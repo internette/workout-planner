@@ -1,0 +1,43 @@
+import { Svg, type IconProps } from './Svg';
+
+export type Mood = 'Happy' | 'Neutral' | 'Sad' | 'Mad';
+
+// A minimal face drawn in `color` (the page background colour by default) to sit on a coloured disc.
+export function MoodFace({
+  mood,
+  size,
+  color = '#FBF1F3',
+  style,
+  className,
+}: { mood: Mood | string } & IconProps) {
+  return (
+    <Svg
+      size={size}
+      style={style}
+      className={className}
+      fill="none"
+      stroke={color}
+      strokeWidth={2}
+      strokeLinecap="round"
+    >
+      {mood === 'Mad' ? (
+        <>
+          <line x1="7.4" y1="8.4" x2="10.6" y2="10.2" />
+          <line x1="16.6" y1="8.4" x2="13.4" y2="10.2" />
+        </>
+      ) : (
+        <>
+          <circle cx="9" cy="10" r="1.1" fill={color} stroke="none" />
+          <circle cx="15" cy="10" r="1.1" fill={color} stroke="none" />
+        </>
+      )}
+      {mood === 'Happy' ? (
+        <path d="M8.5 14.5c1.1 1.7 5.9 1.7 7 0" />
+      ) : mood === 'Neutral' ? (
+        <line x1="8.5" y1="15" x2="15.5" y2="15" />
+      ) : (
+        <path d="M8.5 16c1.1-1.7 5.9-1.7 7 0" />
+      )}
+    </Svg>
+  );
+}

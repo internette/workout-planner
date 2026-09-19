@@ -62,6 +62,7 @@ components/
   PlannerView.tsx     The markup for every screen, with no logic of its own
   dcLogic.ts          Small base class that gives the logic its immediate-merge setState
   viewHelpers.tsx     css() and t() helpers used by the view
+  ui/icons/           Design-system icons: glyphs, Sparkle, Gem, MoodFace, ExerciseIcon (gallery at /design-system/icons)
   planner/
     PlannerLogic.ts   UI state, navigation, loading and saving; renderVals() assembles the view's values
     context.ts        Runs the stages below in order to build a shared context

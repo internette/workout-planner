@@ -4,6 +4,35 @@
 // @ts-nocheck
 import { Fragment } from 'react';
 import { css, t } from './viewHelpers';
+import {
+  BarChart,
+  Bike,
+  Book,
+  Calendar,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Close,
+  Dumbbell,
+  DumbbellSmall,
+  Flame,
+  Gem,
+  Info,
+  MoodFace,
+  Moon,
+  Mountain,
+  Notebook,
+  Pencil,
+  Plus,
+  Repeat,
+  Search,
+  Sparkle,
+  Swirl,
+  User,
+  Waves,
+} from '@/components/ui/icons';
 
 export function PlannerView({ v }: { v: any }) {
   return (
@@ -78,19 +107,7 @@ export function PlannerView({ v }: { v: any }) {
                   }}
                   className="hv0"
                 >
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#746E88"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ width: '16px', height: '16px', flex: 'none' }}
-                  >
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                  </svg>
+                  <Close color="#746E88" strokeWidth={2.2} size={16} />
                 </button>
               </div>
               <p
@@ -226,89 +243,23 @@ export function PlannerView({ v }: { v: any }) {
           <nav style={css(v.sidebarStyle)}>
             <div style={css(v.navListStyle)}>
               <button onClick={v.goDay} aria-current={v.navCalOn} style={css(v.navCal)}>
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={v.navCalInk}
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ width: '18px', height: '18px', flex: 'none' }}
-                >
-                  <rect x="3" y="5" width="18" height="16" rx="3"></rect>
-                  <line x1="3" y1="10" x2="21" y2="10"></line>
-                  <line x1="8" y1="3" x2="8" y2="6"></line>
-                  <line x1="16" y1="3" x2="16" y2="6"></line>
-                </svg>
+                <Calendar color={v.navCalInk} size={18} />
                 {'Calendar '}
               </button>
               <button onClick={v.goDiaryList} aria-current={v.navDiaryOn} style={css(v.navDiary)}>
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={v.navDiaryInk}
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ width: '18px', height: '18px', flex: 'none' }}
-                >
-                  <path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"></path>
-                  <path d="M5 17h14"></path>
-                </svg>
+                <Book color={v.navDiaryInk} size={18} />
                 {'Chronicle '}
               </button>
               <button onClick={v.goArsenal} aria-current={v.navArsenalOn} style={css(v.navArsenal)}>
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={v.navArsenalInk}
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ width: '18px', height: '18px', flex: 'none' }}
-                >
-                  <line x1="6" y1="12" x2="18" y2="12"></line>
-                  <line x1="4" y1="9" x2="4" y2="15"></line>
-                  <line x1="20" y1="9" x2="20" y2="15"></line>
-                  <line x1="7" y1="9" x2="7" y2="15"></line>
-                  <line x1="17" y1="9" x2="17" y2="15"></line>
-                </svg>
+                <Dumbbell color={v.navArsenalInk} size={18} />
                 {'Arsenal '}
               </button>
               <button onClick={v.goSummary} aria-current={v.navSummaryOn} style={css(v.navSummary)}>
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={v.navSummaryInk}
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ width: '18px', height: '18px', flex: 'none' }}
-                >
-                  <line x1="5" y1="20" x2="5" y2="13"></line>
-                  <line x1="12" y1="20" x2="12" y2="8"></line>
-                  <line x1="19" y1="20" x2="19" y2="4"></line>
-                </svg>
+                <BarChart color={v.navSummaryInk} strokeWidth={2.2} size={18} />
                 {'Progress '}
               </button>
               <button onClick={v.goProfile} aria-current={v.navProfileOn} style={css(v.navProfile)}>
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={v.navProfileInk}
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ width: '18px', height: '18px', flex: 'none' }}
-                >
-                  <circle cx="12" cy="8.5" r="3.6"></circle>
-                  <path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"></path>
-                </svg>
+                <User color={v.navProfileInk} size={18} />
                 {'Profile '}
               </button>
             </div>
@@ -318,14 +269,27 @@ export function PlannerView({ v }: { v: any }) {
               <div
                 role="alert"
                 style={{
-                  display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px', padding: '12px 16px',
-                  borderRadius: '14px', background: '#FBE9EC', color: '#B23A4C', fontSize: '13.5px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  marginBottom: '14px',
+                  padding: '12px 16px',
+                  borderRadius: '14px',
+                  background: '#FBE9EC',
+                  color: '#B23A4C',
+                  fontSize: '13.5px',
                 }}
               >
                 <span style={{ flex: '1', minWidth: '0' }}>Couldn't save: {v.saveError}</span>
                 <button
                   onClick={v.dismissError}
-                  style={{ border: 'none', background: 'none', color: '#B23A4C', fontWeight: '600', cursor: 'pointer' }}
+                  style={{
+                    border: 'none',
+                    background: 'none',
+                    color: '#B23A4C',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                  }}
                 >
                   Dismiss
                 </button>
@@ -356,18 +320,7 @@ export function PlannerView({ v }: { v: any }) {
                         >
                           {v.monthName}
                         </span>
-                        <svg
-                          aria-hidden="true"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="#746E88"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          style={{ width: '17px', height: '17px', flex: 'none' }}
-                        >
-                          <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
+                        <ChevronDown color="#746E88" strokeWidth={2.2} size={17} />
                         <span
                           style={{
                             display: 'flex',
@@ -379,166 +332,85 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                         >
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-9px)' }}>
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              style={{
-                                width: '11px',
-                                height: '11px',
-                                flex: 'none',
-                                animation: 'twinkle 3.4s ease-in-out 0s infinite',
-                              }}
-                            >
-                              <path
-                                d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                fill="#E1699C"
-                                style={{ filter: 'drop-shadow(0 0 3px rgba(225,105,156,0.45))' }}
-                              ></path>
-                            </svg>
+                            <Sparkle
+                              size={11}
+                              color="#E1699C"
+                              glow={0.45}
+                              glowBlur={3}
+                              style={{ animation: 'twinkle 3.4s ease-in-out 0s infinite' }}
+                            />
                           </span>
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(3px)' }}>
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              style={{
-                                width: '8px',
-                                height: '8px',
-                                flex: 'none',
-                                animation: 'twinkle 4.6s ease-in-out .4s infinite',
-                              }}
-                            >
-                              <path
-                                d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                fill="#7C8FC9"
-                                style={{ filter: 'drop-shadow(0 0 3px rgba(124,143,201,0.45))' }}
-                              ></path>
-                            </svg>
+                            <Sparkle
+                              size={8}
+                              color="#7C8FC9"
+                              glow={0.45}
+                              glowBlur={3}
+                              style={{ animation: 'twinkle 4.6s ease-in-out .4s infinite' }}
+                            />
                           </span>
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-4px)' }}>
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              style={{
-                                width: '9px',
-                                height: '9px',
-                                flex: 'none',
-                                animation: 'twinkle 5.4s ease-in-out .15s infinite',
-                              }}
-                            >
-                              <path
-                                d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                fill="#5EC4D6"
-                                style={{ filter: 'drop-shadow(0 0 3px rgba(94,196,214,0.45))' }}
-                              ></path>
-                            </svg>
+                            <Sparkle
+                              size={9}
+                              color="#5EC4D6"
+                              glow={0.45}
+                              glowBlur={3}
+                              style={{ animation: 'twinkle 5.4s ease-in-out .15s infinite' }}
+                            />
                           </span>
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(7px)' }}>
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              style={{
-                                width: '6px',
-                                height: '6px',
-                                flex: 'none',
-                                animation: 'twinkle 6s ease-in-out .9s infinite',
-                              }}
-                            >
-                              <path
-                                d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                fill="#E1699C"
-                                style={{ filter: 'drop-shadow(0 0 3px rgba(225,105,156,0.4))' }}
-                              ></path>
-                            </svg>
+                            <Sparkle
+                              size={6}
+                              color="#E1699C"
+                              glow={0.4}
+                              glowBlur={3}
+                              style={{ animation: 'twinkle 6s ease-in-out .9s infinite' }}
+                            />
                           </span>
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-7px)' }}>
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              style={{
-                                width: '7px',
-                                height: '7px',
-                                flex: 'none',
-                                animation: 'twinkle 4.2s ease-in-out 1.1s infinite',
-                              }}
-                            >
-                              <path
-                                d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                fill="#7C8FC9"
-                                style={{ filter: 'drop-shadow(0 0 3px rgba(124,143,201,0.42))' }}
-                              ></path>
-                            </svg>
+                            <Sparkle
+                              size={7}
+                              color="#7C8FC9"
+                              glow={0.42}
+                              glowBlur={3}
+                              style={{ animation: 'twinkle 4.2s ease-in-out 1.1s infinite' }}
+                            />
                           </span>
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(1px)' }}>
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              style={{
-                                width: '5px',
-                                height: '5px',
-                                flex: 'none',
-                                animation: 'twinkle 5.2s ease-in-out 1.3s infinite',
-                              }}
-                            >
-                              <path
-                                d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                fill="#5EC4D6"
-                                style={{ filter: 'drop-shadow(0 0 3px rgba(94,196,214,0.4))' }}
-                              ></path>
-                            </svg>
+                            <Sparkle
+                              size={5}
+                              color="#5EC4D6"
+                              glow={0.4}
+                              glowBlur={3}
+                              style={{ animation: 'twinkle 5.2s ease-in-out 1.3s infinite' }}
+                            />
                           </span>
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-2px)' }}>
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              style={{
-                                width: '6px',
-                                height: '6px',
-                                flex: 'none',
-                                animation: 'twinkle 6.6s ease-in-out 1.7s infinite',
-                              }}
-                            >
-                              <path
-                                d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                fill="#E1699C"
-                                style={{ filter: 'drop-shadow(0 0 3px rgba(225,105,156,0.38))' }}
-                              ></path>
-                            </svg>
+                            <Sparkle
+                              size={6}
+                              color="#E1699C"
+                              glow={0.38}
+                              glowBlur={3}
+                              style={{ animation: 'twinkle 6.6s ease-in-out 1.7s infinite' }}
+                            />
                           </span>
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(5px)' }}>
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              style={{
-                                width: '4px',
-                                height: '4px',
-                                flex: 'none',
-                                animation: 'twinkle 4.8s ease-in-out 2s infinite',
-                              }}
-                            >
-                              <path
-                                d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                fill="#7C8FC9"
-                                style={{ filter: 'drop-shadow(0 0 3px rgba(124,143,201,0.36))' }}
-                              ></path>
-                            </svg>
+                            <Sparkle
+                              size={4}
+                              color="#7C8FC9"
+                              glow={0.36}
+                              glowBlur={3}
+                              style={{ animation: 'twinkle 4.8s ease-in-out 2s infinite' }}
+                            />
                           </span>
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-5px)' }}>
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              style={{
-                                width: '3px',
-                                height: '3px',
-                                flex: 'none',
-                                animation: 'twinkle 5.8s ease-in-out 2.4s infinite',
-                              }}
-                            >
-                              <path
-                                d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                fill="#5EC4D6"
-                                style={{ filter: 'drop-shadow(0 0 3px rgba(94,196,214,0.34))' }}
-                              ></path>
-                            </svg>
+                            <Sparkle
+                              size={3}
+                              color="#5EC4D6"
+                              glow={0.34}
+                              glowBlur={3}
+                              style={{ animation: 'twinkle 5.8s ease-in-out 2.4s infinite' }}
+                            />
                           </span>
                         </span>
                       </button>
@@ -578,18 +450,7 @@ export function PlannerView({ v }: { v: any }) {
                                   justifyContent: 'center',
                                 }}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="#C7C4D0"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  style={{ width: '17px', height: '17px', flex: 'none' }}
-                                >
-                                  <polyline points="15 18 9 12 15 6"></polyline>
-                                </svg>
+                                <ChevronLeft color="#C7C4D0" size={17} />
                               </span>
                               <span
                                 style={{
@@ -611,18 +472,7 @@ export function PlannerView({ v }: { v: any }) {
                                   justifyContent: 'center',
                                 }}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="#C7C4D0"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  style={{ width: '17px', height: '17px', flex: 'none' }}
-                                >
-                                  <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
+                                <ChevronRight color="#C7C4D0" size={17} />
                               </span>
                             </div>
                             <div
@@ -716,18 +566,7 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                           className="hv0"
                         >
-                          <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#746E88"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            style={{ width: '17px', height: '17px', flex: 'none' }}
-                          >
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                          </svg>
+                          <ChevronLeft color="#746E88" size={17} />
                         </button>
                         <div style={{ flex: '1', display: 'flex', gap: '4px' }}>
                           {(v.days ?? []).map((d, i) => (
@@ -764,18 +603,7 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                           className="hv0"
                         >
-                          <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#746E88"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            style={{ width: '17px', height: '17px', flex: 'none' }}
-                          >
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                          </svg>
+                          <ChevronRight color="#746E88" size={17} />
                         </button>
                       </div>
                     </>
@@ -805,47 +633,17 @@ export function PlannerView({ v }: { v: any }) {
                             animation: 'twinkle 4.6s ease-in-out infinite',
                           }}
                         >
-                          <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            style={{ width: '10px', height: '10px', flex: 'none' }}
-                          >
-                            <path
-                              d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                              fill="#5EC4D6"
-                              style={{ filter: 'drop-shadow(0 0 4px rgba(94,196,214,0.55))' }}
-                            ></path>
-                          </svg>
+                          <Sparkle size={10} color="#5EC4D6" glow={0.55} />
                         </span>
                         <span style={css(v.questIconWrap)}>
                           {v.questDone ? (
                             <>
-                              <svg
-                                aria-hidden="true"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="#fff"
-                                strokeWidth="2.6"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                style={{ width: '19px', height: '19px', flex: 'none' }}
-                              >
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                              </svg>
+                              <Check color="#fff" strokeWidth={2.6} size={19} />
                             </>
                           ) : null}
                           {v.questOpen ? (
                             <>
-                              <svg
-                                aria-hidden="true"
-                                viewBox="0 0 24 24"
-                                style={{ width: '19px', height: '19px', flex: 'none' }}
-                              >
-                                <path
-                                  d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                  fill="#E1699C"
-                                ></path>
-                              </svg>
+                              <Sparkle size={19} color="#E1699C" />
                             </>
                           ) : null}
                         </span>
@@ -936,18 +734,7 @@ export function PlannerView({ v }: { v: any }) {
                                   className="hv3"
                                 >
                                   {t(v.wName)}
-                                  <svg
-                                    aria-hidden="true"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="#746E88"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    style={{ width: '17px', height: '17px', flex: 'none' }}
-                                  >
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                  </svg>
+                                  <ChevronRight color="#746E88" size={17} />
                                 </button>
                               </h2>
                               <p
@@ -1062,65 +849,21 @@ export function PlannerView({ v }: { v: any }) {
                                     >
                                       {x?.isH ? (
                                         <>
-                                          <svg
-                                            aria-hidden="true"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="#E1699C"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            style={{ width: '20px', height: '20px', flex: 'none' }}
-                                          >
-                                            <line x1="6" y1="12" x2="18" y2="12"></line>
-                                            <line x1="4" y1="9" x2="4" y2="15"></line>
-                                            <line x1="20" y1="9" x2="20" y2="15"></line>
-                                            <line x1="7" y1="9" x2="7" y2="15"></line>
-                                            <line x1="17" y1="9" x2="17" y2="15"></line>
-                                          </svg>
+                                          <Dumbbell color="#E1699C" size={20} />
                                         </>
                                       ) : null}
                                       {x?.isV ? (
                                         <>
-                                          <svg
-                                            aria-hidden="true"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="#E1699C"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            style={{
-                                              width: '17px',
-                                              height: '17px',
-                                              flex: 'none',
-                                              transform: 'rotate(90deg)',
-                                            }}
-                                          >
-                                            <line x1="6" y1="12" x2="18" y2="12"></line>
-                                            <line x1="4" y1="9" x2="4" y2="15"></line>
-                                            <line x1="20" y1="9" x2="20" y2="15"></line>
-                                            <line x1="7" y1="9" x2="7" y2="15"></line>
-                                            <line x1="17" y1="9" x2="17" y2="15"></line>
-                                          </svg>
+                                          <Dumbbell
+                                            color="#E1699C"
+                                            size={17}
+                                            style={{ transform: 'rotate(90deg)' }}
+                                          />
                                         </>
                                       ) : null}
                                       {x?.isD ? (
                                         <>
-                                          <svg
-                                            aria-hidden="true"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="#E1699C"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            style={{ width: '20px', height: '20px', flex: 'none' }}
-                                          >
-                                            <line x1="9" y1="12" x2="15" y2="12"></line>
-                                            <line x1="6" y1="9" x2="6" y2="15"></line>
-                                            <line x1="18" y1="9" x2="18" y2="15"></line>
-                                          </svg>
+                                          <DumbbellSmall color="#E1699C" size={20} />
                                         </>
                                       ) : null}
                                       <span style={css(x?.textStyle)}>{x?.text}</span>
@@ -1150,18 +893,7 @@ export function PlannerView({ v }: { v: any }) {
                               >
                                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                                   {t(v.moreLabel)}
-                                  <svg
-                                    aria-hidden="true"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="#746E88"
-                                    strokeWidth="2.2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    style={css(v.moreCaret)}
-                                  >
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                  </svg>
+                                  <ChevronDown color="#746E88" strokeWidth={2.2} style={css(v.moreCaret)} />
                                 </span>
                               </button>
                             </>
@@ -1204,19 +936,7 @@ export function PlannerView({ v }: { v: any }) {
                               gap: '7px',
                             }}
                           >
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="#c4548a"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              style={{ width: '17px', height: '17px', flex: 'none' }}
-                            >
-                              <line x1="12" y1="5" x2="12" y2="19"></line>
-                              <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
+                            <Plus color="#c4548a" size={17} />
                             Add workout
                           </button>
                         </aside>
@@ -1247,30 +967,9 @@ export function PlannerView({ v }: { v: any }) {
                             justifyContent: 'center',
                           }}
                         >
-                          <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#7C8FC9"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            style={{ width: '40px', height: '40px', flex: 'none' }}
-                          >
-                            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
-                          </svg>
+                          <Moon color="#7C8FC9" size={40} />
                           <span style={{ position: 'absolute', top: '21px', right: '20px', display: 'flex' }}>
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="#E0A93A"
-                              strokeWidth="2.2"
-                              strokeLinejoin="round"
-                              style={{ width: '9.5px', height: '9.5px', flex: 'none' }}
-                            >
-                              <path d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"></path>
-                            </svg>
+                            <Sparkle size={9.5} outline color="#E0A93A" strokeWidth={2.2} />
                           </span>
                         </div>
                         <h2
@@ -1315,19 +1014,7 @@ export function PlannerView({ v }: { v: any }) {
                             gap: '8px',
                           }}
                         >
-                          <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#fff"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            style={{ width: '16px', height: '16px', flex: 'none' }}
-                          >
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                          </svg>
+                          <Plus color="#fff" size={16} />
                           Add workout
                         </button>
                         <span
@@ -1338,17 +1025,7 @@ export function PlannerView({ v }: { v: any }) {
                             animation: 'twinkle 4s ease-in-out infinite',
                           }}
                         >
-                          <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            style={{ width: '13px', height: '13px', flex: 'none' }}
-                          >
-                            <path
-                              d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                              fill="#7C8FC9"
-                              style={{ filter: 'drop-shadow(0 0 4px rgba(124,143,201,0.5))' }}
-                            ></path>
-                          </svg>
+                          <Sparkle size={13} color="#7C8FC9" glow={0.5} />
                         </span>
                       </div>
                     </>
@@ -1375,18 +1052,7 @@ export function PlannerView({ v }: { v: any }) {
                             }}
                             className="hv0"
                           >
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="#746E88"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              style={{ width: '17px', height: '17px', flex: 'none' }}
-                            >
-                              <polyline points="15 18 9 12 15 6"></polyline>
-                            </svg>
+                            <ChevronLeft color="#746E88" size={17} />
                           </button>
                           <span
                             style={{
@@ -1418,18 +1084,7 @@ export function PlannerView({ v }: { v: any }) {
                             }}
                             className="hv0"
                           >
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="#746E88"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              style={{ width: '17px', height: '17px', flex: 'none' }}
-                            >
-                              <polyline points="9 18 15 12 9 6"></polyline>
-                            </svg>
+                            <ChevronRight color="#746E88" size={17} />
                           </button>
                         </div>
                         <div
@@ -1492,79 +1147,27 @@ export function PlannerView({ v }: { v: any }) {
                                     >
                                       {w?.isRideRow ? (
                                         <>
-                                          <svg
-                                            aria-hidden="true"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="#7C8FC9"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            style={{ width: '19px', height: '19px', flex: 'none' }}
-                                          >
-                                            <circle cx="6" cy="17" r="3.4"></circle>
-                                            <circle cx="18" cy="17" r="3.4"></circle>
-                                            <path d="M6 17l5-8h5l2 8"></path>
-                                          </svg>
+                                          <Bike color="#7C8FC9" size={19} />
                                         </>
                                       ) : null}
                                       {w?.isPush ? (
                                         <>
-                                          <svg
-                                            aria-hidden="true"
-                                            viewBox="0 0 24 24"
-                                            style={{ width: '16px', height: '16px', flex: 'none' }}
-                                          >
-                                            <path
-                                              d="M12.5 2c1.2 3.4 3.5 5.6 3.5 9.2a4.5 4.5 0 1 1-9 0c0-2.6 1.2-4 1.9-5.6.4 1.6 1.3 2.2 1.6 3.4.5-1.3.6-3.5 2-7z"
-                                              fill="#E1699C"
-                                            ></path>
-                                          </svg>
+                                          <Flame color="#E1699C" size={16} />
                                         </>
                                       ) : null}
                                       {w?.isPull ? (
                                         <>
-                                          <svg
-                                            aria-hidden="true"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="#7C8FC9"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            style={{ width: '20px', height: '20px', flex: 'none' }}
-                                          >
-                                            <path d="M2 10c2.2-2 4.4-2 6.6 0s4.4 2 6.6 0 4.4-2 6.6 0"></path>
-                                            <path d="M2 15c2.2-2 4.4-2 6.6 0s4.4 2 6.6 0 4.4-2 6.6 0"></path>
-                                          </svg>
+                                          <Waves color="#7C8FC9" size={20} />
                                         </>
                                       ) : null}
                                       {w?.isLegs ? (
                                         <>
-                                          <svg
-                                            aria-hidden="true"
-                                            viewBox="0 0 24 24"
-                                            style={{ width: '16px', height: '16px', flex: 'none' }}
-                                          >
-                                            <path d="M2 20 L9 8 L13 14 L17 6 L22 20 Z" fill="#5C6684"></path>
-                                          </svg>
+                                          <Mountain color="#5C6684" size={16} />
                                         </>
                                       ) : null}
                                       {w?.isCore ? (
                                         <>
-                                          <svg
-                                            aria-hidden="true"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="#5EC4D6"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            style={{ width: '20px', height: '20px', flex: 'none' }}
-                                          >
-                                            <path d="M3 8c4-3 8-1 8 2s-3 4-6 2"></path>
-                                            <path d="M3 15c5-2 11 0 15 3s6-1 5-5"></path>
-                                          </svg>
+                                          <Swirl color="#5EC4D6" size={20} />
                                         </>
                                       ) : null}
                                       <div style={{ minWidth: '0', flex: '1' }}>
@@ -1624,17 +1227,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 3.4s ease-in-out infinite',
                                 }}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  style={{ width: '12px', height: '12px', flex: 'none' }}
-                                >
-                                  <path
-                                    d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                    fill="#7C8FC9"
-                                    style={{ filter: 'drop-shadow(0 0 4px rgba(124,143,201,0.5))' }}
-                                  ></path>
-                                </svg>
+                                <Sparkle size={12} color="#7C8FC9" glow={0.5} />
                               </span>
                               <span
                                 style={{
@@ -1644,17 +1237,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 4.6s ease-in-out infinite',
                                 }}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  style={{ width: '10px', height: '10px', flex: 'none' }}
-                                >
-                                  <path
-                                    d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                    fill="#5EC4D6"
-                                    style={{ filter: 'drop-shadow(0 0 4px rgba(94,196,214,0.55))' }}
-                                  ></path>
-                                </svg>
+                                <Sparkle size={10} color="#5EC4D6" glow={0.55} />
                               </span>
                               <span
                                 style={{
@@ -1664,17 +1247,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 6s ease-in-out infinite',
                                 }}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  style={{ width: '9px', height: '9px', flex: 'none' }}
-                                >
-                                  <path
-                                    d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                    fill="#F0A385"
-                                    style={{ filter: 'drop-shadow(0 0 4px rgba(240,163,133,0.55))' }}
-                                  ></path>
-                                </svg>
+                                <Sparkle size={9} color="#F0A385" glow={0.55} />
                               </span>
                               <div
                                 style={{
@@ -1688,18 +1261,7 @@ export function PlannerView({ v }: { v: any }) {
                                   justifyContent: 'center',
                                 }}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="#fff"
-                                  strokeWidth="2.6"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  style={{ width: '26px', height: '26px', flex: 'none' }}
-                                >
-                                  <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
+                                <Check color="#fff" strokeWidth={2.6} size={26} />
                               </div>
                               <h3
                                 style={{
@@ -1749,17 +1311,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 3.4s ease-in-out infinite',
                                 }}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  style={{ width: '13px', height: '13px', flex: 'none' }}
-                                >
-                                  <path
-                                    d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                    fill="#7C8FC9"
-                                    style={{ filter: 'drop-shadow(0 0 4px rgba(124,143,201,0.5))' }}
-                                  ></path>
-                                </svg>
+                                <Sparkle size={13} color="#7C8FC9" glow={0.5} />
                               </span>
                               <span
                                 style={{
@@ -1769,17 +1321,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 4.6s ease-in-out infinite',
                                 }}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  style={{ width: '10px', height: '10px', flex: 'none' }}
-                                >
-                                  <path
-                                    d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                    fill="#5EC4D6"
-                                    style={{ filter: 'drop-shadow(0 0 4px rgba(94,196,214,0.55))' }}
-                                  ></path>
-                                </svg>
+                                <Sparkle size={10} color="#5EC4D6" glow={0.55} />
                               </span>
                               <span
                                 style={{
@@ -1789,17 +1331,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 6s ease-in-out infinite',
                                 }}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  style={{ width: '10px', height: '10px', flex: 'none' }}
-                                >
-                                  <path
-                                    d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                    fill="#F0A385"
-                                    style={{ filter: 'drop-shadow(0 0 4px rgba(240,163,133,0.55))' }}
-                                  ></path>
-                                </svg>
+                                <Sparkle size={10} color="#F0A385" glow={0.55} />
                               </span>
                               <div
                                 style={{
@@ -1814,29 +1346,7 @@ export function PlannerView({ v }: { v: any }) {
                                   justifyContent: 'center',
                                 }}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  style={{ width: '32px', height: '32px', flex: 'none' }}
-                                >
-                                  <defs>
-                                    <linearGradient id="gemEmptyWk" x1="0" y1="0" x2="1" y2="1">
-                                      <stop offset="0%" stopColor="#E1699C"></stop>
-                                      <stop offset="50%" stopColor="#7C8FC9"></stop>
-                                      <stop offset="100%" stopColor="#5EC4D6"></stop>
-                                    </linearGradient>
-                                  </defs>
-                                  <path
-                                    d="M12 2 L20 8 L17 14 L12 22 L7 14 L4 8 Z"
-                                    fill="url(#gemEmptyWk)"
-                                  ></path>
-                                  <path
-                                    d="M12 2 L12 22 M4 8 L20 8 M4 8 L12 22 M20 8 L12 22"
-                                    stroke="rgba(255,255,255,0.45)"
-                                    strokeWidth="0.6"
-                                    fill="none"
-                                  ></path>
-                                </svg>
+                                <Gem size={32} />
                               </div>
                               <h3
                                 style={{
@@ -1879,19 +1389,7 @@ export function PlannerView({ v }: { v: any }) {
                                 }}
                                 className="hv4"
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="#fff"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  style={{ width: '16px', height: '16px', flex: 'none' }}
-                                >
-                                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
+                                <Plus color="#fff" size={16} />
                                 Add workout
                               </button>
                             </div>
@@ -1934,26 +1432,7 @@ export function PlannerView({ v }: { v: any }) {
                                 justifyContent: 'center',
                               }}
                             >
-                              <svg
-                                aria-hidden="true"
-                                viewBox="0 0 24 24"
-                                style={{ width: '20px', height: '20px', flex: 'none' }}
-                              >
-                                <defs>
-                                  <linearGradient id="gemStat" x1="0" y1="0" x2="1" y2="1">
-                                    <stop offset="0%" stopColor="#E1699C"></stop>
-                                    <stop offset="50%" stopColor="#7C8FC9"></stop>
-                                    <stop offset="100%" stopColor="#5EC4D6"></stop>
-                                  </linearGradient>
-                                </defs>
-                                <path d="M12 2 L20 8 L17 14 L12 22 L7 14 L4 8 Z" fill="url(#gemStat)"></path>
-                                <path
-                                  d="M12 2 L12 22 M4 8 L20 8 M4 8 L12 22 M20 8 L12 22"
-                                  stroke="rgba(255,255,255,0.45)"
-                                  strokeWidth="0.6"
-                                  fill="none"
-                                ></path>
-                              </svg>
+                              <Gem size={20} />
                             </div>
                             <div style={{ minWidth: '0' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -2013,18 +1492,7 @@ export function PlannerView({ v }: { v: any }) {
                                   justifyContent: 'center',
                                 }}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="#E1699C"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  style={{ width: '20px', height: '20px', flex: 'none' }}
-                                >
-                                  <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
+                                <Check color="#E1699C" size={20} />
                               </span>
                             </div>
                             <div style={{ minWidth: '0' }}>
@@ -2232,18 +1700,7 @@ export function PlannerView({ v }: { v: any }) {
                                   </div>
                                 </div>
                                 <span style={{ marginLeft: 'auto', display: 'flex' }}>
-                                  <svg
-                                    aria-hidden="true"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="#746E88"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    style={{ width: '20px', height: '20px', flex: 'none' }}
-                                  >
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                  </svg>
+                                  <ChevronRight color="#746E88" size={20} />
                                 </span>
                               </div>
                             </div>
@@ -2275,17 +1732,7 @@ export function PlannerView({ v }: { v: any }) {
                       animation: 'twinkle 3.4s ease-in-out infinite',
                     }}
                   >
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 24 24"
-                      style={{ width: '13px', height: '13px', flex: 'none' }}
-                    >
-                      <path
-                        d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                        fill="#7C8FC9"
-                        style={{ filter: 'drop-shadow(0 0 4px rgba(124,143,201,0.5))' }}
-                      ></path>
-                    </svg>
+                    <Sparkle size={13} color="#7C8FC9" glow={0.5} />
                   </span>
                   <span
                     style={{
@@ -2295,17 +1742,7 @@ export function PlannerView({ v }: { v: any }) {
                       animation: 'twinkle 4.6s ease-in-out infinite',
                     }}
                   >
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 24 24"
-                      style={{ width: '11px', height: '11px', flex: 'none' }}
-                    >
-                      <path
-                        d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                        fill="#5EC4D6"
-                        style={{ filter: 'drop-shadow(0 0 4px rgba(94,196,214,0.55))' }}
-                      ></path>
-                    </svg>
+                    <Sparkle size={11} color="#5EC4D6" glow={0.55} />
                   </span>
                   <span
                     style={{
@@ -2315,17 +1752,7 @@ export function PlannerView({ v }: { v: any }) {
                       animation: 'twinkle 6s ease-in-out infinite',
                     }}
                   >
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 24 24"
-                      style={{ width: '10px', height: '10px', flex: 'none' }}
-                    >
-                      <path
-                        d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                        fill="#F0A385"
-                        style={{ filter: 'drop-shadow(0 0 4px rgba(240,163,133,0.55))' }}
-                      ></path>
-                    </svg>
+                    <Sparkle size={10} color="#F0A385" glow={0.55} />
                   </span>
                   <div
                     style={{
@@ -2353,24 +1780,12 @@ export function PlannerView({ v }: { v: any }) {
                         justifyContent: 'center',
                       }}
                     >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#E1699C"
-                        strokeWidth="2.4"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{
-                          width: '30px',
-                          height: '30px',
-                          flex: 'none',
-                          strokeDasharray: '30',
-                          animation: 'draw .5s .2s ease-out both',
-                        }}
-                      >
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
+                      <Check
+                        color="#E1699C"
+                        strokeWidth={2.4}
+                        size={30}
+                        style={{ strokeDasharray: '30', animation: 'draw .5s .2s ease-out both' }}
+                      />
                     </div>
                   </div>
                   <h1
@@ -2446,18 +1861,7 @@ export function PlannerView({ v }: { v: any }) {
                           {v.savedCount}
                         </span>
                       </span>
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#746E88"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{ width: '20px', height: '20px', flex: 'none' }}
-                      >
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                      </svg>
+                      <ChevronRight color="#746E88" size={20} />
                     </button>
                     <button
                       onClick={v.goNextUp}
@@ -2500,18 +1904,7 @@ export function PlannerView({ v }: { v: any }) {
                           {v.savedNextMeta}
                         </span>
                       </span>
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#746E88"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{ width: '20px', height: '20px', flex: 'none' }}
-                      >
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                      </svg>
+                      <ChevronRight color="#746E88" size={20} />
                     </button>
                     <button
                       onClick={v.goSummary}
@@ -2554,18 +1947,7 @@ export function PlannerView({ v }: { v: any }) {
                           Streak, week and month totals
                         </span>
                       </span>
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#746E88"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{ width: '20px', height: '20px', flex: 'none' }}
-                      >
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                      </svg>
+                      <ChevronRight color="#746E88" size={20} />
                     </button>
                   </div>
                   <button
@@ -2626,17 +2008,7 @@ export function PlannerView({ v }: { v: any }) {
                         {v.profileInitial}
                       </span>
                       <span style={{ position: 'absolute', top: '-2px', right: '-2px' }}>
-                        <svg
-                          aria-hidden="true"
-                          viewBox="0 0 24 24"
-                          style={{ width: '16px', height: '16px', flex: 'none' }}
-                        >
-                          <path
-                            d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                            fill="#F0C060"
-                            style={{ filter: 'drop-shadow(0 0 4px rgba(240,192,96,0.6))' }}
-                          ></path>
-                        </svg>
+                        <Sparkle size={16} color="#F0C060" glow={0.6} />
                       </span>
                     </div>
                     <div style={{ minWidth: '0', flex: '1 1 200px' }}>
@@ -2658,18 +2030,7 @@ export function PlannerView({ v }: { v: any }) {
                       >
                         <span style={css(v.rankGem)}></span>
                         {t(v.rankName)}
-                        <svg
-                          aria-hidden="true"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.4"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          style={{ width: '12px', height: '12px', flex: 'none', opacity: '.7' }}
-                        >
-                          <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
+                        <ChevronRight strokeWidth={2.4} size={12} style={{ opacity: '.7' }} />
                       </button>
                       <div
                         data-pop="xp"
@@ -2716,20 +2077,7 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                           className="hv0"
                         >
-                          <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#746E88"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            style={{ width: '16px', height: '16px', flex: 'none' }}
-                          >
-                            <circle cx="12" cy="12" r="9"></circle>
-                            <line x1="12" y1="11" x2="12" y2="16.5"></line>
-                            <line x1="12" y1="7.8" x2="12" y2="8"></line>
-                          </svg>
+                          <Info color="#746E88" size={16} />
                         </button>
                         {v.xpInfoOpen ? (
                           <>
@@ -3199,26 +2547,7 @@ export function PlannerView({ v }: { v: any }) {
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 'none' }}>
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        style={{ width: '30px', height: '30px', flex: 'none' }}
-                      >
-                        <defs>
-                          <linearGradient id="gemStreak" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stopColor="#E1699C"></stop>
-                            <stop offset="50%" stopColor="#7C8FC9"></stop>
-                            <stop offset="100%" stopColor="#5EC4D6"></stop>
-                          </linearGradient>
-                        </defs>
-                        <path d="M12 2 L20 8 L17 14 L12 22 L7 14 L4 8 Z" fill="url(#gemStreak)"></path>
-                        <path
-                          d="M12 2 L12 22 M4 8 L20 8 M4 8 L12 22 M20 8 L12 22"
-                          stroke="rgba(255,255,255,0.45)"
-                          strokeWidth="0.6"
-                          fill="none"
-                        ></path>
-                      </svg>
+                      <Gem size={30} />
                       <div style={{ minWidth: '0' }}>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '7px' }}>
                           <span
@@ -3412,18 +2741,7 @@ export function PlannerView({ v }: { v: any }) {
                             <span style={css(q?.mark)}>
                               {q?.done ? (
                                 <>
-                                  <svg
-                                    aria-hidden="true"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="#fff"
-                                    strokeWidth="3"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    style={{ width: '10px', height: '10px', flex: 'none' }}
-                                  >
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                  </svg>
+                                  <Check color="#fff" strokeWidth={3} size={10} />
                                 </>
                               ) : null}
                             </span>
@@ -3545,19 +2863,7 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                       className="hv4"
                     >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#fff"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{ width: '16px', height: '16px', flex: 'none' }}
-                      >
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                      </svg>
+                      <Plus color="#fff" strokeWidth={2.2} size={16} />
                       New exercise
                     </button>
                   </div>
@@ -3587,19 +2893,7 @@ export function PlannerView({ v }: { v: any }) {
                       boxShadow: '0 1px 3px rgba(35,42,69,.06)',
                     }}
                   >
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#A9A2B4"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      style={{ width: '17px', height: '17px', flex: 'none' }}
-                    >
-                      <circle cx="11" cy="11" r="7"></circle>
-                      <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
-                    </svg>
+                    <Search color="#A9A2B4" size={17} />
                     <input
                       value={v.arsenalQuery ?? ''}
                       onChange={v.setArsenalQuery}
@@ -3636,19 +2930,7 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                           className="hv8"
                         >
-                          <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#746E88"
-                            strokeWidth="2.2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            style={{ width: '14px', height: '14px', flex: 'none' }}
-                          >
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                          </svg>
+                          <Close color="#746E88" strokeWidth={2.2} size={14} />
                         </button>
                       </>
                     ) : null}
@@ -3967,18 +3249,7 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                       className="hv0"
                     >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#5C6684"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{ width: '18px', height: '18px', flex: 'none' }}
-                      >
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                      </svg>
+                      <ChevronLeft color="#5C6684" strokeWidth={2.2} size={18} />
                     </button>
                   </div>
                   <h1
@@ -4184,21 +3455,7 @@ export function PlannerView({ v }: { v: any }) {
                             borderBottom: '1.5px dashed rgba(35,42,69,.22)',
                           }}
                         >
-                          <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#A9A2B4"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            style={{ width: '16px', height: '16px', flex: 'none' }}
-                          >
-                            <rect x="3" y="5" width="18" height="16" rx="3"></rect>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                            <line x1="8" y1="3" x2="8" y2="6"></line>
-                            <line x1="16" y1="3" x2="16" y2="6"></line>
-                          </svg>
+                          <Calendar color="#A9A2B4" size={16} />
                           <input
                             value={v.rangeFrom ?? ''}
                             onChange={v.setRangeFrom}
@@ -4271,70 +3528,22 @@ export function PlannerView({ v }: { v: any }) {
                             <span style={css(e?.faceWrap)}>
                               {e?.isHappy ? (
                                 <>
-                                  <svg
-                                    aria-hidden="true"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="#FBF1F3"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    style={{ width: '24px', height: '24px' }}
-                                  >
-                                    <circle cx="9" cy="10" r="1.1" fill="#FBF1F3" stroke="none"></circle>
-                                    <circle cx="15" cy="10" r="1.1" fill="#FBF1F3" stroke="none"></circle>
-                                    <path d="M8.5 14.5c1.1 1.7 5.9 1.7 7 0"></path>
-                                  </svg>
+                                  <MoodFace mood="Happy" size={24} />
                                 </>
                               ) : null}
                               {e?.isNeutral ? (
                                 <>
-                                  <svg
-                                    aria-hidden="true"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="#FBF1F3"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    style={{ width: '24px', height: '24px' }}
-                                  >
-                                    <circle cx="9" cy="10" r="1.1" fill="#FBF1F3" stroke="none"></circle>
-                                    <circle cx="15" cy="10" r="1.1" fill="#FBF1F3" stroke="none"></circle>
-                                    <line x1="8.5" y1="15" x2="15.5" y2="15"></line>
-                                  </svg>
+                                  <MoodFace mood="Neutral" size={24} />
                                 </>
                               ) : null}
                               {e?.isSad ? (
                                 <>
-                                  <svg
-                                    aria-hidden="true"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="#FBF1F3"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    style={{ width: '24px', height: '24px' }}
-                                  >
-                                    <circle cx="9" cy="10" r="1.1" fill="#FBF1F3" stroke="none"></circle>
-                                    <circle cx="15" cy="10" r="1.1" fill="#FBF1F3" stroke="none"></circle>
-                                    <path d="M8.5 16c1.1-1.7 5.9-1.7 7 0"></path>
-                                  </svg>
+                                  <MoodFace mood="Sad" size={24} />
                                 </>
                               ) : null}
                               {e?.isMad ? (
                                 <>
-                                  <svg
-                                    aria-hidden="true"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="#FBF1F3"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    style={{ width: '24px', height: '24px' }}
-                                  >
-                                    <line x1="7.4" y1="8.4" x2="10.6" y2="10.2"></line>
-                                    <line x1="16.6" y1="8.4" x2="13.4" y2="10.2"></line>
-                                    <path d="M8.5 16c1.1-1.7 5.9-1.7 7 0"></path>
-                                  </svg>
+                                  <MoodFace mood="Mad" size={24} />
                                 </>
                               ) : null}
                             </span>
@@ -4368,18 +3577,7 @@ export function PlannerView({ v }: { v: any }) {
                                 >
                                   {e?.name}
                                 </span>
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="#A9A2B4"
-                                  strokeWidth="2.2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  style={{ width: '16px', height: '16px', flex: 'none' }}
-                                >
-                                  <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
+                                <ChevronRight color="#A9A2B4" strokeWidth={2.2} size={16} />
                               </span>
                               <span
                                 style={{
@@ -4430,19 +3628,7 @@ export function PlannerView({ v }: { v: any }) {
                             }}
                             className="hv9"
                           >
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="#A9A2B4"
-                              strokeWidth="2.2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              style={{ width: '14px', height: '14px', flex: 'none' }}
-                            >
-                              <line x1="6" y1="6" x2="18" y2="18"></line>
-                              <line x1="18" y1="6" x2="6" y2="18"></line>
-                            </svg>
+                            <Close color="#A9A2B4" strokeWidth={2.2} size={14} />
                           </button>
                         </div>
                       </Fragment>
@@ -4483,18 +3669,7 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                       className="hv0"
                     >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#5C6684"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{ width: '18px', height: '18px', flex: 'none' }}
-                      >
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                      </svg>
+                      <ChevronLeft color="#5C6684" strokeWidth={2.2} size={18} />
                     </button>
                     <div
                       style={{
@@ -4553,19 +3728,7 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                           className="hv0"
                         >
-                          <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#746E88"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            style={{ width: '17px', height: '17px', flex: 'none' }}
-                          >
-                            <path d="M12 20h9"></path>
-                            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path>
-                          </svg>
+                          <Pencil color="#746E88" size={17} />
                         </button>
                       </div>
                     </div>
@@ -4587,19 +3750,7 @@ export function PlannerView({ v }: { v: any }) {
                         gap: '6px',
                       }}
                     >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#746E88"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{ width: '15px', height: '15px', flex: 'none' }}
-                      >
-                        <circle cx="12" cy="12" r="9"></circle>
-                        <polyline points="12 7 12 12 15.5 14"></polyline>
-                      </svg>
+                      <Clock color="#746E88" size={15} />
                       {t(v.eTime)}
                     </span>
                     {v.inSeries ? (
@@ -4619,21 +3770,7 @@ export function PlannerView({ v }: { v: any }) {
                             color: '#fff',
                           }}
                         >
-                          <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#fff"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            style={{ width: '15px', height: '15px', flex: 'none' }}
-                          >
-                            <polyline points="17 1 21 5 17 9"></polyline>
-                            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
-                            <polyline points="7 23 3 19 7 15"></polyline>
-                            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
-                          </svg>
+                          <Repeat color="#fff" size={15} />
                           {'Weekly series '}
                           <button
                             onClick={v.endSeries}
@@ -4653,19 +3790,7 @@ export function PlannerView({ v }: { v: any }) {
                             }}
                             className="hv10"
                           >
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="rgba(255,255,255,0.85)"
-                              strokeWidth="2.2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              style={{ width: '13px', height: '13px', flex: 'none' }}
-                            >
-                              <line x1="6" y1="6" x2="18" y2="18"></line>
-                              <line x1="18" y1="6" x2="6" y2="18"></line>
-                            </svg>
+                            <Close color="rgba(255,255,255,0.85)" strokeWidth={2.2} size={13} />
                           </button>
                         </span>
                       </>
@@ -4732,18 +3857,7 @@ export function PlannerView({ v }: { v: any }) {
                         </div>
                         <button onClick={v.toggleRideDone} style={css(v.rideDoneBtn)}>
                           <span style={css(v.rideDoneMark)}>
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke={v.rideDoneStroke}
-                              strokeWidth="2.8"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              style={{ width: '13px', height: '13px', flex: 'none' }}
-                            >
-                              <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
+                            <Check color={v.rideDoneStroke} strokeWidth={2.8} size={13} />
                           </span>
                           {t(v.rideDoneLabel)}
                         </button>
@@ -4803,17 +3917,7 @@ export function PlannerView({ v }: { v: any }) {
                               <span
                                 style={{ display: 'flex', animation: 'twinkle 2.6s ease-in-out infinite' }}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  style={{ width: '14px', height: '14px', flex: 'none' }}
-                                >
-                                  <path
-                                    d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                    fill="#E1699C"
-                                    style={{ filter: 'drop-shadow(0 0 4px rgba(225,105,156,0.55))' }}
-                                  ></path>
-                                </svg>
+                                <Sparkle size={14} color="#E1699C" glow={0.55} />
                               </span>
                             </>
                           ) : null}
@@ -4871,18 +3975,7 @@ export function PlannerView({ v }: { v: any }) {
                                 aria-label={ex?.doneAria}
                                 style={css(ex?.doneBtn)}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke={ex?.doneStroke}
-                                  strokeWidth="2.6"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  style={{ width: '15px', height: '15px', flex: 'none' }}
-                                >
-                                  <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
+                                <Check color={ex?.doneStroke} strokeWidth={2.6} size={15} />
                               </button>
                             </div>
                           </Fragment>
@@ -4920,19 +4013,7 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                       className="hv1"
                     >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#5C6684"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{ width: '17px', height: '17px', flex: 'none' }}
-                      >
-                        <path d="M12 20h9"></path>
-                        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path>
-                      </svg>
+                      <Pencil color="#5C6684" size={17} />
                       Edit workout
                     </button>
                     <button
@@ -4979,18 +4060,7 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                       className="hv0"
                     >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#5C6684"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{ width: '18px', height: '18px', flex: 'none' }}
-                      >
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                      </svg>
+                      <ChevronLeft color="#5C6684" strokeWidth={2.2} size={18} />
                     </button>
                     <div>
                       <div
@@ -5052,22 +4122,7 @@ export function PlannerView({ v }: { v: any }) {
                           justifyContent: 'center',
                         }}
                       >
-                        <svg
-                          aria-hidden="true"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="#E1699C"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          style={{ width: '22px', height: '22px', flex: 'none' }}
-                        >
-                          <line x1="6" y1="12" x2="18" y2="12"></line>
-                          <line x1="4" y1="9" x2="4" y2="15"></line>
-                          <line x1="20" y1="9" x2="20" y2="15"></line>
-                          <line x1="7" y1="9" x2="7" y2="15"></line>
-                          <line x1="17" y1="9" x2="17" y2="15"></line>
-                        </svg>
+                        <Dumbbell color="#E1699C" size={22} />
                       </span>
                       <span>
                         <span
@@ -5126,20 +4181,7 @@ export function PlannerView({ v }: { v: any }) {
                           justifyContent: 'center',
                         }}
                       >
-                        <svg
-                          aria-hidden="true"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="#7C8FC9"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          style={{ width: '22px', height: '22px', flex: 'none' }}
-                        >
-                          <circle cx="6" cy="17" r="3.4"></circle>
-                          <circle cx="18" cy="17" r="3.4"></circle>
-                          <path d="M6 17l5-8h5l2 8"></path>
-                        </svg>
+                        <Bike color="#7C8FC9" size={22} />
                       </span>
                       <span>
                         <span
@@ -5294,18 +4336,7 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                       className="hv0"
                     >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#5C6684"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{ width: '18px', height: '18px', flex: 'none' }}
-                      >
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                      </svg>
+                      <ChevronLeft color="#5C6684" strokeWidth={2.2} size={18} />
                     </button>
                     <div data-pop="icons" style={{ position: 'relative', flex: 'none' }}>
                       <button
@@ -5461,21 +4492,7 @@ export function PlannerView({ v }: { v: any }) {
                         }}
                         className="hv12"
                       >
-                        <svg
-                          aria-hidden="true"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="#746E88"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          style={{ width: '15px', height: '15px', flex: 'none' }}
-                        >
-                          <rect x="3" y="5" width="18" height="16" rx="3"></rect>
-                          <line x1="3" y1="10" x2="21" y2="10"></line>
-                          <line x1="8" y1="3" x2="8" y2="6"></line>
-                          <line x1="16" y1="3" x2="16" y2="6"></line>
-                        </svg>
+                        <Calendar color="#746E88" size={15} />
                         {t(v.eDate)}
                       </button>
                       {v.dateOpen ? (
@@ -5511,18 +4528,7 @@ export function PlannerView({ v }: { v: any }) {
                                 }}
                                 className="hv8"
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="#5C6684"
-                                  strokeWidth="2.2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  style={{ width: '15px', height: '15px', flex: 'none' }}
-                                >
-                                  <polyline points="15 18 9 12 15 6"></polyline>
-                                </svg>
+                                <ChevronLeft color="#5C6684" strokeWidth={2.2} size={15} />
                               </button>
                               <span
                                 style={{
@@ -5551,18 +4557,7 @@ export function PlannerView({ v }: { v: any }) {
                                 }}
                                 className="hv8"
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="#5C6684"
-                                  strokeWidth="2.2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  style={{ width: '15px', height: '15px', flex: 'none' }}
-                                >
-                                  <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
+                                <ChevronRight color="#5C6684" strokeWidth={2.2} size={15} />
                               </button>
                             </span>
                             <span
@@ -5617,21 +4612,7 @@ export function PlannerView({ v }: { v: any }) {
                             gap: '6px',
                           }}
                         >
-                          <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#fff"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            style={{ width: '15px', height: '15px', flex: 'none' }}
-                          >
-                            <polyline points="17 1 21 5 17 9"></polyline>
-                            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
-                            <polyline points="7 23 3 19 7 15"></polyline>
-                            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
-                          </svg>
+                          <Repeat color="#fff" size={15} />
                           Weekly
                         </span>
                       </>
@@ -5652,19 +4633,7 @@ export function PlannerView({ v }: { v: any }) {
                         whiteSpace: 'nowrap',
                       }}
                     >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#746E88"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{ width: '17px', height: '17px', flex: 'none' }}
-                      >
-                        <circle cx="12" cy="12" r="9"></circle>
-                        <polyline points="12 7 12 12 15.5 14"></polyline>
-                      </svg>
+                      <Clock color="#746E88" size={17} />
                       {t(v.eTime)}
                     </span>
                   </div>
@@ -5681,21 +4650,7 @@ export function PlannerView({ v }: { v: any }) {
                     }}
                   >
                     <span style={{ display: 'flex' }}>
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#746E88"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{ width: '20px', height: '20px', flex: 'none' }}
-                      >
-                        <polyline points="17 1 21 5 17 9"></polyline>
-                        <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
-                        <polyline points="7 23 3 19 7 15"></polyline>
-                        <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
-                      </svg>
+                      <Repeat color="#746E88" size={20} />
                     </span>
                     <span style={{ fontSize: '15px', fontWeight: '600' }}>Repeat weekly</span>
                     <button
@@ -6368,17 +5323,7 @@ export function PlannerView({ v }: { v: any }) {
                               <span
                                 style={{ display: 'flex', animation: 'twinkle 2.6s ease-in-out infinite' }}
                               >
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  style={{ width: '14px', height: '14px', flex: 'none' }}
-                                >
-                                  <path
-                                    d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                                    fill="#E1699C"
-                                    style={{ filter: 'drop-shadow(0 0 4px rgba(225,105,156,0.55))' }}
-                                  ></path>
-                                </svg>
+                                <Sparkle size={14} color="#E1699C" glow={0.55} />
                               </span>
                             </>
                           ) : null}
@@ -6428,65 +5373,21 @@ export function PlannerView({ v }: { v: any }) {
                                       <>
                                         {ex?.isH ? (
                                           <>
-                                            <svg
-                                              aria-hidden="true"
-                                              viewBox="0 0 24 24"
-                                              fill="none"
-                                              stroke="#E1699C"
-                                              strokeWidth="2"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              style={{ width: '19px', height: '19px', flex: 'none' }}
-                                            >
-                                              <line x1="6" y1="12" x2="18" y2="12"></line>
-                                              <line x1="4" y1="9" x2="4" y2="15"></line>
-                                              <line x1="20" y1="9" x2="20" y2="15"></line>
-                                              <line x1="7" y1="9" x2="7" y2="15"></line>
-                                              <line x1="17" y1="9" x2="17" y2="15"></line>
-                                            </svg>
+                                            <Dumbbell color="#E1699C" size={19} />
                                           </>
                                         ) : null}
                                         {ex?.isV ? (
                                           <>
-                                            <svg
-                                              aria-hidden="true"
-                                              viewBox="0 0 24 24"
-                                              fill="none"
-                                              stroke="#E1699C"
-                                              strokeWidth="2"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              style={{
-                                                width: '19px',
-                                                height: '19px',
-                                                flex: 'none',
-                                                transform: 'rotate(90deg)',
-                                              }}
-                                            >
-                                              <line x1="6" y1="12" x2="18" y2="12"></line>
-                                              <line x1="4" y1="9" x2="4" y2="15"></line>
-                                              <line x1="20" y1="9" x2="20" y2="15"></line>
-                                              <line x1="7" y1="9" x2="7" y2="15"></line>
-                                              <line x1="17" y1="9" x2="17" y2="15"></line>
-                                            </svg>
+                                            <Dumbbell
+                                              color="#E1699C"
+                                              size={19}
+                                              style={{ transform: 'rotate(90deg)' }}
+                                            />
                                           </>
                                         ) : null}
                                         {ex?.isD ? (
                                           <>
-                                            <svg
-                                              aria-hidden="true"
-                                              viewBox="0 0 24 24"
-                                              fill="none"
-                                              stroke="#E1699C"
-                                              strokeWidth="2"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              style={{ width: '19px', height: '19px', flex: 'none' }}
-                                            >
-                                              <line x1="9" y1="12" x2="15" y2="12"></line>
-                                              <line x1="6" y1="9" x2="6" y2="15"></line>
-                                              <line x1="18" y1="9" x2="18" y2="15"></line>
-                                            </svg>
+                                            <DumbbellSmall color="#E1699C" size={19} />
                                           </>
                                         ) : null}
                                       </>
@@ -6526,61 +5427,17 @@ export function PlannerView({ v }: { v: any }) {
                                           }}
                                         >
                                           <button onClick={ex?.pickH} style={css(ex?.optH)}>
-                                            <svg
-                                              aria-hidden="true"
-                                              viewBox="0 0 24 24"
-                                              fill="none"
-                                              stroke="#E1699C"
-                                              strokeWidth="2"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              style={{ width: '20px', height: '20px', flex: 'none' }}
-                                            >
-                                              <line x1="6" y1="12" x2="18" y2="12"></line>
-                                              <line x1="4" y1="9" x2="4" y2="15"></line>
-                                              <line x1="20" y1="9" x2="20" y2="15"></line>
-                                              <line x1="7" y1="9" x2="7" y2="15"></line>
-                                              <line x1="17" y1="9" x2="17" y2="15"></line>
-                                            </svg>
+                                            <Dumbbell color="#E1699C" size={20} />
                                           </button>
                                           <button onClick={ex?.pickV} style={css(ex?.optV)}>
-                                            <svg
-                                              aria-hidden="true"
-                                              viewBox="0 0 24 24"
-                                              fill="none"
-                                              stroke="#E1699C"
-                                              strokeWidth="2"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              style={{
-                                                width: '20px',
-                                                height: '20px',
-                                                flex: 'none',
-                                                transform: 'rotate(90deg)',
-                                              }}
-                                            >
-                                              <line x1="6" y1="12" x2="18" y2="12"></line>
-                                              <line x1="4" y1="9" x2="4" y2="15"></line>
-                                              <line x1="20" y1="9" x2="20" y2="15"></line>
-                                              <line x1="7" y1="9" x2="7" y2="15"></line>
-                                              <line x1="17" y1="9" x2="17" y2="15"></line>
-                                            </svg>
+                                            <Dumbbell
+                                              color="#E1699C"
+                                              size={20}
+                                              style={{ transform: 'rotate(90deg)' }}
+                                            />
                                           </button>
                                           <button onClick={ex?.pickD} style={css(ex?.optD)}>
-                                            <svg
-                                              aria-hidden="true"
-                                              viewBox="0 0 24 24"
-                                              fill="none"
-                                              stroke="#E1699C"
-                                              strokeWidth="2"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              style={{ width: '20px', height: '20px', flex: 'none' }}
-                                            >
-                                              <line x1="9" y1="12" x2="15" y2="12"></line>
-                                              <line x1="6" y1="9" x2="6" y2="15"></line>
-                                              <line x1="18" y1="9" x2="18" y2="15"></line>
-                                            </svg>
+                                            <DumbbellSmall color="#E1699C" size={20} />
                                           </button>
                                         </div>
                                       </div>
@@ -6594,18 +5451,7 @@ export function PlannerView({ v }: { v: any }) {
                                   aria-label={ex?.doneAria}
                                   style={css(ex?.doneBtn)}
                                 >
-                                  <svg
-                                    aria-hidden="true"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke={ex?.doneStroke}
-                                    strokeWidth="2.6"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    style={{ width: '15px', height: '15px', flex: 'none' }}
-                                  >
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                  </svg>
+                                  <Check color={ex?.doneStroke} strokeWidth={2.6} size={15} />
                                 </button>
                                 <button
                                   onClick={ex?.remove}
@@ -6624,19 +5470,7 @@ export function PlannerView({ v }: { v: any }) {
                                   }}
                                   className="hv8"
                                 >
-                                  <svg
-                                    aria-hidden="true"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="#746E88"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    style={{ width: '19px', height: '19px', flex: 'none' }}
-                                  >
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                  </svg>
+                                  <Close color="#746E88" size={19} />
                                 </button>
                               </div>
                               <div
@@ -6754,19 +5588,7 @@ export function PlannerView({ v }: { v: any }) {
                           gap: '8px',
                         }}
                       >
-                        <svg
-                          aria-hidden="true"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="#E1699C"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          style={{ width: '19px', height: '19px', flex: 'none' }}
-                        >
-                          <line x1="12" y1="5" x2="12" y2="19"></line>
-                          <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
+                        <Plus color="#E1699C" size={19} />
                         Add exercise
                       </button>
                     </>
@@ -6860,18 +5682,7 @@ export function PlannerView({ v }: { v: any }) {
                                 className="hv7"
                               >
                                 Browse the Arsenal
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="#c4548a"
-                                  strokeWidth="2.2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  style={{ width: '14px', height: '14px', flex: 'none' }}
-                                >
-                                  <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
+                                <ChevronRight color="#c4548a" strokeWidth={2.2} size={14} />
                               </button>
                             </div>
                           </>
@@ -7159,18 +5970,7 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                       className="hv0"
                     >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#5C6684"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        style={{ width: '17px', height: '17px', flex: 'none' }}
-                      >
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                      </svg>
+                      <ChevronLeft color="#5C6684" strokeWidth={2.2} size={17} />
                       Back
                     </button>
                   </div>
@@ -7226,18 +6026,7 @@ export function PlannerView({ v }: { v: any }) {
                             className="hv7"
                           >
                             View workout
-                            <svg
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="#c4548a"
-                              strokeWidth="2.2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              style={{ width: '15px', height: '15px', flex: 'none' }}
-                            >
-                              <polyline points="9 18 15 12 9 6"></polyline>
-                            </svg>
+                            <ChevronRight color="#c4548a" strokeWidth={2.2} size={15} />
                           </button>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '22px' }}>
@@ -7413,23 +6202,12 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                         >
                           {'How did that feel? '}
-                          <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            style={{
-                              width: '17px',
-                              height: '17px',
-                              flex: 'none',
-                              display: 'inline-block',
-                              verticalAlign: 'middle',
-                            }}
-                          >
-                            <path
-                              d="M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z"
-                              fill="#7C8FC9"
-                              style={{ filter: 'drop-shadow(0 0 4px rgba(124,143,201,0.5))' }}
-                            ></path>
-                          </svg>
+                          <Sparkle
+                            size={17}
+                            color="#7C8FC9"
+                            glow={0.5}
+                            style={{ display: 'inline-block', verticalAlign: 'middle' }}
+                          />
                         </h1>
                         <p
                           style={{
@@ -7457,70 +6235,22 @@ export function PlannerView({ v }: { v: any }) {
                               <span style={css(m?.face)}>
                                 {m?.isHappy ? (
                                   <>
-                                    <svg
-                                      aria-hidden="true"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="#FBF1F3"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      style={{ width: '34px', height: '34px' }}
-                                    >
-                                      <circle cx="9" cy="10" r="1.1" fill="#FBF1F3" stroke="none"></circle>
-                                      <circle cx="15" cy="10" r="1.1" fill="#FBF1F3" stroke="none"></circle>
-                                      <path d="M8.5 14.5c1.1 1.7 5.9 1.7 7 0"></path>
-                                    </svg>
+                                    <MoodFace mood="Happy" size={34} />
                                   </>
                                 ) : null}
                                 {m?.isNeutral ? (
                                   <>
-                                    <svg
-                                      aria-hidden="true"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="#FBF1F3"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      style={{ width: '34px', height: '34px' }}
-                                    >
-                                      <circle cx="9" cy="10" r="1.1" fill="#FBF1F3" stroke="none"></circle>
-                                      <circle cx="15" cy="10" r="1.1" fill="#FBF1F3" stroke="none"></circle>
-                                      <line x1="8.5" y1="15" x2="15.5" y2="15"></line>
-                                    </svg>
+                                    <MoodFace mood="Neutral" size={34} />
                                   </>
                                 ) : null}
                                 {m?.isSad ? (
                                   <>
-                                    <svg
-                                      aria-hidden="true"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="#FBF1F3"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      style={{ width: '34px', height: '34px' }}
-                                    >
-                                      <circle cx="9" cy="10" r="1.1" fill="#FBF1F3" stroke="none"></circle>
-                                      <circle cx="15" cy="10" r="1.1" fill="#FBF1F3" stroke="none"></circle>
-                                      <path d="M8.5 16c1.1-1.7 5.9-1.7 7 0"></path>
-                                    </svg>
+                                    <MoodFace mood="Sad" size={34} />
                                   </>
                                 ) : null}
                                 {m?.isMad ? (
                                   <>
-                                    <svg
-                                      aria-hidden="true"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="#FBF1F3"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      style={{ width: '34px', height: '34px' }}
-                                    >
-                                      <line x1="7.4" y1="8.4" x2="10.6" y2="10.2"></line>
-                                      <line x1="16.6" y1="8.4" x2="13.4" y2="10.2"></line>
-                                      <path d="M8.5 16c1.1-1.7 5.9-1.7 7 0"></path>
-                                    </svg>
+                                    <MoodFace mood="Mad" size={34} />
                                   </>
                                 ) : null}
                               </span>
@@ -7612,71 +6342,19 @@ export function PlannerView({ v }: { v: any }) {
         </div>
         <nav style={css(v.tabbarStyle)}>
           <button onClick={v.goDay} style={css(v.mTabCal)}>
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke={v.mCalColor}
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ width: '22px', height: '22px', flex: 'none' }}
-            >
-              <rect x="3" y="5" width="18" height="16" rx="3"></rect>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-              <line x1="8" y1="3" x2="8" y2="6"></line>
-              <line x1="16" y1="3" x2="16" y2="6"></line>
-            </svg>
+            <Calendar color={v.mCalColor} size={22} />
             <span style={css(v.mCalLabel)}>Calendar</span>
           </button>
           <button onClick={v.goDiaryList} style={css(v.mTabDiary)}>
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke={v.mDiaryColor}
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ width: '22px', height: '22px', flex: 'none' }}
-            >
-              <path d="M5 4h11a3 3 0 0 1 3 3v13H7a2 2 0 0 1-2-2z"></path>
-              <line x1="9" y1="9" x2="15" y2="9"></line>
-              <line x1="9" y1="13" x2="14" y2="13"></line>
-            </svg>
+            <Notebook color={v.mDiaryColor} size={22} />
             <span style={css(v.mDiaryLabel)}>Chronicle</span>
           </button>
           <button onClick={v.goSummary} style={css(v.mTabSummary)}>
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke={v.mSummaryColor}
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ width: '22px', height: '22px', flex: 'none' }}
-            >
-              <line x1="6" y1="20" x2="6" y2="13"></line>
-              <line x1="12" y1="20" x2="12" y2="8"></line>
-              <line x1="18" y1="20" x2="18" y2="4"></line>
-            </svg>
+            <BarChart color={v.mSummaryColor} size={22} />
             <span style={css(v.mSummaryLabel)}>Progress</span>
           </button>
           <button onClick={v.goProfile} style={css(v.mTabProfile)}>
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke={v.mProfileColor}
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ width: '22px', height: '22px', flex: 'none' }}
-            >
-              <circle cx="12" cy="8.5" r="3.6"></circle>
-              <path d="M4.8 20a7.4 7.4 0 0 1 14.4 0"></path>
-            </svg>
+            <User color={v.mProfileColor} size={22} />
             <span style={css(v.mProfileLabel)}>Profile</span>
           </button>
         </nav>

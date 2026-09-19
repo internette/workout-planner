@@ -1,6 +1,7 @@
 import { DOW3, EDIT_OVERLAYS, ICON_COLORS, MON3, PINK } from '../constants';
 import { idOf, isoOf } from '../helpers';
-import { ICONS, iconSvg } from '../icons';
+import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
+import { iconSvg } from '../icons';
 import { modeStyle, optStyle, zoneStyle } from '../styles';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -163,10 +164,10 @@ export function editVals(ctx: Ctx) {
     setSets: (e) => logic.s({ dSets: e.target.value }),
     setWeight: (e) => logic.s({ dWeight: e.target.value }),
     setRest: (e) => logic.s({ dRest: e.target.value }),
-    iconGrid: ICONS.map((def) => ({
-      svg: iconSvg(def[0]),
-      pick: () => logic.s({ dIcon: def[0] }),
-      style: optStyle((st.dIcon || 'h') === def[0]),
+    iconGrid: EXERCISE_ICON_NAMES.map((name) => ({
+      svg: iconSvg(name),
+      pick: () => logic.s({ dIcon: name }),
+      style: optStyle((st.dIcon || 'h') === name),
     })),
     commitStyle:
       'height:52px;padding:0 30px;border:none;border-radius:16px;font-size:15px;font-weight:600;cursor:pointer;color:#fff;background:' +
@@ -196,10 +197,10 @@ export function editVals(ctx: Ctx) {
     iconBadge:
       'width:46px;height:46px;border-radius:15px;background:#FCE8F1;border:2px solid #fff;box-shadow:0 2px 6px rgba(214,96,139,.28),0 0 0 1px rgba(35,42,69,.05);display:flex;align-items:center;justify-content:center;cursor:pointer',
     workoutIcoSvg: iconSvg(wIcon, wColor),
-    workoutIconGrid: ICONS.map((def) => ({
-      svg: iconSvg(def[0], wColor),
-      pick: () => logic.s({ icons: Object.assign({}, st.icons, { [listKey]: def[0] }) }),
-      style: optStyle(wIcon === def[0]),
+    workoutIconGrid: EXERCISE_ICON_NAMES.map((name) => ({
+      svg: iconSvg(name, wColor),
+      pick: () => logic.s({ icons: Object.assign({}, st.icons, { [listKey]: name }) }),
+      style: optStyle(wIcon === name),
     })),
     iconColors: ICON_COLORS.map((c) => ({
       pick: () => logic.s({ iconColors: Object.assign({}, st.iconColors, { [listKey]: c }) }),
@@ -323,7 +324,11 @@ export function editVals(ctx: Ctx) {
           .filter((u) => u.ex && u.ex.id)
           .map((u) => ({
             id: u.ex.id,
-            patch: Object.assign({}, u.patch, (st.exIcons || {})[u.ex.name] ? { i: st.exIcons[u.ex.name] } : {}),
+            patch: Object.assign(
+              {},
+              u.patch,
+              (st.exIcons || {})[u.ex.name] ? { i: st.exIcons[u.ex.name] } : {},
+            ),
           }));
         Object.keys(st.exIcons || {}).forEach((n) => {
           const ex = byName(n);
@@ -342,7 +347,12 @@ export function editVals(ctx: Ctx) {
               iconColor: (st.iconColors || {})[listKey],
               areas: (st.areas || {})[listKey],
               ride: selRide
-                ? { dist: rDist, elev: rElev, zone: st.rZone || selRide.zone || 'Endurance', minutes: plannedMin }
+                ? {
+                    dist: rDist,
+                    elev: rElev,
+                    zone: st.rZone || selRide.zone || 'Endurance',
+                    minutes: plannedMin,
+                  }
                 : null,
               moveTo: moved ? isoOf(new Date(Y, mi, selDay)) : undefined,
               actual:
@@ -370,7 +380,9 @@ export function editVals(ctx: Ctx) {
             name: nm,
             isRide,
             durationMinutes: isRide ? plannedMin || 45 : Math.max(20, selList.length * 10),
-            ride: isRide ? { dist: st.rDist || '', elev: st.rElev || '', zone: st.rZone || 'Endurance' } : null,
+            ride: isRide
+              ? { dist: st.rDist || '', elev: st.rElev || '', zone: st.rZone || 'Endurance' }
+              : null,
             icon: (st.icons || {}).__draft || null,
             iconColor: (st.iconColors || {}).__draft || null,
             areas: picked,
@@ -432,10 +444,12 @@ export function editVals(ctx: Ctx) {
       (st.repeat ? 'flex-end' : 'flex-start') +
       ';background:' +
       (st.repeat ? PINK : '#C7C4D0'),
-    switchKnob: 'width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(35,42,69,.35)',
+    switchKnob:
+      'width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(35,42,69,.35)',
     exercises: selList.map((e, ix) => {
       const cur = (st.exIcons || {})[e.name] || e.i;
-      const set = (v) => () => logic.s({ exIcons: Object.assign({}, st.exIcons, { [e.name]: v }), exOpen: null });
+      const set = (v) => () =>
+        logic.s({ exIcons: Object.assign({}, st.exIcons, { [e.name]: v }), exOpen: null });
       const setField = (k) => (ev) =>
         logic.s({
           fields: Object.assign({}, st.fields, {
@@ -472,9 +486,17 @@ export function editVals(ctx: Ctx) {
           const tot = selList.length;
           logic.s({
             done: Object.assign({}, st.done, { [listKey]: names }),
-            announce: e.name + (nowDone ? ' marked done' : ' unmarked') + '. ' + names.length + ' of ' + tot + ' done.',
+            announce:
+              e.name +
+              (nowDone ? ' marked done' : ' unmarked') +
+              '. ' +
+              names.length +
+              ' of ' +
+              tot +
+              ' done.',
           });
-          if (!creating) logic.save(() => db.setExercisesDone(listKey, names, tot > 0 && names.length === tot));
+          if (!creating)
+            logic.save(() => db.setExercisesDone(listKey, names, tot > 0 && names.length === tot));
         },
         remove: () =>
           logic.s({
