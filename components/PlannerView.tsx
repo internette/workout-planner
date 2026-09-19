@@ -5505,7 +5505,7 @@ export function PlannerView({ v }: { v: any }) {
                           <Button type="danger" ghost size="lg" onClick={v.deleteEntry}>
                             Delete entry
                           </Button>
-                          <Button type="secondary" size="lg" onClick={v.editEntry}>
+                          <Button type="primary" size="lg" onClick={v.editEntry}>
                             Edit entry
                           </Button>
                         </div>
