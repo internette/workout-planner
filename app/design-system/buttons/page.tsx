@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight, Close, Pencil, Plus } from '@/components/ui/
 
 export const metadata = { title: 'Buttons — Design system' };
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px' };
+const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
 const note: React.CSSProperties = {
   margin: '0 0 16px',
   color: 'var(--color-muted)',
@@ -33,7 +33,7 @@ export default function ButtonsPage() {
         Both come from <code>@/components/ui/buttons</code>. Hover over any of them to see the hover state. The native HTML <code>type</code> (submit, reset) is passed as <code>htmlType</code>, since <code>type</code> here is the design type.
       </p>
 
-      <h2 style={h2}>Hierarchy</h2>
+      <h2 id="hierarchy" style={h2}>Hierarchy</h2>
       <p style={note}>
         Use one <strong>primary</strong> per screen or dialog. <strong>Secondary</strong> is a real
         alternative that sits beside it. <strong>Ghost</strong> is the quiet third tier: cancel, back,
@@ -54,7 +54,7 @@ export default function ButtonsPage() {
         </Button>
       </div>
 
-      <h2 style={h2}>Types</h2>
+      <h2 id="types" style={h2}>Types</h2>
       <p style={note}>
         <code>type</code> picks the colour and role; <code>ghost</code> drops the fill. Sizes go across: xs,
         sm, md, lg.
@@ -84,7 +84,7 @@ export default function ButtonsPage() {
         ))}
       </div>
 
-      <h2 style={h2}>With an icon</h2>
+      <h2 id="with-an-icon" style={h2}>With an icon</h2>
       <p style={note}>Icons sit before the label; the gap adjusts to the size.</p>
       <div style={row}>
         <Button type="primary" size="sm">
@@ -101,7 +101,7 @@ export default function ButtonsPage() {
         </Button>
       </div>
 
-      <h2 style={h2}>Glow and full width</h2>
+      <h2 id="glow-and-full-width" style={h2}>Glow and full width</h2>
       <div style={{ ...row, flexDirection: 'column', alignItems: 'stretch' }}>
         <div>
           <Button type="primary" size="lg" glow>
@@ -117,7 +117,7 @@ export default function ButtonsPage() {
         </Button>
       </div>
 
-      <h2 style={h2}>Disabled</h2>
+      <h2 id="disabled" style={h2}>Disabled</h2>
       <div style={row}>
         <Button type="primary" disabled>
           Save workout
@@ -130,7 +130,7 @@ export default function ButtonsPage() {
         </Button>
       </div>
 
-      <h2 style={h2}>Icon buttons</h2>
+      <h2 id="icon-buttons" style={h2}>Icon buttons</h2>
       <p style={note}>
         A <code>label</code> is required: it names the button for screen readers and shows as a tooltip.
       </p>
