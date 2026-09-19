@@ -63,6 +63,7 @@ components/
   dcLogic.ts          Small base class that gives the logic its immediate-merge setState
   viewHelpers.tsx     css() and t() helpers used by the view
   ui/icons/           Design-system icons: glyphs, Sparkle, Gem, MoodFace, ExerciseIcon (gallery at /design-system/icons)
+  ui/colors/          Design-system colour tokens, published as CSS variables (see /design-system/colors)
   planner/
     PlannerLogic.ts   UI state, navigation, loading and saving; renderVals() assembles the view's values
     context.ts        Runs the stages below in order to build a shared context
@@ -83,7 +84,7 @@ supabase/migrations/  SQL to run in the Supabase SQL editor
 
 Ticks update the screen immediately. Other saves (creating or editing a workout, diary entries, deletes, the Arsenal) are written to Supabase first. When the writes finish, the model is reloaded and the UI state cleared. Writes run in order, and a failed one shows a dismissible error banner.
 
-**The view is generated.** `PlannerView.tsx` was converted from the design's HTML template by a one-off script and is now ordinary source, so edit it directly. Hover styles from the design are the `.hvN:hover` rules at the bottom of `app/planner.css`, and elements use them by class name.
+**The view is generated.** `PlannerView.tsx` was converted from the design's HTML template by a one-off script and is now ordinary source, so edit it directly. Colours are CSS variables such as `var(--color-pink)` (defined in `components/ui/colors`). Hover styles from the design are the `.hvN:hover` rules at the bottom of `app/planner.css`, and elements use them by class name.
 
 ## Limitations
 
