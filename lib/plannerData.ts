@@ -44,7 +44,7 @@ export interface DiaryEntry {
   workout: string;
 }
 
-// A saved workout: the template a plan entry is scheduled from, with when it is next on the plan.
+// A saved workout: the template a plan entry is scheduled from. It has no date of its own.
 export interface WorkoutSummary {
   id: string;
   name: string;
@@ -54,10 +54,7 @@ export interface WorkoutSummary {
   icon: string | null;
   iconColor: string | null;
   exercises: string[];
-  ride?: { dist: string; zone: string };
-  entryCount: number;
-  next: { m: number; d: number } | null; // the next scheduled date, if any
-  open: { m: number; d: number } | null; // the entry to open: the next one, else the most recent
+  ride?: { dist: string; elev: string; zone: string };
 }
 
 export interface Model {
@@ -91,7 +88,9 @@ function parseWeight(text: string): { value: number | null; unit: string | null 
   const t = text.trim().toLowerCase();
   if (t.startsWith('body')) return { value: null, unit: 'body' };
   const m = t.match(/^(\d+(?:\.\d+)?)\s*(lbs?|kg)?/);
-  return m ? { value: Number(m[1]), unit: m[2] ? m[2].replace('lbs', 'lb') : 'lb' } : { value: null, unit: null };
+  return m
+    ? { value: Number(m[1]), unit: m[2] ? m[2].replace('lbs', 'lb') : 'lb' }
+    : { value: null, unit: null };
 }
 
 const fmtRest = (sec: number | null) => (sec != null ? `${sec} sec` : '—');
@@ -176,7 +175,8 @@ export async function loadModel(today: Date): Promise<Model> {
     const completed = p.status === 'completed';
     const isRide = w.kind === 'ride';
     const minutes = w.duration_minutes ?? (isRide ? 45 : 50);
-    const hasActual = p.actual_distance_miles != null || p.actual_elevation_ft != null || p.actual_minutes != null;
+    const hasActual =
+      p.actual_distance_miles != null || p.actual_elevation_ft != null || p.actual_minutes != null;
     const av: Entry = {
       id: p.id,
       workoutId: w.id,
@@ -218,14 +218,18 @@ export async function loadModel(today: Date): Promise<Model> {
     const av = entryById[r.plan_entry_id];
     const hit = av && entries.find((e) => e.av.id === av.id);
     if (!av || !hit) return;
-    DIARY[av.id] = { m: hit.m, d: hit.d, mood: r.mood.charAt(0).toUpperCase() + r.mood.slice(1), rpe: r.rpe ?? 3, note: r.notes || '', workout: av.name };
+    DIARY[av.id] = {
+      m: hit.m,
+      d: hit.d,
+      mood: r.mood.charAt(0).toUpperCase() + r.mood.slice(1),
+      rpe: r.rpe ?? 3,
+      note: r.notes || '',
+      workout: av.name,
+    };
   });
 
   const saved: WorkoutSummary[] = workouts
     .map((w: any) => {
-      const mine = entries.filter((e) => e.av.workoutId === w.id);
-      const upcoming = mine.find((e) => e.iso >= todayIso);
-      const pick = upcoming || mine[mine.length - 1];
       const isRide = w.kind === 'ride';
       const minutes = w.duration_minutes ?? (isRide ? 45 : 50);
       return {
@@ -238,11 +242,12 @@ export async function loadModel(today: Date): Promise<Model> {
         iconColor: w.icon_color,
         exercises: (EX[w.name] || []).map((e) => e.name),
         ride: isRide
-          ? { dist: w.ride_distance_miles != null ? String(w.ride_distance_miles) : '', zone: w.ride_zone || 'Endurance' }
+          ? {
+              dist: w.ride_distance_miles != null ? String(w.ride_distance_miles) : '',
+              elev: w.ride_elevation_ft != null ? String(w.ride_elevation_ft) : '',
+              zone: w.ride_zone || 'Endurance',
+            }
           : undefined,
-        entryCount: mine.length,
-        next: upcoming ? { m: upcoming.m, d: upcoming.d } : null,
-        open: pick ? { m: pick.m, d: pick.d } : null,
       } as WorkoutSummary;
     })
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -271,7 +276,7 @@ export async function setExercisesDone(entryId: string, names: string[], complet
         status: completed ? 'completed' : 'planned',
         completed_at: completed ? new Date().toISOString() : null,
       })
-      .eq('id', entryId)
+      .eq('id', entryId),
   );
 }
 
@@ -279,8 +284,11 @@ export async function setRideDone(entryId: string, completed: boolean) {
   await ok(
     supabase
       .from('plan_entries')
-      .update({ status: completed ? 'completed' : 'planned', completed_at: completed ? new Date().toISOString() : null })
-      .eq('id', entryId)
+      .update({
+        status: completed ? 'completed' : 'planned',
+        completed_at: completed ? new Date().toISOString() : null,
+      })
+      .eq('id', entryId),
   );
 }
 
@@ -288,7 +296,10 @@ export async function saveDiary(entryId: string, e: { mood: string; rpe: number;
   await ok(
     supabase
       .from('diary_entries')
-      .upsert({ plan_entry_id: entryId, mood: e.mood.toLowerCase(), rpe: e.rpe, notes: e.note }, { onConflict: 'plan_entry_id' })
+      .upsert(
+        { plan_entry_id: entryId, mood: e.mood.toLowerCase(), rpe: e.rpe, notes: e.note },
+        { onConflict: 'plan_entry_id' },
+      ),
   );
 }
 
@@ -305,7 +316,7 @@ export async function deletePlanEntries(entryIds: string[]) {
 // Ends a weekly series: removes its later repeats and turns repeating off for the workout.
 export async function endSeries(workoutId: string, afterIso: string) {
   const later: { id: string }[] = await ok(
-    supabase.from('plan_entries').select('id').eq('workout_id', workoutId).gt('scheduled_date', afterIso)
+    supabase.from('plan_entries').select('id').eq('workout_id', workoutId).gt('scheduled_date', afterIso),
   );
   await deletePlanEntries(later.map((r) => r.id));
   await ok(supabase.from('workouts').update({ repeat_enabled: false }).eq('id', workoutId));
@@ -347,13 +358,15 @@ export async function createWorkout(w: NewWorkout) {
           ride_zone: w.ride ? w.ride.zone : null,
           repeat_enabled: w.repeat,
         })
-        .select('id')
+        .select('id'),
     );
     workoutId = row[0].id;
   }
 
   if (w.exercises.length) {
-    const have: any[] = await ok(supabase.from('workout_exercises').select('name, order_index').eq('workout_id', workoutId));
+    const have: any[] = await ok(
+      supabase.from('workout_exercises').select('name, order_index').eq('workout_id', workoutId),
+    );
     const names = new Set(have.map((r) => r.name));
     let order = have.reduce((max, r) => Math.max(max, r.order_index ?? 0), have.length ? 0 : -1) + 1;
     const fresh = w.exercises.filter((e) => !names.has(e.name));
@@ -361,7 +374,7 @@ export async function createWorkout(w: NewWorkout) {
       await ok(
         supabase
           .from('workout_exercises')
-          .insert(fresh.map((e) => ({ workout_id: workoutId, order_index: order++, ...exerciseRow(e) })))
+          .insert(fresh.map((e) => ({ workout_id: workoutId, order_index: order++, ...exerciseRow(e) }))),
       );
     }
   }
@@ -369,7 +382,7 @@ export async function createWorkout(w: NewWorkout) {
   await ok(
     supabase
       .from('plan_entries')
-      .insert(w.dates.map((d) => ({ workout_id: workoutId, scheduled_date: d, status: 'planned' })))
+      .insert(w.dates.map((d) => ({ workout_id: workoutId, scheduled_date: d, status: 'planned' }))),
   );
 }
 
@@ -416,12 +429,16 @@ export async function updateWorkout(e: WorkoutEdit) {
     await ok(supabase.from('workout_exercises').delete().in('id', e.exercises.removeIds));
   }
   if (e.exercises.add.length) {
-    const have: any[] = await ok(supabase.from('workout_exercises').select('order_index').eq('workout_id', e.workoutId));
+    const have: any[] = await ok(
+      supabase.from('workout_exercises').select('order_index').eq('workout_id', e.workoutId),
+    );
     let order = have.reduce((max, r) => Math.max(max, r.order_index ?? 0), -1) + 1;
     await ok(
       supabase
         .from('workout_exercises')
-        .insert(e.exercises.add.map((x) => ({ workout_id: e.workoutId, order_index: order++, ...exerciseRow(x) })))
+        .insert(
+          e.exercises.add.map((x) => ({ workout_id: e.workoutId, order_index: order++, ...exerciseRow(x) })),
+        ),
     );
   }
 
@@ -432,13 +449,16 @@ export async function updateWorkout(e: WorkoutEdit) {
     entryPatch.actual_elevation_ft = e.actual.elev ? Number(e.actual.elev) : null;
     entryPatch.actual_minutes = e.actual.minutes || null;
   }
-  if (Object.keys(entryPatch).length) await ok(supabase.from('plan_entries').update(entryPatch).eq('id', e.entryId));
+  if (Object.keys(entryPatch).length)
+    await ok(supabase.from('plan_entries').update(entryPatch).eq('id', e.entryId));
 
   if (e.repeatDates.length) {
     await ok(
       supabase
         .from('plan_entries')
-        .insert(e.repeatDates.map((d) => ({ workout_id: e.workoutId, scheduled_date: d, status: 'planned' })))
+        .insert(
+          e.repeatDates.map((d) => ({ workout_id: e.workoutId, scheduled_date: d, status: 'planned' })),
+        ),
     );
   }
 }

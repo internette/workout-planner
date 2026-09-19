@@ -1,4 +1,3 @@
-import { MONTHS, MON3, DOW3 } from '../constants';
 import { colors } from '@/components/ui/colors';
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
@@ -6,7 +5,7 @@ import type { Ctx } from '../types';
 
 // Arsenal: the exercise library, its search and the add-exercise form.
 export function arsenalVals(ctx: Ctx) {
-  const { logic, st, EX, Y, arsenalNames, firstEntry, nameOf } = ctx;
+  const { logic, st, EX, arsenalNames } = ctx;
 
   // ---- exercise count (shown in the header when the exercises view is open)
   const exerciseNames = {};
@@ -22,12 +21,6 @@ export function arsenalVals(ctx: Ctx) {
   const hits = workouts.filter(
     (w) => !q || w.name.toLowerCase().includes(q) || w.exercises.some((n) => n.toLowerCase().includes(q)),
   );
-  const dayLabel = ({ m, d }) => {
-    const dt = new Date(Y, m, d);
-    return (
-      DOW3[dt.getDay()].charAt(0) + DOW3[dt.getDay()].slice(1, 3).toLowerCase() + ', ' + MON3[m] + ' ' + d
-    );
-  };
   const savedWorkouts = hits.map((w) => ({
     name: w.name,
     svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || colors.pink),
@@ -43,13 +36,60 @@ export function arsenalVals(ctx: Ctx) {
         : w.exercises.slice(0, 3).join(', ') +
           (w.exercises.length > 3 ? ' +' + (w.exercises.length - 3) + ' more' : ''),
     areas: w.areas,
-    when: w.next ? 'Next · ' + dayLabel(w.next) : w.open ? 'Last · ' + dayLabel(w.open) : 'Not scheduled',
-    open: w.open
-      ? () => logic.nav({ screen: 'detail', creating: false, month: MONTHS[w.open.m], day: w.open.d })
-      : null,
+    open: () => logic.nav({ screen: 'template', templateId: w.id }),
   }));
 
+  // ---- one exercise, read-only: its numbers, and the saved workouts that include it
+  const openExercise = (name) => logic.nav({ screen: 'exercise', exerciseName: name });
+  const findExercise = (name) => {
+    for (const w of Object.keys(EX)) {
+      const hit = (EX[w] || []).find((e) => e.name === name);
+      if (hit) return hit;
+    }
+    return logic.model.library.find((e) => e.name === name) || null;
+  };
+  const chosenExercise = st.screen === 'exercise' ? findExercise(st.exerciseName) : null;
+  const exercise = chosenExercise
+    ? {
+        name: chosenExercise.name,
+        svg: iconSvg(chosenExercise.i),
+        sets: chosenExercise.sets,
+        weight: chosenExercise.weight,
+        rest: chosenExercise.rest,
+        usedIn: workouts
+          .filter((w) => w.exercises.includes(chosenExercise.name))
+          .map((w) => ({ name: w.name, open: () => logic.nav({ screen: 'template', templateId: w.id }) })),
+      }
+    : null;
+
+  // ---- one saved workout, read-only: no date, no completion
+  const chosen = st.screen === 'template' ? workouts.find((w) => w.id === st.templateId) : null;
+  const template = chosen
+    ? {
+        name: chosen.name,
+        svg: iconSvg(chosen.icon || (chosen.kind === 'ride' ? 'bike' : 'h'), chosen.iconColor || colors.pink),
+        time: chosen.time,
+        areas: chosen.areas,
+        isRide: chosen.kind === 'ride',
+        rideStats: chosen.ride
+          ? [
+              { label: 'DISTANCE', value: chosen.ride.dist ? chosen.ride.dist + ' mi' : '—' },
+              { label: 'DURATION', value: chosen.time },
+              { label: 'ELEVATION', value: chosen.ride.elev ? chosen.ride.elev + ' ft' : '—' },
+              { label: 'EFFORT', value: chosen.ride.zone },
+            ]
+          : [],
+        exercises: (EX[chosen.name] || []).map((e) => ({
+          name: e.name,
+          svg: iconSvg(e.i),
+          detail: e.sets + ' · ' + e.weight + ' · ' + e.rest + ' rest',
+        })),
+      }
+    : null;
+
   return {
+    exercise,
+    template,
     arsenalView: view,
     setArsenalView: (next) => logic.s({ arsenalView: next, arsenalAdd: false }),
     showArsenalWorkouts: view === 'workouts',
@@ -60,7 +100,7 @@ export function arsenalVals(ctx: Ctx) {
         : exerciseCount,
     arsenalIntro:
       view === 'workouts'
-        ? "Every workout you've saved. Open one to see when it's next on your plan."
+        ? "Every workout you've saved, ready to add to your plan."
         : "Every exercise you've called on, grouped by the workout it belongs to.",
     arsenalSearchPlaceholder: view === 'workouts' ? 'Search workouts' : 'Search exercises',
     savedWorkouts,
@@ -110,22 +150,14 @@ export function arsenalVals(ctx: Ctx) {
             items: hit,
           });
       };
-      const rowStyle = (clickable) =>
-        'display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:16px 20px;background:var(--color-white);border-radius:18px;box-shadow:0 4px 14px rgba(35,42,69,.07)' +
-        (clickable ? ';cursor:pointer' : '');
       Object.keys(EX).forEach((w) => {
-        const firstDay = firstEntry(w);
         push(
           w,
           (EX[w] || []).map((e) => ({
             name: e.name,
             svg: iconSvg(e.i),
             detail: e.sets + ' · ' + e.weight,
-            open: firstDay
-              ? () =>
-                  logic.nav({ screen: 'detail', creating: false, month: MONTHS[firstDay.m], day: firstDay.d })
-              : null,
-            rowStyle: rowStyle(!!firstDay),
+            open: () => openExercise(e.name),
           })),
         );
       });
@@ -135,61 +167,10 @@ export function arsenalVals(ctx: Ctx) {
           name: e.name,
           svg: iconSvg(e.i),
           detail: e.sets + ' · ' + e.weight,
-          open: null,
-          rowStyle: rowStyle(false),
+          open: () => openExercise(e.name),
         })),
       );
       return groups;
-    })(),
-    moveLibrary: (() => {
-      const seen = {};
-      Object.keys(EX).forEach((k) =>
-        EX[k].forEach((e) => {
-          if (!seen[e.name])
-            seen[e.name] = { name: e.name, i: e.i, sets: e.sets, weight: e.weight, used: [] };
-          seen[e.name].used.push(k);
-        }),
-      );
-      Object.keys(st.extra || {}).forEach((k) =>
-        (st.extra[k] || []).forEach((e) => {
-          if (!seen[e.name])
-            seen[e.name] = { name: e.name, i: e.i, sets: e.sets, weight: e.weight, used: [] };
-          let label = 'Arsenal only';
-          if (k === '__draft') label = 'New workout';
-          else {
-            const src = logic.model.entries.find((x) => x.av.id === k);
-            label = src ? nameOf(src.av.name) : 'Arsenal only';
-          }
-          if (seen[e.name].used.indexOf(label) === -1) seen[e.name].used.push(label);
-        }),
-      );
-      logic.model.library.forEach((e) => {
-        if (!seen[e.name]) seen[e.name] = { name: e.name, i: e.i, sets: e.sets, weight: e.weight, used: [] };
-      });
-      const q = (st.arsenalQ || '').trim().toLowerCase();
-      return Object.keys(seen)
-        .filter((n) => !q || n.toLowerCase().indexOf(q) > -1)
-        .map((n) => {
-          const owners = seen[n].used;
-          const firstDay = owners.length ? firstEntry(owners[0]) : null;
-          return {
-            name: n,
-            svg: iconSvg(seen[n].i),
-            detail: seen[n].sets + ' · ' + seen[n].weight,
-            used: !owners.length
-              ? 'Arsenal only'
-              : owners.length === 1
-                ? owners[0]
-                : owners.length + ' workouts',
-            open: firstDay
-              ? () =>
-                  logic.nav({ screen: 'detail', creating: false, month: MONTHS[firstDay.m], day: firstDay.d })
-              : null,
-            rowStyle:
-              'display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:16px 20px;background:var(--color-white);border-radius:18px;box-shadow:0 4px 14px rgba(35,42,69,.07)' +
-              (firstDay ? ';cursor:pointer' : ''),
-          };
-        });
     })(),
   };
 }

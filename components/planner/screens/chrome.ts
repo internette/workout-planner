@@ -22,6 +22,7 @@ export function chromeVals(ctx: Ctx) {
     TODAY_M,
     TODAY_D,
   } = ctx;
+  const arsenalActive = st.screen === 'arsenal' || st.screen === 'template' || st.screen === 'exercise';
   return {
     topTabsStyle: narrow ? 'display:none' : 'display:flex;flex-wrap:wrap;gap:6px;padding:18px 28px 0',
     sidebarStyle: narrow
@@ -104,16 +105,18 @@ export function chromeVals(ctx: Ctx) {
       if (c.kind === 'series') logic.save(() => db.endSeries(c.sid, isoOf(new Date(Y, mi, selDay))));
     },
     isArsenal: st.screen === 'arsenal',
+    isTemplate: st.screen === 'template',
+    isExercise: st.screen === 'exercise',
     canGoBack: (st.hist || []).length > 0,
     goBack: () => logic.back(),
     goArsenal: () => logic.nav({ screen: 'arsenal', monthOpen: false }),
     navArsenal:
       'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
-      (st.screen === 'arsenal'
+      (arsenalActive
         ? 'background:var(--color-pink-tint);color:var(--color-pink-deep);font-weight:var(--font-weight-semibold)'
         : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
       navExtra,
-    navArsenalInk: st.screen === 'arsenal' ? 'var(--color-pink)' : 'var(--color-subtle)',
+    navArsenalInk: arsenalActive ? 'var(--color-pink)' : 'var(--color-subtle)',
     isCal: st.screen === 'day' || st.screen === 'rest',
     isEdit: st.screen === 'edit' && !(creating && !st.newType),
     isDiary: st.screen === 'diary',
@@ -135,7 +138,7 @@ export function chromeVals(ctx: Ctx) {
     tabRest: tab(st.screen === 'rest'),
     navCalOn: calActive ? 'page' : false,
     navDiaryOn: st.screen === 'diaryList' ? 'page' : false,
-    navArsenalOn: st.screen === 'arsenal' ? 'page' : false,
+    navArsenalOn: arsenalActive ? 'page' : false,
     navSummaryOn: st.screen === 'summary' ? 'page' : false,
     navProfileOn: st.screen === 'profile' ? 'page' : false,
   };

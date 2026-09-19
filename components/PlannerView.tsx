@@ -2241,7 +2241,18 @@ export function PlannerView({ v }: { v: any }) {
                               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                 {(g?.items ?? []).map((m, i) => (
                                   <Fragment key={i}>
-                                    <div onClick={m?.open} style={css(m?.rowStyle)}>
+                                    <Card
+                                      as="button"
+                                      interactive
+                                      pad="sm"
+                                      onClick={m?.open}
+                                      style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '14px',
+                                        width: '100%',
+                                      }}
+                                    >
                                       <span
                                         style={{
                                           width: '34px',
@@ -2268,7 +2279,7 @@ export function PlannerView({ v }: { v: any }) {
                                           {m?.detail}
                                         </Text>
                                       </span>
-                                    </div>
+                                    </Card>
                                   </Fragment>
                                 ))}
                               </div>
@@ -2296,10 +2307,10 @@ export function PlannerView({ v }: { v: any }) {
                         {(v.savedWorkouts ?? []).map((w, i) => (
                           <Card
                             key={i}
-                            as={w?.open ? 'button' : 'div'}
-                            interactive={!!w?.open}
+                            as="button"
+                            interactive
                             pad="sm"
-                            onClick={w?.open ?? undefined}
+                            onClick={w?.open}
                             style={{
                               display: 'flex',
                               flexWrap: 'wrap',
@@ -2352,14 +2363,185 @@ export function PlannerView({ v }: { v: any }) {
                                 </span>
                               ) : null}
                             </span>
-                            <Text variant="caption" tone="muted" weight="medium" style={{ flex: 'none' }}>
-                              {w?.when}
-                            </Text>
                           </Card>
                         ))}
                       </div>
                     </>
                   ) : null}
+                </div>
+              </>
+            ) : null}
+            {v.isExercise && v.exercise ? (
+              <>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <IconButton label="Back" size="md" onClick={v.goBack} style={{ marginLeft: '-8px' }}>
+                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
+                    </IconButton>
+                    <Text variant="eyebrow" tone="slate">
+                      EXERCISE
+                    </Text>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
+                    <span
+                      style={{
+                        width: '46px',
+                        height: '46px',
+                        flex: 'none',
+                        borderRadius: '15px',
+                        background: 'var(--color-pink-tint)',
+                        border: '2px solid var(--color-white)',
+                        boxShadow: '0 2px 6px rgba(214,96,139,.28),0 0 0 1px rgba(35,42,69,.05)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      {v.exercise.svg}
+                    </span>
+                    <Text variant="title" as="h1" style={{ margin: '0' }}>
+                      {v.exercise.name}
+                    </Text>
+                  </div>
+                  <Card style={{ marginTop: '18px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '26px' }}>
+                      <div>
+                        <Text variant="micro" tone="subtle" as="div">
+                          SETS × REPS
+                        </Text>
+                        <Text variant="subheading" tone="ink" as="div" style={{ marginTop: '4px' }}>
+                          {v.exercise.sets}
+                        </Text>
+                      </div>
+                      <div>
+                        <Text variant="micro" tone="subtle" as="div">
+                          WEIGHT
+                        </Text>
+                        <Text variant="subheading" tone="ink" as="div" style={{ marginTop: '4px' }}>
+                          {v.exercise.weight}
+                        </Text>
+                      </div>
+                      <div>
+                        <Text variant="micro" tone="subtle" as="div">
+                          REST
+                        </Text>
+                        <Text variant="subheading" tone="ink" as="div" style={{ marginTop: '4px' }}>
+                          {v.exercise.rest}
+                        </Text>
+                      </div>
+                    </div>
+                  </Card>
+                  <Text variant="eyebrow" tone="slate" as="div" style={{ margin: '24px 0 10px' }}>
+                    USED IN
+                  </Text>
+                  {(v.exercise.usedIn ?? []).length ? (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                      {(v.exercise.usedIn ?? []).map((w, i) => (
+                        <Chip key={i} onClick={w?.open}>
+                          {w?.name}
+                        </Chip>
+                      ))}
+                    </div>
+                  ) : (
+                    <Text variant="body" as="p" tone="muted" style={{ margin: '0' }}>
+                      Not part of a saved workout yet.
+                    </Text>
+                  )}
+                </div>
+              </>
+            ) : null}
+            {v.isTemplate && v.template ? (
+              <>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <IconButton label="Back" size="md" onClick={v.goBack} style={{ marginLeft: '-8px' }}>
+                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
+                    </IconButton>
+                    <Text variant="eyebrow" tone="slate">
+                      SAVED WORKOUT
+                    </Text>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
+                    <span
+                      style={{
+                        width: '46px',
+                        height: '46px',
+                        flex: 'none',
+                        borderRadius: '15px',
+                        background: 'var(--color-pink-tint)',
+                        border: '2px solid var(--color-white)',
+                        boxShadow: '0 2px 6px rgba(214,96,139,.28),0 0 0 1px rgba(35,42,69,.05)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      {v.template.svg}
+                    </span>
+                    <Text variant="title" as="h1" style={{ margin: '0' }}>
+                      {v.template.name}
+                    </Text>
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '18px' }}>
+                    <Chip icon={<Clock color="var(--color-muted)" size={15} />}>{v.template.time}</Chip>
+                    {(v.template.areas ?? []).map((a, i) => (
+                      <Chip key={i}>{a}</Chip>
+                    ))}
+                  </div>
+                  {v.template.isRide ? (
+                    <Card style={{ marginTop: '18px' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '26px' }}>
+                        {(v.template.rideStats ?? []).map((r, i) => (
+                          <div key={i}>
+                            <Text variant="micro" tone="subtle" as="div">
+                              {r?.label}
+                            </Text>
+                            <Text variant="subheading" tone="ink" as="div" style={{ marginTop: '4px' }}>
+                              {r?.value}
+                            </Text>
+                          </div>
+                        ))}
+                      </div>
+                    </Card>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '18px' }}>
+                      {(v.template.exercises ?? []).map((e, i) => (
+                        <Card key={i} pad="sm" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                          <span
+                            style={{
+                              width: '34px',
+                              height: '34px',
+                              flex: 'none',
+                              borderRadius: '11px',
+                              background: 'var(--color-pink-tint)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            {e?.svg}
+                          </span>
+                          <span style={{ flex: '1', minWidth: '0' }}>
+                            <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+                              {e?.name}
+                            </Text>
+                            <Text
+                              variant="caption"
+                              tone="muted"
+                              style={{ display: 'block', marginTop: '3px' }}
+                            >
+                              {e?.detail}
+                            </Text>
+                          </span>
+                        </Card>
+                      ))}
+                      {(v.template.exercises ?? []).length === 0 ? (
+                        <Text variant="body" as="p" tone="muted" style={{ margin: '4px 0 0' }}>
+                          No exercises in this workout yet.
+                        </Text>
+                      ) : null}
+                    </div>
+                  )}
                 </div>
               </>
             ) : null}

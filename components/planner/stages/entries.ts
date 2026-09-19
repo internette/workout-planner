@@ -42,10 +42,6 @@ export function entriesStage(ctx: Ctx): Ctx {
       if (st.rTo && iso > st.rTo) return false;
       return true;
     });
-  const firstEntry = (name) => {
-    const hit = logic.model.entries.find((x) => x.av.name === name);
-    return hit ? { m: hit.m, d: hit.d } : null;
-  };
   const moodDefs = [
     ['Happy', 'var(--color-pink)'],
     ['Neutral', 'var(--color-slate)'],
@@ -91,6 +87,5 @@ export function entriesStage(ctx: Ctx): Ctx {
     moods,
     stars,
     RPE_WORDS,
-    firstEntry,
   };
 }
