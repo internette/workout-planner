@@ -5,6 +5,7 @@
 import { Fragment } from 'react';
 import { css, t } from './viewHelpers';
 import { Card } from '@/components/ui/card';
+import { Text } from '@/components/ui/typography';
 import { Chip } from '@/components/ui/chip';
 import { Label, TextArea, TextField } from '@/components/ui/text-field';
 import { SegmentedControl } from '@/components/ui/segmented-control';
@@ -83,41 +84,19 @@ export function PlannerView({ v }: { v: any }) {
               style={{ width: '100%', maxWidth: '440px', maxHeight: '80vh', overflowY: 'auto' }}
             >
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
-                <h2
-                  style={{
-                    margin: '0',
-                    fontSize: 'var(--text-2xl)',
-                    fontWeight: 'var(--font-weight-bold)',
-                    letterSpacing: 'var(--tracking-tight)',
-                  }}
-                >
+                <Text variant="subheading" as="h2" style={{ margin: '0' }}>
                   Ranks
-                </h2>
-                <span
-                  style={{
-                    fontSize: 'var(--text-md)',
-                    fontWeight: 'var(--font-weight-medium)',
-                    color: 'var(--color-muted)',
-                  }}
-                >
+                </Text>
+                <Text variant="caption" tone="muted" weight="medium">
                   {v.rankStepLabel}
-                </span>
+                </Text>
                 <IconButton label="Close" size="md" onClick={v.closeRanks} style={{ marginLeft: 'auto' }}>
                   <Close color="var(--color-muted)" strokeWidth={2.2} size={16} />
                 </IconButton>
               </div>
-              <p
-                style={{
-                  margin: '10px 0 0',
-                  fontSize: 'var(--text-base)',
-                  fontWeight: 'var(--font-weight-regular)',
-                  lineHeight: 'var(--leading-relaxed)',
-                  color: 'var(--color-muted)',
-                  textWrap: 'pretty',
-                }}
-              >
+              <Text variant="body" as="p" tone="muted" style={{ margin: '10px 0 0', textWrap: 'pretty' }}>
                 Earned with experience — 10 XP per exercise completed, 50 XP per workout finished.
-              </p>
+              </Text>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '18px' }}>
                 {(v.rankLadder ?? []).map((r, i) => (
                   <Fragment key={i}>
@@ -155,28 +134,12 @@ export function PlannerView({ v }: { v: any }) {
               aria-label={v.confirmTitle}
               style={{ width: '100%', maxWidth: '400px' }}
             >
-              <h2
-                style={{
-                  margin: '0',
-                  fontSize: 'var(--text-2xl)',
-                  fontWeight: 'var(--font-weight-bold)',
-                  letterSpacing: 'var(--tracking-tight)',
-                }}
-              >
+              <Text variant="subheading" as="h2" style={{ margin: '0' }}>
                 {v.confirmTitle}
-              </h2>
-              <p
-                style={{
-                  margin: '10px 0 0',
-                  fontSize: 'var(--text-base)',
-                  fontWeight: 'var(--font-weight-regular)',
-                  lineHeight: 'var(--leading-relaxed)',
-                  color: 'var(--color-muted)',
-                  textWrap: 'pretty',
-                }}
-              >
+              </Text>
+              <Text variant="body" as="p" tone="muted" style={{ margin: '10px 0 0', textWrap: 'pretty' }}>
                 {v.confirmBody}
-              </p>
+              </Text>
               <div
                 style={{
                   display: 'flex',
@@ -270,17 +233,9 @@ export function PlannerView({ v }: { v: any }) {
                   >
                     <div data-pop="month" style={{ position: 'relative', flex: 'none' }}>
                       <button onClick={v.toggleMonth} style={css(v.monthBtn)} className="hv1">
-                        <span
-                          style={{
-                            fontFamily: 'var(--font-heading)',
-                            fontSize: 'var(--text-3xl)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-tight)',
-                            color: 'var(--color-ink)',
-                          }}
-                        >
+                        <Text variant="heading" tone="ink">
                           {v.monthName}
-                        </span>
+                        </Text>
                         <ChevronDown color="var(--color-muted)" strokeWidth={2.2} size={17} />
                         <span
                           style={{
@@ -411,15 +366,7 @@ export function PlannerView({ v }: { v: any }) {
                               >
                                 <ChevronLeft color="var(--color-hairline)" size={17} />
                               </span>
-                              <span
-                                style={{
-                                  fontFamily: 'var(--font-heading)',
-                                  fontSize: 'var(--text-2xl)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                }}
-                              >
-                                {v.yearLabel}
-                              </span>
+                              <Text variant="subheading">{v.yearLabel}</Text>
                               <span
                                 style={{
                                   width: '34px',
@@ -479,25 +426,12 @@ export function PlannerView({ v }: { v: any }) {
                           marginTop: '20px',
                         }}
                       >
-                        <h1
-                          style={{
-                            margin: '0',
-                            fontSize: 'var(--text-4xl)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-tight)',
-                          }}
-                        >
+                        <Text variant="title" as="h1" style={{ margin: '0' }}>
                           {v.dayName}
-                        </h1>
-                        <span
-                          style={{
-                            fontSize: 'var(--text-base)',
-                            fontWeight: 'var(--font-weight-medium)',
-                            color: 'var(--color-muted)',
-                          }}
-                        >
+                        </Text>
+                        <Text variant="label" tone="muted">
                           {v.shortDate}
-                        </span>
+                        </Text>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '20px' }}>
                         <IconButton label="Previous week" size="md" onClick={v.prevWeek}>
@@ -566,29 +500,22 @@ export function PlannerView({ v }: { v: any }) {
                           ) : null}
                         </span>
                         <div style={{ flex: '1 1 200px', minWidth: '0' }}>
-                          <div
-                            style={{
-                              fontSize: 'var(--text-2xs)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              letterSpacing: 'var(--tracking-wide)',
-                              color: 'var(--color-pink-deep)',
-                            }}
-                          >
+                          <Text variant="micro" as="div" tone="accent">
                             {v.questEyebrow}
-                          </div>
+                          </Text>
                           <div style={css(v.questTitleStyle)}>{v.questTitle}</div>
-                          <div
+                          <Text
+                            variant="caption"
+                            as="div"
+                            tone="slate"
                             style={{
-                              fontSize: 'var(--text-md)',
-                              fontWeight: 'var(--font-weight-regular)',
                               lineHeight: 'var(--leading-snug)',
-                              color: 'var(--color-slate)',
                               marginTop: '3px',
                               textWrap: 'pretty',
                             }}
                           >
                             {v.questNote}
-                          </div>
+                          </Text>
                         </div>
                       </div>
                     </>
@@ -617,14 +544,7 @@ export function PlannerView({ v }: { v: any }) {
                               {v.dayIcoSvg}
                             </div>
                             <div style={{ minWidth: '0' }}>
-                              <h2
-                                style={{
-                                  margin: '0',
-                                  fontSize: 'var(--text-3xl)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  letterSpacing: 'var(--tracking-tight)',
-                                }}
-                              >
+                              <Text variant="heading" as="h2" style={{ margin: '0' }}>
                                 <button
                                   onClick={v.goDetail}
                                   style={{
@@ -647,17 +567,10 @@ export function PlannerView({ v }: { v: any }) {
                                   {t(v.wName)}
                                   <ChevronRight color="var(--color-muted)" size={17} />
                                 </button>
-                              </h2>
-                              <p
-                                style={{
-                                  margin: '4px 0 0',
-                                  fontSize: 'var(--text-base)',
-                                  fontWeight: 'var(--font-weight-medium)',
-                                  color: 'var(--color-muted)',
-                                }}
-                              >
+                              </Text>
+                              <Text variant="label" as="p" tone="muted" style={{ margin: '4px 0 0' }}>
                                 {v.wMeta}
-                              </p>
+                              </Text>
                             </div>
                           </div>
                           {v.dayIsLift ? (
@@ -710,27 +623,17 @@ export function PlannerView({ v }: { v: any }) {
                                 {(v.rideStats ?? []).map((r, i) => (
                                   <Fragment key={i}>
                                     <div>
-                                      <div
-                                        style={{
-                                          fontSize: 'var(--text-2xs)',
-                                          fontWeight: 'var(--font-weight-bold)',
-                                          letterSpacing: 'var(--tracking-wide)',
-                                          color: 'var(--color-subtle)',
-                                        }}
-                                      >
+                                      <Text variant="micro" as="div" tone="subtle">
                                         {r?.label}
-                                      </div>
-                                      <div
-                                        style={{
-                                          fontFamily: 'var(--font-heading)',
-                                          fontSize: 'var(--text-xl)',
-                                          fontWeight: 'var(--font-weight-bold)',
-                                          color: 'var(--color-ink)',
-                                          marginTop: '4px',
-                                        }}
+                                      </Text>
+                                      <Text
+                                        variant="cardTitle"
+                                        as="div"
+                                        tone="ink"
+                                        style={{ marginTop: '4px' }}
                                       >
                                         {r?.value}
-                                      </div>
+                                      </Text>
                                     </div>
                                   </Fragment>
                                 ))}
@@ -861,16 +764,9 @@ export function PlannerView({ v }: { v: any }) {
                             <Sparkle size={9.5} outline color={colors.gold} strokeWidth={2.2} />
                           </span>
                         </div>
-                        <h2
-                          style={{
-                            margin: '22px 0 0',
-                            fontSize: 'var(--text-4xl)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-tight)',
-                          }}
-                        >
+                        <Text variant="title" as="h2" style={{ margin: '22px 0 0' }}>
                           The city is quiet
-                        </h2>
+                        </Text>
                         <p
                           style={{
                             margin: '10px auto 0',
@@ -915,18 +811,9 @@ export function PlannerView({ v }: { v: any }) {
                           <IconButton label="Previous week" size="md" onClick={v.prevWeek}>
                             <ChevronLeft color="var(--color-muted)" size={17} />
                           </IconButton>
-                          <span
-                            style={{
-                              flex: 'none',
-                              fontFamily: 'var(--font-heading)',
-                              fontSize: 'var(--text-lg)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              letterSpacing: 'var(--tracking-snug)',
-                              whiteSpace: 'nowrap',
-                            }}
-                          >
+                          <Text variant="itemTitle" style={{ flex: 'none', whiteSpace: 'nowrap' }}>
                             {v.weekLabel}
-                          </span>
+                          </Text>
                           <IconButton label="Next week" size="md" onClick={v.nextWeek}>
                             <ChevronRight color="var(--color-muted)" size={17} />
                           </IconButton>
@@ -959,15 +846,9 @@ export function PlannerView({ v }: { v: any }) {
                                           background: 'var(--color-divider)',
                                         }}
                                       ></span>
-                                      <span
-                                        style={{
-                                          fontSize: 'var(--text-base)',
-                                          fontWeight: 'var(--font-weight-medium)',
-                                          color: 'var(--color-muted)',
-                                        }}
-                                      >
+                                      <Text variant="label" tone="muted">
                                         Rest day
-                                      </span>
+                                      </Text>
                                     </div>
                                   </>
                                 ) : null}
@@ -1012,26 +893,17 @@ export function PlannerView({ v }: { v: any }) {
                                         </>
                                       ) : null}
                                       <div style={{ minWidth: '0', flex: '1' }}>
-                                        <div
-                                          style={{
-                                            fontFamily: 'var(--font-heading)',
-                                            fontSize: 'var(--text-lg)',
-                                            fontWeight: 'var(--font-weight-bold)',
-                                            letterSpacing: 'var(--tracking-snug)',
-                                          }}
-                                        >
+                                        <Text variant="itemTitle" as="div">
                                           {w?.name}
-                                        </div>
-                                        <div
-                                          style={{
-                                            fontSize: 'var(--text-md)',
-                                            fontWeight: 'var(--font-weight-regular)',
-                                            color: 'var(--color-muted)',
-                                            marginTop: '3px',
-                                          }}
+                                        </Text>
+                                        <Text
+                                          variant="caption"
+                                          as="div"
+                                          tone="muted"
+                                          style={{ marginTop: '3px' }}
                                         >
                                           {w?.meta}
-                                        </div>
+                                        </Text>
                                       </div>
                                       <span style={css(w?.stateDot)}></span>
                                     </Card>
@@ -1105,29 +977,17 @@ export function PlannerView({ v }: { v: any }) {
                               >
                                 <Check color="var(--color-white)" strokeWidth={2.6} size={26} />
                               </div>
-                              <h3
-                                style={{
-                                  margin: '16px 0 0',
-                                  fontSize: 'var(--text-2xl)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  letterSpacing: 'var(--tracking-tight)',
-                                }}
-                              >
+                              <Text variant="subheading" as="h3" style={{ margin: '16px 0 0' }}>
                                 Week sealed
-                              </h3>
-                              <p
-                                style={{
-                                  margin: '8px auto 0',
-                                  maxWidth: '320px',
-                                  fontSize: 'var(--text-base)',
-                                  fontWeight: 'var(--font-weight-regular)',
-                                  lineHeight: 'var(--leading-relaxed)',
-                                  color: 'var(--color-slate)',
-                                  textWrap: 'pretty',
-                                }}
+                              </Text>
+                              <Text
+                                variant="body"
+                                as="p"
+                                tone="slate"
+                                style={{ margin: '8px auto 0', maxWidth: '320px', textWrap: 'pretty' }}
                               >
                                 {v.weekDoneNote}
-                              </p>
+                              </Text>
                             </div>
                           </>
                         ) : null}
@@ -1190,29 +1050,17 @@ export function PlannerView({ v }: { v: any }) {
                               >
                                 <Gem size={32} />
                               </div>
-                              <h3
-                                style={{
-                                  margin: '20px 0 0',
-                                  fontSize: 'var(--text-2xl)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  letterSpacing: 'var(--tracking-tight)',
-                                }}
-                              >
+                              <Text variant="subheading" as="h3" style={{ margin: '20px 0 0' }}>
                                 Your wand's still charging
-                              </h3>
-                              <p
-                                style={{
-                                  margin: '10px auto 0',
-                                  maxWidth: '340px',
-                                  fontSize: 'var(--text-base)',
-                                  fontWeight: 'var(--font-weight-regular)',
-                                  lineHeight: 'var(--leading-relaxed)',
-                                  color: 'var(--color-slate)',
-                                  textWrap: 'pretty',
-                                }}
+                              </Text>
+                              <Text
+                                variant="body"
+                                as="p"
+                                tone="slate"
+                                style={{ margin: '10px auto 0', maxWidth: '340px', textWrap: 'pretty' }}
                               >
                                 {v.emptyWeekNote}
-                              </p>
+                              </Text>
                               <Button
                                 type="primary"
                                 size="lg"
@@ -1256,26 +1104,11 @@ export function PlannerView({ v }: { v: any }) {
                             </div>
                             <div style={{ minWidth: '0' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <span
-                                  style={{
-                                    fontFamily: 'var(--font-heading)',
-                                    fontSize: 'var(--text-2xl)',
-                                    fontWeight: 'var(--font-weight-bold)',
-                                  }}
-                                >
-                                  {v.streakCount}
-                                </span>
+                                <Text variant="subheading">{v.streakCount}</Text>
                               </div>
-                              <div
-                                style={{
-                                  fontSize: 'var(--text-sm)',
-                                  fontWeight: 'var(--font-weight-regular)',
-                                  color: 'var(--color-muted)',
-                                  marginTop: '2px',
-                                }}
-                              >
+                              <Text variant="small" as="div" tone="muted" style={{ marginTop: '2px' }}>
                                 day streak
-                              </div>
+                              </Text>
                             </div>
                           </Card>
                           <Card pad="sm" style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
@@ -1307,25 +1140,12 @@ export function PlannerView({ v }: { v: any }) {
                               </span>
                             </div>
                             <div style={{ minWidth: '0' }}>
-                              <div
-                                style={{
-                                  fontFamily: 'var(--font-heading)',
-                                  fontSize: 'var(--text-2xl)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                }}
-                              >
+                              <Text variant="subheading" as="div">
                                 {v.monthDone}
-                              </div>
-                              <div
-                                style={{
-                                  fontSize: 'var(--text-sm)',
-                                  fontWeight: 'var(--font-weight-regular)',
-                                  color: 'var(--color-muted)',
-                                  marginTop: '2px',
-                                }}
-                              >
+                              </Text>
+                              <Text variant="small" as="div" tone="muted" style={{ marginTop: '2px' }}>
                                 {v.monthDoneUnit}
-                              </div>
+                              </Text>
                             </div>
                           </Card>
                         </div>
@@ -1378,15 +1198,10 @@ export function PlannerView({ v }: { v: any }) {
                           </div>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', marginTop: '20px' }}>
-                          <span
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '7px',
-                              fontSize: 'var(--text-sm)',
-                              fontWeight: 'var(--font-weight-regular)',
-                              color: 'var(--color-muted)',
-                            }}
+                          <Text
+                            variant="small"
+                            tone="muted"
+                            style={{ display: 'flex', alignItems: 'center', gap: '7px' }}
                           >
                             <span
                               style={{
@@ -1398,16 +1213,11 @@ export function PlannerView({ v }: { v: any }) {
                               }}
                             ></span>
                             Planned
-                          </span>
-                          <span
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '7px',
-                              fontSize: 'var(--text-sm)',
-                              fontWeight: 'var(--font-weight-regular)',
-                              color: 'var(--color-muted)',
-                            }}
+                          </Text>
+                          <Text
+                            variant="small"
+                            tone="muted"
+                            style={{ display: 'flex', alignItems: 'center', gap: '7px' }}
                           >
                             <span
                               style={{
@@ -1418,16 +1228,11 @@ export function PlannerView({ v }: { v: any }) {
                               }}
                             ></span>
                             Completed
-                          </span>
-                          <span
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '7px',
-                              fontSize: 'var(--text-sm)',
-                              fontWeight: 'var(--font-weight-regular)',
-                              color: 'var(--color-muted)',
-                            }}
+                          </Text>
+                          <Text
+                            variant="small"
+                            tone="muted"
+                            style={{ display: 'flex', alignItems: 'center', gap: '7px' }}
                           >
                             <span
                               style={{
@@ -1439,16 +1244,11 @@ export function PlannerView({ v }: { v: any }) {
                               }}
                             ></span>
                             Missed
-                          </span>
-                          <span
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '7px',
-                              fontSize: 'var(--text-sm)',
-                              fontWeight: 'var(--font-weight-regular)',
-                              color: 'var(--color-muted)',
-                            }}
+                          </Text>
+                          <Text
+                            variant="small"
+                            tone="muted"
+                            style={{ display: 'flex', alignItems: 'center', gap: '7px' }}
                           >
                             <span
                               style={{
@@ -1459,21 +1259,14 @@ export function PlannerView({ v }: { v: any }) {
                               }}
                             ></span>
                             Rest
-                          </span>
+                          </Text>
                         </div>
                         {v.hasToday ? (
                           <>
                             <div style={{ marginTop: '30px' }}>
-                              <div
-                                style={{
-                                  fontSize: 'var(--text-xs)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  letterSpacing: 'var(--tracking-wide)',
-                                  color: 'var(--color-muted)',
-                                }}
-                              >
+                              <Text variant="eyebrow" as="div" tone="muted">
                                 {v.todayLabel}
-                              </div>
+                              </Text>
                               <Card
                                 onClick={v.openToday}
                                 style={{
@@ -1485,26 +1278,12 @@ export function PlannerView({ v }: { v: any }) {
                                 }}
                               >
                                 <div style={{ minWidth: '0' }}>
-                                  <div
-                                    style={{
-                                      fontFamily: 'var(--font-heading)',
-                                      fontSize: 'var(--text-lg)',
-                                      fontWeight: 'var(--font-weight-bold)',
-                                      letterSpacing: 'var(--tracking-snug)',
-                                    }}
-                                  >
+                                  <Text variant="itemTitle" as="div">
                                     {v.todayName}
-                                  </div>
-                                  <div
-                                    style={{
-                                      fontSize: 'var(--text-md)',
-                                      fontWeight: 'var(--font-weight-regular)',
-                                      color: 'var(--color-muted)',
-                                      marginTop: '3px',
-                                    }}
-                                  >
+                                  </Text>
+                                  <Text variant="caption" as="div" tone="muted" style={{ marginTop: '3px' }}>
                                     {v.todayMeta}
-                                  </div>
+                                  </Text>
                                 </div>
                                 <span style={{ marginLeft: 'auto', display: 'flex' }}>
                                   <ChevronRight color="var(--color-muted)" size={20} />
@@ -1595,29 +1374,17 @@ export function PlannerView({ v }: { v: any }) {
                       />
                     </div>
                   </div>
-                  <h1
-                    style={{
-                      margin: '22px 0 0',
-                      fontSize: 'var(--text-4xl)',
-                      fontWeight: 'var(--font-weight-bold)',
-                      letterSpacing: 'var(--tracking-tight)',
-                    }}
-                  >
+                  <Text variant="title" as="h1" style={{ margin: '22px 0 0' }}>
                     Entry saved
-                  </h1>
-                  <p
-                    style={{
-                      margin: '10px auto 0',
-                      maxWidth: '340px',
-                      fontSize: 'var(--text-base)',
-                      fontWeight: 'var(--font-weight-regular)',
-                      lineHeight: 'var(--leading-relaxed)',
-                      color: 'var(--color-muted)',
-                      textWrap: 'pretty',
-                    }}
+                  </Text>
+                  <Text
+                    variant="body"
+                    as="p"
+                    tone="muted"
+                    style={{ margin: '10px auto 0', maxWidth: '340px', textWrap: 'pretty' }}
                   >
                     {v.savedLine}
-                  </p>
+                  </Text>
                   <div
                     style={{
                       display: 'flex',
@@ -1635,29 +1402,12 @@ export function PlannerView({ v }: { v: any }) {
                       style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
                     >
                       <span style={{ flex: '1', minWidth: '0' }}>
-                        <span
-                          style={{
-                            display: 'block',
-                            fontFamily: 'var(--font-heading)',
-                            fontSize: 'var(--text-lg)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-snug)',
-                            color: 'var(--color-ink)',
-                          }}
-                        >
+                        <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
                           Read your chronicle
-                        </span>
-                        <span
-                          style={{
-                            display: 'block',
-                            fontSize: 'var(--text-md)',
-                            fontWeight: 'var(--font-weight-regular)',
-                            color: 'var(--color-muted)',
-                            marginTop: '3px',
-                          }}
-                        >
+                        </Text>
+                        <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
                           {v.savedCount}
-                        </span>
+                        </Text>
                       </span>
                       <ChevronRight color="var(--color-muted)" size={20} />
                     </Card>
@@ -1669,29 +1419,12 @@ export function PlannerView({ v }: { v: any }) {
                       style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
                     >
                       <span style={{ flex: '1', minWidth: '0' }}>
-                        <span
-                          style={{
-                            display: 'block',
-                            fontFamily: 'var(--font-heading)',
-                            fontSize: 'var(--text-lg)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-snug)',
-                            color: 'var(--color-ink)',
-                          }}
-                        >
+                        <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
                           {v.savedNextTitle}
-                        </span>
-                        <span
-                          style={{
-                            display: 'block',
-                            fontSize: 'var(--text-md)',
-                            fontWeight: 'var(--font-weight-regular)',
-                            color: 'var(--color-muted)',
-                            marginTop: '3px',
-                          }}
-                        >
+                        </Text>
+                        <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
                           {v.savedNextMeta}
-                        </span>
+                        </Text>
                       </span>
                       <ChevronRight color="var(--color-muted)" size={20} />
                     </Card>
@@ -1703,29 +1436,12 @@ export function PlannerView({ v }: { v: any }) {
                       style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
                     >
                       <span style={{ flex: '1', minWidth: '0' }}>
-                        <span
-                          style={{
-                            display: 'block',
-                            fontFamily: 'var(--font-heading)',
-                            fontSize: 'var(--text-lg)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-snug)',
-                            color: 'var(--color-ink)',
-                          }}
-                        >
+                        <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
                           See your progress
-                        </span>
-                        <span
-                          style={{
-                            display: 'block',
-                            fontSize: 'var(--text-md)',
-                            fontWeight: 'var(--font-weight-regular)',
-                            color: 'var(--color-muted)',
-                            marginTop: '3px',
-                          }}
-                        >
+                        </Text>
+                        <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
                           Streak, week and month totals
-                        </span>
+                        </Text>
                       </span>
                       <ChevronRight color="var(--color-muted)" size={20} />
                     </Card>
@@ -1757,41 +1473,20 @@ export function PlannerView({ v }: { v: any }) {
                         justifyContent: 'center',
                       }}
                     >
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-heading)',
-                          fontSize: 'var(--text-5xl)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          color: 'var(--color-white)',
-                        }}
-                      >
+                      <Text variant="display" tone="inverse">
                         {v.profileInitial}
-                      </span>
+                      </Text>
                       <span style={{ position: 'absolute', top: '-2px', right: '-2px' }}>
                         <Sparkle size={16} color={colors.goldLight} glow={0.6} />
                       </span>
                     </div>
                     <div style={{ minWidth: '0', flex: '1 1 200px' }}>
-                      <h1
-                        style={{
-                          margin: '0',
-                          fontSize: 'var(--text-4xl)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-tight)',
-                        }}
-                      >
+                      <Text variant="title" as="h1" style={{ margin: '0' }}>
                         {v.profileName}
-                      </h1>
-                      <p
-                        style={{
-                          margin: '5px 0 0',
-                          fontSize: 'var(--text-base)',
-                          fontWeight: 'var(--font-weight-regular)',
-                          color: 'var(--color-muted)',
-                        }}
-                      >
+                      </Text>
+                      <Text variant="body" as="p" tone="muted" style={{ margin: '5px 0 0' }}>
                         {v.profileSince}
-                      </p>
+                      </Text>
                       <button
                         onClick={v.openRanks}
                         title="See all 20 ranks"
@@ -1860,31 +1555,17 @@ export function PlannerView({ v }: { v: any }) {
                                 boxShadow: '0 8px 24px rgba(35,42,69,.14)',
                               }}
                             >
-                              <span
-                                style={{
-                                  display: 'block',
-                                  fontSize: 'var(--text-xs)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  letterSpacing: 'var(--tracking-wide)',
-                                  color: 'var(--color-slate)',
-                                }}
-                              >
+                              <Text variant="eyebrow" tone="slate" style={{ display: 'block' }}>
                                 HOW PROGRESS WORKS
-                              </span>
-                              <span
-                                style={{
-                                  display: 'block',
-                                  fontSize: 'var(--text-base)',
-                                  fontWeight: 'var(--font-weight-regular)',
-                                  lineHeight: 'var(--leading-relaxed)',
-                                  color: 'var(--color-ink)',
-                                  marginTop: '9px',
-                                  textWrap: 'pretty',
-                                }}
+                              </Text>
+                              <Text
+                                variant="body"
+                                tone="ink"
+                                style={{ display: 'block', marginTop: '9px', textWrap: 'pretty' }}
                               >
                                 Each exercise you complete earns 10 XP, and finishing a whole workout earns 50
                                 XP on top. Ranks unlock at fixed XP totals.
-                              </span>
+                              </Text>
                               <span
                                 style={{
                                   display: 'block',
@@ -1907,38 +1588,18 @@ export function PlannerView({ v }: { v: any }) {
                     {(v.profileStats ?? []).map((s, i) => (
                       <Fragment key={i}>
                         <Card pad="sm">
-                          <div
-                            style={{
-                              fontSize: 'var(--text-2xs)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              letterSpacing: 'var(--tracking-wide)',
-                              color: 'var(--color-muted)',
-                            }}
-                          >
+                          <Text variant="micro" as="div" tone="muted">
                             {s?.label}
-                          </div>
+                          </Text>
                           <div
                             style={{ display: 'flex', alignItems: 'baseline', gap: '5px', marginTop: '6px' }}
                           >
-                            <span
-                              style={{
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: 'var(--text-3xl)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                color: 'var(--color-ink)',
-                              }}
-                            >
+                            <Text variant="heading" tone="ink">
                               {s?.value}
-                            </span>
-                            <span
-                              style={{
-                                fontSize: 'var(--text-sm)',
-                                fontWeight: 'var(--font-weight-medium)',
-                                color: 'var(--color-muted)',
-                              }}
-                            >
+                            </Text>
+                            <Text variant="small" tone="muted" weight="medium">
                               {s?.unit}
-                            </span>
+                            </Text>
                           </div>
                         </Card>
                       </Fragment>
@@ -1946,37 +1607,16 @@ export function PlannerView({ v }: { v: any }) {
                   </div>
                   <Card style={{ marginTop: '14px' }}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
-                      <span
-                        style={{
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-wide)',
-                          color: 'var(--color-slate)',
-                        }}
-                      >
+                      <Text variant="eyebrow" tone="slate">
                         SESSIONS PER WEEK
-                      </span>
-                      <span
-                        style={{
-                          marginLeft: 'auto',
-                          fontSize: 'var(--text-sm)',
-                          fontWeight: 'var(--font-weight-medium)',
-                          color: 'var(--color-muted)',
-                        }}
-                      >
+                      </Text>
+                      <Text variant="small" tone="muted" weight="medium" style={{ marginLeft: 'auto' }}>
                         {v.chartRangeLabel}
-                      </span>
+                      </Text>
                     </div>
-                    <p
-                      style={{
-                        margin: '8px 0 0',
-                        fontSize: 'var(--text-md)',
-                        fontWeight: 'var(--font-weight-regular)',
-                        color: 'var(--color-muted)',
-                      }}
-                    >
+                    <Text variant="caption" as="p" tone="muted" style={{ margin: '8px 0 0' }}>
                       {v.chartCaption}
-                    </p>
+                    </Text>
                     <div
                       style={{
                         display: 'flex',
@@ -2042,18 +1682,9 @@ export function PlannerView({ v }: { v: any }) {
                             }}
                             className="hv7"
                           >
-                            <span
-                              style={{
-                                flex: 'none',
-                                width: '56px',
-                                fontSize: 'var(--text-xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-muted)',
-                              }}
-                            >
+                            <Text variant="eyebrow" tone="muted" style={{ flex: 'none', width: '56px' }}>
                               {w?.day}
-                            </span>
+                            </Text>
                             <span
                               style={{
                                 flex: '1 1 140px',
@@ -2071,43 +1702,21 @@ export function PlannerView({ v }: { v: any }) {
                       ))}
                       {v.weekEmpty ? (
                         <>
-                          <p
-                            style={{
-                              margin: '0',
-                              fontSize: 'var(--text-base)',
-                              fontWeight: 'var(--font-weight-regular)',
-                              color: 'var(--color-muted)',
-                            }}
-                          >
+                          <Text variant="body" as="p" tone="muted" style={{ margin: '0' }}>
                             No sessions were planned that week.
-                          </p>
+                          </Text>
                         </>
                       ) : null}
                     </div>
                   </Card>
                   <Card style={{ marginTop: '14px' }}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
-                      <span
-                        style={{
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-wide)',
-                          color: 'var(--color-slate)',
-                        }}
-                      >
+                      <Text variant="eyebrow" tone="slate">
                         QUESTS CLEARED
-                      </span>
-                      <span
-                        style={{
-                          marginLeft: 'auto',
-                          fontFamily: 'var(--font-heading)',
-                          fontSize: 'var(--text-lg)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          color: 'var(--color-ink)',
-                        }}
-                      >
+                      </Text>
+                      <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
                         {v.questsClearedLabel}
-                      </span>
+                      </Text>
                     </div>
                     <div
                       style={{
@@ -2125,17 +1734,9 @@ export function PlannerView({ v }: { v: any }) {
                         <Fragment key={i}>
                           <div style={css(q?.row)}>
                             <span style={css(q?.swatch)}></span>
-                            <span
-                              style={{
-                                flex: '1',
-                                minWidth: '0',
-                                fontSize: 'var(--text-base)',
-                                fontWeight: 'var(--font-weight-medium)',
-                                color: 'var(--color-ink)',
-                              }}
-                            >
+                            <Text variant="label" tone="ink" style={{ flex: '1', minWidth: '0' }}>
                               {q?.name}
-                            </span>
+                            </Text>
                             <span
                               style={{
                                 fontFamily: 'var(--font-heading)',
@@ -2161,16 +1762,9 @@ export function PlannerView({ v }: { v: any }) {
                     }}
                   >
                     <Card>
-                      <div
-                        style={{
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-wide)',
-                          color: 'var(--color-slate)',
-                        }}
-                      >
+                      <Text variant="eyebrow" as="div" tone="slate">
                         HOW IT FEELS
-                      </div>
+                      </Text>
                       <div
                         style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '18px' }}
                       >
@@ -2178,17 +1772,9 @@ export function PlannerView({ v }: { v: any }) {
                           <Fragment key={i}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                               <span style={css(m?.swatch)}></span>
-                              <span
-                                style={{
-                                  fontSize: 'var(--text-base)',
-                                  fontWeight: 'var(--font-weight-medium)',
-                                  color: 'var(--color-ink)',
-                                  flex: 'none',
-                                  width: '66px',
-                                }}
-                              >
+                              <Text variant="label" tone="ink" style={{ flex: 'none', width: '66px' }}>
                                 {m?.name}
-                              </span>
+                              </Text>
                               <span
                                 style={{
                                   flex: '1',
@@ -2219,33 +1805,18 @@ export function PlannerView({ v }: { v: any }) {
                       </div>
                     </Card>
                     <Card>
-                      <div
-                        style={{
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-wide)',
-                          color: 'var(--color-slate)',
-                        }}
-                      >
+                      <Text variant="eyebrow" as="div" tone="slate">
                         PERSONAL BESTS
-                      </div>
+                      </Text>
                       <div
                         style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '12px' }}
                       >
                         {(v.records ?? []).map((r, i) => (
                           <Fragment key={i}>
                             <div style={css(r?.rowStyle)}>
-                              <span
-                                style={{
-                                  fontSize: 'var(--text-base)',
-                                  fontWeight: 'var(--font-weight-medium)',
-                                  color: 'var(--color-ink)',
-                                  flex: '1',
-                                  minWidth: '0',
-                                }}
-                              >
+                              <Text variant="label" tone="ink" style={{ flex: '1', minWidth: '0' }}>
                                 {r?.name}
-                              </span>
+                              </Text>
                               <span
                                 style={{
                                   fontFamily: 'var(--font-heading)',
@@ -2270,29 +1841,17 @@ export function PlannerView({ v }: { v: any }) {
             {v.isSummary ? (
               <>
                 <div>
-                  <h1
-                    style={{
-                      margin: '0',
-                      fontSize: 'var(--text-4xl)',
-                      fontWeight: 'var(--font-weight-bold)',
-                      letterSpacing: 'var(--tracking-tight)',
-                    }}
-                  >
+                  <Text variant="title" as="h1" style={{ margin: '0' }}>
                     Progress
-                  </h1>
-                  <p
-                    style={{
-                      margin: '10px 0 0',
-                      maxWidth: '460px',
-                      fontSize: 'var(--text-base)',
-                      fontWeight: 'var(--font-weight-regular)',
-                      lineHeight: 'var(--leading-relaxed)',
-                      color: 'var(--color-muted)',
-                      textWrap: 'pretty',
-                    }}
+                  </Text>
+                  <Text
+                    variant="body"
+                    as="p"
+                    tone="muted"
+                    style={{ margin: '10px 0 0', maxWidth: '460px', textWrap: 'pretty' }}
                   >
                     {v.summarySub}
-                  </p>
+                  </Text>
                   <div
                     style={{
                       display: 'flex',
@@ -2332,29 +1891,21 @@ export function PlannerView({ v }: { v: any }) {
                             {' unbroken'}
                           </span>
                         </div>
-                        <p
-                          style={{
-                            margin: '6px 0 0',
-                            fontSize: 'var(--text-md)',
-                            fontWeight: 'var(--font-weight-medium)',
-                            color: 'var(--color-muted)',
-                          }}
+                        <Text
+                          variant="caption"
+                          as="p"
+                          tone="muted"
+                          weight="medium"
+                          style={{ margin: '6px 0 0' }}
                         >
                           {v.streakNote}
-                        </p>
+                        </Text>
                       </div>
                     </div>
                     <div style={{ flex: '1 1 180px', minWidth: '0' }}>
-                      <div
-                        style={{
-                          fontSize: 'var(--text-2xs)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-wide)',
-                          color: 'var(--color-slate)',
-                        }}
-                      >
+                      <Text variant="micro" as="div" tone="slate">
                         LAST SEVEN SESSIONS
-                      </div>
+                      </Text>
                       <div style={{ display: 'flex', gap: '6px', marginTop: '9px' }}>
                         {(v.streakTicks ?? []).map((t, i) => (
                           <Fragment key={i}>
@@ -2369,37 +1920,16 @@ export function PlannerView({ v }: { v: any }) {
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '26px' }}>
                     <Card pad="sm" style={{ flex: '1 1 260px' }}>
-                      <div
-                        style={{
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-wide)',
-                          color: 'var(--color-muted)',
-                        }}
-                      >
+                      <Text variant="eyebrow" as="div" tone="muted">
                         THIS WEEK
-                      </div>
+                      </Text>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
-                        <span
-                          style={{
-                            fontFamily: 'var(--font-heading)',
-                            fontSize: 'var(--text-2xl)',
-                            fontWeight: 'var(--font-weight-bold)',
-                          }}
-                        >
-                          {v.wkDone}
-                        </span>
-                        <span
-                          style={{
-                            fontSize: 'var(--text-md)',
-                            fontWeight: 'var(--font-weight-medium)',
-                            color: 'var(--color-muted)',
-                          }}
-                        >
+                        <Text variant="subheading">{v.wkDone}</Text>
+                        <Text variant="caption" tone="muted" weight="medium">
                           {'of '}
                           {t(v.wkTotal)}
                           {' sessions'}
-                        </span>
+                        </Text>
                       </div>
                       <div
                         style={{
@@ -2414,16 +1944,9 @@ export function PlannerView({ v }: { v: any }) {
                       </div>
                     </Card>
                     <Card pad="sm" style={{ flex: '1 1 260px' }}>
-                      <div
-                        style={{
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-wide)',
-                          color: 'var(--color-muted)',
-                        }}
-                      >
+                      <Text variant="eyebrow" as="div" tone="muted">
                         NEXT CALL
-                      </div>
+                      </Text>
                       {v.hasNext ? (
                         <>
                           <p
@@ -2436,56 +1959,40 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             {v.nextName}
                           </p>
-                          <p
-                            style={{
-                              margin: '3px 0 0',
-                              fontSize: 'var(--text-md)',
-                              fontWeight: 'var(--font-weight-medium)',
-                              color: 'var(--color-muted)',
-                            }}
+                          <Text
+                            variant="caption"
+                            as="p"
+                            tone="muted"
+                            weight="medium"
+                            style={{ margin: '3px 0 0' }}
                           >
                             {v.nextMeta}
-                          </p>
+                          </Text>
                         </>
                       ) : null}
                       {v.noNext ? (
                         <>
-                          <p
-                            style={{
-                              margin: '9px 0 0',
-                              fontSize: 'var(--text-md)',
-                              fontWeight: 'var(--font-weight-medium)',
-                              color: 'var(--color-muted)',
-                            }}
+                          <Text
+                            variant="caption"
+                            as="p"
+                            tone="muted"
+                            weight="medium"
+                            style={{ margin: '9px 0 0' }}
                           >
                             No call to answer yet.
-                          </p>
+                          </Text>
                         </>
                       ) : null}
                     </Card>
                   </div>
                   <Card style={{ marginTop: '14px' }}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
-                      <span
-                        style={{
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-wide)',
-                          color: 'var(--color-slate)',
-                        }}
-                      >
+                      <Text variant="eyebrow" tone="slate">
                         THIS WEEK'S QUESTS
-                      </span>
-                      <span
-                        style={{
-                          marginLeft: 'auto',
-                          fontSize: 'var(--text-sm)',
-                          fontWeight: 'var(--font-weight-medium)',
-                          color: 'var(--color-muted)',
-                        }}
-                      >
+                      </Text>
+                      <Text variant="small" tone="muted" weight="medium" style={{ marginLeft: 'auto' }}>
                         {v.questsDoneLabel}
-                      </span>
+                      </Text>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '14px' }}>
                       {(v.weekQuests ?? []).map((q, i) => (
@@ -2498,18 +2005,9 @@ export function PlannerView({ v }: { v: any }) {
                                 </>
                               ) : null}
                             </span>
-                            <span
-                              style={{
-                                flex: 'none',
-                                width: '44px',
-                                fontSize: 'var(--text-xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-muted)',
-                              }}
-                            >
+                            <Text variant="eyebrow" tone="muted" style={{ flex: 'none', width: '44px' }}>
                               {q?.day}
-                            </span>
+                            </Text>
                             <span style={css(q?.title)}>{q?.name}</span>
                           </div>
                         </Fragment>
@@ -2518,67 +2016,25 @@ export function PlannerView({ v }: { v: any }) {
                   </Card>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '14px' }}>
                     <Card pad="sm" style={{ flex: '1 1 170px' }}>
-                      <div
-                        style={{
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-wide)',
-                          color: 'var(--color-muted)',
-                        }}
-                      >
+                      <Text variant="eyebrow" as="div" tone="muted">
                         LOGGED
-                      </div>
+                      </Text>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
-                        <span
-                          style={{
-                            fontFamily: 'var(--font-heading)',
-                            fontSize: 'var(--text-2xl)',
-                            fontWeight: 'var(--font-weight-bold)',
-                          }}
-                        >
-                          {v.loggedCount}
-                        </span>
-                        <span
-                          style={{
-                            fontSize: 'var(--text-md)',
-                            fontWeight: 'var(--font-weight-medium)',
-                            color: 'var(--color-muted)',
-                          }}
-                        >
+                        <Text variant="subheading">{v.loggedCount}</Text>
+                        <Text variant="caption" tone="muted" weight="medium">
                           entries
-                        </span>
+                        </Text>
                       </div>
                     </Card>
                     <Card pad="sm" style={{ flex: '1 1 170px' }}>
-                      <div
-                        style={{
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-wide)',
-                          color: 'var(--color-muted)',
-                        }}
-                      >
+                      <Text variant="eyebrow" as="div" tone="muted">
                         SEPTEMBER
-                      </div>
+                      </Text>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
-                        <span
-                          style={{
-                            fontFamily: 'var(--font-heading)',
-                            fontSize: 'var(--text-2xl)',
-                            fontWeight: 'var(--font-weight-bold)',
-                          }}
-                        >
-                          {v.monthDone}
-                        </span>
-                        <span
-                          style={{
-                            fontSize: 'var(--text-md)',
-                            fontWeight: 'var(--font-weight-medium)',
-                            color: 'var(--color-muted)',
-                          }}
-                        >
+                        <Text variant="subheading">{v.monthDone}</Text>
+                        <Text variant="caption" tone="muted" weight="medium">
                           {v.monthDoneUnit}
-                        </span>
+                        </Text>
                       </div>
                     </Card>
                   </div>
@@ -2589,25 +2045,12 @@ export function PlannerView({ v }: { v: any }) {
               <>
                 <div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
-                    <h1
-                      style={{
-                        margin: '0',
-                        fontSize: 'var(--text-4xl)',
-                        fontWeight: 'var(--font-weight-bold)',
-                        letterSpacing: 'var(--tracking-tight)',
-                      }}
-                    >
+                    <Text variant="title" as="h1" style={{ margin: '0' }}>
                       Arsenal
-                    </h1>
-                    <span
-                      style={{
-                        fontSize: 'var(--text-base)',
-                        fontWeight: 'var(--font-weight-medium)',
-                        color: 'var(--color-muted)',
-                      }}
-                    >
+                    </Text>
+                    <Text variant="label" tone="muted">
                       {v.movesCount}
-                    </span>
+                    </Text>
                     <Button
                       type="primary"
                       size="sm"
@@ -2618,19 +2061,14 @@ export function PlannerView({ v }: { v: any }) {
                       New exercise
                     </Button>
                   </div>
-                  <p
-                    style={{
-                      margin: '10px 0 0',
-                      maxWidth: '460px',
-                      fontSize: 'var(--text-base)',
-                      fontWeight: 'var(--font-weight-regular)',
-                      lineHeight: 'var(--leading-relaxed)',
-                      color: 'var(--color-muted)',
-                      textWrap: 'pretty',
-                    }}
+                  <Text
+                    variant="body"
+                    as="p"
+                    tone="muted"
+                    style={{ margin: '10px 0 0', maxWidth: '460px', textWrap: 'pretty' }}
                   >
                     Every exercise you've called on, grouped by the workout it belongs to.
-                  </p>
+                  </Text>
                   <div
                     style={{
                       display: 'flex',
@@ -2666,32 +2104,17 @@ export function PlannerView({ v }: { v: any }) {
                   </div>
                   {v.noMatches ? (
                     <>
-                      <p
-                        style={{
-                          margin: '20px 0 0',
-                          fontSize: 'var(--text-base)',
-                          fontWeight: 'var(--font-weight-regular)',
-                          color: 'var(--color-muted)',
-                        }}
-                      >
+                      <Text variant="body" as="p" tone="muted" style={{ margin: '20px 0 0' }}>
                         {v.noMatchNote}
-                      </p>
+                      </Text>
                     </>
                   ) : null}
                   {v.arsenalAddOpen ? (
                     <>
                       <Card elevation="overlay" style={{ marginTop: '18px' }}>
-                        <span
-                          style={{
-                            display: 'block',
-                            fontFamily: 'var(--font-heading)',
-                            fontSize: 'var(--text-xl)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-snug)',
-                          }}
-                        >
+                        <Text variant="cardTitle" style={{ display: 'block' }}>
                           New exercise
-                        </span>
+                        </Text>
                         <Label style={{ margin: '16px 0 7px' }}>Exercise name</Label>
                         <TextField
                           aria-label="Exercise name"
@@ -2779,25 +2202,12 @@ export function PlannerView({ v }: { v: any }) {
                               padding: '0 2px 10px',
                             }}
                           >
-                            <span
-                              style={{
-                                fontSize: 'var(--text-xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-slate)',
-                              }}
-                            >
+                            <Text variant="eyebrow" tone="slate">
                               {g?.label}
-                            </span>
-                            <span
-                              style={{
-                                fontSize: 'var(--text-sm)',
-                                fontWeight: 'var(--font-weight-medium)',
-                                color: 'var(--color-muted)',
-                              }}
-                            >
+                            </Text>
+                            <Text variant="small" tone="muted" weight="medium">
                               {g?.count}
-                            </span>
+                            </Text>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             {(g?.items ?? []).map((m, i) => (
@@ -2818,29 +2228,16 @@ export function PlannerView({ v }: { v: any }) {
                                     {m?.svg}
                                   </span>
                                   <span style={{ flex: '1 1 180px', minWidth: '0' }}>
-                                    <span
-                                      style={{
-                                        display: 'block',
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: 'var(--text-lg)',
-                                        fontWeight: 'var(--font-weight-bold)',
-                                        letterSpacing: 'var(--tracking-snug)',
-                                        color: 'var(--color-ink)',
-                                      }}
-                                    >
+                                    <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
                                       {m?.name}
-                                    </span>
-                                    <span
-                                      style={{
-                                        display: 'block',
-                                        fontSize: 'var(--text-md)',
-                                        fontWeight: 'var(--font-weight-regular)',
-                                        color: 'var(--color-muted)',
-                                        marginTop: '3px',
-                                      }}
+                                    </Text>
+                                    <Text
+                                      variant="caption"
+                                      tone="muted"
+                                      style={{ display: 'block', marginTop: '3px' }}
                                     >
                                       {m?.detail}
-                                    </span>
+                                    </Text>
                                   </span>
                                 </div>
                               </Fragment>
@@ -2861,46 +2258,25 @@ export function PlannerView({ v }: { v: any }) {
                       <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
                     </IconButton>
                   </div>
-                  <h1
-                    style={{
-                      margin: '24px 0 0',
-                      fontSize: 'var(--text-4xl)',
-                      fontWeight: 'var(--font-weight-bold)',
-                      letterSpacing: 'var(--tracking-tight)',
-                    }}
-                  >
+                  <Text variant="title" as="h1" style={{ margin: '24px 0 0' }}>
                     Which session are you writing about?
-                  </h1>
-                  <p
-                    style={{
-                      margin: '10px 0 0',
-                      maxWidth: '460px',
-                      fontSize: 'var(--text-base)',
-                      fontWeight: 'var(--font-weight-regular)',
-                      lineHeight: 'var(--leading-relaxed)',
-                      color: 'var(--color-muted)',
-                      textWrap: 'pretty',
-                    }}
+                  </Text>
+                  <Text
+                    variant="body"
+                    as="p"
+                    tone="muted"
+                    style={{ margin: '10px 0 0', maxWidth: '460px', textWrap: 'pretty' }}
                   >
                     Entries attach to a workout on your plan. Only past sessions without an entry are listed.
-                  </p>
+                  </Text>
                   <div style={{ marginTop: '22px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
                       {(v.unlogged ?? []).map((u, i) => (
                         <Fragment key={i}>
                           <button onClick={u?.pick} style={css(u?.rowStyle)} className="hv7">
-                            <span
-                              style={{
-                                flex: 'none',
-                                width: '56px',
-                                fontSize: 'var(--text-xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-muted)',
-                              }}
-                            >
+                            <Text variant="eyebrow" tone="muted" style={{ flex: 'none', width: '56px' }}>
                               {u?.day}
-                            </span>
+                            </Text>
                             <span
                               style={{
                                 flex: '1 1 140px',
@@ -2912,32 +2288,18 @@ export function PlannerView({ v }: { v: any }) {
                             >
                               {u?.name}
                             </span>
-                            <span
-                              style={{
-                                flex: 'none',
-                                fontSize: 'var(--text-md)',
-                                fontWeight: 'var(--font-weight-medium)',
-                                color: 'var(--color-muted)',
-                              }}
-                            >
+                            <Text variant="caption" tone="muted" weight="medium" style={{ flex: 'none' }}>
                               {u?.meta}
-                            </span>
+                            </Text>
                           </button>
                         </Fragment>
                       ))}
                     </div>
                     {v.noUnlogged ? (
                       <>
-                        <p
-                          style={{
-                            margin: '16px 0 0',
-                            fontSize: 'var(--text-base)',
-                            fontWeight: 'var(--font-weight-regular)',
-                            color: 'var(--color-muted)',
-                          }}
-                        >
+                        <Text variant="body" as="p" tone="muted" style={{ margin: '16px 0 0' }}>
                           Every workout on your plan already has an entry.
-                        </p>
+                        </Text>
                       </>
                     ) : null}
                     <div
@@ -2961,42 +2323,24 @@ export function PlannerView({ v }: { v: any }) {
               <>
                 <div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
-                    <h1
-                      style={{
-                        margin: '0',
-                        fontSize: 'var(--text-4xl)',
-                        fontWeight: 'var(--font-weight-bold)',
-                        letterSpacing: 'var(--tracking-tight)',
-                      }}
-                    >
+                    <Text variant="title" as="h1" style={{ margin: '0' }}>
                       Chronicle
-                    </h1>
-                    <span
-                      style={{
-                        fontSize: 'var(--text-base)',
-                        fontWeight: 'var(--font-weight-medium)',
-                        color: 'var(--color-muted)',
-                      }}
-                    >
+                    </Text>
+                    <Text variant="label" tone="muted">
                       {v.diaryCount}
-                    </span>
+                    </Text>
                     <Button type="primary" size="sm" onClick={v.openNewEntry} style={{ marginLeft: 'auto' }}>
                       New entry
                     </Button>
                   </div>
-                  <p
-                    style={{
-                      margin: '10px 0 0',
-                      maxWidth: '620px',
-                      fontSize: 'var(--text-base)',
-                      fontWeight: 'var(--font-weight-regular)',
-                      lineHeight: 'var(--leading-relaxed)',
-                      color: 'var(--color-muted)',
-                      textWrap: 'pretty',
-                    }}
+                  <Text
+                    variant="body"
+                    as="p"
+                    tone="muted"
+                    style={{ margin: '10px 0 0', maxWidth: '620px', textWrap: 'pretty' }}
                   >
                     Every session you've written down after the fact. Open one to read or edit it.
-                  </p>
+                  </Text>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
                     <SegmentedControl
                       label="Show entries from"
@@ -3099,17 +2443,9 @@ export function PlannerView({ v }: { v: any }) {
                               ) : null}
                             </span>
                             <span style={{ flex: '1 1 220px', minWidth: '0' }}>
-                              <span
-                                style={{
-                                  display: 'block',
-                                  fontSize: 'var(--text-xs)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  letterSpacing: 'var(--tracking-wide)',
-                                  color: 'var(--color-muted)',
-                                }}
-                              >
+                              <Text variant="eyebrow" tone="muted" style={{ display: 'block' }}>
                                 {e?.date}
-                              </span>
+                              </Text>
                               <span
                                 style={{
                                   display: 'flex',
@@ -3118,16 +2454,7 @@ export function PlannerView({ v }: { v: any }) {
                                   marginTop: '4px',
                                 }}
                               >
-                                <span
-                                  style={{
-                                    fontFamily: 'var(--font-heading)',
-                                    fontSize: 'var(--text-lg)',
-                                    fontWeight: 'var(--font-weight-bold)',
-                                    letterSpacing: 'var(--tracking-snug)',
-                                  }}
-                                >
-                                  {e?.name}
-                                </span>
+                                <Text variant="itemTitle">{e?.name}</Text>
                                 <ChevronRight color="var(--color-subtle)" strokeWidth={2.2} size={16} />
                               </span>
                               <span
@@ -3144,19 +2471,18 @@ export function PlannerView({ v }: { v: any }) {
                                   </Fragment>
                                 ))}
                               </span>
-                              <span
+                              <Text
+                                variant="caption"
+                                tone="muted"
                                 style={{
                                   display: 'block',
-                                  fontSize: 'var(--text-md)',
-                                  fontWeight: 'var(--font-weight-regular)',
                                   lineHeight: 'var(--leading-snug)',
-                                  color: 'var(--color-muted)',
                                   marginTop: '7px',
                                   textWrap: 'pretty',
                                 }}
                               >
                                 {e?.note}
-                              </span>
+                              </Text>
                             </span>
                           </Card>
                           <IconButton
@@ -3175,16 +2501,9 @@ export function PlannerView({ v }: { v: any }) {
                   </div>
                   {v.diaryEmpty ? (
                     <>
-                      <p
-                        style={{
-                          margin: '24px 0 0',
-                          fontSize: 'var(--text-base)',
-                          fontWeight: 'var(--font-weight-regular)',
-                          color: 'var(--color-muted)',
-                        }}
-                      >
+                      <Text variant="body" as="p" tone="muted" style={{ margin: '24px 0 0' }}>
                         {v.diaryEmptyNote}
-                      </p>
+                      </Text>
                     </>
                   ) : null}
                 </div>
@@ -3214,27 +2533,13 @@ export function PlannerView({ v }: { v: any }) {
                       {v.dayIcoSvg}
                     </div>
                     <div style={{ minWidth: '0' }}>
-                      <div
-                        style={{
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-wide)',
-                          color: 'var(--color-slate)',
-                        }}
-                      >
+                      <Text variant="eyebrow" as="div" tone="slate">
                         {v.eDate}
-                      </div>
+                      </Text>
                       <div style={{ display: 'flex', alignItems: 'flex-end', gap: '9px' }}>
-                        <h1
-                          style={{
-                            margin: '3px 0 0',
-                            fontSize: 'var(--text-4xl)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-tight)',
-                          }}
-                        >
+                        <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
                           {v.eName}
-                        </h1>
+                        </Text>
                         <IconButton
                           label="Edit workout"
                           size="md"
@@ -3283,27 +2588,12 @@ export function PlannerView({ v }: { v: any }) {
                           {(v.rideStats ?? []).map((r, i) => (
                             <Fragment key={i}>
                               <div>
-                                <div
-                                  style={{
-                                    fontSize: 'var(--text-2xs)',
-                                    fontWeight: 'var(--font-weight-bold)',
-                                    letterSpacing: 'var(--tracking-wide)',
-                                    color: 'var(--color-subtle)',
-                                  }}
-                                >
+                                <Text variant="micro" as="div" tone="subtle">
                                   {r?.label}
-                                </div>
-                                <div
-                                  style={{
-                                    fontFamily: 'var(--font-heading)',
-                                    fontSize: 'var(--text-xl)',
-                                    fontWeight: 'var(--font-weight-bold)',
-                                    color: 'var(--color-ink)',
-                                    marginTop: '4px',
-                                  }}
-                                >
+                                </Text>
+                                <Text variant="cardTitle" as="div" tone="ink" style={{ marginTop: '4px' }}>
                                   {r?.value}
-                                </div>
+                                </Text>
                               </div>
                             </Fragment>
                           ))}
@@ -3328,27 +2618,12 @@ export function PlannerView({ v }: { v: any }) {
                         <div
                           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
                         >
-                          <span
-                            style={{
-                              fontSize: 'var(--text-xs)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              letterSpacing: 'var(--tracking-wide)',
-                              color: 'var(--color-slate)',
-                            }}
-                          >
+                          <Text variant="eyebrow" tone="slate">
                             PROGRESS
-                          </span>
-                          <span
-                            style={{
-                              marginLeft: 'auto',
-                              fontFamily: 'var(--font-heading)',
-                              fontSize: 'var(--text-lg)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              color: 'var(--color-ink)',
-                            }}
-                          >
+                          </Text>
+                          <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
                             {v.progLabel}
-                          </span>
+                          </Text>
                         </div>
                         <div
                           style={{
@@ -3399,17 +2674,13 @@ export function PlannerView({ v }: { v: any }) {
                               </span>
                               <span style={{ minWidth: '0' }}>
                                 <span style={css(ex?.nameStyle)}>{ex?.name}</span>
-                                <span
-                                  style={{
-                                    display: 'block',
-                                    fontSize: 'var(--text-md)',
-                                    fontWeight: 'var(--font-weight-regular)',
-                                    color: 'var(--color-muted)',
-                                    marginTop: '3px',
-                                  }}
+                                <Text
+                                  variant="caption"
+                                  tone="muted"
+                                  style={{ display: 'block', marginTop: '3px' }}
                                 >
                                   {ex?.detail}
-                                </span>
+                                </Text>
                               </span>
                               <button
                                 onClick={ex?.toggleDone}
@@ -3456,26 +2727,12 @@ export function PlannerView({ v }: { v: any }) {
                       <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
                     </IconButton>
                     <div>
-                      <div
-                        style={{
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-wide)',
-                          color: 'var(--color-slate)',
-                        }}
-                      >
+                      <Text variant="eyebrow" as="div" tone="slate">
                         NEW WORKOUT
-                      </div>
-                      <h1
-                        style={{
-                          margin: '3px 0 0',
-                          fontSize: 'var(--text-3xl)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-tight)',
-                        }}
-                      >
+                      </Text>
+                      <Text variant="heading" as="h1" style={{ margin: '3px 0 0' }}>
                         What kind of session?
-                      </h1>
+                      </Text>
                     </div>
                   </div>
                   <div
@@ -3513,31 +2770,21 @@ export function PlannerView({ v }: { v: any }) {
                         <Dumbbell color="var(--color-pink)" size={22} />
                       </span>
                       <span>
-                        <span
-                          style={{
-                            display: 'block',
-                            fontFamily: 'var(--font-heading)',
-                            fontSize: 'var(--text-2xl)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-snug)',
-                            color: 'var(--color-ink)',
-                          }}
-                        >
+                        <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
                           Lifting
-                        </span>
-                        <span
+                        </Text>
+                        <Text
+                          variant="body"
+                          tone="muted"
                           style={{
                             display: 'block',
-                            fontSize: 'var(--text-base)',
-                            fontWeight: 'var(--font-weight-regular)',
                             lineHeight: 'var(--leading-snug)',
-                            color: 'var(--color-muted)',
                             marginTop: '5px',
                             textWrap: 'pretty',
                           }}
                         >
                           Build a list of exercises with sets, reps and weight.
-                        </span>
+                        </Text>
                       </span>
                     </Card>
                     <Card
@@ -3567,31 +2814,21 @@ export function PlannerView({ v }: { v: any }) {
                         <Bike color="var(--color-periwinkle)" size={22} />
                       </span>
                       <span>
-                        <span
-                          style={{
-                            display: 'block',
-                            fontFamily: 'var(--font-heading)',
-                            fontSize: 'var(--text-2xl)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-snug)',
-                            color: 'var(--color-ink)',
-                          }}
-                        >
+                        <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
                           Cycling
-                        </span>
-                        <span
+                        </Text>
+                        <Text
+                          variant="body"
+                          tone="muted"
                           style={{
                             display: 'block',
-                            fontSize: 'var(--text-base)',
-                            fontWeight: 'var(--font-weight-regular)',
                             lineHeight: 'var(--leading-snug)',
-                            color: 'var(--color-muted)',
                             marginTop: '5px',
                             textWrap: 'pretty',
                           }}
                         >
                           Set a distance, duration and target effort for the ride.
-                        </span>
+                        </Text>
                       </span>
                     </Card>
                   </div>
@@ -3623,28 +2860,17 @@ export function PlannerView({ v }: { v: any }) {
                           aria-label="Keep your changes?"
                           style={{ width: '100%', maxWidth: '400px' }}
                         >
-                          <h2
-                            style={{
-                              margin: '0',
-                              fontSize: 'var(--text-2xl)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              letterSpacing: 'var(--tracking-tight)',
-                            }}
-                          >
+                          <Text variant="subheading" as="h2" style={{ margin: '0' }}>
                             Keep your changes?
-                          </h2>
-                          <p
-                            style={{
-                              margin: '10px 0 0',
-                              fontSize: 'var(--text-base)',
-                              fontWeight: 'var(--font-weight-regular)',
-                              lineHeight: 'var(--leading-relaxed)',
-                              color: 'var(--color-muted)',
-                              textWrap: 'pretty',
-                            }}
+                          </Text>
+                          <Text
+                            variant="body"
+                            as="p"
+                            tone="muted"
+                            style={{ margin: '10px 0 0', textWrap: 'pretty' }}
                           >
                             You've edited this workout. Save what you changed, or leave it as it was.
-                          </p>
+                          </Text>
                           <div
                             style={{
                               display: 'flex',
@@ -3692,17 +2918,9 @@ export function PlannerView({ v }: { v: any }) {
                               width: '238px',
                             }}
                           >
-                            <div
-                              style={{
-                                fontSize: 'var(--text-xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-slate)',
-                                padding: '0 2px 10px',
-                              }}
-                            >
+                            <Text variant="eyebrow" as="div" tone="slate" style={{ padding: '0 2px 10px' }}>
                               ICON
-                            </div>
+                            </Text>
                             <div
                               style={{
                                 display: 'grid',
@@ -3718,17 +2936,14 @@ export function PlannerView({ v }: { v: any }) {
                                 </Fragment>
                               ))}
                             </div>
-                            <div
-                              style={{
-                                fontSize: 'var(--text-xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-slate)',
-                                padding: '14px 2px 10px',
-                              }}
+                            <Text
+                              variant="eyebrow"
+                              as="div"
+                              tone="slate"
+                              style={{ padding: '14px 2px 10px' }}
                             >
                               COLOR
-                            </div>
+                            </Text>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                               {(v.iconColors ?? []).map((c, i) => (
                                 <Fragment key={i}>
@@ -3741,16 +2956,9 @@ export function PlannerView({ v }: { v: any }) {
                       ) : null}
                     </div>
                     <div style={{ flex: '1 1 220px', minWidth: '0' }}>
-                      <div
-                        style={{
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 'var(--font-weight-bold)',
-                          letterSpacing: 'var(--tracking-wide)',
-                          color: 'var(--color-slate)',
-                        }}
-                      >
+                      <Text variant="eyebrow" as="div" tone="slate">
                         {v.eEyebrow}
-                      </div>
+                      </Text>
                       {v.eNamePlaceholder ? (
                         <>
                           <TextField
@@ -3802,17 +3010,9 @@ export function PlannerView({ v }: { v: any }) {
                               <IconButton label="Previous month" size="md" onClick={v.prevMonth}>
                                 <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={15} />
                               </IconButton>
-                              <span
-                                style={{
-                                  flex: '1',
-                                  textAlign: 'center',
-                                  fontFamily: 'var(--font-heading)',
-                                  fontSize: 'var(--text-lg)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                }}
-                              >
+                              <Text variant="itemTitle" style={{ flex: '1', textAlign: 'center' }}>
                                 {v.monthName}
-                              </span>
+                              </Text>
                               <IconButton label="Next month" size="md" onClick={v.nextMonth}>
                                 <ChevronRight color="var(--color-slate)" strokeWidth={2.2} size={15} />
                               </IconButton>
@@ -3887,119 +3087,45 @@ export function PlannerView({ v }: { v: any }) {
                         <div
                           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
                         >
-                          <span
-                            style={{
-                              fontSize: 'var(--text-xs)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              letterSpacing: 'var(--tracking-wide)',
-                              color: 'var(--color-slate)',
-                            }}
-                          >
+                          <Text variant="eyebrow" tone="slate">
                             RIDE PLAN
-                          </span>
-                          <span
-                            style={{
-                              marginLeft: 'auto',
-                              fontSize: 'var(--text-sm)',
-                              fontWeight: 'var(--font-weight-medium)',
-                              color: 'var(--color-subtle)',
-                            }}
-                          >
+                          </Text>
+                          <Text variant="small" tone="subtle" weight="medium" style={{ marginLeft: 'auto' }}>
                             {v.rideLockNote}
-                          </span>
+                          </Text>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '22px', marginTop: '12px' }}>
                           <div>
-                            <div
-                              style={{
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-subtle)',
-                              }}
-                            >
+                            <Text variant="micro" as="div" tone="subtle">
                               DISTANCE
-                            </div>
-                            <div
-                              style={{
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: 'var(--text-lg)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                color: 'var(--color-ink)',
-                                marginTop: '4px',
-                              }}
-                            >
+                            </Text>
+                            <Text variant="itemTitle" as="div" tone="ink" style={{ marginTop: '4px' }}>
                               {v.planDistText}
-                            </div>
+                            </Text>
                           </div>
                           <div>
-                            <div
-                              style={{
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-subtle)',
-                              }}
-                            >
+                            <Text variant="micro" as="div" tone="subtle">
                               DURATION
-                            </div>
-                            <div
-                              style={{
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: 'var(--text-lg)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                color: 'var(--color-ink)',
-                                marginTop: '4px',
-                              }}
-                            >
+                            </Text>
+                            <Text variant="itemTitle" as="div" tone="ink" style={{ marginTop: '4px' }}>
                               {v.planDurText}
-                            </div>
+                            </Text>
                           </div>
                           <div>
-                            <div
-                              style={{
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-subtle)',
-                              }}
-                            >
+                            <Text variant="micro" as="div" tone="subtle">
                               ELEVATION
-                            </div>
-                            <div
-                              style={{
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: 'var(--text-lg)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                color: 'var(--color-ink)',
-                                marginTop: '4px',
-                              }}
-                            >
+                            </Text>
+                            <Text variant="itemTitle" as="div" tone="ink" style={{ marginTop: '4px' }}>
                               {v.planElevText}
-                            </div>
+                            </Text>
                           </div>
                           <div>
-                            <div
-                              style={{
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-subtle)',
-                              }}
-                            >
+                            <Text variant="micro" as="div" tone="subtle">
                               TARGET EFFORT
-                            </div>
-                            <div
-                              style={{
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: 'var(--text-lg)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                color: 'var(--color-ink)',
-                                marginTop: '4px',
-                              }}
-                            >
+                            </Text>
+                            <Text variant="itemTitle" as="div" tone="ink" style={{ marginTop: '4px' }}>
                               {v.rideZone}
-                            </div>
+                            </Text>
                           </div>
                         </div>
                       </div>
@@ -4008,16 +3134,9 @@ export function PlannerView({ v }: { v: any }) {
                   {v.ridePlanEdit ? (
                     <>
                       <Card style={{ marginTop: '16px' }}>
-                        <div
-                          style={{
-                            fontSize: 'var(--text-xs)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-wide)',
-                            color: 'var(--color-slate)',
-                          }}
-                        >
+                        <Text variant="eyebrow" as="div" tone="slate">
                           RIDE PLAN
-                        </div>
+                        </Text>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}>
                           <TextField
                             label="Distance"
@@ -4082,16 +3201,9 @@ export function PlannerView({ v }: { v: any }) {
                         <div
                           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
                         >
-                          <span
-                            style={{
-                              fontSize: 'var(--text-xs)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              letterSpacing: 'var(--tracking-wide)',
-                              color: 'var(--color-slate)',
-                            }}
-                          >
+                          <Text variant="eyebrow" tone="slate">
                             WHAT YOU ACTUALLY RODE
-                          </span>
+                          </Text>
                           <span
                             style={{
                               marginLeft: 'auto',
@@ -4176,16 +3288,9 @@ export function PlannerView({ v }: { v: any }) {
                   {v.isLift ? (
                     <>
                       <Card style={{ marginTop: '16px' }}>
-                        <div
-                          style={{
-                            fontSize: 'var(--text-xs)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-wide)',
-                            color: 'var(--color-slate)',
-                          }}
-                        >
+                        <Text variant="eyebrow" as="div" tone="slate">
                           TARGET AREAS
-                        </div>
+                        </Text>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '14px' }}>
                           {(v.targetAreas ?? []).map((t, i) => (
                             <Fragment key={i}>
@@ -4204,27 +3309,12 @@ export function PlannerView({ v }: { v: any }) {
                         <div
                           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
                         >
-                          <span
-                            style={{
-                              fontSize: 'var(--text-xs)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              letterSpacing: 'var(--tracking-wide)',
-                              color: 'var(--color-slate)',
-                            }}
-                          >
+                          <Text variant="eyebrow" tone="slate">
                             PROGRESS
-                          </span>
-                          <span
-                            style={{
-                              marginLeft: 'auto',
-                              fontFamily: 'var(--font-heading)',
-                              fontSize: 'var(--text-lg)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              color: 'var(--color-ink)',
-                            }}
-                          >
+                          </Text>
+                          <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
                             {v.progLabel}
-                          </span>
+                          </Text>
                         </div>
                         <div
                           style={{
@@ -4319,17 +3409,14 @@ export function PlannerView({ v }: { v: any }) {
                                           width: '186px',
                                         }}
                                       >
-                                        <div
-                                          style={{
-                                            fontSize: 'var(--text-2xs)',
-                                            fontWeight: 'var(--font-weight-bold)',
-                                            letterSpacing: 'var(--tracking-wide)',
-                                            color: 'var(--color-slate)',
-                                            padding: '0 2px 9px',
-                                          }}
+                                        <Text
+                                          variant="micro"
+                                          as="div"
+                                          tone="slate"
+                                          style={{ padding: '0 2px 9px' }}
                                         >
                                           ICON
-                                        </div>
+                                        </Text>
                                         <div
                                           style={{
                                             display: 'grid',
@@ -4414,16 +3501,7 @@ export function PlannerView({ v }: { v: any }) {
                     <>
                       <Card elevation="overlay" style={{ marginTop: '14px' }}>
                         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
-                          <span
-                            style={{
-                              fontFamily: 'var(--font-heading)',
-                              fontSize: 'var(--text-xl)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              letterSpacing: 'var(--tracking-snug)',
-                            }}
-                          >
-                            Add exercise
-                          </span>
+                          <Text variant="cardTitle">Add exercise</Text>
                           <SegmentedControl
                             label="Add exercise from"
                             size="sm"
@@ -4459,16 +3537,9 @@ export function PlannerView({ v }: { v: any }) {
                                     >
                                       {l?.name}
                                     </span>
-                                    <span
-                                      style={{
-                                        marginLeft: 'auto',
-                                        fontSize: 'var(--text-md)',
-                                        fontWeight: 'var(--font-weight-regular)',
-                                        color: 'var(--color-muted)',
-                                      }}
-                                    >
+                                    <Text variant="caption" tone="muted" style={{ marginLeft: 'auto' }}>
                                       {l?.detail}
-                                    </span>
+                                    </Text>
                                   </button>
                                 </Fragment>
                               ))}
@@ -4574,18 +3645,9 @@ export function PlannerView({ v }: { v: any }) {
                     </>
                   ) : null}
                   <div style={{ marginTop: '24px' }}>
-                    <span
-                      style={{
-                        display: 'block',
-                        fontSize: 'var(--text-xs)',
-                        fontWeight: 'var(--font-weight-bold)',
-                        letterSpacing: 'var(--tracking-wide)',
-                        color: 'var(--color-muted)',
-                        marginBottom: '10px',
-                      }}
-                    >
+                    <Text variant="eyebrow" tone="muted" style={{ display: 'block', marginBottom: '10px' }}>
                       WORKOUT NOTES
-                    </span>
+                    </Text>
                     <TextArea
                       aria-label="Workout notes"
                       rows={3}
@@ -4632,16 +3694,9 @@ export function PlannerView({ v }: { v: any }) {
                   {v.diaryReading ? (
                     <>
                       <div style={{ marginTop: '30px' }}>
-                        <div
-                          style={{
-                            fontSize: 'var(--text-xs)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-wide)',
-                            color: 'var(--color-subtle)',
-                          }}
-                        >
+                        <Text variant="eyebrow" as="div" tone="subtle">
                           {v.longDate}
-                        </div>
+                        </Text>
                         <div
                           style={{
                             display: 'flex',
@@ -4651,16 +3706,9 @@ export function PlannerView({ v }: { v: any }) {
                             marginTop: '8px',
                           }}
                         >
-                          <h1
-                            style={{
-                              margin: '0',
-                              fontSize: 'var(--text-5xl)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              letterSpacing: 'var(--tracking-tight)',
-                            }}
-                          >
+                          <Text variant="display" as="h1" style={{ margin: '0' }}>
                             {v.eName}
-                          </h1>
+                          </Text>
                           <button
                             onClick={v.goDetail}
                             style={{
@@ -4691,53 +3739,24 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             <span style={css(v.readMoodFace)}>{v.readMoodSvg}</span>
                             <div style={{ minWidth: '0' }}>
-                              <div
-                                style={{
-                                  fontSize: 'var(--text-2xs)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  letterSpacing: 'var(--tracking-wide)',
-                                  color: 'var(--color-subtle)',
-                                }}
-                              >
+                              <Text variant="micro" as="div" tone="subtle">
                                 MOOD
-                              </div>
-                              <div
-                                style={{
-                                  fontFamily: 'var(--font-heading)',
-                                  fontSize: 'var(--text-xl)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  color: 'var(--color-ink)',
-                                  marginTop: '3px',
-                                }}
-                              >
+                              </Text>
+                              <Text variant="cardTitle" as="div" tone="ink" style={{ marginTop: '3px' }}>
                                 {v.readMood}
-                              </div>
+                              </Text>
                             </div>
                           </Card>
                           <Card pad="sm" style={{ flex: '1 1 200px' }}>
-                            <div
-                              style={{
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-subtle)',
-                              }}
-                            >
+                            <Text variant="micro" as="div" tone="subtle">
                               EFFORT
-                            </div>
+                            </Text>
                             <div
                               style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '5px' }}
                             >
-                              <span
-                                style={{
-                                  fontFamily: 'var(--font-heading)',
-                                  fontSize: 'var(--text-xl)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  color: 'var(--color-ink)',
-                                }}
-                              >
+                              <Text variant="cardTitle" tone="ink">
                                 {v.rpeLabel}
-                              </span>
+                              </Text>
                               <span style={{ display: 'flex', gap: '3px' }}>
                                 {(v.readStars ?? []).map((s, i) => (
                                   <Fragment key={i}>
@@ -4749,16 +3768,9 @@ export function PlannerView({ v }: { v: any }) {
                           </Card>
                         </div>
                         <Card style={{ marginTop: '12px' }}>
-                          <div
-                            style={{
-                              fontSize: 'var(--text-2xs)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              letterSpacing: 'var(--tracking-wide)',
-                              color: 'var(--color-subtle)',
-                            }}
-                          >
+                          <Text variant="micro" as="div" tone="subtle">
                             NOTES
-                          </div>
+                          </Text>
                           <p
                             style={{
                               margin: '10px 0 0',
@@ -4796,14 +3808,7 @@ export function PlannerView({ v }: { v: any }) {
                   {v.diaryEditing ? (
                     <>
                       <div style={{ marginTop: '34px', textAlign: 'center' }}>
-                        <h1
-                          style={{
-                            margin: '0',
-                            fontSize: 'var(--text-4xl)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-tight)',
-                          }}
-                        >
+                        <Text variant="title" as="h1" style={{ margin: '0' }}>
                           {'How did that feel? '}
                           <Sparkle
                             size={17}
@@ -4811,7 +3816,7 @@ export function PlannerView({ v }: { v: any }) {
                             glow={0.5}
                             style={{ display: 'inline-block', verticalAlign: 'middle' }}
                           />
-                        </h1>
+                        </Text>
                         <p
                           style={{
                             margin: '9px 0 0',

@@ -64,7 +64,7 @@ components/
   viewHelpers.tsx     css() and t() helpers used by the view
   ui/icons/           Design-system icons: glyphs, Sparkle, Gem, MoodFace, ExerciseIcon (gallery at /design-system/icons)
   ui/colors/          Design-system colour tokens, published as CSS variables (see /design-system/colors)
-  ui/typography/      Design-system type tokens (families, sizes, weights, tracking, leading) as CSS variables
+  ui/typography/      Design-system type tokens as CSS variables, plus named text styles and the Text component
   ui/buttons/         Design-system Button and IconButton (variants, sizes, hover states)
   ui/card/            Design-system Card (raised and overlay surfaces, padding steps, clickable cards)
   ui/segmented-control/  Design-system SegmentedControl (brand and quiet tones, tabs or options, keyboard support)
