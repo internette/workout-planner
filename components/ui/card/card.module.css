@@ -1,0 +1,25 @@
+/* A white surface that sits above the page. Raised cards sit on the canvas; overlay cards float over it. */
+
+.card {
+  background: var(--color-white);
+  color: inherit;
+  box-sizing: border-box;
+}
+
+.raised { border-radius: 20px; box-shadow: 0 4px 14px rgba(35, 42, 69, 0.07); }
+.overlay { border-radius: 22px; box-shadow: 0 8px 24px rgba(35, 42, 69, 0.14); }
+
+.pad-xs { padding: 14px; }
+.pad-sm { padding: 18px 20px; }
+.pad-md { padding: 22px; }
+.pad-lg { padding: 26px; }
+
+/* Clickable cards render as <button>, so reset the native look. */
+.interactive {
+  border: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+}
+.interactive:hover { box-shadow: 0 8px 24px rgba(35, 42, 69, 0.14); }

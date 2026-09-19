@@ -4,6 +4,7 @@
 // @ts-nocheck
 import { Fragment } from 'react';
 import { css, t } from './viewHelpers';
+import { Card } from '@/components/ui/card';
 import { Button, IconButton } from '@/components/ui/buttons';
 import {
   BarChart,
@@ -70,20 +71,13 @@ export function PlannerView({ v }: { v: any }) {
               background: 'rgba(35,42,69,.35)',
             }}
           >
-            <div
+            <Card
+              pad="lg"
+              elevation="overlay"
               role="dialog"
               aria-modal="true"
               aria-label="Ranks"
-              style={{
-                width: '100%',
-                maxWidth: '440px',
-                maxHeight: '80vh',
-                overflowY: 'auto',
-                padding: '26px',
-                background: 'var(--color-white)',
-                borderRadius: '24px',
-                boxShadow: '0 8px 24px rgba(35,42,69,.14)',
-              }}
+              style={{ width: '100%', maxWidth: '440px', maxHeight: '80vh', overflowY: 'auto' }}
             >
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
                 <h2
@@ -132,7 +126,7 @@ export function PlannerView({ v }: { v: any }) {
                   </Fragment>
                 ))}
               </div>
-            </div>
+            </Card>
           </div>
         </>
       ) : null}
@@ -150,18 +144,13 @@ export function PlannerView({ v }: { v: any }) {
               background: 'rgba(35,42,69,.35)',
             }}
           >
-            <div
+            <Card
+              pad="lg"
+              elevation="overlay"
               role="dialog"
               aria-modal="true"
               aria-label={v.confirmTitle}
-              style={{
-                width: '100%',
-                maxWidth: '400px',
-                padding: '26px',
-                background: 'var(--color-white)',
-                borderRadius: '24px',
-                boxShadow: '0 8px 24px rgba(35,42,69,.14)',
-              }}
+              style={{ width: '100%', maxWidth: '400px' }}
             >
               <h2
                 style={{
@@ -202,7 +191,7 @@ export function PlannerView({ v }: { v: any }) {
                   {v.confirmLabel}
                 </Button>
               </div>
-            </div>
+            </Card>
           </div>
         </>
       ) : null}
@@ -385,17 +374,15 @@ export function PlannerView({ v }: { v: any }) {
                       </button>
                       {v.monthOpen ? (
                         <>
-                          <div
+                          <Card
+                            pad="xs"
+                            elevation="overlay"
                             style={{
                               position: 'absolute',
                               top: '40px',
                               left: '50%',
                               transform: 'translateX(-50%)',
                               width: '300px',
-                              background: 'var(--color-white)',
-                              borderRadius: '22px',
-                              padding: '16px',
-                              boxShadow: '0 8px 24px rgba(35,42,69,.14)',
                               zIndex: '20',
                             }}
                           >
@@ -460,7 +447,7 @@ export function PlannerView({ v }: { v: any }) {
                                 </Fragment>
                               ))}
                             </div>
-                          </div>
+                          </Card>
                         </>
                       ) : null}
                     </div>
@@ -619,14 +606,7 @@ export function PlannerView({ v }: { v: any }) {
                   {v.hasWorkout ? (
                     <>
                       <div style={{ marginTop: '14px' }}>
-                        <div
-                          style={{
-                            background: 'var(--color-white)',
-                            borderRadius: '24px',
-                            padding: '24px',
-                            boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                          }}
-                        >
+                        <Card pad="lg">
                           <div
                             style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '14px' }}
                           >
@@ -852,7 +832,7 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             {v.ctaLabel}
                           </Button>
-                        </div>
+                        </Card>
                         <aside style={{ display: 'flex', marginTop: '14px' }}>
                           <Button type="dashed" size="md" onClick={v.goNewWorkout} style={{ flex: '1' }}>
                             <Plus color="var(--color-pink-deep)" size={17} />
@@ -1003,7 +983,10 @@ export function PlannerView({ v }: { v: any }) {
                                 ) : null}
                                 {w?.hasRow ? (
                                   <>
-                                    <button
+                                    <Card
+                                      as="button"
+                                      pad="sm"
+                                      interactive
                                       onClick={w?.open}
                                       aria-label={w?.aria}
                                       style={{
@@ -1011,17 +994,7 @@ export function PlannerView({ v }: { v: any }) {
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: '13px',
-                                        padding: '18px 20px',
-                                        border: 'none',
-                                        background: 'var(--color-white)',
-                                        borderRadius: '20px',
-                                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                                        textAlign: 'left',
-                                        font: 'inherit',
-                                        color: 'inherit',
-                                        cursor: 'pointer',
                                       }}
-                                      className="hv5"
                                     >
                                       {w?.isRideRow ? (
                                         <>
@@ -1071,7 +1044,7 @@ export function PlannerView({ v }: { v: any }) {
                                         </div>
                                       </div>
                                       <span style={css(w?.stateDot)}></span>
-                                    </button>
+                                    </Card>
                                   </>
                                 ) : null}
                               </div>
@@ -1276,17 +1249,7 @@ export function PlannerView({ v }: { v: any }) {
                             alignItems: 'stretch',
                           }}
                         >
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '13px',
-                              padding: '18px 20px',
-                              background: 'var(--color-white)',
-                              borderRadius: '20px',
-                              boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                            }}
-                          >
+                          <Card pad="sm" style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
                             <div
                               style={{
                                 width: '40px',
@@ -1324,18 +1287,8 @@ export function PlannerView({ v }: { v: any }) {
                                 day streak
                               </div>
                             </div>
-                          </div>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '13px',
-                              padding: '18px 20px',
-                              background: 'var(--color-white)',
-                              borderRadius: '20px',
-                              boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                            }}
-                          >
+                          </Card>
+                          <Card pad="sm" style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
                             <div
                               style={{
                                 width: '40px',
@@ -1384,7 +1337,7 @@ export function PlannerView({ v }: { v: any }) {
                                 {v.monthDoneUnit}
                               </div>
                             </div>
-                          </div>
+                          </Card>
                         </div>
                         <div
                           style={{
@@ -1531,17 +1484,13 @@ export function PlannerView({ v }: { v: any }) {
                               >
                                 {v.todayLabel}
                               </div>
-                              <div
+                              <Card
                                 onClick={v.openToday}
                                 style={{
                                   display: 'flex',
                                   alignItems: 'center',
                                   gap: '14px',
                                   marginTop: '12px',
-                                  padding: '20px 22px',
-                                  background: 'var(--color-white)',
-                                  borderRadius: '20px',
-                                  boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                                   cursor: 'pointer',
                                 }}
                               >
@@ -1570,7 +1519,7 @@ export function PlannerView({ v }: { v: any }) {
                                 <span style={{ marginLeft: 'auto', display: 'flex' }}>
                                   <ChevronRight color="var(--color-muted)" size={20} />
                                 </span>
-                              </div>
+                              </Card>
                             </div>
                           </>
                         ) : null}
@@ -1688,21 +1637,12 @@ export function PlannerView({ v }: { v: any }) {
                       textAlign: 'left',
                     }}
                   >
-                    <button
+                    <Card
+                      as="button"
+                      pad="sm"
+                      interactive
                       onClick={v.goDiaryList}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '14px',
-                        padding: '18px 20px',
-                        border: 'none',
-                        borderRadius: '20px',
-                        background: 'var(--color-white)',
-                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                      }}
-                      className="hv5"
+                      style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
                     >
                       <span style={{ flex: '1', minWidth: '0' }}>
                         <span
@@ -1730,22 +1670,13 @@ export function PlannerView({ v }: { v: any }) {
                         </span>
                       </span>
                       <ChevronRight color="var(--color-muted)" size={20} />
-                    </button>
-                    <button
+                    </Card>
+                    <Card
+                      as="button"
+                      pad="sm"
+                      interactive
                       onClick={v.goNextUp}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '14px',
-                        padding: '18px 20px',
-                        border: 'none',
-                        borderRadius: '20px',
-                        background: 'var(--color-white)',
-                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                      }}
-                      className="hv5"
+                      style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
                     >
                       <span style={{ flex: '1', minWidth: '0' }}>
                         <span
@@ -1773,22 +1704,13 @@ export function PlannerView({ v }: { v: any }) {
                         </span>
                       </span>
                       <ChevronRight color="var(--color-muted)" size={20} />
-                    </button>
-                    <button
+                    </Card>
+                    <Card
+                      as="button"
+                      pad="sm"
+                      interactive
                       onClick={v.goSummary}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '14px',
-                        padding: '18px 20px',
-                        border: 'none',
-                        borderRadius: '20px',
-                        background: 'var(--color-white)',
-                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                      }}
-                      className="hv5"
+                      style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
                     >
                       <span style={{ flex: '1', minWidth: '0' }}>
                         <span
@@ -1816,7 +1738,7 @@ export function PlannerView({ v }: { v: any }) {
                         </span>
                       </span>
                       <ChevronRight color="var(--color-muted)" size={20} />
-                    </button>
+                    </Card>
                   </div>
                   <Button type="neutral" ghost size="md" onClick={v.backToDay} style={{ marginTop: '20px' }}>
                     Back to calendar
@@ -1827,17 +1749,9 @@ export function PlannerView({ v }: { v: any }) {
             {v.isProfile ? (
               <>
                 <div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      alignItems: 'center',
-                      gap: '18px',
-                      padding: '24px',
-                      background: 'var(--color-white)',
-                      borderRadius: '24px',
-                      boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                    }}
+                  <Card
+                    pad="lg"
+                    style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '18px' }}
                   >
                     <div
                       style={{
@@ -1998,18 +1912,11 @@ export function PlannerView({ v }: { v: any }) {
                         ) : null}
                       </div>
                     </div>
-                  </div>
+                  </Card>
                   <div id="profileStats" style={{ display: 'grid', gap: '12px', marginTop: '14px' }}>
                     {(v.profileStats ?? []).map((s, i) => (
                       <Fragment key={i}>
-                        <div
-                          style={{
-                            padding: '18px 20px',
-                            background: 'var(--color-white)',
-                            borderRadius: '20px',
-                            boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                          }}
-                        >
+                        <Card pad="sm">
                           <div
                             style={{
                               fontSize: 'var(--text-2xs)',
@@ -2043,19 +1950,11 @@ export function PlannerView({ v }: { v: any }) {
                               {s?.unit}
                             </span>
                           </div>
-                        </div>
+                        </Card>
                       </Fragment>
                     ))}
                   </div>
-                  <div
-                    style={{
-                      marginTop: '14px',
-                      padding: '22px',
-                      background: 'var(--color-white)',
-                      borderRadius: '22px',
-                      boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                    }}
-                  >
+                  <Card style={{ marginTop: '14px' }}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
                       <span
                         style={{
@@ -2195,16 +2094,8 @@ export function PlannerView({ v }: { v: any }) {
                         </>
                       ) : null}
                     </div>
-                  </div>
-                  <div
-                    style={{
-                      marginTop: '14px',
-                      padding: '22px',
-                      background: 'var(--color-white)',
-                      borderRadius: '22px',
-                      boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                    }}
-                  >
+                  </Card>
+                  <Card style={{ marginTop: '14px' }}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
                       <span
                         style={{
@@ -2270,7 +2161,7 @@ export function PlannerView({ v }: { v: any }) {
                         </Fragment>
                       ))}
                     </div>
-                  </div>
+                  </Card>
                   <div
                     style={{
                       display: 'grid',
@@ -2279,14 +2170,7 @@ export function PlannerView({ v }: { v: any }) {
                       marginTop: '14px',
                     }}
                   >
-                    <div
-                      style={{
-                        padding: '22px',
-                        background: 'var(--color-white)',
-                        borderRadius: '22px',
-                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                      }}
-                    >
+                    <Card>
                       <div
                         style={{
                           fontSize: 'var(--text-xs)',
@@ -2343,15 +2227,8 @@ export function PlannerView({ v }: { v: any }) {
                           </Fragment>
                         ))}
                       </div>
-                    </div>
-                    <div
-                      style={{
-                        padding: '22px',
-                        background: 'var(--color-white)',
-                        borderRadius: '22px',
-                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                      }}
-                    >
+                    </Card>
+                    <Card>
                       <div
                         style={{
                           fontSize: 'var(--text-xs)',
@@ -2395,7 +2272,7 @@ export function PlannerView({ v }: { v: any }) {
                           </Fragment>
                         ))}
                       </div>
-                    </div>
+                    </Card>
                   </div>
                 </div>
               </>
@@ -2501,15 +2378,7 @@ export function PlannerView({ v }: { v: any }) {
                     </div>
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '26px' }}>
-                    <div
-                      style={{
-                        flex: '1 1 260px',
-                        background: 'var(--color-white)',
-                        borderRadius: '22px',
-                        padding: '20px',
-                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                      }}
-                    >
+                    <Card pad="sm" style={{ flex: '1 1 260px' }}>
                       <div
                         style={{
                           fontSize: 'var(--text-xs)',
@@ -2553,16 +2422,8 @@ export function PlannerView({ v }: { v: any }) {
                       >
                         <div style={css(v.wkBar)}></div>
                       </div>
-                    </div>
-                    <div
-                      style={{
-                        flex: '1 1 260px',
-                        background: 'var(--color-white)',
-                        borderRadius: '22px',
-                        padding: '20px',
-                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                      }}
-                    >
+                    </Card>
+                    <Card pad="sm" style={{ flex: '1 1 260px' }}>
                       <div
                         style={{
                           fontSize: 'var(--text-xs)',
@@ -2611,17 +2472,9 @@ export function PlannerView({ v }: { v: any }) {
                           </p>
                         </>
                       ) : null}
-                    </div>
+                    </Card>
                   </div>
-                  <div
-                    style={{
-                      marginTop: '14px',
-                      padding: '22px',
-                      background: 'var(--color-white)',
-                      borderRadius: '22px',
-                      boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                    }}
-                  >
+                  <Card style={{ marginTop: '14px' }}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
                       <span
                         style={{
@@ -2672,17 +2525,9 @@ export function PlannerView({ v }: { v: any }) {
                         </Fragment>
                       ))}
                     </div>
-                  </div>
+                  </Card>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '14px' }}>
-                    <div
-                      style={{
-                        flex: '1 1 170px',
-                        background: 'var(--color-white)',
-                        borderRadius: '22px',
-                        padding: '20px',
-                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                      }}
-                    >
+                    <Card pad="sm" style={{ flex: '1 1 170px' }}>
                       <div
                         style={{
                           fontSize: 'var(--text-xs)',
@@ -2713,16 +2558,8 @@ export function PlannerView({ v }: { v: any }) {
                           entries
                         </span>
                       </div>
-                    </div>
-                    <div
-                      style={{
-                        flex: '1 1 170px',
-                        background: 'var(--color-white)',
-                        borderRadius: '22px',
-                        padding: '20px',
-                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                      }}
-                    >
+                    </Card>
+                    <Card pad="sm" style={{ flex: '1 1 170px' }}>
                       <div
                         style={{
                           fontSize: 'var(--text-xs)',
@@ -2753,7 +2590,7 @@ export function PlannerView({ v }: { v: any }) {
                           {v.monthDoneUnit}
                         </span>
                       </div>
-                    </div>
+                    </Card>
                   </div>
                 </div>
               </>
@@ -2863,15 +2700,7 @@ export function PlannerView({ v }: { v: any }) {
                   ) : null}
                   {v.arsenalAddOpen ? (
                     <>
-                      <div
-                        style={{
-                          marginTop: '18px',
-                          padding: '22px',
-                          background: 'var(--color-white)',
-                          borderRadius: '20px',
-                          boxShadow: '0 8px 24px rgba(35,42,69,.14)',
-                        }}
-                      >
+                      <Card elevation="overlay" style={{ marginTop: '18px' }}>
                         <span
                           style={{
                             display: 'block',
@@ -3051,7 +2880,7 @@ export function PlannerView({ v }: { v: any }) {
                             Add to Arsenal
                           </Button>
                         </div>
-                      </div>
+                      </Card>
                     </>
                   ) : null}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: '22px' }}>
@@ -3388,7 +3217,10 @@ export function PlannerView({ v }: { v: any }) {
                     {(v.diaryList ?? []).map((e, i) => (
                       <Fragment key={i}>
                         <div style={{ position: 'relative' }}>
-                          <button
+                          <Card
+                            as="button"
+                            pad="none"
+                            interactive
                             onClick={e?.open}
                             aria-label={e?.aria}
                             style={{
@@ -3398,16 +3230,7 @@ export function PlannerView({ v }: { v: any }) {
                               alignItems: 'flex-start',
                               gap: '16px',
                               padding: '18px 62px 18px 20px',
-                              border: 'none',
-                              background: 'var(--color-white)',
-                              borderRadius: '20px',
-                              boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                              color: 'var(--color-ink)',
-                              textAlign: 'left',
-                              font: 'inherit',
-                              cursor: 'pointer',
                             }}
-                            className="hv5"
                           >
                             <span style={css(e?.faceWrap)}>
                               {e?.isHappy ? (
@@ -3491,7 +3314,7 @@ export function PlannerView({ v }: { v: any }) {
                                 {e?.note}
                               </span>
                             </span>
-                          </button>
+                          </Card>
                           <IconButton
                             label="Delete entry"
                             size="lg"
@@ -3653,15 +3476,7 @@ export function PlannerView({ v }: { v: any }) {
                   </div>
                   {v.dayIsRide ? (
                     <>
-                      <div
-                        style={{
-                          marginTop: '18px',
-                          padding: '20px 22px',
-                          background: 'var(--color-white)',
-                          borderRadius: '20px',
-                          boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                        }}
-                      >
+                      <Card style={{ marginTop: '18px' }}>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '26px' }}>
                           {(v.rideStats ?? []).map((r, i) => (
                             <Fragment key={i}>
@@ -3702,20 +3517,12 @@ export function PlannerView({ v }: { v: any }) {
                           </span>
                           {t(v.rideDoneLabel)}
                         </Button>
-                      </div>
+                      </Card>
                     </>
                   ) : null}
                   {v.dayIsLift ? (
                     <>
-                      <div
-                        style={{
-                          marginTop: '16px',
-                          padding: '20px 22px',
-                          background: 'var(--color-white)',
-                          borderRadius: '20px',
-                          boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                        }}
-                      >
+                      <Card style={{ marginTop: '16px' }}>
                         <div
                           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
                         >
@@ -3764,23 +3571,15 @@ export function PlannerView({ v }: { v: any }) {
                           ) : null}
                           {t(v.progNote)}
                         </p>
-                      </div>
+                      </Card>
                       <div
                         style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}
                       >
                         {(v.exercises ?? []).map((ex, i) => (
                           <Fragment key={i}>
-                            <div
-                              style={{
-                                display: 'flex',
-                                flexWrap: 'wrap',
-                                alignItems: 'center',
-                                gap: '13px',
-                                padding: '16px 20px',
-                                background: 'var(--color-white)',
-                                borderRadius: '18px',
-                                boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                              }}
+                            <Card
+                              pad="sm"
+                              style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '13px' }}
                             >
                               <span
                                 style={{
@@ -3818,7 +3617,7 @@ export function PlannerView({ v }: { v: any }) {
                               >
                                 <Check color={ex?.doneStroke} strokeWidth={2.6} size={15} />
                               </button>
-                            </div>
+                            </Card>
                           </Fragment>
                         ))}
                       </div>
@@ -3885,22 +3684,17 @@ export function PlannerView({ v }: { v: any }) {
                       marginTop: '22px',
                     }}
                   >
-                    <button
+                    <Card
+                      as="button"
+                      pad="lg"
+                      interactive
                       onClick={v.pickTypeLift}
                       style={{
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'flex-start',
                         gap: '14px',
-                        padding: '24px',
-                        border: 'none',
-                        borderRadius: '22px',
-                        background: 'var(--color-white)',
-                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                        textAlign: 'left',
-                        cursor: 'pointer',
                       }}
-                      className="hv5"
                     >
                       <span
                         style={{
@@ -3943,23 +3737,18 @@ export function PlannerView({ v }: { v: any }) {
                           Build a list of exercises with sets, reps and weight.
                         </span>
                       </span>
-                    </button>
-                    <button
+                    </Card>
+                    <Card
+                      as="button"
+                      pad="lg"
+                      interactive
                       onClick={v.pickTypeCycle}
                       style={{
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'flex-start',
                         gap: '14px',
-                        padding: '24px',
-                        border: 'none',
-                        borderRadius: '22px',
-                        background: 'var(--color-white)',
-                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                        textAlign: 'left',
-                        cursor: 'pointer',
                       }}
-                      className="hv5"
                     >
                       <span
                         style={{
@@ -4002,7 +3791,7 @@ export function PlannerView({ v }: { v: any }) {
                           Set a distance, duration and target effort for the ride.
                         </span>
                       </span>
-                    </button>
+                    </Card>
                   </div>
                 </div>
               </>
@@ -4024,18 +3813,13 @@ export function PlannerView({ v }: { v: any }) {
                           background: 'rgba(35,42,69,.35)',
                         }}
                       >
-                        <div
+                        <Card
+                          pad="lg"
+                          elevation="overlay"
                           role="dialog"
                           aria-modal="true"
                           aria-label="Keep your changes?"
-                          style={{
-                            width: '100%',
-                            maxWidth: '400px',
-                            padding: '26px',
-                            background: 'var(--color-white)',
-                            borderRadius: '24px',
-                            boxShadow: '0 8px 24px rgba(35,42,69,.14)',
-                          }}
+                          style={{ width: '100%', maxWidth: '400px' }}
                         >
                           <h2
                             style={{
@@ -4076,7 +3860,7 @@ export function PlannerView({ v }: { v: any }) {
                               Save changes
                             </Button>
                           </div>
-                        </div>
+                        </Card>
                       </div>
                     </>
                   ) : null}
@@ -4095,17 +3879,15 @@ export function PlannerView({ v }: { v: any }) {
                       </button>
                       {v.iconsOpen ? (
                         <>
-                          <div
+                          <Card
+                            pad="xs"
+                            elevation="overlay"
                             style={{
                               position: 'absolute',
                               top: '52px',
                               left: '0',
                               zIndex: '30',
                               width: '238px',
-                              padding: '14px',
-                              background: 'var(--color-white)',
-                              borderRadius: '20px',
-                              boxShadow: '0 8px 24px rgba(35,42,69,.14)',
                             }}
                           >
                             <div
@@ -4152,7 +3934,7 @@ export function PlannerView({ v }: { v: any }) {
                                 </Fragment>
                               ))}
                             </div>
-                          </div>
+                          </Card>
                         </>
                       ) : null}
                     </div>
@@ -4353,17 +4135,9 @@ export function PlannerView({ v }: { v: any }) {
                       {t(v.eTime)}
                     </span>
                   </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      marginTop: '16px',
-                      padding: '18px 20px',
-                      background: 'var(--color-white)',
-                      borderRadius: '20px',
-                      boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                    }}
+                  <Card
+                    pad="sm"
+                    style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '16px' }}
                   >
                     <span style={{ display: 'flex' }}>
                       <Repeat color="var(--color-muted)" size={20} />
@@ -4380,7 +4154,7 @@ export function PlannerView({ v }: { v: any }) {
                     >
                       <span style={css(v.switchKnob)}></span>
                     </button>
-                  </div>
+                  </Card>
                   {v.ridePlanStatic ? (
                     <>
                       <div style={{ marginTop: '18px' }}>
@@ -4507,15 +4281,7 @@ export function PlannerView({ v }: { v: any }) {
                   ) : null}
                   {v.ridePlanEdit ? (
                     <>
-                      <div
-                        style={{
-                          marginTop: '16px',
-                          padding: '22px',
-                          background: 'var(--color-white)',
-                          borderRadius: '20px',
-                          boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                        }}
-                      >
+                      <Card style={{ marginTop: '16px' }}>
                         <div
                           style={{
                             fontSize: 'var(--text-xs)',
@@ -4710,20 +4476,12 @@ export function PlannerView({ v }: { v: any }) {
                             Intervals
                           </button>
                         </div>
-                      </div>
+                      </Card>
                     </>
                   ) : null}
                   {v.ridePlanStatic ? (
                     <>
-                      <div
-                        style={{
-                          marginTop: '14px',
-                          padding: '22px',
-                          background: 'var(--color-white)',
-                          borderRadius: '20px',
-                          boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                        }}
-                      >
+                      <Card style={{ marginTop: '14px' }}>
                         <div
                           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
                         >
@@ -4952,20 +4710,12 @@ export function PlannerView({ v }: { v: any }) {
                           </div>
                         </div>
                         <p style={css(v.rideNoteStyle)}>{v.rideNote}</p>
-                      </div>
+                      </Card>
                     </>
                   ) : null}
                   {v.isLift ? (
                     <>
-                      <div
-                        style={{
-                          marginTop: '16px',
-                          padding: '20px 22px',
-                          background: 'var(--color-white)',
-                          borderRadius: '20px',
-                          boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                        }}
-                      >
+                      <Card style={{ marginTop: '16px' }}>
                         <div
                           style={{
                             fontSize: 'var(--text-xs)',
@@ -4985,20 +4735,12 @@ export function PlannerView({ v }: { v: any }) {
                             </Fragment>
                           ))}
                         </div>
-                      </div>
+                      </Card>
                     </>
                   ) : null}
                   {v.hasProgress ? (
                     <>
-                      <div
-                        style={{
-                          marginTop: '16px',
-                          padding: '20px 22px',
-                          background: 'var(--color-white)',
-                          borderRadius: '20px',
-                          boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                        }}
-                      >
+                      <Card style={{ marginTop: '16px' }}>
                         <div
                           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
                         >
@@ -5047,7 +4789,7 @@ export function PlannerView({ v }: { v: any }) {
                           ) : null}
                           {t(v.progNote)}
                         </p>
-                      </div>
+                      </Card>
                     </>
                   ) : null}
                   {v.isLift ? (
@@ -5057,14 +4799,7 @@ export function PlannerView({ v }: { v: any }) {
                       >
                         {(v.exercises ?? []).map((ex, i) => (
                           <Fragment key={i}>
-                            <div
-                              style={{
-                                background: 'var(--color-white)',
-                                borderRadius: '20px',
-                                padding: '20px',
-                                boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                              }}
-                            >
+                            <Card pad="sm">
                               <div style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
                                 <div data-pop="ex" style={{ position: 'relative', flex: 'none' }}>
                                   <button
@@ -5113,17 +4848,15 @@ export function PlannerView({ v }: { v: any }) {
                                   </button>
                                   {ex?.open ? (
                                     <>
-                                      <div
+                                      <Card
+                                        pad="xs"
+                                        elevation="overlay"
                                         style={{
                                           position: 'absolute',
                                           top: '48px',
                                           left: '0',
                                           zIndex: '30',
                                           width: '186px',
-                                          padding: '12px',
-                                          background: 'var(--color-white)',
-                                          borderRadius: '18px',
-                                          boxShadow: '0 8px 24px rgba(35,42,69,.14)',
                                         }}
                                       >
                                         <div
@@ -5158,7 +4891,7 @@ export function PlannerView({ v }: { v: any }) {
                                             <DumbbellSmall color="var(--color-pink)" size={20} />
                                           </button>
                                         </div>
-                                      </div>
+                                      </Card>
                                     </>
                                   ) : null}
                                 </div>
@@ -5263,7 +4996,7 @@ export function PlannerView({ v }: { v: any }) {
                                   />
                                 </label>
                               </div>
-                            </div>
+                            </Card>
                           </Fragment>
                         ))}
                       </div>
@@ -5285,15 +5018,7 @@ export function PlannerView({ v }: { v: any }) {
                   ) : null}
                   {v.addOpen ? (
                     <>
-                      <div
-                        style={{
-                          marginTop: '14px',
-                          padding: '22px',
-                          background: 'var(--color-white)',
-                          borderRadius: '20px',
-                          boxShadow: '0 8px 24px rgba(35,42,69,.14)',
-                        }}
-                      >
+                      <Card elevation="overlay" style={{ marginTop: '14px' }}>
                         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
                           <span
                             style={{
@@ -5553,7 +5278,7 @@ export function PlannerView({ v }: { v: any }) {
                             </>
                           ) : null}
                         </div>
-                      </div>
+                      </Card>
                     </>
                   ) : null}
                   <div style={{ marginTop: '24px' }}>
@@ -5679,17 +5404,9 @@ export function PlannerView({ v }: { v: any }) {
                           </button>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '22px' }}>
-                          <div
-                            style={{
-                              flex: '1 1 200px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '14px',
-                              padding: '18px 20px',
-                              background: 'var(--color-white)',
-                              borderRadius: '20px',
-                              boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                            }}
+                          <Card
+                            pad="sm"
+                            style={{ flex: '1 1 200px', display: 'flex', alignItems: 'center', gap: '14px' }}
                           >
                             <span style={css(v.readMoodFace)}>{v.readMoodSvg}</span>
                             <div style={{ minWidth: '0' }}>
@@ -5715,16 +5432,8 @@ export function PlannerView({ v }: { v: any }) {
                                 {v.readMood}
                               </div>
                             </div>
-                          </div>
-                          <div
-                            style={{
-                              flex: '1 1 200px',
-                              padding: '18px 20px',
-                              background: 'var(--color-white)',
-                              borderRadius: '20px',
-                              boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                            }}
-                          >
+                          </Card>
+                          <Card pad="sm" style={{ flex: '1 1 200px' }}>
                             <div
                               style={{
                                 fontSize: 'var(--text-2xs)',
@@ -5756,17 +5465,9 @@ export function PlannerView({ v }: { v: any }) {
                                 ))}
                               </span>
                             </div>
-                          </div>
+                          </Card>
                         </div>
-                        <div
-                          style={{
-                            marginTop: '12px',
-                            padding: '22px',
-                            background: 'var(--color-white)',
-                            borderRadius: '20px',
-                            boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                          }}
-                        >
+                        <Card style={{ marginTop: '12px' }}>
                           <div
                             style={{
                               fontSize: 'var(--text-2xs)',
@@ -5789,7 +5490,7 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             {v.readNote}
                           </p>
-                        </div>
+                        </Card>
                         <div
                           style={{
                             display: 'flex',
