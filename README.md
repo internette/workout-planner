@@ -55,20 +55,30 @@ Run the migration once in the Supabase SQL editor. It is safe to run again.
 ## How it works
 
 ```
-app/                 Next.js App Router: layout, page, global styles (planner.css)
+app/                  Next.js App Router: layout, page, global styles (planner.css)
 components/
-  PlannerLoader.tsx  Loads the planner on the client only (its layout depends on window width)
-  Planner.tsx        All screen logic and state, plus the host component
-  PlannerView.tsx    The markup for every screen, with no logic of its own
-  dcLogic.ts         Small base class that gives the logic its immediate-merge setState
-  viewHelpers.tsx    css() and t() helpers used by the view
+  Planner.tsx         Host component: loading and error screens, renders the view
+  PlannerLoader.tsx   Loads the planner on the client only (its layout depends on window width)
+  PlannerView.tsx     The markup for every screen, with no logic of its own
+  dcLogic.ts          Small base class that gives the logic its immediate-merge setState
+  viewHelpers.tsx     css() and t() helpers used by the view
+  planner/
+    PlannerLogic.ts   UI state, navigation, loading and saving; renderVals() assembles the view's values
+    context.ts        Runs the stages below in order to build a shared context
+    stages/           Derived values, built up in order: base (clock, layout), entries, calendar, stats, workout
+    screens/          One builder per area of the UI: chrome, calendar, workout, edit, diary, arsenal, progress
+    constants.ts      Names, quests, ranks and other fixed data
+    helpers.ts        Small pure helpers (ids, ISO dates, quest lookup)
+    icons.tsx         Exercise icons and mood faces
+    styles.ts         Inline-style builders for active/inactive controls
+    types.ts          The loose Ctx type shared by stages and screens
 lib/
-  supabase.ts        Supabase client
-  plannerData.ts     Loads the database into the shapes the UI uses, and all writes
-supabase/migrations/ SQL to run in the Supabase SQL editor
+  supabase.ts         Supabase client
+  plannerData.ts      Loads the database into the shapes the UI uses, and all writes
+supabase/migrations/  SQL to run in the Supabase SQL editor
 ```
 
-**Data flow.** On load, `loadModel` reads all five tables and builds one model: exercises by workout, one entry per date, diary entries, ticks and the library. `Planner.tsx` derives everything on screen from that model plus a small amount of UI state.
+**Data flow.** On load, `loadModel` reads all five tables and builds one model: exercises by workout, one entry per date, diary entries, ticks and the library. On each render, `PlannerLogic.renderVals()` builds a context from that model plus the UI state (the stages in `planner/stages/`), then each screen builder in `planner/screens/` turns the context into the values and handlers its part of the view needs.
 
 Ticks update the screen immediately. Other saves (creating or editing a workout, diary entries, deletes, the Arsenal) are written to Supabase first. When the writes finish, the model is reloaded and the UI state cleared. Writes run in order, and a failed one shows a dismissible error banner.
 
@@ -81,5 +91,5 @@ Ticks update the screen immediately. Other saves (creating or editing a workout,
 - **Current year only.** Entries from other years don't appear on the calendar.
 - **Free-text exercise fields** such as "4 × 8", "135 lb" and "90 sec" are stored as numbers. Text that doesn't fit those shapes, like "3 × 45s", loses its detail on save.
 - **Duplicate exercise rows.** Adding an existing exercise to another workout creates a separate row rather than a link.
-- **Fixed profile.** The profile name ("Mika") and start date are constants in `Planner.tsx`.
+- **Fixed profile.** The profile name ("Mika") and start date are constants in `components/planner/constants.ts`.
 - **Moods** are stored as `happy`, `neutral`, `sad` or `mad`, the only values the `diary_entries` table accepts.
