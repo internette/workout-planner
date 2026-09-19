@@ -31,9 +31,17 @@ export function workoutVals(ctx: Ctx) {
   return {
     backToDay: () => logic.back(),
     goDetail: () => logic.nav({ screen: 'detail', creating: false }),
-    goEdit: () => logic.nav({ screen: 'edit', editing: !!actFor(selDay), creating: false, editKey: mi + '-' + selDay }),
+    goEdit: () =>
+      logic.nav({ screen: 'edit', editing: !!actFor(selDay), creating: false, editKey: mi + '-' + selDay }),
     goNewWorkout: () =>
-      logic.nav({ screen: 'edit', editing: false, creating: true, addOpen: false, newName: '', newType: null }),
+      logic.nav({
+        screen: 'edit',
+        editing: false,
+        creating: true,
+        addOpen: false,
+        newName: '',
+        newType: null,
+      }),
     goDiary: () => logic.nav({ screen: 'diary', diaryFrom: 'day', diaryEdit: false }),
     wName: selAct ? nameOf(selAct.name) : '',
     wMeta: !selAct
@@ -61,9 +69,10 @@ export function workoutVals(ctx: Ctx) {
         ? 'background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)'
         : 'background:var(--color-white);box-shadow:0 1px 3px rgba(35,42,69,.06)'),
     questTitleStyle:
-      "font-family:var(--font-heading);font-size:var(--text-lg);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-snug);margin-top:4px;" +
+      'font-family:var(--font-heading);font-size:var(--text-lg);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-snug);margin-top:4px;' +
       (questCleared ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
-    isDone: (actFor(selDay) || {}).s === 'c' || rideDone || (selList.length > 0 && doneCount === selList.length),
+    isDone:
+      (actFor(selDay) || {}).s === 'c' || rideDone || (selList.length > 0 && doneCount === selList.length),
     dayIsRide: !!selRide,
     dayIsLift: !selRide,
     toggleRideDone: () => {
@@ -71,9 +80,7 @@ export function workoutVals(ctx: Ctx) {
       logic.save(() => db.setRideDone(idOf(selAct), !rideDone));
     },
     rideDoneLabel: rideDone ? 'Ride completed' : 'Mark ride complete',
-    rideDoneBtn:
-      'display:inline-flex;align-items:center;gap:10px;margin-top:20px;height:46px;padding:0 18px 0 14px;border:none;border-radius:15px;cursor:pointer;font-size:var(--text-base);font-weight:var(--font-weight-semibold);' +
-      (rideDone ? 'background:var(--color-pink-tint);color:var(--color-pink-deep)' : 'background:var(--color-canvas);color:var(--color-slate)'),
+    rideDoneType: rideDone ? 'secondary' : 'neutral',
     rideDoneMark:
       'width:24px;height:24px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;' +
       (rideDone ? 'background:var(--color-pink)' : 'border:1.5px solid rgba(35,42,69,.18)'),
@@ -99,19 +106,24 @@ export function workoutVals(ctx: Ctx) {
     hasMore: all.length > 3,
     moreLabel: st.more ? 'Show less' : '+ ' + (all.length - 3) + ' more',
     moreCaret:
-      'width:15px;height:15px;flex:none;transition:transform .2s' + (st.more ? ';transform:rotate(180deg)' : ''),
+      'width:15px;height:15px;flex:none;transition:transform .2s' +
+      (st.more ? ';transform:rotate(180deg)' : ''),
     ctaLabel: hasEntry ? 'View chronicle entry' : 'Finish workout & log it',
     longDate: DOWFULL[selDate.getDay()] + ', ' + st.month + ' ' + selDay,
     badgeStyle:
       'margin-left:auto;padding:7px 13px;border-radius:999px;font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);' +
-      (doneSel ? 'background:var(--color-cloud);color:var(--color-slate)' : 'background:var(--color-pink-tint);color:var(--color-pink-deep)'),
+      (doneSel
+        ? 'background:var(--color-cloud);color:var(--color-slate)'
+        : 'background:var(--color-pink-tint);color:var(--color-pink-deep)'),
     hasProgress: st.screen === 'edit' && !isCycleView && selList.length > 0,
     progLabel: doneCount + ' of ' + selList.length + ' done',
     allDone: selList.length > 0 && doneCount === selList.length,
     someDone: !(selList.length > 0 && doneCount === selList.length),
     progNoteStyle:
       'margin:12px 0 0;display:flex;align-items:center;gap:7px;font-size:var(--text-md);font-weight:' +
-      (selList.length && doneCount === selList.length ? 'var(--font-weight-semibold);color:var(--color-pink-deep)' : 'var(--font-weight-regular);color:var(--color-muted)'),
+      (selList.length && doneCount === selList.length
+        ? 'var(--font-weight-semibold);color:var(--color-pink-deep)'
+        : 'var(--font-weight-regular);color:var(--color-muted)'),
     progBar:
       'width:' +
       (selList.length ? Math.round((doneCount / selList.length) * 100) : 0) +

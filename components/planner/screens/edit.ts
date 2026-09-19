@@ -106,7 +106,9 @@ export function editVals(ctx: Ctx) {
           : ridePct + '% of the planned distance. The rest stays on the plan.',
     rideNoteStyle:
       'margin:14px 0 0;font-size:var(--text-md);font-weight:' +
-      (ridePct != null && ridePct >= 100 ? 'var(--font-weight-semibold);color:var(--color-pink-deep)' : 'var(--font-weight-regular);color:var(--color-muted)'),
+      (ridePct != null && ridePct >= 100
+        ? 'var(--font-weight-semibold);color:var(--color-pink-deep)'
+        : 'var(--font-weight-regular);color:var(--color-muted)'),
     setHours: (e) => logic.s({ rHrs: e.target.value.replace(/[^0-9]/g, '').slice(0, 2) }),
     setMins: (e) => {
       const v = e.target.value.replace(/[^0-9]/g, '').slice(0, 2);
@@ -132,7 +134,9 @@ export function editVals(ctx: Ctx) {
           }),
         style:
           'padding:10px 16px;border:none;border-radius:999px;font-size:var(--text-md);font-weight:var(--font-weight-semibold);cursor:pointer;' +
-          (on ? 'background:var(--color-pink);color:var(--color-white)' : 'background:var(--color-canvas);color:var(--color-slate)'),
+          (on
+            ? 'background:var(--color-pink);color:var(--color-white)'
+            : 'background:var(--color-canvas);color:var(--color-slate)'),
       };
     }),
     addOpen: !!st.addOpen,
@@ -169,9 +173,7 @@ export function editVals(ctx: Ctx) {
       pick: () => logic.s({ dIcon: name }),
       style: optStyle((st.dIcon || 'h') === name),
     })),
-    commitStyle:
-      'height:52px;padding:0 30px;border:none;border-radius:16px;font-size:var(--text-lg);font-weight:var(--font-weight-semibold);cursor:pointer;color:var(--color-white);background:' +
-      ((st.dName || '').trim() ? 'var(--color-pink)' : 'var(--color-pink-muted)'),
+    commitDisabled: !(st.dName || '').trim(),
     commitNew: () => {
       const nm = (st.dName || '').trim();
       if (!nm) return;
@@ -425,9 +427,7 @@ export function editVals(ctx: Ctx) {
         newName: '',
         extra: Object.assign({}, st.extra, { __draft: [] }),
       }),
-    eCancelStyle:
-      'height:52px;padding:0 22px;border:none;border-radius:16px;background:none;font-size:var(--text-lg);font-weight:var(--font-weight-semibold);cursor:pointer;color:' +
-      (creating ? 'var(--color-slate)' : 'var(--color-danger)'),
+    eCancelType: creating ? 'neutral' : 'danger',
     eDate:
       DOW3[selDate.getDay()].charAt(0) +
       DOW3[selDate.getDay()].slice(1, 3).toLowerCase() +
@@ -470,11 +470,15 @@ export function editVals(ctx: Ctx) {
         hideLegacy: false,
         detail: e.sets + ' · ' + e.weight + ' · ' + e.rest + ' rest',
         nameStyle:
-          "display:block;font-family:var(--font-heading);font-size:var(--text-xl);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-snug);" +
-          (doneSet[e.name] ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
+          'display:block;font-family:var(--font-heading);font-size:var(--text-xl);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-snug);' +
+          (doneSet[e.name]
+            ? 'color:var(--color-muted);text-decoration:line-through'
+            : 'color:var(--color-ink)'),
         doneBtn:
           'margin-left:auto;display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;border-radius:11px;cursor:pointer;border:' +
-          (doneSet[e.name] ? 'none;background:var(--color-pink)' : '1.5px solid rgba(35,42,69,.15);background:none'),
+          (doneSet[e.name]
+            ? 'none;background:var(--color-pink)'
+            : '1.5px solid rgba(35,42,69,.15);background:none'),
         doneStroke: doneSet[e.name] ? 'var(--color-white)' : 'rgba(35,42,69,0.22)',
         isDone: !!doneSet[e.name],
         iconAria: 'Choose icon for ' + e.name,

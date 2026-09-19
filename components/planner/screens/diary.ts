@@ -41,7 +41,8 @@ export function diaryVals(ctx: Ctx) {
             mood: st.mood,
             rpe: st.rpe,
             note:
-              (st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote) || 'No notes for this one.',
+              (st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote) ||
+              'No notes for this one.',
           }),
         {
           screen: st.diaryFrom === 'list' ? 'diary' : 'saved',
@@ -139,7 +140,13 @@ export function diaryVals(ctx: Ctx) {
       const d = en.d;
       const dt = new Date(Y, en.m, en.d);
       const bg =
-        en.mood === 'Happy' ? 'var(--color-pink)' : en.mood === 'Neutral' ? 'var(--color-slate)' : en.mood === 'Sad' ? 'var(--color-periwinkle)' : 'var(--color-danger)';
+        en.mood === 'Happy'
+          ? 'var(--color-pink)'
+          : en.mood === 'Neutral'
+            ? 'var(--color-slate)'
+            : en.mood === 'Sad'
+              ? 'var(--color-periwinkle)'
+              : 'var(--color-danger)';
       return {
         date: DOW3[dt.getDay()] + ', ' + MON3[en.m].toUpperCase() + ' ' + en.d,
         name: en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout',
@@ -189,7 +196,9 @@ export function diaryVals(ctx: Ctx) {
         isSad: en.mood === 'Sad',
         isMad: en.mood === 'Mad',
         stars: [1, 2, 3, 4, 5].map(
-          (i) => 'font-size:var(--text-md);line-height:var(--leading-none);color:' + (i <= en.rpe ? 'var(--color-ink)' : 'var(--color-hairline)'),
+          (i) =>
+            'font-size:var(--text-md);line-height:var(--leading-none);color:' +
+            (i <= en.rpe ? 'var(--color-ink)' : 'var(--color-hairline)'),
         ),
       };
     }),
@@ -210,11 +219,19 @@ export function diaryVals(ctx: Ctx) {
     readMood: st.mood,
     readNote: (ENTRIES[entryKey] || {}).note || 'No notes for this one.',
     readStars: [1, 2, 3, 4, 5].map(
-      (n) => 'font-size:var(--text-md);line-height:var(--leading-none);color:' + (n <= st.rpe ? 'var(--color-ink)' : 'var(--color-hairline)'),
+      (n) =>
+        'font-size:var(--text-md);line-height:var(--leading-none);color:' +
+        (n <= st.rpe ? 'var(--color-ink)' : 'var(--color-hairline)'),
     ),
     readMoodFace:
       'width:44px;height:44px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:' +
-      (st.mood === 'Happy' ? 'var(--color-pink)' : st.mood === 'Neutral' ? 'var(--color-slate)' : st.mood === 'Sad' ? 'var(--color-periwinkle)' : 'var(--color-danger)'),
+      (st.mood === 'Happy'
+        ? 'var(--color-pink)'
+        : st.mood === 'Neutral'
+          ? 'var(--color-slate)'
+          : st.mood === 'Sad'
+            ? 'var(--color-periwinkle)'
+            : 'var(--color-danger)'),
     readMoodSvg: moodSvg(st.mood),
     diaryBackLabel: st.diaryFrom === 'list' ? 'Chronicle' : 'Back',
     diaryEyebrow: st.diaryFrom === 'list' ? 'CHRONICLE ENTRY' : 'COMPLETED',

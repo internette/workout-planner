@@ -1,0 +1,69 @@
+/* Shared by Button and IconButton. Colours and type come from the design-system variables. */
+
+.base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: var(--font-weight-semibold);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.base:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---- Button sizes */
+.xs { min-height: 30px; padding: 0 12px; border-radius: 10px; font-size: var(--text-md); gap: 5px; }
+.sm { min-height: 44px; padding: 0 20px; border-radius: 15px; font-size: var(--text-base); }
+.md { min-height: 48px; padding: 0 22px; border-radius: 15px; font-size: var(--text-lg); }
+.lg { min-height: 52px; padding: 0 28px; border-radius: 16px; font-size: var(--text-lg); }
+
+.fullWidth { display: flex; width: 100%; }
+
+/* ---- Button types. Each has a filled look and, with .ghost, a text-only look. */
+.primary { background: var(--color-pink); color: var(--color-white); }
+.primary:hover:not(:disabled) { background: var(--color-pink-hover); }
+.primary.ghost { background: none; color: var(--color-pink); }
+.primary.ghost:hover:not(:disabled) { background: var(--color-pink-tint); }
+
+.glow { box-shadow: 0 8px 20px rgba(225, 105, 156, 0.4); }
+
+.secondary { background: var(--color-pink-tint); color: var(--color-pink-deep); }
+.secondary:hover:not(:disabled) { filter: brightness(0.97); }
+.secondary.ghost { background: none; }
+.secondary.ghost:hover:not(:disabled) { background: var(--color-pink-tint); filter: none; }
+
+.neutral { background: var(--color-canvas); color: var(--color-slate); }
+.neutral:hover:not(:disabled) { filter: brightness(0.97); }
+.neutral.ghost { background: none; }
+.neutral.ghost:hover:not(:disabled) { background: rgba(35, 42, 69, 0.05); filter: none; }
+
+.danger { background: var(--color-danger); color: var(--color-white); }
+.danger:hover:not(:disabled) { background: var(--color-danger-hover); }
+.danger.ghost { background: none; color: var(--color-danger); }
+.danger.ghost:hover:not(:disabled) { background: rgba(178, 58, 76, 0.08); }
+
+.dashed {
+  border: 1px dashed rgba(225, 105, 156, 0.5);
+  background: rgba(252, 231, 239, 0.5);
+  color: var(--color-pink-deep);
+}
+.dashed:hover:not(:disabled) { background: var(--color-pink-tint); }
+
+/* ---- Icon buttons: square, icon only */
+.icon { padding: 0; flex: none; }
+.icon-xs { width: 24px; height: 24px; border-radius: 8px; }
+.icon-sm { width: 34px; height: 34px; border-radius: 11px; }
+.icon-md { width: 36px; height: 36px; border-radius: 12px; }
+.icon-lg { width: 44px; height: 44px; border-radius: 13px; }
+.circle { border-radius: 50%; }
+
+.icon-default:hover:not(:disabled) { background: rgba(35, 42, 69, 0.06); }
+.icon-danger:hover:not(:disabled) { background: rgba(178, 58, 76, 0.09); }
+.icon-inverse:hover:not(:disabled) { background: rgba(255, 255, 255, 0.22); }

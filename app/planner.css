@@ -40,16 +40,9 @@ button:focus-visible { background-color: rgba(35, 42, 69, 0.06); }
 }
 
 /* Generated from the design's style-hover attributes; !important so they beat inline styles. */
-.hv0:hover{background:rgba(35,42,69,.06) !important}
 .hv1:hover{background:rgba(35,42,69,.05) !important}
-.hv2:hover{background:var(--color-danger-hover) !important}
 .hv3:hover{color:var(--color-pink-deep) !important;background:rgba(35,42,69,.04) !important}
-.hv4:hover{background:var(--color-pink-hover) !important}
 .hv5:hover{box-shadow:0 8px 24px rgba(35,42,69,.14) !important}
 .hv6:hover{filter:brightness(.97) !important}
 .hv7:hover{background:var(--color-pink-tint) !important}
-.hv8:hover{background:var(--color-canvas) !important}
-.hv9:hover{background:rgba(178,58,76,.09) !important}
-.hv10:hover{background:rgba(255,255,255,.22) !important}
-.hv11:hover{background:rgba(178,58,76,.08) !important}
 .hv12:hover{box-shadow:0 4px 14px rgba(35,42,69,.07) !important}

@@ -65,6 +65,7 @@ components/
   ui/icons/           Design-system icons: glyphs, Sparkle, Gem, MoodFace, ExerciseIcon (gallery at /design-system/icons)
   ui/colors/          Design-system colour tokens, published as CSS variables (see /design-system/colors)
   ui/typography/      Design-system type tokens (families, sizes, weights, tracking, leading) as CSS variables
+  ui/buttons/         Design-system Button and IconButton (variants, sizes, hover states)
   planner/
     PlannerLogic.ts   UI state, navigation, loading and saving; renderVals() assembles the view's values
     context.ts        Runs the stages below in order to build a shared context

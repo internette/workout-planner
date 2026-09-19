@@ -78,7 +78,8 @@ export function arsenalVals(ctx: Ctx) {
             svg: iconSvg(e.i),
             detail: e.sets + ' · ' + e.weight,
             open: firstDay
-              ? () => logic.nav({ screen: 'detail', creating: false, month: MONTHS[firstDay.m], day: firstDay.d })
+              ? () =>
+                  logic.nav({ screen: 'detail', creating: false, month: MONTHS[firstDay.m], day: firstDay.d })
               : null,
             rowStyle: rowStyle(!!firstDay),
           })),
@@ -100,13 +101,15 @@ export function arsenalVals(ctx: Ctx) {
       const seen = {};
       Object.keys(EX).forEach((k) =>
         EX[k].forEach((e) => {
-          if (!seen[e.name]) seen[e.name] = { name: e.name, i: e.i, sets: e.sets, weight: e.weight, used: [] };
+          if (!seen[e.name])
+            seen[e.name] = { name: e.name, i: e.i, sets: e.sets, weight: e.weight, used: [] };
           seen[e.name].used.push(k);
         }),
       );
       Object.keys(st.extra || {}).forEach((k) =>
         (st.extra[k] || []).forEach((e) => {
-          if (!seen[e.name]) seen[e.name] = { name: e.name, i: e.i, sets: e.sets, weight: e.weight, used: [] };
+          if (!seen[e.name])
+            seen[e.name] = { name: e.name, i: e.i, sets: e.sets, weight: e.weight, used: [] };
           let label = 'Arsenal only';
           if (k === '__draft') label = 'New workout';
           else {
@@ -129,9 +132,14 @@ export function arsenalVals(ctx: Ctx) {
             name: n,
             svg: iconSvg(seen[n].i),
             detail: seen[n].sets + ' · ' + seen[n].weight,
-            used: !owners.length ? 'Arsenal only' : owners.length === 1 ? owners[0] : owners.length + ' workouts',
+            used: !owners.length
+              ? 'Arsenal only'
+              : owners.length === 1
+                ? owners[0]
+                : owners.length + ' workouts',
             open: firstDay
-              ? () => logic.nav({ screen: 'detail', creating: false, month: MONTHS[firstDay.m], day: firstDay.d })
+              ? () =>
+                  logic.nav({ screen: 'detail', creating: false, month: MONTHS[firstDay.m], day: firstDay.d })
               : null,
             rowStyle:
               'display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:16px 20px;background:var(--color-white);border-radius:18px;box-shadow:0 4px 14px rgba(35,42,69,.07)' +

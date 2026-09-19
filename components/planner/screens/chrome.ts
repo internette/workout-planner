@@ -6,8 +6,22 @@ import type { Ctx } from '../types';
 
 // Shell: sidebar, tab bar, screen flags, navigation shortcuts, confirm dialog and error banner.
 export function chromeVals(ctx: Ctx) {
-  const { logic, narrow, tablet, onCal, st, navExtra, calActive, Y, srcAct, mi, selDay, creating, TODAY_M, TODAY_D } =
-    ctx;
+  const {
+    logic,
+    narrow,
+    tablet,
+    onCal,
+    st,
+    navExtra,
+    calActive,
+    Y,
+    srcAct,
+    mi,
+    selDay,
+    creating,
+    TODAY_M,
+    TODAY_D,
+  } = ctx;
   return {
     topTabsStyle: narrow ? 'display:none' : 'display:flex;flex-wrap:wrap;gap:6px;padding:18px 28px 0',
     sidebarStyle: narrow
@@ -15,7 +29,9 @@ export function chromeVals(ctx: Ctx) {
       : tablet
         ? 'flex:1 1 100%;width:100%;position:relative;background:var(--color-white);border-radius:18px;padding:8px;box-shadow:0 4px 14px rgba(35,42,69,.07)'
         : 'flex:0 1 208px;min-width:180px;position:relative;background:var(--color-white);border-radius:22px;padding:18px 14px;box-shadow:0 4px 14px rgba(35,42,69,.07)',
-    navListStyle: tablet ? 'display:flex;flex-direction:row;gap:4px' : 'display:flex;flex-direction:column;gap:4px',
+    navListStyle: tablet
+      ? 'display:flex;flex-direction:row;gap:4px'
+      : 'display:flex;flex-direction:column;gap:4px',
     pageStyle: 'min-height:100vh;padding:0 0 ' + (narrow ? '108px' : '64px'),
     tabbarStyle: narrow
       ? 'position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;gap:4px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid rgba(35,42,69,.07);box-shadow:0 -4px 14px rgba(35,42,69,.07)'
@@ -102,9 +118,17 @@ export function chromeVals(ctx: Ctx) {
     isEdit: st.screen === 'edit' && !(creating && !st.newType),
     isDiary: st.screen === 'diary',
     goDay: () =>
-      logic.s({ screen: 'day', month: MONTHS[TODAY_M], day: TODAY_D, monthOpen: false, seg: 'Day', creating: false }),
+      logic.s({
+        screen: 'day',
+        month: MONTHS[TODAY_M],
+        day: TODAY_D,
+        monthOpen: false,
+        seg: 'Day',
+        creating: false,
+      }),
     isDetail: st.screen === 'detail',
-    goRest: () => logic.s({ screen: 'rest', month: MONTHS[TODAY_M], day: TODAY_D, monthOpen: false, seg: 'Day' }),
+    goRest: () =>
+      logic.s({ screen: 'rest', month: MONTHS[TODAY_M], day: TODAY_D, monthOpen: false, seg: 'Day' }),
     tabDay: tab(st.screen === 'day'),
     tabEdit: tab(st.screen === 'edit'),
     tabDiary: tab(st.screen === 'diary'),
