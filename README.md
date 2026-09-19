@@ -8,7 +8,7 @@
 - **Workouts:** lifting sessions (exercises with sets, reps, weight and rest) and cycling sessions (distance, elevation, duration, target effort). Both can repeat weekly for 12 weeks.
 - **Progress tracking:** tick exercises off, mark rides complete, and log what you actually rode against the plan.
 - **Chronicle:** a diary entry per session with mood, effort (1–5) and notes.
-- **Arsenal:** your exercise library, grouped by workout, plus exercises not yet assigned to one.
+- **Arsenal:** two views, switched with a toggle. **Workouts** lists every saved workout with its exercises, target areas and when it is next on your plan; **Exercises** is your exercise library, grouped by workout, plus exercises not yet assigned to one.
 - **Progress and Profile:** streaks, weekly counts, mood split, personal records, and XP with a 20-step rank ladder (10 XP per exercise, 50 XP per finished workout).
 
 ## Getting started

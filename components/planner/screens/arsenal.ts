@@ -1,12 +1,72 @@
-import { MONTHS } from '../constants';
+import { MONTHS, MON3, DOW3 } from '../constants';
+import { colors } from '@/components/ui/colors';
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
 
 // Arsenal: the exercise library, its search and the add-exercise form.
 export function arsenalVals(ctx: Ctx) {
-  const { logic, st, EX, arsenalNames, firstEntry, nameOf } = ctx;
+  const { logic, st, EX, Y, arsenalNames, firstEntry, nameOf } = ctx;
+
+  // ---- exercise count (shown in the header when the exercises view is open)
+  const exerciseNames = {};
+  Object.keys(EX).forEach((k) => EX[k].forEach((e) => (exerciseNames[e.name] = 1)));
+  Object.keys(st.extra || {}).forEach((k) => (st.extra[k] || []).forEach((e) => (exerciseNames[e.name] = 1)));
+  logic.model.library.forEach((e) => (exerciseNames[e.name] = 1));
+  const exerciseCount = Object.keys(exerciseNames).length + ' exercises';
+
+  // ---- saved workouts
+  const view = st.arsenalView === 'workouts' ? 'workouts' : 'exercises';
+  const q = (st.arsenalQ || '').trim().toLowerCase();
+  const workouts = logic.model.workouts;
+  const hits = workouts.filter(
+    (w) => !q || w.name.toLowerCase().includes(q) || w.exercises.some((n) => n.toLowerCase().includes(q)),
+  );
+  const dayLabel = ({ m, d }) => {
+    const dt = new Date(Y, m, d);
+    return (
+      DOW3[dt.getDay()].charAt(0) + DOW3[dt.getDay()].slice(1, 3).toLowerCase() + ', ' + MON3[m] + ' ' + d
+    );
+  };
+  const savedWorkouts = hits.map((w) => ({
+    name: w.name,
+    svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || colors.pink),
+    meta:
+      w.kind === 'ride'
+        ? ['Ride', w.ride && w.ride.dist ? w.ride.dist + ' mi' : '', w.ride && w.ride.zone, w.time]
+            .filter(Boolean)
+            .join(' · ')
+        : w.exercises.length + (w.exercises.length === 1 ? ' exercise' : ' exercises') + ' · ' + w.time,
+    exercises:
+      w.kind === 'ride' || !w.exercises.length
+        ? ''
+        : w.exercises.slice(0, 3).join(', ') +
+          (w.exercises.length > 3 ? ' +' + (w.exercises.length - 3) + ' more' : ''),
+    areas: w.areas,
+    when: w.next ? 'Next · ' + dayLabel(w.next) : w.open ? 'Last · ' + dayLabel(w.open) : 'Not scheduled',
+    open: w.open
+      ? () => logic.nav({ screen: 'detail', creating: false, month: MONTHS[w.open.m], day: w.open.d })
+      : null,
+  }));
+
   return {
+    arsenalView: view,
+    setArsenalView: (next) => logic.s({ arsenalView: next, arsenalAdd: false }),
+    showArsenalWorkouts: view === 'workouts',
+    showArsenalExercises: view === 'exercises',
+    arsenalCount:
+      view === 'workouts'
+        ? workouts.length + (workouts.length === 1 ? ' workout' : ' workouts')
+        : exerciseCount,
+    arsenalIntro:
+      view === 'workouts'
+        ? "Every workout you've saved. Open one to see when it's next on your plan."
+        : "Every exercise you've called on, grouped by the workout it belongs to.",
+    arsenalSearchPlaceholder: view === 'workouts' ? 'Search workouts' : 'Search exercises',
+    savedWorkouts,
+    noSavedWorkouts: workouts.length === 0,
+    noWorkoutMatches: workouts.length > 0 && !!q && hits.length === 0,
+    noWorkoutMatchNote: 'No workout matches “' + (st.arsenalQ || '').trim() + '”.',
     arsenalAddOpen: !!st.arsenalAdd,
     openArsenalAdd: () => logic.s({ arsenalAdd: true }),
     closeArsenalAdd: () => logic.s({ arsenalAdd: false, dName: '', dSets: '', dWeight: '', dRest: '' }),
@@ -29,23 +89,7 @@ export function arsenalVals(ctx: Ctx) {
         dIcon: 'h',
       });
     },
-    movesCount: (() => {
-      const s2 = {};
-      Object.keys(EX).forEach((k) =>
-        EX[k].forEach((e) => {
-          s2[e.name] = 1;
-        }),
-      );
-      Object.keys(st.extra || {}).forEach((k) =>
-        (st.extra[k] || []).forEach((e) => {
-          s2[e.name] = 1;
-        }),
-      );
-      logic.model.library.forEach((e) => {
-        s2[e.name] = 1;
-      });
-      return Object.keys(s2).length + ' exercises';
-    })(),
+    movesCount: exerciseCount,
     arsenalQuery: st.arsenalQ || '',
     noMatches:
       !!(st.arsenalQ || '').trim() &&

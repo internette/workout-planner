@@ -2049,17 +2049,29 @@ export function PlannerView({ v }: { v: any }) {
                       Arsenal
                     </Text>
                     <Text variant="label" tone="muted">
-                      {v.movesCount}
+                      {v.arsenalCount}
                     </Text>
-                    <Button
-                      type="primary"
-                      size="sm"
-                      onClick={v.openArsenalAdd}
-                      style={{ marginLeft: 'auto' }}
-                    >
-                      <Plus color="var(--color-white)" strokeWidth={2.2} size={16} />
-                      New exercise
-                    </Button>
+                    {v.showArsenalWorkouts ? (
+                      <Button
+                        type="primary"
+                        size="sm"
+                        onClick={v.goNewWorkout}
+                        style={{ marginLeft: 'auto' }}
+                      >
+                        <Plus color="var(--color-white)" strokeWidth={2.2} size={16} />
+                        New workout
+                      </Button>
+                    ) : (
+                      <Button
+                        type="primary"
+                        size="sm"
+                        onClick={v.openArsenalAdd}
+                        style={{ marginLeft: 'auto' }}
+                      >
+                        <Plus color="var(--color-white)" strokeWidth={2.2} size={16} />
+                        New exercise
+                      </Button>
+                    )}
                   </div>
                   <Text
                     variant="body"
@@ -2067,15 +2079,26 @@ export function PlannerView({ v }: { v: any }) {
                     tone="muted"
                     style={{ margin: '10px 0 0', maxWidth: '460px', textWrap: 'pretty' }}
                   >
-                    Every exercise you've called on, grouped by the workout it belongs to.
+                    {v.arsenalIntro}
                   </Text>
+                  <SegmentedControl
+                    label="Arsenal view"
+                    size="sm"
+                    options={[
+                      { value: 'workouts', label: 'Workouts' },
+                      { value: 'exercises', label: 'Exercises' },
+                    ]}
+                    value={v.arsenalView}
+                    onChange={v.setArsenalView}
+                    style={{ marginTop: '18px' }}
+                  />
                   <div
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       gap: '10px',
                       width: '100%',
-                      marginTop: '18px',
+                      marginTop: '12px',
                       padding: '12px 16px',
                       background: 'var(--color-white)',
                       borderRadius: '15px',
@@ -2087,7 +2110,7 @@ export function PlannerView({ v }: { v: any }) {
                       variant="bare"
                       value={v.arsenalQuery ?? ''}
                       onChange={v.setArsenalQuery}
-                      placeholder="Search exercises"
+                      placeholder={v.arsenalSearchPlaceholder}
                     />
                     {v.hasQuery ? (
                       <>
@@ -2102,151 +2125,241 @@ export function PlannerView({ v }: { v: any }) {
                       </>
                     ) : null}
                   </div>
-                  {v.noMatches ? (
+                  {v.showArsenalExercises ? (
                     <>
-                      <Text variant="body" as="p" tone="muted" style={{ margin: '20px 0 0' }}>
-                        {v.noMatchNote}
-                      </Text>
+                      {v.noMatches ? (
+                        <>
+                          <Text variant="body" as="p" tone="muted" style={{ margin: '20px 0 0' }}>
+                            {v.noMatchNote}
+                          </Text>
+                        </>
+                      ) : null}
+                      {v.arsenalAddOpen ? (
+                        <>
+                          <Card elevation="overlay" style={{ marginTop: '18px' }}>
+                            <Text variant="cardTitle" style={{ display: 'block' }}>
+                              New exercise
+                            </Text>
+                            <Label style={{ margin: '16px 0 7px' }}>Exercise name</Label>
+                            <TextField
+                              aria-label="Exercise name"
+                              value={v.draftName ?? ''}
+                              onChange={v.setName}
+                              onKeyDown={v.commitOnEnter}
+                              placeholder="e.g. Bulgarian Split Squat"
+                            />
+                            <div
+                              style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '14px' }}
+                            >
+                              <TextField
+                                label="Sets × reps"
+                                containerStyle={{ flex: '1 1 120px', minWidth: '0' }}
+                                value={v.draftSets ?? ''}
+                                onChange={v.setSets}
+                                placeholder="3 × 10"
+                              />
+                              <TextField
+                                label="Weight"
+                                containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
+                                value={v.draftWeight ?? ''}
+                                onChange={v.setWeight}
+                                placeholder="45 lb"
+                              />
+                              <TextField
+                                label="Rest"
+                                containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
+                                value={v.draftRest ?? ''}
+                                onChange={v.setRest}
+                                placeholder="60 sec"
+                              />
+                            </div>
+                            <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
+                            <div
+                              style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(5,minmax(0,1fr))',
+                                gap: '8px',
+                              }}
+                            >
+                              {(v.iconGrid ?? []).map((g, i) => (
+                                <Fragment key={i}>
+                                  <button onClick={g?.pick} style={css(g?.style)}>
+                                    {g?.svg}
+                                  </button>
+                                </Fragment>
+                              ))}
+                            </div>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                justifyContent: 'flex-end',
+                                alignItems: 'center',
+                                gap: '10px',
+                                marginTop: '20px',
+                                paddingTop: '18px',
+                                borderTop: '1px solid rgba(35,42,69,.07)',
+                              }}
+                            >
+                              <Button type="neutral" ghost size="lg" onClick={v.closeArsenalAdd}>
+                                Cancel
+                              </Button>
+                              <Button
+                                type="primary"
+                                size="lg"
+                                disabled={v.commitDisabled}
+                                onClick={v.commitArsenal}
+                              >
+                                Add to Arsenal
+                              </Button>
+                            </div>
+                          </Card>
+                        </>
+                      ) : null}
+                      <div
+                        style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: '22px' }}
+                      >
+                        {(v.moveGroups ?? []).map((g, i) => (
+                          <Fragment key={i}>
+                            <div>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexWrap: 'wrap',
+                                  alignItems: 'baseline',
+                                  gap: '8px',
+                                  padding: '0 2px 10px',
+                                }}
+                              >
+                                <Text variant="eyebrow" tone="slate">
+                                  {g?.label}
+                                </Text>
+                                <Text variant="small" tone="muted" weight="medium">
+                                  {g?.count}
+                                </Text>
+                              </div>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                {(g?.items ?? []).map((m, i) => (
+                                  <Fragment key={i}>
+                                    <div onClick={m?.open} style={css(m?.rowStyle)}>
+                                      <span
+                                        style={{
+                                          width: '34px',
+                                          height: '34px',
+                                          flex: 'none',
+                                          borderRadius: '11px',
+                                          background: 'var(--color-pink-tint)',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                        }}
+                                      >
+                                        {m?.svg}
+                                      </span>
+                                      <span style={{ flex: '1 1 180px', minWidth: '0' }}>
+                                        <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+                                          {m?.name}
+                                        </Text>
+                                        <Text
+                                          variant="caption"
+                                          tone="muted"
+                                          style={{ display: 'block', marginTop: '3px' }}
+                                        >
+                                          {m?.detail}
+                                        </Text>
+                                      </span>
+                                    </div>
+                                  </Fragment>
+                                ))}
+                              </div>
+                            </div>
+                          </Fragment>
+                        ))}
+                      </div>
                     </>
                   ) : null}
-                  {v.arsenalAddOpen ? (
+                  {v.showArsenalWorkouts ? (
                     <>
-                      <Card elevation="overlay" style={{ marginTop: '18px' }}>
-                        <Text variant="cardTitle" style={{ display: 'block' }}>
-                          New exercise
+                      {v.noSavedWorkouts ? (
+                        <Text variant="body" as="p" tone="muted" style={{ margin: '20px 0 0' }}>
+                          No saved workouts yet. Add one from the calendar and it will show up here.
                         </Text>
-                        <Label style={{ margin: '16px 0 7px' }}>Exercise name</Label>
-                        <TextField
-                          aria-label="Exercise name"
-                          value={v.draftName ?? ''}
-                          onChange={v.setName}
-                          onKeyDown={v.commitOnEnter}
-                          placeholder="e.g. Bulgarian Split Squat"
-                        />
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '14px' }}>
-                          <TextField
-                            label="Sets × reps"
-                            containerStyle={{ flex: '1 1 120px', minWidth: '0' }}
-                            value={v.draftSets ?? ''}
-                            onChange={v.setSets}
-                            placeholder="3 × 10"
-                          />
-                          <TextField
-                            label="Weight"
-                            containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
-                            value={v.draftWeight ?? ''}
-                            onChange={v.setWeight}
-                            placeholder="45 lb"
-                          />
-                          <TextField
-                            label="Rest"
-                            containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
-                            value={v.draftRest ?? ''}
-                            onChange={v.setRest}
-                            placeholder="60 sec"
-                          />
-                        </div>
-                        <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
-                        <div
-                          style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(5,minmax(0,1fr))',
-                            gap: '8px',
-                          }}
-                        >
-                          {(v.iconGrid ?? []).map((g, i) => (
-                            <Fragment key={i}>
-                              <button onClick={g?.pick} style={css(g?.style)}>
-                                {g?.svg}
-                              </button>
-                            </Fragment>
-                          ))}
-                        </div>
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            justifyContent: 'flex-end',
-                            alignItems: 'center',
-                            gap: '10px',
-                            marginTop: '20px',
-                            paddingTop: '18px',
-                            borderTop: '1px solid rgba(35,42,69,.07)',
-                          }}
-                        >
-                          <Button type="neutral" ghost size="lg" onClick={v.closeArsenalAdd}>
-                            Cancel
-                          </Button>
-                          <Button
-                            type="primary"
-                            size="lg"
-                            disabled={v.commitDisabled}
-                            onClick={v.commitArsenal}
-                          >
-                            Add to Arsenal
-                          </Button>
-                        </div>
-                      </Card>
-                    </>
-                  ) : null}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: '22px' }}>
-                    {(v.moveGroups ?? []).map((g, i) => (
-                      <Fragment key={i}>
-                        <div>
-                          <div
+                      ) : null}
+                      {v.noWorkoutMatches ? (
+                        <Text variant="body" as="p" tone="muted" style={{ margin: '20px 0 0' }}>
+                          {v.noWorkoutMatchNote}
+                        </Text>
+                      ) : null}
+                      <div
+                        style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '18px' }}
+                      >
+                        {(v.savedWorkouts ?? []).map((w, i) => (
+                          <Card
+                            key={i}
+                            as={w?.open ? 'button' : 'div'}
+                            interactive={!!w?.open}
+                            pad="sm"
+                            onClick={w?.open ?? undefined}
                             style={{
                               display: 'flex',
                               flexWrap: 'wrap',
-                              alignItems: 'baseline',
-                              gap: '8px',
-                              padding: '0 2px 10px',
+                              alignItems: 'center',
+                              gap: '14px',
+                              width: '100%',
                             }}
                           >
-                            <Text variant="eyebrow" tone="slate">
-                              {g?.label}
+                            <span
+                              style={{
+                                width: '40px',
+                                height: '40px',
+                                flex: 'none',
+                                borderRadius: '13px',
+                                background: 'var(--color-pink-tint)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              {w?.svg}
+                            </span>
+                            <span style={{ flex: '1 1 200px', minWidth: '0' }}>
+                              <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+                                {w?.name}
+                              </Text>
+                              <Text
+                                variant="caption"
+                                tone="muted"
+                                style={{ display: 'block', marginTop: '3px' }}
+                              >
+                                {w?.meta}
+                              </Text>
+                              {w?.exercises ? (
+                                <Text
+                                  variant="small"
+                                  tone="subtle"
+                                  style={{ display: 'block', marginTop: '3px' }}
+                                >
+                                  {w?.exercises}
+                                </Text>
+                              ) : null}
+                              {(w?.areas ?? []).length ? (
+                                <span
+                                  style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}
+                                >
+                                  {(w?.areas ?? []).map((a, k) => (
+                                    <Chip key={k}>{a}</Chip>
+                                  ))}
+                                </span>
+                              ) : null}
+                            </span>
+                            <Text variant="caption" tone="muted" weight="medium" style={{ flex: 'none' }}>
+                              {w?.when}
                             </Text>
-                            <Text variant="small" tone="muted" weight="medium">
-                              {g?.count}
-                            </Text>
-                          </div>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            {(g?.items ?? []).map((m, i) => (
-                              <Fragment key={i}>
-                                <div onClick={m?.open} style={css(m?.rowStyle)}>
-                                  <span
-                                    style={{
-                                      width: '34px',
-                                      height: '34px',
-                                      flex: 'none',
-                                      borderRadius: '11px',
-                                      background: 'var(--color-pink-tint)',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                    }}
-                                  >
-                                    {m?.svg}
-                                  </span>
-                                  <span style={{ flex: '1 1 180px', minWidth: '0' }}>
-                                    <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
-                                      {m?.name}
-                                    </Text>
-                                    <Text
-                                      variant="caption"
-                                      tone="muted"
-                                      style={{ display: 'block', marginTop: '3px' }}
-                                    >
-                                      {m?.detail}
-                                    </Text>
-                                  </span>
-                                </div>
-                              </Fragment>
-                            ))}
-                          </div>
-                        </div>
-                      </Fragment>
-                    ))}
-                  </div>
+                          </Card>
+                        ))}
+                      </div>
+                    </>
+                  ) : null}
                 </div>
               </>
             ) : null}

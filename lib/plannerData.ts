@@ -44,12 +44,29 @@ export interface DiaryEntry {
   workout: string;
 }
 
+// A saved workout: the template a plan entry is scheduled from, with when it is next on the plan.
+export interface WorkoutSummary {
+  id: string;
+  name: string;
+  kind: 'lift' | 'ride';
+  time: string;
+  areas: string[];
+  icon: string | null;
+  iconColor: string | null;
+  exercises: string[];
+  ride?: { dist: string; zone: string };
+  entryCount: number;
+  next: { m: number; d: number } | null; // the next scheduled date, if any
+  open: { m: number; d: number } | null; // the entry to open: the next one, else the most recent
+}
+
 export interface Model {
   EX: Record<string, Exercise[]>; // workout name -> exercises
   SEED: Record<number, Record<number, Entry>>; // month -> day -> entry
   entries: { m: number; d: number; iso: string; av: Entry }[]; // sorted by date
   DIARY: Record<string, DiaryEntry>; // plan entry id -> diary entry
   library: Exercise[]; // arsenal exercises not tied to a workout
+  workouts: WorkoutSummary[]; // every saved workout, by name
   done: Record<string, string[]>; // plan entry id -> ticked exercise names
   rideDone: Record<string, boolean>;
   year: number;
@@ -204,12 +221,39 @@ export async function loadModel(today: Date): Promise<Model> {
     DIARY[av.id] = { m: hit.m, d: hit.d, mood: r.mood.charAt(0).toUpperCase() + r.mood.slice(1), rpe: r.rpe ?? 3, note: r.notes || '', workout: av.name };
   });
 
+  const saved: WorkoutSummary[] = workouts
+    .map((w: any) => {
+      const mine = entries.filter((e) => e.av.workoutId === w.id);
+      const upcoming = mine.find((e) => e.iso >= todayIso);
+      const pick = upcoming || mine[mine.length - 1];
+      const isRide = w.kind === 'ride';
+      const minutes = w.duration_minutes ?? (isRide ? 45 : 50);
+      return {
+        id: w.id,
+        name: w.name,
+        kind: isRide ? 'ride' : 'lift',
+        time: isRide ? rideTime(minutes) : `~${minutes} min`,
+        areas: w.target_areas || [],
+        icon: w.icon,
+        iconColor: w.icon_color,
+        exercises: (EX[w.name] || []).map((e) => e.name),
+        ride: isRide
+          ? { dist: w.ride_distance_miles != null ? String(w.ride_distance_miles) : '', zone: w.ride_zone || 'Endurance' }
+          : undefined,
+        entryCount: mine.length,
+        next: upcoming ? { m: upcoming.m, d: upcoming.d } : null,
+        open: pick ? { m: pick.m, d: pick.d } : null,
+      } as WorkoutSummary;
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+
   return {
     EX,
     SEED,
     entries,
     DIARY,
     library: library.map(toExercise),
+    workouts: saved,
     done,
     rideDone,
     year: today.getFullYear(),
