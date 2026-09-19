@@ -3836,7 +3836,7 @@ export function PlannerView({ v }: { v: any }) {
                       borderTop: '1px solid rgba(35,42,69,.07)',
                     }}
                   >
-                    <Button type="secondary" size="lg" onClick={v.goEdit}>
+                    <Button type="neutral" ghost size="lg" onClick={v.goEdit}>
                       <Pencil color="var(--color-slate)" size={17} />
                       Edit workout
                     </Button>
