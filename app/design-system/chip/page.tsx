@@ -5,7 +5,7 @@ import { Chip } from '@/components/ui/chip';
 import { Calendar, Clock, Close, Repeat } from '@/components/ui/icons';
 import { IconButton } from '@/components/ui/buttons';
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px' };
+const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
 const note: React.CSSProperties = { margin: '0 0 16px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, padding: '18px 20px', background: 'var(--color-canvas)', borderRadius: 18, boxShadow: 'inset 0 0 0 1px rgba(35,42,69,.07)' };
 
@@ -25,7 +25,7 @@ export default function ChipPage() {
         <code>onClick</code> (or use the choice tone) and it becomes a button; otherwise it is a plain label.
       </p>
 
-      <h2 style={h2}>Info</h2>
+      <h2 id="info" style={h2}>Info</h2>
       <p style={note}>
         White, for a fact about what is on screen: a date, a duration, a tag. With an <code>onClick</code> it lifts on
         hover.
@@ -38,7 +38,7 @@ export default function ChipPage() {
         </Chip>
       </div>
 
-      <h2 style={h2}>Accent</h2>
+      <h2 id="accent" style={h2}>Accent</h2>
       <p style={note}>Solid pink, for something that is switched on. A trailing slot holds a small action.</p>
       <div style={row}>
         <Chip tone="accent" icon={<Repeat color="var(--color-white)" size={15} />}>
@@ -57,7 +57,7 @@ export default function ChipPage() {
         </Chip>
       </div>
 
-      <h2 style={h2}>Choice</h2>
+      <h2 id="choice" style={h2}>Choice</h2>
       <p style={note}>
         A selectable option, pink when <code>selected</code> and exposed with <code>aria-pressed</code>. Use it one
         at a time for a single choice, or several at once for a multi-select. Unselected choices are canvas-coloured,
@@ -80,7 +80,7 @@ export default function ChipPage() {
         </div>
       </div>
 
-      <h2 style={h2}>Sizes</h2>
+      <h2 id="sizes" style={h2}>Sizes</h2>
       <div style={row}>
         <Chip>sm</Chip>
         <Chip size="md">md</Chip>

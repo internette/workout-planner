@@ -27,7 +27,8 @@ export function DesignSystemNav() {
       const line = window.innerHeight * 0.33;
       let id = headings[0]?.id ?? null;
       for (const h of headings) if (h.getBoundingClientRect().top <= line) id = h.id;
-      if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 4) id = headings[headings.length - 1]?.id ?? id;
+      if (Math.ceil(window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight - 8)
+        id = headings[headings.length - 1]?.id ?? id;
       setActiveId(id);
     };
     const release = () => {

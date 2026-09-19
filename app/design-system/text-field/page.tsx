@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Label, TextArea, TextField } from '@/components/ui/text-field';
 import { Search } from '@/components/ui/icons';
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px' };
+const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
 const note: React.CSSProperties = { margin: '0 0 16px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', gap: 12 };
 
@@ -24,7 +24,7 @@ export default function TextFieldPage() {
         <code>onChange</code>, <code>inputMode</code>, <code>placeholder</code>, and so on).
       </p>
 
-      <h2 style={h2}>Filled, with a label</h2>
+      <h2 id="filled-with-a-label" style={h2}>Filled, with a label</h2>
       <p style={note}>
         The default. <code>label</code> wraps the field in a <code>&lt;label&gt;</code> and shows the caption above it;
         write it in normal case, it is uppercased for you. <code>labelNote</code> adds a quieter aside such as a unit.
@@ -44,7 +44,7 @@ export default function TextFieldPage() {
         </div>
       </Card>
 
-      <h2 style={h2}>Suffix</h2>
+      <h2 id="suffix" style={h2}>Suffix</h2>
       <p style={note}>
         <code>suffix</code> puts a unit after the input inside the box. Use <code>Label</code> on its own as the heading
         for a group of fields.
@@ -57,7 +57,7 @@ export default function TextFieldPage() {
         </div>
       </Card>
 
-      <h2 style={h2}>Error and disabled</h2>
+      <h2 id="error-and-disabled" style={h2}>Error and disabled</h2>
       <Card>
         <div style={row}>
           <TextField
@@ -71,13 +71,13 @@ export default function TextFieldPage() {
         </div>
       </Card>
 
-      <h2 style={h2}>Title</h2>
+      <h2 id="title" style={h2}>Title</h2>
       <p style={note}>
         <code>variant=&quot;title&quot;</code> is an editable heading with a dashed underline.
       </p>
       <TextField variant="title" aria-label="Workout name" value={title} onChange={(e) => setTitle(e.target.value)} />
 
-      <h2 style={h2}>Bare</h2>
+      <h2 id="bare" style={h2}>Bare</h2>
       <p style={note}>
         <code>variant=&quot;bare&quot;</code> is just the input, for a container you style yourself, such as a search
         box. <code>size=&quot;sm&quot;</code> is the compact date-style text.
@@ -87,7 +87,7 @@ export default function TextFieldPage() {
         <TextField variant="bare" aria-label="Search" placeholder="Search exercises" value={query} onChange={(e) => setQuery(e.target.value)} />
       </Card>
 
-      <h2 style={h2}>Text area</h2>
+      <h2 id="text-area" style={h2}>Text area</h2>
       <p style={note}>A white raised surface for notes.</p>
       <TextArea rows={4} placeholder="Energy, soreness, what worked…" value={notes} onChange={(e) => setNotes(e.target.value)} />
     </main>

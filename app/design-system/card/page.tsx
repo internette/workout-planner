@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 
 export const metadata = { title: 'Card — Design system' };
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px' };
+const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
 const note: React.CSSProperties = { margin: '0 0 16px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const grid: React.CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 };
 const title: React.CSSProperties = { fontFamily: 'var(--font-heading)', fontWeight: 'var(--font-weight-bold)', fontSize: 'var(--text-xl)' };
@@ -18,7 +18,7 @@ export default function CardPage() {
         props (<code>style</code>, <code>role</code>, <code>onClick</code>, and so on) like a normal element.
       </p>
 
-      <h2 style={h2}>Padding</h2>
+      <h2 id="padding" style={h2}>Padding</h2>
       <p style={note}>
         <code>pad</code>: none, xs (14px), sm (18px 20px), md (22px, the default) and lg (26px).
       </p>
@@ -31,7 +31,7 @@ export default function CardPage() {
         ))}
       </div>
 
-      <h2 style={h2}>Elevation</h2>
+      <h2 id="elevation" style={h2}>Elevation</h2>
       <p style={note}>
         <code>raised</code> for cards on the page, <code>overlay</code> for dialogs, menus and popovers that float
         above it.
@@ -47,7 +47,7 @@ export default function CardPage() {
         </Card>
       </div>
 
-      <h2 style={h2}>Clickable</h2>
+      <h2 id="clickable" style={h2}>Clickable</h2>
       <p style={note}>
         A card that goes somewhere is a button: <code>as=&quot;button&quot;</code> with <code>interactive</code>. It
         resets the native button look and lifts on hover.
@@ -63,7 +63,7 @@ export default function CardPage() {
         </Card>
       </div>
 
-      <h2 style={h2}>As a section</h2>
+      <h2 id="as-a-section" style={h2}>As a section</h2>
       <p style={note}>
         <code>as</code> can be div (the default), section, aside, article or button.
       </p>

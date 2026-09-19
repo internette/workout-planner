@@ -5,11 +5,22 @@ import { colors } from '@/components/ui/colors';
 export const metadata = { title: 'Icons — Design system' };
 
 const card: React.CSSProperties = {
-  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '18px 8px',
-  background: 'var(--color-white)', borderRadius: 16, boxShadow: '0 4px 14px rgba(35,42,69,.07)', color: 'var(--color-ink)',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: 10,
+  padding: '18px 8px',
+  background: 'var(--color-white)',
+  borderRadius: 16,
+  boxShadow: '0 4px 14px rgba(35,42,69,.07)',
+  color: 'var(--color-ink)',
 };
 const label: React.CSSProperties = { fontSize: 'var(--text-sm)', color: 'var(--color-muted)', textAlign: 'center' };
-const grid: React.CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: 12 };
+const grid: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
+  gap: 12,
+};
 
 function Tile({ name, children }: { name: string; children: React.ReactNode }) {
   return (
@@ -29,7 +40,9 @@ export default function IconsPage() {
         <code>strokeWidth</code>. Line icons default to the surrounding text colour.
       </p>
 
-      <h2 style={{ fontSize: 'var(--text-2xl)' }}>Glyphs</h2>
+      <h2 id="glyphs" style={{ scrollMarginTop: 16, fontSize: 'var(--text-2xl)' }}>
+        Glyphs
+      </h2>
       <div style={grid}>
         {Object.entries(glyphs).map(([name, Glyph]) => (
           <Tile key={name} name={name}>
@@ -38,7 +51,9 @@ export default function IconsPage() {
         ))}
       </div>
 
-      <h2 style={{ fontSize: 'var(--text-2xl)', marginTop: 40 }}>Exercise icons</h2>
+      <h2 id="exercise-icons" style={{ scrollMarginTop: 16, fontSize: 'var(--text-2xl)', marginTop: 40 }}>
+        Exercise icons
+      </h2>
       <div style={grid}>
         {EXERCISE_ICON_NAMES.map((name) => (
           <Tile key={name} name={`ExerciseIcon “${name}”`}>
@@ -47,7 +62,9 @@ export default function IconsPage() {
         ))}
       </div>
 
-      <h2 style={{ fontSize: 'var(--text-2xl)', marginTop: 40 }}>Decorative</h2>
+      <h2 id="decorative" style={{ scrollMarginTop: 16, fontSize: 'var(--text-2xl)', marginTop: 40 }}>
+        Decorative
+      </h2>
       <div style={grid}>
         <Tile name="Sparkle">
           <Sparkle size={28} color={colors.pink} />
@@ -63,14 +80,26 @@ export default function IconsPage() {
         </Tile>
       </div>
 
-      <h2 style={{ fontSize: 'var(--text-2xl)', marginTop: 40 }}>Mood faces</h2>
+      <h2 id="mood-faces" style={{ scrollMarginTop: 16, fontSize: 'var(--text-2xl)', marginTop: 40 }}>
+        Mood faces
+      </h2>
       <div style={grid}>
         {(['Happy', 'Neutral', 'Sad', 'Mad'] as const).map((mood, i) => (
           <Tile key={mood} name={mood}>
             <span
               style={{
-                width: 48, height: 48, borderRadius: '50%', display: 'flex', alignItems: 'center',
-                justifyContent: 'center', background: ['var(--color-pink)', 'var(--color-slate)', 'var(--color-periwinkle)', 'var(--color-danger)'][i],
+                width: 48,
+                height: 48,
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: [
+                  'var(--color-pink)',
+                  'var(--color-slate)',
+                  'var(--color-periwinkle)',
+                  'var(--color-danger)',
+                ][i],
               }}
             >
               <MoodFace mood={mood} size={26} />

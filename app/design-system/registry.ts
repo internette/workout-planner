@@ -28,10 +28,19 @@ export const categories: Record<Category, { title: string; description: string }
 };
 
 export const sections: Section[] = [
-  { slug: 'colors', title: 'Colors', category: 'foundations', description: 'The palette as CSS variables, grouped by role.',
+  {
+    slug: 'colors',
+    title: 'Colors',
+    category: 'foundations',
+    description: 'The palette as CSS variables, grouped by role.',
     // One link per colour group; the page gives each group heading the same id.
-    anchors: Object.keys(colorGroups).map((title) => ({ id: title.toLowerCase(), title })) },
-  { slug: 'typography', title: 'Typography', category: 'foundations', description: 'Families, sizes and weights, and the named text styles built from them.',
+    anchors: Object.keys(colorGroups).map((title) => ({ id: title.toLowerCase(), title })),
+  },
+  {
+    slug: 'typography',
+    title: 'Typography',
+    category: 'foundations',
+    description: 'Families, sizes and weights, and the named text styles built from them.',
     anchors: [
       { id: 'text-styles', title: 'Text styles' },
       { id: 'tones', title: 'Tones' },
@@ -40,9 +49,25 @@ export const sections: Section[] = [
       { id: 'weights', title: 'Weights' },
       { id: 'tracking', title: 'Tracking' },
       { id: 'leading', title: 'Leading' },
-    ] },
-  { slug: 'icons', title: 'Icons', category: 'foundations', description: 'Glyphs, sparkles, gems and mood faces on a 24×24 canvas.' },
-  { slug: 'buttons', title: 'Buttons', category: 'components', description: 'Button and IconButton: types, ghost, sizes and hover states.',
+    ],
+  },
+  {
+    slug: 'icons',
+    title: 'Icons',
+    category: 'foundations',
+    description: 'Glyphs, sparkles, gems and mood faces on a 24×24 canvas.',
+    anchors: [
+      { id: 'glyphs', title: 'Glyphs' },
+      { id: 'exercise-icons', title: 'Exercise icons' },
+      { id: 'decorative', title: 'Decorative' },
+      { id: 'mood-faces', title: 'Mood faces' },
+    ],
+  },
+  {
+    slug: 'buttons',
+    title: 'Buttons',
+    category: 'components',
+    description: 'Button and IconButton: types, ghost, sizes and hover states.',
     anchors: [
       { id: 'hierarchy', title: 'Hierarchy' },
       { id: 'types', title: 'Types' },
@@ -50,11 +75,58 @@ export const sections: Section[] = [
       { id: 'glow-and-full-width', title: 'Glow and full width' },
       { id: 'disabled', title: 'Disabled' },
       { id: 'icon-buttons', title: 'Icon buttons' },
-    ] },
-  { slug: 'card', title: 'Card', category: 'components', description: 'White surfaces, raised or floating, with steps of padding.' },
-  { slug: 'chip', title: 'Chip', category: 'components', description: 'Pills for a fact, a tag or a choice.' },
-  { slug: 'segmented-control', title: 'Segmented control', category: 'components', description: 'A tray of mutually exclusive options, with keyboard support.' },
-  { slug: 'text-field', title: 'Text field', category: 'components', description: 'Inputs, text areas and their labels, with hints and errors.' },
+    ],
+  },
+  {
+    slug: 'card',
+    title: 'Card',
+    category: 'components',
+    description: 'White surfaces, raised or floating, with steps of padding.',
+    anchors: [
+      { id: 'padding', title: 'Padding' },
+      { id: 'elevation', title: 'Elevation' },
+      { id: 'clickable', title: 'Clickable' },
+      { id: 'as-a-section', title: 'As a section' },
+    ],
+  },
+  {
+    slug: 'chip',
+    title: 'Chip',
+    category: 'components',
+    description: 'Pills for a fact, a tag or a choice.',
+    anchors: [
+      { id: 'info', title: 'Info' },
+      { id: 'accent', title: 'Accent' },
+      { id: 'choice', title: 'Choice' },
+      { id: 'sizes', title: 'Sizes' },
+    ],
+  },
+  {
+    slug: 'segmented-control',
+    title: 'Segmented control',
+    category: 'components',
+    description: 'A tray of mutually exclusive options, with keyboard support.',
+    anchors: [
+      { id: 'brand-medium', title: 'Brand, medium' },
+      { id: 'brand-small', title: 'Brand, small' },
+      { id: 'quiet', title: 'Quiet' },
+      { id: 'full-width', title: 'Full width' },
+    ],
+  },
+  {
+    slug: 'text-field',
+    title: 'Text field',
+    category: 'components',
+    description: 'Inputs, text areas and their labels, with hints and errors.',
+    anchors: [
+      { id: 'filled-with-a-label', title: 'Filled, with a label' },
+      { id: 'suffix', title: 'Suffix' },
+      { id: 'error-and-disabled', title: 'Error and disabled' },
+      { id: 'title', title: 'Title' },
+      { id: 'bare', title: 'Bare' },
+      { id: 'text-area', title: 'Text area' },
+    ],
+  },
 ];
 
 // Ideas for what to build next. These are proposals, not commitments.

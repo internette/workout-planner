@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px' };
+const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
 const note: React.CSSProperties = { margin: '0 0 16px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 18, padding: '18px 20px', background: 'var(--color-white)', borderRadius: 18 };
 
@@ -35,7 +35,7 @@ export default function SegmentedControlPage() {
         <code>@/components/ui/segmented-control</code>. The arrow keys, Home and End move the selection.
       </p>
 
-      <h2 style={h2}>Brand, medium</h2>
+      <h2 id="brand-medium" style={h2}>Brand, medium</h2>
       <p style={note}>
         The default, for switching a whole view. <code>semantics=&quot;tabs&quot;</code> exposes it as tabs; use{' '}
         <code>equalWidth</code> to give every option the same width.
@@ -45,7 +45,7 @@ export default function SegmentedControlPage() {
         <SegmentedControl label="Calendar view, sized to labels" semantics="tabs" options={views} value={view} onChange={setView} />
       </div>
 
-      <h2 style={h2}>Brand, small</h2>
+      <h2 id="brand-small" style={h2}>Brand, small</h2>
       <p style={note}>
         <code>size=&quot;sm&quot;</code> for filters. Add <code>wrap</code> to let the options flow onto a second line.
       </p>
@@ -53,7 +53,7 @@ export default function SegmentedControlPage() {
         <SegmentedControl label="Show entries from" size="sm" wrap options={scopes} value={scope} onChange={setScope} />
       </div>
 
-      <h2 style={h2}>Quiet</h2>
+      <h2 id="quiet" style={h2}>Quiet</h2>
       <p style={note}>
         <code>tone=&quot;quiet&quot;</code> is a canvas tray with a white selection, for placing inside a card.
       </p>
@@ -75,7 +75,7 @@ export default function SegmentedControlPage() {
         </div>
       </Card>
 
-      <h2 style={h2}>Full width</h2>
+      <h2 id="full-width" style={h2}>Full width</h2>
       <p style={note}>
         <code>fullWidth</code> stretches the tray to its container, as on a narrow screen.
       </p>
