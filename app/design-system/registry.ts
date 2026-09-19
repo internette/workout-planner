@@ -1,3 +1,5 @@
+import { colorGroups } from '@/components/ui/colors/tokens';
+
 // The map of the design system: which sections exist and how they are grouped. The landing page and the
 // sidebar both read this. A folder in components/ui that is not listed here still shows up on the
 // landing page, under "Not yet organised", so nothing gets lost.
@@ -26,7 +28,9 @@ export const categories: Record<Category, { title: string; description: string }
 };
 
 export const sections: Section[] = [
-  { slug: 'colors', title: 'Colors', category: 'foundations', description: 'The palette as CSS variables, grouped by role.' },
+  { slug: 'colors', title: 'Colors', category: 'foundations', description: 'The palette as CSS variables, grouped by role.',
+    // One link per colour group; the page gives each group heading the same id.
+    anchors: Object.keys(colorGroups).map((title) => ({ id: title.toLowerCase(), title })) },
   { slug: 'typography', title: 'Typography', category: 'foundations', description: 'Families, sizes and weights, and the named text styles built from them.',
     anchors: [
       { id: 'text-styles', title: 'Text styles' },
