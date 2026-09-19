@@ -2,7 +2,7 @@ import { DOW3, EDIT_OVERLAYS, ICON_COLORS, MON3, PINK } from '../constants';
 import { idOf, isoOf } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
-import { modeStyle, optStyle, zoneStyle } from '../styles';
+import { optStyle, zoneStyle } from '../styles';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
 
@@ -144,10 +144,8 @@ export function editVals(ctx: Ctx) {
     addNew: st.addMode === 'new',
     openAdd: () => logic.s({ addOpen: true, addMode: 'lib' }),
     closeAdd: () => logic.s({ addOpen: false }),
-    modeLib: () => logic.s({ addMode: 'lib' }),
-    modeNew: () => logic.s({ addMode: 'new' }),
-    modeLibStyle: modeStyle(st.addMode !== 'new'),
-    modeNewStyle: modeStyle(st.addMode === 'new'),
+    addMode: st.addMode === 'new' ? 'new' : 'lib',
+    setAddMode: (mode) => logic.s({ addMode: mode }),
     library: libraryFor(listKey).map((e) => ({
       name: e.name,
       detail: e.sets + ' · ' + e.weight,

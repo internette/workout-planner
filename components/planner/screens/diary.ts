@@ -1,7 +1,6 @@
 import { DOW3, MON3, MONTHS } from '../constants';
 import { isoOf, tokenFor } from '../helpers';
 import { moodSvg } from '../icons';
-import { scopeStyle } from '../styles';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
 
@@ -30,6 +29,18 @@ export function diaryVals(ctx: Ctx) {
     stars,
     RPE_WORDS,
   } = ctx;
+  const scopeHandlers = {
+    all: () => logic.s({ diaryScope: 'all', rFrom: '', rTo: '' }),
+    today: () => logic.s({ diaryScope: 'today', rFrom: isoToday, rTo: isoToday }),
+    week: () =>
+      logic.s({
+        diaryScope: 'week',
+        rFrom: isoOf(todayWkStart),
+        rTo: isoOf(new Date(Y, TODAY_M, todayWkStart.getDate() + 6)),
+      }),
+    month: () => logic.s({ diaryScope: 'month', rFrom: iso30, rTo: isoToday }),
+    range: () => logic.s({ diaryScope: 'range', rFrom: st.rFrom || iso30, rTo: st.rTo || isoToday }),
+  };
   return {
     saveEntryLabel: st.diaryFrom === 'list' ? 'Save changes' : 'Save entry',
     entryNote: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
@@ -90,15 +101,6 @@ export function diaryVals(ctx: Ctx) {
           diaryEdit: true,
         }),
     })),
-    diaryAll: () => logic.s({ diaryScope: 'all', rFrom: '', rTo: '' }),
-    diaryToday: () => logic.s({ diaryScope: 'today', rFrom: isoToday, rTo: isoToday }),
-    diaryWeek: () =>
-      logic.s({
-        diaryScope: 'week',
-        rFrom: isoOf(todayWkStart),
-        rTo: isoOf(new Date(Y, TODAY_M, todayWkStart.getDate() + 6)),
-      }),
-    diaryMonth: () => logic.s({ diaryScope: 'month', rFrom: iso30, rTo: isoToday }),
     showRange: dScope === 'range',
     rangeFrom: st.rFrom || '',
     rangeTo: st.rTo || '',
@@ -112,17 +114,8 @@ export function diaryVals(ctx: Ctx) {
     },
     rangeMin: st.rFrom || '',
     clearRange: () => logic.s({ rFrom: '', rTo: '' }),
-    diaryAllStyle: scopeStyle(dScope === 'all'),
-    diaryTodayStyle: scopeStyle(dScope === 'today'),
-    diaryWeekStyle: scopeStyle(dScope === 'week'),
-    diaryMonthStyle: scopeStyle(dScope === 'month'),
-    dScopeAll: dScope === 'all',
-    dScopeToday: dScope === 'today',
-    dScopeWeek: dScope === 'week',
-    dScope30: dScope === 'month',
-    dScopeRange: dScope === 'range',
-    diaryRange: () => logic.s({ diaryScope: 'range', rFrom: st.rFrom || iso30, rTo: st.rTo || isoToday }),
-    diaryRangeStyle: scopeStyle(dScope === 'range'),
+    diaryScope: dScope,
+    setDiaryScope: (scope) => scopeHandlers[scope](),
     rangeShown: dScope === 'range',
     diaryEmpty: diaryDays.length === 0,
     diaryEmptyNote:

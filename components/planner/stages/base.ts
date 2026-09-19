@@ -18,11 +18,6 @@ export function baseStage(ctx: Ctx): Ctx {
   const navExtra = tablet ? ';flex:none;padding:11px 16px' : '';
   const onCal = st.screen === 'day' || st.screen === 'rest' || st.screen === 'diary' || st.screen === 'edit';
   const calActive = ['day', 'rest', 'edit', 'detail', 'newEntry'].indexOf(st.screen) > -1;
-  const seg = (on) =>
-    'flex:1;min-width:0;padding:12px' +
-    (narrow ? '' : ' 20px') +
-    ';border:none;border-radius:12px;font-size:var(--text-base);font-weight:var(--font-weight-semibold);cursor:pointer;' +
-    (on ? 'background:' + PINK + ';color:var(--color-white)' : 'background:none;color:var(--color-muted)');
   const creating = st.screen === 'edit' && !!st.creating;
   return {
     st,
@@ -41,6 +36,5 @@ export function baseStage(ctx: Ctx): Ctx {
     onCal,
     navExtra,
     calActive,
-    seg,
   };
 }

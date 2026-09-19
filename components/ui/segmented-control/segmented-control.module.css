@@ -1,0 +1,37 @@
+/* A row of mutually exclusive options in one tray. */
+
+.tray {
+  display: inline-flex;
+  gap: 4px;
+  box-sizing: border-box;
+}
+.wrap { flex-wrap: wrap; }
+.fullWidth { display: flex; width: 100%; }
+
+.tray-sm { padding: 4px; border-radius: 15px; }
+.tray-md { padding: 5px; border-radius: 16px; }
+
+/* brand: a white tray with the selected option in pink. quiet: a canvas tray for use inside cards. */
+.tone-brand { background: var(--color-white); box-shadow: 0 4px 14px rgba(35, 42, 69, 0.07); }
+.tone-quiet { background: var(--color-canvas); }
+
+.segment {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-muted);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.equalWidth .segment { flex: 1; min-width: 0; }
+
+.segment-sm { padding: 9px 16px; border-radius: 11px; font-size: var(--text-md); }
+.segment-md { padding: 12px 20px; border-radius: 12px; font-size: var(--text-base); }
+
+.tone-brand .selected { background: var(--color-pink); color: var(--color-white); }
+.tone-quiet .selected {
+  background: var(--color-white);
+  color: var(--color-pink-deep);
+  box-shadow: 0 1px 3px rgba(35, 42, 69, 0.06);
+}

@@ -14,7 +14,6 @@ export function calendarVals(ctx: Ctx) {
     monthDays,
     actFor,
     selDay,
-    seg,
     Y,
     mi,
     months,
@@ -34,9 +33,10 @@ export function calendarVals(ctx: Ctx) {
     weekRows,
     monthCells,
     constellation,
-    segRowStyle:
-      'display:flex;gap:4px;padding:5px;background:var(--color-white);border-radius:16px;box-shadow:0 4px 14px rgba(35,42,69,.07);' +
-      (narrow ? 'flex:1 1 100%;width:100%' : 'flex:none'),
+    // Full width on narrow screens, where the toggle gets its own row
+    segLayout: narrow ? { flex: '1 1 100%', width: '100%' } : { flex: 'none' },
+    calendarView: st.seg,
+    setCalendarView: (seg) => logic.s({ seg }),
     monthBtn:
       'display:inline-flex;align-items:center;gap:7px;margin-left:-10px;padding:8px 10px;border:none;border-radius:14px;background:' +
       (st.monthOpen ? 'rgba(35,42,69,.05)' : 'none') +
@@ -49,15 +49,6 @@ export function calendarVals(ctx: Ctx) {
     showMonth: st.seg === 'Month',
     isRest: st.seg === 'Day' && !actFor(selDay),
     hasWorkout: st.seg === 'Day' && !!actFor(selDay),
-    segDayStyle: seg(st.seg === 'Day'),
-    segWeekStyle: seg(st.seg === 'Week'),
-    segMonthStyle: seg(st.seg === 'Month'),
-    segDayOn: st.seg === 'Day',
-    segWeekOn: st.seg === 'Week',
-    segMonthOn: st.seg === 'Month',
-    segDay: () => logic.s({ seg: 'Day' }),
-    segWeek: () => logic.s({ seg: 'Week' }),
-    segMonth: () => logic.s({ seg: 'Month' }),
     monthName: st.month,
     monthOpen: st.monthOpen,
     caretStyle:

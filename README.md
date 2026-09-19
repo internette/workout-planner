@@ -67,6 +67,7 @@ components/
   ui/typography/      Design-system type tokens (families, sizes, weights, tracking, leading) as CSS variables
   ui/buttons/         Design-system Button and IconButton (variants, sizes, hover states)
   ui/card/            Design-system Card (raised and overlay surfaces, padding steps, clickable cards)
+  ui/segmented-control/  Design-system SegmentedControl (brand and quiet tones, tabs or options, keyboard support)
   planner/
     PlannerLogic.ts   UI state, navigation, loading and saving; renderVals() assembles the view's values
     context.ts        Runs the stages below in order to build a shared context

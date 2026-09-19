@@ -5,6 +5,7 @@
 import { Fragment } from 'react';
 import { css, t } from './viewHelpers';
 import { Card } from '@/components/ui/card';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 import { Button, IconButton } from '@/components/ui/buttons';
 import {
   BarChart,
@@ -451,32 +452,19 @@ export function PlannerView({ v }: { v: any }) {
                         </>
                       ) : null}
                     </div>
-                    <div role="tablist" aria-label="Calendar view" style={css(v.segRowStyle)}>
-                      <button
-                        onClick={v.segDay}
-                        role="tab"
-                        aria-selected={v.segDayOn}
-                        style={css(v.segDayStyle)}
-                      >
-                        Day
-                      </button>
-                      <button
-                        onClick={v.segWeek}
-                        role="tab"
-                        aria-selected={v.segWeekOn}
-                        style={css(v.segWeekStyle)}
-                      >
-                        Week
-                      </button>
-                      <button
-                        onClick={v.segMonth}
-                        role="tab"
-                        aria-selected={v.segMonthOn}
-                        style={css(v.segMonthStyle)}
-                      >
-                        Month
-                      </button>
-                    </div>
+                    <SegmentedControl
+                      label="Calendar view"
+                      semantics="tabs"
+                      equalWidth
+                      options={[
+                        { value: 'Day', label: 'Day' },
+                        { value: 'Week', label: 'Week' },
+                        { value: 'Month', label: 'Month' },
+                      ]}
+                      value={v.calendarView}
+                      onChange={v.setCalendarView}
+                      style={v.segLayout}
+                    />
                   </div>
                   {v.showDay ? (
                     <>
@@ -3115,42 +3103,21 @@ export function PlannerView({ v }: { v: any }) {
                     Every session you've written down after the fact. Open one to read or edit it.
                   </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
-                    <div
-                      style={{
-                        display: 'inline-flex',
-                        alignSelf: 'flex-start',
-                        flexWrap: 'wrap',
-                        gap: '4px',
-                        padding: '5px',
-                        background: 'var(--color-white)',
-                        borderRadius: '15px',
-                        boxShadow: '0 1px 3px rgba(35,42,69,.06)',
-                      }}
-                    >
-                      <button onClick={v.diaryAll} aria-pressed={v.dScopeAll} style={css(v.diaryAllStyle)}>
-                        All
-                      </button>
-                      <button
-                        onClick={v.diaryToday}
-                        aria-pressed={v.dScopeToday}
-                        style={css(v.diaryTodayStyle)}
-                      >
-                        Today
-                      </button>
-                      <button onClick={v.diaryWeek} aria-pressed={v.dScopeWeek} style={css(v.diaryWeekStyle)}>
-                        Week
-                      </button>
-                      <button onClick={v.diaryMonth} aria-pressed={v.dScope30} style={css(v.diaryMonthStyle)}>
-                        30 days
-                      </button>
-                      <button
-                        onClick={v.diaryRange}
-                        aria-pressed={v.dScopeRange}
-                        style={css(v.diaryRangeStyle)}
-                      >
-                        Range
-                      </button>
-                    </div>
+                    <SegmentedControl
+                      label="Show entries from"
+                      size="sm"
+                      wrap
+                      options={[
+                        { value: 'all', label: 'All' },
+                        { value: 'today', label: 'Today' },
+                        { value: 'week', label: 'Week' },
+                        { value: 'month', label: '30 days' },
+                        { value: 'range', label: 'Range' },
+                      ]}
+                      value={v.diaryScope}
+                      onChange={v.setDiaryScope}
+                      style={{ alignSelf: 'flex-start' }}
+                    />
                     {v.rangeShown ? (
                       <>
                         <div
@@ -5030,23 +4997,18 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             Add exercise
                           </span>
-                          <div
-                            style={{
-                              marginLeft: 'auto',
-                              display: 'flex',
-                              gap: '4px',
-                              padding: '4px',
-                              background: 'var(--color-canvas)',
-                              borderRadius: '13px',
-                            }}
-                          >
-                            <button onClick={v.modeLib} style={css(v.modeLibStyle)}>
-                              From Arsenal
-                            </button>
-                            <button onClick={v.modeNew} style={css(v.modeNewStyle)}>
-                              Create new
-                            </button>
-                          </div>
+                          <SegmentedControl
+                            label="Add exercise from"
+                            size="sm"
+                            tone="quiet"
+                            options={[
+                              { value: 'lib', label: 'From Arsenal' },
+                              { value: 'new', label: 'Create new' },
+                            ]}
+                            value={v.addMode}
+                            onChange={v.setAddMode}
+                            style={{ marginLeft: 'auto' }}
+                          />
                         </div>
                         {v.addLib ? (
                           <>
