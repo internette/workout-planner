@@ -1,0 +1,90 @@
+/* Text inputs and their captions. */
+
+.field { display: block; min-width: 0; }
+
+.caption {
+  display: block;
+  margin-bottom: 7px;
+  font-size: var(--text-2xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.note { color: var(--color-subtle); }
+
+/* ---- filled: a canvas box that holds the input and an optional suffix */
+.control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 15px;
+  border-radius: 13px;
+  background: var(--color-canvas);
+}
+.control:focus-within { outline: 2px solid var(--color-pink); outline-offset: 2px; }
+.control.invalid { outline: 2px solid var(--color-danger); outline-offset: 0; }
+.suffix { flex: none; font-size: var(--text-md); font-weight: var(--font-weight-semibold); color: var(--color-muted); }
+
+/* The input itself: no chrome of its own inside a control, and reset everywhere else. */
+.input {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-ink);
+}
+.control .input:focus-visible { outline: none; }
+
+/* ---- bare: for placing inside a container you style yourself */
+.bare { flex: 1; min-height: 36px; }
+.bare-sm {
+  flex: 1;
+  min-height: 36px;
+  padding: 8px 0;
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-slate);
+}
+
+/* ---- title: an inline heading you can edit, with a dashed underline */
+.title {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 3px 0 0;
+  min-height: 36px;
+  padding: 5px 0;
+  border-bottom: 1.5px dashed rgba(35, 42, 69, 0.3);
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* ---- text area: a white raised surface */
+.textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 18px;
+  border: none;
+  border-radius: 20px;
+  background: var(--color-white);
+  box-shadow: 0 4px 14px rgba(35, 42, 69, 0.07);
+  font-family: inherit;
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-ink);
+  resize: vertical;
+}
+.textarea.invalid { outline: 2px solid var(--color-danger); }
+
+.hint { display: block; margin-top: 6px; font-size: var(--text-xs); font-weight: var(--font-weight-regular); color: var(--color-subtle); }
+.error { margin-top: 6px; font-size: var(--text-sm); color: var(--color-danger); }
+.disabled { opacity: 0.5; }

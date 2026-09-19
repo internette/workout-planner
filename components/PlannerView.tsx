@@ -6,6 +6,7 @@ import { Fragment } from 'react';
 import { css, t } from './viewHelpers';
 import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
+import { Label, TextArea, TextField } from '@/components/ui/text-field';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { Button, IconButton } from '@/components/ui/buttons';
 import {
@@ -2644,21 +2645,11 @@ export function PlannerView({ v }: { v: any }) {
                     }}
                   >
                     <Search color="var(--color-subtle)" size={17} />
-                    <input
+                    <TextField
+                      variant="bare"
                       value={v.arsenalQuery ?? ''}
                       onChange={v.setArsenalQuery}
                       placeholder="Search exercises"
-                      style={{
-                        flex: '1',
-                        minWidth: '0',
-                        minHeight: '36px',
-                        border: 'none',
-                        background: 'none',
-                        padding: '0',
-                        fontSize: 'var(--text-lg)',
-                        fontWeight: 'var(--font-weight-medium)',
-                        color: 'var(--color-ink)',
-                      }}
                     />
                     {v.hasQuery ? (
                       <>
@@ -2701,135 +2692,38 @@ export function PlannerView({ v }: { v: any }) {
                         >
                           New exercise
                         </span>
-                        <span
-                          style={{
-                            display: 'block',
-                            fontSize: 'var(--text-2xs)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-wide)',
-                            color: 'var(--color-muted)',
-                            margin: '16px 0 7px',
-                          }}
-                        >
-                          EXERCISE NAME
-                        </span>
-                        <input
+                        <Label style={{ margin: '16px 0 7px' }}>Exercise name</Label>
+                        <TextField
+                          aria-label="Exercise name"
                           value={v.draftName ?? ''}
                           onChange={v.setName}
                           onKeyDown={v.commitOnEnter}
                           placeholder="e.g. Bulgarian Split Squat"
-                          style={{
-                            width: '100%',
-                            padding: '13px 15px',
-                            border: 'none',
-                            borderRadius: '13px',
-                            background: 'var(--color-canvas)',
-                            fontSize: 'var(--text-lg)',
-                            fontWeight: 'var(--font-weight-medium)',
-                            color: 'var(--color-ink)',
-                          }}
                         />
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '14px' }}>
-                          <label style={{ flex: '1 1 120px', minWidth: '0', display: 'block' }}>
-                            <span
-                              style={{
-                                display: 'block',
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-muted)',
-                                marginBottom: '7px',
-                              }}
-                            >
-                              SETS × REPS
-                            </span>
-                            <input
-                              value={v.draftSets ?? ''}
-                              onChange={v.setSets}
-                              placeholder="3 × 10"
-                              style={{
-                                width: '100%',
-                                padding: '13px 15px',
-                                border: 'none',
-                                borderRadius: '13px',
-                                background: 'var(--color-canvas)',
-                                fontSize: 'var(--text-lg)',
-                                fontWeight: 'var(--font-weight-medium)',
-                                color: 'var(--color-ink)',
-                              }}
-                            />
-                          </label>
-                          <label style={{ flex: '1 1 110px', minWidth: '0', display: 'block' }}>
-                            <span
-                              style={{
-                                display: 'block',
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-muted)',
-                                marginBottom: '7px',
-                              }}
-                            >
-                              WEIGHT
-                            </span>
-                            <input
-                              value={v.draftWeight ?? ''}
-                              onChange={v.setWeight}
-                              placeholder="45 lb"
-                              style={{
-                                width: '100%',
-                                padding: '13px 15px',
-                                border: 'none',
-                                borderRadius: '13px',
-                                background: 'var(--color-canvas)',
-                                fontSize: 'var(--text-lg)',
-                                fontWeight: 'var(--font-weight-medium)',
-                                color: 'var(--color-ink)',
-                              }}
-                            />
-                          </label>
-                          <label style={{ flex: '1 1 110px', minWidth: '0', display: 'block' }}>
-                            <span
-                              style={{
-                                display: 'block',
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-muted)',
-                                marginBottom: '7px',
-                              }}
-                            >
-                              REST
-                            </span>
-                            <input
-                              value={v.draftRest ?? ''}
-                              onChange={v.setRest}
-                              placeholder="60 sec"
-                              style={{
-                                width: '100%',
-                                padding: '13px 15px',
-                                border: 'none',
-                                borderRadius: '13px',
-                                background: 'var(--color-canvas)',
-                                fontSize: 'var(--text-lg)',
-                                fontWeight: 'var(--font-weight-medium)',
-                                color: 'var(--color-ink)',
-                              }}
-                            />
-                          </label>
+                          <TextField
+                            label="Sets × reps"
+                            containerStyle={{ flex: '1 1 120px', minWidth: '0' }}
+                            value={v.draftSets ?? ''}
+                            onChange={v.setSets}
+                            placeholder="3 × 10"
+                          />
+                          <TextField
+                            label="Weight"
+                            containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
+                            value={v.draftWeight ?? ''}
+                            onChange={v.setWeight}
+                            placeholder="45 lb"
+                          />
+                          <TextField
+                            label="Rest"
+                            containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
+                            value={v.draftRest ?? ''}
+                            onChange={v.setRest}
+                            placeholder="60 sec"
+                          />
                         </div>
-                        <span
-                          style={{
-                            display: 'block',
-                            fontSize: 'var(--text-2xs)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-wide)',
-                            color: 'var(--color-muted)',
-                            margin: '16px 0 8px',
-                          }}
-                        >
-                          ICON
-                        </span>
+                        <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
                         <div
                           style={{
                             display: 'grid',
@@ -3132,22 +3026,13 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                         >
                           <Calendar color="var(--color-subtle)" size={16} />
-                          <input
+                          <TextField
+                            variant="bare"
+                            size="sm"
+                            aria-label="From date"
                             value={v.rangeFrom ?? ''}
                             onChange={v.setRangeFrom}
                             type="date"
-                            style={{
-                              flex: '1',
-                              minWidth: '0',
-                              minHeight: '36px',
-                              border: 'none',
-                              background: 'none',
-                              padding: '8px 0',
-                              fontFamily: 'var(--font-body)',
-                              fontSize: 'var(--text-md)',
-                              fontWeight: 'var(--font-weight-semibold)',
-                              color: 'var(--color-slate)',
-                            }}
                           />
                           <span
                             style={{
@@ -3159,23 +3044,14 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             →
                           </span>
-                          <input
+                          <TextField
+                            variant="bare"
+                            size="sm"
+                            aria-label="To date"
                             value={v.rangeTo ?? ''}
                             onChange={v.setRangeTo}
                             type="date"
                             min={v.rangeMin}
-                            style={{
-                              flex: '1',
-                              minWidth: '0',
-                              minHeight: '36px',
-                              border: 'none',
-                              background: 'none',
-                              padding: '8px 0',
-                              fontFamily: 'var(--font-body)',
-                              fontSize: 'var(--text-md)',
-                              fontWeight: 'var(--font-weight-semibold)',
-                              color: 'var(--color-slate)',
-                            }}
                           />
                         </div>
                       </>
@@ -3877,49 +3753,25 @@ export function PlannerView({ v }: { v: any }) {
                       </div>
                       {v.eNamePlaceholder ? (
                         <>
-                          <input
+                          <TextField
+                            variant="title"
+                            aria-label="Workout name"
                             value={v.eName ?? ''}
                             onChange={v.setNewName}
                             onKeyDown={v.commitOnEnter}
                             placeholder="Name this workout"
-                            style={{
-                              margin: '3px 0 0',
-                              width: '100%',
-                              minHeight: '36px',
-                              padding: '5px 0',
-                              border: 'none',
-                              borderBottom: '1.5px dashed rgba(35,42,69,.3)',
-                              background: 'none',
-                              fontFamily: 'var(--font-heading)',
-                              fontSize: 'var(--text-3xl)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              letterSpacing: 'var(--tracking-tight)',
-                              color: 'var(--color-ink)',
-                            }}
                           />
                         </>
                       ) : null}
                       {v.eNameStatic ? (
                         <>
-                          <input
+                          <TextField
+                            variant="title"
+                            aria-label="Workout name"
                             value={v.eName ?? ''}
                             onChange={v.setEditName}
                             onKeyDown={v.commitOnEnter}
                             placeholder="Name this workout"
-                            style={{
-                              margin: '3px 0 0',
-                              width: '100%',
-                              minHeight: '36px',
-                              padding: '5px 0',
-                              border: 'none',
-                              borderBottom: '1.5px dashed rgba(35,42,69,.3)',
-                              background: 'none',
-                              fontFamily: 'var(--font-heading)',
-                              fontSize: 'var(--text-3xl)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              letterSpacing: 'var(--tracking-tight)',
-                              color: 'var(--color-ink)',
-                            }}
                           />
                         </>
                       ) : null}
@@ -4167,175 +4019,47 @@ export function PlannerView({ v }: { v: any }) {
                           RIDE PLAN
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}>
-                          <label style={{ flex: '1 1 130px', minWidth: '0', display: 'block' }}>
-                            <span
-                              style={{
-                                display: 'block',
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-muted)',
-                                marginBottom: '7px',
-                              }}
-                            >
-                              {'DISTANCE '}
-                              <span style={{ color: 'var(--color-subtle)' }}>(MILES)</span>
-                            </span>
-                            <input
-                              value={v.rideDistance ?? ''}
-                              onChange={v.setDistance}
-                              inputMode="decimal"
-                              placeholder="24.5"
-                              style={{
-                                width: '100%',
-                                padding: '13px 15px',
-                                border: 'none',
-                                borderRadius: '13px',
-                                background: 'var(--color-canvas)',
-                                fontSize: 'var(--text-lg)',
-                                fontWeight: 'var(--font-weight-medium)',
-                                color: 'var(--color-ink)',
-                              }}
-                            />
-                          </label>
-                          <label style={{ flex: '1 1 130px', minWidth: '0', display: 'block' }}>
-                            <span
-                              style={{
-                                display: 'block',
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-muted)',
-                                marginBottom: '7px',
-                              }}
-                            >
-                              {'ELEVATION '}
-                              <span style={{ color: 'var(--color-subtle)' }}>(FEET)</span>
-                            </span>
-                            <input
-                              value={v.rideElev ?? ''}
-                              onChange={v.setElev}
-                              inputMode="numeric"
-                              placeholder="1200"
-                              style={{
-                                width: '100%',
-                                padding: '13px 15px',
-                                border: 'none',
-                                borderRadius: '13px',
-                                background: 'var(--color-canvas)',
-                                fontSize: 'var(--text-lg)',
-                                fontWeight: 'var(--font-weight-medium)',
-                                color: 'var(--color-ink)',
-                              }}
-                            />
-                          </label>
+                          <TextField
+                            label="Distance"
+                            labelNote="(miles)"
+                            containerStyle={{ flex: '1 1 130px', minWidth: '0' }}
+                            value={v.rideDistance ?? ''}
+                            onChange={v.setDistance}
+                            inputMode="decimal"
+                            placeholder="24.5"
+                          />
+                          <TextField
+                            label="Elevation"
+                            labelNote="(feet)"
+                            containerStyle={{ flex: '1 1 130px', minWidth: '0' }}
+                            value={v.rideElev ?? ''}
+                            onChange={v.setElev}
+                            inputMode="numeric"
+                            placeholder="1200"
+                          />
                           <div style={{ flex: '1 1 210px', minWidth: '0' }}>
-                            <span
-                              style={{
-                                display: 'block',
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-muted)',
-                                marginBottom: '7px',
-                              }}
-                            >
-                              DURATION
-                            </span>
+                            <Label>Duration</Label>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <span
-                                style={{
-                                  flex: '1',
-                                  minWidth: '0',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '6px',
-                                  padding: '13px 15px',
-                                  borderRadius: '13px',
-                                  background: 'var(--color-canvas)',
-                                }}
-                              >
-                                <input
-                                  value={v.rideHours ?? ''}
-                                  onChange={v.setHours}
-                                  inputMode="numeric"
-                                  placeholder="1"
-                                  style={{
-                                    width: '100%',
-                                    minWidth: '0',
-                                    border: 'none',
-                                    background: 'none',
-                                    padding: '0',
-                                    fontSize: 'var(--text-lg)',
-                                    fontWeight: 'var(--font-weight-medium)',
-                                    color: 'var(--color-ink)',
-                                  }}
-                                />
-                                <span
-                                  style={{
-                                    flex: 'none',
-                                    fontSize: 'var(--text-md)',
-                                    fontWeight: 'var(--font-weight-semibold)',
-                                    color: 'var(--color-muted)',
-                                  }}
-                                >
-                                  hr
-                                </span>
-                              </span>
-                              <span
-                                style={{
-                                  flex: '1',
-                                  minWidth: '0',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '6px',
-                                  padding: '13px 15px',
-                                  borderRadius: '13px',
-                                  background: 'var(--color-canvas)',
-                                }}
-                              >
-                                <input
-                                  value={v.rideMins ?? ''}
-                                  onChange={v.setMins}
-                                  inputMode="numeric"
-                                  placeholder="20"
-                                  style={{
-                                    width: '100%',
-                                    minWidth: '0',
-                                    border: 'none',
-                                    background: 'none',
-                                    padding: '0',
-                                    fontSize: 'var(--text-lg)',
-                                    fontWeight: 'var(--font-weight-medium)',
-                                    color: 'var(--color-ink)',
-                                  }}
-                                />
-                                <span
-                                  style={{
-                                    flex: 'none',
-                                    fontSize: 'var(--text-md)',
-                                    fontWeight: 'var(--font-weight-semibold)',
-                                    color: 'var(--color-muted)',
-                                  }}
-                                >
-                                  min
-                                </span>
-                              </span>
+                              <TextField
+                                suffix="hr"
+                                containerStyle={{ flex: '1', minWidth: '0' }}
+                                value={v.rideHours ?? ''}
+                                onChange={v.setHours}
+                                inputMode="numeric"
+                                placeholder="1"
+                              />
+                              <TextField
+                                suffix="min"
+                                containerStyle={{ flex: '1', minWidth: '0' }}
+                                value={v.rideMins ?? ''}
+                                onChange={v.setMins}
+                                inputMode="numeric"
+                                placeholder="20"
+                              />
                             </div>
                           </div>
                         </div>
-                        <span
-                          style={{
-                            display: 'block',
-                            fontSize: 'var(--text-2xs)',
-                            fontWeight: 'var(--font-weight-bold)',
-                            letterSpacing: 'var(--tracking-wide)',
-                            color: 'var(--color-muted)',
-                            margin: '18px 0 9px',
-                          }}
-                        >
-                          TARGET EFFORT
-                        </span>
+                        <Label style={{ margin: '18px 0 9px' }}>Target effort</Label>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                           {['Recovery', 'Endurance', 'Tempo', 'Intervals'].map((zone) => (
                             <Chip
@@ -4392,182 +4116,45 @@ export function PlannerView({ v }: { v: any }) {
                           <div style={css(v.rideBar)}></div>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '18px' }}>
-                          <label style={{ flex: '1 1 130px', minWidth: '0', display: 'block' }}>
-                            <span
-                              style={{
-                                display: 'block',
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-muted)',
-                                marginBottom: '7px',
-                              }}
-                            >
-                              {'DISTANCE '}
-                              <span style={{ color: 'var(--color-subtle)' }}>(MILES)</span>
-                            </span>
-                            <input
-                              value={v.actDistance ?? ''}
-                              onChange={v.setActDistance}
-                              inputMode="decimal"
-                              placeholder={v.plannedDistPh}
-                              style={{
-                                width: '100%',
-                                padding: '13px 15px',
-                                border: 'none',
-                                borderRadius: '13px',
-                                background: 'var(--color-canvas)',
-                                fontSize: 'var(--text-lg)',
-                                fontWeight: 'var(--font-weight-medium)',
-                                color: 'var(--color-ink)',
-                              }}
-                            />
-                            <span
-                              style={{
-                                display: 'block',
-                                fontSize: 'var(--text-xs)',
-                                fontWeight: 'var(--font-weight-regular)',
-                                color: 'var(--color-subtle)',
-                                marginTop: '6px',
-                              }}
-                            >
-                              {v.plannedDist}
-                            </span>
-                          </label>
-                          <label style={{ flex: '1 1 130px', minWidth: '0', display: 'block' }}>
-                            <span
-                              style={{
-                                display: 'block',
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-muted)',
-                                marginBottom: '7px',
-                              }}
-                            >
-                              {'ELEVATION '}
-                              <span style={{ color: 'var(--color-subtle)' }}>(FEET)</span>
-                            </span>
-                            <input
-                              value={v.actElev ?? ''}
-                              onChange={v.setActElev}
-                              inputMode="numeric"
-                              placeholder={v.plannedElevPh}
-                              style={{
-                                width: '100%',
-                                padding: '13px 15px',
-                                border: 'none',
-                                borderRadius: '13px',
-                                background: 'var(--color-canvas)',
-                                fontSize: 'var(--text-lg)',
-                                fontWeight: 'var(--font-weight-medium)',
-                                color: 'var(--color-ink)',
-                              }}
-                            />
-                            <span
-                              style={{
-                                display: 'block',
-                                fontSize: 'var(--text-xs)',
-                                fontWeight: 'var(--font-weight-regular)',
-                                color: 'var(--color-subtle)',
-                                marginTop: '6px',
-                              }}
-                            >
-                              {v.plannedElev}
-                            </span>
-                          </label>
+                          <TextField
+                            label="Distance"
+                            labelNote="(miles)"
+                            hint={v.plannedDist}
+                            containerStyle={{ flex: '1 1 130px', minWidth: '0' }}
+                            value={v.actDistance ?? ''}
+                            onChange={v.setActDistance}
+                            inputMode="decimal"
+                            placeholder={v.plannedDistPh}
+                          />
+                          <TextField
+                            label="Elevation"
+                            labelNote="(feet)"
+                            hint={v.plannedElev}
+                            containerStyle={{ flex: '1 1 130px', minWidth: '0' }}
+                            value={v.actElev ?? ''}
+                            onChange={v.setActElev}
+                            inputMode="numeric"
+                            placeholder={v.plannedElevPh}
+                          />
                           <div style={{ flex: '1 1 210px', minWidth: '0' }}>
-                            <span
-                              style={{
-                                display: 'block',
-                                fontSize: 'var(--text-2xs)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                letterSpacing: 'var(--tracking-wide)',
-                                color: 'var(--color-muted)',
-                                marginBottom: '7px',
-                              }}
-                            >
-                              DURATION
-                            </span>
+                            <Label>Duration</Label>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <span
-                                style={{
-                                  flex: '1',
-                                  minWidth: '0',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '6px',
-                                  padding: '13px 15px',
-                                  borderRadius: '13px',
-                                  background: 'var(--color-canvas)',
-                                }}
-                              >
-                                <input
-                                  value={v.actHours ?? ''}
-                                  onChange={v.setActHours}
-                                  inputMode="numeric"
-                                  placeholder="0"
-                                  style={{
-                                    width: '100%',
-                                    minWidth: '0',
-                                    border: 'none',
-                                    background: 'none',
-                                    padding: '0',
-                                    fontSize: 'var(--text-lg)',
-                                    fontWeight: 'var(--font-weight-medium)',
-                                    color: 'var(--color-ink)',
-                                  }}
-                                />
-                                <span
-                                  style={{
-                                    flex: 'none',
-                                    fontSize: 'var(--text-md)',
-                                    fontWeight: 'var(--font-weight-semibold)',
-                                    color: 'var(--color-muted)',
-                                  }}
-                                >
-                                  hr
-                                </span>
-                              </span>
-                              <span
-                                style={{
-                                  flex: '1',
-                                  minWidth: '0',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '6px',
-                                  padding: '13px 15px',
-                                  borderRadius: '13px',
-                                  background: 'var(--color-canvas)',
-                                }}
-                              >
-                                <input
-                                  value={v.actMins ?? ''}
-                                  onChange={v.setActMins}
-                                  inputMode="numeric"
-                                  placeholder="0"
-                                  style={{
-                                    width: '100%',
-                                    minWidth: '0',
-                                    border: 'none',
-                                    background: 'none',
-                                    padding: '0',
-                                    fontSize: 'var(--text-lg)',
-                                    fontWeight: 'var(--font-weight-medium)',
-                                    color: 'var(--color-ink)',
-                                  }}
-                                />
-                                <span
-                                  style={{
-                                    flex: 'none',
-                                    fontSize: 'var(--text-md)',
-                                    fontWeight: 'var(--font-weight-semibold)',
-                                    color: 'var(--color-muted)',
-                                  }}
-                                >
-                                  min
-                                </span>
-                              </span>
+                              <TextField
+                                suffix="hr"
+                                containerStyle={{ flex: '1', minWidth: '0' }}
+                                value={v.actHours ?? ''}
+                                onChange={v.setActHours}
+                                inputMode="numeric"
+                                placeholder="0"
+                              />
+                              <TextField
+                                suffix="min"
+                                containerStyle={{ flex: '1', minWidth: '0' }}
+                                value={v.actMins ?? ''}
+                                onChange={v.setActMins}
+                                inputMode="numeric"
+                                placeholder="0"
+                              />
                             </div>
                             <span
                               style={{
@@ -4784,90 +4371,24 @@ export function PlannerView({ v }: { v: any }) {
                               <div
                                 style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}
                               >
-                                <label style={{ flex: '1 1 120px', minWidth: '0', display: 'block' }}>
-                                  <span
-                                    style={{
-                                      display: 'block',
-                                      fontSize: 'var(--text-2xs)',
-                                      fontWeight: 'var(--font-weight-bold)',
-                                      letterSpacing: 'var(--tracking-wide)',
-                                      color: 'var(--color-muted)',
-                                      marginBottom: '7px',
-                                    }}
-                                  >
-                                    SETS × REPS
-                                  </span>
-                                  <input
-                                    value={ex?.sets ?? ''}
-                                    onChange={ex?.setSets}
-                                    style={{
-                                      width: '100%',
-                                      padding: '13px 15px',
-                                      border: 'none',
-                                      borderRadius: '13px',
-                                      background: 'var(--color-canvas)',
-                                      fontSize: 'var(--text-lg)',
-                                      fontWeight: 'var(--font-weight-medium)',
-                                      color: 'var(--color-ink)',
-                                    }}
-                                  />
-                                </label>
-                                <label style={{ flex: '1 1 110px', minWidth: '0', display: 'block' }}>
-                                  <span
-                                    style={{
-                                      display: 'block',
-                                      fontSize: 'var(--text-2xs)',
-                                      fontWeight: 'var(--font-weight-bold)',
-                                      letterSpacing: 'var(--tracking-wide)',
-                                      color: 'var(--color-muted)',
-                                      marginBottom: '7px',
-                                    }}
-                                  >
-                                    WEIGHT
-                                  </span>
-                                  <input
-                                    value={ex?.weight ?? ''}
-                                    onChange={ex?.setWeight}
-                                    style={{
-                                      width: '100%',
-                                      padding: '13px 15px',
-                                      border: 'none',
-                                      borderRadius: '13px',
-                                      background: 'var(--color-canvas)',
-                                      fontSize: 'var(--text-lg)',
-                                      fontWeight: 'var(--font-weight-medium)',
-                                      color: 'var(--color-ink)',
-                                    }}
-                                  />
-                                </label>
-                                <label style={{ flex: '1 1 110px', minWidth: '0', display: 'block' }}>
-                                  <span
-                                    style={{
-                                      display: 'block',
-                                      fontSize: 'var(--text-2xs)',
-                                      fontWeight: 'var(--font-weight-bold)',
-                                      letterSpacing: 'var(--tracking-wide)',
-                                      color: 'var(--color-muted)',
-                                      marginBottom: '7px',
-                                    }}
-                                  >
-                                    REST
-                                  </span>
-                                  <input
-                                    value={ex?.rest ?? ''}
-                                    onChange={ex?.setRest}
-                                    style={{
-                                      width: '100%',
-                                      padding: '13px 15px',
-                                      border: 'none',
-                                      borderRadius: '13px',
-                                      background: 'var(--color-canvas)',
-                                      fontSize: 'var(--text-lg)',
-                                      fontWeight: 'var(--font-weight-medium)',
-                                      color: 'var(--color-ink)',
-                                    }}
-                                  />
-                                </label>
+                                <TextField
+                                  label="Sets × reps"
+                                  containerStyle={{ flex: '1 1 120px', minWidth: '0' }}
+                                  value={ex?.sets ?? ''}
+                                  onChange={ex?.setSets}
+                                />
+                                <TextField
+                                  label="Weight"
+                                  containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
+                                  value={ex?.weight ?? ''}
+                                  onChange={ex?.setWeight}
+                                />
+                                <TextField
+                                  label="Rest"
+                                  containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
+                                  value={ex?.rest ?? ''}
+                                  onChange={ex?.setRest}
+                                />
                               </div>
                             </Card>
                           </Fragment>
@@ -4967,45 +4488,14 @@ export function PlannerView({ v }: { v: any }) {
                         {v.addNew ? (
                           <>
                             <div style={{ marginTop: '18px' }}>
-                              <span
-                                style={{
-                                  display: 'block',
-                                  fontSize: 'var(--text-2xs)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  letterSpacing: 'var(--tracking-wide)',
-                                  color: 'var(--color-muted)',
-                                  marginBottom: '7px',
-                                }}
-                              >
-                                EXERCISE NAME
-                              </span>
-                              <input
+                              <Label>Exercise name</Label>
+                              <TextField
+                                aria-label="Exercise name"
                                 value={v.draftName ?? ''}
                                 onChange={v.setName}
                                 placeholder="e.g. Bulgarian Split Squat"
-                                style={{
-                                  width: '100%',
-                                  padding: '13px 15px',
-                                  border: 'none',
-                                  borderRadius: '13px',
-                                  background: 'var(--color-canvas)',
-                                  fontSize: 'var(--text-lg)',
-                                  fontWeight: 'var(--font-weight-medium)',
-                                  color: 'var(--color-ink)',
-                                }}
                               />
-                              <span
-                                style={{
-                                  display: 'block',
-                                  fontSize: 'var(--text-2xs)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  letterSpacing: 'var(--tracking-wide)',
-                                  color: 'var(--color-muted)',
-                                  margin: '16px 0 8px',
-                                }}
-                              >
-                                ICON
-                              </span>
+                              <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
                               <div
                                 style={{
                                   maxHeight: '236px',
@@ -5027,93 +4517,27 @@ export function PlannerView({ v }: { v: any }) {
                               <div
                                 style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '14px' }}
                               >
-                                <label style={{ flex: '1 1 120px', minWidth: '0', display: 'block' }}>
-                                  <span
-                                    style={{
-                                      display: 'block',
-                                      fontSize: 'var(--text-2xs)',
-                                      fontWeight: 'var(--font-weight-bold)',
-                                      letterSpacing: 'var(--tracking-wide)',
-                                      color: 'var(--color-muted)',
-                                      marginBottom: '7px',
-                                    }}
-                                  >
-                                    SETS × REPS
-                                  </span>
-                                  <input
-                                    value={v.draftSets ?? ''}
-                                    onChange={v.setSets}
-                                    placeholder="3 × 10"
-                                    style={{
-                                      width: '100%',
-                                      padding: '13px 15px',
-                                      border: 'none',
-                                      borderRadius: '13px',
-                                      background: 'var(--color-canvas)',
-                                      fontSize: 'var(--text-lg)',
-                                      fontWeight: 'var(--font-weight-medium)',
-                                      color: 'var(--color-ink)',
-                                    }}
-                                  />
-                                </label>
-                                <label style={{ flex: '1 1 110px', minWidth: '0', display: 'block' }}>
-                                  <span
-                                    style={{
-                                      display: 'block',
-                                      fontSize: 'var(--text-2xs)',
-                                      fontWeight: 'var(--font-weight-bold)',
-                                      letterSpacing: 'var(--tracking-wide)',
-                                      color: 'var(--color-muted)',
-                                      marginBottom: '7px',
-                                    }}
-                                  >
-                                    WEIGHT
-                                  </span>
-                                  <input
-                                    value={v.draftWeight ?? ''}
-                                    onChange={v.setWeight}
-                                    placeholder="45 lb"
-                                    style={{
-                                      width: '100%',
-                                      padding: '13px 15px',
-                                      border: 'none',
-                                      borderRadius: '13px',
-                                      background: 'var(--color-canvas)',
-                                      fontSize: 'var(--text-lg)',
-                                      fontWeight: 'var(--font-weight-medium)',
-                                      color: 'var(--color-ink)',
-                                    }}
-                                  />
-                                </label>
-                                <label style={{ flex: '1 1 110px', minWidth: '0', display: 'block' }}>
-                                  <span
-                                    style={{
-                                      display: 'block',
-                                      fontSize: 'var(--text-2xs)',
-                                      fontWeight: 'var(--font-weight-bold)',
-                                      letterSpacing: 'var(--tracking-wide)',
-                                      color: 'var(--color-muted)',
-                                      marginBottom: '7px',
-                                    }}
-                                  >
-                                    REST
-                                  </span>
-                                  <input
-                                    value={v.draftRest ?? ''}
-                                    onChange={v.setRest}
-                                    placeholder="60 sec"
-                                    style={{
-                                      width: '100%',
-                                      padding: '13px 15px',
-                                      border: 'none',
-                                      borderRadius: '13px',
-                                      background: 'var(--color-canvas)',
-                                      fontSize: 'var(--text-lg)',
-                                      fontWeight: 'var(--font-weight-medium)',
-                                      color: 'var(--color-ink)',
-                                    }}
-                                  />
-                                </label>
+                                <TextField
+                                  label="Sets × reps"
+                                  containerStyle={{ flex: '1 1 120px', minWidth: '0' }}
+                                  value={v.draftSets ?? ''}
+                                  onChange={v.setSets}
+                                  placeholder="3 × 10"
+                                />
+                                <TextField
+                                  label="Weight"
+                                  containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
+                                  value={v.draftWeight ?? ''}
+                                  onChange={v.setWeight}
+                                  placeholder="45 lb"
+                                />
+                                <TextField
+                                  label="Rest"
+                                  containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
+                                  value={v.draftRest ?? ''}
+                                  onChange={v.setRest}
+                                  placeholder="60 sec"
+                                />
                               </div>
                             </div>
                           </>
@@ -5162,21 +4586,10 @@ export function PlannerView({ v }: { v: any }) {
                     >
                       WORKOUT NOTES
                     </span>
-                    <textarea
+                    <TextArea
+                      aria-label="Workout notes"
                       rows={3}
                       placeholder="Cues, targets, anything to remember…"
-                      style={{
-                        width: '100%',
-                        padding: '16px',
-                        border: 'none',
-                        borderRadius: '18px',
-                        background: 'var(--color-white)',
-                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                        fontSize: 'var(--text-lg)',
-                        fontWeight: 'var(--font-weight-medium)',
-                        color: 'var(--color-ink)',
-                        resize: 'vertical',
-                      }}
                     />
                   </div>
                   <div
@@ -5493,23 +4906,12 @@ export function PlannerView({ v }: { v: any }) {
                         >
                           Notes (optional)
                         </p>
-                        <textarea
+                        <TextArea
+                          aria-label="Notes"
                           rows={5}
                           value={v.entryNote ?? ''}
                           onChange={v.setEntryNote}
                           placeholder="Energy, soreness, what worked, what didn't…"
-                          style={{
-                            width: '100%',
-                            padding: '18px',
-                            border: 'none',
-                            borderRadius: '20px',
-                            background: 'var(--color-white)',
-                            boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                            fontSize: 'var(--text-lg)',
-                            fontWeight: 'var(--font-weight-medium)',
-                            color: 'var(--color-ink)',
-                            resize: 'vertical',
-                          }}
                         />
                         <Button
                           type="primary"
