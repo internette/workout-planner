@@ -161,6 +161,77 @@ export function PlannerView({ v }: { v: any }) {
           </div>
         </>
       ) : null}
+      {v.tplConfirmOpen ? (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              inset: '0',
+              zIndex: '70',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '24px',
+              background: 'rgba(35,42,69,.35)',
+            }}
+          >
+            <Card
+              pad="lg"
+              elevation="overlay"
+              role="dialog"
+              aria-modal="true"
+              aria-label={v.tplConfirmTitle}
+              style={{ width: '100%', maxWidth: '440px' }}
+            >
+              <Text variant="subheading" as="h2" style={{ margin: '0' }}>
+                {v.tplConfirmTitle}
+              </Text>
+              <Text variant="body" as="p" tone="muted" style={{ margin: '10px 0 0', textWrap: 'pretty' }}>
+                {v.tplConfirmBody}
+              </Text>
+              <ul style={{ margin: '14px 0 0', padding: '0 0 0 20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <li>
+                  <Text variant="body" as="span" tone="muted" style={{ textWrap: 'pretty' }}>
+                    <Text variant="body" as="strong" weight="semibold">
+                      Ticked:
+                    </Text>{' '}
+                    {v.tplConfirmOn}
+                  </Text>
+                </li>
+                <li>
+                  <Text variant="body" as="span" tone="muted" style={{ textWrap: 'pretty' }}>
+                    <Text variant="body" as="strong" weight="semibold">
+                      Unticked:
+                    </Text>{' '}
+                    {v.tplConfirmOff}
+                  </Text>
+                </li>
+              </ul>
+              <label
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '16px', cursor: 'pointer' }}
+              >
+                <input
+                  type="checkbox"
+                  checked={v.tplConfirmUpdateChecked}
+                  onChange={v.tplConfirmToggle}
+                  style={{ width: '18px', height: '18px', margin: '0', accentColor: 'var(--color-pink)', cursor: 'pointer' }}
+                />
+                <Text variant="body" as="span">
+                  Update upcoming sessions
+                </Text>
+              </label>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '10px', marginTop: '22px' }}>
+                <Button type="neutral" ghost size="md" onClick={v.tplConfirmCancel}>
+                  Cancel
+                </Button>
+                <Button type="primary" size="md" onClick={v.tplConfirmSave}>
+                  Update
+                </Button>
+              </div>
+            </Card>
+          </div>
+        </>
+      ) : null}
       <div style={css(v.pageStyle)}>
         <div
           style={{
@@ -2381,6 +2452,15 @@ export function PlannerView({ v }: { v: any }) {
                     <Text variant="eyebrow" tone="slate">
                       EXERCISE
                     </Text>
+                    <Button
+                      type="secondary"
+                      size="sm"
+                      onClick={v.exercise.edit}
+                      style={{ marginLeft: 'auto' }}
+                    >
+                      <Pencil color="var(--color-pink-deep)" size={16} />
+                      Edit
+                    </Button>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
                     <span
@@ -2460,6 +2540,15 @@ export function PlannerView({ v }: { v: any }) {
                     <Text variant="eyebrow" tone="slate">
                       SAVED WORKOUT
                     </Text>
+                    <Button
+                      type="secondary"
+                      size="sm"
+                      onClick={v.template.edit}
+                      style={{ marginLeft: 'auto' }}
+                    >
+                      <Pencil color="var(--color-pink-deep)" size={16} />
+                      Edit
+                    </Button>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
                     <span
@@ -2542,6 +2631,266 @@ export function PlannerView({ v }: { v: any }) {
                       ) : null}
                     </div>
                   )}
+                </div>
+              </>
+            ) : null}
+            {v.isTemplateEdit && v.templateEdit ? (
+              <>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <IconButton
+                      label="Cancel editing"
+                      size="md"
+                      onClick={v.templateEdit.cancel}
+                      style={{ marginLeft: '-8px' }}
+                    >
+                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
+                    </IconButton>
+                    <Text variant="eyebrow" tone="slate">
+                      EDIT WORKOUT
+                    </Text>
+                  </div>
+                  <div style={{ marginTop: '14px' }}>
+                    <TextField
+                      variant="title"
+                      aria-label="Workout name"
+                      value={v.templateEdit.name}
+                      onChange={v.templateEdit.setName}
+                      placeholder="Name this workout"
+                    />
+                  </div>
+                  {v.templateEdit.isRide ? (
+                    <Card style={{ marginTop: '18px' }}>
+                      <Text variant="eyebrow" tone="slate" as="div">
+                        RIDE PLAN
+                      </Text>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}>
+                        <TextField
+                          label="Distance"
+                          labelNote="(miles)"
+                          inputMode="decimal"
+                          containerStyle={{ flex: '1 1 130px', minWidth: '0' }}
+                          value={v.templateEdit.dist}
+                          onChange={v.templateEdit.setDist}
+                        />
+                        <TextField
+                          label="Elevation"
+                          labelNote="(feet)"
+                          inputMode="numeric"
+                          containerStyle={{ flex: '1 1 130px', minWidth: '0' }}
+                          value={v.templateEdit.elev}
+                          onChange={v.templateEdit.setElev}
+                        />
+                        <div style={{ flex: '1 1 210px', minWidth: '0' }}>
+                          <Label>Duration</Label>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <TextField
+                              suffix="hr"
+                              inputMode="numeric"
+                              containerStyle={{ flex: '1', minWidth: '0' }}
+                              value={v.templateEdit.hrs}
+                              onChange={v.templateEdit.setHrs}
+                            />
+                            <TextField
+                              suffix="min"
+                              inputMode="numeric"
+                              containerStyle={{ flex: '1', minWidth: '0' }}
+                              value={v.templateEdit.mins}
+                              onChange={v.templateEdit.setMins}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <Label style={{ margin: '18px 0 9px' }}>Target effort</Label>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                        {['Recovery', 'Endurance', 'Tempo', 'Intervals'].map((zone) => (
+                          <Chip
+                            key={zone}
+                            tone="choice"
+                            size="md"
+                            selected={v.templateEdit.zone === zone}
+                            onClick={() => v.templateEdit.setZone(zone)}
+                          >
+                            {zone}
+                          </Chip>
+                        ))}
+                      </div>
+                    </Card>
+                  ) : (
+                    <>
+                      <Card style={{ marginTop: '18px' }}>
+                        <Text variant="eyebrow" tone="slate" as="div">
+                          TARGET AREAS
+                        </Text>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '14px' }}>
+                          {(v.templateEdit.areas ?? []).map((a, i) => (
+                            <Chip key={i} tone="choice" size="md" selected={a?.on} onClick={a?.toggle}>
+                              {a?.name}
+                            </Chip>
+                          ))}
+                        </div>
+                      </Card>
+                      <div
+                        style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}
+                      >
+                        {(v.templateEdit.rows ?? []).map((r) => (
+                          <Card key={r?.key} pad="sm">
+                            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '10px' }}>
+                              <TextField
+                                label="Exercise"
+                                containerStyle={{ flex: '1', minWidth: '0' }}
+                                value={r?.name}
+                                onChange={r?.setName}
+                                placeholder="Exercise name"
+                              />
+                              <IconButton
+                                label={'Remove ' + (r?.name || 'exercise')}
+                                size="md"
+                                onClick={r?.remove}
+                                style={{ marginBottom: '6px' }}
+                              >
+                                <Close color="var(--color-muted)" strokeWidth={2.2} size={16} />
+                              </IconButton>
+                            </div>
+                            <div
+                              style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '12px' }}
+                            >
+                              <TextField
+                                label="Sets × reps"
+                                containerStyle={{ flex: '1 1 120px', minWidth: '0' }}
+                                value={r?.sets}
+                                onChange={r?.setSets}
+                              />
+                              <TextField
+                                label="Weight"
+                                containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
+                                value={r?.weight}
+                                onChange={r?.setWeight}
+                              />
+                              <TextField
+                                label="Rest"
+                                containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
+                                value={r?.rest}
+                                onChange={r?.setRest}
+                              />
+                            </div>
+                          </Card>
+                        ))}
+                        <Button type="dashed" size="lg" fullWidth onClick={v.templateEdit.addRow}>
+                          <Plus color="var(--color-pink-deep)" size={17} />
+                          Add exercise
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      justifyContent: 'flex-end',
+                      alignItems: 'center',
+                      gap: '10px',
+                      marginTop: '22px',
+                      paddingTop: '20px',
+                      borderTop: '1px solid rgba(35,42,69,.07)',
+                    }}
+                  >
+                    <Button type="neutral" ghost size="lg" onClick={v.templateEdit.cancel}>
+                      Cancel
+                    </Button>
+                    <Button
+                      type="primary"
+                      size="lg"
+                      disabled={!v.templateEdit.canSave}
+                      onClick={v.templateEdit.save}
+                    >
+                      Save changes
+                    </Button>
+                  </div>
+                </div>
+              </>
+            ) : null}
+            {v.isExerciseEdit && v.exerciseEdit ? (
+              <>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <IconButton
+                      label="Cancel editing"
+                      size="md"
+                      onClick={v.exerciseEdit.cancel}
+                      style={{ marginLeft: '-8px' }}
+                    >
+                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
+                    </IconButton>
+                    <Text variant="eyebrow" tone="slate">
+                      EDIT EXERCISE
+                    </Text>
+                  </div>
+                  <Card style={{ marginTop: '18px' }}>
+                    <TextField
+                      label="Name"
+                      value={v.exerciseEdit.name}
+                      onChange={v.exerciseEdit.setName}
+                      placeholder="e.g. Bulgarian Split Squat"
+                    />
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '14px' }}>
+                      <TextField
+                        label="Sets × reps"
+                        containerStyle={{ flex: '1 1 120px', minWidth: '0' }}
+                        value={v.exerciseEdit.sets}
+                        onChange={v.exerciseEdit.setSets}
+                        placeholder="3 × 10"
+                      />
+                      <TextField
+                        label="Weight"
+                        containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
+                        value={v.exerciseEdit.weight}
+                        onChange={v.exerciseEdit.setWeight}
+                        placeholder="45 lb"
+                      />
+                      <TextField
+                        label="Rest"
+                        containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
+                        value={v.exerciseEdit.rest}
+                        onChange={v.exerciseEdit.setRest}
+                        placeholder="60 sec"
+                      />
+                    </div>
+                    <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
+                    <div
+                      style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: '8px' }}
+                    >
+                      {(v.exerciseEdit.icons ?? []).map((g, i) => (
+                        <button key={i} onClick={g?.pick} style={css(g?.style)}>
+                          {g?.svg}
+                        </button>
+                      ))}
+                    </div>
+                  </Card>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      justifyContent: 'flex-end',
+                      alignItems: 'center',
+                      gap: '10px',
+                      marginTop: '22px',
+                      paddingTop: '20px',
+                      borderTop: '1px solid rgba(35,42,69,.07)',
+                    }}
+                  >
+                    <Button type="neutral" ghost size="lg" onClick={v.exerciseEdit.cancel}>
+                      Cancel
+                    </Button>
+                    <Button
+                      type="primary"
+                      size="lg"
+                      disabled={!v.exerciseEdit.canSave}
+                      onClick={v.exerciseEdit.save}
+                    >
+                      Save changes
+                    </Button>
+                  </div>
                 </div>
               </>
             ) : null}

@@ -4,7 +4,7 @@ import { colors } from '@/components/ui/colors';
 
 // The selected workout: ride plan and actuals, exercise list, icons and completion state.
 export function workoutStage(ctx: Ctx): Ctx {
-  const { logic, Y, mi, dim, selDay, st, creating, seedAt, actFor, EX, TK, DIARY } = ctx;
+  const { logic, Y, mi, dim, selDay, st, creating, seedAt, actFor, EX, EXV, TK, DIARY } = ctx;
   const pickLead = new Date(Y, mi, 1).getDay();
   const pickRows = Math.ceil((pickLead + dim) / 7);
   const pickerCells = [];
@@ -26,7 +26,8 @@ export function workoutStage(ctx: Ctx): Ctx {
     st.screen === 'edit' && !creating && st.editKey
       ? seedAt(Number(st.editKey.split('-')[0]), Number(st.editKey.split('-')[1]))
       : null;
-  const srcAct = editSrc || actFor(selDay);
+  // A workout being created starts blank; it must not inherit whatever is already on the selected day.
+  const srcAct = creating ? null : editSrc || actFor(selDay);
   const selRide = srcAct && srcAct.ride ? srcAct.ride : null;
   const rideDone = !!(st.rideDone || {})[idOf(srcAct)];
   const savedRide = !creating && selRide ? selRide : null;
@@ -46,6 +47,7 @@ export function workoutStage(ctx: Ctx): Ctx {
   const ridePct = !rodeDist ? null : planDist ? Math.round((rodeDist / planDist) * 100) : 100;
   const selAct = creating ? null : srcAct;
   const baseName = (srcAct && srcAct.name) || '';
+  const baseKey = (srcAct && srcAct.exKey) || '';
   const selName = creating ? st.newName || '' : (st.renames || {})[baseName] != null ? st.renames[baseName] : baseName;
   const libraryFor = (name) => {
     const have = {};
@@ -76,7 +78,7 @@ export function workoutStage(ctx: Ctx): Ctx {
   const doneCount = doneNames.length;
   const gone = (st.removed || {})[listKey] || [];
   const added = (st.extra || {})[listKey] || [];
-  const selList = (creating ? [] : EX[baseName] || [])
+  const selList = (creating ? [] : EXV[baseKey] || [])
     .concat(added)
     .filter((e) => gone.indexOf(e.name) === -1)
     .map((e) => Object.assign({}, e, (st.fields || {})[listKey + '|' + e.name] || {}));
@@ -133,6 +135,7 @@ export function workoutStage(ctx: Ctx): Ctx {
     wColor,
     selName,
     baseName,
+    baseKey,
     pickerCells,
     doneSet,
     doneNames,

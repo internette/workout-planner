@@ -33,6 +33,7 @@ export class PlannerLogic extends DCLogic {
       if (e.key !== 'Escape') return;
       const st = this.state;
       if (st.confirm) { this.setState({ confirm:null }); return; }
+      if (st.tplConfirm) { this.setState({ tplConfirm:null }); return; }
       if (st.leaveOpen) { this.setState({ leaveOpen:false }); return; }
       if (st.ranksOpen) { this.setState({ ranksOpen:false }); return; }
       if (st.iconsOpen || st.dateOpen || st.monthOpen || st.xpInfo || st.exOpen != null)
@@ -79,11 +80,15 @@ export class PlannerLogic extends DCLogic {
 
   // Queues a database write; when the queue drains the model is reloaded and `patch` applied to the
   // UI state. A failed write shows in the error banner and the reload puts the UI back in sync.
-  save(write: () => Promise<unknown>, patch: any = {}) {
+  // `patch` may be a function of what the write returned, for state that depends on rows it created.
+  save(write: () => Promise<any>, patch: any = {}) {
     this.pending++;
-    this.pendingPatch = { ...this.pendingPatch, ...patch };
+    if (typeof patch !== 'function') this.pendingPatch = { ...this.pendingPatch, ...patch };
     this.queue = this.queue
-      .then(write)
+      .then(async () => {
+        const result = await write();
+        if (typeof patch === 'function') this.pendingPatch = { ...this.pendingPatch, ...patch(result) };
+      })
       .catch(e => this.setState({ saveError: e instanceof Error ? e.message : String(e) }))
       .then(() => {
         if (--this.pending > 0) return;

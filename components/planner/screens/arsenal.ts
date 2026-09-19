@@ -1,11 +1,14 @@
 import { colors } from '@/components/ui/colors';
 import { iconSvg } from '../icons';
+import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import * as db from '@/lib/plannerData';
+import { isoOf } from '../helpers';
+import { optStyle } from '../styles';
 import type { Ctx } from '../types';
 
 // Arsenal: the exercise library, its search and the add-exercise form.
 export function arsenalVals(ctx: Ctx) {
-  const { logic, st, EX, arsenalNames } = ctx;
+  const { logic, st, EX, Y, TODAY_M, TODAY_D, arsenalNames } = ctx;
 
   // ---- exercise count (shown in the header when the exercises view is open)
   const exerciseNames = {};
@@ -13,6 +16,33 @@ export function arsenalVals(ctx: Ctx) {
   Object.keys(st.extra || {}).forEach((k) => (st.extra[k] || []).forEach((e) => (exerciseNames[e.name] = 1)));
   logic.model.library.forEach((e) => (exerciseNames[e.name] = 1));
   const exerciseCount = Object.keys(exerciseNames).length + ' exercises';
+
+  // ---- edits to a saved workout never rewrite sessions that are already done. If sessions are still ahead
+  // (from today on, not completed), ask whether they should follow the edit; past and completed ones never do.
+  const todayIso = isoOf(new Date(Y, TODAY_M, TODAY_D));
+  // When the edit becomes a new workout, the screen moves on to that copy (and to its copy of the exercise).
+  const applyEdit = (edit, updateUpcoming, patch) =>
+    logic.save(
+      () => db.updateWorkoutTemplate(edit, { updateUpcoming, todayIso }),
+      (r) => ({
+        ...patch,
+        ...(r.created ? { templateId: r.workoutId } : {}),
+        ...(r.created && patch.screen === 'exercise' ? { exerciseId: r.exerciseIds[edit.exercises.update[0]?.id] } : {}),
+        tplConfirm: null,
+      }),
+    );
+  const askThenApply = async (edit, name, patch) => {
+    try {
+      const count = await db.countUpcoming(edit.workoutId, todayIso);
+      if (count === 0) return applyEdit(edit, true, patch);
+      logic.s({
+        tplConfirm: { count, name, update: true, apply: (updateUpcoming) => applyEdit(edit, updateUpcoming, patch) },
+      });
+    } catch (e) {
+      logic.s({ saveError: e instanceof Error ? e.message : String(e) });
+    }
+  };
+  const confirm = st.tplConfirm;
 
   // ---- saved workouts
   const view = st.arsenalView === 'workouts' ? 'workouts' : 'exercises';
@@ -39,31 +69,89 @@ export function arsenalVals(ctx: Ctx) {
     open: () => logic.nav({ screen: 'template', templateId: w.id }),
   }));
 
-  // ---- one exercise, read-only: its numbers, and the saved workouts that include it
-  const openExercise = (name) => logic.nav({ screen: 'exercise', exerciseName: name });
-  const findExercise = (name) => {
+  // ---- one exercise: a read-only view, and an editor for that one row
+  const openExercise = (id) => logic.nav({ screen: 'exercise', exerciseId: id });
+  const findExercise = (id) => {
     for (const w of Object.keys(EX)) {
-      const hit = (EX[w] || []).find((e) => e.name === name);
-      if (hit) return hit;
+      const hit = (EX[w] || []).find((e) => e.id === id);
+      if (hit) return { ex: hit, workout: workouts.find((x) => x.name === w) || null };
     }
-    return logic.model.library.find((e) => e.name === name) || null;
+    const lib = logic.model.library.find((e) => e.id === id);
+    return lib ? { ex: lib, workout: null } : null;
   };
-  const chosenExercise = st.screen === 'exercise' ? findExercise(st.exerciseName) : null;
-  const exercise = chosenExercise
+  const onExerciseScreen = st.screen === 'exercise' || st.screen === 'exerciseEdit';
+  const found = onExerciseScreen ? findExercise(st.exerciseId) : null;
+  const exercise = found
     ? {
-        name: chosenExercise.name,
-        svg: iconSvg(chosenExercise.i),
-        sets: chosenExercise.sets,
-        weight: chosenExercise.weight,
-        rest: chosenExercise.rest,
+        name: found.ex.name,
+        svg: iconSvg(found.ex.i),
+        sets: found.ex.sets,
+        weight: found.ex.weight,
+        rest: found.ex.rest,
         usedIn: workouts
-          .filter((w) => w.exercises.includes(chosenExercise.name))
+          .filter((w) => w.exercises.includes(found.ex.name))
           .map((w) => ({ name: w.name, open: () => logic.nav({ screen: 'template', templateId: w.id }) })),
+        edit: () =>
+          logic.s({
+            screen: 'exerciseEdit',
+            exDraft: {
+              name: found.ex.name,
+              sets: found.ex.sets,
+              weight: found.ex.weight,
+              rest: found.ex.rest,
+              i: found.ex.i,
+            },
+          }),
       }
     : null;
+  const exDraft = st.exDraft || { name: '', sets: '', weight: '', rest: '', i: 'h' };
+  const setExDraft = (field) => (e) => logic.s({ exDraft: { ...exDraft, [field]: e.target.value } });
+  const exerciseEdit = {
+    name: exDraft.name,
+    sets: exDraft.sets,
+    weight: exDraft.weight,
+    rest: exDraft.rest,
+    setName: setExDraft('name'),
+    setSets: setExDraft('sets'),
+    setWeight: setExDraft('weight'),
+    setRest: setExDraft('rest'),
+    icons: EXERCISE_ICON_NAMES.map((name) => ({
+      svg: iconSvg(name),
+      pick: () => logic.s({ exDraft: { ...exDraft, i: name } }),
+      style: optStyle(exDraft.i === name),
+    })),
+    canSave: !!exDraft.name.trim(),
+    cancel: () => logic.s({ screen: 'exercise', exDraft: null }),
+    save: () => {
+      if (!found || !exDraft.name.trim()) return;
+      const patch = {
+        name: exDraft.name.trim(),
+        sets: exDraft.sets,
+        weight: exDraft.weight,
+        rest: exDraft.rest,
+        i: exDraft.i,
+      };
+      const after = { screen: 'exercise', exDraft: null };
+      if (!found.workout) {
+        logic.save(() => db.updateExerciseRow({ kind: 'library', id: found.ex.id }, patch), after);
+        return;
+      }
+      askThenApply(
+        {
+          entryId: '',
+          workoutId: found.workout.id,
+          exercises: { update: [{ id: found.ex.id, patch }], removeIds: [], add: [] },
+          repeatDates: [],
+        },
+        found.workout.name,
+        after,
+      );
+    },
+  };
 
   // ---- one saved workout, read-only: no date, no completion
-  const chosen = st.screen === 'template' ? workouts.find((w) => w.id === st.templateId) : null;
+  const onTemplateScreen = st.screen === 'template' || st.screen === 'templateEdit';
+  const chosen = onTemplateScreen ? workouts.find((w) => w.id === st.templateId) : null;
   const template = chosen
     ? {
         name: chosen.name,
@@ -84,12 +172,168 @@ export function arsenalVals(ctx: Ctx) {
           svg: iconSvg(e.i),
           detail: e.sets + ' · ' + e.weight + ' · ' + e.rest + ' rest',
         })),
+        edit: () =>
+          logic.s({
+            screen: 'templateEdit',
+            tplDraft: {
+              name: chosen.name,
+              areas: [...chosen.areas],
+              dist: chosen.ride ? chosen.ride.dist : '',
+              elev: chosen.ride ? chosen.ride.elev : '',
+              hrs: Math.floor(chosen.minutes / 60) ? String(Math.floor(chosen.minutes / 60)) : '',
+              mins: chosen.minutes % 60 ? String(chosen.minutes % 60) : '',
+              zone: chosen.ride ? chosen.ride.zone : 'Endurance',
+              rows: (EX[chosen.name] || []).map((e) => ({
+                key: e.id,
+                id: e.id,
+                name: e.name,
+                sets: e.sets,
+                weight: e.weight,
+                rest: e.rest,
+                i: e.i,
+                removed: false,
+              })),
+            },
+          }),
       }
     : null;
 
+  // ---- the saved-workout editor: a draft that is written to the database on save
+  const draft = st.tplDraft;
+  const patchDraft = (patch) => logic.s({ tplDraft: { ...draft, ...patch } });
+  const digits = (n) => (e) => patchDraft({ [n]: e.target.value.replace(/[^0-9.]/g, '') });
+  const whole =
+    (n, max?, len = 2) =>
+    (e) => {
+      const v = e.target.value.replace(/[^0-9]/g, '').slice(0, len);
+      patchDraft({ [n]: v === '' || max == null ? v : String(Math.min(max, Number(v))) });
+    };
+  const patchRow = (key, patch) =>
+    patchDraft({ rows: draft.rows.map((r) => (r.key === key ? { ...r, ...patch } : r)) });
+  const templateEdit =
+    chosen && draft
+      ? {
+          isRide: chosen.kind === 'ride',
+          name: draft.name,
+          setName: (e) => patchDraft({ name: e.target.value }),
+          areas: ['Core', 'Arms', 'Back', 'Legs'].map((a) => ({
+            name: a,
+            on: draft.areas.includes(a),
+            toggle: () =>
+              patchDraft({
+                areas: draft.areas.includes(a) ? draft.areas.filter((x) => x !== a) : [...draft.areas, a],
+              }),
+          })),
+          dist: draft.dist,
+          elev: draft.elev,
+          hrs: draft.hrs,
+          mins: draft.mins,
+          zone: draft.zone,
+          setDist: digits('dist'),
+          setElev: whole('elev', undefined, 6),
+          setHrs: whole('hrs'),
+          setMins: whole('mins', 59),
+          setZone: (zone) => patchDraft({ zone }),
+          rows: draft.rows
+            .filter((r) => !r.removed)
+            .map((r) => ({
+              key: r.key,
+              name: r.name,
+              sets: r.sets,
+              weight: r.weight,
+              rest: r.rest,
+              setName: (e) => patchRow(r.key, { name: e.target.value }),
+              setSets: (e) => patchRow(r.key, { sets: e.target.value }),
+              setWeight: (e) => patchRow(r.key, { weight: e.target.value }),
+              setRest: (e) => patchRow(r.key, { rest: e.target.value }),
+              remove: () =>
+                r.id
+                  ? patchRow(r.key, { removed: true })
+                  : patchDraft({ rows: draft.rows.filter((x) => x.key !== r.key) }),
+            })),
+          addRow: () =>
+            patchDraft({
+              rows: [
+                ...draft.rows,
+                {
+                  key: 'new-' + Date.now(),
+                  id: null,
+                  name: '',
+                  sets: '3 × 10',
+                  weight: '',
+                  rest: '60 sec',
+                  i: 'h',
+                  removed: false,
+                },
+              ],
+            }),
+          canSave: !!draft.name.trim(),
+          cancel: () => logic.s({ screen: 'template', tplDraft: null }),
+          save: () => {
+            if (!draft.name.trim()) return;
+            const minutes = Number(draft.hrs || 0) * 60 + Number(draft.mins || 0);
+            askThenApply(
+              {
+                entryId: '',
+                workoutId: chosen.id,
+                name: draft.name,
+                areas: chosen.kind === 'ride' ? undefined : draft.areas,
+                ride:
+                  chosen.kind === 'ride'
+                    ? { dist: draft.dist, elev: draft.elev, zone: draft.zone, minutes }
+                    : null,
+                exercises: {
+                  update: draft.rows
+                    .filter((r) => r.id && !r.removed)
+                    .map((r) => ({
+                      id: r.id,
+                      patch: { name: r.name.trim() || r.name, sets: r.sets, weight: r.weight, rest: r.rest },
+                    })),
+                  removeIds: draft.rows.filter((r) => r.id && r.removed).map((r) => r.id),
+                  add: draft.rows
+                    .filter((r) => !r.id && !r.removed && r.name.trim())
+                    .map((r) => ({
+                      name: r.name.trim(),
+                      sets: r.sets,
+                      weight: r.weight,
+                      rest: r.rest,
+                      i: r.i,
+                    })),
+                },
+                repeatDates: [],
+              },
+              chosen.name,
+              { screen: 'template', tplDraft: null },
+            );
+          },
+        }
+      : null;
+
   return {
+    tplConfirmOpen: !!confirm,
+    tplConfirmTitle: 'Save changes to this workout?',
+    tplConfirmBody: confirm
+      ? (confirm.count === 1 ? '1 upcoming session uses' : confirm.count + ' upcoming sessions use') +
+        ' “' +
+        confirm.name +
+        '”. Past and completed sessions always keep the workout as it was.'
+      : '',
+    // Both outcomes are always shown, whatever the checkbox says.
+    tplConfirmOn: confirm ? 'Your changes are saved to “' + confirm.name + '” and applied to its upcoming sessions.' : '',
+    tplConfirmOff: confirm
+      ? 'Your changes are saved as a new workout. “' + confirm.name + '” and its sessions stay as they are.'
+      : '',
+    tplConfirmCancel: () => logic.s({ tplConfirm: null }),
+    tplConfirmUpdateChecked: !!confirm?.update,
+    tplConfirmToggle: () => confirm && logic.s({ tplConfirm: { ...confirm, update: !confirm.update } }),
+    tplConfirmSave: () => {
+      logic.s({ tplConfirm: null });
+      if (confirm) confirm.apply(confirm.update);
+    },
     exercise,
+    exerciseEdit,
     template,
+    templateEdit,
     arsenalView: view,
     setArsenalView: (next) => logic.s({ arsenalView: next, arsenalAdd: false }),
     showArsenalWorkouts: view === 'workouts',
@@ -157,7 +401,7 @@ export function arsenalVals(ctx: Ctx) {
             name: e.name,
             svg: iconSvg(e.i),
             detail: e.sets + ' · ' + e.weight,
-            open: () => openExercise(e.name),
+            open: () => openExercise(e.id),
           })),
         );
       });
@@ -167,7 +411,7 @@ export function arsenalVals(ctx: Ctx) {
           name: e.name,
           svg: iconSvg(e.i),
           detail: e.sets + ' · ' + e.weight,
-          open: () => openExercise(e.name),
+          open: () => openExercise(e.id),
         })),
       );
       return groups;

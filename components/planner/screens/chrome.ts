@@ -22,7 +22,9 @@ export function chromeVals(ctx: Ctx) {
     TODAY_M,
     TODAY_D,
   } = ctx;
-  const arsenalActive = st.screen === 'arsenal' || st.screen === 'template' || st.screen === 'exercise';
+  const arsenalActive = ['arsenal', 'template', 'templateEdit', 'exercise', 'exerciseEdit'].includes(
+    st.screen,
+  );
   return {
     topTabsStyle: narrow ? 'display:none' : 'display:flex;flex-wrap:wrap;gap:6px;padding:18px 28px 0',
     sidebarStyle: narrow
@@ -107,6 +109,8 @@ export function chromeVals(ctx: Ctx) {
     isArsenal: st.screen === 'arsenal',
     isTemplate: st.screen === 'template',
     isExercise: st.screen === 'exercise',
+    isTemplateEdit: st.screen === 'templateEdit',
+    isExerciseEdit: st.screen === 'exerciseEdit',
     canGoBack: (st.hist || []).length > 0,
     goBack: () => logic.back(),
     goArsenal: () => logic.nav({ screen: 'arsenal', monthOpen: false }),

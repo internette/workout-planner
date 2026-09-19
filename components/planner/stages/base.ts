@@ -5,7 +5,7 @@ import type { Ctx } from '../types';
 export function baseStage(ctx: Ctx): Ctx {
   const { logic } = ctx;
   const st = logic.state;
-  const { EX, SEED, DIARY } = logic.model;
+  const { EX, EXV, SEED, DIARY } = logic.model;
   const nowDate = new Date();
   const Y = nowDate.getFullYear();
   const TODAY_M = nowDate.getMonth();
@@ -22,6 +22,7 @@ export function baseStage(ctx: Ctx): Ctx {
   return {
     st,
     EX,
+    EXV,
     DIARY,
     nowDate,
     Y,

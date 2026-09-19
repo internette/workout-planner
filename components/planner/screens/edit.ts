@@ -39,12 +39,13 @@ export function editVals(ctx: Ctx) {
     selRide,
     selAct,
     baseName,
+    baseKey,
     mi,
     selDay,
     srcAct,
     pickerCells,
     Y,
-    EX,
+    EXV,
     selList,
     selDate,
     doneSet,
@@ -301,7 +302,7 @@ export function editVals(ctx: Ctx) {
       const cleared = EDIT_OVERLAYS;
       const bare = (e) => ({ name: e.name, sets: e.sets, weight: e.weight, rest: e.rest, i: e.i });
       if (!creating) {
-        const owned = EX[baseName] || [];
+        const owned = EXV[baseKey] || [];
         const byName = (n) => owned.find((e) => e.name === n);
         const prefix = listKey + '|';
         const update = Object.keys(st.fields || {})

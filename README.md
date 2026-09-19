@@ -8,7 +8,7 @@
 - **Workouts:** lifting sessions (exercises with sets, reps, weight and rest) and cycling sessions (distance, elevation, duration, target effort). Both can repeat weekly for 12 weeks.
 - **Progress tracking:** tick exercises off, mark rides complete, and log what you actually rode against the plan.
 - **Chronicle:** a diary entry per session with mood, effort (1–5) and notes.
-- **Arsenal:** two views, switched with a toggle. **Workouts** lists every saved workout with its exercises and target areas; **Exercises** is your exercise library, grouped by workout, plus exercises not yet assigned to one.
+- **Arsenal:** two views, switched with a toggle. **Workouts** lists every saved workout with its exercises and target areas; **Exercises** is your exercise library, grouped by workout, plus exercises not yet assigned to one. Open either to read it without any date, and use Edit to change it. When you save a workout that has upcoming sessions, a dialog asks whether to update them. With "Update upcoming sessions" ticked, the workout is edited and its upcoming sessions follow. Unticked, your changes are saved as a new workout and the original keeps all its sessions. Either way, past and completed sessions never change.
 - **Progress and Profile:** streaks, weekly counts, mood split, personal records, and XP with a 20-step rank ladder (10 XP per exercise, 50 XP per finished workout).
 
 ## Getting started
@@ -41,7 +41,9 @@ The app expects these tables: `workouts`, `workout_exercises`, `plan_entries` an
 - `diary_entries`: `rpe`, and a unique `plan_entry_id` so saving an entry updates the existing one.
 - A new `library_exercises` table for the Arsenal.
 
-Run the migration once in the Supabase SQL editor. It is safe to run again.
+A second migration, [supabase/migrations/20260920000000_workout_snapshots.sql](supabase/migrations/20260920000000_workout_snapshots.sql), adds `workouts.archived`. Editing a workout from the Arsenal (with upcoming sessions updated) saves the old version as an archived copy, so past sessions keep showing what you actually did.
+
+Run both migrations once, in order, in the Supabase SQL editor. They are safe to run again.
 
 ## Scripts
 

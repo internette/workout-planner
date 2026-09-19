@@ -3,16 +3,17 @@ import type { Ctx } from '../types';
 
 // Per-entry helpers (names, exercise counts, done state), the chronicle filter and the mood / effort widgets.
 export function entriesStage(ctx: Ctx): Ctx {
-  const { logic, st, EX, DIARY, nowDate, Y, TODAY_M, TODAY_D } = ctx;
+  const { logic, st, EXV, DIARY, nowDate, Y, TODAY_M, TODAY_D } = ctx;
   const nameOf = (n) => ((st.renames || {})[n] != null && st.renames[n] !== '' ? st.renames[n] : n);
-  const instList = (name, key) =>
-    (EX[name] || [])
+  // An entry's exercises come from the version of the workout it was scheduled with, not the current one.
+  const instList = (exKey, key) =>
+    (EXV[exKey] || [])
       .concat((st.extra || {})[key] || [])
       .filter((e) => ((st.removed || {})[key] || []).indexOf(e.name) === -1);
-  const countAt = (av) => instList(av.name, idOf(av)).length;
+  const countAt = (av) => instList(av.exKey, idOf(av)).length;
   const doneCountAt = (av) => {
     const dn = (st.done || {})[idOf(av)] || [];
-    return instList(av.name, idOf(av)).filter((e) => dn.indexOf(e.name) !== -1).length;
+    return instList(av.exKey, idOf(av)).filter((e) => dn.indexOf(e.name) !== -1).length;
   };
   const ENTRIES = {};
   Object.assign(ENTRIES, DIARY);
