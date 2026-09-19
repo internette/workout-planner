@@ -97,7 +97,7 @@ export function editVals(ctx: Ctx) {
     rideBar:
       'width:' +
       (ridePct == null ? 0 : Math.min(100, ridePct)) +
-      '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,#E1699C 0%,#7C8FC9 50%,#5EC4D6 100%)',
+      '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
     rideNote:
       ridePct == null
         ? 'Log what you rode — a partial ride still counts.'
@@ -105,8 +105,8 @@ export function editVals(ctx: Ctx) {
           ? 'Full route ridden. Plan met.'
           : ridePct + '% of the planned distance. The rest stays on the plan.',
     rideNoteStyle:
-      'margin:14px 0 0;font-size:13px;font-weight:' +
-      (ridePct != null && ridePct >= 100 ? '600;color:#c4548a' : '400;color:#746E88'),
+      'margin:14px 0 0;font-size:var(--text-md);font-weight:' +
+      (ridePct != null && ridePct >= 100 ? 'var(--font-weight-semibold);color:var(--color-pink-deep)' : 'var(--font-weight-regular);color:var(--color-muted)'),
     setHours: (e) => logic.s({ rHrs: e.target.value.replace(/[^0-9]/g, '').slice(0, 2) }),
     setMins: (e) => {
       const v = e.target.value.replace(/[^0-9]/g, '').slice(0, 2);
@@ -131,8 +131,8 @@ export function editVals(ctx: Ctx) {
             }),
           }),
         style:
-          'padding:10px 16px;border:none;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;' +
-          (on ? 'background:#E1699C;color:#fff' : 'background:#FBF1F3;color:#5C6684'),
+          'padding:10px 16px;border:none;border-radius:999px;font-size:var(--text-md);font-weight:var(--font-weight-semibold);cursor:pointer;' +
+          (on ? 'background:var(--color-pink);color:var(--color-white)' : 'background:var(--color-canvas);color:var(--color-slate)'),
       };
     }),
     addOpen: !!st.addOpen,
@@ -154,7 +154,7 @@ export function editVals(ctx: Ctx) {
           addOpen: false,
         }),
       style:
-        'display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;border-radius:14px;background:#FBF1F3;text-align:left;cursor:pointer;width:100%',
+        'display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;border-radius:14px;background:var(--color-canvas);text-align:left;cursor:pointer;width:100%',
     })),
     draftName: st.dName || '',
     draftSets: st.dSets || '',
@@ -170,8 +170,8 @@ export function editVals(ctx: Ctx) {
       style: optStyle((st.dIcon || 'h') === name),
     })),
     commitStyle:
-      'height:52px;padding:0 30px;border:none;border-radius:16px;font-size:15px;font-weight:600;cursor:pointer;color:#fff;background:' +
-      ((st.dName || '').trim() ? '#E1699C' : '#E8BFD2'),
+      'height:52px;padding:0 30px;border:none;border-radius:16px;font-size:var(--text-lg);font-weight:var(--font-weight-semibold);cursor:pointer;color:var(--color-white);background:' +
+      ((st.dName || '').trim() ? 'var(--color-pink)' : 'var(--color-pink-muted)'),
     commitNew: () => {
       const nm = (st.dName || '').trim();
       if (!nm) return;
@@ -195,7 +195,7 @@ export function editVals(ctx: Ctx) {
     iconsOpen: !!st.iconsOpen,
     toggleIcons: () => logic.s({ iconsOpen: !st.iconsOpen }),
     iconBadge:
-      'width:46px;height:46px;border-radius:15px;background:#FCE8F1;border:2px solid #fff;box-shadow:0 2px 6px rgba(214,96,139,.28),0 0 0 1px rgba(35,42,69,.05);display:flex;align-items:center;justify-content:center;cursor:pointer',
+      'width:46px;height:46px;border-radius:15px;background:var(--color-pink-tint);border:2px solid var(--color-white);box-shadow:0 2px 6px rgba(214,96,139,.28),0 0 0 1px rgba(35,42,69,.05);display:flex;align-items:center;justify-content:center;cursor:pointer',
     workoutIcoSvg: iconSvg(wIcon, wColor),
     workoutIconGrid: EXERCISE_ICON_NAMES.map((name) => ({
       svg: iconSvg(name, wColor),
@@ -207,11 +207,11 @@ export function editVals(ctx: Ctx) {
       style:
         'width:34px;height:34px;border:none;border-radius:11px;cursor:pointer;background:' +
         c +
-        (c === wColor ? ';box-shadow:0 0 0 2px #fff,0 0 0 4px ' + c : ''),
+        (c === wColor ? ';box-shadow:0 0 0 2px var(--color-white),0 0 0 4px ' + c : ''),
     })),
     chipStyle:
-      'flex:none;white-space:nowrap;padding:8px 14px;border-radius:999px;color:#fff;font-size:12.5px;font-weight:600;background:' +
-      (doneSel ? '#5C6684' : '#E1699C'),
+      'flex:none;white-space:nowrap;padding:8px 14px;border-radius:999px;color:var(--color-white);font-size:var(--text-md);font-weight:var(--font-weight-semibold);background:' +
+      (doneSel ? 'var(--color-slate)' : 'var(--color-pink)'),
     eName: selName,
     eCat: selRide ? selRide.zone || 'Endurance' : picked.length ? picked.join(' · ') : 'No target areas',
     areaPills: selRide ? [selRide.zone || 'Endurance'] : picked,
@@ -426,8 +426,8 @@ export function editVals(ctx: Ctx) {
         extra: Object.assign({}, st.extra, { __draft: [] }),
       }),
     eCancelStyle:
-      'height:52px;padding:0 22px;border:none;border-radius:16px;background:none;font-size:14.5px;font-weight:600;cursor:pointer;color:' +
-      (creating ? '#5C6684' : '#B23A4C'),
+      'height:52px;padding:0 22px;border:none;border-radius:16px;background:none;font-size:var(--text-lg);font-weight:var(--font-weight-semibold);cursor:pointer;color:' +
+      (creating ? 'var(--color-slate)' : 'var(--color-danger)'),
     eDate:
       DOW3[selDate.getDay()].charAt(0) +
       DOW3[selDate.getDay()].slice(1, 3).toLowerCase() +
@@ -443,9 +443,9 @@ export function editVals(ctx: Ctx) {
       'margin-left:auto;width:58px;height:34px;flex:none;border:none;border-radius:999px;padding:4px;cursor:pointer;display:flex;align-items:center;justify-content:' +
       (st.repeat ? 'flex-end' : 'flex-start') +
       ';background:' +
-      (st.repeat ? PINK : '#C7C4D0'),
+      (st.repeat ? PINK : 'var(--color-hairline)'),
     switchKnob:
-      'width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(35,42,69,.35)',
+      'width:26px;height:26px;border-radius:50%;background:var(--color-white);box-shadow:0 1px 3px rgba(35,42,69,.35)',
     exercises: selList.map((e, ix) => {
       const cur = (st.exIcons || {})[e.name] || e.i;
       const set = (v) => () =>
@@ -470,12 +470,12 @@ export function editVals(ctx: Ctx) {
         hideLegacy: false,
         detail: e.sets + ' · ' + e.weight + ' · ' + e.rest + ' rest',
         nameStyle:
-          "display:block;font-family:'Space Grotesk',system-ui,sans-serif;font-size:16.5px;font-weight:700;letter-spacing:-.01em;" +
-          (doneSet[e.name] ? 'color:#746E88;text-decoration:line-through' : 'color:#232A45'),
+          "display:block;font-family:var(--font-heading);font-size:var(--text-xl);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-snug);" +
+          (doneSet[e.name] ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
         doneBtn:
           'margin-left:auto;display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;border-radius:11px;cursor:pointer;border:' +
-          (doneSet[e.name] ? 'none;background:#E1699C' : '1.5px solid rgba(35,42,69,.15);background:none'),
-        doneStroke: doneSet[e.name] ? '#fff' : 'rgba(35,42,69,0.22)',
+          (doneSet[e.name] ? 'none;background:var(--color-pink)' : '1.5px solid rgba(35,42,69,.15);background:none'),
+        doneStroke: doneSet[e.name] ? 'var(--color-white)' : 'rgba(35,42,69,0.22)',
         isDone: !!doneSet[e.name],
         iconAria: 'Choose icon for ' + e.name,
         removeAria: 'Remove ' + e.name,

@@ -35,7 +35,7 @@ export function calendarVals(ctx: Ctx) {
     monthCells,
     constellation,
     segRowStyle:
-      'display:flex;gap:4px;padding:5px;background:#fff;border-radius:16px;box-shadow:0 4px 14px rgba(35,42,69,.07);' +
+      'display:flex;gap:4px;padding:5px;background:var(--color-white);border-radius:16px;box-shadow:0 4px 14px rgba(35,42,69,.07);' +
       (narrow ? 'flex:1 1 100%;width:100%' : 'flex:none'),
     monthBtn:
       'display:inline-flex;align-items:center;gap:7px;margin-left:-10px;padding:8px 10px;border:none;border-radius:14px;background:' +

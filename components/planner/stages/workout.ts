@@ -1,5 +1,6 @@
 import { idOf } from '../helpers';
 import type { Ctx } from '../types';
+import { colors } from '@/components/ui/colors';
 
 // The selected workout: ride plan and actuals, exercise list, icons and completion state.
 export function workoutStage(ctx: Ctx): Ctx {
@@ -17,8 +18,8 @@ export function workoutStage(ctx: Ctx): Ctx {
       label: String(pd),
       pick: () => logic.s({ day: pd, dateOpen: false }),
       style:
-        "height:34px;border:none;border-radius:10px;cursor:pointer;font-family:'Space Grotesk',system-ui,sans-serif;font-size:12.5px;font-weight:" +
-        (pd === selDay ? '700;background:#E1699C;color:#fff' : '500;background:none;color:#232A45'),
+        "height:34px;border:none;border-radius:10px;cursor:pointer;font-family:var(--font-heading);font-size:var(--text-md);font-weight:" +
+        (pd === selDay ? 'var(--font-weight-bold);background:var(--color-pink);color:var(--color-white)' : 'var(--font-weight-medium);background:none;color:var(--color-ink)'),
     });
   }
   const editSrc =
@@ -66,7 +67,7 @@ export function workoutStage(ctx: Ctx): Ctx {
   const listKey = creating ? '__draft' : idOf(srcAct);
   const picked = (st.areas || {})[listKey] || (srcAct && srcAct.areas) || [];
   const wIcon = (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (isCycleView ? 'bike' : 'h');
-  const wColor = (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || '#E1699C';
+  const wColor = (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || colors.pink;
   const doneNames = (st.done || {})[listKey] || [];
   const doneSet = {};
   doneNames.forEach((n) => {
@@ -85,11 +86,11 @@ export function workoutStage(ctx: Ctx): Ctx {
     isV: e.i === 'v',
     isD: e.i === 'd',
     textStyle:
-      'flex:1;min-width:0;font-size:14.5px;font-weight:500;' +
-      (doneSet[e.name] ? 'color:#746E88;text-decoration:line-through' : 'color:#232A45'),
+      'flex:1;min-width:0;font-size:var(--text-lg);font-weight:var(--font-weight-medium);' +
+      (doneSet[e.name] ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
     tick:
       'flex:none;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:' +
-      (doneSet[e.name] ? '#E1699C' : 'transparent'),
+      (doneSet[e.name] ? 'var(--color-pink)' : 'transparent'),
   }));
   const ridePast = mi * 100 + selDay < TK;
   const ridePlanOpen = !!savedRide && !rideDone && !ridePast;

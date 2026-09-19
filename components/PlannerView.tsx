@@ -33,6 +33,7 @@ import {
   User,
   Waves,
 } from '@/components/ui/icons';
+import { colors } from '@/components/ui/colors';
 
 export function PlannerView({ v }: { v: any }) {
   return (
@@ -78,16 +79,16 @@ export function PlannerView({ v }: { v: any }) {
                 maxHeight: '80vh',
                 overflowY: 'auto',
                 padding: '26px',
-                background: '#fff',
+                background: 'var(--color-white)',
                 borderRadius: '24px',
                 boxShadow: '0 8px 24px rgba(35,42,69,.14)',
               }}
             >
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
-                <h2 style={{ margin: '0', fontSize: '18px', fontWeight: '700', letterSpacing: '-.02em' }}>
+                <h2 style={{ margin: '0', fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--tracking-tight)' }}>
                   Ranks
                 </h2>
-                <span style={{ fontSize: '13px', fontWeight: '500', color: '#746E88' }}>
+                <span style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-muted)' }}>
                   {v.rankStepLabel}
                 </span>
                 <button
@@ -107,16 +108,16 @@ export function PlannerView({ v }: { v: any }) {
                   }}
                   className="hv0"
                 >
-                  <Close color="#746E88" strokeWidth={2.2} size={16} />
+                  <Close color="var(--color-muted)" strokeWidth={2.2} size={16} />
                 </button>
               </div>
               <p
                 style={{
                   margin: '10px 0 0',
-                  fontSize: '13.5px',
-                  fontWeight: '400',
-                  lineHeight: '1.6',
-                  color: '#746E88',
+                  fontSize: 'var(--text-base)',
+                  fontWeight: 'var(--font-weight-regular)',
+                  lineHeight: 'var(--leading-relaxed)',
+                  color: 'var(--color-muted)',
                   textWrap: 'pretty',
                 }}
               >
@@ -159,21 +160,21 @@ export function PlannerView({ v }: { v: any }) {
                 width: '100%',
                 maxWidth: '400px',
                 padding: '26px',
-                background: '#fff',
+                background: 'var(--color-white)',
                 borderRadius: '24px',
                 boxShadow: '0 8px 24px rgba(35,42,69,.14)',
               }}
             >
-              <h2 style={{ margin: '0', fontSize: '18px', fontWeight: '700', letterSpacing: '-.02em' }}>
+              <h2 style={{ margin: '0', fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--tracking-tight)' }}>
                 {v.confirmTitle}
               </h2>
               <p
                 style={{
                   margin: '10px 0 0',
-                  fontSize: '14px',
-                  fontWeight: '400',
-                  lineHeight: '1.6',
-                  color: '#746E88',
+                  fontSize: 'var(--text-base)',
+                  fontWeight: 'var(--font-weight-regular)',
+                  lineHeight: 'var(--leading-relaxed)',
+                  color: 'var(--color-muted)',
                   textWrap: 'pretty',
                 }}
               >
@@ -197,9 +198,9 @@ export function PlannerView({ v }: { v: any }) {
                     border: 'none',
                     borderRadius: '15px',
                     background: 'none',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    color: '#746E88',
+                    fontSize: 'var(--text-base)',
+                    fontWeight: 'var(--font-weight-semibold)',
+                    color: 'var(--color-muted)',
                     cursor: 'pointer',
                   }}
                   className="hv1"
@@ -213,10 +214,10 @@ export function PlannerView({ v }: { v: any }) {
                     padding: '0 22px',
                     border: 'none',
                     borderRadius: '15px',
-                    background: '#B23A4C',
-                    color: '#fff',
-                    fontSize: '14.5px',
-                    fontWeight: '600',
+                    background: 'var(--color-danger)',
+                    color: 'var(--color-white)',
+                    fontSize: 'var(--text-lg)',
+                    fontWeight: 'var(--font-weight-semibold)',
                     cursor: 'pointer',
                   }}
                   className="hv2"
@@ -275,9 +276,9 @@ export function PlannerView({ v }: { v: any }) {
                   marginBottom: '14px',
                   padding: '12px 16px',
                   borderRadius: '14px',
-                  background: '#FBE9EC',
-                  color: '#B23A4C',
-                  fontSize: '13.5px',
+                  background: 'var(--color-danger-tint)',
+                  color: 'var(--color-danger)',
+                  fontSize: 'var(--text-base)',
                 }}
               >
                 <span style={{ flex: '1', minWidth: '0' }}>Couldn't save: {v.saveError}</span>
@@ -286,8 +287,8 @@ export function PlannerView({ v }: { v: any }) {
                   style={{
                     border: 'none',
                     background: 'none',
-                    color: '#B23A4C',
-                    fontWeight: '600',
+                    color: 'var(--color-danger)',
+                    fontWeight: 'var(--font-weight-semibold)',
                     cursor: 'pointer',
                   }}
                 >
@@ -311,16 +312,16 @@ export function PlannerView({ v }: { v: any }) {
                       <button onClick={v.toggleMonth} style={css(v.monthBtn)} className="hv1">
                         <span
                           style={{
-                            fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                            fontSize: '20px',
-                            fontWeight: '700',
-                            letterSpacing: '-.02em',
-                            color: '#232A45',
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'var(--text-3xl)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-tight)',
+                            color: 'var(--color-ink)',
                           }}
                         >
                           {v.monthName}
                         </span>
-                        <ChevronDown color="#746E88" strokeWidth={2.2} size={17} />
+                        <ChevronDown color="var(--color-muted)" strokeWidth={2.2} size={17} />
                         <span
                           style={{
                             display: 'flex',
@@ -334,7 +335,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-9px)' }}>
                             <Sparkle
                               size={11}
-                              color="#E1699C"
+                              color={colors.pink}
                               glow={0.45}
                               glowBlur={3}
                               style={{ animation: 'twinkle 3.4s ease-in-out 0s infinite' }}
@@ -343,7 +344,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(3px)' }}>
                             <Sparkle
                               size={8}
-                              color="#7C8FC9"
+                              color={colors.periwinkle}
                               glow={0.45}
                               glowBlur={3}
                               style={{ animation: 'twinkle 4.6s ease-in-out .4s infinite' }}
@@ -352,7 +353,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-4px)' }}>
                             <Sparkle
                               size={9}
-                              color="#5EC4D6"
+                              color={colors.teal}
                               glow={0.45}
                               glowBlur={3}
                               style={{ animation: 'twinkle 5.4s ease-in-out .15s infinite' }}
@@ -361,7 +362,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(7px)' }}>
                             <Sparkle
                               size={6}
-                              color="#E1699C"
+                              color={colors.pink}
                               glow={0.4}
                               glowBlur={3}
                               style={{ animation: 'twinkle 6s ease-in-out .9s infinite' }}
@@ -370,7 +371,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-7px)' }}>
                             <Sparkle
                               size={7}
-                              color="#7C8FC9"
+                              color={colors.periwinkle}
                               glow={0.42}
                               glowBlur={3}
                               style={{ animation: 'twinkle 4.2s ease-in-out 1.1s infinite' }}
@@ -379,7 +380,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(1px)' }}>
                             <Sparkle
                               size={5}
-                              color="#5EC4D6"
+                              color={colors.teal}
                               glow={0.4}
                               glowBlur={3}
                               style={{ animation: 'twinkle 5.2s ease-in-out 1.3s infinite' }}
@@ -388,7 +389,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-2px)' }}>
                             <Sparkle
                               size={6}
-                              color="#E1699C"
+                              color={colors.pink}
                               glow={0.38}
                               glowBlur={3}
                               style={{ animation: 'twinkle 6.6s ease-in-out 1.7s infinite' }}
@@ -397,7 +398,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(5px)' }}>
                             <Sparkle
                               size={4}
-                              color="#7C8FC9"
+                              color={colors.periwinkle}
                               glow={0.36}
                               glowBlur={3}
                               style={{ animation: 'twinkle 4.8s ease-in-out 2s infinite' }}
@@ -406,7 +407,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-5px)' }}>
                             <Sparkle
                               size={3}
-                              color="#5EC4D6"
+                              color={colors.teal}
                               glow={0.34}
                               glowBlur={3}
                               style={{ animation: 'twinkle 5.8s ease-in-out 2.4s infinite' }}
@@ -423,7 +424,7 @@ export function PlannerView({ v }: { v: any }) {
                               left: '50%',
                               transform: 'translateX(-50%)',
                               width: '300px',
-                              background: '#fff',
+                              background: 'var(--color-white)',
                               borderRadius: '22px',
                               padding: '16px',
                               boxShadow: '0 8px 24px rgba(35,42,69,.14)',
@@ -450,13 +451,13 @@ export function PlannerView({ v }: { v: any }) {
                                   justifyContent: 'center',
                                 }}
                               >
-                                <ChevronLeft color="#C7C4D0" size={17} />
+                                <ChevronLeft color="var(--color-hairline)" size={17} />
                               </span>
                               <span
                                 style={{
-                                  fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                  fontSize: '17px',
-                                  fontWeight: '700',
+                                  fontFamily: 'var(--font-heading)',
+                                  fontSize: 'var(--text-2xl)',
+                                  fontWeight: 'var(--font-weight-bold)',
                                 }}
                               >
                                 {v.yearLabel}
@@ -472,7 +473,7 @@ export function PlannerView({ v }: { v: any }) {
                                   justifyContent: 'center',
                                 }}
                               >
-                                <ChevronRight color="#C7C4D0" size={17} />
+                                <ChevronRight color="var(--color-hairline)" size={17} />
                               </span>
                             </div>
                             <div
@@ -536,14 +537,14 @@ export function PlannerView({ v }: { v: any }) {
                         <h1
                           style={{
                             margin: '0',
-                            fontSize: '22px',
-                            fontWeight: '700',
-                            letterSpacing: '-.02em',
+                            fontSize: 'var(--text-4xl)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-tight)',
                           }}
                         >
                           {v.dayName}
                         </h1>
-                        <span style={{ fontSize: '14px', fontWeight: '500', color: '#746E88' }}>
+                        <span style={{ fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-muted)' }}>
                           {v.shortDate}
                         </span>
                       </div>
@@ -566,7 +567,7 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                           className="hv0"
                         >
-                          <ChevronLeft color="#746E88" size={17} />
+                          <ChevronLeft color="var(--color-muted)" size={17} />
                         </button>
                         <div style={{ flex: '1', display: 'flex', gap: '4px' }}>
                           {(v.days ?? []).map((d, i) => (
@@ -603,7 +604,7 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                           className="hv0"
                         >
-                          <ChevronRight color="#746E88" size={17} />
+                          <ChevronRight color="var(--color-muted)" size={17} />
                         </button>
                       </div>
                     </>
@@ -633,27 +634,27 @@ export function PlannerView({ v }: { v: any }) {
                             animation: 'twinkle 4.6s ease-in-out infinite',
                           }}
                         >
-                          <Sparkle size={10} color="#5EC4D6" glow={0.55} />
+                          <Sparkle size={10} color={colors.teal} glow={0.55} />
                         </span>
                         <span style={css(v.questIconWrap)}>
                           {v.questDone ? (
                             <>
-                              <Check color="#fff" strokeWidth={2.6} size={19} />
+                              <Check color="var(--color-white)" strokeWidth={2.6} size={19} />
                             </>
                           ) : null}
                           {v.questOpen ? (
                             <>
-                              <Sparkle size={19} color="#E1699C" />
+                              <Sparkle size={19} color={colors.pink} />
                             </>
                           ) : null}
                         </span>
                         <div style={{ flex: '1 1 200px', minWidth: '0' }}>
                           <div
                             style={{
-                              fontSize: '10px',
-                              fontWeight: '700',
-                              letterSpacing: '.11em',
-                              color: '#c4548a',
+                              fontSize: 'var(--text-2xs)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              letterSpacing: 'var(--tracking-wide)',
+                              color: 'var(--color-pink-deep)',
                             }}
                           >
                             {v.questEyebrow}
@@ -661,10 +662,10 @@ export function PlannerView({ v }: { v: any }) {
                           <div style={css(v.questTitleStyle)}>{v.questTitle}</div>
                           <div
                             style={{
-                              fontSize: '13px',
-                              fontWeight: '400',
-                              lineHeight: '1.5',
-                              color: '#5C6684',
+                              fontSize: 'var(--text-md)',
+                              fontWeight: 'var(--font-weight-regular)',
+                              lineHeight: 'var(--leading-snug)',
+                              color: 'var(--color-slate)',
                               marginTop: '3px',
                               textWrap: 'pretty',
                             }}
@@ -680,7 +681,7 @@ export function PlannerView({ v }: { v: any }) {
                       <div style={{ marginTop: '14px' }}>
                         <div
                           style={{
-                            background: '#fff',
+                            background: 'var(--color-white)',
                             borderRadius: '24px',
                             padding: '24px',
                             boxShadow: '0 4px 14px rgba(35,42,69,.07)',
@@ -695,8 +696,8 @@ export function PlannerView({ v }: { v: any }) {
                                 height: '40px',
                                 flex: 'none',
                                 borderRadius: '13px',
-                                background: '#FCE8F1',
-                                border: '2px solid #fff',
+                                background: 'var(--color-pink-tint)',
+                                border: '2px solid var(--color-white)',
                                 boxShadow: '0 2px 6px rgba(214,96,139,.28),0 0 0 1px rgba(35,42,69,.05)',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -709,9 +710,9 @@ export function PlannerView({ v }: { v: any }) {
                               <h2
                                 style={{
                                   margin: '0',
-                                  fontSize: '20px',
-                                  fontWeight: '700',
-                                  letterSpacing: '-.02em',
+                                  fontSize: 'var(--text-3xl)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  letterSpacing: 'var(--tracking-tight)',
                                 }}
                               >
                                 <button
@@ -734,15 +735,15 @@ export function PlannerView({ v }: { v: any }) {
                                   className="hv3"
                                 >
                                   {t(v.wName)}
-                                  <ChevronRight color="#746E88" size={17} />
+                                  <ChevronRight color="var(--color-muted)" size={17} />
                                 </button>
                               </h2>
                               <p
                                 style={{
                                   margin: '4px 0 0',
-                                  fontSize: '13.5px',
-                                  fontWeight: '500',
-                                  color: '#746E88',
+                                  fontSize: 'var(--text-base)',
+                                  fontWeight: 'var(--font-weight-medium)',
+                                  color: 'var(--color-muted)',
                                 }}
                               >
                                 {v.wMeta}
@@ -764,7 +765,7 @@ export function PlannerView({ v }: { v: any }) {
                                     flex: '1',
                                     height: '8px',
                                     borderRadius: '5px',
-                                    background: '#FCE8F1',
+                                    background: 'var(--color-pink-tint)',
                                     overflow: 'hidden',
                                   }}
                                 >
@@ -772,10 +773,10 @@ export function PlannerView({ v }: { v: any }) {
                                 </div>
                                 <span
                                   style={{
-                                    fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                    fontSize: '13px',
-                                    fontWeight: '700',
-                                    color: '#232A45',
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: 'var(--text-md)',
+                                    fontWeight: 'var(--font-weight-bold)',
+                                    color: 'var(--color-ink)',
                                     flex: 'none',
                                   }}
                                 >
@@ -801,20 +802,20 @@ export function PlannerView({ v }: { v: any }) {
                                     <div>
                                       <div
                                         style={{
-                                          fontSize: '10px',
-                                          fontWeight: '700',
-                                          letterSpacing: '.1em',
-                                          color: '#A9A2B4',
+                                          fontSize: 'var(--text-2xs)',
+                                          fontWeight: 'var(--font-weight-bold)',
+                                          letterSpacing: 'var(--tracking-wide)',
+                                          color: 'var(--color-subtle)',
                                         }}
                                       >
                                         {r?.label}
                                       </div>
                                       <div
                                         style={{
-                                          fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                          fontSize: '16px',
-                                          fontWeight: '700',
-                                          color: '#232A45',
+                                          fontFamily: 'var(--font-heading)',
+                                          fontSize: 'var(--text-xl)',
+                                          fontWeight: 'var(--font-weight-bold)',
+                                          color: 'var(--color-ink)',
                                           marginTop: '4px',
                                         }}
                                       >
@@ -849,13 +850,13 @@ export function PlannerView({ v }: { v: any }) {
                                     >
                                       {x?.isH ? (
                                         <>
-                                          <Dumbbell color="#E1699C" size={20} />
+                                          <Dumbbell color="var(--color-pink)" size={20} />
                                         </>
                                       ) : null}
                                       {x?.isV ? (
                                         <>
                                           <Dumbbell
-                                            color="#E1699C"
+                                            color="var(--color-pink)"
                                             size={17}
                                             style={{ transform: 'rotate(90deg)' }}
                                           />
@@ -863,7 +864,7 @@ export function PlannerView({ v }: { v: any }) {
                                       ) : null}
                                       {x?.isD ? (
                                         <>
-                                          <DumbbellSmall color="#E1699C" size={20} />
+                                          <DumbbellSmall color="var(--color-pink)" size={20} />
                                         </>
                                       ) : null}
                                       <span style={css(x?.textStyle)}>{x?.text}</span>
@@ -884,16 +885,16 @@ export function PlannerView({ v }: { v: any }) {
                                   borderRadius: '12px',
                                   background: 'none',
                                   padding: '0 12px',
-                                  color: '#746E88',
-                                  fontSize: '13.5px',
-                                  fontWeight: '500',
+                                  color: 'var(--color-muted)',
+                                  fontSize: 'var(--text-base)',
+                                  fontWeight: 'var(--font-weight-medium)',
                                   cursor: 'pointer',
                                 }}
                                 className="hv1"
                               >
                                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                                   {t(v.moreLabel)}
-                                  <ChevronDown color="#746E88" strokeWidth={2.2} style={css(v.moreCaret)} />
+                                  <ChevronDown color="var(--color-muted)" strokeWidth={2.2} style={css(v.moreCaret)} />
                                 </span>
                               </button>
                             </>
@@ -906,10 +907,10 @@ export function PlannerView({ v }: { v: any }) {
                               padding: '17px',
                               border: 'none',
                               borderRadius: '17px',
-                              background: '#E1699C',
-                              color: '#fff',
-                              fontSize: '15px',
-                              fontWeight: '600',
+                              background: 'var(--color-pink)',
+                              color: 'var(--color-white)',
+                              fontSize: 'var(--text-lg)',
+                              fontWeight: 'var(--font-weight-semibold)',
                               cursor: 'pointer',
                             }}
                             className="hv4"
@@ -926,9 +927,9 @@ export function PlannerView({ v }: { v: any }) {
                               border: '1px dashed rgba(225,105,156,.5)',
                               borderRadius: '18px',
                               background: 'rgba(252,231,239,.5)',
-                              color: '#c4548a',
-                              fontSize: '14px',
-                              fontWeight: '600',
+                              color: 'var(--color-pink-deep)',
+                              fontSize: 'var(--text-base)',
+                              fontWeight: 'var(--font-weight-semibold)',
                               cursor: 'pointer',
                               display: 'flex',
                               alignItems: 'center',
@@ -936,7 +937,7 @@ export function PlannerView({ v }: { v: any }) {
                               gap: '7px',
                             }}
                           >
-                            <Plus color="#c4548a" size={17} />
+                            <Plus color="var(--color-pink-deep)" size={17} />
                             Add workout
                           </button>
                         </aside>
@@ -960,24 +961,24 @@ export function PlannerView({ v }: { v: any }) {
                             height: '78px',
                             margin: '0 auto',
                             borderRadius: '50%',
-                            background: '#fff',
+                            background: 'var(--color-white)',
                             boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                           }}
                         >
-                          <Moon color="#7C8FC9" size={40} />
+                          <Moon color="var(--color-periwinkle)" size={40} />
                           <span style={{ position: 'absolute', top: '21px', right: '20px', display: 'flex' }}>
-                            <Sparkle size={9.5} outline color="#E0A93A" strokeWidth={2.2} />
+                            <Sparkle size={9.5} outline color={colors.gold} strokeWidth={2.2} />
                           </span>
                         </div>
                         <h2
                           style={{
                             margin: '22px 0 0',
-                            fontSize: '21px',
-                            fontWeight: '700',
-                            letterSpacing: '-.02em',
+                            fontSize: 'var(--text-4xl)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-tight)',
                           }}
                         >
                           The city is quiet
@@ -986,10 +987,10 @@ export function PlannerView({ v }: { v: any }) {
                           style={{
                             margin: '10px auto 0',
                             maxWidth: '330px',
-                            fontSize: '14.5px',
-                            fontWeight: '500',
-                            lineHeight: '1.6',
-                            color: '#746E88',
+                            fontSize: 'var(--text-lg)',
+                            fontWeight: 'var(--font-weight-medium)',
+                            lineHeight: 'var(--leading-relaxed)',
+                            color: 'var(--color-muted)',
                             textWrap: 'pretty',
                           }}
                         >
@@ -1003,10 +1004,10 @@ export function PlannerView({ v }: { v: any }) {
                             padding: '15px 28px',
                             border: 'none',
                             borderRadius: '16px',
-                            background: '#E1699C',
-                            color: '#fff',
-                            fontSize: '15px',
-                            fontWeight: '600',
+                            background: 'var(--color-pink)',
+                            color: 'var(--color-white)',
+                            fontSize: 'var(--text-lg)',
+                            fontWeight: 'var(--font-weight-semibold)',
                             cursor: 'pointer',
                             boxShadow: '0 8px 20px rgba(225,105,156,.4)',
                             display: 'inline-flex',
@@ -1014,7 +1015,7 @@ export function PlannerView({ v }: { v: any }) {
                             gap: '8px',
                           }}
                         >
-                          <Plus color="#fff" size={16} />
+                          <Plus color="var(--color-white)" size={16} />
                           Add workout
                         </button>
                         <span
@@ -1025,7 +1026,7 @@ export function PlannerView({ v }: { v: any }) {
                             animation: 'twinkle 4s ease-in-out infinite',
                           }}
                         >
-                          <Sparkle size={13} color="#7C8FC9" glow={0.5} />
+                          <Sparkle size={13} color={colors.periwinkle} glow={0.5} />
                         </span>
                       </div>
                     </>
@@ -1052,15 +1053,15 @@ export function PlannerView({ v }: { v: any }) {
                             }}
                             className="hv0"
                           >
-                            <ChevronLeft color="#746E88" size={17} />
+                            <ChevronLeft color="var(--color-muted)" size={17} />
                           </button>
                           <span
                             style={{
                               flex: 'none',
-                              fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                              fontSize: '15px',
-                              fontWeight: '700',
-                              letterSpacing: '-.01em',
+                              fontFamily: 'var(--font-heading)',
+                              fontSize: 'var(--text-lg)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              letterSpacing: 'var(--tracking-snug)',
                               whiteSpace: 'nowrap',
                             }}
                           >
@@ -1084,7 +1085,7 @@ export function PlannerView({ v }: { v: any }) {
                             }}
                             className="hv0"
                           >
-                            <ChevronRight color="#746E88" size={17} />
+                            <ChevronRight color="var(--color-muted)" size={17} />
                           </button>
                         </div>
                         <div
@@ -1112,11 +1113,11 @@ export function PlannerView({ v }: { v: any }) {
                                           height: '2px',
                                           flex: 'none',
                                           borderRadius: '1px',
-                                          background: '#DAD7E0',
+                                          background: 'var(--color-divider)',
                                         }}
                                       ></span>
                                       <span
-                                        style={{ fontSize: '13.5px', fontWeight: '500', color: '#746E88' }}
+                                        style={{ fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-muted)' }}
                                       >
                                         Rest day
                                       </span>
@@ -1135,7 +1136,7 @@ export function PlannerView({ v }: { v: any }) {
                                         gap: '13px',
                                         padding: '18px 20px',
                                         border: 'none',
-                                        background: '#fff',
+                                        background: 'var(--color-white)',
                                         borderRadius: '20px',
                                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                                         textAlign: 'left',
@@ -1147,45 +1148,45 @@ export function PlannerView({ v }: { v: any }) {
                                     >
                                       {w?.isRideRow ? (
                                         <>
-                                          <Bike color="#7C8FC9" size={19} />
+                                          <Bike color="var(--color-periwinkle)" size={19} />
                                         </>
                                       ) : null}
                                       {w?.isPush ? (
                                         <>
-                                          <Flame color="#E1699C" size={16} />
+                                          <Flame color="var(--color-pink)" size={16} />
                                         </>
                                       ) : null}
                                       {w?.isPull ? (
                                         <>
-                                          <Waves color="#7C8FC9" size={20} />
+                                          <Waves color="var(--color-periwinkle)" size={20} />
                                         </>
                                       ) : null}
                                       {w?.isLegs ? (
                                         <>
-                                          <Mountain color="#5C6684" size={16} />
+                                          <Mountain color="var(--color-slate)" size={16} />
                                         </>
                                       ) : null}
                                       {w?.isCore ? (
                                         <>
-                                          <Swirl color="#5EC4D6" size={20} />
+                                          <Swirl color="var(--color-teal)" size={20} />
                                         </>
                                       ) : null}
                                       <div style={{ minWidth: '0', flex: '1' }}>
                                         <div
                                           style={{
-                                            fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                            fontSize: '15px',
-                                            fontWeight: '700',
-                                            letterSpacing: '-.01em',
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: 'var(--text-lg)',
+                                            fontWeight: 'var(--font-weight-bold)',
+                                            letterSpacing: 'var(--tracking-snug)',
                                           }}
                                         >
                                           {w?.name}
                                         </div>
                                         <div
                                           style={{
-                                            fontSize: '13px',
-                                            fontWeight: '400',
-                                            color: '#746E88',
+                                            fontSize: 'var(--text-md)',
+                                            fontWeight: 'var(--font-weight-regular)',
+                                            color: 'var(--color-muted)',
                                             marginTop: '3px',
                                           }}
                                         >
@@ -1227,7 +1228,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 3.4s ease-in-out infinite',
                                 }}
                               >
-                                <Sparkle size={12} color="#7C8FC9" glow={0.5} />
+                                <Sparkle size={12} color={colors.periwinkle} glow={0.5} />
                               </span>
                               <span
                                 style={{
@@ -1237,7 +1238,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 4.6s ease-in-out infinite',
                                 }}
                               >
-                                <Sparkle size={10} color="#5EC4D6" glow={0.55} />
+                                <Sparkle size={10} color={colors.teal} glow={0.55} />
                               </span>
                               <span
                                 style={{
@@ -1247,7 +1248,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 6s ease-in-out infinite',
                                 }}
                               >
-                                <Sparkle size={9} color="#F0A385" glow={0.55} />
+                                <Sparkle size={9} color={colors.coral} glow={0.55} />
                               </span>
                               <div
                                 style={{
@@ -1255,20 +1256,20 @@ export function PlannerView({ v }: { v: any }) {
                                   height: '56px',
                                   margin: '0 auto',
                                   borderRadius: '50%',
-                                  background: 'linear-gradient(135deg,#E1699C 0%,#7C8FC9 50%,#5EC4D6 100%)',
+                                  background: 'linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
                                 }}
                               >
-                                <Check color="#fff" strokeWidth={2.6} size={26} />
+                                <Check color="var(--color-white)" strokeWidth={2.6} size={26} />
                               </div>
                               <h3
                                 style={{
                                   margin: '16px 0 0',
-                                  fontSize: '17px',
-                                  fontWeight: '700',
-                                  letterSpacing: '-.02em',
+                                  fontSize: 'var(--text-2xl)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  letterSpacing: 'var(--tracking-tight)',
                                 }}
                               >
                                 Week sealed
@@ -1277,10 +1278,10 @@ export function PlannerView({ v }: { v: any }) {
                                 style={{
                                   margin: '8px auto 0',
                                   maxWidth: '320px',
-                                  fontSize: '13.5px',
-                                  fontWeight: '400',
-                                  lineHeight: '1.6',
-                                  color: '#5C6684',
+                                  fontSize: 'var(--text-base)',
+                                  fontWeight: 'var(--font-weight-regular)',
+                                  lineHeight: 'var(--leading-relaxed)',
+                                  color: 'var(--color-slate)',
                                   textWrap: 'pretty',
                                 }}
                               >
@@ -1311,7 +1312,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 3.4s ease-in-out infinite',
                                 }}
                               >
-                                <Sparkle size={13} color="#7C8FC9" glow={0.5} />
+                                <Sparkle size={13} color={colors.periwinkle} glow={0.5} />
                               </span>
                               <span
                                 style={{
@@ -1321,7 +1322,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 4.6s ease-in-out infinite',
                                 }}
                               >
-                                <Sparkle size={10} color="#5EC4D6" glow={0.55} />
+                                <Sparkle size={10} color={colors.teal} glow={0.55} />
                               </span>
                               <span
                                 style={{
@@ -1331,7 +1332,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 6s ease-in-out infinite',
                                 }}
                               >
-                                <Sparkle size={10} color="#F0A385" glow={0.55} />
+                                <Sparkle size={10} color={colors.coral} glow={0.55} />
                               </span>
                               <div
                                 style={{
@@ -1339,7 +1340,7 @@ export function PlannerView({ v }: { v: any }) {
                                   height: '66px',
                                   margin: '0 auto',
                                   borderRadius: '50%',
-                                  background: '#fff',
+                                  background: 'var(--color-white)',
                                   boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                                   display: 'flex',
                                   alignItems: 'center',
@@ -1351,9 +1352,9 @@ export function PlannerView({ v }: { v: any }) {
                               <h3
                                 style={{
                                   margin: '20px 0 0',
-                                  fontSize: '18px',
-                                  fontWeight: '700',
-                                  letterSpacing: '-.02em',
+                                  fontSize: 'var(--text-2xl)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  letterSpacing: 'var(--tracking-tight)',
                                 }}
                               >
                                 Your wand's still charging
@@ -1362,10 +1363,10 @@ export function PlannerView({ v }: { v: any }) {
                                 style={{
                                   margin: '10px auto 0',
                                   maxWidth: '340px',
-                                  fontSize: '14px',
-                                  fontWeight: '400',
-                                  lineHeight: '1.6',
-                                  color: '#5C6684',
+                                  fontSize: 'var(--text-base)',
+                                  fontWeight: 'var(--font-weight-regular)',
+                                  lineHeight: 'var(--leading-relaxed)',
+                                  color: 'var(--color-slate)',
                                   textWrap: 'pretty',
                                 }}
                               >
@@ -1378,10 +1379,10 @@ export function PlannerView({ v }: { v: any }) {
                                   padding: '15px 26px',
                                   border: 'none',
                                   borderRadius: '16px',
-                                  background: '#E1699C',
-                                  color: '#fff',
-                                  fontSize: '15px',
-                                  fontWeight: '600',
+                                  background: 'var(--color-pink)',
+                                  color: 'var(--color-white)',
+                                  fontSize: 'var(--text-lg)',
+                                  fontWeight: 'var(--font-weight-semibold)',
                                   cursor: 'pointer',
                                   display: 'inline-flex',
                                   alignItems: 'center',
@@ -1389,7 +1390,7 @@ export function PlannerView({ v }: { v: any }) {
                                 }}
                                 className="hv4"
                               >
-                                <Plus color="#fff" size={16} />
+                                <Plus color="var(--color-white)" size={16} />
                                 Add workout
                               </button>
                             </div>
@@ -1415,7 +1416,7 @@ export function PlannerView({ v }: { v: any }) {
                               alignItems: 'center',
                               gap: '13px',
                               padding: '18px 20px',
-                              background: '#fff',
+                              background: 'var(--color-white)',
                               borderRadius: '20px',
                               boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                             }}
@@ -1426,7 +1427,7 @@ export function PlannerView({ v }: { v: any }) {
                                 height: '40px',
                                 flex: 'none',
                                 borderRadius: '13px',
-                                background: '#FCE8F1',
+                                background: 'var(--color-pink-tint)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -1438,9 +1439,9 @@ export function PlannerView({ v }: { v: any }) {
                               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <span
                                   style={{
-                                    fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                    fontSize: '17px',
-                                    fontWeight: '700',
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: 'var(--text-2xl)',
+                                    fontWeight: 'var(--font-weight-bold)',
                                   }}
                                 >
                                   {v.streakCount}
@@ -1448,9 +1449,9 @@ export function PlannerView({ v }: { v: any }) {
                               </div>
                               <div
                                 style={{
-                                  fontSize: '12px',
-                                  fontWeight: '400',
-                                  color: '#746E88',
+                                  fontSize: 'var(--text-sm)',
+                                  fontWeight: 'var(--font-weight-regular)',
+                                  color: 'var(--color-muted)',
                                   marginTop: '2px',
                                 }}
                               >
@@ -1464,7 +1465,7 @@ export function PlannerView({ v }: { v: any }) {
                               alignItems: 'center',
                               gap: '13px',
                               padding: '18px 20px',
-                              background: '#fff',
+                              background: 'var(--color-white)',
                               borderRadius: '20px',
                               boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                             }}
@@ -1475,7 +1476,7 @@ export function PlannerView({ v }: { v: any }) {
                                 height: '40px',
                                 flex: 'none',
                                 borderRadius: '50%',
-                                background: 'linear-gradient(135deg,#E1699C 0%,#7C8FC9 50%,#5EC4D6 100%)',
+                                background: 'linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -1486,30 +1487,30 @@ export function PlannerView({ v }: { v: any }) {
                                   width: '28px',
                                   height: '28px',
                                   borderRadius: '50%',
-                                  background: '#fff',
+                                  background: 'var(--color-white)',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
                                 }}
                               >
-                                <Check color="#E1699C" size={20} />
+                                <Check color="var(--color-pink)" size={20} />
                               </span>
                             </div>
                             <div style={{ minWidth: '0' }}>
                               <div
                                 style={{
-                                  fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                  fontSize: '17px',
-                                  fontWeight: '700',
+                                  fontFamily: 'var(--font-heading)',
+                                  fontSize: 'var(--text-2xl)',
+                                  fontWeight: 'var(--font-weight-bold)',
                                 }}
                               >
                                 {v.monthDone}
                               </div>
                               <div
                                 style={{
-                                  fontSize: '12px',
-                                  fontWeight: '400',
-                                  color: '#746E88',
+                                  fontSize: 'var(--text-sm)',
+                                  fontWeight: 'var(--font-weight-regular)',
+                                  color: 'var(--color-muted)',
                                   marginTop: '2px',
                                 }}
                               >
@@ -1530,10 +1531,10 @@ export function PlannerView({ v }: { v: any }) {
                               <div
                                 style={{
                                   textAlign: 'center',
-                                  fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                  fontSize: '13px',
-                                  fontWeight: '600',
-                                  color: '#746E88',
+                                  fontFamily: 'var(--font-heading)',
+                                  fontSize: 'var(--text-md)',
+                                  fontWeight: 'var(--font-weight-semibold)',
+                                  color: 'var(--color-muted)',
                                   paddingBottom: '10px',
                                 }}
                               >
@@ -1572,9 +1573,9 @@ export function PlannerView({ v }: { v: any }) {
                               display: 'flex',
                               alignItems: 'center',
                               gap: '7px',
-                              fontSize: '12px',
-                              fontWeight: '400',
-                              color: '#746E88',
+                              fontSize: 'var(--text-sm)',
+                              fontWeight: 'var(--font-weight-regular)',
+                              color: 'var(--color-muted)',
                             }}
                           >
                             <span
@@ -1583,7 +1584,7 @@ export function PlannerView({ v }: { v: any }) {
                                 height: '6px',
                                 borderRadius: '50%',
                                 background: 'none',
-                                boxShadow: 'inset 0 0 0 1.5px #5EC4D6',
+                                boxShadow: 'inset 0 0 0 1.5px var(--color-teal)',
                               }}
                             ></span>
                             Planned
@@ -1593,9 +1594,9 @@ export function PlannerView({ v }: { v: any }) {
                               display: 'flex',
                               alignItems: 'center',
                               gap: '7px',
-                              fontSize: '12px',
-                              fontWeight: '400',
-                              color: '#746E88',
+                              fontSize: 'var(--text-sm)',
+                              fontWeight: 'var(--font-weight-regular)',
+                              color: 'var(--color-muted)',
                             }}
                           >
                             <span
@@ -1603,7 +1604,7 @@ export function PlannerView({ v }: { v: any }) {
                                 width: '6px',
                                 height: '6px',
                                 borderRadius: '50%',
-                                background: '#5C6684',
+                                background: 'var(--color-slate)',
                               }}
                             ></span>
                             Completed
@@ -1613,9 +1614,9 @@ export function PlannerView({ v }: { v: any }) {
                               display: 'flex',
                               alignItems: 'center',
                               gap: '7px',
-                              fontSize: '12px',
-                              fontWeight: '400',
-                              color: '#746E88',
+                              fontSize: 'var(--text-sm)',
+                              fontWeight: 'var(--font-weight-regular)',
+                              color: 'var(--color-muted)',
                             }}
                           >
                             <span
@@ -1624,7 +1625,7 @@ export function PlannerView({ v }: { v: any }) {
                                 height: '7px',
                                 borderRadius: '50%',
                                 background: 'none',
-                                boxShadow: 'inset 0 0 0 1.5px #746E88',
+                                boxShadow: 'inset 0 0 0 1.5px var(--color-muted)',
                               }}
                             ></span>
                             Missed
@@ -1634,9 +1635,9 @@ export function PlannerView({ v }: { v: any }) {
                               display: 'flex',
                               alignItems: 'center',
                               gap: '7px',
-                              fontSize: '12px',
-                              fontWeight: '400',
-                              color: '#746E88',
+                              fontSize: 'var(--text-sm)',
+                              fontWeight: 'var(--font-weight-regular)',
+                              color: 'var(--color-muted)',
                             }}
                           >
                             <span
@@ -1644,7 +1645,7 @@ export function PlannerView({ v }: { v: any }) {
                                 width: '7px',
                                 height: '1.5px',
                                 borderRadius: '1px',
-                                background: '#DAD7E0',
+                                background: 'var(--color-divider)',
                               }}
                             ></span>
                             Rest
@@ -1655,10 +1656,10 @@ export function PlannerView({ v }: { v: any }) {
                             <div style={{ marginTop: '30px' }}>
                               <div
                                 style={{
-                                  fontSize: '11px',
-                                  fontWeight: '700',
-                                  letterSpacing: '.11em',
-                                  color: '#746E88',
+                                  fontSize: 'var(--text-xs)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  letterSpacing: 'var(--tracking-wide)',
+                                  color: 'var(--color-muted)',
                                 }}
                               >
                                 {v.todayLabel}
@@ -1671,7 +1672,7 @@ export function PlannerView({ v }: { v: any }) {
                                   gap: '14px',
                                   marginTop: '12px',
                                   padding: '20px 22px',
-                                  background: '#fff',
+                                  background: 'var(--color-white)',
                                   borderRadius: '20px',
                                   boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                                   cursor: 'pointer',
@@ -1680,19 +1681,19 @@ export function PlannerView({ v }: { v: any }) {
                                 <div style={{ minWidth: '0' }}>
                                   <div
                                     style={{
-                                      fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                      fontSize: '15px',
-                                      fontWeight: '700',
-                                      letterSpacing: '-.01em',
+                                      fontFamily: 'var(--font-heading)',
+                                      fontSize: 'var(--text-lg)',
+                                      fontWeight: 'var(--font-weight-bold)',
+                                      letterSpacing: 'var(--tracking-snug)',
                                     }}
                                   >
                                     {v.todayName}
                                   </div>
                                   <div
                                     style={{
-                                      fontSize: '13px',
-                                      fontWeight: '400',
-                                      color: '#746E88',
+                                      fontSize: 'var(--text-md)',
+                                      fontWeight: 'var(--font-weight-regular)',
+                                      color: 'var(--color-muted)',
                                       marginTop: '3px',
                                     }}
                                   >
@@ -1700,7 +1701,7 @@ export function PlannerView({ v }: { v: any }) {
                                   </div>
                                 </div>
                                 <span style={{ marginLeft: 'auto', display: 'flex' }}>
-                                  <ChevronRight color="#746E88" size={20} />
+                                  <ChevronRight color="var(--color-muted)" size={20} />
                                 </span>
                               </div>
                             </div>
@@ -1732,7 +1733,7 @@ export function PlannerView({ v }: { v: any }) {
                       animation: 'twinkle 3.4s ease-in-out infinite',
                     }}
                   >
-                    <Sparkle size={13} color="#7C8FC9" glow={0.5} />
+                    <Sparkle size={13} color={colors.periwinkle} glow={0.5} />
                   </span>
                   <span
                     style={{
@@ -1742,7 +1743,7 @@ export function PlannerView({ v }: { v: any }) {
                       animation: 'twinkle 4.6s ease-in-out infinite',
                     }}
                   >
-                    <Sparkle size={11} color="#5EC4D6" glow={0.55} />
+                    <Sparkle size={11} color={colors.teal} glow={0.55} />
                   </span>
                   <span
                     style={{
@@ -1752,7 +1753,7 @@ export function PlannerView({ v }: { v: any }) {
                       animation: 'twinkle 6s ease-in-out infinite',
                     }}
                   >
-                    <Sparkle size={10} color="#F0A385" glow={0.55} />
+                    <Sparkle size={10} color={colors.coral} glow={0.55} />
                   </span>
                   <div
                     style={{
@@ -1773,7 +1774,7 @@ export function PlannerView({ v }: { v: any }) {
                         width: '66px',
                         height: '66px',
                         borderRadius: '50%',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                         display: 'flex',
                         alignItems: 'center',
@@ -1781,7 +1782,7 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                     >
                       <Check
-                        color="#E1699C"
+                        color="var(--color-pink)"
                         strokeWidth={2.4}
                         size={30}
                         style={{ strokeDasharray: '30', animation: 'draw .5s .2s ease-out both' }}
@@ -1791,9 +1792,9 @@ export function PlannerView({ v }: { v: any }) {
                   <h1
                     style={{
                       margin: '22px 0 0',
-                      fontSize: '22px',
-                      fontWeight: '700',
-                      letterSpacing: '-.02em',
+                      fontSize: 'var(--text-4xl)',
+                      fontWeight: 'var(--font-weight-bold)',
+                      letterSpacing: 'var(--tracking-tight)',
                     }}
                   >
                     Entry saved
@@ -1802,10 +1803,10 @@ export function PlannerView({ v }: { v: any }) {
                     style={{
                       margin: '10px auto 0',
                       maxWidth: '340px',
-                      fontSize: '14px',
-                      fontWeight: '400',
-                      lineHeight: '1.6',
-                      color: '#746E88',
+                      fontSize: 'var(--text-base)',
+                      fontWeight: 'var(--font-weight-regular)',
+                      lineHeight: 'var(--leading-relaxed)',
+                      color: 'var(--color-muted)',
                       textWrap: 'pretty',
                     }}
                   >
@@ -1829,7 +1830,7 @@ export function PlannerView({ v }: { v: any }) {
                         padding: '18px 20px',
                         border: 'none',
                         borderRadius: '20px',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                         cursor: 'pointer',
                         textAlign: 'left',
@@ -1840,11 +1841,11 @@ export function PlannerView({ v }: { v: any }) {
                         <span
                           style={{
                             display: 'block',
-                            fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                            fontSize: '15px',
-                            fontWeight: '700',
-                            letterSpacing: '-.01em',
-                            color: '#232A45',
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'var(--text-lg)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-snug)',
+                            color: 'var(--color-ink)',
                           }}
                         >
                           Read your chronicle
@@ -1852,16 +1853,16 @@ export function PlannerView({ v }: { v: any }) {
                         <span
                           style={{
                             display: 'block',
-                            fontSize: '13px',
-                            fontWeight: '400',
-                            color: '#746E88',
+                            fontSize: 'var(--text-md)',
+                            fontWeight: 'var(--font-weight-regular)',
+                            color: 'var(--color-muted)',
                             marginTop: '3px',
                           }}
                         >
                           {v.savedCount}
                         </span>
                       </span>
-                      <ChevronRight color="#746E88" size={20} />
+                      <ChevronRight color="var(--color-muted)" size={20} />
                     </button>
                     <button
                       onClick={v.goNextUp}
@@ -1872,7 +1873,7 @@ export function PlannerView({ v }: { v: any }) {
                         padding: '18px 20px',
                         border: 'none',
                         borderRadius: '20px',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                         cursor: 'pointer',
                         textAlign: 'left',
@@ -1883,11 +1884,11 @@ export function PlannerView({ v }: { v: any }) {
                         <span
                           style={{
                             display: 'block',
-                            fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                            fontSize: '15px',
-                            fontWeight: '700',
-                            letterSpacing: '-.01em',
-                            color: '#232A45',
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'var(--text-lg)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-snug)',
+                            color: 'var(--color-ink)',
                           }}
                         >
                           {v.savedNextTitle}
@@ -1895,16 +1896,16 @@ export function PlannerView({ v }: { v: any }) {
                         <span
                           style={{
                             display: 'block',
-                            fontSize: '13px',
-                            fontWeight: '400',
-                            color: '#746E88',
+                            fontSize: 'var(--text-md)',
+                            fontWeight: 'var(--font-weight-regular)',
+                            color: 'var(--color-muted)',
                             marginTop: '3px',
                           }}
                         >
                           {v.savedNextMeta}
                         </span>
                       </span>
-                      <ChevronRight color="#746E88" size={20} />
+                      <ChevronRight color="var(--color-muted)" size={20} />
                     </button>
                     <button
                       onClick={v.goSummary}
@@ -1915,7 +1916,7 @@ export function PlannerView({ v }: { v: any }) {
                         padding: '18px 20px',
                         border: 'none',
                         borderRadius: '20px',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                         cursor: 'pointer',
                         textAlign: 'left',
@@ -1926,11 +1927,11 @@ export function PlannerView({ v }: { v: any }) {
                         <span
                           style={{
                             display: 'block',
-                            fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                            fontSize: '15px',
-                            fontWeight: '700',
-                            letterSpacing: '-.01em',
-                            color: '#232A45',
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'var(--text-lg)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-snug)',
+                            color: 'var(--color-ink)',
                           }}
                         >
                           See your progress
@@ -1938,16 +1939,16 @@ export function PlannerView({ v }: { v: any }) {
                         <span
                           style={{
                             display: 'block',
-                            fontSize: '13px',
-                            fontWeight: '400',
-                            color: '#746E88',
+                            fontSize: 'var(--text-md)',
+                            fontWeight: 'var(--font-weight-regular)',
+                            color: 'var(--color-muted)',
                             marginTop: '3px',
                           }}
                         >
                           Streak, week and month totals
                         </span>
                       </span>
-                      <ChevronRight color="#746E88" size={20} />
+                      <ChevronRight color="var(--color-muted)" size={20} />
                     </button>
                   </div>
                   <button
@@ -1958,9 +1959,9 @@ export function PlannerView({ v }: { v: any }) {
                       border: 'none',
                       borderRadius: '16px',
                       background: 'none',
-                      color: '#5C6684',
-                      fontSize: '14px',
-                      fontWeight: '600',
+                      color: 'var(--color-slate)',
+                      fontSize: 'var(--text-base)',
+                      fontWeight: 'var(--font-weight-semibold)',
                       cursor: 'pointer',
                     }}
                   >
@@ -1979,7 +1980,7 @@ export function PlannerView({ v }: { v: any }) {
                       alignItems: 'center',
                       gap: '18px',
                       padding: '24px',
-                      background: '#fff',
+                      background: 'var(--color-white)',
                       borderRadius: '24px',
                       boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                     }}
@@ -1991,7 +1992,7 @@ export function PlannerView({ v }: { v: any }) {
                         height: '74px',
                         flex: 'none',
                         borderRadius: '50%',
-                        background: 'linear-gradient(135deg,#E1699C 0%,#7C8FC9 50%,#5EC4D6 100%)',
+                        background: 'linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -1999,26 +2000,26 @@ export function PlannerView({ v }: { v: any }) {
                     >
                       <span
                         style={{
-                          fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                          fontSize: '26px',
-                          fontWeight: '700',
-                          color: '#fff',
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: 'var(--text-5xl)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          color: 'var(--color-white)',
                         }}
                       >
                         {v.profileInitial}
                       </span>
                       <span style={{ position: 'absolute', top: '-2px', right: '-2px' }}>
-                        <Sparkle size={16} color="#F0C060" glow={0.6} />
+                        <Sparkle size={16} color={colors.goldLight} glow={0.6} />
                       </span>
                     </div>
                     <div style={{ minWidth: '0', flex: '1 1 200px' }}>
                       <h1
-                        style={{ margin: '0', fontSize: '22px', fontWeight: '700', letterSpacing: '-.02em' }}
+                        style={{ margin: '0', fontSize: 'var(--text-4xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--tracking-tight)' }}
                       >
                         {v.profileName}
                       </h1>
                       <p
-                        style={{ margin: '5px 0 0', fontSize: '13.5px', fontWeight: '400', color: '#746E88' }}
+                        style={{ margin: '5px 0 0', fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-regular)', color: 'var(--color-muted)' }}
                       >
                         {v.profileSince}
                       </p>
@@ -2049,13 +2050,13 @@ export function PlannerView({ v }: { v: any }) {
                             maxWidth: '260px',
                             height: '8px',
                             borderRadius: '5px',
-                            background: '#F4EFF1',
+                            background: 'var(--color-mist)',
                             overflow: 'hidden',
                           }}
                         >
                           <div style={css(v.rankBar)}></div>
                         </div>
-                        <span style={{ fontSize: '12px', fontWeight: '600', color: '#5C6684' }}>
+                        <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-slate)' }}>
                           {v.rankProgress}
                         </span>
                         <button
@@ -2077,7 +2078,7 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                           className="hv0"
                         >
-                          <Info color="#746E88" size={16} />
+                          <Info color="var(--color-muted)" size={16} />
                         </button>
                         {v.xpInfoOpen ? (
                           <>
@@ -2090,7 +2091,7 @@ export function PlannerView({ v }: { v: any }) {
                                 display: 'block',
                                 width: '280px',
                                 padding: '16px 18px',
-                                background: '#fff',
+                                background: 'var(--color-white)',
                                 borderRadius: '18px',
                                 boxShadow: '0 8px 24px rgba(35,42,69,.14)',
                               }}
@@ -2098,10 +2099,10 @@ export function PlannerView({ v }: { v: any }) {
                               <span
                                 style={{
                                   display: 'block',
-                                  fontSize: '10.5px',
-                                  fontWeight: '700',
-                                  letterSpacing: '.11em',
-                                  color: '#5C6684',
+                                  fontSize: 'var(--text-xs)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  letterSpacing: 'var(--tracking-wide)',
+                                  color: 'var(--color-slate)',
                                 }}
                               >
                                 HOW PROGRESS WORKS
@@ -2109,10 +2110,10 @@ export function PlannerView({ v }: { v: any }) {
                               <span
                                 style={{
                                   display: 'block',
-                                  fontSize: '13.5px',
-                                  fontWeight: '400',
-                                  lineHeight: '1.6',
-                                  color: '#232A45',
+                                  fontSize: 'var(--text-base)',
+                                  fontWeight: 'var(--font-weight-regular)',
+                                  lineHeight: 'var(--leading-relaxed)',
+                                  color: 'var(--color-ink)',
                                   marginTop: '9px',
                                   textWrap: 'pretty',
                                 }}
@@ -2123,10 +2124,10 @@ export function PlannerView({ v }: { v: any }) {
                               <span
                                 style={{
                                   display: 'block',
-                                  fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                  fontSize: '13px',
-                                  fontWeight: '700',
-                                  color: '#c4548a',
+                                  fontFamily: 'var(--font-heading)',
+                                  fontSize: 'var(--text-md)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  color: 'var(--color-pink-deep)',
                                   marginTop: '12px',
                                 }}
                               >
@@ -2144,17 +2145,17 @@ export function PlannerView({ v }: { v: any }) {
                         <div
                           style={{
                             padding: '18px 20px',
-                            background: '#fff',
+                            background: 'var(--color-white)',
                             borderRadius: '20px',
                             boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                           }}
                         >
                           <div
                             style={{
-                              fontSize: '10px',
-                              fontWeight: '700',
-                              letterSpacing: '.11em',
-                              color: '#746E88',
+                              fontSize: 'var(--text-2xs)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              letterSpacing: 'var(--tracking-wide)',
+                              color: 'var(--color-muted)',
                             }}
                           >
                             {s?.label}
@@ -2164,15 +2165,15 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             <span
                               style={{
-                                fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                fontSize: '20px',
-                                fontWeight: '700',
-                                color: '#232A45',
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'var(--text-3xl)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                color: 'var(--color-ink)',
                               }}
                             >
                               {s?.value}
                             </span>
-                            <span style={{ fontSize: '12px', fontWeight: '500', color: '#746E88' }}>
+                            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-muted)' }}>
                               {s?.unit}
                             </span>
                           </div>
@@ -2184,7 +2185,7 @@ export function PlannerView({ v }: { v: any }) {
                     style={{
                       marginTop: '14px',
                       padding: '22px',
-                      background: '#fff',
+                      background: 'var(--color-white)',
                       borderRadius: '22px',
                       boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                     }}
@@ -2192,21 +2193,21 @@ export function PlannerView({ v }: { v: any }) {
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
                       <span
                         style={{
-                          fontSize: '10.5px',
-                          fontWeight: '700',
-                          letterSpacing: '.11em',
-                          color: '#5C6684',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-wide)',
+                          color: 'var(--color-slate)',
                         }}
                       >
                         SESSIONS PER WEEK
                       </span>
                       <span
-                        style={{ marginLeft: 'auto', fontSize: '12px', fontWeight: '500', color: '#746E88' }}
+                        style={{ marginLeft: 'auto', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-muted)' }}
                       >
                         {v.chartRangeLabel}
                       </span>
                     </div>
-                    <p style={{ margin: '8px 0 0', fontSize: '12.5px', fontWeight: '400', color: '#746E88' }}>
+                    <p style={{ margin: '8px 0 0', fontSize: 'var(--text-md)', fontWeight: 'var(--font-weight-regular)', color: 'var(--color-muted)' }}>
                       {v.chartCaption}
                     </p>
                     <div
@@ -2267,7 +2268,7 @@ export function PlannerView({ v }: { v: any }) {
                               padding: '12px 14px',
                               border: 'none',
                               borderRadius: '14px',
-                              background: '#FBF1F3',
+                              background: 'var(--color-canvas)',
                               textAlign: 'left',
                               cursor: 'pointer',
                               width: '100%',
@@ -2278,10 +2279,10 @@ export function PlannerView({ v }: { v: any }) {
                               style={{
                                 flex: 'none',
                                 width: '56px',
-                                fontSize: '11px',
-                                fontWeight: '700',
-                                letterSpacing: '.08em',
-                                color: '#746E88',
+                                fontSize: 'var(--text-xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-muted)',
                               }}
                             >
                               {w?.day}
@@ -2290,9 +2291,9 @@ export function PlannerView({ v }: { v: any }) {
                               style={{
                                 flex: '1 1 140px',
                                 minWidth: '0',
-                                fontSize: '14px',
-                                fontWeight: '600',
-                                color: '#232A45',
+                                fontSize: 'var(--text-base)',
+                                fontWeight: 'var(--font-weight-semibold)',
+                                color: 'var(--color-ink)',
                               }}
                             >
                               {w?.name}
@@ -2303,7 +2304,7 @@ export function PlannerView({ v }: { v: any }) {
                       ))}
                       {v.weekEmpty ? (
                         <>
-                          <p style={{ margin: '0', fontSize: '13.5px', fontWeight: '400', color: '#746E88' }}>
+                          <p style={{ margin: '0', fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-regular)', color: 'var(--color-muted)' }}>
                             No sessions were planned that week.
                           </p>
                         </>
@@ -2314,7 +2315,7 @@ export function PlannerView({ v }: { v: any }) {
                     style={{
                       marginTop: '14px',
                       padding: '22px',
-                      background: '#fff',
+                      background: 'var(--color-white)',
                       borderRadius: '22px',
                       boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                     }}
@@ -2322,10 +2323,10 @@ export function PlannerView({ v }: { v: any }) {
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
                       <span
                         style={{
-                          fontSize: '10.5px',
-                          fontWeight: '700',
-                          letterSpacing: '.11em',
-                          color: '#5C6684',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-wide)',
+                          color: 'var(--color-slate)',
                         }}
                       >
                         QUESTS CLEARED
@@ -2333,10 +2334,10 @@ export function PlannerView({ v }: { v: any }) {
                       <span
                         style={{
                           marginLeft: 'auto',
-                          fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                          fontSize: '15px',
-                          fontWeight: '700',
-                          color: '#232A45',
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: 'var(--text-lg)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          color: 'var(--color-ink)',
                         }}
                       >
                         {v.questsClearedLabel}
@@ -2346,7 +2347,7 @@ export function PlannerView({ v }: { v: any }) {
                       style={{
                         height: '8px',
                         borderRadius: '5px',
-                        background: '#F4EFF1',
+                        background: 'var(--color-mist)',
                         marginTop: '12px',
                         overflow: 'hidden',
                       }}
@@ -2362,19 +2363,19 @@ export function PlannerView({ v }: { v: any }) {
                               style={{
                                 flex: '1',
                                 minWidth: '0',
-                                fontSize: '13.5px',
-                                fontWeight: '500',
-                                color: '#232A45',
+                                fontSize: 'var(--text-base)',
+                                fontWeight: 'var(--font-weight-medium)',
+                                color: 'var(--color-ink)',
                               }}
                             >
                               {q?.name}
                             </span>
                             <span
                               style={{
-                                fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                fontSize: '13px',
-                                fontWeight: '700',
-                                color: '#5C6684',
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'var(--text-md)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                color: 'var(--color-slate)',
                                 flex: 'none',
                               }}
                             >
@@ -2396,17 +2397,17 @@ export function PlannerView({ v }: { v: any }) {
                     <div
                       style={{
                         padding: '22px',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         borderRadius: '22px',
                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                       }}
                     >
                       <div
                         style={{
-                          fontSize: '10.5px',
-                          fontWeight: '700',
-                          letterSpacing: '.11em',
-                          color: '#5C6684',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-wide)',
+                          color: 'var(--color-slate)',
                         }}
                       >
                         HOW IT FEELS
@@ -2420,9 +2421,9 @@ export function PlannerView({ v }: { v: any }) {
                               <span style={css(m?.swatch)}></span>
                               <span
                                 style={{
-                                  fontSize: '13.5px',
-                                  fontWeight: '500',
-                                  color: '#232A45',
+                                  fontSize: 'var(--text-base)',
+                                  fontWeight: 'var(--font-weight-medium)',
+                                  color: 'var(--color-ink)',
                                   flex: 'none',
                                   width: '66px',
                                 }}
@@ -2434,7 +2435,7 @@ export function PlannerView({ v }: { v: any }) {
                                   flex: '1',
                                   height: '8px',
                                   borderRadius: '5px',
-                                  background: '#F4EFF1',
+                                  background: 'var(--color-mist)',
                                   overflow: 'hidden',
                                 }}
                               >
@@ -2442,10 +2443,10 @@ export function PlannerView({ v }: { v: any }) {
                               </span>
                               <span
                                 style={{
-                                  fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                  fontSize: '12.5px',
-                                  fontWeight: '700',
-                                  color: '#5C6684',
+                                  fontFamily: 'var(--font-heading)',
+                                  fontSize: 'var(--text-md)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  color: 'var(--color-slate)',
                                   flex: 'none',
                                   width: '30px',
                                   textAlign: 'right',
@@ -2461,17 +2462,17 @@ export function PlannerView({ v }: { v: any }) {
                     <div
                       style={{
                         padding: '22px',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         borderRadius: '22px',
                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                       }}
                     >
                       <div
                         style={{
-                          fontSize: '10.5px',
-                          fontWeight: '700',
-                          letterSpacing: '.11em',
-                          color: '#5C6684',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-wide)',
+                          color: 'var(--color-slate)',
                         }}
                       >
                         PERSONAL BESTS
@@ -2484,9 +2485,9 @@ export function PlannerView({ v }: { v: any }) {
                             <div style={css(r?.rowStyle)}>
                               <span
                                 style={{
-                                  fontSize: '13.5px',
-                                  fontWeight: '500',
-                                  color: '#232A45',
+                                  fontSize: 'var(--text-base)',
+                                  fontWeight: 'var(--font-weight-medium)',
+                                  color: 'var(--color-ink)',
                                   flex: '1',
                                   minWidth: '0',
                                 }}
@@ -2495,10 +2496,10 @@ export function PlannerView({ v }: { v: any }) {
                               </span>
                               <span
                                 style={{
-                                  fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                  fontSize: '14px',
-                                  fontWeight: '700',
-                                  color: '#232A45',
+                                  fontFamily: 'var(--font-heading)',
+                                  fontSize: 'var(--text-base)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  color: 'var(--color-ink)',
                                   flex: 'none',
                                 }}
                               >
@@ -2517,17 +2518,17 @@ export function PlannerView({ v }: { v: any }) {
             {v.isSummary ? (
               <>
                 <div>
-                  <h1 style={{ margin: '0', fontSize: '22px', fontWeight: '700', letterSpacing: '-.02em' }}>
+                  <h1 style={{ margin: '0', fontSize: 'var(--text-4xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--tracking-tight)' }}>
                     Progress
                   </h1>
                   <p
                     style={{
                       margin: '10px 0 0',
                       maxWidth: '460px',
-                      fontSize: '14px',
-                      fontWeight: '400',
-                      lineHeight: '1.6',
-                      color: '#746E88',
+                      fontSize: 'var(--text-base)',
+                      fontWeight: 'var(--font-weight-regular)',
+                      lineHeight: 'var(--leading-relaxed)',
+                      color: 'var(--color-muted)',
                       textWrap: 'pretty',
                     }}
                   >
@@ -2552,16 +2553,16 @@ export function PlannerView({ v }: { v: any }) {
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '7px' }}>
                           <span
                             style={{
-                              fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                              fontSize: '32px',
-                              fontWeight: '700',
-                              lineHeight: '1',
-                              color: '#232A45',
+                              fontFamily: 'var(--font-heading)',
+                              fontSize: 'var(--text-6xl)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              lineHeight: 'var(--leading-none)',
+                              color: 'var(--color-ink)',
                             }}
                           >
                             {v.streakCount}
                           </span>
-                          <span style={{ fontSize: '13.5px', fontWeight: '600', color: '#c4548a' }}>
+                          <span style={{ fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-pink-deep)' }}>
                             {t(v.streakUnit)}
                             {' unbroken'}
                           </span>
@@ -2569,9 +2570,9 @@ export function PlannerView({ v }: { v: any }) {
                         <p
                           style={{
                             margin: '6px 0 0',
-                            fontSize: '12.5px',
-                            fontWeight: '500',
-                            color: '#746E88',
+                            fontSize: 'var(--text-md)',
+                            fontWeight: 'var(--font-weight-medium)',
+                            color: 'var(--color-muted)',
                           }}
                         >
                           {v.streakNote}
@@ -2581,10 +2582,10 @@ export function PlannerView({ v }: { v: any }) {
                     <div style={{ flex: '1 1 180px', minWidth: '0' }}>
                       <div
                         style={{
-                          fontSize: '10px',
-                          fontWeight: '700',
-                          letterSpacing: '.11em',
-                          color: '#5C6684',
+                          fontSize: 'var(--text-2xs)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-wide)',
+                          color: 'var(--color-slate)',
                         }}
                       >
                         LAST SEVEN SESSIONS
@@ -2605,7 +2606,7 @@ export function PlannerView({ v }: { v: any }) {
                     <div
                       style={{
                         flex: '1 1 260px',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         borderRadius: '22px',
                         padding: '20px',
                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
@@ -2613,10 +2614,10 @@ export function PlannerView({ v }: { v: any }) {
                     >
                       <div
                         style={{
-                          fontSize: '10.5px',
-                          fontWeight: '700',
-                          letterSpacing: '.1em',
-                          color: '#746E88',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-wide)',
+                          color: 'var(--color-muted)',
                         }}
                       >
                         THIS WEEK
@@ -2624,14 +2625,14 @@ export function PlannerView({ v }: { v: any }) {
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
                         <span
                           style={{
-                            fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                            fontSize: '17px',
-                            fontWeight: '700',
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'var(--text-2xl)',
+                            fontWeight: 'var(--font-weight-bold)',
                           }}
                         >
                           {v.wkDone}
                         </span>
-                        <span style={{ fontSize: '13px', fontWeight: '500', color: '#746E88' }}>
+                        <span style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-muted)' }}>
                           {'of '}
                           {t(v.wkTotal)}
                           {' sessions'}
@@ -2641,7 +2642,7 @@ export function PlannerView({ v }: { v: any }) {
                         style={{
                           height: '7px',
                           borderRadius: '4px',
-                          background: '#FCE8F1',
+                          background: 'var(--color-pink-tint)',
                           marginTop: '14px',
                           overflow: 'hidden',
                         }}
@@ -2652,7 +2653,7 @@ export function PlannerView({ v }: { v: any }) {
                     <div
                       style={{
                         flex: '1 1 260px',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         borderRadius: '22px',
                         padding: '20px',
                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
@@ -2660,10 +2661,10 @@ export function PlannerView({ v }: { v: any }) {
                     >
                       <div
                         style={{
-                          fontSize: '10.5px',
-                          fontWeight: '700',
-                          letterSpacing: '.1em',
-                          color: '#746E88',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-wide)',
+                          color: 'var(--color-muted)',
                         }}
                       >
                         NEXT CALL
@@ -2672,10 +2673,10 @@ export function PlannerView({ v }: { v: any }) {
                         <>
                           <p
                             style={{
-                              fontFamily: "'Space Grotesk',system-ui,sans-serif",
+                              fontFamily: 'var(--font-heading)',
                               margin: '9px 0 0',
-                              fontSize: '14.5px',
-                              fontWeight: '600',
+                              fontSize: 'var(--text-lg)',
+                              fontWeight: 'var(--font-weight-semibold)',
                             }}
                           >
                             {v.nextName}
@@ -2683,9 +2684,9 @@ export function PlannerView({ v }: { v: any }) {
                           <p
                             style={{
                               margin: '3px 0 0',
-                              fontSize: '13px',
-                              fontWeight: '500',
-                              color: '#746E88',
+                              fontSize: 'var(--text-md)',
+                              fontWeight: 'var(--font-weight-medium)',
+                              color: 'var(--color-muted)',
                             }}
                           >
                             {v.nextMeta}
@@ -2697,9 +2698,9 @@ export function PlannerView({ v }: { v: any }) {
                           <p
                             style={{
                               margin: '9px 0 0',
-                              fontSize: '13px',
-                              fontWeight: '500',
-                              color: '#746E88',
+                              fontSize: 'var(--text-md)',
+                              fontWeight: 'var(--font-weight-medium)',
+                              color: 'var(--color-muted)',
                             }}
                           >
                             No call to answer yet.
@@ -2712,7 +2713,7 @@ export function PlannerView({ v }: { v: any }) {
                     style={{
                       marginTop: '14px',
                       padding: '22px',
-                      background: '#fff',
+                      background: 'var(--color-white)',
                       borderRadius: '22px',
                       boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                     }}
@@ -2720,16 +2721,16 @@ export function PlannerView({ v }: { v: any }) {
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
                       <span
                         style={{
-                          fontSize: '10.5px',
-                          fontWeight: '700',
-                          letterSpacing: '.11em',
-                          color: '#5C6684',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-wide)',
+                          color: 'var(--color-slate)',
                         }}
                       >
                         THIS WEEK'S QUESTS
                       </span>
                       <span
-                        style={{ marginLeft: 'auto', fontSize: '12px', fontWeight: '500', color: '#746E88' }}
+                        style={{ marginLeft: 'auto', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-muted)' }}
                       >
                         {v.questsDoneLabel}
                       </span>
@@ -2741,7 +2742,7 @@ export function PlannerView({ v }: { v: any }) {
                             <span style={css(q?.mark)}>
                               {q?.done ? (
                                 <>
-                                  <Check color="#fff" strokeWidth={3} size={10} />
+                                  <Check color="var(--color-white)" strokeWidth={3} size={10} />
                                 </>
                               ) : null}
                             </span>
@@ -2749,10 +2750,10 @@ export function PlannerView({ v }: { v: any }) {
                               style={{
                                 flex: 'none',
                                 width: '44px',
-                                fontSize: '11px',
-                                fontWeight: '700',
-                                letterSpacing: '.08em',
-                                color: '#746E88',
+                                fontSize: 'var(--text-xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-muted)',
                               }}
                             >
                               {q?.day}
@@ -2767,7 +2768,7 @@ export function PlannerView({ v }: { v: any }) {
                     <div
                       style={{
                         flex: '1 1 170px',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         borderRadius: '22px',
                         padding: '20px',
                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
@@ -2775,10 +2776,10 @@ export function PlannerView({ v }: { v: any }) {
                     >
                       <div
                         style={{
-                          fontSize: '10.5px',
-                          fontWeight: '700',
-                          letterSpacing: '.1em',
-                          color: '#746E88',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-wide)',
+                          color: 'var(--color-muted)',
                         }}
                       >
                         LOGGED
@@ -2786,20 +2787,20 @@ export function PlannerView({ v }: { v: any }) {
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
                         <span
                           style={{
-                            fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                            fontSize: '17px',
-                            fontWeight: '700',
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'var(--text-2xl)',
+                            fontWeight: 'var(--font-weight-bold)',
                           }}
                         >
                           {v.loggedCount}
                         </span>
-                        <span style={{ fontSize: '13px', fontWeight: '500', color: '#746E88' }}>entries</span>
+                        <span style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-muted)' }}>entries</span>
                       </div>
                     </div>
                     <div
                       style={{
                         flex: '1 1 170px',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         borderRadius: '22px',
                         padding: '20px',
                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
@@ -2807,10 +2808,10 @@ export function PlannerView({ v }: { v: any }) {
                     >
                       <div
                         style={{
-                          fontSize: '10.5px',
-                          fontWeight: '700',
-                          letterSpacing: '.1em',
-                          color: '#746E88',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-wide)',
+                          color: 'var(--color-muted)',
                         }}
                       >
                         SEPTEMBER
@@ -2818,14 +2819,14 @@ export function PlannerView({ v }: { v: any }) {
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
                         <span
                           style={{
-                            fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                            fontSize: '17px',
-                            fontWeight: '700',
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'var(--text-2xl)',
+                            fontWeight: 'var(--font-weight-bold)',
                           }}
                         >
                           {v.monthDone}
                         </span>
-                        <span style={{ fontSize: '13px', fontWeight: '500', color: '#746E88' }}>
+                        <span style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-muted)' }}>
                           {v.monthDoneUnit}
                         </span>
                       </div>
@@ -2838,10 +2839,10 @@ export function PlannerView({ v }: { v: any }) {
               <>
                 <div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
-                    <h1 style={{ margin: '0', fontSize: '22px', fontWeight: '700', letterSpacing: '-.02em' }}>
+                    <h1 style={{ margin: '0', fontSize: 'var(--text-4xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--tracking-tight)' }}>
                       Arsenal
                     </h1>
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#746E88' }}>
+                    <span style={{ fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-muted)' }}>
                       {v.movesCount}
                     </span>
                     <button
@@ -2852,10 +2853,10 @@ export function PlannerView({ v }: { v: any }) {
                         padding: '0 20px',
                         border: 'none',
                         borderRadius: '15px',
-                        background: '#E1699C',
-                        color: '#fff',
-                        fontSize: '14px',
-                        fontWeight: '600',
+                        background: 'var(--color-pink)',
+                        color: 'var(--color-white)',
+                        fontSize: 'var(--text-base)',
+                        fontWeight: 'var(--font-weight-semibold)',
                         cursor: 'pointer',
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -2863,7 +2864,7 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                       className="hv4"
                     >
-                      <Plus color="#fff" strokeWidth={2.2} size={16} />
+                      <Plus color="var(--color-white)" strokeWidth={2.2} size={16} />
                       New exercise
                     </button>
                   </div>
@@ -2871,10 +2872,10 @@ export function PlannerView({ v }: { v: any }) {
                     style={{
                       margin: '10px 0 0',
                       maxWidth: '460px',
-                      fontSize: '14px',
-                      fontWeight: '400',
-                      lineHeight: '1.6',
-                      color: '#746E88',
+                      fontSize: 'var(--text-base)',
+                      fontWeight: 'var(--font-weight-regular)',
+                      lineHeight: 'var(--leading-relaxed)',
+                      color: 'var(--color-muted)',
                       textWrap: 'pretty',
                     }}
                   >
@@ -2888,12 +2889,12 @@ export function PlannerView({ v }: { v: any }) {
                       width: '100%',
                       marginTop: '18px',
                       padding: '12px 16px',
-                      background: '#fff',
+                      background: 'var(--color-white)',
                       borderRadius: '15px',
                       boxShadow: '0 1px 3px rgba(35,42,69,.06)',
                     }}
                   >
-                    <Search color="#A9A2B4" size={17} />
+                    <Search color="var(--color-subtle)" size={17} />
                     <input
                       value={v.arsenalQuery ?? ''}
                       onChange={v.setArsenalQuery}
@@ -2905,9 +2906,9 @@ export function PlannerView({ v }: { v: any }) {
                         border: 'none',
                         background: 'none',
                         padding: '0',
-                        fontSize: '14.5px',
-                        fontWeight: '500',
-                        color: '#232A45',
+                        fontSize: 'var(--text-lg)',
+                        fontWeight: 'var(--font-weight-medium)',
+                        color: 'var(--color-ink)',
                       }}
                     />
                     {v.hasQuery ? (
@@ -2930,7 +2931,7 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                           className="hv8"
                         >
-                          <Close color="#746E88" strokeWidth={2.2} size={14} />
+                          <Close color="var(--color-muted)" strokeWidth={2.2} size={14} />
                         </button>
                       </>
                     ) : null}
@@ -2938,7 +2939,7 @@ export function PlannerView({ v }: { v: any }) {
                   {v.noMatches ? (
                     <>
                       <p
-                        style={{ margin: '20px 0 0', fontSize: '14px', fontWeight: '400', color: '#746E88' }}
+                        style={{ margin: '20px 0 0', fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-regular)', color: 'var(--color-muted)' }}
                       >
                         {v.noMatchNote}
                       </p>
@@ -2950,7 +2951,7 @@ export function PlannerView({ v }: { v: any }) {
                         style={{
                           marginTop: '18px',
                           padding: '22px',
-                          background: '#fff',
+                          background: 'var(--color-white)',
                           borderRadius: '20px',
                           boxShadow: '0 8px 24px rgba(35,42,69,.14)',
                         }}
@@ -2958,10 +2959,10 @@ export function PlannerView({ v }: { v: any }) {
                         <span
                           style={{
                             display: 'block',
-                            fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                            fontSize: '16px',
-                            fontWeight: '700',
-                            letterSpacing: '-.01em',
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'var(--text-xl)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-snug)',
                           }}
                         >
                           New exercise
@@ -2969,10 +2970,10 @@ export function PlannerView({ v }: { v: any }) {
                         <span
                           style={{
                             display: 'block',
-                            fontSize: '10px',
-                            fontWeight: '700',
-                            letterSpacing: '.1em',
-                            color: '#746E88',
+                            fontSize: 'var(--text-2xs)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-wide)',
+                            color: 'var(--color-muted)',
                             margin: '16px 0 7px',
                           }}
                         >
@@ -2988,10 +2989,10 @@ export function PlannerView({ v }: { v: any }) {
                             padding: '13px 15px',
                             border: 'none',
                             borderRadius: '13px',
-                            background: '#FBF1F3',
-                            fontSize: '14.5px',
-                            fontWeight: '500',
-                            color: '#232A45',
+                            background: 'var(--color-canvas)',
+                            fontSize: 'var(--text-lg)',
+                            fontWeight: 'var(--font-weight-medium)',
+                            color: 'var(--color-ink)',
                           }}
                         />
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '14px' }}>
@@ -2999,10 +3000,10 @@ export function PlannerView({ v }: { v: any }) {
                             <span
                               style={{
                                 display: 'block',
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.1em',
-                                color: '#746E88',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-muted)',
                                 marginBottom: '7px',
                               }}
                             >
@@ -3017,10 +3018,10 @@ export function PlannerView({ v }: { v: any }) {
                                 padding: '13px 15px',
                                 border: 'none',
                                 borderRadius: '13px',
-                                background: '#FBF1F3',
-                                fontSize: '14.5px',
-                                fontWeight: '500',
-                                color: '#232A45',
+                                background: 'var(--color-canvas)',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-medium)',
+                                color: 'var(--color-ink)',
                               }}
                             />
                           </label>
@@ -3028,10 +3029,10 @@ export function PlannerView({ v }: { v: any }) {
                             <span
                               style={{
                                 display: 'block',
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.1em',
-                                color: '#746E88',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-muted)',
                                 marginBottom: '7px',
                               }}
                             >
@@ -3046,10 +3047,10 @@ export function PlannerView({ v }: { v: any }) {
                                 padding: '13px 15px',
                                 border: 'none',
                                 borderRadius: '13px',
-                                background: '#FBF1F3',
-                                fontSize: '14.5px',
-                                fontWeight: '500',
-                                color: '#232A45',
+                                background: 'var(--color-canvas)',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-medium)',
+                                color: 'var(--color-ink)',
                               }}
                             />
                           </label>
@@ -3057,10 +3058,10 @@ export function PlannerView({ v }: { v: any }) {
                             <span
                               style={{
                                 display: 'block',
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.1em',
-                                color: '#746E88',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-muted)',
                                 marginBottom: '7px',
                               }}
                             >
@@ -3075,10 +3076,10 @@ export function PlannerView({ v }: { v: any }) {
                                 padding: '13px 15px',
                                 border: 'none',
                                 borderRadius: '13px',
-                                background: '#FBF1F3',
-                                fontSize: '14.5px',
-                                fontWeight: '500',
-                                color: '#232A45',
+                                background: 'var(--color-canvas)',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-medium)',
+                                color: 'var(--color-ink)',
                               }}
                             />
                           </label>
@@ -3086,10 +3087,10 @@ export function PlannerView({ v }: { v: any }) {
                         <span
                           style={{
                             display: 'block',
-                            fontSize: '10px',
-                            fontWeight: '700',
-                            letterSpacing: '.1em',
-                            color: '#746E88',
+                            fontSize: 'var(--text-2xs)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-wide)',
+                            color: 'var(--color-muted)',
                             margin: '16px 0 8px',
                           }}
                         >
@@ -3130,9 +3131,9 @@ export function PlannerView({ v }: { v: any }) {
                               border: 'none',
                               borderRadius: '16px',
                               background: 'none',
-                              fontSize: '14.5px',
-                              fontWeight: '600',
-                              color: '#5C6684',
+                              fontSize: 'var(--text-lg)',
+                              fontWeight: 'var(--font-weight-semibold)',
+                              color: 'var(--color-slate)',
                               cursor: 'pointer',
                             }}
                           >
@@ -3160,15 +3161,15 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             <span
                               style={{
-                                fontSize: '10.5px',
-                                fontWeight: '700',
-                                letterSpacing: '.11em',
-                                color: '#5C6684',
+                                fontSize: 'var(--text-xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-slate)',
                               }}
                             >
                               {g?.label}
                             </span>
-                            <span style={{ fontSize: '11.5px', fontWeight: '500', color: '#746E88' }}>
+                            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-muted)' }}>
                               {g?.count}
                             </span>
                           </div>
@@ -3182,7 +3183,7 @@ export function PlannerView({ v }: { v: any }) {
                                       height: '34px',
                                       flex: 'none',
                                       borderRadius: '11px',
-                                      background: '#FCE8F1',
+                                      background: 'var(--color-pink-tint)',
                                       display: 'flex',
                                       alignItems: 'center',
                                       justifyContent: 'center',
@@ -3194,11 +3195,11 @@ export function PlannerView({ v }: { v: any }) {
                                     <span
                                       style={{
                                         display: 'block',
-                                        fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                        fontSize: '15px',
-                                        fontWeight: '700',
-                                        letterSpacing: '-.01em',
-                                        color: '#232A45',
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: 'var(--text-lg)',
+                                        fontWeight: 'var(--font-weight-bold)',
+                                        letterSpacing: 'var(--tracking-snug)',
+                                        color: 'var(--color-ink)',
                                       }}
                                     >
                                       {m?.name}
@@ -3206,9 +3207,9 @@ export function PlannerView({ v }: { v: any }) {
                                     <span
                                       style={{
                                         display: 'block',
-                                        fontSize: '13px',
-                                        fontWeight: '400',
-                                        color: '#746E88',
+                                        fontSize: 'var(--text-md)',
+                                        fontWeight: 'var(--font-weight-regular)',
+                                        color: 'var(--color-muted)',
                                         marginTop: '3px',
                                       }}
                                     >
@@ -3249,15 +3250,15 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                       className="hv0"
                     >
-                      <ChevronLeft color="#5C6684" strokeWidth={2.2} size={18} />
+                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
                     </button>
                   </div>
                   <h1
                     style={{
                       margin: '24px 0 0',
-                      fontSize: '22px',
-                      fontWeight: '700',
-                      letterSpacing: '-.02em',
+                      fontSize: 'var(--text-4xl)',
+                      fontWeight: 'var(--font-weight-bold)',
+                      letterSpacing: 'var(--tracking-tight)',
                     }}
                   >
                     Which session are you writing about?
@@ -3266,10 +3267,10 @@ export function PlannerView({ v }: { v: any }) {
                     style={{
                       margin: '10px 0 0',
                       maxWidth: '460px',
-                      fontSize: '14px',
-                      fontWeight: '400',
-                      lineHeight: '1.6',
-                      color: '#746E88',
+                      fontSize: 'var(--text-base)',
+                      fontWeight: 'var(--font-weight-regular)',
+                      lineHeight: 'var(--leading-relaxed)',
+                      color: 'var(--color-muted)',
                       textWrap: 'pretty',
                     }}
                   >
@@ -3284,10 +3285,10 @@ export function PlannerView({ v }: { v: any }) {
                               style={{
                                 flex: 'none',
                                 width: '56px',
-                                fontSize: '11px',
-                                fontWeight: '700',
-                                letterSpacing: '.08em',
-                                color: '#746E88',
+                                fontSize: 'var(--text-xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-muted)',
                               }}
                             >
                               {u?.day}
@@ -3296,9 +3297,9 @@ export function PlannerView({ v }: { v: any }) {
                               style={{
                                 flex: '1 1 140px',
                                 minWidth: '0',
-                                fontSize: '14.5px',
-                                fontWeight: '600',
-                                color: '#232A45',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-semibold)',
+                                color: 'var(--color-ink)',
                               }}
                             >
                               {u?.name}
@@ -3306,9 +3307,9 @@ export function PlannerView({ v }: { v: any }) {
                             <span
                               style={{
                                 flex: 'none',
-                                fontSize: '12.5px',
-                                fontWeight: '500',
-                                color: '#746E88',
+                                fontSize: 'var(--text-md)',
+                                fontWeight: 'var(--font-weight-medium)',
+                                color: 'var(--color-muted)',
                               }}
                             >
                               {u?.meta}
@@ -3322,9 +3323,9 @@ export function PlannerView({ v }: { v: any }) {
                         <p
                           style={{
                             margin: '16px 0 0',
-                            fontSize: '14px',
-                            fontWeight: '400',
-                            color: '#746E88',
+                            fontSize: 'var(--text-base)',
+                            fontWeight: 'var(--font-weight-regular)',
+                            color: 'var(--color-muted)',
                           }}
                         >
                           Every workout on your plan already has an entry.
@@ -3348,9 +3349,9 @@ export function PlannerView({ v }: { v: any }) {
                           border: 'none',
                           borderRadius: '15px',
                           background: 'none',
-                          fontSize: '14px',
-                          fontWeight: '600',
-                          color: '#5C6684',
+                          fontSize: 'var(--text-base)',
+                          fontWeight: 'var(--font-weight-semibold)',
+                          color: 'var(--color-slate)',
                           cursor: 'pointer',
                         }}
                       >
@@ -3365,10 +3366,10 @@ export function PlannerView({ v }: { v: any }) {
               <>
                 <div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
-                    <h1 style={{ margin: '0', fontSize: '22px', fontWeight: '700', letterSpacing: '-.02em' }}>
+                    <h1 style={{ margin: '0', fontSize: 'var(--text-4xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--tracking-tight)' }}>
                       Chronicle
                     </h1>
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#746E88' }}>
+                    <span style={{ fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-muted)' }}>
                       {v.diaryCount}
                     </span>
                     <button
@@ -3379,10 +3380,10 @@ export function PlannerView({ v }: { v: any }) {
                         padding: '0 20px',
                         border: 'none',
                         borderRadius: '15px',
-                        background: '#E1699C',
-                        color: '#fff',
-                        fontSize: '14px',
-                        fontWeight: '600',
+                        background: 'var(--color-pink)',
+                        color: 'var(--color-white)',
+                        fontSize: 'var(--text-base)',
+                        fontWeight: 'var(--font-weight-semibold)',
                         cursor: 'pointer',
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -3397,10 +3398,10 @@ export function PlannerView({ v }: { v: any }) {
                     style={{
                       margin: '10px 0 0',
                       maxWidth: '620px',
-                      fontSize: '14px',
-                      fontWeight: '400',
-                      lineHeight: '1.6',
-                      color: '#746E88',
+                      fontSize: 'var(--text-base)',
+                      fontWeight: 'var(--font-weight-regular)',
+                      lineHeight: 'var(--leading-relaxed)',
+                      color: 'var(--color-muted)',
                       textWrap: 'pretty',
                     }}
                   >
@@ -3414,7 +3415,7 @@ export function PlannerView({ v }: { v: any }) {
                         flexWrap: 'wrap',
                         gap: '4px',
                         padding: '5px',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         borderRadius: '15px',
                         boxShadow: '0 1px 3px rgba(35,42,69,.06)',
                       }}
@@ -3455,7 +3456,7 @@ export function PlannerView({ v }: { v: any }) {
                             borderBottom: '1.5px dashed rgba(35,42,69,.22)',
                           }}
                         >
-                          <Calendar color="#A9A2B4" size={16} />
+                          <Calendar color="var(--color-subtle)" size={16} />
                           <input
                             value={v.rangeFrom ?? ''}
                             onChange={v.setRangeFrom}
@@ -3467,14 +3468,14 @@ export function PlannerView({ v }: { v: any }) {
                               border: 'none',
                               background: 'none',
                               padding: '8px 0',
-                              fontFamily: "'IBM Plex Sans',system-ui,sans-serif",
-                              fontSize: '13px',
-                              fontWeight: '600',
-                              color: '#5C6684',
+                              fontFamily: 'var(--font-body)',
+                              fontSize: 'var(--text-md)',
+                              fontWeight: 'var(--font-weight-semibold)',
+                              color: 'var(--color-slate)',
                             }}
                           />
                           <span
-                            style={{ flex: 'none', fontSize: '13px', fontWeight: '600', color: '#C7C4D0' }}
+                            style={{ flex: 'none', fontSize: 'var(--text-md)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-hairline)' }}
                           >
                             →
                           </span>
@@ -3490,10 +3491,10 @@ export function PlannerView({ v }: { v: any }) {
                               border: 'none',
                               background: 'none',
                               padding: '8px 0',
-                              fontFamily: "'IBM Plex Sans',system-ui,sans-serif",
-                              fontSize: '13px',
-                              fontWeight: '600',
-                              color: '#5C6684',
+                              fontFamily: 'var(--font-body)',
+                              fontSize: 'var(--text-md)',
+                              fontWeight: 'var(--font-weight-semibold)',
+                              color: 'var(--color-slate)',
                             }}
                           />
                         </div>
@@ -3515,10 +3516,10 @@ export function PlannerView({ v }: { v: any }) {
                               gap: '16px',
                               padding: '18px 62px 18px 20px',
                               border: 'none',
-                              background: '#fff',
+                              background: 'var(--color-white)',
                               borderRadius: '20px',
                               boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                              color: '#232A45',
+                              color: 'var(--color-ink)',
                               textAlign: 'left',
                               font: 'inherit',
                               cursor: 'pointer',
@@ -3551,10 +3552,10 @@ export function PlannerView({ v }: { v: any }) {
                               <span
                                 style={{
                                   display: 'block',
-                                  fontSize: '11px',
-                                  fontWeight: '700',
-                                  letterSpacing: '.11em',
-                                  color: '#746E88',
+                                  fontSize: 'var(--text-xs)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  letterSpacing: 'var(--tracking-wide)',
+                                  color: 'var(--color-muted)',
                                 }}
                               >
                                 {e?.date}
@@ -3569,15 +3570,15 @@ export function PlannerView({ v }: { v: any }) {
                               >
                                 <span
                                   style={{
-                                    fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                    fontSize: '15px',
-                                    fontWeight: '700',
-                                    letterSpacing: '-.01em',
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: 'var(--text-lg)',
+                                    fontWeight: 'var(--font-weight-bold)',
+                                    letterSpacing: 'var(--tracking-snug)',
                                   }}
                                 >
                                   {e?.name}
                                 </span>
-                                <ChevronRight color="#A9A2B4" strokeWidth={2.2} size={16} />
+                                <ChevronRight color="var(--color-subtle)" strokeWidth={2.2} size={16} />
                               </span>
                               <span
                                 style={{
@@ -3596,10 +3597,10 @@ export function PlannerView({ v }: { v: any }) {
                               <span
                                 style={{
                                   display: 'block',
-                                  fontSize: '13px',
-                                  fontWeight: '400',
-                                  lineHeight: '1.5',
-                                  color: '#746E88',
+                                  fontSize: 'var(--text-md)',
+                                  fontWeight: 'var(--font-weight-regular)',
+                                  lineHeight: 'var(--leading-snug)',
+                                  color: 'var(--color-muted)',
                                   marginTop: '7px',
                                   textWrap: 'pretty',
                                 }}
@@ -3628,7 +3629,7 @@ export function PlannerView({ v }: { v: any }) {
                             }}
                             className="hv9"
                           >
-                            <Close color="#A9A2B4" strokeWidth={2.2} size={14} />
+                            <Close color="var(--color-subtle)" strokeWidth={2.2} size={14} />
                           </button>
                         </div>
                       </Fragment>
@@ -3637,7 +3638,7 @@ export function PlannerView({ v }: { v: any }) {
                   {v.diaryEmpty ? (
                     <>
                       <p
-                        style={{ margin: '24px 0 0', fontSize: '14px', fontWeight: '400', color: '#746E88' }}
+                        style={{ margin: '24px 0 0', fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-regular)', color: 'var(--color-muted)' }}
                       >
                         {v.diaryEmptyNote}
                       </p>
@@ -3669,7 +3670,7 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                       className="hv0"
                     >
-                      <ChevronLeft color="#5C6684" strokeWidth={2.2} size={18} />
+                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
                     </button>
                     <div
                       style={{
@@ -3677,8 +3678,8 @@ export function PlannerView({ v }: { v: any }) {
                         height: '46px',
                         flex: 'none',
                         borderRadius: '15px',
-                        background: '#FCE8F1',
-                        border: '2px solid #fff',
+                        background: 'var(--color-pink-tint)',
+                        border: '2px solid var(--color-white)',
                         boxShadow: '0 2px 6px rgba(214,96,139,.28),0 0 0 1px rgba(35,42,69,.05)',
                         display: 'flex',
                         alignItems: 'center',
@@ -3690,10 +3691,10 @@ export function PlannerView({ v }: { v: any }) {
                     <div style={{ minWidth: '0' }}>
                       <div
                         style={{
-                          fontSize: '10.5px',
-                          fontWeight: '700',
-                          letterSpacing: '.11em',
-                          color: '#5C6684',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-wide)',
+                          color: 'var(--color-slate)',
                         }}
                       >
                         {v.eDate}
@@ -3702,9 +3703,9 @@ export function PlannerView({ v }: { v: any }) {
                         <h1
                           style={{
                             margin: '3px 0 0',
-                            fontSize: '22px',
-                            fontWeight: '700',
-                            letterSpacing: '-.02em',
+                            fontSize: 'var(--text-4xl)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-tight)',
                           }}
                         >
                           {v.eName}
@@ -3728,7 +3729,7 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                           className="hv0"
                         >
-                          <Pencil color="#746E88" size={17} />
+                          <Pencil color="var(--color-muted)" size={17} />
                         </button>
                       </div>
                     </div>
@@ -3740,17 +3741,17 @@ export function PlannerView({ v }: { v: any }) {
                         whiteSpace: 'nowrap',
                         padding: '8px 14px',
                         borderRadius: '999px',
-                        background: '#fff',
-                        fontSize: '12.5px',
-                        fontWeight: '500',
-                        color: '#5C6684',
+                        background: 'var(--color-white)',
+                        fontSize: 'var(--text-md)',
+                        fontWeight: 'var(--font-weight-medium)',
+                        color: 'var(--color-slate)',
                         boxShadow: '0 1px 3px rgba(35,42,69,.06)',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '6px',
                       }}
                     >
-                      <Clock color="#746E88" size={15} />
+                      <Clock color="var(--color-muted)" size={15} />
                       {t(v.eTime)}
                     </span>
                     {v.inSeries ? (
@@ -3764,13 +3765,13 @@ export function PlannerView({ v }: { v: any }) {
                             gap: '7px',
                             padding: '8px 8px 8px 14px',
                             borderRadius: '999px',
-                            background: '#E1699C',
-                            fontSize: '12.5px',
-                            fontWeight: '600',
-                            color: '#fff',
+                            background: 'var(--color-pink)',
+                            fontSize: 'var(--text-md)',
+                            fontWeight: 'var(--font-weight-semibold)',
+                            color: 'var(--color-white)',
                           }}
                         >
-                          <Repeat color="#fff" size={15} />
+                          <Repeat color="var(--color-white)" size={15} />
                           {'Weekly series '}
                           <button
                             onClick={v.endSeries}
@@ -3803,10 +3804,10 @@ export function PlannerView({ v }: { v: any }) {
                             whiteSpace: 'nowrap',
                             padding: '8px 14px',
                             borderRadius: '999px',
-                            background: '#fff',
-                            fontSize: '12.5px',
-                            fontWeight: '500',
-                            color: '#5C6684',
+                            background: 'var(--color-white)',
+                            fontSize: 'var(--text-md)',
+                            fontWeight: 'var(--font-weight-medium)',
+                            color: 'var(--color-slate)',
                             boxShadow: '0 1px 3px rgba(35,42,69,.06)',
                           }}
                         >
@@ -3821,7 +3822,7 @@ export function PlannerView({ v }: { v: any }) {
                         style={{
                           marginTop: '18px',
                           padding: '20px 22px',
-                          background: '#fff',
+                          background: 'var(--color-white)',
                           borderRadius: '20px',
                           boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                         }}
@@ -3832,20 +3833,20 @@ export function PlannerView({ v }: { v: any }) {
                               <div>
                                 <div
                                   style={{
-                                    fontSize: '10px',
-                                    fontWeight: '700',
-                                    letterSpacing: '.1em',
-                                    color: '#A9A2B4',
+                                    fontSize: 'var(--text-2xs)',
+                                    fontWeight: 'var(--font-weight-bold)',
+                                    letterSpacing: 'var(--tracking-wide)',
+                                    color: 'var(--color-subtle)',
                                   }}
                                 >
                                   {r?.label}
                                 </div>
                                 <div
                                   style={{
-                                    fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                    fontSize: '16px',
-                                    fontWeight: '700',
-                                    color: '#232A45',
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: 'var(--text-xl)',
+                                    fontWeight: 'var(--font-weight-bold)',
+                                    color: 'var(--color-ink)',
                                     marginTop: '4px',
                                   }}
                                 >
@@ -3870,7 +3871,7 @@ export function PlannerView({ v }: { v: any }) {
                         style={{
                           marginTop: '16px',
                           padding: '20px 22px',
-                          background: '#fff',
+                          background: 'var(--color-white)',
                           borderRadius: '20px',
                           boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                         }}
@@ -3880,10 +3881,10 @@ export function PlannerView({ v }: { v: any }) {
                         >
                           <span
                             style={{
-                              fontSize: '10.5px',
-                              fontWeight: '700',
-                              letterSpacing: '.11em',
-                              color: '#5C6684',
+                              fontSize: 'var(--text-xs)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              letterSpacing: 'var(--tracking-wide)',
+                              color: 'var(--color-slate)',
                             }}
                           >
                             PROGRESS
@@ -3891,10 +3892,10 @@ export function PlannerView({ v }: { v: any }) {
                           <span
                             style={{
                               marginLeft: 'auto',
-                              fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                              fontSize: '15px',
-                              fontWeight: '700',
-                              color: '#232A45',
+                              fontFamily: 'var(--font-heading)',
+                              fontSize: 'var(--text-lg)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              color: 'var(--color-ink)',
                             }}
                           >
                             {v.progLabel}
@@ -3904,7 +3905,7 @@ export function PlannerView({ v }: { v: any }) {
                           style={{
                             height: '8px',
                             borderRadius: '5px',
-                            background: '#FCE8F1',
+                            background: 'var(--color-pink-tint)',
                             marginTop: '12px',
                             overflow: 'hidden',
                           }}
@@ -3917,7 +3918,7 @@ export function PlannerView({ v }: { v: any }) {
                               <span
                                 style={{ display: 'flex', animation: 'twinkle 2.6s ease-in-out infinite' }}
                               >
-                                <Sparkle size={14} color="#E1699C" glow={0.55} />
+                                <Sparkle size={14} color={colors.pink} glow={0.55} />
                               </span>
                             </>
                           ) : null}
@@ -3936,7 +3937,7 @@ export function PlannerView({ v }: { v: any }) {
                                 alignItems: 'center',
                                 gap: '13px',
                                 padding: '16px 20px',
-                                background: '#fff',
+                                background: 'var(--color-white)',
                                 borderRadius: '18px',
                                 boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                               }}
@@ -3947,7 +3948,7 @@ export function PlannerView({ v }: { v: any }) {
                                   height: '34px',
                                   flex: 'none',
                                   borderRadius: '11px',
-                                  background: '#FCE8F1',
+                                  background: 'var(--color-pink-tint)',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
@@ -3960,9 +3961,9 @@ export function PlannerView({ v }: { v: any }) {
                                 <span
                                   style={{
                                     display: 'block',
-                                    fontSize: '13px',
-                                    fontWeight: '400',
-                                    color: '#746E88',
+                                    fontSize: 'var(--text-md)',
+                                    fontWeight: 'var(--font-weight-regular)',
+                                    color: 'var(--color-muted)',
                                     marginTop: '3px',
                                   }}
                                 >
@@ -4003,9 +4004,9 @@ export function PlannerView({ v }: { v: any }) {
                         border: 'none',
                         borderRadius: '16px',
                         background: 'none',
-                        fontSize: '14.5px',
-                        fontWeight: '600',
-                        color: '#5C6684',
+                        fontSize: 'var(--text-lg)',
+                        fontWeight: 'var(--font-weight-semibold)',
+                        color: 'var(--color-slate)',
                         cursor: 'pointer',
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -4013,7 +4014,7 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                       className="hv1"
                     >
-                      <Pencil color="#5C6684" size={17} />
+                      <Pencil color="var(--color-slate)" size={17} />
                       Edit workout
                     </button>
                     <button
@@ -4023,10 +4024,10 @@ export function PlannerView({ v }: { v: any }) {
                         padding: '0 30px',
                         border: 'none',
                         borderRadius: '16px',
-                        background: '#E1699C',
-                        color: '#fff',
-                        fontSize: '15px',
-                        fontWeight: '600',
+                        background: 'var(--color-pink)',
+                        color: 'var(--color-white)',
+                        fontSize: 'var(--text-lg)',
+                        fontWeight: 'var(--font-weight-semibold)',
                         cursor: 'pointer',
                       }}
                       className="hv4"
@@ -4060,15 +4061,15 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                       className="hv0"
                     >
-                      <ChevronLeft color="#5C6684" strokeWidth={2.2} size={18} />
+                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
                     </button>
                     <div>
                       <div
                         style={{
-                          fontSize: '10.5px',
-                          fontWeight: '700',
-                          letterSpacing: '.11em',
-                          color: '#5C6684',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-wide)',
+                          color: 'var(--color-slate)',
                         }}
                       >
                         NEW WORKOUT
@@ -4076,9 +4077,9 @@ export function PlannerView({ v }: { v: any }) {
                       <h1
                         style={{
                           margin: '3px 0 0',
-                          fontSize: '19px',
-                          fontWeight: '700',
-                          letterSpacing: '-.02em',
+                          fontSize: 'var(--text-3xl)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-tight)',
                         }}
                       >
                         What kind of session?
@@ -4103,7 +4104,7 @@ export function PlannerView({ v }: { v: any }) {
                         padding: '24px',
                         border: 'none',
                         borderRadius: '22px',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                         textAlign: 'left',
                         cursor: 'pointer',
@@ -4116,23 +4117,23 @@ export function PlannerView({ v }: { v: any }) {
                           height: '46px',
                           flex: 'none',
                           borderRadius: '15px',
-                          background: '#FCE8F1',
+                          background: 'var(--color-pink-tint)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                         }}
                       >
-                        <Dumbbell color="#E1699C" size={22} />
+                        <Dumbbell color="var(--color-pink)" size={22} />
                       </span>
                       <span>
                         <span
                           style={{
                             display: 'block',
-                            fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                            fontSize: '17px',
-                            fontWeight: '700',
-                            letterSpacing: '-.01em',
-                            color: '#232A45',
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'var(--text-2xl)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-snug)',
+                            color: 'var(--color-ink)',
                           }}
                         >
                           Lifting
@@ -4140,10 +4141,10 @@ export function PlannerView({ v }: { v: any }) {
                         <span
                           style={{
                             display: 'block',
-                            fontSize: '13.5px',
-                            fontWeight: '400',
-                            lineHeight: '1.5',
-                            color: '#746E88',
+                            fontSize: 'var(--text-base)',
+                            fontWeight: 'var(--font-weight-regular)',
+                            lineHeight: 'var(--leading-snug)',
+                            color: 'var(--color-muted)',
                             marginTop: '5px',
                             textWrap: 'pretty',
                           }}
@@ -4162,7 +4163,7 @@ export function PlannerView({ v }: { v: any }) {
                         padding: '24px',
                         border: 'none',
                         borderRadius: '22px',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                         textAlign: 'left',
                         cursor: 'pointer',
@@ -4175,23 +4176,23 @@ export function PlannerView({ v }: { v: any }) {
                           height: '46px',
                           flex: 'none',
                           borderRadius: '15px',
-                          background: '#E9EEF9',
+                          background: 'var(--color-periwinkle-tint)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                         }}
                       >
-                        <Bike color="#7C8FC9" size={22} />
+                        <Bike color="var(--color-periwinkle)" size={22} />
                       </span>
                       <span>
                         <span
                           style={{
                             display: 'block',
-                            fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                            fontSize: '17px',
-                            fontWeight: '700',
-                            letterSpacing: '-.01em',
-                            color: '#232A45',
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'var(--text-2xl)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-snug)',
+                            color: 'var(--color-ink)',
                           }}
                         >
                           Cycling
@@ -4199,10 +4200,10 @@ export function PlannerView({ v }: { v: any }) {
                         <span
                           style={{
                             display: 'block',
-                            fontSize: '13.5px',
-                            fontWeight: '400',
-                            lineHeight: '1.5',
-                            color: '#746E88',
+                            fontSize: 'var(--text-base)',
+                            fontWeight: 'var(--font-weight-regular)',
+                            lineHeight: 'var(--leading-snug)',
+                            color: 'var(--color-muted)',
                             marginTop: '5px',
                             textWrap: 'pretty',
                           }}
@@ -4240,7 +4241,7 @@ export function PlannerView({ v }: { v: any }) {
                             width: '100%',
                             maxWidth: '400px',
                             padding: '26px',
-                            background: '#fff',
+                            background: 'var(--color-white)',
                             borderRadius: '24px',
                             boxShadow: '0 8px 24px rgba(35,42,69,.14)',
                           }}
@@ -4248,9 +4249,9 @@ export function PlannerView({ v }: { v: any }) {
                           <h2
                             style={{
                               margin: '0',
-                              fontSize: '18px',
-                              fontWeight: '700',
-                              letterSpacing: '-.02em',
+                              fontSize: 'var(--text-2xl)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              letterSpacing: 'var(--tracking-tight)',
                             }}
                           >
                             Keep your changes?
@@ -4258,10 +4259,10 @@ export function PlannerView({ v }: { v: any }) {
                           <p
                             style={{
                               margin: '10px 0 0',
-                              fontSize: '14px',
-                              fontWeight: '400',
-                              lineHeight: '1.6',
-                              color: '#746E88',
+                              fontSize: 'var(--text-base)',
+                              fontWeight: 'var(--font-weight-regular)',
+                              lineHeight: 'var(--leading-relaxed)',
+                              color: 'var(--color-muted)',
                               textWrap: 'pretty',
                             }}
                           >
@@ -4285,9 +4286,9 @@ export function PlannerView({ v }: { v: any }) {
                                 border: 'none',
                                 borderRadius: '15px',
                                 background: 'none',
-                                fontSize: '14.5px',
-                                fontWeight: '600',
-                                color: '#B23A4C',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-semibold)',
+                                color: 'var(--color-danger)',
                                 cursor: 'pointer',
                               }}
                               className="hv11"
@@ -4301,10 +4302,10 @@ export function PlannerView({ v }: { v: any }) {
                                 padding: '0 24px',
                                 border: 'none',
                                 borderRadius: '15px',
-                                background: '#E1699C',
-                                color: '#fff',
-                                fontSize: '14.5px',
-                                fontWeight: '600',
+                                background: 'var(--color-pink)',
+                                color: 'var(--color-white)',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-semibold)',
                                 cursor: 'pointer',
                               }}
                               className="hv4"
@@ -4336,7 +4337,7 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                       className="hv0"
                     >
-                      <ChevronLeft color="#5C6684" strokeWidth={2.2} size={18} />
+                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
                     </button>
                     <div data-pop="icons" style={{ position: 'relative', flex: 'none' }}>
                       <button
@@ -4357,17 +4358,17 @@ export function PlannerView({ v }: { v: any }) {
                               zIndex: '30',
                               width: '238px',
                               padding: '14px',
-                              background: '#fff',
+                              background: 'var(--color-white)',
                               borderRadius: '20px',
                               boxShadow: '0 8px 24px rgba(35,42,69,.14)',
                             }}
                           >
                             <div
                               style={{
-                                fontSize: '10.5px',
-                                fontWeight: '700',
-                                letterSpacing: '.11em',
-                                color: '#5C6684',
+                                fontSize: 'var(--text-xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-slate)',
                                 padding: '0 2px 10px',
                               }}
                             >
@@ -4390,10 +4391,10 @@ export function PlannerView({ v }: { v: any }) {
                             </div>
                             <div
                               style={{
-                                fontSize: '10.5px',
-                                fontWeight: '700',
-                                letterSpacing: '.11em',
-                                color: '#5C6684',
+                                fontSize: 'var(--text-xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-slate)',
                                 padding: '14px 2px 10px',
                               }}
                             >
@@ -4413,10 +4414,10 @@ export function PlannerView({ v }: { v: any }) {
                     <div style={{ flex: '1 1 220px', minWidth: '0' }}>
                       <div
                         style={{
-                          fontSize: '10.5px',
-                          fontWeight: '700',
-                          letterSpacing: '.11em',
-                          color: '#5C6684',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 'var(--font-weight-bold)',
+                          letterSpacing: 'var(--tracking-wide)',
+                          color: 'var(--color-slate)',
                         }}
                       >
                         {v.eEyebrow}
@@ -4436,11 +4437,11 @@ export function PlannerView({ v }: { v: any }) {
                               border: 'none',
                               borderBottom: '1.5px dashed rgba(35,42,69,.3)',
                               background: 'none',
-                              fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                              fontSize: '19px',
-                              fontWeight: '700',
-                              letterSpacing: '-.02em',
-                              color: '#232A45',
+                              fontFamily: 'var(--font-heading)',
+                              fontSize: 'var(--text-3xl)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              letterSpacing: 'var(--tracking-tight)',
+                              color: 'var(--color-ink)',
                             }}
                           />
                         </>
@@ -4460,11 +4461,11 @@ export function PlannerView({ v }: { v: any }) {
                               border: 'none',
                               borderBottom: '1.5px dashed rgba(35,42,69,.3)',
                               background: 'none',
-                              fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                              fontSize: '19px',
-                              fontWeight: '700',
-                              letterSpacing: '-.02em',
-                              color: '#232A45',
+                              fontFamily: 'var(--font-heading)',
+                              fontSize: 'var(--text-3xl)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              letterSpacing: 'var(--tracking-tight)',
+                              color: 'var(--color-ink)',
                             }}
                           />
                         </>
@@ -4479,10 +4480,10 @@ export function PlannerView({ v }: { v: any }) {
                           padding: '8px 14px',
                           border: 'none',
                           borderRadius: '999px',
-                          background: '#fff',
-                          fontSize: '12.5px',
-                          fontWeight: '500',
-                          color: '#5C6684',
+                          background: 'var(--color-white)',
+                          fontSize: 'var(--text-md)',
+                          fontWeight: 'var(--font-weight-medium)',
+                          color: 'var(--color-slate)',
                           boxShadow: '0 1px 3px rgba(35,42,69,.06)',
                           whiteSpace: 'nowrap',
                           cursor: 'pointer',
@@ -4492,7 +4493,7 @@ export function PlannerView({ v }: { v: any }) {
                         }}
                         className="hv12"
                       >
-                        <Calendar color="#746E88" size={15} />
+                        <Calendar color="var(--color-muted)" size={15} />
                         {t(v.eDate)}
                       </button>
                       {v.dateOpen ? (
@@ -4506,7 +4507,7 @@ export function PlannerView({ v }: { v: any }) {
                               display: 'block',
                               width: '280px',
                               padding: '16px',
-                              background: '#fff',
+                              background: 'var(--color-white)',
                               borderRadius: '20px',
                               boxShadow: '0 8px 24px rgba(35,42,69,.14)',
                             }}
@@ -4528,15 +4529,15 @@ export function PlannerView({ v }: { v: any }) {
                                 }}
                                 className="hv8"
                               >
-                                <ChevronLeft color="#5C6684" strokeWidth={2.2} size={15} />
+                                <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={15} />
                               </button>
                               <span
                                 style={{
                                   flex: '1',
                                   textAlign: 'center',
-                                  fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                  fontSize: '14.5px',
-                                  fontWeight: '700',
+                                  fontFamily: 'var(--font-heading)',
+                                  fontSize: 'var(--text-lg)',
+                                  fontWeight: 'var(--font-weight-bold)',
                                 }}
                               >
                                 {v.monthName}
@@ -4557,7 +4558,7 @@ export function PlannerView({ v }: { v: any }) {
                                 }}
                                 className="hv8"
                               >
-                                <ChevronRight color="#5C6684" strokeWidth={2.2} size={15} />
+                                <ChevronRight color="var(--color-slate)" strokeWidth={2.2} size={15} />
                               </button>
                             </span>
                             <span
@@ -4573,9 +4574,9 @@ export function PlannerView({ v }: { v: any }) {
                                   <span
                                     style={{
                                       textAlign: 'center',
-                                      fontSize: '10px',
-                                      fontWeight: '700',
-                                      color: '#A9A2B4',
+                                      fontSize: 'var(--text-2xs)',
+                                      fontWeight: 'var(--font-weight-bold)',
+                                      color: 'var(--color-subtle)',
                                       paddingBottom: '4px',
                                     }}
                                   >
@@ -4603,16 +4604,16 @@ export function PlannerView({ v }: { v: any }) {
                             whiteSpace: 'nowrap',
                             padding: '8px 14px',
                             borderRadius: '999px',
-                            background: '#E1699C',
-                            fontSize: '12.5px',
-                            fontWeight: '600',
-                            color: '#fff',
+                            background: 'var(--color-pink)',
+                            fontSize: 'var(--text-md)',
+                            fontWeight: 'var(--font-weight-semibold)',
+                            color: 'var(--color-white)',
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '6px',
                           }}
                         >
-                          <Repeat color="#fff" size={15} />
+                          <Repeat color="var(--color-white)" size={15} />
                           Weekly
                         </span>
                       </>
@@ -4621,10 +4622,10 @@ export function PlannerView({ v }: { v: any }) {
                       style={{
                         padding: '8px 14px',
                         borderRadius: '999px',
-                        background: '#fff',
-                        fontSize: '12.5px',
-                        fontWeight: '500',
-                        color: '#5C6684',
+                        background: 'var(--color-white)',
+                        fontSize: 'var(--text-md)',
+                        fontWeight: 'var(--font-weight-medium)',
+                        color: 'var(--color-slate)',
                         boxShadow: '0 1px 3px rgba(35,42,69,.06)',
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -4633,7 +4634,7 @@ export function PlannerView({ v }: { v: any }) {
                         whiteSpace: 'nowrap',
                       }}
                     >
-                      <Clock color="#746E88" size={17} />
+                      <Clock color="var(--color-muted)" size={17} />
                       {t(v.eTime)}
                     </span>
                   </div>
@@ -4644,15 +4645,15 @@ export function PlannerView({ v }: { v: any }) {
                       gap: '12px',
                       marginTop: '16px',
                       padding: '18px 20px',
-                      background: '#fff',
+                      background: 'var(--color-white)',
                       borderRadius: '20px',
                       boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                     }}
                   >
                     <span style={{ display: 'flex' }}>
-                      <Repeat color="#746E88" size={20} />
+                      <Repeat color="var(--color-muted)" size={20} />
                     </span>
-                    <span style={{ fontSize: '15px', fontWeight: '600' }}>Repeat weekly</span>
+                    <span style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-weight-semibold)' }}>Repeat weekly</span>
                     <button
                       onClick={v.toggleRepeat}
                       role="switch"
@@ -4671,10 +4672,10 @@ export function PlannerView({ v }: { v: any }) {
                         >
                           <span
                             style={{
-                              fontSize: '10.5px',
-                              fontWeight: '700',
-                              letterSpacing: '.11em',
-                              color: '#5C6684',
+                              fontSize: 'var(--text-xs)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              letterSpacing: 'var(--tracking-wide)',
+                              color: 'var(--color-slate)',
                             }}
                           >
                             RIDE PLAN
@@ -4682,9 +4683,9 @@ export function PlannerView({ v }: { v: any }) {
                           <span
                             style={{
                               marginLeft: 'auto',
-                              fontSize: '12px',
-                              fontWeight: '500',
-                              color: '#A9A2B4',
+                              fontSize: 'var(--text-sm)',
+                              fontWeight: 'var(--font-weight-medium)',
+                              color: 'var(--color-subtle)',
                             }}
                           >
                             {v.rideLockNote}
@@ -4694,20 +4695,20 @@ export function PlannerView({ v }: { v: any }) {
                           <div>
                             <div
                               style={{
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.1em',
-                                color: '#A9A2B4',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-subtle)',
                               }}
                             >
                               DISTANCE
                             </div>
                             <div
                               style={{
-                                fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                fontSize: '15px',
-                                fontWeight: '700',
-                                color: '#232A45',
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                color: 'var(--color-ink)',
                                 marginTop: '4px',
                               }}
                             >
@@ -4717,20 +4718,20 @@ export function PlannerView({ v }: { v: any }) {
                           <div>
                             <div
                               style={{
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.1em',
-                                color: '#A9A2B4',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-subtle)',
                               }}
                             >
                               DURATION
                             </div>
                             <div
                               style={{
-                                fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                fontSize: '15px',
-                                fontWeight: '700',
-                                color: '#232A45',
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                color: 'var(--color-ink)',
                                 marginTop: '4px',
                               }}
                             >
@@ -4740,20 +4741,20 @@ export function PlannerView({ v }: { v: any }) {
                           <div>
                             <div
                               style={{
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.1em',
-                                color: '#A9A2B4',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-subtle)',
                               }}
                             >
                               ELEVATION
                             </div>
                             <div
                               style={{
-                                fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                fontSize: '15px',
-                                fontWeight: '700',
-                                color: '#232A45',
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                color: 'var(--color-ink)',
                                 marginTop: '4px',
                               }}
                             >
@@ -4763,20 +4764,20 @@ export function PlannerView({ v }: { v: any }) {
                           <div>
                             <div
                               style={{
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.1em',
-                                color: '#A9A2B4',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-subtle)',
                               }}
                             >
                               TARGET EFFORT
                             </div>
                             <div
                               style={{
-                                fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                fontSize: '15px',
-                                fontWeight: '700',
-                                color: '#232A45',
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                color: 'var(--color-ink)',
                                 marginTop: '4px',
                               }}
                             >
@@ -4793,17 +4794,17 @@ export function PlannerView({ v }: { v: any }) {
                         style={{
                           marginTop: '16px',
                           padding: '22px',
-                          background: '#fff',
+                          background: 'var(--color-white)',
                           borderRadius: '20px',
                           boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                         }}
                       >
                         <div
                           style={{
-                            fontSize: '10.5px',
-                            fontWeight: '700',
-                            letterSpacing: '.11em',
-                            color: '#5C6684',
+                            fontSize: 'var(--text-xs)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-wide)',
+                            color: 'var(--color-slate)',
                           }}
                         >
                           RIDE PLAN
@@ -4813,15 +4814,15 @@ export function PlannerView({ v }: { v: any }) {
                             <span
                               style={{
                                 display: 'block',
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.1em',
-                                color: '#746E88',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-muted)',
                                 marginBottom: '7px',
                               }}
                             >
                               {'DISTANCE '}
-                              <span style={{ color: '#A9A2B4' }}>(MILES)</span>
+                              <span style={{ color: 'var(--color-subtle)' }}>(MILES)</span>
                             </span>
                             <input
                               value={v.rideDistance ?? ''}
@@ -4833,10 +4834,10 @@ export function PlannerView({ v }: { v: any }) {
                                 padding: '13px 15px',
                                 border: 'none',
                                 borderRadius: '13px',
-                                background: '#FBF1F3',
-                                fontSize: '14.5px',
-                                fontWeight: '500',
-                                color: '#232A45',
+                                background: 'var(--color-canvas)',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-medium)',
+                                color: 'var(--color-ink)',
                               }}
                             />
                           </label>
@@ -4844,15 +4845,15 @@ export function PlannerView({ v }: { v: any }) {
                             <span
                               style={{
                                 display: 'block',
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.1em',
-                                color: '#746E88',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-muted)',
                                 marginBottom: '7px',
                               }}
                             >
                               {'ELEVATION '}
-                              <span style={{ color: '#A9A2B4' }}>(FEET)</span>
+                              <span style={{ color: 'var(--color-subtle)' }}>(FEET)</span>
                             </span>
                             <input
                               value={v.rideElev ?? ''}
@@ -4864,10 +4865,10 @@ export function PlannerView({ v }: { v: any }) {
                                 padding: '13px 15px',
                                 border: 'none',
                                 borderRadius: '13px',
-                                background: '#FBF1F3',
-                                fontSize: '14.5px',
-                                fontWeight: '500',
-                                color: '#232A45',
+                                background: 'var(--color-canvas)',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-medium)',
+                                color: 'var(--color-ink)',
                               }}
                             />
                           </label>
@@ -4875,10 +4876,10 @@ export function PlannerView({ v }: { v: any }) {
                             <span
                               style={{
                                 display: 'block',
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.1em',
-                                color: '#746E88',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-muted)',
                                 marginBottom: '7px',
                               }}
                             >
@@ -4894,7 +4895,7 @@ export function PlannerView({ v }: { v: any }) {
                                   gap: '6px',
                                   padding: '13px 15px',
                                   borderRadius: '13px',
-                                  background: '#FBF1F3',
+                                  background: 'var(--color-canvas)',
                                 }}
                               >
                                 <input
@@ -4908,17 +4909,17 @@ export function PlannerView({ v }: { v: any }) {
                                     border: 'none',
                                     background: 'none',
                                     padding: '0',
-                                    fontSize: '14.5px',
-                                    fontWeight: '500',
-                                    color: '#232A45',
+                                    fontSize: 'var(--text-lg)',
+                                    fontWeight: 'var(--font-weight-medium)',
+                                    color: 'var(--color-ink)',
                                   }}
                                 />
                                 <span
                                   style={{
                                     flex: 'none',
-                                    fontSize: '12.5px',
-                                    fontWeight: '600',
-                                    color: '#746E88',
+                                    fontSize: 'var(--text-md)',
+                                    fontWeight: 'var(--font-weight-semibold)',
+                                    color: 'var(--color-muted)',
                                   }}
                                 >
                                   hr
@@ -4933,7 +4934,7 @@ export function PlannerView({ v }: { v: any }) {
                                   gap: '6px',
                                   padding: '13px 15px',
                                   borderRadius: '13px',
-                                  background: '#FBF1F3',
+                                  background: 'var(--color-canvas)',
                                 }}
                               >
                                 <input
@@ -4947,17 +4948,17 @@ export function PlannerView({ v }: { v: any }) {
                                     border: 'none',
                                     background: 'none',
                                     padding: '0',
-                                    fontSize: '14.5px',
-                                    fontWeight: '500',
-                                    color: '#232A45',
+                                    fontSize: 'var(--text-lg)',
+                                    fontWeight: 'var(--font-weight-medium)',
+                                    color: 'var(--color-ink)',
                                   }}
                                 />
                                 <span
                                   style={{
                                     flex: 'none',
-                                    fontSize: '12.5px',
-                                    fontWeight: '600',
-                                    color: '#746E88',
+                                    fontSize: 'var(--text-md)',
+                                    fontWeight: 'var(--font-weight-semibold)',
+                                    color: 'var(--color-muted)',
                                   }}
                                 >
                                   min
@@ -4969,10 +4970,10 @@ export function PlannerView({ v }: { v: any }) {
                         <span
                           style={{
                             display: 'block',
-                            fontSize: '10px',
-                            fontWeight: '700',
-                            letterSpacing: '.1em',
-                            color: '#746E88',
+                            fontSize: 'var(--text-2xs)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-wide)',
+                            color: 'var(--color-muted)',
                             margin: '18px 0 9px',
                           }}
                         >
@@ -5001,7 +5002,7 @@ export function PlannerView({ v }: { v: any }) {
                         style={{
                           marginTop: '14px',
                           padding: '22px',
-                          background: '#fff',
+                          background: 'var(--color-white)',
                           borderRadius: '20px',
                           boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                         }}
@@ -5011,10 +5012,10 @@ export function PlannerView({ v }: { v: any }) {
                         >
                           <span
                             style={{
-                              fontSize: '10.5px',
-                              fontWeight: '700',
-                              letterSpacing: '.11em',
-                              color: '#5C6684',
+                              fontSize: 'var(--text-xs)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              letterSpacing: 'var(--tracking-wide)',
+                              color: 'var(--color-slate)',
                             }}
                           >
                             WHAT YOU ACTUALLY RODE
@@ -5022,10 +5023,10 @@ export function PlannerView({ v }: { v: any }) {
                           <span
                             style={{
                               marginLeft: 'auto',
-                              fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                              fontSize: '14px',
-                              fontWeight: '700',
-                              color: '#232A45',
+                              fontFamily: 'var(--font-heading)',
+                              fontSize: 'var(--text-base)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              color: 'var(--color-ink)',
                             }}
                           >
                             {v.ridePctLabel}
@@ -5035,7 +5036,7 @@ export function PlannerView({ v }: { v: any }) {
                           style={{
                             height: '8px',
                             borderRadius: '5px',
-                            background: '#F4EFF1',
+                            background: 'var(--color-mist)',
                             marginTop: '12px',
                             overflow: 'hidden',
                           }}
@@ -5047,15 +5048,15 @@ export function PlannerView({ v }: { v: any }) {
                             <span
                               style={{
                                 display: 'block',
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.1em',
-                                color: '#746E88',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-muted)',
                                 marginBottom: '7px',
                               }}
                             >
                               {'DISTANCE '}
-                              <span style={{ color: '#A9A2B4' }}>(MILES)</span>
+                              <span style={{ color: 'var(--color-subtle)' }}>(MILES)</span>
                             </span>
                             <input
                               value={v.actDistance ?? ''}
@@ -5067,18 +5068,18 @@ export function PlannerView({ v }: { v: any }) {
                                 padding: '13px 15px',
                                 border: 'none',
                                 borderRadius: '13px',
-                                background: '#FBF1F3',
-                                fontSize: '14.5px',
-                                fontWeight: '500',
-                                color: '#232A45',
+                                background: 'var(--color-canvas)',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-medium)',
+                                color: 'var(--color-ink)',
                               }}
                             />
                             <span
                               style={{
                                 display: 'block',
-                                fontSize: '11px',
-                                fontWeight: '400',
-                                color: '#A9A2B4',
+                                fontSize: 'var(--text-xs)',
+                                fontWeight: 'var(--font-weight-regular)',
+                                color: 'var(--color-subtle)',
                                 marginTop: '6px',
                               }}
                             >
@@ -5089,15 +5090,15 @@ export function PlannerView({ v }: { v: any }) {
                             <span
                               style={{
                                 display: 'block',
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.1em',
-                                color: '#746E88',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-muted)',
                                 marginBottom: '7px',
                               }}
                             >
                               {'ELEVATION '}
-                              <span style={{ color: '#A9A2B4' }}>(FEET)</span>
+                              <span style={{ color: 'var(--color-subtle)' }}>(FEET)</span>
                             </span>
                             <input
                               value={v.actElev ?? ''}
@@ -5109,18 +5110,18 @@ export function PlannerView({ v }: { v: any }) {
                                 padding: '13px 15px',
                                 border: 'none',
                                 borderRadius: '13px',
-                                background: '#FBF1F3',
-                                fontSize: '14.5px',
-                                fontWeight: '500',
-                                color: '#232A45',
+                                background: 'var(--color-canvas)',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-medium)',
+                                color: 'var(--color-ink)',
                               }}
                             />
                             <span
                               style={{
                                 display: 'block',
-                                fontSize: '11px',
-                                fontWeight: '400',
-                                color: '#A9A2B4',
+                                fontSize: 'var(--text-xs)',
+                                fontWeight: 'var(--font-weight-regular)',
+                                color: 'var(--color-subtle)',
                                 marginTop: '6px',
                               }}
                             >
@@ -5131,10 +5132,10 @@ export function PlannerView({ v }: { v: any }) {
                             <span
                               style={{
                                 display: 'block',
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.1em',
-                                color: '#746E88',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-muted)',
                                 marginBottom: '7px',
                               }}
                             >
@@ -5150,7 +5151,7 @@ export function PlannerView({ v }: { v: any }) {
                                   gap: '6px',
                                   padding: '13px 15px',
                                   borderRadius: '13px',
-                                  background: '#FBF1F3',
+                                  background: 'var(--color-canvas)',
                                 }}
                               >
                                 <input
@@ -5164,17 +5165,17 @@ export function PlannerView({ v }: { v: any }) {
                                     border: 'none',
                                     background: 'none',
                                     padding: '0',
-                                    fontSize: '14.5px',
-                                    fontWeight: '500',
-                                    color: '#232A45',
+                                    fontSize: 'var(--text-lg)',
+                                    fontWeight: 'var(--font-weight-medium)',
+                                    color: 'var(--color-ink)',
                                   }}
                                 />
                                 <span
                                   style={{
                                     flex: 'none',
-                                    fontSize: '12.5px',
-                                    fontWeight: '600',
-                                    color: '#746E88',
+                                    fontSize: 'var(--text-md)',
+                                    fontWeight: 'var(--font-weight-semibold)',
+                                    color: 'var(--color-muted)',
                                   }}
                                 >
                                   hr
@@ -5189,7 +5190,7 @@ export function PlannerView({ v }: { v: any }) {
                                   gap: '6px',
                                   padding: '13px 15px',
                                   borderRadius: '13px',
-                                  background: '#FBF1F3',
+                                  background: 'var(--color-canvas)',
                                 }}
                               >
                                 <input
@@ -5203,17 +5204,17 @@ export function PlannerView({ v }: { v: any }) {
                                     border: 'none',
                                     background: 'none',
                                     padding: '0',
-                                    fontSize: '14.5px',
-                                    fontWeight: '500',
-                                    color: '#232A45',
+                                    fontSize: 'var(--text-lg)',
+                                    fontWeight: 'var(--font-weight-medium)',
+                                    color: 'var(--color-ink)',
                                   }}
                                 />
                                 <span
                                   style={{
                                     flex: 'none',
-                                    fontSize: '12.5px',
-                                    fontWeight: '600',
-                                    color: '#746E88',
+                                    fontSize: 'var(--text-md)',
+                                    fontWeight: 'var(--font-weight-semibold)',
+                                    color: 'var(--color-muted)',
                                   }}
                                 >
                                   min
@@ -5223,9 +5224,9 @@ export function PlannerView({ v }: { v: any }) {
                             <span
                               style={{
                                 display: 'block',
-                                fontSize: '11px',
-                                fontWeight: '400',
-                                color: '#A9A2B4',
+                                fontSize: 'var(--text-xs)',
+                                fontWeight: 'var(--font-weight-regular)',
+                                color: 'var(--color-subtle)',
                                 marginTop: '6px',
                               }}
                             >
@@ -5243,17 +5244,17 @@ export function PlannerView({ v }: { v: any }) {
                         style={{
                           marginTop: '16px',
                           padding: '20px 22px',
-                          background: '#fff',
+                          background: 'var(--color-white)',
                           borderRadius: '20px',
                           boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                         }}
                       >
                         <div
                           style={{
-                            fontSize: '10.5px',
-                            fontWeight: '700',
-                            letterSpacing: '.11em',
-                            color: '#5C6684',
+                            fontSize: 'var(--text-xs)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-wide)',
+                            color: 'var(--color-slate)',
                           }}
                         >
                           TARGET AREAS
@@ -5276,7 +5277,7 @@ export function PlannerView({ v }: { v: any }) {
                         style={{
                           marginTop: '16px',
                           padding: '20px 22px',
-                          background: '#fff',
+                          background: 'var(--color-white)',
                           borderRadius: '20px',
                           boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                         }}
@@ -5286,10 +5287,10 @@ export function PlannerView({ v }: { v: any }) {
                         >
                           <span
                             style={{
-                              fontSize: '10.5px',
-                              fontWeight: '700',
-                              letterSpacing: '.11em',
-                              color: '#5C6684',
+                              fontSize: 'var(--text-xs)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              letterSpacing: 'var(--tracking-wide)',
+                              color: 'var(--color-slate)',
                             }}
                           >
                             PROGRESS
@@ -5297,10 +5298,10 @@ export function PlannerView({ v }: { v: any }) {
                           <span
                             style={{
                               marginLeft: 'auto',
-                              fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                              fontSize: '15px',
-                              fontWeight: '700',
-                              color: '#232A45',
+                              fontFamily: 'var(--font-heading)',
+                              fontSize: 'var(--text-lg)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              color: 'var(--color-ink)',
                             }}
                           >
                             {v.progLabel}
@@ -5310,7 +5311,7 @@ export function PlannerView({ v }: { v: any }) {
                           style={{
                             height: '8px',
                             borderRadius: '5px',
-                            background: '#FCE8F1',
+                            background: 'var(--color-pink-tint)',
                             marginTop: '12px',
                             overflow: 'hidden',
                           }}
@@ -5323,7 +5324,7 @@ export function PlannerView({ v }: { v: any }) {
                               <span
                                 style={{ display: 'flex', animation: 'twinkle 2.6s ease-in-out infinite' }}
                               >
-                                <Sparkle size={14} color="#E1699C" glow={0.55} />
+                                <Sparkle size={14} color={colors.pink} glow={0.55} />
                               </span>
                             </>
                           ) : null}
@@ -5341,7 +5342,7 @@ export function PlannerView({ v }: { v: any }) {
                           <Fragment key={i}>
                             <div
                               style={{
-                                background: '#fff',
+                                background: 'var(--color-white)',
                                 borderRadius: '20px',
                                 padding: '20px',
                                 boxShadow: '0 4px 14px rgba(35,42,69,.07)',
@@ -5358,8 +5359,8 @@ export function PlannerView({ v }: { v: any }) {
                                       height: '40px',
                                       flex: 'none',
                                       borderRadius: '13px',
-                                      background: '#FCE8F1',
-                                      border: '2px solid #fff',
+                                      background: 'var(--color-pink-tint)',
+                                      border: '2px solid var(--color-white)',
                                       boxShadow:
                                         '0 2px 6px rgba(214,96,139,.28),0 0 0 1px rgba(35,42,69,.05)',
                                       display: 'flex',
@@ -5373,13 +5374,13 @@ export function PlannerView({ v }: { v: any }) {
                                       <>
                                         {ex?.isH ? (
                                           <>
-                                            <Dumbbell color="#E1699C" size={19} />
+                                            <Dumbbell color="var(--color-pink)" size={19} />
                                           </>
                                         ) : null}
                                         {ex?.isV ? (
                                           <>
                                             <Dumbbell
-                                              color="#E1699C"
+                                              color="var(--color-pink)"
                                               size={19}
                                               style={{ transform: 'rotate(90deg)' }}
                                             />
@@ -5387,7 +5388,7 @@ export function PlannerView({ v }: { v: any }) {
                                         ) : null}
                                         {ex?.isD ? (
                                           <>
-                                            <DumbbellSmall color="#E1699C" size={19} />
+                                            <DumbbellSmall color="var(--color-pink)" size={19} />
                                           </>
                                         ) : null}
                                       </>
@@ -5403,17 +5404,17 @@ export function PlannerView({ v }: { v: any }) {
                                           zIndex: '30',
                                           width: '186px',
                                           padding: '12px',
-                                          background: '#fff',
+                                          background: 'var(--color-white)',
                                           borderRadius: '18px',
                                           boxShadow: '0 8px 24px rgba(35,42,69,.14)',
                                         }}
                                       >
                                         <div
                                           style={{
-                                            fontSize: '10px',
-                                            fontWeight: '700',
-                                            letterSpacing: '.11em',
-                                            color: '#5C6684',
+                                            fontSize: 'var(--text-2xs)',
+                                            fontWeight: 'var(--font-weight-bold)',
+                                            letterSpacing: 'var(--tracking-wide)',
+                                            color: 'var(--color-slate)',
                                             padding: '0 2px 9px',
                                           }}
                                         >
@@ -5427,17 +5428,17 @@ export function PlannerView({ v }: { v: any }) {
                                           }}
                                         >
                                           <button onClick={ex?.pickH} style={css(ex?.optH)}>
-                                            <Dumbbell color="#E1699C" size={20} />
+                                            <Dumbbell color="var(--color-pink)" size={20} />
                                           </button>
                                           <button onClick={ex?.pickV} style={css(ex?.optV)}>
                                             <Dumbbell
-                                              color="#E1699C"
+                                              color="var(--color-pink)"
                                               size={20}
                                               style={{ transform: 'rotate(90deg)' }}
                                             />
                                           </button>
                                           <button onClick={ex?.pickD} style={css(ex?.optD)}>
-                                            <DumbbellSmall color="#E1699C" size={20} />
+                                            <DumbbellSmall color="var(--color-pink)" size={20} />
                                           </button>
                                         </div>
                                       </div>
@@ -5470,7 +5471,7 @@ export function PlannerView({ v }: { v: any }) {
                                   }}
                                   className="hv8"
                                 >
-                                  <Close color="#746E88" size={19} />
+                                  <Close color="var(--color-muted)" size={19} />
                                 </button>
                               </div>
                               <div
@@ -5480,10 +5481,10 @@ export function PlannerView({ v }: { v: any }) {
                                   <span
                                     style={{
                                       display: 'block',
-                                      fontSize: '10px',
-                                      fontWeight: '700',
-                                      letterSpacing: '.1em',
-                                      color: '#746E88',
+                                      fontSize: 'var(--text-2xs)',
+                                      fontWeight: 'var(--font-weight-bold)',
+                                      letterSpacing: 'var(--tracking-wide)',
+                                      color: 'var(--color-muted)',
                                       marginBottom: '7px',
                                     }}
                                   >
@@ -5497,10 +5498,10 @@ export function PlannerView({ v }: { v: any }) {
                                       padding: '13px 15px',
                                       border: 'none',
                                       borderRadius: '13px',
-                                      background: '#FBF1F3',
-                                      fontSize: '14.5px',
-                                      fontWeight: '500',
-                                      color: '#232A45',
+                                      background: 'var(--color-canvas)',
+                                      fontSize: 'var(--text-lg)',
+                                      fontWeight: 'var(--font-weight-medium)',
+                                      color: 'var(--color-ink)',
                                     }}
                                   />
                                 </label>
@@ -5508,10 +5509,10 @@ export function PlannerView({ v }: { v: any }) {
                                   <span
                                     style={{
                                       display: 'block',
-                                      fontSize: '10px',
-                                      fontWeight: '700',
-                                      letterSpacing: '.1em',
-                                      color: '#746E88',
+                                      fontSize: 'var(--text-2xs)',
+                                      fontWeight: 'var(--font-weight-bold)',
+                                      letterSpacing: 'var(--tracking-wide)',
+                                      color: 'var(--color-muted)',
                                       marginBottom: '7px',
                                     }}
                                   >
@@ -5525,10 +5526,10 @@ export function PlannerView({ v }: { v: any }) {
                                       padding: '13px 15px',
                                       border: 'none',
                                       borderRadius: '13px',
-                                      background: '#FBF1F3',
-                                      fontSize: '14.5px',
-                                      fontWeight: '500',
-                                      color: '#232A45',
+                                      background: 'var(--color-canvas)',
+                                      fontSize: 'var(--text-lg)',
+                                      fontWeight: 'var(--font-weight-medium)',
+                                      color: 'var(--color-ink)',
                                     }}
                                   />
                                 </label>
@@ -5536,10 +5537,10 @@ export function PlannerView({ v }: { v: any }) {
                                   <span
                                     style={{
                                       display: 'block',
-                                      fontSize: '10px',
-                                      fontWeight: '700',
-                                      letterSpacing: '.1em',
-                                      color: '#746E88',
+                                      fontSize: 'var(--text-2xs)',
+                                      fontWeight: 'var(--font-weight-bold)',
+                                      letterSpacing: 'var(--tracking-wide)',
+                                      color: 'var(--color-muted)',
                                       marginBottom: '7px',
                                     }}
                                   >
@@ -5553,10 +5554,10 @@ export function PlannerView({ v }: { v: any }) {
                                       padding: '13px 15px',
                                       border: 'none',
                                       borderRadius: '13px',
-                                      background: '#FBF1F3',
-                                      fontSize: '14.5px',
-                                      fontWeight: '500',
-                                      color: '#232A45',
+                                      background: 'var(--color-canvas)',
+                                      fontSize: 'var(--text-lg)',
+                                      fontWeight: 'var(--font-weight-medium)',
+                                      color: 'var(--color-ink)',
                                     }}
                                   />
                                 </label>
@@ -5578,9 +5579,9 @@ export function PlannerView({ v }: { v: any }) {
                           border: '1.5px dashed rgba(225,105,156,.45)',
                           borderRadius: '18px',
                           background: 'none',
-                          color: '#E1699C',
-                          fontSize: '14.5px',
-                          fontWeight: '600',
+                          color: 'var(--color-pink)',
+                          fontSize: 'var(--text-lg)',
+                          fontWeight: 'var(--font-weight-semibold)',
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
@@ -5588,7 +5589,7 @@ export function PlannerView({ v }: { v: any }) {
                           gap: '8px',
                         }}
                       >
-                        <Plus color="#E1699C" size={19} />
+                        <Plus color="var(--color-pink)" size={19} />
                         Add exercise
                       </button>
                     </>
@@ -5599,7 +5600,7 @@ export function PlannerView({ v }: { v: any }) {
                         style={{
                           marginTop: '14px',
                           padding: '22px',
-                          background: '#fff',
+                          background: 'var(--color-white)',
                           borderRadius: '20px',
                           boxShadow: '0 8px 24px rgba(35,42,69,.14)',
                         }}
@@ -5607,10 +5608,10 @@ export function PlannerView({ v }: { v: any }) {
                         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
                           <span
                             style={{
-                              fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                              fontSize: '16px',
-                              fontWeight: '700',
-                              letterSpacing: '-.01em',
+                              fontFamily: 'var(--font-heading)',
+                              fontSize: 'var(--text-xl)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              letterSpacing: 'var(--tracking-snug)',
                             }}
                           >
                             Add exercise
@@ -5621,7 +5622,7 @@ export function PlannerView({ v }: { v: any }) {
                               display: 'flex',
                               gap: '4px',
                               padding: '4px',
-                              background: '#FBF1F3',
+                              background: 'var(--color-canvas)',
                               borderRadius: '13px',
                             }}
                           >
@@ -5646,15 +5647,15 @@ export function PlannerView({ v }: { v: any }) {
                               {(v.library ?? []).map((l, i) => (
                                 <Fragment key={i}>
                                   <button onClick={l?.add} style={css(l?.style)}>
-                                    <span style={{ fontSize: '14.5px', fontWeight: '600', color: '#232A45' }}>
+                                    <span style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-ink)' }}>
                                       {l?.name}
                                     </span>
                                     <span
                                       style={{
                                         marginLeft: 'auto',
-                                        fontSize: '13px',
-                                        fontWeight: '400',
-                                        color: '#746E88',
+                                        fontSize: 'var(--text-md)',
+                                        fontWeight: 'var(--font-weight-regular)',
+                                        color: 'var(--color-muted)',
                                       }}
                                     >
                                       {l?.detail}
@@ -5670,9 +5671,9 @@ export function PlannerView({ v }: { v: any }) {
                                   border: 'none',
                                   borderRadius: '14px',
                                   background: 'none',
-                                  fontSize: '13px',
-                                  fontWeight: '600',
-                                  color: '#c4548a',
+                                  fontSize: 'var(--text-md)',
+                                  fontWeight: 'var(--font-weight-semibold)',
+                                  color: 'var(--color-pink-deep)',
                                   cursor: 'pointer',
                                   display: 'inline-flex',
                                   alignItems: 'center',
@@ -5682,7 +5683,7 @@ export function PlannerView({ v }: { v: any }) {
                                 className="hv7"
                               >
                                 Browse the Arsenal
-                                <ChevronRight color="#c4548a" strokeWidth={2.2} size={14} />
+                                <ChevronRight color="var(--color-pink-deep)" strokeWidth={2.2} size={14} />
                               </button>
                             </div>
                           </>
@@ -5693,10 +5694,10 @@ export function PlannerView({ v }: { v: any }) {
                               <span
                                 style={{
                                   display: 'block',
-                                  fontSize: '10px',
-                                  fontWeight: '700',
-                                  letterSpacing: '.1em',
-                                  color: '#746E88',
+                                  fontSize: 'var(--text-2xs)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  letterSpacing: 'var(--tracking-wide)',
+                                  color: 'var(--color-muted)',
                                   marginBottom: '7px',
                                 }}
                               >
@@ -5711,19 +5712,19 @@ export function PlannerView({ v }: { v: any }) {
                                   padding: '13px 15px',
                                   border: 'none',
                                   borderRadius: '13px',
-                                  background: '#FBF1F3',
-                                  fontSize: '14.5px',
-                                  fontWeight: '500',
-                                  color: '#232A45',
+                                  background: 'var(--color-canvas)',
+                                  fontSize: 'var(--text-lg)',
+                                  fontWeight: 'var(--font-weight-medium)',
+                                  color: 'var(--color-ink)',
                                 }}
                               />
                               <span
                                 style={{
                                   display: 'block',
-                                  fontSize: '10px',
-                                  fontWeight: '700',
-                                  letterSpacing: '.1em',
-                                  color: '#746E88',
+                                  fontSize: 'var(--text-2xs)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  letterSpacing: 'var(--tracking-wide)',
+                                  color: 'var(--color-muted)',
                                   margin: '16px 0 8px',
                                 }}
                               >
@@ -5754,10 +5755,10 @@ export function PlannerView({ v }: { v: any }) {
                                   <span
                                     style={{
                                       display: 'block',
-                                      fontSize: '10px',
-                                      fontWeight: '700',
-                                      letterSpacing: '.1em',
-                                      color: '#746E88',
+                                      fontSize: 'var(--text-2xs)',
+                                      fontWeight: 'var(--font-weight-bold)',
+                                      letterSpacing: 'var(--tracking-wide)',
+                                      color: 'var(--color-muted)',
                                       marginBottom: '7px',
                                     }}
                                   >
@@ -5772,10 +5773,10 @@ export function PlannerView({ v }: { v: any }) {
                                       padding: '13px 15px',
                                       border: 'none',
                                       borderRadius: '13px',
-                                      background: '#FBF1F3',
-                                      fontSize: '14.5px',
-                                      fontWeight: '500',
-                                      color: '#232A45',
+                                      background: 'var(--color-canvas)',
+                                      fontSize: 'var(--text-lg)',
+                                      fontWeight: 'var(--font-weight-medium)',
+                                      color: 'var(--color-ink)',
                                     }}
                                   />
                                 </label>
@@ -5783,10 +5784,10 @@ export function PlannerView({ v }: { v: any }) {
                                   <span
                                     style={{
                                       display: 'block',
-                                      fontSize: '10px',
-                                      fontWeight: '700',
-                                      letterSpacing: '.1em',
-                                      color: '#746E88',
+                                      fontSize: 'var(--text-2xs)',
+                                      fontWeight: 'var(--font-weight-bold)',
+                                      letterSpacing: 'var(--tracking-wide)',
+                                      color: 'var(--color-muted)',
                                       marginBottom: '7px',
                                     }}
                                   >
@@ -5801,10 +5802,10 @@ export function PlannerView({ v }: { v: any }) {
                                       padding: '13px 15px',
                                       border: 'none',
                                       borderRadius: '13px',
-                                      background: '#FBF1F3',
-                                      fontSize: '14.5px',
-                                      fontWeight: '500',
-                                      color: '#232A45',
+                                      background: 'var(--color-canvas)',
+                                      fontSize: 'var(--text-lg)',
+                                      fontWeight: 'var(--font-weight-medium)',
+                                      color: 'var(--color-ink)',
                                     }}
                                   />
                                 </label>
@@ -5812,10 +5813,10 @@ export function PlannerView({ v }: { v: any }) {
                                   <span
                                     style={{
                                       display: 'block',
-                                      fontSize: '10px',
-                                      fontWeight: '700',
-                                      letterSpacing: '.1em',
-                                      color: '#746E88',
+                                      fontSize: 'var(--text-2xs)',
+                                      fontWeight: 'var(--font-weight-bold)',
+                                      letterSpacing: 'var(--tracking-wide)',
+                                      color: 'var(--color-muted)',
                                       marginBottom: '7px',
                                     }}
                                   >
@@ -5830,10 +5831,10 @@ export function PlannerView({ v }: { v: any }) {
                                       padding: '13px 15px',
                                       border: 'none',
                                       borderRadius: '13px',
-                                      background: '#FBF1F3',
-                                      fontSize: '14.5px',
-                                      fontWeight: '500',
-                                      color: '#232A45',
+                                      background: 'var(--color-canvas)',
+                                      fontSize: 'var(--text-lg)',
+                                      fontWeight: 'var(--font-weight-medium)',
+                                      color: 'var(--color-ink)',
                                     }}
                                   />
                                 </label>
@@ -5861,9 +5862,9 @@ export function PlannerView({ v }: { v: any }) {
                               border: 'none',
                               borderRadius: '16px',
                               background: 'none',
-                              fontSize: '14.5px',
-                              fontWeight: '600',
-                              color: '#5C6684',
+                              fontSize: 'var(--text-lg)',
+                              fontWeight: 'var(--font-weight-semibold)',
+                              color: 'var(--color-slate)',
                               cursor: 'pointer',
                             }}
                           >
@@ -5884,10 +5885,10 @@ export function PlannerView({ v }: { v: any }) {
                     <span
                       style={{
                         display: 'block',
-                        fontSize: '10.5px',
-                        fontWeight: '700',
-                        letterSpacing: '.1em',
-                        color: '#746E88',
+                        fontSize: 'var(--text-xs)',
+                        fontWeight: 'var(--font-weight-bold)',
+                        letterSpacing: 'var(--tracking-wide)',
+                        color: 'var(--color-muted)',
                         marginBottom: '10px',
                       }}
                     >
@@ -5901,11 +5902,11 @@ export function PlannerView({ v }: { v: any }) {
                         padding: '16px',
                         border: 'none',
                         borderRadius: '18px',
-                        background: '#fff',
+                        background: 'var(--color-white)',
                         boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                        fontSize: '14.5px',
-                        fontWeight: '500',
-                        color: '#232A45',
+                        fontSize: 'var(--text-lg)',
+                        fontWeight: 'var(--font-weight-medium)',
+                        color: 'var(--color-ink)',
                         resize: 'vertical',
                       }}
                     />
@@ -5932,10 +5933,10 @@ export function PlannerView({ v }: { v: any }) {
                         padding: '0 30px',
                         border: 'none',
                         borderRadius: '16px',
-                        background: '#E1699C',
-                        color: '#fff',
-                        fontSize: '15px',
-                        fontWeight: '600',
+                        background: 'var(--color-pink)',
+                        color: 'var(--color-white)',
+                        fontSize: 'var(--text-lg)',
+                        fontWeight: 'var(--font-weight-semibold)',
                         cursor: 'pointer',
                       }}
                       className="hv4"
@@ -5964,13 +5965,13 @@ export function PlannerView({ v }: { v: any }) {
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '5px',
-                        fontSize: '13px',
-                        fontWeight: '600',
-                        color: '#5C6684',
+                        fontSize: 'var(--text-md)',
+                        fontWeight: 'var(--font-weight-semibold)',
+                        color: 'var(--color-slate)',
                       }}
                       className="hv0"
                     >
-                      <ChevronLeft color="#5C6684" strokeWidth={2.2} size={17} />
+                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={17} />
                       Back
                     </button>
                   </div>
@@ -5979,10 +5980,10 @@ export function PlannerView({ v }: { v: any }) {
                       <div style={{ marginTop: '30px' }}>
                         <div
                           style={{
-                            fontSize: '10.5px',
-                            fontWeight: '700',
-                            letterSpacing: '.11em',
-                            color: '#A9A2B4',
+                            fontSize: 'var(--text-xs)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-wide)',
+                            color: 'var(--color-subtle)',
                           }}
                         >
                           {v.longDate}
@@ -5999,9 +6000,9 @@ export function PlannerView({ v }: { v: any }) {
                           <h1
                             style={{
                               margin: '0',
-                              fontSize: '26px',
-                              fontWeight: '700',
-                              letterSpacing: '-.025em',
+                              fontSize: 'var(--text-5xl)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              letterSpacing: 'var(--tracking-tight)',
                             }}
                           >
                             {v.eName}
@@ -6019,14 +6020,14 @@ export function PlannerView({ v }: { v: any }) {
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: '6px',
-                              fontSize: '12.5px',
-                              fontWeight: '600',
-                              color: '#c4548a',
+                              fontSize: 'var(--text-md)',
+                              fontWeight: 'var(--font-weight-semibold)',
+                              color: 'var(--color-pink-deep)',
                             }}
                             className="hv7"
                           >
                             View workout
-                            <ChevronRight color="#c4548a" strokeWidth={2.2} size={15} />
+                            <ChevronRight color="var(--color-pink-deep)" strokeWidth={2.2} size={15} />
                           </button>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '22px' }}>
@@ -6037,7 +6038,7 @@ export function PlannerView({ v }: { v: any }) {
                               alignItems: 'center',
                               gap: '14px',
                               padding: '18px 20px',
-                              background: '#fff',
+                              background: 'var(--color-white)',
                               borderRadius: '20px',
                               boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                             }}
@@ -6046,20 +6047,20 @@ export function PlannerView({ v }: { v: any }) {
                             <div style={{ minWidth: '0' }}>
                               <div
                                 style={{
-                                  fontSize: '10px',
-                                  fontWeight: '700',
-                                  letterSpacing: '.11em',
-                                  color: '#A9A2B4',
+                                  fontSize: 'var(--text-2xs)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  letterSpacing: 'var(--tracking-wide)',
+                                  color: 'var(--color-subtle)',
                                 }}
                               >
                                 MOOD
                               </div>
                               <div
                                 style={{
-                                  fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                  fontSize: '16px',
-                                  fontWeight: '700',
-                                  color: '#232A45',
+                                  fontFamily: 'var(--font-heading)',
+                                  fontSize: 'var(--text-xl)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  color: 'var(--color-ink)',
                                   marginTop: '3px',
                                 }}
                               >
@@ -6071,17 +6072,17 @@ export function PlannerView({ v }: { v: any }) {
                             style={{
                               flex: '1 1 200px',
                               padding: '18px 20px',
-                              background: '#fff',
+                              background: 'var(--color-white)',
                               borderRadius: '20px',
                               boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                             }}
                           >
                             <div
                               style={{
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                letterSpacing: '.11em',
-                                color: '#A9A2B4',
+                                fontSize: 'var(--text-2xs)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                letterSpacing: 'var(--tracking-wide)',
+                                color: 'var(--color-subtle)',
                               }}
                             >
                               EFFORT
@@ -6091,10 +6092,10 @@ export function PlannerView({ v }: { v: any }) {
                             >
                               <span
                                 style={{
-                                  fontFamily: "'Space Grotesk',system-ui,sans-serif",
-                                  fontSize: '16px',
-                                  fontWeight: '700',
-                                  color: '#232A45',
+                                  fontFamily: 'var(--font-heading)',
+                                  fontSize: 'var(--text-xl)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  color: 'var(--color-ink)',
                                 }}
                               >
                                 {v.rpeLabel}
@@ -6113,17 +6114,17 @@ export function PlannerView({ v }: { v: any }) {
                           style={{
                             marginTop: '12px',
                             padding: '22px',
-                            background: '#fff',
+                            background: 'var(--color-white)',
                             borderRadius: '20px',
                             boxShadow: '0 4px 14px rgba(35,42,69,.07)',
                           }}
                         >
                           <div
                             style={{
-                              fontSize: '10px',
-                              fontWeight: '700',
-                              letterSpacing: '.11em',
-                              color: '#A9A2B4',
+                              fontSize: 'var(--text-2xs)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              letterSpacing: 'var(--tracking-wide)',
+                              color: 'var(--color-subtle)',
                             }}
                           >
                             NOTES
@@ -6131,10 +6132,10 @@ export function PlannerView({ v }: { v: any }) {
                           <p
                             style={{
                               margin: '10px 0 0',
-                              fontSize: '15px',
-                              fontWeight: '400',
-                              lineHeight: '1.65',
-                              color: '#232A45',
+                              fontSize: 'var(--text-lg)',
+                              fontWeight: 'var(--font-weight-regular)',
+                              lineHeight: 'var(--leading-relaxed)',
+                              color: 'var(--color-ink)',
                               textWrap: 'pretty',
                             }}
                           >
@@ -6160,9 +6161,9 @@ export function PlannerView({ v }: { v: any }) {
                               border: 'none',
                               borderRadius: '16px',
                               background: 'none',
-                              fontSize: '14.5px',
-                              fontWeight: '600',
-                              color: '#B23A4C',
+                              fontSize: 'var(--text-lg)',
+                              fontWeight: 'var(--font-weight-semibold)',
+                              color: 'var(--color-danger)',
                               cursor: 'pointer',
                             }}
                             className="hv11"
@@ -6176,10 +6177,10 @@ export function PlannerView({ v }: { v: any }) {
                               padding: '0 26px',
                               border: 'none',
                               borderRadius: '16px',
-                              background: '#E1699C',
-                              color: '#fff',
-                              fontSize: '15px',
-                              fontWeight: '600',
+                              background: 'var(--color-pink)',
+                              color: 'var(--color-white)',
+                              fontSize: 'var(--text-lg)',
+                              fontWeight: 'var(--font-weight-semibold)',
                               cursor: 'pointer',
                             }}
                             className="hv4"
@@ -6196,15 +6197,15 @@ export function PlannerView({ v }: { v: any }) {
                         <h1
                           style={{
                             margin: '0',
-                            fontSize: '22px',
-                            fontWeight: '700',
-                            letterSpacing: '-.02em',
+                            fontSize: 'var(--text-4xl)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            letterSpacing: 'var(--tracking-tight)',
                           }}
                         >
                           {'How did that feel? '}
                           <Sparkle
                             size={17}
-                            color="#7C8FC9"
+                            color={colors.periwinkle}
                             glow={0.5}
                             style={{ display: 'inline-block', verticalAlign: 'middle' }}
                           />
@@ -6212,9 +6213,9 @@ export function PlannerView({ v }: { v: any }) {
                         <p
                           style={{
                             margin: '9px 0 0',
-                            fontSize: '14.5px',
-                            fontWeight: '500',
-                            color: '#746E88',
+                            fontSize: 'var(--text-lg)',
+                            fontWeight: 'var(--font-weight-medium)',
+                            color: 'var(--color-muted)',
                           }}
                         >
                           {v.longDate}
@@ -6263,15 +6264,15 @@ export function PlannerView({ v }: { v: any }) {
                         <div
                           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
                         >
-                          <p style={{ margin: '0', fontSize: '13.5px', fontWeight: '600', color: '#5C6684' }}>
+                          <p style={{ margin: '0', fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-slate)' }}>
                             How hard did it feel?
                           </p>
                           <span
                             style={{
                               marginLeft: 'auto',
-                              fontSize: '13px',
-                              fontWeight: '600',
-                              color: '#c4548a',
+                              fontSize: 'var(--text-md)',
+                              fontWeight: 'var(--font-weight-semibold)',
+                              color: 'var(--color-pink-deep)',
                             }}
                           >
                             {v.rpeLabel}
@@ -6289,9 +6290,9 @@ export function PlannerView({ v }: { v: any }) {
                         <p
                           style={{
                             margin: '28px 0 10px',
-                            fontSize: '13.5px',
-                            fontWeight: '600',
-                            color: '#5C6684',
+                            fontSize: 'var(--text-base)',
+                            fontWeight: 'var(--font-weight-semibold)',
+                            color: 'var(--color-slate)',
                           }}
                         >
                           Notes (optional)
@@ -6306,11 +6307,11 @@ export function PlannerView({ v }: { v: any }) {
                             padding: '18px',
                             border: 'none',
                             borderRadius: '20px',
-                            background: '#fff',
+                            background: 'var(--color-white)',
                             boxShadow: '0 4px 14px rgba(35,42,69,.07)',
-                            fontSize: '14.5px',
-                            fontWeight: '500',
-                            color: '#232A45',
+                            fontSize: 'var(--text-lg)',
+                            fontWeight: 'var(--font-weight-medium)',
+                            color: 'var(--color-ink)',
                             resize: 'vertical',
                           }}
                         />
@@ -6322,10 +6323,10 @@ export function PlannerView({ v }: { v: any }) {
                             padding: '18px',
                             border: 'none',
                             borderRadius: '18px',
-                            background: '#E1699C',
-                            color: '#fff',
-                            fontSize: '15px',
-                            fontWeight: '600',
+                            background: 'var(--color-pink)',
+                            color: 'var(--color-white)',
+                            fontSize: 'var(--text-lg)',
+                            fontWeight: 'var(--font-weight-semibold)',
                             cursor: 'pointer',
                             boxShadow: '0 8px 20px rgba(225,105,156,.4)',
                           }}

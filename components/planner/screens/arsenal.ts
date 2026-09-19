@@ -67,7 +67,7 @@ export function arsenalVals(ctx: Ctx) {
           });
       };
       const rowStyle = (clickable) =>
-        'display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:16px 20px;background:#fff;border-radius:18px;box-shadow:0 4px 14px rgba(35,42,69,.07)' +
+        'display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:16px 20px;background:var(--color-white);border-radius:18px;box-shadow:0 4px 14px rgba(35,42,69,.07)' +
         (clickable ? ';cursor:pointer' : '');
       Object.keys(EX).forEach((w) => {
         const firstDay = firstEntry(w);
@@ -134,7 +134,7 @@ export function arsenalVals(ctx: Ctx) {
               ? () => logic.nav({ screen: 'detail', creating: false, month: MONTHS[firstDay.m], day: firstDay.d })
               : null,
             rowStyle:
-              'display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:16px 20px;background:#fff;border-radius:18px;box-shadow:0 4px 14px rgba(35,42,69,.07)' +
+              'display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:16px 20px;background:var(--color-white);border-radius:18px;box-shadow:0 4px 14px rgba(35,42,69,.07)' +
               (firstDay ? ';cursor:pointer' : ''),
           };
         });

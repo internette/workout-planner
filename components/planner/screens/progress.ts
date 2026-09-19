@@ -57,27 +57,27 @@ export function progressVals(ctx: Ctx) {
         req: ix === 0 ? 'Start' : XP_STEPS[ix - 1] + ' XP',
         row:
           'display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:14px;' +
-          (cur ? r.pill : reached ? 'background:#FBF1F3;color:#5C6684' : 'background:none;color:#746E88'),
+          (cur ? r.pill : reached ? 'background:var(--color-canvas);color:var(--color-slate)' : 'background:none;color:var(--color-muted)'),
         gem:
           'width:11px;height:15px;flex:none;clip-path:polygon(50% 0,100% 35%,50% 100%,0 35%);background:' +
           (ix === RANKS.length - 1
-            ? 'linear-gradient(135deg,#E1699C 0%,#7C8FC9 50%,#5EC4D6 100%)'
-            : cur && r.gem === '#fff'
-              ? '#fff'
+            ? 'linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)'
+            : cur && r.gem === 'var(--color-white)'
+              ? 'var(--color-white)'
               : r.gem) +
           (cur || reached ? '' : ';opacity:.45'),
-        name: 'flex:1;min-width:0;font-size:13.5px;font-weight:' + (cur ? '700' : '500'),
-        xp: "flex:none;font-family:'Space Grotesk',system-ui,sans-serif;font-size:12px;font-weight:600;opacity:.8",
+        name: 'flex:1;min-width:0;font-size:var(--text-base);font-weight:' + (cur ? 'var(--font-weight-bold)' : 'var(--font-weight-medium)'),
+        xp: "flex:none;font-family:var(--font-heading);font-size:var(--text-sm);font-weight:var(--font-weight-semibold);opacity:.8",
       };
     }),
     profileName: PROFILE.name,
     profileInitial: PROFILE.name.charAt(0),
     profileSince: 'Training since ' + PROFILE.since,
     rankPill:
-      'display:inline-flex;align-items:center;gap:8px;margin-top:9px;padding:7px 15px 7px 12px;border-radius:999px;font-size:12.5px;font-weight:700;letter-spacing:.02em;' +
+      'display:inline-flex;align-items:center;gap:8px;margin-top:9px;padding:7px 15px 7px 12px;border-radius:999px;font-size:var(--text-md);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-loose);' +
       RANKS[derivedRank].pill,
     rankPillBtn:
-      'display:inline-flex;align-items:center;gap:8px;margin-top:9px;min-height:36px;padding:8px 15px 8px 14px;border:none;border-radius:999px;font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:.02em;cursor:pointer;' +
+      'display:inline-flex;align-items:center;gap:8px;margin-top:9px;min-height:36px;padding:8px 15px 8px 14px;border:none;border-radius:999px;font-family:inherit;font-size:var(--text-md);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-loose);cursor:pointer;' +
       RANKS[derivedRank].pill,
     rankGem:
       'width:10px;height:14px;flex:none;clip-path:polygon(50% 0,100% 35%,50% 100%,0 35%);background:' +
@@ -85,7 +85,7 @@ export function progressVals(ctx: Ctx) {
     rankBar:
       'width:' +
       rankPct +
-      '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,#E1699C 0%,#7C8FC9 50%,#5EC4D6 100%)',
+      '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
     rankProgress:
       rankPct === 0 ? 'Just promoted — 0% to ' + RANKS[derivedRank].next : rankPct + '% to ' + RANKS[derivedRank].next,
     rankTip: 'XP ' + xpTotal + ' of ' + rankCeil + ' · 10 XP per exercise completed, 50 XP per workout finished',
@@ -112,13 +112,13 @@ export function progressVals(ctx: Ctx) {
           bar:
             'display:block;height:7px;border-radius:4px;background:' +
             (dayComplete[k]
-              ? 'linear-gradient(135deg,#E1699C,#7C8FC9)'
+              ? 'linear-gradient(135deg,var(--color-pink),var(--color-periwinkle))'
               : pending
                 ? 'repeating-linear-gradient(135deg,rgba(225,105,156,.45) 0 3px,rgba(225,105,156,.16) 3px 6px)'
                 : 'rgba(35,42,69,.13)'),
           cap:
-            'display:block;margin-top:6px;font-size:9.5px;font-weight:600;letter-spacing:.04em;text-align:center;color:' +
-            (pending ? '#8f4f78' : dayComplete[k] ? '#5C6684' : '#746E88'),
+            'display:block;margin-top:6px;font-size:var(--text-2xs);font-weight:var(--font-weight-semibold);letter-spacing:var(--tracking-loose);text-align:center;color:' +
+            (pending ? 'var(--color-pink-plum)' : dayComplete[k] ? 'var(--color-slate)' : 'var(--color-muted)'),
         });
       }
       return out;
@@ -132,8 +132,8 @@ export function progressVals(ctx: Ctx) {
         name: nameOf(x.av.name),
         statusLabel: x.done ? 'Done' : 'Planned',
         status:
-          'flex:none;padding:5px 11px;border-radius:999px;font-size:11.5px;font-weight:600;' +
-          (x.done ? 'background:#E1699C;color:#fff' : 'background:#fff;color:#746E88'),
+          'flex:none;padding:5px 11px;border-radius:999px;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
+          (x.done ? 'background:var(--color-pink);color:var(--color-white)' : 'background:var(--color-white);color:var(--color-muted)'),
         open: () => logic.nav({ screen: 'detail', creating: false, month: MONTHS[TODAY_M], day: x.d }),
       })),
     chartCaption: (() => {
@@ -156,11 +156,11 @@ export function progressVals(ctx: Ctx) {
     questsClearedBar:
       'width:' +
       (totalSessions ? Math.round((completedSessions / totalSessions) * 100) : 0) +
-      '%;height:100%;border-radius:5px;background:linear-gradient(135deg,#E1699C 0%,#7C8FC9 50%,#5EC4D6 100%)',
+      '%;height:100%;border-radius:5px;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
     questStats: Object.keys(questCounts)
       .sort((a, b) => questCounts[b] - questCounts[a])
       .slice(0, 5)
-      .map((t, i) => [t, ['#E1699C', '#7C8FC9', '#5EC4D6', '#5C6684', '#F0A385'][i], String(questCounts[t])])
+      .map((t, i) => [t, ['var(--color-pink)', 'var(--color-periwinkle)', 'var(--color-teal)', 'var(--color-slate)', 'var(--color-coral)'][i], String(questCounts[t])])
       .map(([name, color, count], ix, arr) => ({
         name,
         count,
@@ -193,8 +193,8 @@ export function progressVals(ctx: Ctx) {
           n +
           (n === 1 ? ' session' : ' sessions'),
         value:
-          "font-family:'Space Grotesk',system-ui,sans-serif;font-size:11px;font-weight:700;color:" +
-          (ix === barSel ? '#c4548a' : '#746E88'),
+          "font-family:var(--font-heading);font-size:var(--text-xs);font-weight:var(--font-weight-bold);color:" +
+          (ix === barSel ? 'var(--color-pink-deep)' : 'var(--color-muted)'),
         bar:
           'width:100%;border-radius:6px 6px 3px 3px;transition:background .2s;height:' +
           Math.max(
@@ -202,14 +202,14 @@ export function progressVals(ctx: Ctx) {
             Math.round((n / Math.max(1, Math.max.apply(null, weekBuckets.map((b) => b.done).concat([1])))) * 96),
           ) +
           'px;background:' +
-          (ix === barSel ? 'linear-gradient(180deg,#E1699C 0%,#7C8FC9 100%)' : 'rgba(225,105,156,.3)'),
-        label: 'font-size:9.5px;font-weight:' + (ix === barSel ? '700;color:#c4548a' : '500;color:#746E88'),
+          (ix === barSel ? 'linear-gradient(180deg,var(--color-pink) 0%,var(--color-periwinkle) 100%)' : 'rgba(225,105,156,.3)'),
+        label: 'font-size:var(--text-2xs);font-weight:' + (ix === barSel ? 'var(--font-weight-bold);color:var(--color-pink-deep)' : 'var(--font-weight-medium);color:var(--color-muted)'),
       })),
     moodSplit: [
-      ['Happy', '#E1699C'],
-      ['Neutral', '#5C6684'],
-      ['Sad', '#7C8FC9'],
-      ['Mad', '#B23A4C'],
+      ['Happy', 'var(--color-pink)'],
+      ['Neutral', 'var(--color-slate)'],
+      ['Sad', 'var(--color-periwinkle)'],
+      ['Mad', 'var(--color-danger)'],
     ]
       .map(([name, color]) => [name, color, Math.round(((moodCounts[name] || 0) / moodTotal) * 100)])
       .map(([name, color, pct]) => ({
@@ -230,14 +230,14 @@ export function progressVals(ctx: Ctx) {
         rowStyle:
           'display:flex;align-items:center;gap:12px;padding:11px 0;' +
           (ix === arr.length - 1 ? '' : 'border-bottom:1px solid rgba(35,42,69,.055)'),
-        deltaStyle: 'flex:none;width:44px;text-align:right;font-size:12px;font-weight:600;color:#c4548a',
+        deltaStyle: 'flex:none;width:44px;text-align:right;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:var(--color-pink-deep)',
       })),
     wkDone: weekAll.filter((a) => a.s === 'c').length,
     wkTotal: weekAll.length,
     wkBar:
       'width:' +
       (weekAll.length ? Math.round((weekAll.filter((a) => a.s === 'c').length / weekAll.length) * 100) : 0) +
-      '%;height:100%;border-radius:4px;background:#E1699C',
+      '%;height:100%;border-radius:4px;background:var(--color-pink)',
     hasNext: !!nextUp,
     noNext: !nextUp,
     nextName: nextUp && nextUp.name,
@@ -272,10 +272,10 @@ export function progressVals(ctx: Ctx) {
             (i === 6 ? '' : ';border-bottom:1px solid rgba(35,42,69,.055)'),
           mark:
             'width:18px;height:18px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;' +
-            (isDone ? 'background:#E1699C' : 'background:transparent'),
+            (isDone ? 'background:var(--color-pink)' : 'background:transparent'),
           title:
-            'flex:1;min-width:0;font-size:13.5px;' +
-            (isDone ? 'font-weight:500;color:#c4548a' : 'font-weight:500;color:#232A45'),
+            'flex:1;min-width:0;font-size:var(--text-base);' +
+            (isDone ? 'font-weight:var(--font-weight-medium);color:var(--color-pink-deep)' : 'font-weight:var(--font-weight-medium);color:var(--color-ink)'),
         });
       }
       return out;

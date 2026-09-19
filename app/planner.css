@@ -1,15 +1,15 @@
 /* Global rules from the design's <helmet>. */
 body {
   margin: 0;
-  background: #fbf1f3;
-  font-family: 'IBM Plex Sans', system-ui, sans-serif;
-  color: #232a45;
+  background: var(--color-canvas);
+  font-family: var(--font-body);
+  color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
 }
 * { box-sizing: border-box; }
-h1, h2, h3 { font-family: 'Space Grotesk', system-ui, sans-serif; }
-a { color: #e1699c; }
-a:hover { color: #c4548a; }
+h1, h2, h3 { font-family: var(--font-heading); }
+a { color: var(--color-pink); }
+a:hover { color: var(--color-pink-deep); }
 input, textarea, button { font-family: inherit; }
 
 @keyframes pop { 0% { transform: scale(0.4); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
@@ -20,7 +20,7 @@ input, textarea, button { font-family: inherit; }
 }
 
 button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
-  outline: 2px solid #e1699c;
+  outline: 2px solid var(--color-pink);
   outline-offset: 2px;
   border-radius: 10px;
 }
@@ -42,13 +42,13 @@ button:focus-visible { background-color: rgba(35, 42, 69, 0.06); }
 /* Generated from the design's style-hover attributes; !important so they beat inline styles. */
 .hv0:hover{background:rgba(35,42,69,.06) !important}
 .hv1:hover{background:rgba(35,42,69,.05) !important}
-.hv2:hover{background:#9c3243 !important}
-.hv3:hover{color:#c4548a !important;background:rgba(35,42,69,.04) !important}
-.hv4:hover{background:#cf5a8c !important}
+.hv2:hover{background:var(--color-danger-hover) !important}
+.hv3:hover{color:var(--color-pink-deep) !important;background:rgba(35,42,69,.04) !important}
+.hv4:hover{background:var(--color-pink-hover) !important}
 .hv5:hover{box-shadow:0 8px 24px rgba(35,42,69,.14) !important}
 .hv6:hover{filter:brightness(.97) !important}
-.hv7:hover{background:#FCE8F1 !important}
-.hv8:hover{background:#FBF1F3 !important}
+.hv7:hover{background:var(--color-pink-tint) !important}
+.hv8:hover{background:var(--color-canvas) !important}
 .hv9:hover{background:rgba(178,58,76,.09) !important}
 .hv10:hover{background:rgba(255,255,255,.22) !important}
 .hv11:hover{background:rgba(178,58,76,.08) !important}

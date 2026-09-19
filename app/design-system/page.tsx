@@ -21,26 +21,26 @@ function listSections() {
 }
 
 const card: React.CSSProperties = {
-  display: 'flex', flexDirection: 'column', gap: 6, padding: '20px 22px', background: '#fff', borderRadius: 18,
-  boxShadow: '0 4px 14px rgba(35,42,69,.07)', color: '#232A45', textDecoration: 'none',
+  display: 'flex', flexDirection: 'column', gap: 6, padding: '20px 22px', background: 'var(--color-white)', borderRadius: 18,
+  boxShadow: '0 4px 14px rgba(35,42,69,.07)', color: 'var(--color-ink)', textDecoration: 'none',
 };
 
 export default function DesignSystemPage() {
   const sections = listSections();
   return (
     <main style={{ maxWidth: 960, margin: '0 auto', padding: '24px 24px 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 28 }}>Design system</h1>
-      <p style={{ margin: '8px 0 32px', color: '#746E88', lineHeight: 1.6 }}>
+      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Design system</h1>
+      <p style={{ margin: '8px 0 32px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
         Each section below is a folder in <code>components/ui</code>.
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 14 }}>
         {sections.map(({ name, files, hasPage }) => {
           const body = (
             <>
-              <span style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif", fontSize: 18, fontWeight: 700, textTransform: 'capitalize' }}>
+              <span style={{ fontFamily: "var(--font-heading)", fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-weight-bold)', textTransform: 'capitalize' }}>
                 {name}
               </span>
-              <span style={{ fontSize: 13, color: '#746E88' }}>
+              <span style={{ fontSize: 'var(--text-md)', color: 'var(--color-muted)' }}>
                 {files} {files === 1 ? 'file' : 'files'} · {hasPage ? `/design-system/${name}` : 'no page yet'}
               </span>
             </>
@@ -56,7 +56,7 @@ export default function DesignSystemPage() {
           );
         })}
       </div>
-      {sections.length === 0 ? <p style={{ color: '#746E88' }}>components/ui has no folders yet.</p> : null}
+      {sections.length === 0 ? <p style={{ color: 'var(--color-muted)' }}>components/ui has no folders yet.</p> : null}
     </main>
   );
 }

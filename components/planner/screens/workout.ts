@@ -3,6 +3,7 @@ import { idOf, questSeed, tokenFor } from '../helpers';
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
+import { colors } from '@/components/ui/colors';
 
 // The day card and the workout detail screen (today's quest, exercise preview, completion).
 export function workoutVals(ctx: Ctx) {
@@ -57,11 +58,11 @@ export function workoutVals(ctx: Ctx) {
     questIconWrap:
       'width:40px;height:40px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;' +
       (questCleared
-        ? 'background:linear-gradient(135deg,#E1699C 0%,#7C8FC9 50%,#5EC4D6 100%)'
-        : 'background:#fff;box-shadow:0 1px 3px rgba(35,42,69,.06)'),
+        ? 'background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)'
+        : 'background:var(--color-white);box-shadow:0 1px 3px rgba(35,42,69,.06)'),
     questTitleStyle:
-      "font-family:'Space Grotesk',system-ui,sans-serif;font-size:15px;font-weight:700;letter-spacing:-.01em;margin-top:4px;" +
-      (questCleared ? 'color:#746E88;text-decoration:line-through' : 'color:#232A45'),
+      "font-family:var(--font-heading);font-size:var(--text-lg);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-snug);margin-top:4px;" +
+      (questCleared ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
     isDone: (actFor(selDay) || {}).s === 'c' || rideDone || (selList.length > 0 && doneCount === selList.length),
     dayIsRide: !!selRide,
     dayIsLift: !selRide,
@@ -71,15 +72,15 @@ export function workoutVals(ctx: Ctx) {
     },
     rideDoneLabel: rideDone ? 'Ride completed' : 'Mark ride complete',
     rideDoneBtn:
-      'display:inline-flex;align-items:center;gap:10px;margin-top:20px;height:46px;padding:0 18px 0 14px;border:none;border-radius:15px;cursor:pointer;font-size:14px;font-weight:600;' +
-      (rideDone ? 'background:#FCE8F1;color:#c4548a' : 'background:#FBF1F3;color:#5C6684'),
+      'display:inline-flex;align-items:center;gap:10px;margin-top:20px;height:46px;padding:0 18px 0 14px;border:none;border-radius:15px;cursor:pointer;font-size:var(--text-base);font-weight:var(--font-weight-semibold);' +
+      (rideDone ? 'background:var(--color-pink-tint);color:var(--color-pink-deep)' : 'background:var(--color-canvas);color:var(--color-slate)'),
     rideDoneMark:
       'width:24px;height:24px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;' +
-      (rideDone ? 'background:#E1699C' : 'border:1.5px solid rgba(35,42,69,.18)'),
-    rideDoneStroke: rideDone ? '#fff' : 'rgba(35,42,69,0.22)',
+      (rideDone ? 'background:var(--color-pink)' : 'border:1.5px solid rgba(35,42,69,.18)'),
+    rideDoneStroke: rideDone ? 'var(--color-white)' : 'rgba(35,42,69,0.22)',
     dayIcoSvg: iconSvg(
       (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (selRide ? 'bike' : 'h'),
-      (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || '#E1699C',
+      (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || colors.pink,
     ),
     rideStats: !selRide
       ? []
@@ -93,7 +94,7 @@ export function workoutVals(ctx: Ctx) {
     dayProgBar:
       'width:' +
       (selList.length ? Math.round((doneCount / selList.length) * 100) : 0) +
-      '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,#E1699C 0%,#7C8FC9 50%,#5EC4D6 100%)',
+      '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
     preview: st.more ? all : all.slice(0, 3),
     hasMore: all.length > 3,
     moreLabel: st.more ? 'Show less' : '+ ' + (all.length - 3) + ' more',
@@ -102,19 +103,19 @@ export function workoutVals(ctx: Ctx) {
     ctaLabel: hasEntry ? 'View chronicle entry' : 'Finish workout & log it',
     longDate: DOWFULL[selDate.getDay()] + ', ' + st.month + ' ' + selDay,
     badgeStyle:
-      'margin-left:auto;padding:7px 13px;border-radius:999px;font-size:10.5px;font-weight:700;letter-spacing:.09em;' +
-      (doneSel ? 'background:#EAECF3;color:#5C6684' : 'background:#FCE8F1;color:#c4548a'),
+      'margin-left:auto;padding:7px 13px;border-radius:999px;font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);' +
+      (doneSel ? 'background:var(--color-cloud);color:var(--color-slate)' : 'background:var(--color-pink-tint);color:var(--color-pink-deep)'),
     hasProgress: st.screen === 'edit' && !isCycleView && selList.length > 0,
     progLabel: doneCount + ' of ' + selList.length + ' done',
     allDone: selList.length > 0 && doneCount === selList.length,
     someDone: !(selList.length > 0 && doneCount === selList.length),
     progNoteStyle:
-      'margin:12px 0 0;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:' +
-      (selList.length && doneCount === selList.length ? '600;color:#c4548a' : '400;color:#746E88'),
+      'margin:12px 0 0;display:flex;align-items:center;gap:7px;font-size:var(--text-md);font-weight:' +
+      (selList.length && doneCount === selList.length ? 'var(--font-weight-semibold);color:var(--color-pink-deep)' : 'var(--font-weight-regular);color:var(--color-muted)'),
     progBar:
       'width:' +
       (selList.length ? Math.round((doneCount / selList.length) * 100) : 0) +
-      '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,#E1699C 0%,#7C8FC9 50%,#5EC4D6 100%)',
+      '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
     progNote:
       selList.length === 0
         ? ''

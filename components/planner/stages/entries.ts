@@ -47,10 +47,10 @@ export function entriesStage(ctx: Ctx): Ctx {
     return hit ? { m: hit.m, d: hit.d } : null;
   };
   const moodDefs = [
-    ['Happy', '#E1699C'],
-    ['Neutral', '#5C6684'],
-    ['Sad', '#7C8FC9'],
-    ['Mad', '#B23A4C'],
+    ['Happy', 'var(--color-pink)'],
+    ['Neutral', 'var(--color-slate)'],
+    ['Sad', 'var(--color-periwinkle)'],
+    ['Mad', 'var(--color-danger)'],
   ];
   const moods = moodDefs.map(([name, bg]) => {
     const on = st.mood === name;
@@ -62,12 +62,12 @@ export function entriesStage(ctx: Ctx): Ctx {
         'width:60px;height:60px;border-radius:50%;background:' +
         bg +
         ';display:flex;align-items:center;justify-content:center;box-shadow:' +
-        (on ? '0 0 0 2px #FBF1F3, 0 0 0 4px ' + bg : 'none'),
+        (on ? '0 0 0 2px var(--color-canvas), 0 0 0 4px ' + bg : 'none'),
       isHappy: name === 'Happy',
       isNeutral: name === 'Neutral',
       isSad: name === 'Sad',
       isMad: name === 'Mad',
-      label: 'font-size:12.5px;font-weight:' + (on ? '700' : '500') + ';color:' + (on ? '#232A45' : '#746E88'),
+      label: 'font-size:var(--text-md);font-weight:' + (on ? 'var(--font-weight-bold)' : 'var(--font-weight-medium)') + ';color:' + (on ? 'var(--color-ink)' : 'var(--color-muted)'),
     };
   });
   const RPE_WORDS = ['Easy', 'Steady', 'Solid', 'Hard', 'All out'];
@@ -75,8 +75,8 @@ export function entriesStage(ctx: Ctx): Ctx {
     glyph: n <= st.rpe ? '★' : '☆',
     pick: () => logic.s({ rpe: n }),
     style:
-      'border:none;background:none;padding:0;font-size:26px;line-height:1;cursor:pointer;color:' +
-      (n <= st.rpe ? '#232A45' : '#C7C4D0'),
+      'border:none;background:none;padding:0;font-size:var(--text-5xl);line-height:var(--leading-none);cursor:pointer;color:' +
+      (n <= st.rpe ? 'var(--color-ink)' : 'var(--color-hairline)'),
   }));
   return {
     isDoneEntry,

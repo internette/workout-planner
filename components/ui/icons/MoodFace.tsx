@@ -6,7 +6,7 @@ export type Mood = 'Happy' | 'Neutral' | 'Sad' | 'Mad';
 export function MoodFace({
   mood,
   size,
-  color = '#FBF1F3',
+  color = 'var(--color-canvas)',
   style,
   className,
 }: { mood: Mood | string } & IconProps) {

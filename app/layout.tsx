@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import './planner.css';
+import { ColorVariables } from '@/components/ui/colors';
+import { TypographyVariables } from '@/components/ui/typography';
 
 export const metadata: Metadata = {
   title: 'Ritual — Magical Girl Training Plan',
@@ -10,6 +12,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        <ColorVariables />
+        <TypographyVariables />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

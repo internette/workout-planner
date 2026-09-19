@@ -21,8 +21,8 @@ export function baseStage(ctx: Ctx): Ctx {
   const seg = (on) =>
     'flex:1;min-width:0;padding:12px' +
     (narrow ? '' : ' 20px') +
-    ';border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;' +
-    (on ? 'background:' + PINK + ';color:#fff' : 'background:none;color:#746E88');
+    ';border:none;border-radius:12px;font-size:var(--text-base);font-weight:var(--font-weight-semibold);cursor:pointer;' +
+    (on ? 'background:' + PINK + ';color:var(--color-white)' : 'background:none;color:var(--color-muted)');
   const creating = st.screen === 'edit' && !!st.creating;
   return {
     st,

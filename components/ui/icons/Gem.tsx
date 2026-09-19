@@ -8,9 +8,9 @@ export function Gem({ size, style, className }: Pick<IconProps, 'size' | 'style'
     <Svg size={size} style={style} className={className}>
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#E1699C" />
-          <stop offset="50%" stopColor="#7C8FC9" />
-          <stop offset="100%" stopColor="#5EC4D6" />
+          <stop offset="0%" stopColor="var(--color-pink)" />
+          <stop offset="50%" stopColor="var(--color-periwinkle)" />
+          <stop offset="100%" stopColor="var(--color-teal)" />
         </linearGradient>
       </defs>
       <path d="M12 2 L20 8 L17 14 L12 22 L7 14 L4 8 Z" fill={`url(#${id})`} />

@@ -26,7 +26,6 @@ export interface Entry {
   name: string;
   s: 'c' | 'p' | 't'; // completed / planned / today
   time: string;
-  color: string;
   icon: string | null;
   iconColor: string | null;
   areas: string[];
@@ -167,7 +166,6 @@ export async function loadModel(today: Date): Promise<Model> {
       name: w.name,
       s: completed ? 'c' : p.scheduled_date === todayIso ? 't' : 'p',
       time: isRide ? rideTime(minutes) : `~${minutes} min`,
-      color: '#E1699C',
       icon: w.icon,
       iconColor: w.icon_color,
       areas: w.target_areas || [],

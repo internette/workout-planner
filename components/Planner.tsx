@@ -6,7 +6,7 @@ import { PlannerView } from './PlannerView';
 
 const centered: React.CSSProperties = {
   minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-  gap: 14, padding: 24, textAlign: 'center', color: '#746E88',
+  gap: 14, padding: 24, textAlign: 'center', color: 'var(--color-muted)',
 };
 
 export default class Planner extends React.Component {
@@ -43,9 +43,9 @@ export default class Planner extends React.Component {
     if (status === 'error') {
       return (
         <div style={centered} role="alert">
-          <h1 style={{ margin: 0, color: '#232A45', fontSize: 20 }}>Couldn't reach your plan</h1>
-          <p style={{ margin: 0, maxWidth: 420, fontSize: 14, lineHeight: 1.6 }}>{loadError}</p>
-          <button onClick={this.retry} style={{ padding: '12px 22px', border: 'none', borderRadius: 14, background: '#E1699C', color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+          <h1 style={{ margin: 0, color: 'var(--color-ink)', fontSize: 'var(--text-3xl)' }}>Couldn't reach your plan</h1>
+          <p style={{ margin: 0, maxWidth: 420, fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' }}>{loadError}</p>
+          <button onClick={this.retry} style={{ padding: '12px 22px', border: 'none', borderRadius: 14, background: 'var(--color-pink)', color: 'var(--color-white)', fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-semibold)', cursor: 'pointer' }}>
             Try again
           </button>
         </div>

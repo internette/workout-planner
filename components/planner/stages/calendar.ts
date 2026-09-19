@@ -37,7 +37,7 @@ export function calendarStage(ctx: Ctx): Ctx {
       pick: () => logic.s({ month: MONTHS[cellMonth], day: num, monthOpen: false }),
       mon: spansMonths ? MON3[cellMonth].toUpperCase() : '',
       monStyle: spansMonths
-        ? 'font-size:8.5px;font-weight:700;letter-spacing:.08em;color:' + (on ? 'rgba(255,255,255,.8)' : '#A9A2B4')
+        ? 'font-size:var(--text-2xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);color:' + (on ? 'rgba(255,255,255,.8)' : 'var(--color-subtle)')
         : 'display:none',
       aria:
         DOWFULL[new Date(Y, cellMonth, num).getDay()] +
@@ -53,24 +53,24 @@ export function calendarStage(ctx: Ctx): Ctx {
         (on ? PINK : 'none') +
         ';display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer',
       letterStyle:
-        "font-family:'Space Grotesk',system-ui,sans-serif;" +
-        'font-size:11.5px;font-weight:600;color:' +
-        (on ? 'rgba(255,255,255,.85)' : '#746E88'),
+        "font-family:var(--font-heading);" +
+        'font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:' +
+        (on ? 'rgba(255,255,255,.85)' : 'var(--color-muted)'),
       numStyle:
-        "font-family:'Space Grotesk',system-ui,sans-serif;" +
-        'font-size:16px;font-weight:' +
-        (on ? '700' : '600') +
+        "font-family:var(--font-heading);" +
+        'font-size:var(--text-xl);font-weight:' +
+        (on ? 'var(--font-weight-bold)' : 'var(--font-weight-semibold)') +
         ';color:' +
-        (on ? '#fff' : same ? '#232A45' : '#C7C4D0'),
+        (on ? 'var(--color-white)' : same ? 'var(--color-ink)' : 'var(--color-hairline)'),
       dotStyle: !dot
-        ? 'width:10px;height:2px;border-radius:1px;background:' + (on ? 'rgba(255,255,255,.6)' : '#DAD7E0')
+        ? 'width:10px;height:2px;border-radius:1px;background:' + (on ? 'rgba(255,255,255,.6)' : 'var(--color-divider)')
         : done
-          ? 'width:6px;height:6px;border-radius:50%;background:' + (on ? '#fff' : '#5C6684')
+          ? 'width:6px;height:6px;border-radius:50%;background:' + (on ? 'var(--color-white)' : 'var(--color-slate)')
           : miss
             ? 'width:7px;height:7px;border-radius:50%;background:none;box-shadow:inset 0 0 0 1.5px ' +
-              (on ? 'rgba(255,255,255,.85)' : '#746E88')
+              (on ? 'rgba(255,255,255,.85)' : 'var(--color-muted)')
             : 'width:6px;height:6px;border-radius:50%;background:none;box-shadow:inset 0 0 0 1.5px ' +
-              (on ? '#fff' : '#5EC4D6'),
+              (on ? 'var(--color-white)' : 'var(--color-teal)'),
     };
   });
   const months = MONTHS.map((name) => ({
@@ -78,9 +78,9 @@ export function calendarStage(ctx: Ctx): Ctx {
     short: MON3[MONTHS.indexOf(name)],
     pick: () => logic.s({ month: name, monthOpen: false, day: 1 }),
     style:
-      "font-family:'Space Grotesk',system-ui,sans-serif;" +
-      'padding:11px 6px;border-radius:12px;font-size:14px;border:none;cursor:pointer;' +
-      (st.month === name ? 'background:' + PINK + ';color:#fff;font-weight:700' : 'color:#232A45;font-weight:500'),
+      "font-family:var(--font-heading);" +
+      'padding:11px 6px;border-radius:12px;font-size:var(--text-base);border:none;cursor:pointer;' +
+      (st.month === name ? 'background:' + PINK + ';color:var(--color-white);font-weight:var(--font-weight-bold)' : 'color:var(--color-ink);font-weight:var(--font-weight-medium)'),
   }));
   const weekRows = cells.map((d) => {
     const a = actForDate(d);
@@ -98,8 +98,8 @@ export function calendarStage(ctx: Ctx): Ctx {
         hasRow: false,
         done: false,
         eyebrow:
-          'font-size:11px;font-weight:700;letter-spacing:.11em;margin:14px 0 9px;color:' +
-          (today0 ? '#c4548a' : '#746E88'),
+          'font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);margin:14px 0 9px;color:' +
+          (today0 ? 'var(--color-pink-deep)' : 'var(--color-muted)'),
       };
     }
     const today = a.s === 't';
@@ -133,13 +133,13 @@ export function calendarStage(ctx: Ctx): Ctx {
       stateDot:
         'flex:none;margin-left:auto;' +
         (isDoneEntry(a)
-          ? 'width:8px;height:8px;border-radius:50%;background:#5C6684'
+          ? 'width:8px;height:8px;border-radius:50%;background:var(--color-slate)'
           : d.getMonth() * 100 + d.getDate() < TK
-            ? 'width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1.5px #746E88'
-            : 'width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px #5EC4D6'),
+            ? 'width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--color-muted)'
+            : 'width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--color-teal)'),
       eyebrow:
-        'font-size:11px;font-weight:700;letter-spacing:.11em;margin:14px 0 9px;color:' +
-        (label.indexOf('TODAY') > -1 ? '#c4548a' : '#746E88'),
+        'font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);margin:14px 0 9px;color:' +
+        (label.indexOf('TODAY') > -1 ? 'var(--color-pink-deep)' : 'var(--color-muted)'),
     };
   });
   const lead = new Date(Y, mi, 1).getDay();
@@ -168,11 +168,11 @@ export function calendarStage(ctx: Ctx): Ctx {
       wrap:
         'height:50px;border:none;border-radius:14px;outline:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;' +
         (sel
-          ? 'background:#E1699C'
+          ? 'background:var(--color-pink)'
           : missed
             ? 'background:rgba(255,255,255,.5)'
             : a
-              ? 'background:#fff;box-shadow:0 1px 3px rgba(35,42,69,.06)'
+              ? 'background:var(--color-white);box-shadow:0 1px 3px rgba(35,42,69,.06)'
               : 'background:none') +
         (today && !sel ? ';box-shadow:inset 0 0 0 1.5px rgba(225,105,156,.45)' : ''),
       aria: d
@@ -187,20 +187,20 @@ export function calendarStage(ctx: Ctx): Ctx {
         : '',
       isToday: today ? 'date' : false,
       num:
-        "font-family:'Space Grotesk',system-ui,sans-serif;font-size:13px;font-weight:" +
-        (a ? '600' : '400') +
+        "font-family:var(--font-heading);font-size:var(--text-md);font-weight:" +
+        (a ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)') +
         ';color:' +
-        (sel ? '#fff' : missed ? '#746E88' : a ? '#232A45' : '#746E88'),
+        (sel ? 'var(--color-white)' : missed ? 'var(--color-muted)' : a ? 'var(--color-ink)' : 'var(--color-muted)'),
       dot:
         a === 'c' || (sel && a && !missed)
-          ? 'width:6px;height:6px;border-radius:50%;background:' + (sel ? '#fff' : '#5C6684')
+          ? 'width:6px;height:6px;border-radius:50%;background:' + (sel ? 'var(--color-white)' : 'var(--color-slate)')
           : missed
             ? 'width:7px;height:7px;border-radius:50%;background:none;position:relative;box-shadow:inset 0 0 0 1.5px ' +
-              (sel ? 'rgba(255,255,255,.85)' : '#746E88')
+              (sel ? 'rgba(255,255,255,.85)' : 'var(--color-muted)')
             : a
               ? 'width:6px;height:6px;border-radius:50%;background:none;box-shadow:inset 0 0 0 1.5px ' +
-                (sel ? '#fff' : '#5EC4D6')
-              : 'width:7px;height:1.5px;border-radius:1px;background:' + (sel ? 'rgba(255,255,255,.6)' : '#DAD7E0'),
+                (sel ? 'var(--color-white)' : 'var(--color-teal)')
+              : 'width:7px;height:1.5px;border-radius:1px;background:' + (sel ? 'rgba(255,255,255,.6)' : 'var(--color-divider)'),
     });
   }
   const activeDays = isCurMonth
@@ -225,7 +225,7 @@ export function calendarStage(ctx: Ctx): Ctx {
     React.createElement('polyline', {
       points: pts,
       fill: 'none',
-      stroke: '#7C8FC9',
+      stroke: 'var(--color-periwinkle)',
       strokeWidth: 0.015,
       strokeDasharray: '0.06 0.05',
       strokeLinejoin: 'round',

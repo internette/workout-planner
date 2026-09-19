@@ -13,8 +13,8 @@ export function chromeVals(ctx: Ctx) {
     sidebarStyle: narrow
       ? 'display:none'
       : tablet
-        ? 'flex:1 1 100%;width:100%;position:relative;background:#fff;border-radius:18px;padding:8px;box-shadow:0 4px 14px rgba(35,42,69,.07)'
-        : 'flex:0 1 208px;min-width:180px;position:relative;background:#fff;border-radius:22px;padding:18px 14px;box-shadow:0 4px 14px rgba(35,42,69,.07)',
+        ? 'flex:1 1 100%;width:100%;position:relative;background:var(--color-white);border-radius:18px;padding:8px;box-shadow:0 4px 14px rgba(35,42,69,.07)'
+        : 'flex:0 1 208px;min-width:180px;position:relative;background:var(--color-white);border-radius:22px;padding:18px 14px;box-shadow:0 4px 14px rgba(35,42,69,.07)',
     navListStyle: tablet ? 'display:flex;flex-direction:row;gap:4px' : 'display:flex;flex-direction:column;gap:4px',
     pageStyle: 'min-height:100vh;padding:0 0 ' + (narrow ? '108px' : '64px'),
     tabbarStyle: narrow
@@ -23,11 +23,11 @@ export function chromeVals(ctx: Ctx) {
     mTabCal: mTab(onCal),
     mTabDiary: mTab(st.screen === 'diaryList'),
     mTabSummary: mTab(st.screen === 'summary'),
-    mCalColor: onCal ? '#c4548a' : '#746E88',
-    mDiaryColor: st.screen === 'diaryList' ? '#c4548a' : '#746E88',
-    mSummaryColor: st.screen === 'summary' ? '#c4548a' : '#746E88',
+    mCalColor: onCal ? 'var(--color-pink-deep)' : 'var(--color-muted)',
+    mDiaryColor: st.screen === 'diaryList' ? 'var(--color-pink-deep)' : 'var(--color-muted)',
+    mSummaryColor: st.screen === 'summary' ? 'var(--color-pink-deep)' : 'var(--color-muted)',
     mTabProfile: mTab(st.screen === 'profile'),
-    mProfileColor: st.screen === 'profile' ? '#c4548a' : '#746E88',
+    mProfileColor: st.screen === 'profile' ? 'var(--color-pink-deep)' : 'var(--color-muted)',
     mProfileLabel: mLabel(st.screen === 'profile'),
     mCalLabel: mLabel(onCal),
     mDiaryLabel: mLabel(st.screen === 'diaryList'),
@@ -37,12 +37,12 @@ export function chromeVals(ctx: Ctx) {
     goProfile: () => logic.nav({ screen: 'profile', monthOpen: false }),
     tabProfile: tab(st.screen === 'profile'),
     navProfile:
-      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:13.5px;text-align:left;cursor:pointer;' +
+      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (st.screen === 'profile'
-        ? 'background:#FCE8F1;color:#c4548a;font-weight:600'
-        : 'background:none;color:#746E88;font-weight:500') +
+        ? 'background:var(--color-pink-tint);color:var(--color-pink-deep);font-weight:var(--font-weight-semibold)'
+        : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
       navExtra,
-    navProfileInk: st.screen === 'profile' ? '#E1699C' : '#A9A2B4',
+    navProfileInk: st.screen === 'profile' ? 'var(--color-pink)' : 'var(--color-subtle)',
     isSummary: st.screen === 'summary',
     isSaved: st.screen === 'saved',
     goSummary: () => logic.nav({ screen: 'summary', monthOpen: false }),
@@ -50,26 +50,26 @@ export function chromeVals(ctx: Ctx) {
     goDiaryList: () => logic.nav({ screen: 'diaryList', monthOpen: false }),
     isNewEntry: st.screen === 'newEntry',
     navCal:
-      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:13.5px;text-align:left;cursor:pointer;' +
+      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (calActive
-        ? 'background:#FCE8F1;color:#c4548a;font-weight:600'
-        : 'background:none;color:#746E88;font-weight:500') +
+        ? 'background:var(--color-pink-tint);color:var(--color-pink-deep);font-weight:var(--font-weight-semibold)'
+        : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
       navExtra,
     navDiary:
-      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:13.5px;text-align:left;cursor:pointer;' +
+      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (st.screen === 'diaryList'
-        ? 'background:#FCE8F1;color:#c4548a;font-weight:600'
-        : 'background:none;color:#746E88;font-weight:500') +
+        ? 'background:var(--color-pink-tint);color:var(--color-pink-deep);font-weight:var(--font-weight-semibold)'
+        : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
       navExtra,
-    navCalInk: calActive ? '#E1699C' : '#A9A2B4',
-    navDiaryInk: st.screen === 'diaryList' ? '#E1699C' : '#A9A2B4',
+    navCalInk: calActive ? 'var(--color-pink)' : 'var(--color-subtle)',
+    navDiaryInk: st.screen === 'diaryList' ? 'var(--color-pink)' : 'var(--color-subtle)',
     navSummary:
-      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:13.5px;text-align:left;cursor:pointer;' +
+      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (st.screen === 'summary'
-        ? 'background:#FCE8F1;color:#c4548a;font-weight:600'
-        : 'background:none;color:#746E88;font-weight:500') +
+        ? 'background:var(--color-pink-tint);color:var(--color-pink-deep);font-weight:var(--font-weight-semibold)'
+        : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
       navExtra,
-    navSummaryInk: st.screen === 'summary' ? '#E1699C' : '#A9A2B4',
+    navSummaryInk: st.screen === 'summary' ? 'var(--color-pink)' : 'var(--color-subtle)',
     announce: st.announce || '',
     saveError: st.saveError || '',
     dismissError: () => logic.s({ saveError: null }),
@@ -92,12 +92,12 @@ export function chromeVals(ctx: Ctx) {
     goBack: () => logic.back(),
     goArsenal: () => logic.nav({ screen: 'arsenal', monthOpen: false }),
     navArsenal:
-      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:13.5px;text-align:left;cursor:pointer;' +
+      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (st.screen === 'arsenal'
-        ? 'background:#FCE8F1;color:#c4548a;font-weight:600'
-        : 'background:none;color:#746E88;font-weight:500') +
+        ? 'background:var(--color-pink-tint);color:var(--color-pink-deep);font-weight:var(--font-weight-semibold)'
+        : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
       navExtra,
-    navArsenalInk: st.screen === 'arsenal' ? '#E1699C' : '#A9A2B4',
+    navArsenalInk: st.screen === 'arsenal' ? 'var(--color-pink)' : 'var(--color-subtle)',
     isCal: st.screen === 'day' || st.screen === 'rest',
     isEdit: st.screen === 'edit' && !(creating && !st.newType),
     isDiary: st.screen === 'diary',

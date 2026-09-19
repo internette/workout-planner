@@ -73,7 +73,7 @@ export function diaryVals(ctx: Ctx) {
     noUnlogged: unloggedDays.length === 0,
     unlogged: unloggedDays.map((x) => ({
       rowStyle:
-        'display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px 22px;border:none;border-radius:999px;text-align:left;width:100%;background:#fff;box-shadow:0 4px 14px rgba(35,42,69,.07);cursor:pointer',
+        'display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px 22px;border:none;border-radius:999px;text-align:left;width:100%;background:var(--color-white);box-shadow:0 4px 14px rgba(35,42,69,.07);cursor:pointer',
       day: DOW3[new Date(Y, TODAY_M, x.d).getDay()] + ' ' + x.d,
       name: nameOf(x.av.name),
       meta: x.av.ride ? (x.av.ride.dist ? x.av.ride.dist + ' mi' : x.av.time) : x.av.time,
@@ -139,7 +139,7 @@ export function diaryVals(ctx: Ctx) {
       const d = en.d;
       const dt = new Date(Y, en.m, en.d);
       const bg =
-        en.mood === 'Happy' ? '#E1699C' : en.mood === 'Neutral' ? '#5C6684' : en.mood === 'Sad' ? '#7C8FC9' : '#B23A4C';
+        en.mood === 'Happy' ? 'var(--color-pink)' : en.mood === 'Neutral' ? 'var(--color-slate)' : en.mood === 'Sad' ? 'var(--color-periwinkle)' : 'var(--color-danger)';
       return {
         date: DOW3[dt.getDay()] + ', ' + MON3[en.m].toUpperCase() + ' ' + en.d,
         name: en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout',
@@ -189,7 +189,7 @@ export function diaryVals(ctx: Ctx) {
         isSad: en.mood === 'Sad',
         isMad: en.mood === 'Mad',
         stars: [1, 2, 3, 4, 5].map(
-          (i) => 'font-size:13px;line-height:1;color:' + (i <= en.rpe ? '#232A45' : '#C7C4D0'),
+          (i) => 'font-size:var(--text-md);line-height:var(--leading-none);color:' + (i <= en.rpe ? 'var(--color-ink)' : 'var(--color-hairline)'),
         ),
       };
     }),
@@ -210,11 +210,11 @@ export function diaryVals(ctx: Ctx) {
     readMood: st.mood,
     readNote: (ENTRIES[entryKey] || {}).note || 'No notes for this one.',
     readStars: [1, 2, 3, 4, 5].map(
-      (n) => 'font-size:13px;line-height:1;color:' + (n <= st.rpe ? '#232A45' : '#C7C4D0'),
+      (n) => 'font-size:var(--text-md);line-height:var(--leading-none);color:' + (n <= st.rpe ? 'var(--color-ink)' : 'var(--color-hairline)'),
     ),
     readMoodFace:
       'width:44px;height:44px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:' +
-      (st.mood === 'Happy' ? '#E1699C' : st.mood === 'Neutral' ? '#5C6684' : st.mood === 'Sad' ? '#7C8FC9' : '#B23A4C'),
+      (st.mood === 'Happy' ? 'var(--color-pink)' : st.mood === 'Neutral' ? 'var(--color-slate)' : st.mood === 'Sad' ? 'var(--color-periwinkle)' : 'var(--color-danger)'),
     readMoodSvg: moodSvg(st.mood),
     diaryBackLabel: st.diaryFrom === 'list' ? 'Chronicle' : 'Back',
     diaryEyebrow: st.diaryFrom === 'list' ? 'CHRONICLE ENTRY' : 'COMPLETED',
