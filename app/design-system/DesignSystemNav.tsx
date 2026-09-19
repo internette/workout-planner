@@ -2,31 +2,79 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { categories, sections, type Category } from './registry';
+import { useEffect, useState } from 'react';
+import { categories, sections, type Category, type Section } from './registry';
 import styles from './design-system.module.css';
 
-// The sidebar: an overview link, then every section grouped by category.
+// The sidebar: an overview link, then every section grouped by category. The section you are on
+// expands to show links to its headings, and the heading currently in view is highlighted.
 export function DesignSystemNav() {
   const pathname = usePathname();
-  const item = (href: string, label: string) => (
+  const current = sections.find((s) => pathname === `/design-system/${s.slug}`);
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setActiveId(null);
+    const anchors = current?.anchors;
+    if (!anchors?.length) return;
+    const headings = anchors.map((a) => document.getElementById(a.id)).filter((el): el is HTMLElement => !!el);
+    // The active heading is the last one that has scrolled past the top third of the screen.
+    const update = () => {
+      const line = window.innerHeight * 0.33;
+      let id = headings[0]?.id ?? null;
+      for (const h of headings) if (h.getBoundingClientRect().top <= line) id = h.id;
+      if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 4) id = headings[headings.length - 1]?.id ?? id;
+      setActiveId(id);
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, [current]);
+
+  const link = (href: string, label: string, active: boolean) => (
     <Link
       key={href}
       href={href}
-      aria-current={pathname === href ? 'page' : undefined}
-      className={[styles.link, pathname === href && styles.active].filter(Boolean).join(' ')}
+      aria-current={active ? 'page' : undefined}
+      className={[styles.link, active && styles.active].filter(Boolean).join(' ')}
     >
       {label}
     </Link>
   );
+
+  const sublinks = (section: Section) => (
+    <div key={section.slug + '-anchors'} className={styles.sublinks}>
+      {section.anchors!.map((a) => (
+        <a
+          key={a.id}
+          href={`#${a.id}`}
+          aria-current={activeId === a.id ? 'location' : undefined}
+          className={[styles.sublink, activeId === a.id && styles.subactive].filter(Boolean).join(' ')}
+        >
+          {a.title}
+        </a>
+      ))}
+    </div>
+  );
+
   return (
     <nav aria-label="Design system" className={styles.nav}>
-      {item('/design-system', 'Overview')}
+      {link('/design-system', 'Overview', pathname === '/design-system')}
       {(Object.keys(categories) as Category[]).map((category) => (
         <div key={category} style={{ display: 'contents' }}>
-          <div className={styles.group} style={{ fontSize: 'var(--text-xs)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--tracking-wide)', textTransform: 'uppercase', color: 'var(--color-subtle)' }}>
-            {categories[category].title}
-          </div>
-          {sections.filter((s) => s.category === category).map((s) => item(`/design-system/${s.slug}`, s.title))}
+          <div className={styles.group}>{categories[category].title}</div>
+          {sections
+            .filter((s) => s.category === category)
+            .map((s) => (
+              <div key={s.slug} style={{ display: 'contents' }}>
+                {link(`/design-system/${s.slug}`, s.title, current?.slug === s.slug)}
+                {current?.slug === s.slug && s.anchors?.length ? sublinks(s) : null}
+              </div>
+            ))}
         </div>
       ))}
     </nav>

@@ -22,7 +22,15 @@
   box-shadow: 0 4px 14px rgba(35, 42, 69, 0.07);
 }
 
-.group { margin: 14px 0 4px; padding: 0 12px; }
+.group {
+  margin: 14px 0 4px;
+  padding: 0 12px;
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-subtle);
+}
 .group:first-of-type { margin-top: 2px; }
 
 .link {
@@ -39,10 +47,32 @@
 
 .content { min-width: 0; }
 
+/* Links to the headings of the current section, nested under it. */
+.sublinks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 0 6px 18px;
+  padding-left: 10px;
+  border-left: 2px solid rgba(35, 42, 69, 0.08);
+}
+.sublink {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-muted);
+  text-decoration: none;
+}
+.sublink:hover { background: rgba(35, 42, 69, 0.05); color: var(--color-ink); }
+.subactive, .subactive:hover { color: var(--color-pink-deep); font-weight: var(--font-weight-semibold); }
+
+
 @media (max-width: 820px) {
   .body { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .nav { position: static; flex-direction: row; flex-wrap: wrap; padding: 12px; }
-  .group { display: none; }
+  .group, .sublinks { display: none; }
 }
 
 /* ---- landing page */

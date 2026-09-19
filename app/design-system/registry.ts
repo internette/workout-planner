@@ -10,6 +10,8 @@ export interface Section {
   title: string;
   category: Category;
   description: string;
+  /** Headings on the section's page that get their own link in the sidebar. `id` is the heading's id. */
+  anchors?: { id: string; title: string }[];
 }
 
 export const categories: Record<Category, { title: string; description: string }> = {
@@ -25,7 +27,16 @@ export const categories: Record<Category, { title: string; description: string }
 
 export const sections: Section[] = [
   { slug: 'colors', title: 'Colors', category: 'foundations', description: 'The palette as CSS variables, grouped by role.' },
-  { slug: 'typography', title: 'Typography', category: 'foundations', description: 'Families, sizes and weights, and the named text styles built from them.' },
+  { slug: 'typography', title: 'Typography', category: 'foundations', description: 'Families, sizes and weights, and the named text styles built from them.',
+    anchors: [
+      { id: 'text-styles', title: 'Text styles' },
+      { id: 'tones', title: 'Tones' },
+      { id: 'families', title: 'Families' },
+      { id: 'sizes', title: 'Sizes' },
+      { id: 'weights', title: 'Weights' },
+      { id: 'tracking', title: 'Tracking' },
+      { id: 'leading', title: 'Leading' },
+    ] },
   { slug: 'icons', title: 'Icons', category: 'foundations', description: 'Glyphs, sparkles, gems and mood faces on a 24×24 canvas.' },
   { slug: 'buttons', title: 'Buttons', category: 'components', description: 'Button and IconButton: types, ghost, sizes and hover states.' },
   { slug: 'card', title: 'Card', category: 'components', description: 'White surfaces, raised or floating, with steps of padding.' },

@@ -12,6 +12,11 @@ a { color: var(--color-pink); }
 a:hover { color: var(--color-pink-deep); }
 input, textarea, button { font-family: inherit; }
 
+/* In-page links (the design-system sidebar) scroll rather than jump. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
 @keyframes pop { 0% { transform: scale(0.4); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes draw { 0% { stroke-dashoffset: 30; } 100% { stroke-dashoffset: 0; } }
 @keyframes twinkle {

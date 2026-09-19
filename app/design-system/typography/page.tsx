@@ -24,7 +24,7 @@ const meta: React.CSSProperties = {
   color: 'var(--color-muted)',
   lineHeight: 'var(--leading-snug)',
 };
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px' };
+const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
 
 export default function TypographyPage() {
   return (
@@ -35,7 +35,7 @@ export default function TypographyPage() {
         a CSS variable, for example <code>var(--text-md)</code> or <code>var(--font-weight-bold)</code>.
       </p>
 
-      <h2 style={h2}>Text styles</h2>
+      <h2 id="text-styles" style={h2}>Text styles</h2>
       <p style={{ margin: '0 0 8px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
         A style is a family, size, weight, tracking and leading that go together. Use{' '}
         <code>{'<Text variant="title" as="h1" tone="ink">'}</code>; without <code>tone</code> the text
@@ -77,7 +77,7 @@ export default function TypographyPage() {
         );
       })}
 
-      <h2 style={h2}>Tones</h2>
+      <h2 id="tones" style={h2}>Tones</h2>
       <p style={{ margin: '0 0 8px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
         Text colour by role, set with <code>tone</code>.
       </p>
@@ -109,7 +109,7 @@ export default function TypographyPage() {
         </div>
       </div>
 
-      <h2 style={h2}>Families</h2>
+      <h2 id="families" style={h2}>Families</h2>
       {Object.entries(fontFamilies).map(([name, { value, use }]) => (
         <div key={name} style={row}>
           <div>
@@ -132,7 +132,7 @@ export default function TypographyPage() {
         </div>
       ))}
 
-      <h2 style={h2}>Sizes</h2>
+      <h2 id="sizes" style={h2}>Sizes</h2>
       {Object.entries(fontSizes).map(([name, { px, use }]) => (
         <div key={name} style={row}>
           <div>
@@ -150,7 +150,7 @@ export default function TypographyPage() {
         </div>
       ))}
 
-      <h2 style={h2}>Weights</h2>
+      <h2 id="weights" style={h2}>Weights</h2>
       {Object.entries(fontWeights).map(([name, { value, use }]) => (
         <div key={name} style={row}>
           <div>
@@ -168,7 +168,7 @@ export default function TypographyPage() {
         </div>
       ))}
 
-      <h2 style={h2}>Tracking</h2>
+      <h2 id="tracking" style={h2}>Tracking</h2>
       {Object.entries(tracking).map(([name, { value, use }]) => (
         <div key={name} style={row}>
           <div>
@@ -193,7 +193,7 @@ export default function TypographyPage() {
         </div>
       ))}
 
-      <h2 style={h2}>Leading</h2>
+      <h2 id="leading" style={h2}>Leading</h2>
       {Object.entries(leading).map(([name, { value, use }]) => (
         <div key={name} style={row}>
           <div>
