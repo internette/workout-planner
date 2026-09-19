@@ -5,6 +5,7 @@
 import { Fragment } from 'react';
 import { css, t } from './viewHelpers';
 import { Card } from '@/components/ui/card';
+import { Chip } from '@/components/ui/chip';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { Button, IconButton } from '@/components/ui/buttons';
 import {
@@ -3371,73 +3372,31 @@ export function PlannerView({ v }: { v: any }) {
                     </div>
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '20px' }}>
-                    <span
-                      style={{
-                        flex: 'none',
-                        whiteSpace: 'nowrap',
-                        padding: '8px 14px',
-                        borderRadius: '999px',
-                        background: 'var(--color-white)',
-                        fontSize: 'var(--text-md)',
-                        fontWeight: 'var(--font-weight-medium)',
-                        color: 'var(--color-slate)',
-                        boxShadow: '0 1px 3px rgba(35,42,69,.06)',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                      }}
-                    >
-                      <Clock color="var(--color-muted)" size={15} />
-                      {t(v.eTime)}
-                    </span>
+                    <Chip icon={<Clock color="var(--color-muted)" size={15} />}>{t(v.eTime)}</Chip>
                     {v.inSeries ? (
                       <>
-                        <span
-                          style={{
-                            flex: 'none',
-                            whiteSpace: 'nowrap',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '7px',
-                            padding: '8px 8px 8px 14px',
-                            borderRadius: '999px',
-                            background: 'var(--color-pink)',
-                            fontSize: 'var(--text-md)',
-                            fontWeight: 'var(--font-weight-semibold)',
-                            color: 'var(--color-white)',
-                          }}
+                        <Chip
+                          tone="accent"
+                          icon={<Repeat color="var(--color-white)" size={15} />}
+                          trailing={
+                            <IconButton
+                              label="End this series"
+                              size="xs"
+                              tone="inverse"
+                              onClick={v.endSeries}
+                              title="End this series"
+                            >
+                              <Close color="rgba(255,255,255,0.85)" strokeWidth={2.2} size={13} />
+                            </IconButton>
+                          }
                         >
-                          <Repeat color="var(--color-white)" size={15} />
-                          {'Weekly series '}
-                          <IconButton
-                            label="End this series"
-                            size="xs"
-                            tone="inverse"
-                            onClick={v.endSeries}
-                            title="End this series"
-                          >
-                            <Close color="rgba(255,255,255,0.85)" strokeWidth={2.2} size={13} />
-                          </IconButton>
-                        </span>
+                          {'Weekly series'}
+                        </Chip>
                       </>
                     ) : null}
                     {(v.areaPills ?? []).map((a, i) => (
                       <Fragment key={i}>
-                        <span
-                          style={{
-                            flex: 'none',
-                            whiteSpace: 'nowrap',
-                            padding: '8px 14px',
-                            borderRadius: '999px',
-                            background: 'var(--color-white)',
-                            fontSize: 'var(--text-md)',
-                            fontWeight: 'var(--font-weight-medium)',
-                            color: 'var(--color-slate)',
-                            boxShadow: '0 1px 3px rgba(35,42,69,.06)',
-                          }}
-                        >
-                          {a}
-                        </span>
+                        <Chip>{a}</Chip>
                       </Fragment>
                     ))}
                   </div>
@@ -3968,28 +3927,9 @@ export function PlannerView({ v }: { v: any }) {
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '20px' }}>
                     <span data-pop="date" style={{ position: 'relative', flex: 'none' }}>
-                      <button
-                        onClick={v.toggleDate}
-                        style={{
-                          padding: '8px 14px',
-                          border: 'none',
-                          borderRadius: '999px',
-                          background: 'var(--color-white)',
-                          fontSize: 'var(--text-md)',
-                          fontWeight: 'var(--font-weight-medium)',
-                          color: 'var(--color-slate)',
-                          boxShadow: '0 1px 3px rgba(35,42,69,.06)',
-                          whiteSpace: 'nowrap',
-                          cursor: 'pointer',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '7px',
-                        }}
-                        className="hv12"
-                      >
-                        <Calendar color="var(--color-muted)" size={15} />
+                      <Chip icon={<Calendar color="var(--color-muted)" size={15} />} onClick={v.toggleDate}>
                         {t(v.eDate)}
-                      </button>
+                      </Chip>
                       {v.dateOpen ? (
                         <>
                           <span
@@ -4062,45 +4002,12 @@ export function PlannerView({ v }: { v: any }) {
                     </span>
                     {v.repeatOn ? (
                       <>
-                        <span
-                          style={{
-                            flex: 'none',
-                            whiteSpace: 'nowrap',
-                            padding: '8px 14px',
-                            borderRadius: '999px',
-                            background: 'var(--color-pink)',
-                            fontSize: 'var(--text-md)',
-                            fontWeight: 'var(--font-weight-semibold)',
-                            color: 'var(--color-white)',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                          }}
-                        >
-                          <Repeat color="var(--color-white)" size={15} />
+                        <Chip tone="accent" icon={<Repeat color="var(--color-white)" size={15} />}>
                           Weekly
-                        </span>
+                        </Chip>
                       </>
                     ) : null}
-                    <span
-                      style={{
-                        padding: '8px 14px',
-                        borderRadius: '999px',
-                        background: 'var(--color-white)',
-                        fontSize: 'var(--text-md)',
-                        fontWeight: 'var(--font-weight-medium)',
-                        color: 'var(--color-slate)',
-                        boxShadow: '0 1px 3px rgba(35,42,69,.06)',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        flex: 'none',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      <Clock color="var(--color-muted)" size={17} />
-                      {t(v.eTime)}
-                    </span>
+                    <Chip icon={<Clock color="var(--color-muted)" size={17} />}>{t(v.eTime)}</Chip>
                   </div>
                   <Card
                     pad="sm"
@@ -4430,18 +4337,17 @@ export function PlannerView({ v }: { v: any }) {
                           TARGET EFFORT
                         </span>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                          <button onClick={v.setZoneRecovery} style={css(v.zoneRecovery)}>
-                            Recovery
-                          </button>
-                          <button onClick={v.setZoneEndurance} style={css(v.zoneEndurance)}>
-                            Endurance
-                          </button>
-                          <button onClick={v.setZoneTempo} style={css(v.zoneTempo)}>
-                            Tempo
-                          </button>
-                          <button onClick={v.setZoneIntervals} style={css(v.zoneIntervals)}>
-                            Intervals
-                          </button>
+                          {['Recovery', 'Endurance', 'Tempo', 'Intervals'].map((zone) => (
+                            <Chip
+                              key={zone}
+                              tone="choice"
+                              size="md"
+                              selected={v.rideZone === zone}
+                              onClick={() => v.setRideZone(zone)}
+                            >
+                              {zone}
+                            </Chip>
+                          ))}
                         </div>
                       </Card>
                     </>
@@ -4696,9 +4602,9 @@ export function PlannerView({ v }: { v: any }) {
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '14px' }}>
                           {(v.targetAreas ?? []).map((t, i) => (
                             <Fragment key={i}>
-                              <button onClick={t?.toggle} style={css(t?.style)}>
+                              <Chip tone="choice" size="md" selected={t?.on} onClick={t?.toggle}>
                                 {t?.name}
-                              </button>
+                              </Chip>
                             </Fragment>
                           ))}
                         </div>

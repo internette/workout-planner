@@ -1,0 +1,47 @@
+/* A small pill for a fact, a tag or a choice. */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  white-space: nowrap;
+  border: none;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: var(--text-md);
+  box-sizing: border-box;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.sm { padding: 8px 14px; }
+.md { padding: 10px 16px; }
+.hasTrailing { padding-right: 8px; }
+
+/* info: white, for a fact about the thing on screen (a date, a duration, a tag) */
+.info {
+  background: var(--color-white);
+  color: var(--color-slate);
+  font-weight: var(--font-weight-medium);
+  box-shadow: 0 1px 3px rgba(35, 42, 69, 0.06);
+}
+.info.clickable:hover { box-shadow: 0 4px 14px rgba(35, 42, 69, 0.07); }
+
+/* accent: solid pink, for something that is switched on */
+.accent {
+  background: var(--color-pink);
+  color: var(--color-white);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* choice: a selectable option; pink when selected */
+.choice {
+  background: var(--color-canvas);
+  color: var(--color-slate);
+  font-weight: var(--font-weight-semibold);
+}
+.choice.selected { background: var(--color-pink); color: var(--color-white); }
+.choice:not(.selected):hover { filter: brightness(0.97); }
+
+.clickable { cursor: pointer; }
+.icon, .trailing { display: inline-flex; }

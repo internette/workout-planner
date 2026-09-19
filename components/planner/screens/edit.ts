@@ -2,7 +2,7 @@ import { DOW3, EDIT_OVERLAYS, ICON_COLORS, MON3, PINK } from '../constants';
 import { idOf, isoOf } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
-import { optStyle, zoneStyle } from '../styles';
+import { optStyle } from '../styles';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
 
@@ -114,14 +114,7 @@ export function editVals(ctx: Ctx) {
       const v = e.target.value.replace(/[^0-9]/g, '').slice(0, 2);
       logic.s({ rMins: v === '' ? '' : String(Math.min(59, Number(v))) });
     },
-    zoneRecovery: zoneStyle(st.rZone === 'Recovery'),
-    zoneEndurance: zoneStyle((st.rZone || 'Endurance') === 'Endurance'),
-    zoneTempo: zoneStyle(st.rZone === 'Tempo'),
-    zoneIntervals: zoneStyle(st.rZone === 'Intervals'),
-    setZoneRecovery: () => logic.s({ rZone: 'Recovery' }),
-    setZoneEndurance: () => logic.s({ rZone: 'Endurance' }),
-    setZoneTempo: () => logic.s({ rZone: 'Tempo' }),
-    setZoneIntervals: () => logic.s({ rZone: 'Intervals' }),
+    setRideZone: (zone) => logic.s({ rZone: zone }),
     targetAreas: ['Core', 'Arms', 'Back', 'Legs'].map((name) => {
       const on = picked.indexOf(name) > -1;
       return {
@@ -132,11 +125,7 @@ export function editVals(ctx: Ctx) {
               [listKey]: on ? picked.filter((p) => p !== name) : picked.concat([name]),
             }),
           }),
-        style:
-          'padding:10px 16px;border:none;border-radius:999px;font-size:var(--text-md);font-weight:var(--font-weight-semibold);cursor:pointer;' +
-          (on
-            ? 'background:var(--color-pink);color:var(--color-white)'
-            : 'background:var(--color-canvas);color:var(--color-slate)'),
+        on,
       };
     }),
     addOpen: !!st.addOpen,
@@ -209,9 +198,6 @@ export function editVals(ctx: Ctx) {
         c +
         (c === wColor ? ';box-shadow:0 0 0 2px var(--color-white),0 0 0 4px ' + c : ''),
     })),
-    chipStyle:
-      'flex:none;white-space:nowrap;padding:8px 14px;border-radius:999px;color:var(--color-white);font-size:var(--text-md);font-weight:var(--font-weight-semibold);background:' +
-      (doneSel ? 'var(--color-slate)' : 'var(--color-pink)'),
     eName: selName,
     eCat: selRide ? selRide.zone || 'Endurance' : picked.length ? picked.join(' · ') : 'No target areas',
     areaPills: selRide ? [selRide.zone || 'Endurance'] : picked,

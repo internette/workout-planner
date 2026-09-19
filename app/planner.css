@@ -44,4 +44,3 @@ button:focus-visible { background-color: rgba(35, 42, 69, 0.06); }
 .hv3:hover{color:var(--color-pink-deep) !important;background:rgba(35,42,69,.04) !important}
 .hv6:hover{filter:brightness(.97) !important}
 .hv7:hover{background:var(--color-pink-tint) !important}
-.hv12:hover{box-shadow:0 4px 14px rgba(35,42,69,.07) !important}
