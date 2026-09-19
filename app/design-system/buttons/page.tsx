@@ -26,7 +26,7 @@ const sizes = ['xs', 'sm', 'md', 'lg'] as const;
 
 export default function ButtonsPage() {
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '24px 24px 80px' }}>
+    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
       <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Buttons</h1>
       <p style={{ ...note, marginTop: 8 }}>
         <code>Button</code> for actions with a text label, <code>IconButton</code> for icon-only controls.

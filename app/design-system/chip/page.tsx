@@ -18,7 +18,7 @@ export default function ChipPage() {
   const toggle = (a: string) => setPicked((p) => (p.includes(a) ? p.filter((x) => x !== a) : [...p, a]));
 
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '24px 24px 80px' }}>
+    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
       <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Chip</h1>
       <p style={{ ...note, marginTop: 8 }}>
         A small pill for a fact, a tag or a choice. Import it from <code>@/components/ui/chip</code>. Give it an{' '}

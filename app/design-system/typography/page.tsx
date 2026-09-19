@@ -28,7 +28,7 @@ const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4
 
 export default function TypographyPage() {
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '24px 24px 80px' }}>
+    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
       <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Typography</h1>
       <p style={{ margin: '8px 0 0', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
         Two families, twelve sizes, four weights, and twelve named text styles built from them. Each token is

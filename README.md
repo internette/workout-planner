@@ -56,6 +56,7 @@ Run the migration once in the Supabase SQL editor. It is safe to run again.
 
 ```
 app/                  Next.js App Router: layout, page, global styles (planner.css)
+  design-system/      The design-system site at /design-system: overview, sidebar and a page per section (registry.ts lists them)
 components/
   Planner.tsx         Host component: loading and error screens, renders the view
   PlannerLoader.tsx   Loads the planner on the client only (its layout depends on window width)

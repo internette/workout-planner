@@ -4,7 +4,7 @@ export const metadata = { title: 'Colors — Design system' };
 
 export default function ColorsPage() {
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '24px 24px 80px' }}>
+    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
       <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Colors</h1>
       <p style={{ margin: '8px 0 32px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
         Every colour is a CSS variable on <code>:root</code>, for example <code>var(--color-pink)</code>. Import{' '}

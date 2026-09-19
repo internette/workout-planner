@@ -22,7 +22,7 @@ function Tile({ name, children }: { name: string; children: React.ReactNode }) {
 
 export default function IconsPage() {
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '40px 24px 80px' }}>
+    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
       <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Icons</h1>
       <p style={{ margin: '8px 0 32px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
         Everything is drawn on a 24×24 canvas and takes <code>size</code>, <code>color</code> and{' '}

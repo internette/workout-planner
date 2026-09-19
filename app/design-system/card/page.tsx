@@ -11,7 +11,7 @@ const body: React.CSSProperties = { margin: '6px 0 0', fontSize: 'var(--text-md)
 
 export default function CardPage() {
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '24px 24px 80px' }}>
+    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
       <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Card</h1>
       <p style={{ ...note, marginTop: 8 }}>
         A white surface that sits above the page. Import it from <code>@/components/ui/card</code>. It takes layout
