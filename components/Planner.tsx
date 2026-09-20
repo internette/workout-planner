@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { PlannerLogic } from './planner/PlannerLogic';
+import { useViewport } from './planner/useViewport';
 import { PlannerView } from './PlannerView';
 
 const centered: React.CSSProperties = {
@@ -9,48 +10,38 @@ const centered: React.CSSProperties = {
   gap: 14, padding: 24, textAlign: 'center', color: 'var(--color-muted)',
 };
 
-export default class Planner extends React.Component {
-  private logic: PlannerLogic;
+export default function Planner() {
+  const [logic] = useState(() => new PlannerLogic());
+  const [, rerender] = useReducer((n: number) => n + 1, 0);
+  logic.viewport = useViewport();
 
-  constructor(props: {}) {
-    super(props);
-    this.logic = new PlannerLogic(props);
-    this.logic.__host = this;
-  }
+  // The logic object owns the state; it asks this component to re-render whenever that changes.
+  useEffect(() => {
+    logic.__host = { forceUpdate: rerender };
+    logic.load();
+    return () => {
+      logic.__host = undefined;
+    };
+  }, [logic]);
 
-  componentDidMount() {
-    this.logic.componentDidMount();
-  }
-
-  componentDidUpdate() {
-    this.logic.props = this.props;
-    this.logic.componentDidUpdate();
-  }
-
-  componentWillUnmount() {
-    this.logic.componentWillUnmount();
-  }
-
-  retry = () => {
-    this.logic.status = 'loading';
-    this.forceUpdate();
-    this.logic.load();
+  const retry = () => {
+    logic.status = 'loading';
+    rerender();
+    logic.load();
   };
 
-  render() {
-    const { status, loadError } = this.logic;
-    if (status === 'loading') return <div style={centered} role="status">Loading your plan…</div>;
-    if (status === 'error') {
-      return (
-        <div style={centered} role="alert">
-          <h1 style={{ margin: 0, color: 'var(--color-ink)', fontSize: 'var(--text-3xl)' }}>Couldn't reach your plan</h1>
-          <p style={{ margin: 0, maxWidth: 420, fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' }}>{loadError}</p>
-          <button onClick={this.retry} style={{ padding: '12px 22px', border: 'none', borderRadius: 14, background: 'var(--color-pink)', color: 'var(--color-white)', fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-semibold)', cursor: 'pointer' }}>
-            Try again
-          </button>
-        </div>
-      );
-    }
-    return <PlannerView v={this.logic.renderVals()} />;
+  const { status, loadError } = logic;
+  if (status === 'loading') return <div style={centered} role="status">Loading your plan…</div>;
+  if (status === 'error') {
+    return (
+      <div style={centered} role="alert">
+        <h1 style={{ margin: 0, color: 'var(--color-ink)', fontSize: 'var(--text-3xl)' }}>Couldn't reach your plan</h1>
+        <p style={{ margin: 0, maxWidth: 420, fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' }}>{loadError}</p>
+        <button onClick={retry} style={{ padding: '12px 22px', border: 'none', borderRadius: 14, background: 'var(--color-pink)', color: 'var(--color-white)', fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-semibold)', cursor: 'pointer' }}>
+          Try again
+        </button>
+      </div>
+    );
   }
+  return <PlannerView v={logic.renderVals()} />;
 }

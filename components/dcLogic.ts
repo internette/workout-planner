@@ -2,31 +2,23 @@
 // component) that owns its state. setState merges immediately, so handlers that fire several updates
 // in a row see each other's writes, then asks the host component to re-render.
 export interface LogicHost {
-  forceUpdate(cb?: () => void): void;
+  forceUpdate(): void;
 }
 
 export class DCLogic {
-  props: any;
   state: any = {};
+  /** Set by the host component while it is mounted. */
   __host?: LogicHost;
 
-  constructor(props: any) {
-    this.props = props || {};
-  }
-
-  setState(update: any, cb?: () => void) {
+  setState(update: any) {
     const patch = typeof update === 'function' ? update(this.state) : update;
     this.state = { ...this.state, ...patch };
-    this.__host?.forceUpdate(cb);
+    this.__host?.forceUpdate();
   }
 
   forceUpdate() {
     this.__host?.forceUpdate();
   }
-
-  componentDidMount() {}
-  componentDidUpdate(_prevProps?: any) {}
-  componentWillUnmount() {}
 
   renderVals(): any {
     return {};

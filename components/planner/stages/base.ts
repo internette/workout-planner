@@ -13,8 +13,8 @@ export function baseStage(ctx: Ctx): Ctx {
   const TK = TODAY_M * 100 + TODAY_D;
   const seedAt = (m, d) => (SEED[m] || {})[d] || null;
   const ACT = SEED[TODAY_M] || {};
-  const narrow = typeof window !== 'undefined' && window.innerWidth < 720;
-  const tablet = typeof window !== 'undefined' && window.innerWidth >= 720 && window.innerWidth < 1020;
+  const narrow = logic.viewport === 'narrow';
+  const tablet = logic.viewport === 'tablet';
   const navExtra = tablet ? ';flex:none;padding:11px 16px' : '';
   const onCal = st.screen === 'day' || st.screen === 'rest' || st.screen === 'diary' || st.screen === 'edit';
   const calActive = ['day', 'rest', 'edit', 'detail', 'newEntry'].indexOf(st.screen) > -1;
