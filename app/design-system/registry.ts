@@ -121,7 +121,7 @@ export const sections: Section[] = [
     anchors: [
       { id: 'confirm', title: 'Confirm' },
       { id: 'with-content', title: 'With content' },
-      { id: 'with-a-close-button', title: 'With a close button' },
+      { id: 'reference-panel', title: 'Reference panel' },
       { id: 'behaviour', title: 'Behaviour' },
     ],
   },

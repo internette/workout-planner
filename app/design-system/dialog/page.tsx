@@ -82,10 +82,11 @@ export default function DialogPage() {
         </label>
       </Dialog>
 
-      <h2 id="with-a-close-button" style={h2}>With a close button</h2>
+      <h2 id="reference-panel" style={h2}>Reference panel</h2>
       <p style={note}>
-        For reference panels with nothing to decide, use <code>closeButton</code> instead of a Cancel button.{' '}
-        <code>aside</code> adds small muted text beside the title. Tall content scrolls inside the card.
+        Every dialog has an X in the top right corner that does the same as Escape, so a reference panel with nothing to
+        decide needs no buttons at all. <code>aside</code> adds small muted text beside the title. Tall content
+        scrolls inside the card. Pass <code>closeButton={'{false}'}</code> to leave the X out.
       </p>
       <div style={row}>
         <Button type="neutral" size="md" onClick={() => setOpen('info')}>
@@ -98,7 +99,6 @@ export default function DialogPage() {
         size="md"
         title="Ranks"
         aside="Rank 1 of 20"
-        closeButton
         description="Earned with experience — 10 XP per exercise completed, 50 XP per workout finished."
       />
 
@@ -112,7 +112,10 @@ export default function DialogPage() {
           Escape asks it to close: <code>onClose</code> is called, and it is up to the parent to set{' '}
           <code>open</code> to false. If dialogs are stacked, the top one closes first.
         </li>
-        <li>Focus moves to the first button when it opens and returns to whatever opened it once it closes.</li>
+        <li>
+          Focus moves to the first action button when it opens (or to the X if there are none) and returns to whatever
+          opened it once it closes.
+        </li>
         <li>
           It is labelled by its title. Its dimmed backdrop does nothing when pressed unless you set{' '}
           <code>dismissOnScrim</code>; leave that off for questions that need an answer.

@@ -68,7 +68,6 @@ export function PlannerView({ v }: { v: any }) {
         onClose={v.closeRanks}
         title="Ranks"
         aside={v.rankStepLabel}
-        closeButton
         size="md"
         description="Earned with experience — 10 XP per exercise completed, 50 XP per workout finished."
       >

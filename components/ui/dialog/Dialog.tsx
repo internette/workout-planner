@@ -14,7 +14,7 @@ export interface DialogProps {
   title: string;
   /** Small muted text beside the title. */
   aside?: string;
-  /** A close button in the header, for dialogs that have no Cancel button. */
+  /** The X button in the top right corner. It does the same as Escape. On by default; pass false to leave it out. */
   closeButton?: boolean;
   /** Muted explanatory text under the title. */
   description?: ReactNode;
@@ -37,7 +37,7 @@ export function Dialog(props: DialogProps) {
 }
 
 // Mounted only while open, so showModal() runs once per opening.
-function DialogPanel({ onClose, title, aside, closeButton, description, actions, size = 'sm', dismissOnScrim, children }: DialogProps) {
+function DialogPanel({ onClose, title, aside, closeButton = true, description, actions, size = 'sm', dismissOnScrim, children }: DialogProps) {
   const titleId = useId();
   const ref = useRef<HTMLDialogElement>(null);
   const live = useRef(true);
@@ -48,7 +48,8 @@ function DialogPanel({ onClose, title, aside, closeButton, description, actions,
     if (!dialog) return;
     live.current = true;
     dialog.showModal();
-    dialog.querySelector<HTMLElement>('button')?.focus();
+    // Start on the first action if there is one (Cancel, Keep it), otherwise on the close button.
+    (dialog.querySelector<HTMLElement>('[data-dialog-actions] button') ?? dialog.querySelector<HTMLElement>('button'))?.focus();
     return () => {
       live.current = false;
       if (dialog.open) dialog.close();
@@ -84,7 +85,12 @@ function DialogPanel({ onClose, title, aside, closeButton, description, actions,
       // React supports these two events on <dialog>, but Card's props are typed for a generic element.
       {...({ onCancel, onClose: onNativeClose } as object)}
     >
-      <div className={styles.header}>
+      {closeButton ? (
+        <IconButton label="Close" size="md" onClick={onClose} className={styles.close}>
+          <Close color="var(--color-muted)" strokeWidth={2.2} size={16} />
+        </IconButton>
+      ) : null}
+      <div className={`${styles.header} ${closeButton ? styles.withClose : ''}`}>
         <Text variant="subheading" as="h2" id={titleId} className={styles.title}>
           {title}
         </Text>
@@ -93,11 +99,6 @@ function DialogPanel({ onClose, title, aside, closeButton, description, actions,
             {aside}
           </Text>
         ) : null}
-        {closeButton ? (
-          <IconButton label="Close" size="md" onClick={onClose} className={styles.close}>
-            <Close color="var(--color-muted)" strokeWidth={2.2} size={16} />
-          </IconButton>
-        ) : null}
       </div>
       {description ? (
         <Text variant="body" as="p" tone="muted" className={styles.description}>
@@ -105,7 +106,11 @@ function DialogPanel({ onClose, title, aside, closeButton, description, actions,
         </Text>
       ) : null}
       {children}
-      {actions ? <div className={styles.actions}>{actions}</div> : null}
+      {actions ? (
+        <div className={styles.actions} data-dialog-actions>
+          {actions}
+        </div>
+      ) : null}
     </Card>
   );
 }
