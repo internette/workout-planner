@@ -31,12 +31,12 @@ export function arsenalVals(ctx: Ctx) {
         tplConfirm: null,
       }),
     );
-  const askThenApply = async (edit, name, patch) => {
+  const askThenApply = async (edit, name, patch, exercise = '') => {
     try {
       const count = await db.countUpcoming(edit.workoutId, todayIso);
       if (count === 0) return applyEdit(edit, true, patch);
       logic.s({
-        tplConfirm: { count, name, update: true, apply: (updateUpcoming) => applyEdit(edit, updateUpcoming, patch) },
+        tplConfirm: { count, name, exercise, update: true, apply: (updateUpcoming) => applyEdit(edit, updateUpcoming, patch) },
       });
     } catch (e) {
       logic.s({ saveError: e instanceof Error ? e.message : String(e) });
@@ -145,6 +145,7 @@ export function arsenalVals(ctx: Ctx) {
         },
         found.workout.name,
         after,
+        found.ex.name,
       );
     },
   };
@@ -311,17 +312,29 @@ export function arsenalVals(ctx: Ctx) {
 
   return {
     tplConfirmOpen: !!confirm,
-    tplConfirmTitle: 'Save changes to this workout?',
+    tplConfirmTitle: confirm?.exercise ? 'Save changes to this exercise?' : 'Save changes to this workout?',
     tplConfirmBody: confirm
-      ? (confirm.count === 1 ? '1 upcoming session uses' : confirm.count + ' upcoming sessions use') +
-        ' “' +
-        confirm.name +
-        '”. Past and completed sessions always keep the workout as it was.'
+      ? (confirm.exercise ? '“' + confirm.exercise + '” is part of “' + confirm.name + '”, which has ' : '') +
+        (confirm.exercise
+          ? confirm.count === 1
+            ? '1 upcoming session'
+            : confirm.count + ' upcoming sessions'
+          : (confirm.count === 1 ? '1 upcoming session uses' : confirm.count + ' upcoming sessions use') +
+            ' “' +
+            confirm.name +
+            '”') +
+        '. Past and completed sessions always keep the workout as it was.'
       : '',
     // Both outcomes are always shown, whatever the checkbox says.
-    tplConfirmOn: confirm ? 'Your changes are saved to “' + confirm.name + '” and applied to its upcoming sessions.' : '',
+    tplConfirmOn: confirm
+      ? confirm.exercise
+        ? 'Your changes are saved to “' + confirm.exercise + '” in “' + confirm.name + '” and applied to its upcoming sessions.'
+        : 'Your changes are saved to “' + confirm.name + '” and applied to its upcoming sessions.'
+      : '',
     tplConfirmOff: confirm
-      ? 'Your changes are saved as a new workout. “' + confirm.name + '” and its sessions stay as they are.'
+      ? confirm.exercise
+        ? 'Your changes are saved in a new copy of “' + confirm.name + '”. “' + confirm.name + '” and its sessions stay as they are.'
+        : 'Your changes are saved as a new workout. “' + confirm.name + '” and its sessions stay as they are.'
       : '',
     tplConfirmCancel: () => logic.s({ tplConfirm: null }),
     tplConfirmUpdateChecked: !!confirm?.update,
