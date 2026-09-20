@@ -2344,12 +2344,12 @@ export function PlannerView({ v }: { v: any }) {
                       EXERCISE
                     </Text>
                     <Button
-                      type="secondary"
+                      type="primary"
                       size="sm"
                       onClick={v.exercise.edit}
                       style={{ marginLeft: 'auto' }}
                     >
-                      <Pencil color="var(--color-pink-deep)" size={16} />
+                      <Pencil color="var(--color-white)" size={16} />
                       Edit
                     </Button>
                   </div>
