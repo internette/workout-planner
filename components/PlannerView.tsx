@@ -2431,12 +2431,12 @@ export function PlannerView({ v }: { v: any }) {
                       SAVED WORKOUT
                     </Text>
                     <Button
-                      type="secondary"
+                      type="primary"
                       size="sm"
                       onClick={v.template.edit}
                       style={{ marginLeft: 'auto' }}
                     >
-                      <Pencil color="var(--color-pink-deep)" size={16} />
+                      <Pencil color="var(--color-white)" size={16} />
                       Edit
                     </Button>
                   </div>
@@ -2624,6 +2624,43 @@ export function PlannerView({ v }: { v: any }) {
                         style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}
                       >
                         {(v.templateEdit.rows ?? []).map((r) => (
+                          <Card key={r?.key} pad="sm" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                            <span
+                              style={{
+                                width: '34px',
+                                height: '34px',
+                                flex: 'none',
+                                borderRadius: '11px',
+                                background: 'var(--color-pink-tint)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              {r?.svg}
+                            </span>
+                            <span style={{ flex: '1', minWidth: '0' }}>
+                              <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+                                {r?.name}
+                              </Text>
+                              <Text
+                                variant="caption"
+                                tone="muted"
+                                style={{ display: 'block', marginTop: '3px' }}
+                              >
+                                {r?.detail}
+                              </Text>
+                            </span>
+                            <Button type="neutral" ghost size="sm" onClick={r?.edit}>
+                              <Pencil color="var(--color-slate)" size={16} />
+                              Edit
+                            </Button>
+                            <IconButton label={'Remove ' + r?.name} size="md" onClick={r?.remove}>
+                              <Close color="var(--color-muted)" strokeWidth={2.2} size={16} />
+                            </IconButton>
+                          </Card>
+                        ))}
+                        {(v.templateEdit.newRows ?? []).map((r) => (
                           <Card key={r?.key} pad="sm">
                             <div style={{ display: 'flex', alignItems: 'flex-end', gap: '10px' }}>
                               <TextField

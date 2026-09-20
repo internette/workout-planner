@@ -28,6 +28,8 @@ export function arsenalVals(ctx: Ctx) {
         ...patch,
         ...(r.created ? { templateId: r.workoutId } : {}),
         ...(r.created && patch.screen === 'exercise' ? { exerciseId: r.exerciseIds[edit.exercises.update[0]?.id] } : {}),
+        // The workout being edited was left alone; its draft belongs to it, so open the copy read-only instead.
+        ...(r.created && patch.screen === 'templateEdit' ? { screen: 'template', tplDraft: null } : {}),
         tplConfirm: null,
       }),
     );
@@ -101,6 +103,7 @@ export function arsenalVals(ctx: Ctx) {
         edit: () =>
           logic.s({
             screen: 'exerciseEdit',
+            exFrom: null,
             exDraft: {
               name: found.ex.name,
               sets: found.ex.sets,
@@ -111,6 +114,8 @@ export function arsenalVals(ctx: Ctx) {
           }),
       }
     : null;
+  // Set when the exercise editor was opened from the workout editor, so it returns there.
+  const exFrom = st.exFrom || null;
   const exDraft = st.exDraft || { name: '', sets: '', weight: '', rest: '', i: 'h' };
   const setExDraft = (field) => (e) => logic.s({ exDraft: { ...exDraft, [field]: e.target.value } });
   const exerciseEdit = {
@@ -128,7 +133,7 @@ export function arsenalVals(ctx: Ctx) {
       style: optStyle(exDraft.i === name),
     })),
     canSave: !!exDraft.name.trim(),
-    cancel: () => logic.s({ screen: 'exercise', exDraft: null }),
+    cancel: () => logic.s({ screen: exFrom ? 'templateEdit' : 'exercise', exDraft: null, exFrom: null }),
     save: () => {
       if (!found || !exDraft.name.trim()) return;
       const patch = {
@@ -138,7 +143,7 @@ export function arsenalVals(ctx: Ctx) {
         rest: exDraft.rest,
         i: exDraft.i,
       };
-      const after = { screen: 'exercise', exDraft: null };
+      const after = { screen: exFrom ? 'templateEdit' : 'exercise', exDraft: null, exFrom: null };
       if (!found.workout) {
         logic.save(() => db.updateExerciseRow({ kind: 'library', id: found.ex.id }, patch), after);
         return;
@@ -242,8 +247,30 @@ export function arsenalVals(ctx: Ctx) {
           setHrs: whole('hrs'),
           setMins: whole('mins', 59),
           setZone: (zone) => patchDraft({ zone }),
+          // Exercises already in the workout are a list; each opens the exercise editor. Not-yet-saved ones have fields.
           rows: draft.rows
-            .filter((r) => !r.removed)
+            .filter((r) => r.id && !r.removed)
+            .map((r) => {
+              const live = (EX[chosen.name] || []).find((e) => e.id === r.id);
+              if (!live) return null;
+              return {
+                key: r.key,
+                name: live.name,
+                svg: iconSvg(live.i),
+                detail: live.sets + ' · ' + live.weight + ' · ' + live.rest + ' rest',
+                edit: () =>
+                  logic.s({
+                    screen: 'exerciseEdit',
+                    exerciseId: live.id,
+                    exFrom: 'templateEdit',
+                    exDraft: { name: live.name, sets: live.sets, weight: live.weight, rest: live.rest, i: live.i },
+                  }),
+                remove: () => patchRow(r.key, { removed: true }),
+              };
+            })
+            .filter(Boolean),
+          newRows: draft.rows
+            .filter((r) => !r.id && !r.removed)
             .map((r) => ({
               key: r.key,
               name: r.name,
@@ -254,10 +281,7 @@ export function arsenalVals(ctx: Ctx) {
               setSets: (e) => patchRow(r.key, { sets: e.target.value }),
               setWeight: (e) => patchRow(r.key, { weight: e.target.value }),
               setRest: (e) => patchRow(r.key, { rest: e.target.value }),
-              remove: () =>
-                r.id
-                  ? patchRow(r.key, { removed: true })
-                  : patchDraft({ rows: draft.rows.filter((x) => x.key !== r.key) }),
+              remove: () => patchDraft({ rows: draft.rows.filter((x) => x.key !== r.key) }),
             })),
           addRow: () =>
             patchDraft({
@@ -291,12 +315,7 @@ export function arsenalVals(ctx: Ctx) {
                     ? { dist: draft.dist, elev: draft.elev, zone: draft.zone, minutes }
                     : null,
                 exercises: {
-                  update: draft.rows
-                    .filter((r) => r.id && !r.removed)
-                    .map((r) => ({
-                      id: r.id,
-                      patch: { name: r.name.trim() || r.name, sets: r.sets, weight: r.weight, rest: r.rest },
-                    })),
+                  update: [],
                   removeIds: draft.rows.filter((r) => r.id && r.removed).map((r) => r.id),
                   add: draft.rows
                     .filter((r) => !r.id && !r.removed && r.name.trim())
