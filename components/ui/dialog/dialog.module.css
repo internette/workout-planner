@@ -1,0 +1,19 @@
+/* A modal dialog: a native <dialog> opened with showModal(), which puts it in the top layer over an inert page. */
+
+.panel {
+  box-sizing: border-box;
+  width: calc(100% - 48px);
+  max-height: 80vh;
+  margin: auto;
+  border: none;
+  overflow-y: auto;
+}
+.panel::backdrop { background: rgba(35, 42, 69, 0.35); }
+.sm { max-width: 400px; }
+.md { max-width: 440px; }
+
+.header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
+.title { margin: 0; }
+.close { margin-left: auto; }
+.description { margin: 10px 0 0; text-wrap: pretty; }
+.actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 22px; }

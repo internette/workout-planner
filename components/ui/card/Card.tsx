@@ -2,8 +2,8 @@ import { forwardRef, type ElementType, type HTMLAttributes } from 'react';
 import styles from './card.module.css';
 
 export interface CardProps extends HTMLAttributes<HTMLElement> {
-  /** The element to render. A card that is clicked should be a button. */
-  as?: 'div' | 'section' | 'aside' | 'article' | 'button';
+  /** The element to render. A card that is clicked should be a button; a modal is a dialog. */
+  as?: 'div' | 'section' | 'aside' | 'article' | 'button' | 'dialog';
   /** Inner spacing: xs 14, sm 18/20, md 22, lg 26 px. */
   pad?: 'none' | 'xs' | 'sm' | 'md' | 'lg';
   /** raised: a card on the page. overlay: a dialog, menu or popover floating above it. */

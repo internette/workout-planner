@@ -92,6 +92,33 @@ export function Preview({ slug }: { slug: string }) {
           onChange={noop}
         />
       );
+    case 'dialog':
+      return (
+        <Card pad="sm" elevation="overlay" style={{ width: 190 }}>
+          <Text variant="itemTitle" tone="ink" as="div">
+            Delete this workout?
+          </Text>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 6, marginTop: 10 }}>
+            <Button type="neutral" ghost size="sm">
+              Keep it
+            </Button>
+            <Button type="danger" size="sm">
+              Delete
+            </Button>
+          </div>
+        </Card>
+      );
+    case 'popover':
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6 }}>
+          <Chip icon={<Calendar color="var(--color-muted)" size={15} />}>Thu, Sep 17</Chip>
+          <Card pad="xs" elevation="overlay" style={{ width: 150 }}>
+            <Text variant="caption" tone="muted">
+              Floats under it
+            </Text>
+          </Card>
+        </div>
+      );
     case 'text-field':
       return (
         <Card pad="xs" style={{ width: 190 }}>

@@ -93,6 +93,12 @@ export function chromeVals(ctx: Ctx) {
     saveError: st.saveError || '',
     dismissError: () => logic.s({ saveError: null }),
     yearLabel: String(Y),
+    // The browser dismisses a popover on its own (Escape, outside press) and may report it after another one has
+    // opened, so each closes only itself.
+    closeMonth: () => logic.s({ monthOpen: false }),
+    closeIcons: () => logic.s({ iconsOpen: false }),
+    closeXp: () => logic.s({ xpInfo: false }),
+    closeDate: () => logic.s({ dateOpen: false }),
     confirmOpen: !!st.confirm,
     confirmTitle: (st.confirm || {}).title,
     confirmBody: (st.confirm || {}).body,

@@ -73,6 +73,8 @@ components/
   ui/segmented-control/  Design-system SegmentedControl (brand and quiet tones, tabs or options, keyboard support)
   ui/chip/            Design-system Chip (info, accent and selectable choice pills)
   ui/text-field/      Design-system TextField, TextArea and Label (filled, title and bare inputs; hint and error)
+  ui/dialog/          Design-system Dialog (a native <dialog>: top layer, inert page, Escape and focus handled by the browser)
+  ui/popover/         Design-system Popover (the popover attribute: top layer, dismissed on Escape or an outside press)
   planner/
     PlannerLogic.ts   UI state, navigation, loading and saving; renderVals() assembles the view's values
     context.ts        Runs the stages below in order to build a shared context

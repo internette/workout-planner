@@ -5,6 +5,8 @@
 import { Fragment } from 'react';
 import { css, t } from './viewHelpers';
 import { Card } from '@/components/ui/card';
+import { Dialog } from '@/components/ui/dialog';
+import { Popover } from '@/components/ui/popover';
 import { Text } from '@/components/ui/typography';
 import { Chip } from '@/components/ui/chip';
 import { Label, TextArea, TextField } from '@/components/ui/text-field';
@@ -61,177 +63,92 @@ export function PlannerView({ v }: { v: any }) {
       >
         {v.announce}
       </span>
-      {v.ranksOpen ? (
-        <>
-          <div
-            style={{
-              position: 'fixed',
-              inset: '0',
-              zIndex: '70',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '24px',
-              background: 'rgba(35,42,69,.35)',
-            }}
-          >
-            <Card
-              pad="lg"
-              elevation="overlay"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Ranks"
-              style={{ width: '100%', maxWidth: '440px', maxHeight: '80vh', overflowY: 'auto' }}
-            >
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
-                <Text variant="subheading" as="h2" style={{ margin: '0' }}>
-                  Ranks
-                </Text>
-                <Text variant="caption" tone="muted" weight="medium">
-                  {v.rankStepLabel}
-                </Text>
-                <IconButton label="Close" size="md" onClick={v.closeRanks} style={{ marginLeft: 'auto' }}>
-                  <Close color="var(--color-muted)" strokeWidth={2.2} size={16} />
-                </IconButton>
+      <Dialog
+        open={!!v.ranksOpen}
+        onClose={v.closeRanks}
+        title="Ranks"
+        aside={v.rankStepLabel}
+        closeButton
+        size="md"
+        description="Earned with experience — 10 XP per exercise completed, 50 XP per workout finished."
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '18px' }}>
+          {(v.rankLadder ?? []).map((r, i) => (
+            <Fragment key={i}>
+              <div style={css(r?.row)}>
+                <span style={css(r?.gem)}></span>
+                <span style={css(r?.name)}>{r?.label}</span>
+                <span style={css(r?.xp)}>{r?.req}</span>
               </div>
-              <Text variant="body" as="p" tone="muted" style={{ margin: '10px 0 0', textWrap: 'pretty' }}>
-                Earned with experience — 10 XP per exercise completed, 50 XP per workout finished.
-              </Text>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '18px' }}>
-                {(v.rankLadder ?? []).map((r, i) => (
-                  <Fragment key={i}>
-                    <div style={css(r?.row)}>
-                      <span style={css(r?.gem)}></span>
-                      <span style={css(r?.name)}>{r?.label}</span>
-                      <span style={css(r?.xp)}>{r?.req}</span>
-                    </div>
-                  </Fragment>
-                ))}
-              </div>
-            </Card>
-          </div>
-        </>
-      ) : null}
-      {v.confirmOpen ? (
-        <>
-          <div
-            style={{
-              position: 'fixed',
-              inset: '0',
-              zIndex: '70',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '24px',
-              background: 'rgba(35,42,69,.35)',
-            }}
-          >
-            <Card
-              pad="lg"
-              elevation="overlay"
-              role="dialog"
-              aria-modal="true"
-              aria-label={v.confirmTitle}
-              style={{ width: '100%', maxWidth: '400px' }}
-            >
-              <Text variant="subheading" as="h2" style={{ margin: '0' }}>
-                {v.confirmTitle}
-              </Text>
-              <Text variant="body" as="p" tone="muted" style={{ margin: '10px 0 0', textWrap: 'pretty' }}>
-                {v.confirmBody}
-              </Text>
-              <div
-                style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  justifyContent: 'flex-end',
-                  alignItems: 'center',
-                  gap: '10px',
-                  marginTop: '22px',
-                }}
-              >
-                <Button type="neutral" ghost size="md" onClick={v.confirmCancel}>
-                  Keep it
-                </Button>
-                <Button type="danger" size="md" onClick={v.confirmRun}>
-                  {v.confirmLabel}
-                </Button>
-              </div>
-            </Card>
-          </div>
-        </>
-      ) : null}
-      {v.tplConfirmOpen ? (
-        <>
-          <div
-            style={{
-              position: 'fixed',
-              inset: '0',
-              zIndex: '70',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '24px',
-              background: 'rgba(35,42,69,.35)',
-            }}
-          >
-            <Card
-              pad="lg"
-              elevation="overlay"
-              role="dialog"
-              aria-modal="true"
-              aria-label={v.tplConfirmTitle}
-              style={{ width: '100%', maxWidth: '440px' }}
-            >
-              <Text variant="subheading" as="h2" style={{ margin: '0' }}>
-                {v.tplConfirmTitle}
-              </Text>
-              <Text variant="body" as="p" tone="muted" style={{ margin: '10px 0 0', textWrap: 'pretty' }}>
-                {v.tplConfirmBody}
-              </Text>
-              <ul style={{ margin: '14px 0 0', padding: '0 0 0 20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <li>
-                  <Text variant="body" as="span" tone="muted" style={{ textWrap: 'pretty' }}>
-                    <Text variant="body" as="strong" weight="semibold">
-                      Ticked:
-                    </Text>{' '}
-                    {v.tplConfirmOn}
-                  </Text>
-                </li>
-                <li>
-                  <Text variant="body" as="span" tone="muted" style={{ textWrap: 'pretty' }}>
-                    <Text variant="body" as="strong" weight="semibold">
-                      Unticked:
-                    </Text>{' '}
-                    {v.tplConfirmOff}
-                  </Text>
-                </li>
-              </ul>
-              <label
-                style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '16px', cursor: 'pointer' }}
-              >
-                <input
-                  type="checkbox"
-                  checked={v.tplConfirmUpdateChecked}
-                  onChange={v.tplConfirmToggle}
-                  style={{ width: '18px', height: '18px', margin: '0', accentColor: 'var(--color-pink)', cursor: 'pointer' }}
-                />
-                <Text variant="body" as="span">
-                  Update upcoming sessions
-                </Text>
-              </label>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '10px', marginTop: '22px' }}>
-                <Button type="neutral" ghost size="md" onClick={v.tplConfirmCancel}>
-                  Cancel
-                </Button>
-                <Button type="primary" size="md" onClick={v.tplConfirmSave}>
-                  Update
-                </Button>
-              </div>
-            </Card>
-          </div>
-        </>
-      ) : null}
+            </Fragment>
+          ))}
+        </div>
+      </Dialog>
+      <Dialog
+        open={!!v.confirmOpen}
+        onClose={v.confirmCancel}
+        title={v.confirmTitle}
+        description={v.confirmBody}
+        actions={
+          <>
+            <Button type="neutral" ghost size="md" onClick={v.confirmCancel}>
+              Keep it
+            </Button>
+            <Button type="danger" size="md" onClick={v.confirmRun}>
+              {v.confirmLabel}
+            </Button>
+          </>
+        }
+      />
+      <Dialog
+        open={!!v.tplConfirmOpen}
+        onClose={v.tplConfirmCancel}
+        title={v.tplConfirmTitle}
+        description={v.tplConfirmBody}
+        size="md"
+        actions={
+          <>
+            <Button type="neutral" ghost size="md" onClick={v.tplConfirmCancel}>
+              Cancel
+            </Button>
+            <Button type="primary" size="md" onClick={v.tplConfirmSave}>
+              Update
+            </Button>
+          </>
+        }
+      >
+        <ul style={{ margin: '14px 0 0', padding: '0 0 0 20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <li>
+            <Text variant="body" as="span" tone="muted" style={{ textWrap: 'pretty' }}>
+              <Text variant="body" as="strong" weight="semibold">
+                Ticked:
+              </Text>{' '}
+              {v.tplConfirmOn}
+            </Text>
+          </li>
+          <li>
+            <Text variant="body" as="span" tone="muted" style={{ textWrap: 'pretty' }}>
+              <Text variant="body" as="strong" weight="semibold">
+                Unticked:
+              </Text>{' '}
+              {v.tplConfirmOff}
+            </Text>
+          </li>
+        </ul>
+        <label
+          style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '16px', cursor: 'pointer' }}
+        >
+          <input
+            type="checkbox"
+            checked={v.tplConfirmUpdateChecked}
+            onChange={v.tplConfirmToggle}
+            style={{ width: '18px', height: '18px', margin: '0', accentColor: 'var(--color-pink)', cursor: 'pointer' }}
+          />
+          <Text variant="body" as="span">
+            Update upcoming sessions
+          </Text>
+        </label>
+      </Dialog>
       <div style={css(v.pageStyle)}>
         <div
           style={{
@@ -302,7 +219,70 @@ export function PlannerView({ v }: { v: any }) {
                       gap: '12px',
                     }}
                   >
-                    <div data-pop="month" style={{ position: 'relative', flex: 'none' }}>
+                    <Popover
+                      open={!!v.monthOpen}
+                      onClose={v.closeMonth}
+                      width={300}
+                      top={40}
+                      align="center"
+                      content={
+                        <>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              paddingBottom: '12px',
+                              borderBottom: '1px solid rgba(35,42,69,.09)',
+                            }}
+                          >
+                            <span
+                              style={{
+                                width: '34px',
+                                height: '34px',
+                                borderRadius: '11px',
+                                border: '1px solid rgba(35,42,69,.12)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              <ChevronLeft color="var(--color-hairline)" size={17} />
+                            </span>
+                            <Text variant="subheading">{v.yearLabel}</Text>
+                            <span
+                              style={{
+                                width: '34px',
+                                height: '34px',
+                                borderRadius: '11px',
+                                border: '1px solid rgba(35,42,69,.12)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              <ChevronRight color="var(--color-hairline)" size={17} />
+                            </span>
+                          </div>
+                          <div
+                            style={{
+                              display: 'grid',
+                              gridTemplateColumns: 'repeat(3,minmax(0,1fr))',
+                              gap: '4px',
+                              marginTop: '10px',
+                            }}
+                          >
+                            {(v.months ?? []).map((m, i) => (
+                              <Fragment key={i}>
+                                <button onClick={m?.pick} style={css(m?.style)}>
+                                  {m?.short}
+                                </button>
+                              </Fragment>
+                            ))}
+                          </div>
+                        </>
+                      }
+                    >
                       <button onClick={v.toggleMonth} style={css(v.monthBtn)} className="hv1">
                         <Text variant="heading" tone="ink">
                           {v.monthName}
@@ -401,77 +381,7 @@ export function PlannerView({ v }: { v: any }) {
                           </span>
                         </span>
                       </button>
-                      {v.monthOpen ? (
-                        <>
-                          <Card
-                            pad="xs"
-                            elevation="overlay"
-                            style={{
-                              position: 'absolute',
-                              top: '40px',
-                              left: '50%',
-                              transform: 'translateX(-50%)',
-                              width: '300px',
-                              zIndex: '20',
-                            }}
-                          >
-                            <div
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                paddingBottom: '12px',
-                                borderBottom: '1px solid rgba(35,42,69,.09)',
-                              }}
-                            >
-                              <span
-                                style={{
-                                  width: '34px',
-                                  height: '34px',
-                                  borderRadius: '11px',
-                                  border: '1px solid rgba(35,42,69,.12)',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <ChevronLeft color="var(--color-hairline)" size={17} />
-                              </span>
-                              <Text variant="subheading">{v.yearLabel}</Text>
-                              <span
-                                style={{
-                                  width: '34px',
-                                  height: '34px',
-                                  borderRadius: '11px',
-                                  border: '1px solid rgba(35,42,69,.12)',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <ChevronRight color="var(--color-hairline)" size={17} />
-                              </span>
-                            </div>
-                            <div
-                              style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(3,minmax(0,1fr))',
-                                gap: '4px',
-                                marginTop: '10px',
-                              }}
-                            >
-                              {(v.months ?? []).map((m, i) => (
-                                <Fragment key={i}>
-                                  <button onClick={m?.pick} style={css(m?.style)}>
-                                    {m?.short}
-                                  </button>
-                                </Fragment>
-                              ))}
-                            </div>
-                          </Card>
-                        </>
-                      ) : null}
-                    </div>
+                    </Popover>
                     <SegmentedControl
                       label="Calendar view"
                       semantics="tabs"
@@ -1568,16 +1478,40 @@ export function PlannerView({ v }: { v: any }) {
                         {t(v.rankName)}
                         <ChevronRight strokeWidth={2.4} size={12} style={{ opacity: '.7' }} />
                       </button>
-                      <div
-                        data-pop="xp"
-                        style={{
-                          position: 'relative',
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          alignItems: 'center',
-                          gap: '10px',
-                          marginTop: '14px',
-                        }}
+                      <Popover
+                        open={!!v.xpInfoOpen}
+                        onClose={v.closeXp}
+                        width={280}
+                        top={34}
+                        pad="sm"
+                        style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', marginTop: '14px' }}
+                        content={
+                          <>
+                            <Text variant="eyebrow" tone="slate" style={{ display: 'block' }}>
+                              HOW PROGRESS WORKS
+                            </Text>
+                            <Text
+                              variant="body"
+                              tone="ink"
+                              style={{ display: 'block', marginTop: '9px', textWrap: 'pretty' }}
+                            >
+                              Each exercise you complete earns 10 XP, and finishing a whole workout earns 50
+                              XP on top. Ranks unlock at fixed XP totals.
+                            </Text>
+                            <span
+                              style={{
+                                display: 'block',
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'var(--text-md)',
+                                fontWeight: 'var(--font-weight-bold)',
+                                color: 'var(--color-pink-deep)',
+                                marginTop: '12px',
+                              }}
+                            >
+                              {v.xpLine}
+                            </span>
+                          </>
+                        }
                       >
                         <div
                           style={{
@@ -1610,49 +1544,7 @@ export function PlannerView({ v }: { v: any }) {
                         >
                           <Info color="var(--color-muted)" size={16} />
                         </IconButton>
-                        {v.xpInfoOpen ? (
-                          <>
-                            <span
-                              style={{
-                                position: 'absolute',
-                                top: '34px',
-                                left: '0',
-                                zIndex: '40',
-                                display: 'block',
-                                width: '280px',
-                                padding: '16px 18px',
-                                background: 'var(--color-white)',
-                                borderRadius: '18px',
-                                boxShadow: '0 8px 24px rgba(35,42,69,.14)',
-                              }}
-                            >
-                              <Text variant="eyebrow" tone="slate" style={{ display: 'block' }}>
-                                HOW PROGRESS WORKS
-                              </Text>
-                              <Text
-                                variant="body"
-                                tone="ink"
-                                style={{ display: 'block', marginTop: '9px', textWrap: 'pretty' }}
-                              >
-                                Each exercise you complete earns 10 XP, and finishing a whole workout earns 50
-                                XP on top. Ranks unlock at fixed XP totals.
-                              </Text>
-                              <span
-                                style={{
-                                  display: 'block',
-                                  fontFamily: 'var(--font-heading)',
-                                  fontSize: 'var(--text-md)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  color: 'var(--color-pink-deep)',
-                                  marginTop: '12px',
-                                }}
-                              >
-                                {v.xpLine}
-                              </span>
-                            </span>
-                          </>
-                        ) : null}
-                      </div>
+                      </Popover>
                     </div>
                   </Card>
                   <div id="profileStats" style={{ display: 'grid', gap: '12px', marginTop: '14px' }}>
@@ -3482,65 +3374,69 @@ export function PlannerView({ v }: { v: any }) {
             {v.isEdit ? (
               <>
                 <div style={{ position: 'relative' }}>
-                  {v.leaveOpen ? (
-                    <>
-                      <div
-                        style={{
-                          position: 'fixed',
-                          inset: '0',
-                          zIndex: '60',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          padding: '24px',
-                          background: 'rgba(35,42,69,.35)',
-                        }}
-                      >
-                        <Card
-                          pad="lg"
-                          elevation="overlay"
-                          role="dialog"
-                          aria-modal="true"
-                          aria-label="Keep your changes?"
-                          style={{ width: '100%', maxWidth: '400px' }}
-                        >
-                          <Text variant="subheading" as="h2" style={{ margin: '0' }}>
-                            Keep your changes?
-                          </Text>
-                          <Text
-                            variant="body"
-                            as="p"
-                            tone="muted"
-                            style={{ margin: '10px 0 0', textWrap: 'pretty' }}
-                          >
-                            You've edited this workout. Save what you changed, or leave it as it was.
-                          </Text>
-                          <div
-                            style={{
-                              display: 'flex',
-                              flexWrap: 'wrap',
-                              justifyContent: 'flex-end',
-                              alignItems: 'center',
-                              gap: '10px',
-                              marginTop: '22px',
-                            }}
-                          >
-                            <Button type="danger" ghost size="md" onClick={v.discardLeave}>
-                              Discard changes
-                            </Button>
-                            <Button type="primary" size="md" onClick={v.saveLeave}>
-                              Save changes
-                            </Button>
-                          </div>
-                        </Card>
-                      </div>
-                    </>
-                  ) : null}
+                  <Dialog
+                    open={!!v.leaveOpen}
+                    onClose={v.stayHere}
+                    title="Keep your changes?"
+                    description="You've edited this workout. Save what you changed, or leave it as it was."
+                    actions={
+                      <>
+                        <Button type="danger" ghost size="md" onClick={v.discardLeave}>
+                          Discard changes
+                        </Button>
+                        <Button type="primary" size="md" onClick={v.saveLeave}>
+                          Save changes
+                        </Button>
+                      </>
+                    }
+                  />
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 12px' }}>
                     <IconButton label="Back" size="md" onClick={v.tryLeave} style={{ marginLeft: '-8px' }}>
                       <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
                     </IconButton>
-                    <div data-pop="icons" style={{ position: 'relative', flex: 'none' }}>
+                    <Popover
+                      open={!!v.iconsOpen}
+                      onClose={v.closeIcons}
+                      width={238}
+                      top={52}
+                      content={
+                        <>
+                          <Text variant="eyebrow" as="div" tone="slate" style={{ padding: '0 2px 10px' }}>
+                            ICON
+                          </Text>
+                          <div
+                            style={{
+                              display: 'grid',
+                              gridTemplateColumns: 'repeat(5,minmax(0,1fr))',
+                              gap: '8px',
+                            }}
+                          >
+                            {(v.workoutIconGrid ?? []).map((w, i) => (
+                              <Fragment key={i}>
+                                <button onClick={w?.pick} style={css(w?.style)}>
+                                  {w?.svg}
+                                </button>
+                              </Fragment>
+                            ))}
+                          </div>
+                          <Text
+                            variant="eyebrow"
+                            as="div"
+                            tone="slate"
+                            style={{ padding: '14px 2px 10px' }}
+                          >
+                            COLOR
+                          </Text>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                            {(v.iconColors ?? []).map((c, i) => (
+                              <Fragment key={i}>
+                                <button onClick={c?.pick} style={css(c?.style)}></button>
+                              </Fragment>
+                            ))}
+                          </div>
+                        </>
+                      }
+                    >
                       <button
                         onClick={v.toggleIcons}
                         aria-label="Choose workout icon"
@@ -3549,56 +3445,7 @@ export function PlannerView({ v }: { v: any }) {
                       >
                         {v.workoutIcoSvg}
                       </button>
-                      {v.iconsOpen ? (
-                        <>
-                          <Card
-                            pad="xs"
-                            elevation="overlay"
-                            style={{
-                              position: 'absolute',
-                              top: '52px',
-                              left: '0',
-                              zIndex: '30',
-                              width: '238px',
-                            }}
-                          >
-                            <Text variant="eyebrow" as="div" tone="slate" style={{ padding: '0 2px 10px' }}>
-                              ICON
-                            </Text>
-                            <div
-                              style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(5,minmax(0,1fr))',
-                                gap: '8px',
-                              }}
-                            >
-                              {(v.workoutIconGrid ?? []).map((w, i) => (
-                                <Fragment key={i}>
-                                  <button onClick={w?.pick} style={css(w?.style)}>
-                                    {w?.svg}
-                                  </button>
-                                </Fragment>
-                              ))}
-                            </div>
-                            <Text
-                              variant="eyebrow"
-                              as="div"
-                              tone="slate"
-                              style={{ padding: '14px 2px 10px' }}
-                            >
-                              COLOR
-                            </Text>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                              {(v.iconColors ?? []).map((c, i) => (
-                                <Fragment key={i}>
-                                  <button onClick={c?.pick} style={css(c?.style)}></button>
-                                </Fragment>
-                              ))}
-                            </div>
-                          </Card>
-                        </>
-                      ) : null}
-                    </div>
+                    </Popover>
                     <div style={{ flex: '1 1 220px', minWidth: '0' }}>
                       <Text variant="eyebrow" as="div" tone="slate">
                         {v.eEyebrow}
@@ -3630,72 +3477,63 @@ export function PlannerView({ v }: { v: any }) {
                     </div>
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '20px' }}>
-                    <span data-pop="date" style={{ position: 'relative', flex: 'none' }}>
+                    <Popover
+                      open={!!v.dateOpen}
+                      onClose={v.closeDate}
+                      width={280}
+                      top={44}
+                      as="span"
+                      content={
+                        <>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <IconButton label="Previous month" size="md" onClick={v.prevMonth}>
+                              <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={15} />
+                            </IconButton>
+                            <Text variant="itemTitle" style={{ flex: '1', textAlign: 'center' }}>
+                              {v.monthName}
+                            </Text>
+                            <IconButton label="Next month" size="md" onClick={v.nextMonth}>
+                              <ChevronRight color="var(--color-slate)" strokeWidth={2.2} size={15} />
+                            </IconButton>
+                          </span>
+                          <span
+                            style={{
+                              display: 'grid',
+                              gridTemplateColumns: 'repeat(7,minmax(0,1fr))',
+                              gap: '2px',
+                              marginTop: '10px',
+                            }}
+                          >
+                            {(v.dowLabels ?? []).map((l, i) => (
+                              <Fragment key={i}>
+                                <span
+                                  style={{
+                                    textAlign: 'center',
+                                    fontSize: 'var(--text-2xs)',
+                                    fontWeight: 'var(--font-weight-bold)',
+                                    color: 'var(--color-subtle)',
+                                    paddingBottom: '4px',
+                                  }}
+                                >
+                                  {l}
+                                </span>
+                              </Fragment>
+                            ))}
+                            {(v.pickerCells ?? []).map((p, i) => (
+                              <Fragment key={i}>
+                                <button onClick={p?.pick} style={css(p?.style)}>
+                                  {p?.label}
+                                </button>
+                              </Fragment>
+                            ))}
+                          </span>
+                        </>
+                      }
+                    >
                       <Chip icon={<Calendar color="var(--color-muted)" size={15} />} onClick={v.toggleDate}>
                         {t(v.eDate)}
                       </Chip>
-                      {v.dateOpen ? (
-                        <>
-                          <span
-                            style={{
-                              position: 'absolute',
-                              top: '44px',
-                              left: '0',
-                              zIndex: '30',
-                              display: 'block',
-                              width: '280px',
-                              padding: '16px',
-                              background: 'var(--color-white)',
-                              borderRadius: '20px',
-                              boxShadow: '0 8px 24px rgba(35,42,69,.14)',
-                            }}
-                          >
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <IconButton label="Previous month" size="md" onClick={v.prevMonth}>
-                                <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={15} />
-                              </IconButton>
-                              <Text variant="itemTitle" style={{ flex: '1', textAlign: 'center' }}>
-                                {v.monthName}
-                              </Text>
-                              <IconButton label="Next month" size="md" onClick={v.nextMonth}>
-                                <ChevronRight color="var(--color-slate)" strokeWidth={2.2} size={15} />
-                              </IconButton>
-                            </span>
-                            <span
-                              style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(7,minmax(0,1fr))',
-                                gap: '2px',
-                                marginTop: '10px',
-                              }}
-                            >
-                              {(v.dowLabels ?? []).map((l, i) => (
-                                <Fragment key={i}>
-                                  <span
-                                    style={{
-                                      textAlign: 'center',
-                                      fontSize: 'var(--text-2xs)',
-                                      fontWeight: 'var(--font-weight-bold)',
-                                      color: 'var(--color-subtle)',
-                                      paddingBottom: '4px',
-                                    }}
-                                  >
-                                    {l}
-                                  </span>
-                                </Fragment>
-                              ))}
-                              {(v.pickerCells ?? []).map((p, i) => (
-                                <Fragment key={i}>
-                                  <button onClick={p?.pick} style={css(p?.style)}>
-                                    {p?.label}
-                                  </button>
-                                </Fragment>
-                              ))}
-                            </span>
-                          </span>
-                        </>
-                      ) : null}
-                    </span>
+                    </Popover>
                     {v.repeatOn ? (
                       <>
                         <Chip tone="accent" icon={<Repeat color="var(--color-white)" size={15} />}>
@@ -3995,7 +3833,45 @@ export function PlannerView({ v }: { v: any }) {
                           <Fragment key={i}>
                             <Card pad="sm">
                               <div style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
-                                <div data-pop="ex" style={{ position: 'relative', flex: 'none' }}>
+                                <Popover
+                                  open={!!ex?.open}
+                                  onClose={ex?.close}
+                                  width={186}
+                                  top={48}
+                                  content={
+                                    <>
+                                      <Text
+                                        variant="micro"
+                                        as="div"
+                                        tone="slate"
+                                        style={{ padding: '0 2px 9px' }}
+                                      >
+                                        ICON
+                                      </Text>
+                                      <div
+                                        style={{
+                                          display: 'grid',
+                                          gridTemplateColumns: 'repeat(3,minmax(0,1fr))',
+                                          gap: '7px',
+                                        }}
+                                      >
+                                        <button onClick={ex?.pickH} style={css(ex?.optH)}>
+                                          <Dumbbell color="var(--color-pink)" size={20} />
+                                        </button>
+                                        <button onClick={ex?.pickV} style={css(ex?.optV)}>
+                                          <Dumbbell
+                                            color="var(--color-pink)"
+                                            size={20}
+                                            style={{ transform: 'rotate(90deg)' }}
+                                          />
+                                        </button>
+                                        <button onClick={ex?.pickD} style={css(ex?.optD)}>
+                                          <DumbbellSmall color="var(--color-pink)" size={20} />
+                                        </button>
+                                      </div>
+                                    </>
+                                  }
+                                >
                                   <button
                                     onClick={ex?.toggle}
                                     aria-label={ex?.iconAria}
@@ -4040,52 +3916,7 @@ export function PlannerView({ v }: { v: any }) {
                                       </>
                                     ) : null}
                                   </button>
-                                  {ex?.open ? (
-                                    <>
-                                      <Card
-                                        pad="xs"
-                                        elevation="overlay"
-                                        style={{
-                                          position: 'absolute',
-                                          top: '48px',
-                                          left: '0',
-                                          zIndex: '30',
-                                          width: '186px',
-                                        }}
-                                      >
-                                        <Text
-                                          variant="micro"
-                                          as="div"
-                                          tone="slate"
-                                          style={{ padding: '0 2px 9px' }}
-                                        >
-                                          ICON
-                                        </Text>
-                                        <div
-                                          style={{
-                                            display: 'grid',
-                                            gridTemplateColumns: 'repeat(3,minmax(0,1fr))',
-                                            gap: '7px',
-                                          }}
-                                        >
-                                          <button onClick={ex?.pickH} style={css(ex?.optH)}>
-                                            <Dumbbell color="var(--color-pink)" size={20} />
-                                          </button>
-                                          <button onClick={ex?.pickV} style={css(ex?.optV)}>
-                                            <Dumbbell
-                                              color="var(--color-pink)"
-                                              size={20}
-                                              style={{ transform: 'rotate(90deg)' }}
-                                            />
-                                          </button>
-                                          <button onClick={ex?.pickD} style={css(ex?.optD)}>
-                                            <DumbbellSmall color="var(--color-pink)" size={20} />
-                                          </button>
-                                        </div>
-                                      </Card>
-                                    </>
-                                  ) : null}
-                                </div>
+                                </Popover>
                                 <span style={css(ex?.nameStyle)}>{ex?.name}</span>
                                 <button
                                   onClick={ex?.toggleDone}

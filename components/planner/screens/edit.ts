@@ -497,6 +497,7 @@ export function editVals(ctx: Ctx) {
         isD: cur === 'd',
         open: st.exOpen === e.name,
         toggle: () => logic.s({ exOpen: st.exOpen === e.name ? null : e.name }),
+        close: () => logic.state.exOpen === e.name && logic.s({ exOpen: null }),
         pickH: set('h'),
         pickV: set('v'),
         pickD: set('d'),

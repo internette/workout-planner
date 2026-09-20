@@ -13,46 +13,13 @@ import { progressVals } from './screens/progress';
 
 export class PlannerLogic extends DCLogic {
   _r: any;
-  _out: any;
-  _esc: any;
-  _track: any;
-  _lastFocus: any;
-  _returnTo: any;
   componentDidMount(){
     this.load();
     this._r = () => this.forceUpdate();
     window.addEventListener('resize', this._r);
-    this._out = e => {
-      const st = this.state;
-      if (!st.iconsOpen && !st.dateOpen && !st.monthOpen && !st.xpInfo && st.exOpen == null) return;
-      if (e.target.closest && e.target.closest('[data-pop]')) return;
-      this.setState({ iconsOpen:false, dateOpen:false, monthOpen:false, xpInfo:false, exOpen:null });
-    };
-    document.addEventListener('pointerdown', this._out, true);
-    this._esc = e => {
-      if (e.key !== 'Escape') return;
-      const st = this.state;
-      if (st.confirm) { this.setState({ confirm:null }); return; }
-      if (st.tplConfirm) { this.setState({ tplConfirm:null }); return; }
-      if (st.leaveOpen) { this.setState({ leaveOpen:false }); return; }
-      if (st.ranksOpen) { this.setState({ ranksOpen:false }); return; }
-      if (st.iconsOpen || st.dateOpen || st.monthOpen || st.xpInfo || st.exOpen != null)
-        this.setState({ iconsOpen:false, dateOpen:false, monthOpen:false, xpInfo:false, exOpen:null });
-    };
-    document.addEventListener('keydown', this._esc);
-    this._track = e => {
-      const b = (e.target.closest && e.target.closest('button')) || e.target;
-      if (b && b.tagName === 'BUTTON' && !b.closest('[role="dialog"]')) this._lastFocus = b;
-    };
-    document.addEventListener('focusin', this._track, true);
-    document.addEventListener('pointerdown', this._track, true);
   }
   componentWillUnmount(){
     window.removeEventListener('resize', this._r);
-    document.removeEventListener('pointerdown', this._out, true);
-    document.removeEventListener('keydown', this._esc);
-    document.removeEventListener('focusin', this._track, true);
-    document.removeEventListener('pointerdown', this._track, true);
   }
   model: Model | null = null;
   status: 'loading' | 'error' | 'ready' = 'loading';
@@ -111,18 +78,6 @@ export class PlannerLogic extends DCLogic {
     if (!h.length) return this.setState({ screen:'day', monthOpen:false, seg:'Day', creating:false });
     const prev = h[h.length - 1];
     this.setState(Object.assign({}, prev, { hist: h.slice(0, -1), monthOpen:false }));
-  }
-  componentDidUpdate(){
-    const dlg = document.querySelector('[role="dialog"]');
-    if (dlg && !dlg.contains(document.activeElement)) {
-      if (!this._returnTo) this._returnTo = this._lastFocus || null;
-      const first = dlg.querySelector('button');
-      if (first) first.focus();
-    } else if (!dlg && this._returnTo) {
-      const el = this._returnTo;
-      this._returnTo = null;
-      if (el && document.contains(el)) el.focus();
-    }
   }
   renderVals() {
     const ctx = buildContext(this);

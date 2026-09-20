@@ -114,6 +114,30 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'dialog',
+    title: 'Dialog',
+    category: 'components',
+    description: 'A modal card over a dimmed page, with focus and Escape handled.',
+    anchors: [
+      { id: 'confirm', title: 'Confirm' },
+      { id: 'with-content', title: 'With content' },
+      { id: 'with-a-close-button', title: 'With a close button' },
+      { id: 'behaviour', title: 'Behaviour' },
+    ],
+  },
+  {
+    slug: 'popover',
+    title: 'Popover',
+    category: 'components',
+    description: 'A small floating card anchored to a trigger.',
+    anchors: [
+      { id: 'anchored', title: 'Anchored' },
+      { id: 'centered', title: 'Centred' },
+      { id: 'padding', title: 'Padding' },
+      { id: 'behaviour', title: 'Behaviour' },
+    ],
+  },
+  {
     slug: 'text-field',
     title: 'Text field',
     category: 'components',
@@ -131,7 +155,6 @@ export const sections: Section[] = [
 
 // Ideas for what to build next. These are proposals, not commitments.
 export const planned: { title: string; why: string }[] = [
-  { title: 'Dialog', why: 'Five hand-built dialogs share the same scrim, focus and Escape handling.' },
   { title: 'Progress bar', why: 'The same gradient track appears four times.' },
   { title: 'Badge', why: 'Status pills that Chip does not cover.' },
   { title: 'Empty state', why: 'Six near-identical gradient panels with sparkles.' },
