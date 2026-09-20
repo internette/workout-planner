@@ -21,9 +21,9 @@ export function arsenalVals(ctx: Ctx) {
   // (from today on, not completed), ask whether they should follow the edit; past and completed ones never do.
   const todayIso = isoOf(new Date(Y, TODAY_M, TODAY_D));
   // When the edit becomes a new workout, the screen moves on to that copy (and to its copy of the exercise).
-  const applyEdit = (edit, updateUpcoming, patch) =>
+  const applyEdit = (edit, mode, updateUpcoming, patch) =>
     logic.save(
-      () => db.updateWorkoutTemplate(edit, { updateUpcoming, todayIso }),
+      () => db.updateWorkoutTemplate(edit, { mode, updateUpcoming, todayIso }),
       (r) => ({
         ...patch,
         ...(r.created ? { templateId: r.workoutId } : {}),
@@ -34,9 +34,16 @@ export function arsenalVals(ctx: Ctx) {
   const askThenApply = async (edit, name, patch, exercise = '') => {
     try {
       const count = await db.countUpcoming(edit.workoutId, todayIso);
-      if (count === 0) return applyEdit(edit, true, patch);
+      if (count === 0) return applyEdit(edit, 'update', true, patch);
       logic.s({
-        tplConfirm: { count, name, exercise, update: true, apply: (updateUpcoming) => applyEdit(edit, updateUpcoming, patch) },
+        tplConfirm: {
+          count,
+          name,
+          exercise,
+          choice: 'update',
+          upcoming: true,
+          apply: (mode, updateUpcoming) => applyEdit(edit, mode, updateUpcoming, patch),
+        },
       });
     } catch (e) {
       logic.s({ saveError: e instanceof Error ? e.message : String(e) });
@@ -312,36 +319,41 @@ export function arsenalVals(ctx: Ctx) {
 
   return {
     tplConfirmOpen: !!confirm,
-    tplConfirmTitle: confirm?.exercise ? 'Save changes to this exercise?' : 'Save changes to this workout?',
+    tplConfirmTitle: 'How should this change be saved?',
+    // The name of what is being edited, once. The options and the checkbox carry the rest.
     tplConfirmBody: confirm
-      ? (confirm.exercise ? '“' + confirm.exercise + '” is part of “' + confirm.name + '”, which has ' : '') +
-        (confirm.exercise
-          ? confirm.count === 1
-            ? '1 upcoming session'
-            : confirm.count + ' upcoming sessions'
-          : (confirm.count === 1 ? '1 upcoming session uses' : confirm.count + ' upcoming sessions use') +
-            ' “' +
-            confirm.name +
-            '”') +
-        '. Past and completed sessions always keep the workout as it was.'
-      : '',
-    // Both outcomes are always shown, whatever the checkbox says.
-    tplConfirmOn: confirm
       ? confirm.exercise
-        ? 'Your changes are saved to “' + confirm.exercise + '” in “' + confirm.name + '” and applied to its upcoming sessions.'
-        : 'Your changes are saved to “' + confirm.name + '” and applied to its upcoming sessions.'
+        ? 'Editing “' + confirm.exercise + '” in “' + confirm.name + '”.'
+        : 'Editing “' + confirm.name + '”.'
       : '',
-    tplConfirmOff: confirm
-      ? confirm.exercise
-        ? 'Your changes are saved in a new copy of “' + confirm.name + '”. “' + confirm.name + '” and its sessions stay as they are.'
-        : 'Your changes are saved as a new workout. “' + confirm.name + '” and its sessions stay as they are.'
+    tplConfirmChoice: confirm?.choice === 'new' ? 'new' : 'update',
+    tplConfirmSetChoice: (value) => confirm && logic.s({ tplConfirm: { ...confirm, choice: value } }),
+    tplConfirmOptions: confirm
+      ? [
+          {
+            value: 'update',
+            title: confirm.exercise ? 'Update this exercise' : 'Update this workout',
+            description: 'Past sessions keep the old version.',
+          },
+          {
+            value: 'new',
+            title: confirm.exercise ? 'Save as a new exercise' : 'Save as a new workout',
+            description: confirm.exercise
+              ? 'Saved in a copy of the workout. The original stays as it is.'
+              : 'The original and its sessions stay as they are.',
+          },
+        ]
+      : [],
+    // Shown inside the Update option only.
+    tplConfirmUpcoming: !!confirm?.upcoming,
+    tplConfirmToggleUpcoming: () => confirm && logic.s({ tplConfirm: { ...confirm, upcoming: !confirm.upcoming } }),
+    tplConfirmUpcomingLabel: confirm
+      ? 'Also update ' + confirm.count + (confirm.count === 1 ? ' upcoming session' : ' upcoming sessions')
       : '',
     tplConfirmCancel: () => logic.s({ tplConfirm: null }),
-    tplConfirmUpdateChecked: !!confirm?.update,
-    tplConfirmToggle: () => confirm && logic.s({ tplConfirm: { ...confirm, update: !confirm.update } }),
     tplConfirmSave: () => {
       logic.s({ tplConfirm: null });
-      if (confirm) confirm.apply(confirm.update);
+      if (confirm) confirm.apply(confirm.choice === 'new' ? 'new' : 'update', !!confirm.upcoming);
     },
     exercise,
     exerciseEdit,

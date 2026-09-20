@@ -8,7 +8,7 @@
 - **Workouts:** lifting sessions (exercises with sets, reps, weight and rest) and cycling sessions (distance, elevation, duration, target effort). Both can repeat weekly for 12 weeks.
 - **Progress tracking:** tick exercises off, mark rides complete, and log what you actually rode against the plan.
 - **Chronicle:** a diary entry per session with mood, effort (1–5) and notes.
-- **Arsenal:** two views, switched with a toggle. **Workouts** lists every saved workout with its exercises and target areas; **Exercises** is your exercise library, grouped by workout, plus exercises not yet assigned to one. Open either to read it without any date, and use Edit to change it. When you save a workout, or an exercise inside a workout, that has upcoming sessions, a dialog asks whether to update them. With "Update upcoming sessions" ticked, the workout is edited and its upcoming sessions follow. Unticked, your changes are saved as a new workout (a copy, for an exercise edit) and the original keeps all its sessions. Either way, past and completed sessions never change.
+- **Arsenal:** two views, switched with a toggle. **Workouts** lists every saved workout with its exercises and target areas; **Exercises** is your exercise library, grouped by workout, plus exercises not yet assigned to one. Open either to read it without any date, and use Edit to change it. When you save a workout, or an exercise inside a workout, that has upcoming sessions, a dialog asks how to save it. **Update** edits it in place, with an "Also update upcoming sessions" checkbox: ticked, upcoming sessions follow the edit, and unticked they stay on the old version. **Save as new** leaves the original and all its sessions alone and saves your changes as a copy (a new workout, or a copy of the workout for an exercise edit). Either way, past and completed sessions never change.
 - **Progress and Profile:** streaks, weekly counts, mood split, personal records, and XP with a 20-step rank ladder (10 XP per exercise, 50 XP per finished workout).
 
 ## Getting started
@@ -73,6 +73,7 @@ components/
   ui/segmented-control/  Design-system SegmentedControl (brand and quiet tones, tabs or options, keyboard support)
   ui/chip/            Design-system Chip (info, accent and selectable choice pills)
   ui/text-field/      Design-system TextField, TextArea and Label (filled, title and bare inputs; hint and error)
+  ui/option-card/     Design-system OptionCard and OptionGroup (one answer per card, a native radio underneath)
   ui/dialog/          Design-system Dialog (a native <dialog>: top layer, inert page, Escape and focus handled by the browser)
   ui/popover/         Design-system Popover (the popover attribute: top layer, dismissed on Escape or an outside press)
   planner/

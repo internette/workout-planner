@@ -542,12 +542,13 @@ async function freeWorkoutName(wanted: string): Promise<string> {
 }
 
 // Applies an edit to a saved workout without rewriting history.
-// - updateUpcoming: the workout is edited in place. Past and completed sessions keep the old version: it is
-//   copied to an archived snapshot that they are moved onto. Upcoming sessions follow the edit.
-// - otherwise: the workout and all its sessions stay exactly as they are, and the edit is saved as a new workout.
+// - mode 'update': the workout is edited in place. Past and completed sessions keep the old version: it is
+//   copied to an archived snapshot that they are moved onto. Upcoming sessions follow the edit if
+//   `updateUpcoming` is set, and otherwise are moved onto the snapshot too.
+// - mode 'new': the workout and all its sessions stay exactly as they are, and the edit is saved as a new workout.
 export async function updateWorkoutTemplate(
   edit: WorkoutEdit,
-  opts: { updateUpcoming: boolean; todayIso: string },
+  opts: { mode: 'update' | 'new'; updateUpcoming: boolean; todayIso: string },
 ): Promise<TemplateEditResult> {
   const [old]: any[] = await ok(supabase.from('workouts').select('*').eq('id', edit.workoutId));
   const oldExercises: any[] = await ok(
@@ -565,7 +566,7 @@ export async function updateWorkoutTemplate(
     return ids;
   };
 
-  if (!opts.updateUpcoming) {
+  if (opts.mode === 'new') {
     const name = await freeWorkoutName((edit.name || '').trim() || old.name);
     const [copy]: any[] = await ok(
       supabase.from('workouts').insert({ ...rest, name, archived: false, repeat_enabled: false }).select('id'),
@@ -588,10 +589,15 @@ export async function updateWorkoutTemplate(
   const entries: any[] = await ok(
     supabase.from('plan_entries').select('id, scheduled_date, status').eq('workout_id', edit.workoutId),
   );
-  const past = entries.filter((e) => !(e.scheduled_date >= opts.todayIso && e.status !== 'completed'));
+  const isUpcoming = (e: any) => e.scheduled_date >= opts.todayIso && e.status !== 'completed';
+  const past = entries.filter((e) => !isUpcoming(e) || !opts.updateUpcoming);
   if (past.length) {
+    const keepsUpcoming = past.some(isUpcoming);
     const [snapshot]: any[] = await ok(
-      supabase.from('workouts').insert({ ...rest, archived: true, repeat_enabled: false }).select('id'),
+      supabase
+        .from('workouts')
+        .insert({ ...rest, archived: true, repeat_enabled: keepsUpcoming ? old.repeat_enabled : false })
+        .select('id'),
     );
     await copyExercises(snapshot.id);
     await ok(

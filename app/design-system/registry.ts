@@ -114,6 +114,18 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'option-card',
+    title: 'Option card',
+    category: 'components',
+    description: 'One answer to a question, with what it does.',
+    anchors: [
+      { id: 'single-choice', title: 'Single choice' },
+      { id: 'states', title: 'States' },
+      { id: 'with-extra-controls', title: 'With extra controls' },
+      { id: 'behaviour', title: 'Behaviour' },
+    ],
+  },
+  {
     slug: 'dialog',
     title: 'Dialog',
     category: 'components',

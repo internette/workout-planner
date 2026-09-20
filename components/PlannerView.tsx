@@ -6,6 +6,7 @@ import { Fragment } from 'react';
 import { css, t } from './viewHelpers';
 import { Card } from '@/components/ui/card';
 import { Dialog } from '@/components/ui/dialog';
+import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { Popover } from '@/components/ui/popover';
 import { Text } from '@/components/ui/typography';
 import { Chip } from '@/components/ui/chip';
@@ -111,42 +112,40 @@ export function PlannerView({ v }: { v: any }) {
               Cancel
             </Button>
             <Button type="primary" size="md" onClick={v.tplConfirmSave}>
-              Update
+              Save
             </Button>
           </>
         }
       >
-        <ul style={{ margin: '14px 0 0', padding: '0 0 0 20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <li>
-            <Text variant="body" as="span" tone="muted" style={{ textWrap: 'pretty' }}>
-              <Text variant="body" as="strong" weight="semibold">
-                Ticked:
-              </Text>{' '}
-              {v.tplConfirmOn}
-            </Text>
-          </li>
-          <li>
-            <Text variant="body" as="span" tone="muted" style={{ textWrap: 'pretty' }}>
-              <Text variant="body" as="strong" weight="semibold">
-                Unticked:
-              </Text>{' '}
-              {v.tplConfirmOff}
-            </Text>
-          </li>
-        </ul>
-        <label
-          style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '16px', cursor: 'pointer' }}
-        >
-          <input
-            type="checkbox"
-            checked={v.tplConfirmUpdateChecked}
-            onChange={v.tplConfirmToggle}
-            style={{ width: '18px', height: '18px', margin: '0', accentColor: 'var(--color-pink)', cursor: 'pointer' }}
-          />
-          <Text variant="body" as="span">
-            Update upcoming sessions
-          </Text>
-        </label>
+        <div style={{ marginTop: '16px' }}>
+          <OptionGroup label="How to save your changes">
+            {(v.tplConfirmOptions ?? []).map((o) => (
+              <OptionCard
+                key={o.value}
+                name="tplConfirmChoice"
+                value={o.value}
+                checked={v.tplConfirmChoice === o.value}
+                onChange={v.tplConfirmSetChoice}
+                title={o.title}
+                description={o.description}
+              >
+                {o.value === 'update' ? (
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={v.tplConfirmUpcoming}
+                      onChange={v.tplConfirmToggleUpcoming}
+                      style={{ width: '18px', height: '18px', margin: '0', accentColor: 'var(--color-pink)', cursor: 'pointer' }}
+                    />
+                    <Text variant="body" as="span" tone="ink">
+                      {v.tplConfirmUpcomingLabel}
+                    </Text>
+                  </label>
+                ) : null}
+              </OptionCard>
+            ))}
+          </OptionGroup>
+        </div>
       </Dialog>
       <div style={css(v.pageStyle)}>
         <div

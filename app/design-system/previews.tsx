@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
 import { colors } from '@/components/ui/colors';
 import { Bike, Calendar, Check, Dumbbell, Sparkle } from '@/components/ui/icons';
+import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { TextField } from '@/components/ui/text-field';
 import { Text } from '@/components/ui/typography';
@@ -91,6 +92,15 @@ export function Preview({ slug }: { slug: string }) {
           value="Week"
           onChange={noop}
         />
+      );
+    case 'option-card':
+      return (
+        <div style={{ width: 210 }}>
+          <OptionGroup label="Example">
+            <OptionCard name="preview" value="a" checked onChange={noop} title="Update this workout" />
+            <OptionCard name="preview" value="b" checked={false} onChange={noop} title="Save as a new workout" />
+          </OptionGroup>
+        </div>
       );
     case 'dialog':
       return (
