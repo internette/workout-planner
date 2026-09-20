@@ -159,7 +159,7 @@ export function PlannerView({ v }: { v: any }) {
             alignItems: 'flex-start',
           }}
         >
-          <nav style={css(v.sidebarStyle)}>
+          <nav aria-label="Main" style={css(v.sidebarStyle)}>
             <div style={css(v.navListStyle)}>
               <button onClick={v.goDay} aria-current={v.navCalOn} style={css(v.navCal)}>
                 <Calendar color={v.navCalInk} size={18} />
@@ -4462,22 +4462,36 @@ export function PlannerView({ v }: { v: any }) {
             ) : null}
           </main>
         </div>
-        <nav style={css(v.tabbarStyle)}>
-          <button onClick={v.goDay} style={css(v.mTabCal)}>
+        <nav aria-label="Main" style={css(v.tabbarStyle)}>
+          <button onClick={v.goDay} aria-current={v.navCalOn} style={css(v.mTabCal)}>
             <Calendar color={v.mCalColor} size={22} />
-            <span style={css(v.mCalLabel)}>Calendar</span>
+            <span className="mlabel" style={css(v.mCalLabel)}>
+              Calendar
+            </span>
           </button>
-          <button onClick={v.goDiaryList} style={css(v.mTabDiary)}>
+          <button onClick={v.goDiaryList} aria-current={v.navDiaryOn} style={css(v.mTabDiary)}>
             <Notebook color={v.mDiaryColor} size={22} />
-            <span style={css(v.mDiaryLabel)}>Chronicle</span>
+            <span className="mlabel" style={css(v.mDiaryLabel)}>
+              Chronicle
+            </span>
           </button>
-          <button onClick={v.goSummary} style={css(v.mTabSummary)}>
+          <button onClick={v.goArsenal} aria-current={v.navArsenalOn} style={css(v.mTabArsenal)}>
+            <Dumbbell color={v.mArsenalColor} size={22} />
+            <span className="mlabel" style={css(v.mArsenalLabel)}>
+              Arsenal
+            </span>
+          </button>
+          <button onClick={v.goSummary} aria-current={v.navSummaryOn} style={css(v.mTabSummary)}>
             <BarChart color={v.mSummaryColor} size={22} />
-            <span style={css(v.mSummaryLabel)}>Progress</span>
+            <span className="mlabel" style={css(v.mSummaryLabel)}>
+              Progress
+            </span>
           </button>
-          <button onClick={v.goProfile} style={css(v.mTabProfile)}>
+          <button onClick={v.goProfile} aria-current={v.navProfileOn} style={css(v.mTabProfile)}>
             <User color={v.mProfileColor} size={22} />
-            <span style={css(v.mProfileLabel)}>Profile</span>
+            <span className="mlabel" style={css(v.mProfileLabel)}>
+              Profile
+            </span>
           </button>
         </nav>
       </div>

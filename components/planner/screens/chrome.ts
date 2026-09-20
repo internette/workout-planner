@@ -37,11 +37,14 @@ export function chromeVals(ctx: Ctx) {
       : 'display:flex;flex-direction:column;gap:4px',
     pageStyle: 'min-height:100vh;padding:0 0 ' + (narrow ? '108px' : '64px'),
     tabbarStyle: narrow
-      ? 'position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;gap:4px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid rgba(35,42,69,.07);box-shadow:0 -4px 14px rgba(35,42,69,.07)'
+      ? 'position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;gap:2px;padding:8px 6px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid rgba(35,42,69,.07);box-shadow:0 -4px 14px rgba(35,42,69,.07)'
       : 'display:none',
     mTabCal: mTab(onCal),
     mTabDiary: mTab(st.screen === 'diaryList'),
     mTabSummary: mTab(st.screen === 'summary'),
+    mTabArsenal: mTab(arsenalActive),
+    mArsenalColor: arsenalActive ? 'var(--color-pink-deep)' : 'var(--color-muted)',
+    mArsenalLabel: mLabel(arsenalActive),
     mCalColor: onCal ? 'var(--color-pink-deep)' : 'var(--color-muted)',
     mDiaryColor: st.screen === 'diaryList' ? 'var(--color-pink-deep)' : 'var(--color-muted)',
     mSummaryColor: st.screen === 'summary' ? 'var(--color-pink-deep)' : 'var(--color-muted)',

@@ -24,6 +24,10 @@ input, textarea, button { font-family: inherit; }
   50% { opacity: 1; transform: scale(1.15); }
 }
 
+/* Phone tab bar labels: 12 px, stepping down to 11 px where five tabs would not fit. */
+.mlabel { font-size: var(--text-sm); }
+@media (max-width: 324px) { .mlabel { font-size: var(--text-xs); } }
+
 button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   outline: 2px solid var(--color-pink);
   outline-offset: 2px;
