@@ -56,6 +56,24 @@ export function calendarVals(ctx: Ctx) {
       (st.monthOpen ? '180' : '0') +
       'deg)',
     toggleMonth: () => logic.s({ monthOpen: !st.monthOpen }),
+    // Keyboard movement in the month grid: arrows by day and week, Home and End to the ends of the week,
+    // PageUp and PageDown by month. The selected day is the grid's only tab stop, so focus follows it.
+    monthKeyDown: (e) => {
+      const cur = new Date(Y, mi, selDay);
+      let to: Date | null = null;
+      const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key];
+      if (step) to = new Date(Y, mi, selDay + step);
+      else if (e.key === 'Home') to = new Date(Y, mi, selDay - cur.getDay());
+      else if (e.key === 'End') to = new Date(Y, mi, selDay + (6 - cur.getDay()));
+      else if (e.key === 'PageUp' || e.key === 'PageDown') {
+        const m = mi + (e.key === 'PageUp' ? -1 : 1);
+        to = new Date(Y, m, Math.min(selDay, new Date(Y, m + 1, 0).getDate()));
+      }
+      if (!to || to.getFullYear() !== Y) return; // the planner shows one year
+      e.preventDefault();
+      logic.s({ month: MONTHS[to.getMonth()], day: to.getDate() });
+      requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-month-day="' + to.getDate() + '"]')?.focus());
+    },
     prevWeek: () => {
       const d = new Date(Y, mi, selDay - 7);
       logic.s({ month: MONTHS[d.getMonth()], day: d.getDate() });

@@ -1154,6 +1154,9 @@ export function PlannerView({ v }: { v: any }) {
                         </div>
                         <div style={{ position: 'relative' }}>
                           <div
+                            role="group"
+                            aria-label={v.monthName + ' ' + v.yearLabel + '. Use the arrow keys to move between days.'}
+                            onKeyDown={v.monthKeyDown}
                             style={{
                               position: 'relative',
                               display: 'grid',
@@ -1161,19 +1164,25 @@ export function PlannerView({ v }: { v: any }) {
                               gap: '4px',
                             }}
                           >
-                            {(v.monthCells ?? []).map((c, i) => (
-                              <Fragment key={i}>
+                            {(v.monthCells ?? []).map((c, i) =>
+                              c?.blank ? (
+                                <div key={i} aria-hidden="true" style={css(c?.wrap)}></div>
+                              ) : (
                                 <button
+                                  key={i}
                                   onClick={c?.pick}
+                                  tabIndex={c?.tabStop}
+                                  data-month-day={c?.day}
                                   aria-label={c?.aria}
                                   aria-current={c?.isToday}
+                                  aria-pressed={c?.selected}
                                   style={css(c?.wrap)}
                                 >
                                   <span style={css(c?.num)}>{c?.label}</span>
                                   <span style={css(c?.dot)}></span>
                                 </button>
-                              </Fragment>
-                            ))}
+                              ),
+                            )}
                           </div>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', marginTop: '20px' }}>
@@ -1247,23 +1256,30 @@ export function PlannerView({ v }: { v: any }) {
                                 {v.todayLabel}
                               </Text>
                               <Card
+                                as="button"
+                                interactive
                                 onClick={v.openToday}
                                 style={{
                                   display: 'flex',
                                   alignItems: 'center',
                                   gap: '14px',
+                                  width: '100%',
                                   marginTop: '12px',
-                                  cursor: 'pointer',
                                 }}
                               >
-                                <div style={{ minWidth: '0' }}>
-                                  <Text variant="itemTitle" as="div">
+                                <span style={{ minWidth: '0' }}>
+                                  <Text variant="itemTitle" as="span" style={{ display: 'block' }}>
                                     {v.todayName}
                                   </Text>
-                                  <Text variant="caption" as="div" tone="muted" style={{ marginTop: '3px' }}>
+                                  <Text
+                                    variant="caption"
+                                    as="span"
+                                    tone="muted"
+                                    style={{ display: 'block', marginTop: '3px' }}
+                                  >
                                     {v.todayMeta}
                                   </Text>
-                                </div>
+                                </span>
                                 <span style={{ marginLeft: 'auto', display: 'flex' }}>
                                   <ChevronRight color="var(--color-muted)" size={20} />
                                 </span>

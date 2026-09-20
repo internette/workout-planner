@@ -148,12 +148,8 @@ export function calendarStage(ctx: Ctx): Ctx {
   for (let i = 0; i < rows * 7; i++) {
     const d = i - lead + 1;
     if (d < 1 || d > dim) {
-      monthCells.push({
-        label: '',
-        wrap: 'height:50px;border:none;background:none;outline:none;cursor:default',
-        num: 'display:none',
-        dot: 'display:none',
-      });
+      // Padding before the 1st and after the last day: shown as empty space, not as a control.
+      monthCells.push({ blank: true, label: '', wrap: 'height:50px', num: 'display:none', dot: 'display:none' });
       continue;
     }
     const av = actFor(d);
@@ -164,9 +160,13 @@ export function calendarStage(ctx: Ctx): Ctx {
     const missed = !!a && a !== 'c' && a !== 't' && isCurMonth && d < TODAY_D;
     monthCells.push({
       label: String(d),
+      day: d,
+      // One tab stop for the whole grid: the selected day. Arrow keys move between days.
+      tabStop: sel ? 0 : -1,
+      selected: sel,
       pick: () => logic.s({ day: d }),
       wrap:
-        'height:50px;border:none;border-radius:14px;outline:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;' +
+        'height:50px;border:none;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;' +
         (sel
           ? 'background:var(--color-pink)'
           : missed
