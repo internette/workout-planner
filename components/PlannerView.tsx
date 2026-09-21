@@ -1553,6 +1553,11 @@ export function PlannerView({ v }: { v: any }) {
                         </IconButton>
                       </Popover>
                     </div>
+                                      {v.canSignOut ? (
+                      <Button type="neutral" ghost size="sm" onClick={v.signOut} style={{ alignSelf: 'flex-start', marginLeft: 'auto' }}>
+                        Sign out
+                      </Button>
+                    ) : null}
                   </Card>
                   <div id="profileStats" style={{ display: 'grid', gap: '12px', marginTop: '14px' }}>
                     {(v.profileStats ?? []).map((s, i) => (

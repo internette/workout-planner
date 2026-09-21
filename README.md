@@ -45,6 +45,29 @@ A second migration, [supabase/migrations/20260920000000_workout_snapshots.sql](s
 
 Run both migrations once, in order, in the Supabase SQL editor. They are safe to run again.
 
+### Sign-in
+
+The planner has a landing page with Google and Apple sign-in (at `/welcome`, and at `/` for signed-out visitors when sign-in is required). Auth0 handles the sign-in; Supabase trusts Auth0's token, so row-level security can tell whose data is whose. It is off by default, so the app keeps working until you set it up:
+
+1. **Auth0 application.** Create a *Single Page Application*. Under Settings, add your site's address (`http://localhost:3000` and your production address) to *Allowed Callback URLs*, *Allowed Logout URLs* and *Allowed Web Origins*. The callback address is the site root and the logout address is `/welcome`. Under Advanced Settings → Grant Types, keep *Refresh Token* enabled, and turn on refresh token rotation, since the app renews the person's token with one.
+2. **Auth0 connections.** Under Authentication → Social, enable Google and Apple, and turn them on for the application. Google needs an OAuth client from Google Cloud (Auth0's development keys work for testing); Apple needs a Services ID and key from a paid Apple Developer account.
+3. **Auth0 role claim.** Under Actions → Library, create a custom Action for the *Login / Post Login* flow, deploy it, and add it to the login flow:
+
+   ```js
+   exports.onExecutePostLogin = async (event, api) => {
+     api.idToken.setCustomClaim('role', 'authenticated');
+   };
+   ```
+
+   Supabase reads the person's database role from this claim. It must go on the ID token: Auth0 drops un-namespaced custom claims from access tokens.
+4. **Supabase.** Open Authentication → Third-Party Auth, add the Auth0 integration, and enter your tenant id and region. (Tenants signing with HS256 or PS256 are not supported; the default RS256 is.)
+5. **Environment.** Put your Auth0 domain and client id in `.env.local` as `NEXT_PUBLIC_AUTH0_DOMAIN` and `NEXT_PUBLIC_AUTH0_CLIENT_ID`, set `NEXT_PUBLIC_AUTH_REQUIRED=true`, and restart the dev server.
+6. **Database.** Run [supabase/migrations/20260921000000_per_user_rls.sql](supabase/migrations/20260921000000_per_user_rls.sql) in the SQL editor. It gives every table an owner and lets only that person read or change their rows.
+
+Until steps 1 to 5 are done, the provider buttons say "Sign-in is not set up yet." After step 6 the data you have today is hidden from every account (everyone starts fresh); the last section of the migration shows how to hand it to one account instead.
+
+Two things to know. Google and Apple sign-ins for the same person are **separate Auth0 users** unless you link them, so they would see separate data; Auth0 documents an Action that links accounts by verified email. And the Google and Apple marks in `components/auth/marks.tsx` are drawn approximations: replace them with each provider's official assets before going live. The landing page mentions terms and a privacy policy that do not exist yet.
+
 ## Scripts
 
 | Command | What it does |
@@ -66,16 +89,19 @@ components/
   dcLogic.ts          Small base class that gives the logic its immediate-merge setState
   viewHelpers.tsx     css() and t() helpers used by the view
   ui/icons/           Design-system icons: glyphs, Sparkle, Gem, MoodFace, ExerciseIcon (gallery at /design-system/icons)
-  ui/colors/          Design-system colour tokens, published as CSS variables (see /design-system/colors)
-  ui/typography/      Design-system type tokens as CSS variables, plus named text styles and the Text component
+  ui/colors/          Design-system colour tokens, plus the crystal gradients and the dialog scrim, published as CSS variables (see /design-system/colors)
+  ui/typography/      Design-system type tokens as CSS variables (including two fluid display sizes for marketing pages), plus named text styles and the Text component
+  ui/elevation/       Design-system shadow tokens (hairline, raised, overlay) and the primary glow, as CSS variables
   ui/buttons/         Design-system Button and IconButton (variants, sizes, hover states)
   ui/card/            Design-system Card (raised and overlay surfaces, padding steps, clickable cards)
   ui/segmented-control/  Design-system SegmentedControl (brand and quiet tones, tabs or options, keyboard support)
   ui/chip/            Design-system Chip (info, accent and selectable choice pills)
   ui/text-field/      Design-system TextField, TextArea and Label (filled, title and bare inputs; hint and error)
+  ui/checkbox/        Design-system Checkbox (a tick box with its label; native checkbox, or a switch role)
   ui/option-card/     Design-system OptionCard and OptionGroup (one answer per card, a native radio underneath)
   ui/dialog/          Design-system Dialog (a native <dialog>: top layer, inert page, Escape and focus handled by the browser)
   ui/popover/         Design-system Popover (the popover attribute: top layer, dismissed on Escape or an outside press)
+  auth/               The landing page and sign-in with Auth0: AuthGate, AuthProvider, LandingPage and the provider buttons
   planner/
     PlannerLogic.ts   UI state, navigation, loading and saving; renderVals() assembles the view's values
     context.ts        Runs the stages below in order to build a shared context
@@ -88,6 +114,7 @@ components/
     types.ts          The loose Ctx type shared by stages and screens
 lib/
   supabase.ts         Supabase client
+  auth.ts             Auth0 settings, the connection names, the ID-token hook Supabase reads, and the NEXT_PUBLIC_AUTH_REQUIRED switch
   plannerData.ts      Loads the database into the shapes the UI uses, and all writes
 supabase/migrations/  SQL to run in the Supabase SQL editor
 ```
@@ -100,7 +127,7 @@ Ticks update the screen immediately. Other saves (creating or editing a workout,
 
 ## Limitations
 
-- **No sign-in.** The tables allow anonymous access with the publishable key, so anyone with that key can read and change your data. Add Supabase Auth and per-user row-level security before sharing the app.
+- **Sign-in is off until you turn it on.** Until the steps under Sign-in are done, the tables allow anonymous access with the publishable key, so anyone with that key can read and change your data. Do not share or deploy the app before then.
 - **One workout per day.** The UI shows one `plan_entries` row per date. A second workout on the same day is stored but not shown.
 - **Current year only.** Entries from other years don't appear on the calendar.
 - **Free-text exercise fields** such as "4 × 8", "135 lb" and "90 sec" are stored as numbers. Text that doesn't fit those shapes, like "3 × 45s", loses its detail on save.

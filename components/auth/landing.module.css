@@ -1,0 +1,120 @@
+/* The landing page. Every band is full width with a 28px gutter and a centred inner column, so rows wrap
+   on their own and nothing needs a media query. */
+
+.page { min-height: 100vh; background: var(--color-canvas); color: var(--color-ink); }
+
+.band { width: 100%; padding: 0 28px; }
+.inner { max-width: 1040px; margin: 0 auto; }
+
+.header { width: 100%; padding: 18px 28px; }
+.headerRow { max-width: 1040px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+.signIn { margin-left: auto; }
+
+.wordmark { display: inline-flex; align-items: center; gap: 9px; }
+.wordmarkText { font-family: var(--font-heading); font-weight: var(--font-weight-bold); letter-spacing: -0.03em; color: var(--color-ink); }
+
+.hero { padding-top: 34px; padding-bottom: 56px; }
+.heroText { max-width: 660px; margin: 0 auto; text-align: center; }
+.eyebrowRow { display: inline-flex; align-items: center; gap: 10px; }
+.sparkles { display: inline-flex; align-items: center; gap: 4px; }
+.sparkle { display: inline-flex; animation: twinkle 3.4s ease-in-out infinite; }
+.subhead { max-width: 520px; margin: 18px auto 0; text-wrap: pretty; }
+.authWrap { margin-top: 34px; }
+
+/* ---- the auth card ---- */
+.authCard { width: 100%; max-width: 404px; margin: 0 auto; box-sizing: border-box; }
+.authTitle { margin-top: 8px; }
+.authNote { margin-top: 8px; text-wrap: pretty; }
+.providers { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.legal { margin: 16px 0 0; text-wrap: pretty; }
+.toggle { display: flex; align-items: center; gap: 8px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--color-mist); }
+.toggleLink {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-pink-deep);
+}
+.error {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--color-danger-tint);
+  color: var(--color-danger);
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ---- provider buttons ---- */
+.provider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  transition: background-color 0.18s ease;
+}
+.provider:disabled { cursor: progress; }
+.google { background: var(--color-white); color: var(--color-ink); box-shadow: inset 0 0 0 1.5px var(--color-divider); }
+.google:hover:not(:disabled) { background: var(--color-canvas); }
+.apple { background: var(--color-ink); color: var(--color-white); }
+.apple:hover:not(:disabled) { background: var(--color-slate-deep); }
+.provider[aria-busy='true'] { opacity: 0.75; }
+
+/* ---- sections ---- */
+.sectionGap { padding-bottom: 56px; }
+.steps { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
+.step { flex: 1 1 260px; min-width: 0; }
+.stepIcon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; background: var(--color-pink-tint); }
+.stepTitle { margin: 16px 0 0; }
+.stepBody { margin: 7px 0 0; text-wrap: pretty; }
+
+.quest {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 28px;
+  padding: 28px;
+  border-radius: 24px;
+  background: var(--gradient-gem-tint);
+}
+.col { flex: 1 1 300px; min-width: 0; }
+.headline { margin: 10px 0 0; line-height: 1.1; text-wrap: balance; }
+.questBody { max-width: 420px; margin: 12px 0 0; text-wrap: pretty; }
+.cleared { display: flex; align-items: center; gap: 11px; }
+.track { height: 8px; margin-top: 18px; border-radius: 5px; background: var(--color-mist); overflow: hidden; }
+.fill { width: 100%; height: 100%; border-radius: 5px; background: var(--gradient-gem); }
+.progressRow { display: flex; align-items: baseline; gap: 8px; margin-top: 10px; }
+.progressRow :last-child { margin-left: auto; }
+
+.ranks { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 20px; }
+.ranksLeft { flex: 1 1 320px; min-width: 0; }
+.ranksBody { max-width: 440px; margin: 12px 0 0; text-wrap: pretty; }
+.ranksRight { flex: 1 1 260px; display: flex; flex-direction: column; gap: 8px; }
+.rank { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-radius: 15px; background: var(--color-white); box-shadow: var(--elevation-hairline); }
+.gem { width: 10px; height: 14px; flex: none; clip-path: polygon(50% 0, 100% 35%, 50% 100%, 0 35%); }
+.rankName { flex: 1; min-width: 0; }
+.more { padding: 0 16px; }
+
+.closing { text-align: center; padding: 44px 24px; }
+.closingBody { max-width: 400px; margin: 12px auto 0; text-wrap: pretty; }
+.closingCta { margin-top: 24px; }
+
+.footer { width: 100%; padding: 0 28px 40px; }
+.footerRow { max-width: 1040px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-top: 22px; border-top: 1px solid var(--color-mist); }

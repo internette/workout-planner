@@ -15,6 +15,8 @@ import { progressVals } from './screens/progress';
 export class PlannerLogic extends DCLogic {
   /** Which layout the window calls for. The host component keeps it current. */
   viewport: Viewport = 'wide';
+  /** Whether someone is signed in, and how to sign out. The host component keeps it current. */
+  auth: { canSignOut: boolean; signOut: () => void } = { canSignOut: false, signOut: () => undefined };
   model: Model | null = null;
   status: 'loading' | 'error' | 'ready' = 'loading';
   loadError = '';

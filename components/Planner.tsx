@@ -3,6 +3,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { PlannerLogic } from './planner/PlannerLogic';
 import { useViewport } from './planner/useViewport';
+import { useAuth } from './auth/AuthProvider';
 import { PlannerView } from './PlannerView';
 
 const centered: React.CSSProperties = {
@@ -14,6 +15,8 @@ export default function Planner() {
   const [logic] = useState(() => new PlannerLogic());
   const [, rerender] = useReducer((n: number) => n + 1, 0);
   logic.viewport = useViewport();
+  const auth = useAuth();
+  logic.auth = { canSignOut: auth.status === 'signedIn', signOut: auth.signOut };
 
   // The logic object owns the state; it asks this component to re-render whenever that changes.
   useEffect(() => {

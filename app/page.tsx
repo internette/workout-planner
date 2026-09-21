@@ -1,5 +1,10 @@
 import PlannerLoader from '@/components/PlannerLoader';
+import { AuthGate } from '@/components/auth/AuthGate';
 
 export default function Page() {
-  return <PlannerLoader />;
+  return (
+    <AuthGate>
+      <PlannerLoader />
+    </AuthGate>
+  );
 }

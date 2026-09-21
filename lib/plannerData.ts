@@ -1,3 +1,4 @@
+import { AUTH_REQUIRED } from './auth';
 import { supabase } from './supabase';
 
 // ---------- shapes the planner UI works with ----------
@@ -494,7 +495,9 @@ export async function updateWorkout(e: WorkoutEdit) {
 }
 
 export async function addLibraryExercise(e: Exercise) {
-  await ok(supabase.from('library_exercises').upsert(exerciseRow(e), { onConflict: 'name' }));
+  // With per-user rows a name only has to be unique among one person's exercises.
+  const onConflict = AUTH_REQUIRED ? 'user_id,name' : 'name';
+  await ok(supabase.from('library_exercises').upsert(exerciseRow(e), { onConflict }));
 }
 
 // "Save as a new exercise": always a new row, never an overwrite. Library names are unique, so a taken name
