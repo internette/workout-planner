@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Lockup } from '@/components/brand/Lockup';
 import { DesignSystemNav } from './DesignSystemNav';
 import styles from './design-system.module.css';
 
@@ -6,7 +7,9 @@ export default function DesignSystemLayout({ children }: { children: React.React
   return (
     <div className={styles.shell}>
       <header className={styles.top}>
-        <Link href="/">← Planner</Link>
+        <Link href="/" className={styles.brand} aria-label="Moonshot home">
+          <Lockup height={28} />
+        </Link>
       </header>
       <div className={styles.body}>
         <DesignSystemNav />
