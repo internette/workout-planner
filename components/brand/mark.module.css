@@ -1,0 +1,11 @@
+/* The facets light up one after another, rose to cyan. Reduced motion shows the finished mark. */
+.facet { animation: facet 2.4s ease-in-out infinite; }
+
+@keyframes facet {
+  0%, 100% { opacity: 0.16; }
+  30%, 70% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .facet { animation: none; opacity: 1; }
+}

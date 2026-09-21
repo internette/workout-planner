@@ -13,8 +13,7 @@
 .hero { padding-top: 34px; padding-bottom: 56px; }
 .heroText { max-width: 660px; margin: 0 auto; text-align: center; }
 .eyebrowRow { display: inline-flex; align-items: center; }
-.sparkles { display: flex; align-items: center; gap: 4px; flex: none; margin-left: 9px; pointer-events: none; }
-.sparkle { display: flex; flex: none; }
+.trail { margin-left: 9px; }
 .subhead { max-width: 520px; margin: 18px auto 0; text-wrap: pretty; }
 .authWrap { margin-top: 34px; }
 

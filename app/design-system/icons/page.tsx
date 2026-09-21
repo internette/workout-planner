@@ -1,5 +1,6 @@
 import * as glyphs from '@/components/ui/icons/glyphs';
-import { ExerciseIcon, EXERCISE_ICON_NAMES, Gem, MoodFace, Sparkle } from '@/components/ui/icons';
+import { ExerciseIcon, EXERCISE_ICON_NAMES, Gem, MoodFace, Sparkle, SparkleTrail } from '@/components/ui/icons';
+import { Mark } from '@/components/brand/Mark';
 import { colors } from '@/components/ui/colors';
 import { DocPage } from '../docs';
 
@@ -77,6 +78,12 @@ export default function IconsPage() {
         </Tile>
         <Tile name="Gem">
           <Gem size={28} />
+        </Tile>
+        <Tile name="Sparkle trail">
+          <SparkleTrail />
+        </Tile>
+        <Tile name="Mark, animated">
+          <Mark size={32} animate />
         </Tile>
       </div>
 

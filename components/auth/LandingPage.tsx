@@ -4,34 +4,12 @@ import { useRef, useState } from 'react';
 import { Lockup } from '@/components/brand/Lockup';
 import { Button } from '@/components/ui/buttons';
 import { Card } from '@/components/ui/card';
-import { Book, Calendar, Check, ChevronRight, Gem, Sparkle } from '@/components/ui/icons';
-import { colors } from '@/components/ui/colors';
+import { Book, Calendar, Check, ChevronRight, Gem, Sparkle, SparkleTrail } from '@/components/ui/icons';
 import { Text } from '@/components/ui/typography';
 import { RANKS, RANK_STEPS } from '@/components/planner/constants';
 import { PROVIDER_NAME, type Provider } from '@/lib/auth';
 import { ProviderButton } from './ProviderButton';
 import styles from './landing.module.css';
-
-// A trail of stars that tapers off and wanders up and down: rose, periwinkle, cyan, repeating. Each one twinkles on
-// its own slower clock, so the trail never pulses in step.
-const TRAIL_COLORS = [colors.pink, colors.periwinkle, colors.teal];
-const TRAIL_WANDER = [-9, 3, -4, 7, -7, 1, -2, 5, -5]; // px
-const TRAIL_SIZE = [11, 8, 9, 6, 7, 5, 6, 4, 3]; // px
-function SparkleTrail({ count = 7 }: { count?: number }) {
-  return (
-    <span className={styles.sparkles} aria-hidden="true">
-      {Array.from({ length: count }, (_, i) => (
-        <span key={i} className={styles.sparkle} style={{ transform: `translateY(${TRAIL_WANDER[i]}px)` }}>
-          <Sparkle
-            size={TRAIL_SIZE[i]}
-            color={TRAIL_COLORS[i % TRAIL_COLORS.length]}
-            style={{ flex: 'none', animation: `twinkle ${3.4 + i * 0.4}s ease-in-out ${i * 0.25}s infinite` }}
-          />
-        </span>
-      ))}
-    </span>
-  );
-}
 
 // ---- the auth card: two modes that differ only in wording, since both are the same OAuth call
 function AuthCard({ cardRef, configured, returned }: { cardRef: React.RefObject<HTMLDivElement>; configured: boolean; returned?: string }) {
@@ -147,7 +125,7 @@ export function LandingPage({ configured, returned }: { configured: boolean; ret
                 <Text variant="eyebrow" tone="accent">
                   THE WORK IS THE TRANSFORMATION
                 </Text>
-                <SparkleTrail />
+                <SparkleTrail className={styles.trail} />
               </span>
               <Text variant="hero" as="h1" style={{ margin: '14px 0 0', letterSpacing: '-0.03em', lineHeight: 1.04, textWrap: 'balance' }}>
                 Answer the call.

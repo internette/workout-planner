@@ -1,0 +1,77 @@
+.screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background: var(--color-canvas);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  max-width: 420px;
+  text-align: center;
+}
+
+.medallion {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--color-white);
+  box-shadow: var(--elevation-raised);
+}
+
+/* The error mark sits on the medallion's lower right edge. */
+.badge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--color-danger-tint);
+  box-shadow: 0 0 0 3px var(--color-white);
+}
+
+.copy { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); margin-top: var(--space-1); }
+.trail { height: 28px; }
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin-top: var(--space-1); }
+
+.details { width: 100%; margin-top: var(--space-2); text-align: left; }
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-muted);
+  border-radius: var(--radius-sm);
+}
+.summary::-webkit-details-marker { display: none; }
+.summary:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+.detail {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-4);
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  box-shadow: var(--elevation-hairline);
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+  color: var(--color-slate);
+}

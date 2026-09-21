@@ -8,11 +8,10 @@ import { pathForScreen, screenForPath } from './planner/routes';
 import { logoutUrl, type Account } from '@/lib/auth';
 import { useWindowEvent } from './ui/useWindowEvent';
 import { PlannerView } from './PlannerView';
+import { StatusScreen } from './planner/StatusScreen';
 
-const centered: React.CSSProperties = {
-  minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-  gap: 14, padding: 24, textAlign: 'center', color: 'var(--color-muted)',
-};
+// How long the plan may take before the loading screen says so.
+const SLOW_AFTER_MS = 8000;
 
 export default function Planner({ account = null }: { account?: Account | null }) {
   const pathname = usePathname();
@@ -68,24 +67,25 @@ export default function Planner({ account = null }: { account?: Account | null }
     }
   });
 
+  const { status, loadError } = logic;
+  const [slow, setSlow] = useState(false);
+  // A load that has not finished after a while says so, and offers to try again.
+  useEffect(() => {
+    if (status !== 'loading') return setSlow(false);
+    const timer = setTimeout(() => setSlow(true), SLOW_AFTER_MS);
+    return () => clearTimeout(timer);
+  }, [status]);
+
   const retry = () => {
     logic.status = 'loading';
+    setSlow(false);
     rerender();
     logic.load();
   };
 
-  const { status, loadError } = logic;
-  if (status === 'loading') return <div style={centered} role="status">Loading your plan…</div>;
+  if (status === 'loading') return <StatusScreen kind={slow ? 'slow' : 'loading'} onRetry={retry} />;
   if (status === 'error') {
-    return (
-      <div style={centered} role="alert">
-        <h1 style={{ margin: 0, color: 'var(--color-ink)', fontSize: 'var(--text-3xl)' }}>Couldn&apos;t reach your plan</h1>
-        <p style={{ margin: 0, maxWidth: 420, fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' }}>{loadError}</p>
-        <button onClick={retry} style={{ padding: '12px 22px', border: 'none', borderRadius: 14, background: 'var(--color-pink)', color: 'var(--color-white)', fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-semibold)', cursor: 'pointer' }}>
-          Try again
-        </button>
-      </div>
-    );
+    return <StatusScreen kind="error" detail={loadError} onRetry={retry} onSignOut={account ? logic.auth.signOut : undefined} />;
   }
   return <PlannerView v={logic.renderVals()} />;
 }
