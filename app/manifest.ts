@@ -4,8 +4,8 @@ import type { MetadataRoute } from 'next';
 // the central 80%, so the same file works as a plain icon and as a maskable one (Android rounds or crops it).
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Moonset',
-    short_name: 'Moonset',
+    name: 'Moonshot',
+    short_name: 'Moonshot',
     description: 'Plan workouts, log how they felt, and rank up.',
     start_url: '/calendar',
     display: 'standalone',

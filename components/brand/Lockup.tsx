@@ -1,5 +1,5 @@
-// The Moonset mark with its name. Drawn inline rather than loaded as an image: the name is live text, and an SVG
-// used as an <img> cannot see the page's fonts. Source artwork is in public/brand/moonset-lockup.svg.
+// The Moonshot mark with its name. Drawn inline rather than loaded as an image: the name is live text, and an SVG
+// used as an <img> cannot see the page's fonts. Source artwork is in public/brand/moonshot-lockup.svg.
 const RATIO = 214 / 32;
 
 export function Lockup({ height = 28, className }: { height?: number; className?: string }) {
@@ -10,7 +10,7 @@ export function Lockup({ height = 28, className }: { height?: number; className?
       width={Math.round(height * RATIO)}
       height={height}
       role="img"
-      aria-label="Moonset"
+      aria-label="Moonshot"
       className={className}
     >
       <g transform="translate(0,1) scale(.469)">
@@ -29,7 +29,7 @@ export function Lockup({ height = 28, className }: { height?: number; className?
         letterSpacing="-.46"
         style={{ fontFamily: 'var(--font-heading)', fill: 'var(--color-ink)' }}
       >
-        Moonset
+        Moonshot
       </text>
     </svg>
   );

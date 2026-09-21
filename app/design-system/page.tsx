@@ -28,7 +28,7 @@ export default function DesignSystemPage() {
   return (
     <main style={{ paddingTop: 12 }}>
       <Text variant="eyebrow" tone="subtle" as="div" uppercase>
-        Ritual
+        Moonshot
       </Text>
       <Text variant="display" tone="ink" as="h1" style={{ margin: '4px 0 0' }}>
         Design system

@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { LandingPage } from '@/components/auth/LandingPage';
 import { AUTH0_CONFIGURED, getAuth0 } from '@/lib/auth0';
 
-export const metadata = { title: 'Ritual — Sign in' };
+export const metadata = { title: 'Moonshot — Sign in' };
 export const dynamic = 'force-dynamic';
 
 export default async function Page({ searchParams }: { searchParams: { error?: string } }) {

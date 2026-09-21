@@ -118,7 +118,7 @@ const Section = ({ children, last }: { children: React.ReactNode; last?: boolean
   </section>
 );
 
-/** Explains what Ritual is, and lets a returning person in within one screen height. */
+/** Explains what Moonshot is, and lets a returning person in within one screen height. */
 export function LandingPage({ configured, returned }: { configured: boolean; returned?: string }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const focusCard = () => cardRef.current?.querySelector<HTMLElement>('a')?.focus();
@@ -155,7 +155,7 @@ export function LandingPage({ configured, returned }: { configured: boolean; ret
                 Then do the sets.
               </Text>
               <Text variant="body" tone="muted" as="p" className={styles.subhead} style={{ fontSize: 'var(--text-lg)' }}>
-                Ritual gives every training day a quest, every finished session a crystal, and every honest reflection somewhere to live.
+                Moonshot gives every training day a quest, every finished session a crystal, and every honest reflection somewhere to live.
               </Text>
             </div>
             <div className={styles.authWrap}>

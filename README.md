@@ -1,6 +1,6 @@
 # Workout Planner
 
-"Ritual" is a workout planner with a magical-girl theme. You schedule lifting and cycling sessions on a calendar, tick off exercises as you go, write a short diary entry about how it felt, and earn XP that moves you up a rank ladder. The interface comes from a Claude Design prototype, and everything is saved in Supabase.
+"Moonshot" is a workout planner with a magical-girl theme. You schedule lifting and cycling sessions on a calendar, tick off exercises as you go, write a short diary entry about how it felt, and earn XP that moves you up a rank ladder. The interface comes from a Claude Design prototype, and everything is saved in Supabase.
 
 ## Features
 
