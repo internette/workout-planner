@@ -102,6 +102,43 @@ export function Preview({ slug }: { slug: string }) {
           ))}
         </>
       );
+    case 'radii':
+      return (
+        <>
+          {(['xs', 'sm', 'md', 'lg', 'xl', 'full'] as const).map((name) => (
+            <span
+              key={name}
+              style={{ width: 32, height: 32, background: 'var(--color-pink-tint)', boxShadow: 'inset 0 0 0 2px var(--color-pink)', borderRadius: `var(--radius-${name})` }}
+            />
+          ))}
+        </>
+      );
+    case 'spacing':
+      return (
+        <span style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--space-2)' }}>
+          {[1, 2, 3, 4, 5, 6, 7].map((step) => (
+            <span key={step} style={{ width: `var(--space-${step})`, height: `var(--space-${step})`, borderRadius: 'var(--radius-xs)', background: 'var(--color-periwinkle)' }} />
+          ))}
+        </span>
+      );
+    case 'motion':
+      return (
+        <>
+          <Button type="neutral" ghost size="sm">
+            0.15s
+          </Button>
+          <Button type="primary" size="sm">
+            ease
+          </Button>
+        </>
+      );
+    case 'interaction':
+      return (
+        <>
+          <span style={{ width: 40, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--hover-neutral)', boxShadow: 'inset 0 0 0 1px var(--color-divider)' }} />
+          <span style={{ width: 40, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--color-white)', outline: 'var(--focus-ring)', outlineOffset: 'var(--focus-offset)' }} />
+        </>
+      );
     case 'checkbox':
       return (
         <div style={{ width: 200 }}>

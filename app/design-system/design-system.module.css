@@ -3,10 +3,19 @@
 .top {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 20px 0 8px;
-  font-size: var(--text-base);
+  padding: 16px 0 8px;
 }
+
+/* The lockup is a link home. The padding is its hover area; the negative margin keeps the artwork on the page edge. */
+.brand {
+  display: inline-flex;
+  padding: 6px 10px;
+  margin-left: -10px;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--dur-state) var(--ease-standard);
+}
+.brand:hover { background: var(--hover-neutral); }
+.brand:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
 
 .body { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; align-items: start; }
 
@@ -93,3 +102,14 @@
   overflow: hidden;
 }
 .section { margin-top: 44px; }
+
+.brandStage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  margin-bottom: 14px;
+  background: var(--color-canvas);
+  border-radius: var(--radius-md);
+}
+.download { font-size: var(--text-md); font-weight: var(--font-weight-semibold); color: var(--color-pink-deep); }

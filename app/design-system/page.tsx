@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import Image from 'next/image';
 import Link from 'next/link';
+import { Lockup } from '@/components/brand/Lockup';
 import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
 import { Text } from '@/components/ui/typography';
@@ -21,16 +23,25 @@ function unlistedFolders(): string[] {
     .sort();
 }
 
+const asset = (file: string, size: number, rounded = false) => (
+  <Image src={`/brand/${file}`} alt="" width={size} height={size} unoptimized style={rounded ? { borderRadius: '22%', boxShadow: 'var(--elevation-raised)' } : undefined} />
+);
+
+// The four pieces of artwork in public/brand. The lockup is drawn inline (its name is live text), so it is not an image.
+const BRAND = [
+  { file: 'moonshot-lockup.svg', title: 'Lockup', use: 'The mark with the name. Headers and footers, left-aligned.', preview: <Lockup height={40} /> },
+  { file: 'moonshot-mark.svg', title: 'Mark', use: 'The mark alone, where the name is already on the page.', preview: asset('moonshot-mark.svg', 64) },
+  { file: 'moonshot-favicon.svg', title: 'Favicon', use: 'The mark enlarged to hold up at 16px in a browser tab.', preview: asset('moonshot-favicon.svg', 64) },
+  { file: 'moonshot-app-icon-1024.svg', title: 'App icon', use: 'The mark on the app tint. The home-screen icon, sized 192 and 512.', preview: asset('moonshot-app-icon-1024.svg', 72, true) },
+];
+
 export default function DesignSystemPage() {
   const unlisted = unlistedFolders();
   const counts = (c: Category) => sections.filter((s) => s.category === c).length;
 
   return (
     <main style={{ paddingTop: 12 }}>
-      <Text variant="eyebrow" tone="subtle" as="div" uppercase>
-        Moonshot
-      </Text>
-      <Text variant="display" tone="ink" as="h1" style={{ margin: '4px 0 0' }}>
+      <Text variant="display" tone="ink" as="h1" style={{ margin: 0 }}>
         Design system
       </Text>
       <Text variant="body" tone="muted" as="p" style={{ margin: '10px 0 0', maxWidth: 560 }}>
@@ -72,6 +83,32 @@ export default function DesignSystemPage() {
           </div>
         </section>
       ))}
+
+      <section id="brand" className={styles.section}>
+        <Text variant="heading" tone="ink" as="h2" style={{ margin: 0 }}>
+          Brand
+        </Text>
+        <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 16px' }}>
+          The Moonshot mark and name. The artwork is in <code>public/brand</code>; the colours and type it uses are under
+          Foundations.
+        </Text>
+        <div className={styles.grid}>
+          {BRAND.map((asset) => (
+            <Card key={asset.file} pad="sm">
+              <div className={styles.brandStage}>{asset.preview}</div>
+              <Text variant="itemTitle" tone="ink" as="h3" style={{ margin: 0 }}>
+                {asset.title}
+              </Text>
+              <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 10px' }}>
+                {asset.use}
+              </Text>
+              <a className={styles.download} href={`/brand/${asset.file}`} download>
+                Download SVG
+              </a>
+            </Card>
+          ))}
+        </div>
+      </section>
 
       {unlisted.length ? (
         <section className={styles.section}>
