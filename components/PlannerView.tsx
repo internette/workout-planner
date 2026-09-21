@@ -8,6 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog } from '@/components/ui/dialog';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { Popover } from '@/components/ui/popover';
+import { DeleteAccount } from './planner/DeleteAccount';
 import { Text } from '@/components/ui/typography';
 import { Chip } from '@/components/ui/chip';
 import { Label, TextArea, TextField } from '@/components/ui/text-field';
@@ -1912,6 +1913,7 @@ export function PlannerView({ v }: { v: any }) {
                           Sign out
                         </Button>
                       </div>
+                      <DeleteAccount />
                     </Card>
                   ) : null}
                 </div>

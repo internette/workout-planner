@@ -12,7 +12,7 @@ import { ProviderButton } from './ProviderButton';
 import styles from './landing.module.css';
 
 // ---- the auth card: two modes that differ only in wording, since both are the same OAuth call
-function AuthCard({ cardRef, configured, returned }: { cardRef: React.RefObject<HTMLDivElement>; configured: boolean; returned?: string }) {
+function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.RefObject<HTMLDivElement>; configured: boolean; returned?: string; deleted?: boolean }) {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [busy, setBusy] = useState<Provider | null>(null);
   // What the server reported when Auth0 sent the person back (see lib/auth0.ts), until they try again.
@@ -59,6 +59,11 @@ function AuthCard({ cardRef, configured, returned }: { cardRef: React.RefObject<
             {error}
           </p>
         ) : null}
+        {deleted ? (
+          <p className={styles.notice} role="status">
+            Your account and information were permanently deleted.
+          </p>
+        ) : null}
 
         <Text variant="small" tone="subtle" as="p" className={styles.legal} style={{ lineHeight: 'var(--leading-snug)' }}>
           No password to lose. {signingUp ? 'Continuing accepts the terms and the privacy policy.' : 'We only ever read your name and email.'}
@@ -97,7 +102,7 @@ const Section = ({ children, last }: { children: React.ReactNode; last?: boolean
 );
 
 /** Explains what Moonshot is, and lets a returning person in within one screen height. */
-export function LandingPage({ configured, returned }: { configured: boolean; returned?: string }) {
+export function LandingPage({ configured, returned, deleted }: { configured: boolean; returned?: string; deleted?: boolean }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const focusCard = () => cardRef.current?.querySelector<HTMLElement>('a')?.focus();
   // No provider is chosen yet, so the closing button takes the person back to the card rather than signing in.
@@ -137,7 +142,7 @@ export function LandingPage({ configured, returned }: { configured: boolean; ret
               </Text>
             </div>
             <div className={styles.authWrap}>
-              <AuthCard cardRef={cardRef} configured={configured} returned={returned} />
+              <AuthCard cardRef={cardRef} configured={configured} returned={returned} deleted={deleted} />
             </div>
           </div>
         </section>

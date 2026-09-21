@@ -14,6 +14,7 @@
 .heroText { max-width: 660px; margin: 0 auto; text-align: center; }
 .eyebrowRow { display: inline-flex; align-items: center; }
 .trail { margin-left: 9px; }
+.notice { margin: var(--space-3) 0 0; font-size: var(--text-base); line-height: var(--leading-snug); color: var(--color-slate); }
 .subhead { max-width: 520px; margin: 18px auto 0; text-wrap: pretty; }
 .authWrap { margin-top: 34px; }
 

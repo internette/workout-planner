@@ -69,9 +69,16 @@ The planner has a landing page with Google and Apple sign-in (at `/welcome`; any
 5. **Environment.** Fill in the `AUTH0_*` and `APP_BASE_URL` variables from `.env.local.example`, and restart the dev server. (Leave `NEXT_PUBLIC_AUTH_REQUIRED` out, or remove any `false`.) `AUTH0_CLIENT_SECRET` and `AUTH0_SECRET` are secrets and are only ever read on the server.
 6. **Database.** Run [supabase/migrations/20260921000000_per_user_rls.sql](supabase/migrations/20260921000000_per_user_rls.sql) in the SQL editor. It gives every table an owner and lets only that person read or change their rows.
 
+**Deleting an account.** Profile has a "Delete my account and information" button. It is permanent: it deletes the person's workouts, plan, exercises and diary from Supabase, then their sign-in from Auth0, and nothing can be recovered. (Your hosting provider's own backups may hold a copy for a while, and the app cannot restore from them.) Removing the Auth0 user needs credentials the app's login does not have, so it uses a second application:
+
+1. In Auth0, Applications → Create Application → **Machine to Machine**, and authorise it for the **Auth0 Management API** with the single permission `delete:users`.
+2. Set `AUTH0_MANAGEMENT_CLIENT_ID` and `AUTH0_MANAGEMENT_CLIENT_SECRET` from that application (locally and in your hosting provider's environment variables). The secret is server only.
+
+Until they are set, the button refuses and deletes nothing, rather than deleting the data and leaving the name and email with Auth0.
+
 Until steps 1 to 5 are done, the landing page's provider buttons say "Sign-in is not set up yet." After step 6 the data you have today is hidden from every account (everyone starts fresh); the last section of the migration shows how to hand it to one account instead.
 
-How it fits together: the buttons are links to `/auth/login?connection=…`, which the Auth0 SDK's middleware turns into a redirect to Auth0 and back to `/auth/callback`. The browser gets the ID token it needs for Supabase from `GET /api/token`, which reads the session cookie on the server, renews the token when it is close to expiring, and returns 401 when signed out. Signing out is `/auth/logout`, from the Account card at the foot of Profile, which shows the provider and email and asks first.
+How it fits together: the buttons are links to `/auth/login?connection=…`, which the Auth0 SDK's middleware turns into a redirect to Auth0 and back to `/auth/callback`. The browser gets the ID token it needs for Supabase from `GET /api/token`, which reads the session cookie on the server, renews the token when it is close to expiring, and returns 401 when signed out. Signing out is `/auth/logout`, from the Account card at the foot of Profile, which shows the provider and email and asks first. The same card holds the account deletion described above.
 
 Two things to know. Google and Apple sign-ins for the same person are **separate Auth0 users** unless you link them, so they would see separate data; Auth0 documents an Action that links accounts by verified email. And the Google and Apple marks in `components/auth/marks.tsx` are drawn approximations: replace them with each provider's official assets before going live. The landing page mentions terms and a privacy policy that do not exist yet.
 
