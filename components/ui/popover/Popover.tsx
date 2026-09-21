@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, type CSSProperties, type MouseEvent, type ReactNode, type PointerEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, type CSSProperties, type MouseEvent, type ReactNode, type PointerEvent, type SyntheticEvent } from 'react';
 import { Card } from '../card';
+import { useWindowEvent } from '../useWindowEvent';
 
 export interface PopoverProps {
   /** Whether the panel is showing. The parent owns this, so the trigger inside `children` can toggle it. */
@@ -93,43 +94,47 @@ function PopoverPanel({
   });
 
   // The panel is in the top layer, so it is placed against the window, and follows the trigger on scroll.
-  useLayoutEffect(() => {
+  const place = () => {
     const el = ref.current;
     const at = anchor.current;
     if (!el || !at) return;
+    const r = at.getBoundingClientRect();
+    const left = align === 'center' ? r.left + r.width / 2 - width / 2 : r.left;
+    el.style.left = Math.max(EDGE, Math.min(left, window.innerWidth - width - EDGE)) + 'px';
+    el.style.top = r.top + top + 'px';
+  };
+  useWindowEvent('scroll', place, { capture: true });
+  useWindowEvent('resize', place);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || !anchor.current) return;
     panelRef.current = el;
     live.current = true;
-    const place = () => {
-      const r = at.getBoundingClientRect();
-      const left = align === 'center' ? r.left + r.width / 2 - width / 2 : r.left;
-      el.style.left = Math.max(EDGE, Math.min(left, window.innerWidth - width - EDGE)) + 'px';
-      el.style.top = r.top + top + 'px';
-    };
     place();
     el.showPopover();
-    window.addEventListener('scroll', place, true);
-    window.addEventListener('resize', place);
-    // The browser closes it on Escape and outside presses; tell the parent so `open` follows.
-    const onToggle = (e: Event) => {
-      if (live.current && (e as ToggleEvent).newState === 'closed') onCloseRef.current();
-    };
-    el.addEventListener('toggle', onToggle);
     return () => {
       live.current = false;
-      window.removeEventListener('scroll', place, true);
-      window.removeEventListener('resize', place);
-      el.removeEventListener('toggle', onToggle);
       if (el.matches(':popover-open')) el.hidePopover();
       panelRef.current = null;
     };
   }, [anchor, panelRef, align, width, top]);
+
+  // The browser closes it on Escape and outside presses; tell the parent so `open` follows. React 18 only wires
+  // `toggle` for <details>, but it does listen for every event in the capture phase, hence the Capture form (and
+  // the check that the popover itself, not something inside it, is the one that toggled).
+  const onToggle = (e: SyntheticEvent) => {
+    if (live.current && e.target === e.currentTarget && (e.nativeEvent as ToggleEvent).newState === 'closed') {
+      onCloseRef.current();
+    }
+  };
 
   return (
     <Card
       ref={ref}
       pad={pad}
       elevation="overlay"
-      {...({ popover: 'auto' } as object)}
+      {...({ popover: 'auto', onToggleCapture: onToggle } as object)}
       style={{ position: 'fixed', inset: 'auto', margin: 0, border: 'none', overflow: 'visible', width, zIndex: 30 }}
     >
       {children}
