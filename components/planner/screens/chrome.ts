@@ -96,6 +96,12 @@ export function chromeVals(ctx: Ctx) {
     saveError: st.saveError || '',
     dismissError: () => logic.s({ saveError: null }),
     yearLabel: String(Y),
+    // A nav item is a link, so it can open in a new tab. A plain click goes there without a page load.
+    navGo: (go) => (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      go();
+    },
     canSignOut: logic.auth.canSignOut,
     signOut: () => logic.auth.signOut(),
     // The browser dismisses a popover on its own (Escape, outside press) and may report it after another one has

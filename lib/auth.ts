@@ -13,7 +13,7 @@ export const CONNECTION: Record<Provider, string> = { google: 'google-oauth2', a
 
 /** Where a provider button goes. The server route sends the person to Auth0 and back to the planner. */
 export const loginUrl = (provider: Provider) =>
-  `/auth/login?connection=${encodeURIComponent(CONNECTION[provider])}&returnTo=${encodeURIComponent('/')}`;
+  `/auth/login?connection=${encodeURIComponent(CONNECTION[provider])}&returnTo=${encodeURIComponent('/calendar')}`;
 
 export const LOGOUT_URL = `/auth/logout?returnTo=${encodeURIComponent('/welcome')}`;
 

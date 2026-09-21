@@ -8,6 +8,6 @@ export const dynamic = 'force-dynamic';
 export default async function Page({ searchParams }: { searchParams: { error?: string } }) {
   // Someone already signed in has no use for the front door.
   const auth0 = getAuth0();
-  if (auth0 && (await auth0.getSession())) redirect('/');
+  if (auth0 && (await auth0.getSession())) redirect('/calendar');
   return <LandingPage configured={AUTH0_CONFIGURED} returned={searchParams.error} />;
 }

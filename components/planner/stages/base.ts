@@ -15,7 +15,7 @@ export function baseStage(ctx: Ctx): Ctx {
   const ACT = SEED[TODAY_M] || {};
   const narrow = logic.viewport === 'narrow';
   const tablet = logic.viewport === 'tablet';
-  const navExtra = tablet ? ';flex:none;padding:11px 16px' : '';
+  const navExtra = (tablet ? ';flex:none;padding:11px 16px' : '') + ';text-decoration:none';
   const onCal = st.screen === 'day' || st.screen === 'rest' || st.screen === 'diary' || st.screen === 'edit';
   const calActive = ['day', 'rest', 'edit', 'detail', 'newEntry'].indexOf(st.screen) > -1;
   const creating = st.screen === 'edit' && !!st.creating;

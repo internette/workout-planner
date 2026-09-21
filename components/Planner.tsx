@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { PlannerLogic } from './planner/PlannerLogic';
 import { useViewport } from './planner/useViewport';
+import { pathForScreen, screenForPath } from './planner/routes';
 import { LOGOUT_URL } from '@/lib/auth';
 import { PlannerView } from './PlannerView';
 
@@ -12,8 +14,18 @@ const centered: React.CSSProperties = {
 };
 
 export default function Planner({ signedIn = false }: { signedIn?: boolean }) {
-  const [logic] = useState(() => new PlannerLogic());
+  const pathname = usePathname();
+  const [logic] = useState(() => {
+    const l = new PlannerLogic();
+    // Open on the screen the address names, such as /arsenal. The calendar address opens on today's Day view.
+    const screen = screenForPath(pathname);
+    if (screen) l.state = { ...l.state, screen };
+    return l;
+  });
   const [, rerender] = useReducer((n: number) => n + 1, 0);
+  const seenPath = useRef(pathname);
+  // The address the current screen belongs to, as of the last time the screen or the address changed it.
+  const screenPath = useRef<string | null>(null);
   logic.viewport = useViewport();
   // Signing out is a trip to the server's logout route, which ends the session and returns to the front door.
   logic.auth = { canSignOut: signedIn, signOut: () => window.location.assign(LOGOUT_URL) };
@@ -26,6 +38,29 @@ export default function Planner({ signedIn = false }: { signedIn?: boolean }) {
       logic.__host = undefined;
     };
   }, [logic]);
+
+  // Address to screen: Back and Forward, or a link, changed the address to one the screen is not on.
+  useEffect(() => {
+    if (seenPath.current === pathname) return;
+    seenPath.current = pathname;
+    const screen = screenForPath(pathname);
+    if (screen && pathForScreen(logic.state.screen) !== pathname) logic.setState({ screen, monthOpen: false });
+    screenPath.current = pathForScreen(logic.state.screen);
+  }, [pathname, logic]);
+
+  // Screen to address: when the screen moves to another nav item, push that item's address, so Back returns to where
+  // you were. Only a change of the screen's own address counts: while the address is changing under us (Back), it
+  // differs from the screen's for a moment, and pushing then would undo the Back. Screens inside a flow have no
+  // address of their own, so they leave it alone.
+  useEffect(() => {
+    const path = pathForScreen(logic.state.screen);
+    if (!path || path === screenPath.current) return;
+    screenPath.current = path;
+    if (path !== window.location.pathname) {
+      seenPath.current = path;
+      window.history.pushState(null, '', path);
+    }
+  });
 
   const retry = () => {
     logic.status = 'loading';

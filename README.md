@@ -11,6 +11,10 @@
 - **Arsenal:** two views, switched with a toggle. **Workouts** lists every saved workout with its exercises and target areas; **Exercises** is your exercise library, grouped by workout, plus exercises not yet assigned to one. Open either to read it without any date, and use Edit to change it. Editing a workout lists its exercises; each has an Edit button that opens the exercise editor and returns to the workout editor afterwards, with your unsaved workout changes kept. Saving a workout that has upcoming sessions asks how to save it. **Update** edits the workout, with an "Also update upcoming sessions" checkbox: ticked, upcoming sessions follow the edit, unticked they stay on the old version. **Save as new** leaves the original and all its sessions alone and saves your changes as a copy of the workout. Saving an exercise always asks. **Update** changes the exercise (in its workout, with the same checkbox for the workout's upcoming sessions); **Save as a new exercise** leaves the original and its workout exactly as they are and adds a separate exercise to the Arsenal's Unassigned group (a taken name becomes "… (copy)"). Exercises are identified by id, never by name, so two with the same name stay two exercises. Either way, past and completed sessions never change.
 - **Progress and Profile:** streaks, weekly counts, mood split, personal records, and XP with a 20-step rank ladder (10 XP per exercise, 50 XP per finished workout).
 
+## Addresses
+
+Each nav item has its own address: `/calendar` (opens on today's Day view), `/chronicle`, `/arsenal`, `/progress` and `/profile`. `/` goes to `/calendar`, and so does signing in. The nav items are real links, so they open in a new tab, and Back and Forward move between the places you have been. The planner stays loaded as you move between them. Screens inside a flow (an entry form, a workout editor) do not have addresses of their own yet; they keep the address of the nav item they were opened from. `/welcome` is the sign-in page and `/design-system` is the design-system site.
+
 ## Getting started
 
 You need Node 20+ and a Supabase project.
@@ -82,7 +86,7 @@ Two things to know. Google and Apple sign-ins for the same person are **separate
 ## How it works
 
 ```
-app/                  Next.js App Router: layout, page, global styles (planner.css)
+app/                  Next.js App Router: layout, global styles (planner.css), the (planner) group with a page per nav address, /welcome and /api/token
   design-system/      The design-system site at /design-system: overview, sidebar and a page per section (registry.ts lists them)
 components/
   Planner.tsx         Host component: loading and error screens, renders the view
@@ -105,6 +109,7 @@ components/
   ui/popover/         Design-system Popover (the popover attribute: top layer, dismissed on Escape or an outside press)
   auth/               The landing page and the Google and Apple sign-in buttons (the server side is in lib/auth0.ts, middleware.ts and app/api/token)
   planner/
+    routes.ts         Which address each nav item has, and which screen an address opens
     PlannerLogic.ts   UI state, navigation, loading and saving; renderVals() assembles the view's values
     context.ts        Runs the stages below in order to build a shared context
     stages/           Derived values, built up in order: base (clock, layout), entries, calendar, stats, workout

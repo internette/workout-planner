@@ -22,7 +22,7 @@ export function getAuth0(): Auth0Client | null {
         console.error('Auth0 callback failed:', error.message);
         return NextResponse.redirect(new URL(`/welcome?error=${cancelled ? 'cancelled' : 'failed'}`, base));
       }
-      return NextResponse.redirect(new URL(ctx.returnTo || '/', base));
+      return NextResponse.redirect(new URL(ctx.returnTo || '/calendar', base));
     },
   });
   return client;
