@@ -11,11 +11,9 @@ export function arsenalVals(ctx: Ctx) {
   const { logic, st, EX, Y, TODAY_M, TODAY_D, arsenalNames } = ctx;
 
   // ---- exercise count (shown in the header when the exercises view is open)
-  const exerciseNames = {};
-  Object.keys(EX).forEach((k) => EX[k].forEach((e) => (exerciseNames[e.name] = 1)));
-  Object.keys(st.extra || {}).forEach((k) => (st.extra[k] || []).forEach((e) => (exerciseNames[e.name] = 1)));
-  logic.model.library.forEach((e) => (exerciseNames[e.name] = 1));
-  const exerciseCount = Object.keys(exerciseNames).length + ' exercises';
+  // One per row in the list. Exercises are identified by id, so two with the same name are two exercises.
+  const exerciseCount =
+    Object.keys(EX).reduce((n, k) => n + (EX[k] || []).length, 0) + logic.model.library.length + ' exercises';
 
   // ---- edits to a saved workout never rewrite sessions that are already done. If sessions are still ahead
   // (from today on, not completed), ask whether they should follow the edit; past and completed ones never do.
@@ -27,7 +25,6 @@ export function arsenalVals(ctx: Ctx) {
       (r) => ({
         ...patch,
         ...(r.created ? { templateId: r.workoutId } : {}),
-        ...(r.created && patch.screen === 'exercise' ? { exerciseId: r.exerciseIds[edit.exercises.update[0]?.id] } : {}),
         // The workout being edited was left alone; its draft belongs to it, so open the copy read-only instead.
         ...(r.created && patch.screen === 'templateEdit' ? { screen: 'template', tplDraft: null } : {}),
         tplConfirm: null,
@@ -97,9 +94,10 @@ export function arsenalVals(ctx: Ctx) {
         sets: found.ex.sets,
         weight: found.ex.weight,
         rest: found.ex.rest,
-        usedIn: workouts
-          .filter((w) => w.exercises.includes(found.ex.name))
-          .map((w) => ({ name: w.name, open: () => logic.nav({ screen: 'template', templateId: w.id }) })),
+        // By id, not by name: a same-named exercise in the Unassigned group is not part of any workout.
+        usedIn: found.workout
+          ? [{ name: found.workout.name, open: () => logic.nav({ screen: 'template', templateId: found.workout.id }) }]
+          : [],
         edit: () =>
           logic.s({
             screen: 'exerciseEdit',
@@ -118,6 +116,56 @@ export function arsenalVals(ctx: Ctx) {
   const exFrom = st.exFrom || null;
   const exDraft = st.exDraft || { name: '', sets: '', weight: '', rest: '', i: 'h' };
   const setExDraft = (field) => (e) => logic.s({ exDraft: { ...exDraft, [field]: e.target.value } });
+  // Saving an exercise always asks how: update it, or keep it and save the edit as a new exercise.
+  // Updating can also carry on to the workout's upcoming sessions. Completed and past sessions never change.
+  const askExerciseSave = async (patch) => {
+    const after = { screen: exFrom ? 'templateEdit' : 'exercise', exDraft: null, exFrom: null };
+    const workout = found.workout;
+    try {
+      const count = workout ? await db.countUpcoming(workout.id, todayIso) : 0;
+      logic.s({
+        tplConfirm: {
+          exercise: found.ex.name,
+          name: workout ? workout.name : '',
+          count,
+          choice: 'update',
+          upcoming: true,
+          apply: (choice, upcoming) => {
+            if (choice === 'new') {
+              // A new standalone exercise: the original and its workout stay exactly as they are.
+              logic.save(() => db.createLibraryExercise(patch), (id) => ({
+                screen: 'exercise',
+                exerciseId: id,
+                exDraft: null,
+                exFrom: null,
+                tplDraft: null,
+                tplConfirm: null,
+              }));
+            } else if (workout) {
+              applyEdit(
+                {
+                  entryId: '',
+                  workoutId: workout.id,
+                  exercises: { update: [{ id: found.ex.id, patch }], removeIds: [], add: [] },
+                  repeatDates: [],
+                },
+                'update',
+                upcoming,
+                after,
+              );
+            } else {
+              logic.save(() => db.updateExerciseRow({ kind: 'library', id: found.ex.id }, patch), {
+                ...after,
+                tplConfirm: null,
+              });
+            }
+          },
+        },
+      });
+    } catch (e) {
+      logic.s({ saveError: e instanceof Error ? e.message : String(e) });
+    }
+  };
   const exerciseEdit = {
     name: exDraft.name,
     sets: exDraft.sets,
@@ -143,22 +191,7 @@ export function arsenalVals(ctx: Ctx) {
         rest: exDraft.rest,
         i: exDraft.i,
       };
-      const after = { screen: exFrom ? 'templateEdit' : 'exercise', exDraft: null, exFrom: null };
-      if (!found.workout) {
-        logic.save(() => db.updateExerciseRow({ kind: 'library', id: found.ex.id }, patch), after);
-        return;
-      }
-      askThenApply(
-        {
-          entryId: '',
-          workoutId: found.workout.id,
-          exercises: { update: [{ id: found.ex.id, patch }], removeIds: [], add: [] },
-          repeatDates: [],
-        },
-        found.workout.name,
-        after,
-        found.ex.name,
-      );
+      askExerciseSave(patch);
     },
   };
 
@@ -339,35 +372,53 @@ export function arsenalVals(ctx: Ctx) {
   return {
     tplConfirmOpen: !!confirm,
     tplConfirmTitle: 'How should this change be saved?',
-    // The name of what is being edited, once. The options and the checkbox carry the rest.
-    tplConfirmBody: confirm
-      ? confirm.exercise
-        ? 'Editing “' + confirm.exercise + '” in “' + confirm.name + '”.'
-        : 'Editing “' + confirm.name + '”.'
-      : '',
+    // For a workout, its name once (the options carry the rest). An exercise names itself in its own options.
+    tplConfirmBody: confirm && !confirm.exercise ? 'Editing “' + confirm.name + '”.' : '',
     tplConfirmChoice: confirm?.choice === 'new' ? 'new' : 'update',
     tplConfirmSetChoice: (value) => confirm && logic.s({ tplConfirm: { ...confirm, choice: value } }),
     tplConfirmOptions: confirm
       ? [
-          {
-            value: 'update',
-            title: confirm.exercise ? 'Update this exercise' : 'Update this workout',
-            description: 'Past sessions keep the old version.',
-          },
-          {
-            value: 'new',
-            title: confirm.exercise ? 'Save as a new exercise' : 'Save as a new workout',
-            description: confirm.exercise
-              ? 'Saved in a copy of the workout. The original stays as it is.'
-              : 'The original and its sessions stay as they are.',
-          },
+          confirm.exercise
+            ? {
+                value: 'update',
+                title: 'Update “' + confirm.exercise + '”',
+                description: confirm.name
+                  ? 'Changes the exercise in “' + confirm.name + '”.'
+                  : 'Changes the exercise itself.',
+              }
+            : {
+                value: 'update',
+                title: 'Update this workout',
+                description: 'Past sessions keep the old version.',
+              },
+          confirm.exercise
+            ? {
+                value: 'new',
+                title: 'Save as a new exercise',
+                description: confirm.name
+                  ? '“' + confirm.exercise + '” in “' + confirm.name + '” stays exactly as it is.'
+                  : 'Keeps the original as it is.',
+              }
+            : {
+                value: 'new',
+                title: 'Save as a new workout',
+                description: 'The original and its sessions stay as they are.',
+              },
         ]
       : [],
-    // Shown inside the Update option only.
+    // Inside the Update option only, and only when the exercise's workout has upcoming sessions.
+    tplConfirmShowUpcoming: !!confirm && confirm.count > 0,
     tplConfirmUpcoming: !!confirm?.upcoming,
     tplConfirmToggleUpcoming: () => confirm && logic.s({ tplConfirm: { ...confirm, upcoming: !confirm.upcoming } }),
     tplConfirmUpcomingLabel: confirm
-      ? 'Also update ' + confirm.count + (confirm.count === 1 ? ' upcoming session' : ' upcoming sessions')
+      ? confirm.exercise
+        ? 'Also update ' +
+          confirm.count +
+          (confirm.count === 1 ? ' upcoming session' : ' upcoming sessions') +
+          ' of “' +
+          confirm.name +
+          '”. Completed sessions never change.'
+        : 'Also update ' + confirm.count + (confirm.count === 1 ? ' upcoming session' : ' upcoming sessions')
       : '',
     tplConfirmCancel: () => logic.s({ tplConfirm: null }),
     tplConfirmSave: () => {

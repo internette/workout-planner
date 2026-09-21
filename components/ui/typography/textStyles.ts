@@ -2,6 +2,20 @@
 // Colour is not part of a style; pick it with the `tone` prop on <Text>.
 
 export const textStyles = {
+  hero: {
+    family: 'heading',
+    size: 'display',
+    weight: 'bold',
+    tracking: 'tight',
+    use: 'A marketing hero headline. Scales with the window',
+  },
+  headline: {
+    family: 'heading',
+    size: 'display-sm',
+    weight: 'bold',
+    tracking: 'tight',
+    use: 'Section headlines on a marketing page. Scales with the window',
+  },
   display: {
     family: 'heading',
     size: '5xl',

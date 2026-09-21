@@ -1,0 +1,37 @@
+/* A checkbox with a label. The real input is invisible and covers the whole control, so a press anywhere selects it. */
+
+.wrap {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+.wrap.disabled { opacity: 0.5; cursor: not-allowed; }
+
+.input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
+
+.box {
+  flex: none;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-white);
+  box-shadow: inset 0 0 0 1.5px var(--color-hairline);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.checked .box { background: var(--color-pink); box-shadow: none; }
+.wrap:has(.input:focus-visible) .box { outline: 2px solid var(--color-pink); outline-offset: 2px; }
+
+.label {
+  min-width: 0;
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+  color: var(--color-slate);
+  text-wrap: pretty;
+}

@@ -65,3 +65,30 @@ export const vars = Object.fromEntries(entries.map(([name]) => [name, `var(${css
   ColorName,
   string
 >;
+
+const rgba = (hex: string, alpha: number) => {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
+/** Composites built from the three accents. Written as CSS variables like the colours, e.g. `var(--gradient-gem)`. */
+export const gradients = {
+  gem: {
+    value: 'linear-gradient(135deg, var(--color-pink) 0%, var(--color-periwinkle) 50%, var(--color-teal) 100%)',
+    use: 'The crystal: progress fills, the avatar and the top ranks',
+  },
+  'gem-tint': {
+    value: `linear-gradient(135deg, ${rgba(colors.pink, 0.16)} 0%, ${rgba(colors.periwinkle, 0.16)} 50%, ${rgba(colors.teal, 0.16)} 100%)`,
+    use: 'A ceremonial panel: the quest and streak banners. Use it once per screen',
+  },
+} as const;
+
+export const overlays = {
+  scrim: { value: rgba(colors.ink, 0.35), use: 'The dimmed page behind a dialog' },
+} as const;
+
+/** Every gradient and overlay as a CSS custom property name and value. */
+export const compositeVariables: Record<string, string> = {
+  ...Object.fromEntries(Object.entries(gradients).map(([k, v]) => [`--gradient-${k}`, v.value])),
+  ...Object.fromEntries(Object.entries(overlays).map(([k, v]) => [`--${k}`, v.value])),
+};

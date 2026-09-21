@@ -5,6 +5,7 @@
 import { Fragment } from 'react';
 import { css, t } from './viewHelpers';
 import { Card } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog } from '@/components/ui/dialog';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { Popover } from '@/components/ui/popover';
@@ -129,18 +130,10 @@ export function PlannerView({ v }: { v: any }) {
                 title={o.title}
                 description={o.description}
               >
-                {o.value === 'update' ? (
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
-                    <input
-                      type="checkbox"
-                      checked={v.tplConfirmUpcoming}
-                      onChange={v.tplConfirmToggleUpcoming}
-                      style={{ width: '18px', height: '18px', margin: '0', accentColor: 'var(--color-pink)', cursor: 'pointer' }}
-                    />
-                    <Text variant="body" as="span" tone="ink">
-                      {v.tplConfirmUpcomingLabel}
-                    </Text>
-                  </label>
+                {o.value === 'update' && v.tplConfirmShowUpcoming ? (
+                  <Checkbox switch checked={v.tplConfirmUpcoming} onChange={v.tplConfirmToggleUpcoming}>
+                    {v.tplConfirmUpcomingLabel}
+                  </Checkbox>
                 ) : null}
               </OptionCard>
             ))}
@@ -452,7 +445,7 @@ export function PlannerView({ v }: { v: any }) {
                           padding: '18px 20px',
                           borderRadius: '20px',
                           background:
-                            'linear-gradient(135deg,rgba(225,105,156,.16) 0%,rgba(124,143,201,.16) 50%,rgba(94,196,214,.16) 100%)',
+                            'var(--gradient-gem-tint)',
                           overflow: 'hidden',
                         }}
                       >
@@ -906,7 +899,7 @@ export function PlannerView({ v }: { v: any }) {
                                 padding: '26px 24px',
                                 borderRadius: '22px',
                                 background:
-                                  'linear-gradient(135deg,rgba(225,105,156,.16) 0%,rgba(124,143,201,.16) 50%,rgba(94,196,214,.16) 100%)',
+                                  'var(--gradient-gem-tint)',
                                 textAlign: 'center',
                                 overflow: 'hidden',
                               }}
@@ -948,7 +941,7 @@ export function PlannerView({ v }: { v: any }) {
                                   margin: '0 auto',
                                   borderRadius: '50%',
                                   background:
-                                    'linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
+                                    'var(--gradient-gem)',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
@@ -979,7 +972,7 @@ export function PlannerView({ v }: { v: any }) {
                                 padding: '34px 24px 30px',
                                 borderRadius: '24px',
                                 background:
-                                  'linear-gradient(135deg,rgba(225,105,156,.16) 0%,rgba(124,143,201,.16) 50%,rgba(94,196,214,.16) 100%)',
+                                  'var(--gradient-gem-tint)',
                                 textAlign: 'center',
                                 overflow: 'hidden',
                               }}
@@ -1098,7 +1091,7 @@ export function PlannerView({ v }: { v: any }) {
                                 flex: 'none',
                                 borderRadius: '50%',
                                 background:
-                                  'linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
+                                  'var(--gradient-gem)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -1342,7 +1335,7 @@ export function PlannerView({ v }: { v: any }) {
                       margin: '0 auto',
                       borderRadius: '50%',
                       background:
-                        'linear-gradient(135deg,rgba(225,105,156,.16) 0%,rgba(124,143,201,.16) 50%,rgba(94,196,214,.16) 100%)',
+                        'var(--gradient-gem-tint)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -1462,7 +1455,7 @@ export function PlannerView({ v }: { v: any }) {
                         flex: 'none',
                         borderRadius: '50%',
                         background:
-                          'linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
+                          'var(--gradient-gem)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -1839,7 +1832,7 @@ export function PlannerView({ v }: { v: any }) {
                       padding: '22px 24px',
                       borderRadius: '22px',
                       background:
-                        'linear-gradient(135deg,rgba(225,105,156,.16) 0%,rgba(124,143,201,.16) 50%,rgba(94,196,214,.16) 100%)',
+                        'var(--gradient-gem-tint)',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 'none' }}>

@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/buttons';
 import { Card } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Chip } from '@/components/ui/chip';
 import { colors } from '@/components/ui/colors';
 import { Bike, Calendar, Check, Dumbbell, Sparkle } from '@/components/ui/icons';
@@ -92,6 +93,22 @@ export function Preview({ slug }: { slug: string }) {
           value="Week"
           onChange={noop}
         />
+      );
+    case 'elevation':
+      return (
+        <>
+          {(['hairline', 'raised', 'overlay'] as const).map((name) => (
+            <span key={name} style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--color-white)', boxShadow: `var(--elevation-${name})` }} />
+          ))}
+        </>
+      );
+    case 'checkbox':
+      return (
+        <div style={{ width: 200 }}>
+          <Checkbox checked onChange={noop}>
+            Repeat weekly
+          </Checkbox>
+        </div>
       );
     case 'option-card':
       return (

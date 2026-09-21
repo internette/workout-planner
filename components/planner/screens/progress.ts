@@ -65,7 +65,7 @@ export function progressVals(ctx: Ctx) {
         gem:
           'width:11px;height:15px;flex:none;clip-path:polygon(50% 0,100% 35%,50% 100%,0 35%);background:' +
           (ix === RANKS.length - 1
-            ? 'linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)'
+            ? 'var(--gradient-gem)'
             : cur && r.gem === 'var(--color-white)'
               ? 'var(--color-white)'
               : r.gem) +
@@ -91,7 +91,7 @@ export function progressVals(ctx: Ctx) {
     rankBar:
       'width:' +
       rankPct +
-      '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
+      '%;height:100%;border-radius:5px;transition:width .35s ease;background:var(--gradient-gem)',
     rankProgress:
       rankPct === 0
         ? 'Just promoted — 0% to ' + RANKS[derivedRank].next
@@ -171,7 +171,7 @@ export function progressVals(ctx: Ctx) {
     questsClearedBar:
       'width:' +
       (totalSessions ? Math.round((completedSessions / totalSessions) * 100) : 0) +
-      '%;height:100%;border-radius:5px;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
+      '%;height:100%;border-radius:5px;background:var(--gradient-gem)',
     questStats: Object.keys(questCounts)
       .sort((a, b) => questCounts[b] - questCounts[a])
       .slice(0, 5)

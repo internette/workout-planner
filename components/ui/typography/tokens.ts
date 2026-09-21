@@ -27,6 +27,15 @@ export const fontSizes = {
   '6xl': { px: 32, use: 'Hero numbers' },
 } as const;
 
+/**
+ * Marketing display sizes. They fluidly follow the window width, so they are CSS expressions, not fixed pixels.
+ * The app's own scale stops at 32 px, which is a screen-heading scale.
+ */
+export const displaySizes = {
+  display: { css: 'clamp(34px, 5.2vw, 54px)', use: 'A marketing hero headline' },
+  'display-sm': { css: 'clamp(26px, 3.2vw, 34px)', use: 'Section headlines on a marketing page' },
+} as const;
+
 export const fontWeights = {
   regular: { value: 400, use: 'Body copy' },
   medium: { value: 500, use: 'UI text, inactive controls' },
@@ -51,6 +60,7 @@ export const leading = {
 export const typographyVariables: Record<string, string> = {
   ...Object.fromEntries(Object.entries(fontFamilies).map(([k, v]) => [`--font-${k}`, v.value])),
   ...Object.fromEntries(Object.entries(fontSizes).map(([k, v]) => [`--text-${k}`, `${v.px}px`])),
+  ...Object.fromEntries(Object.entries(displaySizes).map(([k, v]) => [`--text-${k}`, v.css])),
   ...Object.fromEntries(Object.entries(fontWeights).map(([k, v]) => [`--font-weight-${k}`, String(v.value)])),
   ...Object.fromEntries(Object.entries(tracking).map(([k, v]) => [`--tracking-${k}`, v.value])),
   ...Object.fromEntries(Object.entries(leading).map(([k, v]) => [`--leading-${k}`, String(v.value)])),

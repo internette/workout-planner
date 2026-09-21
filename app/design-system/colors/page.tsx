@@ -1,4 +1,4 @@
-import { colorGroups, cssVarName } from '@/components/ui/colors';
+import { colorGroups, cssVarName, gradients, overlays } from '@/components/ui/colors';
 
 export const metadata = { title: 'Colors — Design system' };
 
@@ -39,6 +39,29 @@ export default function ColorsPage() {
           </div>
         </section>
       ))}
+      <section style={{ marginBottom: 36 }}>
+        <h2 id="gradients-and-overlays" style={{ fontSize: 'var(--text-2xl)', scrollMarginTop: 16 }}>Gradients and overlays</h2>
+        <p style={{ margin: '0 0 16px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
+          Composites built from the palette, also CSS variables. Write <code>var(--gradient-gem)</code>, not the
+          gradient itself.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+          {[
+            ...Object.entries(gradients).map(([name, { value, use }]) => ({ name, variable: `--gradient-${name}`, value, use, swatch: `var(--gradient-${name})` })),
+            ...Object.entries(overlays).map(([name, { value, use }]) => ({ name, variable: `--${name}`, value, use, swatch: `linear-gradient(0deg, var(--${name}), var(--${name})), var(--color-canvas)` })),
+          ].map(({ name, variable, value, use, swatch }) => (
+            <div key={name} style={{ background: 'var(--color-white)', borderRadius: 16, overflow: 'hidden', boxShadow: 'var(--elevation-raised)' }}>
+              <div style={{ height: 64, background: swatch, borderBottom: '1px solid rgba(35,42,69,.07)' }} />
+              <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <strong style={{ fontSize: 'var(--text-base)' }}>{name}</strong>
+                <code style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)' }}>var({variable})</code>
+                <span style={{ fontSize: 'var(--text-md)', color: 'var(--color-slate)', lineHeight: 'var(--leading-snug)' }}>{use}</span>
+                <code style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)', wordBreak: 'break-word' }}>{value}</code>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }

@@ -6,8 +6,8 @@
   box-sizing: border-box;
 }
 
-.raised { border-radius: 20px; box-shadow: 0 4px 14px rgba(35, 42, 69, 0.07); }
-.overlay { border-radius: 22px; box-shadow: 0 8px 24px rgba(35, 42, 69, 0.14); }
+.raised { border-radius: 20px; box-shadow: var(--elevation-raised); }
+.overlay { border-radius: 22px; box-shadow: var(--elevation-overlay); }
 
 .pad-xs { padding: 14px; }
 .pad-sm { padding: 18px 20px; }
@@ -22,4 +22,4 @@
   cursor: pointer;
   transition: box-shadow 0.15s ease;
 }
-.interactive:hover { box-shadow: 0 8px 24px rgba(35, 42, 69, 0.14); }
+.interactive:hover { box-shadow: var(--elevation-overlay); }

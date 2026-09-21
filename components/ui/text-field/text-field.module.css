@@ -76,7 +76,7 @@
   border: none;
   border-radius: 20px;
   background: var(--color-white);
-  box-shadow: 0 4px 14px rgba(35, 42, 69, 0.07);
+  box-shadow: var(--elevation-raised);
   font-family: inherit;
   font-size: var(--text-lg);
   font-weight: var(--font-weight-medium);

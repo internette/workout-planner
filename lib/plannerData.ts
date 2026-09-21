@@ -497,6 +497,20 @@ export async function addLibraryExercise(e: Exercise) {
   await ok(supabase.from('library_exercises').upsert(exerciseRow(e), { onConflict: 'name' }));
 }
 
+// "Save as a new exercise": always a new row, never an overwrite. Library names are unique, so a taken name
+// becomes "<name> (copy)", "(copy 2)", ... Returns the new row's id so the screen can open it.
+export async function createLibraryExercise(e: Exercise): Promise<string> {
+  const rows: any[] = await ok(supabase.from('library_exercises').select('name'));
+  const taken = new Set(rows.map((r) => r.name));
+  let name = e.name;
+  if (taken.has(name)) {
+    name = e.name + ' (copy)';
+    for (let n = 2; taken.has(name); n++) name = e.name + ' (copy ' + n + ')';
+  }
+  const [row]: any[] = await ok(supabase.from('library_exercises').insert(exerciseRow({ ...e, name })).select('id'));
+  return row.id;
+}
+
 // Edits one exercise row: the copy inside a workout, or an exercise saved on its own in the Arsenal.
 export async function updateExerciseRow(
   target: { kind: 'workout' | 'library'; id: string; workoutId?: string },

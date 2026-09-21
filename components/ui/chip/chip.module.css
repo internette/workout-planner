@@ -23,9 +23,9 @@
   background: var(--color-white);
   color: var(--color-slate);
   font-weight: var(--font-weight-medium);
-  box-shadow: 0 1px 3px rgba(35, 42, 69, 0.06);
+  box-shadow: var(--elevation-hairline);
 }
-.info.clickable:hover { box-shadow: 0 4px 14px rgba(35, 42, 69, 0.07); }
+.info.clickable:hover { box-shadow: var(--elevation-raised); }
 
 /* accent: solid pink, for something that is switched on */
 .accent {

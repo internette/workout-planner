@@ -8,7 +8,7 @@
   border: none;
   overflow-y: auto;
 }
-.panel::backdrop { background: rgba(35, 42, 69, 0.35); }
+.panel::backdrop { background: var(--scrim); }
 .sm { max-width: 400px; }
 .md { max-width: 440px; }
 

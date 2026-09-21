@@ -1,5 +1,6 @@
 import {
   Text,
+  displaySizes,
   fontFamilies,
   fontSizes,
   fontWeights,
@@ -19,6 +20,7 @@ const row: React.CSSProperties = {
   padding: '14px 0',
   borderBottom: '1px solid rgba(35,42,69,.07)',
 };
+const note: React.CSSProperties = { margin: '0 0 8px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const meta: React.CSSProperties = {
   fontSize: 'var(--text-sm)',
   color: 'var(--color-muted)',
@@ -144,6 +146,29 @@ export default function TypographyPage() {
           <div>
             <div style={{ fontSize: `var(--text-${name})`, lineHeight: 'var(--leading-snug)' }}>
               Every session, one step closer
+            </div>
+            <div style={meta}>{use}</div>
+          </div>
+        </div>
+      ))}
+
+      <h2 id="display-sizes" style={h2}>Display sizes</h2>
+      <p style={note}>
+        For marketing pages only. They follow the window width, so they are CSS expressions rather than fixed pixels.
+        The app&apos;s own scale stops at 32 px, which is a screen-heading scale. Use them through the{' '}
+        <code>hero</code> and <code>headline</code> text styles.
+      </p>
+      {Object.entries(displaySizes).map(([name, { css, use }]) => (
+        <div key={name} style={row}>
+          <div>
+            <strong>{name}</strong>
+            <div style={meta}>
+              {css} · var(--text-{name})
+            </div>
+          </div>
+          <div>
+            <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 'var(--font-weight-bold)', fontSize: `var(--text-${name})`, lineHeight: 1.1, letterSpacing: 'var(--tracking-tight)' }}>
+              Answer the call
             </div>
             <div style={meta}>{use}</div>
           </div>

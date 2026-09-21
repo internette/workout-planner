@@ -34,7 +34,10 @@ export const sections: Section[] = [
     category: 'foundations',
     description: 'The palette as CSS variables, grouped by role.',
     // One link per colour group; the page gives each group heading the same id.
-    anchors: Object.keys(colorGroups).map((title) => ({ id: title.toLowerCase(), title })),
+    anchors: [
+      ...Object.keys(colorGroups).map((title) => ({ id: title.toLowerCase(), title })),
+      { id: 'gradients-and-overlays', title: 'Gradients and overlays' },
+    ],
   },
   {
     slug: 'typography',
@@ -46,9 +49,20 @@ export const sections: Section[] = [
       { id: 'tones', title: 'Tones' },
       { id: 'families', title: 'Families' },
       { id: 'sizes', title: 'Sizes' },
+      { id: 'display-sizes', title: 'Display sizes' },
       { id: 'weights', title: 'Weights' },
       { id: 'tracking', title: 'Tracking' },
       { id: 'leading', title: 'Leading' },
+    ],
+  },
+  {
+    slug: 'elevation',
+    title: 'Elevation',
+    category: 'foundations',
+    description: 'The shadows the interface casts, and the one glow.',
+    anchors: [
+      { id: 'steps', title: 'Steps' },
+      { id: 'glow', title: 'Glow' },
     ],
   },
   {
@@ -111,6 +125,17 @@ export const sections: Section[] = [
       { id: 'brand-small', title: 'Brand, small' },
       { id: 'quiet', title: 'Quiet' },
       { id: 'full-width', title: 'Full width' },
+    ],
+  },
+  {
+    slug: 'checkbox',
+    title: 'Checkbox',
+    category: 'components',
+    description: 'A tick box with its label, as a checkbox or a switch.',
+    anchors: [
+      { id: 'checkbox', title: 'Checkbox' },
+      { id: 'switch', title: 'As a switch' },
+      { id: 'behaviour', title: 'Behaviour' },
     ],
   },
   {
