@@ -3,7 +3,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { PlannerLogic } from './planner/PlannerLogic';
 import { useViewport } from './planner/useViewport';
-import { useAuth } from './auth/AuthProvider';
+import { LOGOUT_URL } from '@/lib/auth';
 import { PlannerView } from './PlannerView';
 
 const centered: React.CSSProperties = {
@@ -11,12 +11,12 @@ const centered: React.CSSProperties = {
   gap: 14, padding: 24, textAlign: 'center', color: 'var(--color-muted)',
 };
 
-export default function Planner() {
+export default function Planner({ signedIn = false }: { signedIn?: boolean }) {
   const [logic] = useState(() => new PlannerLogic());
   const [, rerender] = useReducer((n: number) => n + 1, 0);
   logic.viewport = useViewport();
-  const auth = useAuth();
-  logic.auth = { canSignOut: auth.status === 'signedIn', signOut: auth.signOut };
+  // Signing out is a trip to the server's logout route, which ends the session and returns to the front door.
+  logic.auth = { canSignOut: signedIn, signOut: () => window.location.assign(LOGOUT_URL) };
 
   // The logic object owns the state; it asks this component to re-render whenever that changes.
   useEffect(() => {

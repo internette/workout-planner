@@ -70,11 +70,12 @@
   font-weight: var(--font-weight-semibold);
   transition: background-color 0.18s ease;
 }
-.provider:disabled { cursor: progress; }
+.provider { text-decoration: none; }
+.provider[aria-disabled='true'] { cursor: progress; }
 .google { background: var(--color-white); color: var(--color-ink); box-shadow: inset 0 0 0 1.5px var(--color-divider); }
-.google:hover:not(:disabled) { background: var(--color-canvas); }
+.google:hover:not([aria-disabled='true']) { background: var(--color-canvas); }
 .apple { background: var(--color-ink); color: var(--color-white); }
-.apple:hover:not(:disabled) { background: var(--color-slate-deep); }
+.apple:hover:not([aria-disabled='true']) { background: var(--color-slate-deep); }
 .provider[aria-busy='true'] { opacity: 0.75; }
 
 /* ---- sections ---- */

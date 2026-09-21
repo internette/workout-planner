@@ -47,9 +47,9 @@ Run both migrations once, in order, in the Supabase SQL editor. They are safe to
 
 ### Sign-in
 
-The planner has a landing page with Google and Apple sign-in (at `/welcome`, and at `/` for signed-out visitors when sign-in is required). Auth0 handles the sign-in; Supabase trusts Auth0's token, so row-level security can tell whose data is whose. It is off by default, so the app keeps working until you set it up:
+The planner has a landing page with Google and Apple sign-in (at `/welcome`, and reached from `/` when signed out and sign-in is required). Auth0 handles the sign-in on the server: the session lives in an encrypted cookie the page cannot read, and a middleware guards the planner. Supabase trusts an Auth0 token, so row-level security can tell whose data is whose. It is off by default, so the app keeps working until you set it up:
 
-1. **Auth0 application.** Create a *Single Page Application*. Under Settings, add your site's address (`http://localhost:3000` and your production address) to *Allowed Callback URLs*, *Allowed Logout URLs* and *Allowed Web Origins*. The callback address is the site root and the logout address is `/welcome`. Under Advanced Settings → Grant Types, keep *Refresh Token* enabled, and turn on refresh token rotation, since the app renews the person's token with one.
+1. **Auth0 application.** Create a *Regular Web Application* (not a single-page one: it has a client secret). Under Settings, add `http://localhost:3000/auth/callback` (and your production address's `/auth/callback`) to *Allowed Callback URLs*, and `http://localhost:3000/welcome` (and the production equivalent) to *Allowed Logout URLs*. Under Advanced Settings → Grant Types, keep *Refresh Token* enabled.
 2. **Auth0 connections.** Under Authentication → Social, enable Google and Apple, and turn them on for the application. Google needs an OAuth client from Google Cloud (Auth0's development keys work for testing); Apple needs a Services ID and key from a paid Apple Developer account.
 3. **Auth0 role claim.** Under Actions → Library, create a custom Action for the *Login / Post Login* flow, deploy it, and add it to the login flow:
 
@@ -61,10 +61,12 @@ The planner has a landing page with Google and Apple sign-in (at `/welcome`, and
 
    Supabase reads the person's database role from this claim. It must go on the ID token: Auth0 drops un-namespaced custom claims from access tokens.
 4. **Supabase.** Open Authentication → Third-Party Auth, add the Auth0 integration, and enter your tenant id and region. (Tenants signing with HS256 or PS256 are not supported; the default RS256 is.)
-5. **Environment.** Put your Auth0 domain and client id in `.env.local` as `NEXT_PUBLIC_AUTH0_DOMAIN` and `NEXT_PUBLIC_AUTH0_CLIENT_ID`, set `NEXT_PUBLIC_AUTH_REQUIRED=true`, and restart the dev server.
+5. **Environment.** Fill in the `AUTH0_*` and `APP_BASE_URL` variables from `.env.local.example`, set `NEXT_PUBLIC_AUTH_REQUIRED=true`, and restart the dev server. `AUTH0_CLIENT_SECRET` and `AUTH0_SECRET` are secrets and are only ever read on the server.
 6. **Database.** Run [supabase/migrations/20260921000000_per_user_rls.sql](supabase/migrations/20260921000000_per_user_rls.sql) in the SQL editor. It gives every table an owner and lets only that person read or change their rows.
 
 Until steps 1 to 5 are done, the provider buttons say "Sign-in is not set up yet." After step 6 the data you have today is hidden from every account (everyone starts fresh); the last section of the migration shows how to hand it to one account instead.
+
+How it fits together: the buttons are links to `/auth/login?connection=…`, which the Auth0 SDK's middleware turns into a redirect to Auth0 and back to `/auth/callback`. The browser gets the ID token it needs for Supabase from `GET /api/token`, which reads the session cookie on the server, renews the token when it is close to expiring, and returns 401 when signed out. Signing out is `/auth/logout`, from the Sign out button on Profile.
 
 Two things to know. Google and Apple sign-ins for the same person are **separate Auth0 users** unless you link them, so they would see separate data; Auth0 documents an Action that links accounts by verified email. And the Google and Apple marks in `components/auth/marks.tsx` are drawn approximations: replace them with each provider's official assets before going live. The landing page mentions terms and a privacy policy that do not exist yet.
 
@@ -101,7 +103,7 @@ components/
   ui/option-card/     Design-system OptionCard and OptionGroup (one answer per card, a native radio underneath)
   ui/dialog/          Design-system Dialog (a native <dialog>: top layer, inert page, Escape and focus handled by the browser)
   ui/popover/         Design-system Popover (the popover attribute: top layer, dismissed on Escape or an outside press)
-  auth/               The landing page and sign-in with Auth0: AuthGate, AuthProvider, LandingPage and the provider buttons
+  auth/               The landing page and the Google and Apple sign-in buttons (the server side is in lib/auth0.ts, middleware.ts and app/api/token)
   planner/
     PlannerLogic.ts   UI state, navigation, loading and saving; renderVals() assembles the view's values
     context.ts        Runs the stages below in order to build a shared context
@@ -114,7 +116,8 @@ components/
     types.ts          The loose Ctx type shared by stages and screens
 lib/
   supabase.ts         Supabase client
-  auth.ts             Auth0 settings, the connection names, the ID-token hook Supabase reads, and the NEXT_PUBLIC_AUTH_REQUIRED switch
+  auth.ts             Browser-safe sign-in settings: the login links, the connection names, the NEXT_PUBLIC_AUTH_REQUIRED switch and the ID-token fetch Supabase uses
+  auth0.ts            The server's Auth0 client and its callback rules (server only)
   plannerData.ts      Loads the database into the shapes the UI uses, and all writes
 supabase/migrations/  SQL to run in the Supabase SQL editor
 ```

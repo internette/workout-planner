@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/buttons';
 import { Card } from '@/components/ui/card';
 import { Book, Calendar, Check, ChevronRight, Gem, Sparkle } from '@/components/ui/icons';
@@ -8,7 +8,6 @@ import { colors } from '@/components/ui/colors';
 import { Text } from '@/components/ui/typography';
 import { RANKS, RANK_STEPS } from '@/components/planner/constants';
 import type { Provider } from '@/lib/auth';
-import { useAuth } from './AuthProvider';
 import { ProviderButton } from './ProviderButton';
 import styles from './landing.module.css';
 
@@ -39,29 +38,25 @@ function SparkleTrail() {
 }
 
 // ---- the auth card: two modes that differ only in wording, since both are the same OAuth call
-function AuthCard({ cardRef }: { cardRef: React.RefObject<HTMLDivElement> }) {
+function AuthCard({ cardRef, configured, returned }: { cardRef: React.RefObject<HTMLDivElement>; configured: boolean; returned?: string }) {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [busy, setBusy] = useState<Provider | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const { signIn, returnedError } = useAuth();
+  // What the server reported when Auth0 sent the person back (see lib/auth0.ts), until they try again.
+  const [error, setError] = useState<string | null>(
+    returned === 'cancelled' ? 'Sign-in was cancelled. Try again when you are ready.' : returned ? 'Sign-in did not finish. Try again.' : null,
+  );
   const signingUp = mode === 'signup';
 
-  // A provider that sends the person back with an error, such as cancelling.
-  useEffect(() => {
-    if (returnedError) {
-      setError(returnedError.cancelled ? 'Sign-in was cancelled. Try again when you are ready.' : 'Sign-in did not finish. Try again.');
+  // The button is a link to the server's login route. Here we only add the pending state, or say plainly that
+  // sign-in is not set up.
+  const go = (provider: Provider) => (e: React.MouseEvent) => {
+    if (!configured) {
+      e.preventDefault();
+      setError('Sign-in is not set up yet.');
+      return;
     }
-  }, [returnedError]);
-
-  const go = async (provider: Provider) => {
-    setBusy(provider);
     setError(null);
-    const result = await signIn(provider);
-    // The page leaves on success, so this only runs when the provider could not be reached.
-    if (result) {
-      setError(result.error === 'not-configured' ? 'Sign-in is not set up yet.' : `${PROVIDER_NAME[provider]} did not sign you in. Try again.`);
-      setBusy(null);
-    }
+    setBusy(provider);
   };
 
   return (
@@ -79,7 +74,7 @@ function AuthCard({ cardRef }: { cardRef: React.RefObject<HTMLDivElement> }) {
 
         <div className={styles.providers}>
           {(['google', 'apple'] as const).map((p) => (
-            <ProviderButton key={p} provider={p} onClick={() => go(p)} busy={busy === p} disabled={!!busy}>
+            <ProviderButton key={p} provider={p} onClick={go(p)} busy={busy === p} disabled={!!busy}>
               {busy === p ? `Opening ${PROVIDER_NAME[p]}…` : `Continue with ${PROVIDER_NAME[p]}`}
             </ProviderButton>
           ))}
@@ -128,9 +123,9 @@ const Section = ({ children, last }: { children: React.ReactNode; last?: boolean
 );
 
 /** Explains what Ritual is, and lets a returning person in within one screen height. */
-export function LandingPage() {
+export function LandingPage({ configured, returned }: { configured: boolean; returned?: string }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const focusCard = () => cardRef.current?.querySelector('button')?.focus();
+  const focusCard = () => cardRef.current?.querySelector<HTMLElement>('a')?.focus();
   // No provider is chosen yet, so the closing button takes the person back to the card rather than signing in.
   const toCard = () => {
     cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -168,7 +163,7 @@ export function LandingPage() {
               </Text>
             </div>
             <div className={styles.authWrap}>
-              <AuthCard cardRef={cardRef} />
+              <AuthCard cardRef={cardRef} configured={configured} returned={returned} />
             </div>
           </div>
         </section>
