@@ -10,9 +10,6 @@
 .headerRow { max-width: 1040px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
 .signIn { margin-left: auto; }
 
-.wordmark { display: inline-flex; align-items: center; gap: 9px; }
-.wordmarkText { font-family: var(--font-heading); font-weight: var(--font-weight-bold); letter-spacing: -0.03em; color: var(--color-ink); }
-
 .hero { padding-top: 34px; padding-bottom: 56px; }
 .heroText { max-width: 660px; margin: 0 auto; text-align: center; }
 .eyebrowRow { display: inline-flex; align-items: center; gap: 10px; }

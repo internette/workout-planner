@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { Lockup } from '@/components/brand/Lockup';
 import { Button } from '@/components/ui/buttons';
 import { Card } from '@/components/ui/card';
 import { Book, Calendar, Check, ChevronRight, Gem, Sparkle } from '@/components/ui/icons';
@@ -12,17 +13,6 @@ import { ProviderButton } from './ProviderButton';
 import styles from './landing.module.css';
 
 const PROVIDER_NAME: Record<Provider, string> = { google: 'Google', apple: 'Apple' };
-
-function Wordmark({ size = 20 }: { size?: number }) {
-  return (
-    <span className={styles.wordmark}>
-      <Gem size={size} />
-      <span className={styles.wordmarkText} style={{ fontSize: size - 2 }}>
-        Ritual
-      </span>
-    </span>
-  );
-}
 
 const SPARKLE_COLORS = [colors.pink, colors.periwinkle, colors.teal, colors.pink];
 function SparkleTrail() {
@@ -136,7 +126,7 @@ export function LandingPage({ configured, returned }: { configured: boolean; ret
     <div className={styles.page}>
       <header className={styles.header}>
         <div className={styles.headerRow}>
-          <Wordmark />
+          <Lockup height={28} />
           <Button type="neutral" ghost size="sm" onClick={focusCard} className={styles.signIn}>
             Sign in
           </Button>
@@ -284,7 +274,7 @@ export function LandingPage({ configured, returned }: { configured: boolean; ret
 
       <footer className={styles.footer}>
         <div className={styles.footerRow}>
-          <Wordmark size={17} />
+          <Lockup height={24} />
           <Text variant="caption" tone="subtle">
             A training plan with a transformation sequence.
           </Text>

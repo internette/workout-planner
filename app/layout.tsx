@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './planner.css';
 import { ColorVariables } from '@/components/ui/colors';
 import { TypographyVariables } from '@/components/ui/typography';
@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   title: 'Ritual — Magical Girl Training Plan',
   description: 'Plan workouts, log how they felt, and rank up.',
 };
+
+export const viewport: Viewport = { themeColor: '#FBF1F3' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
