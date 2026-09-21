@@ -1,9 +1,10 @@
 'use client';
 
-import { useId, useLayoutEffect, useRef, useState, type SyntheticEvent } from 'react';
+import { useId, useLayoutEffect, useRef, useState, type MouseEvent, type SyntheticEvent } from 'react';
 import { Mark } from '@/components/brand/Mark';
 import { Button } from '@/components/ui/buttons';
 import { Checkbox } from '@/components/ui/checkbox';
+import { pressedOutside } from '@/components/ui/dialog';
 import { Text } from '@/components/ui/typography';
 import styles from './install-prompt.module.css';
 
@@ -50,8 +51,13 @@ function Sheet({ onInstall, onNotNow }: Pick<InstallPromptProps, 'onInstall' | '
     onNotNow(dontAsk);
   };
 
+  // A press on the dimmed area answers the same as Escape.
+  const onPress = (e: MouseEvent<HTMLDialogElement>) => {
+    if (pressedOutside(e)) onNotNow(dontAsk);
+  };
+
   return (
-    <dialog ref={ref} className={styles.sheet} aria-labelledby={titleId} onCancel={onCancel}>
+    <dialog ref={ref} className={styles.sheet} aria-labelledby={titleId} onCancel={onCancel} onClick={onPress}>
       <div className={styles.handle} aria-hidden="true" />
       <div className={styles.head}>
         <span className={styles.icon}>

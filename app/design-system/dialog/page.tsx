@@ -115,8 +115,9 @@ export default function DialogPage() {
           opened it once it closes.
         </li>
         <li>
-          It is labelled by its title. Its dimmed backdrop does nothing when pressed unless you set{' '}
-          <code>dismissOnScrim</code>; leave that off for questions that need an answer.
+          It is labelled by its title. Pressing the dimmed area around it does the same as Escape: <code>onClose</code> is
+          called. This is always on, so a dialog has to be safe to walk away from: closing it must never do the
+          destructive thing.
         </li>
       </ul>
     </DocPage>

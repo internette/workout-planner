@@ -76,7 +76,6 @@ export function DeleteAccount() {
         onClose={close}
         title="Delete your account permanently?"
         description="This deletes everything you have in Moonshot, and removes your sign-in."
-        dismissOnScrim={false}
         actions={
           <>
             <Button type="neutral" ghost size="md" onClick={close} disabled={busy}>

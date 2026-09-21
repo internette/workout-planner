@@ -5,11 +5,12 @@ import { IconButton } from '../buttons';
 import { Card } from '../card';
 import { Close } from '../icons';
 import { Text } from '../typography';
+import { pressedOutside } from './outside';
 import styles from './dialog.module.css';
 
 export interface DialogProps {
   open: boolean;
-  /** Called when the browser asks to close it (Escape), on the close button, and on a press on the dimmed area if `dismissOnScrim` is set. It should set `open` to false. */
+  /** Called when the browser asks to close it (Escape), on the close button, and on a press on the dimmed area around it. It should set `open` to false. */
   onClose: () => void;
   title: string;
   /** Small muted text beside the title. */
@@ -22,8 +23,6 @@ export interface DialogProps {
   actions?: ReactNode;
   /** md is a little wider than the default sm. */
   size?: 'sm' | 'md';
-  /** Let a press on the dimmed area close the dialog. Leave it off for questions that need an answer. */
-  dismissOnScrim?: boolean;
   /** Anything between the description and the buttons. */
   children?: ReactNode;
 }
@@ -37,7 +36,7 @@ export function Dialog(props: DialogProps) {
 }
 
 // Mounted only while open, so showModal() runs once per opening.
-function DialogPanel({ onClose, title, aside, closeButton = true, description, actions, size = 'sm', dismissOnScrim, children }: DialogProps) {
+function DialogPanel({ onClose, title, aside, closeButton = true, description, actions, size = 'sm', children }: DialogProps) {
   const titleId = useId();
   const ref = useRef<HTMLDialogElement>(null);
   const live = useRef(true);
@@ -66,11 +65,9 @@ function DialogPanel({ onClose, title, aside, closeButton = true, description, a
   const onNativeClose = () => {
     if (live.current && !ref.current?.open) onClose();
   };
-  // The dimmed area is the dialog element itself, outside the card's own box.
+  // A press on the dimmed area closes it, the same as Escape.
   const onPress = (e: MouseEvent<HTMLDialogElement>) => {
-    if (!dismissOnScrim || e.target !== e.currentTarget) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) onClose();
+    if (pressedOutside(e)) onClose();
   };
 
   return (
