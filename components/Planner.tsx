@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { PlannerLogic } from './planner/PlannerLogic';
 import { useViewport } from './planner/useViewport';
 import { pathForScreen, screenForPath } from './planner/routes';
-import { LOGOUT_URL } from '@/lib/auth';
+import { logoutUrl } from '@/lib/auth';
 import { PlannerView } from './PlannerView';
 
 const centered: React.CSSProperties = {
@@ -28,7 +28,7 @@ export default function Planner({ signedIn = false }: { signedIn?: boolean }) {
   const screenPath = useRef<string | null>(null);
   logic.viewport = useViewport();
   // Signing out is a trip to the server's logout route, which ends the session and returns to the front door.
-  logic.auth = { canSignOut: signedIn, signOut: () => window.location.assign(LOGOUT_URL) };
+  logic.auth = { canSignOut: signedIn, signOut: () => window.location.assign(logoutUrl()) };
 
   // The logic object owns the state; it asks this component to re-render whenever that changes.
   useEffect(() => {

@@ -15,7 +15,9 @@ export const CONNECTION: Record<Provider, string> = { google: 'google-oauth2', a
 export const loginUrl = (provider: Provider) =>
   `/auth/login?connection=${encodeURIComponent(CONNECTION[provider])}&returnTo=${encodeURIComponent('/calendar')}`;
 
-export const LOGOUT_URL = `/auth/logout?returnTo=${encodeURIComponent('/welcome')}`;
+// Auth0 only accepts an absolute post-logout address (and it must be listed under Allowed Logout URLs).
+export const logoutUrl = () =>
+  `/auth/logout?returnTo=${encodeURIComponent(`${window.location.origin}/welcome`)}`;
 
 // ---- the ID token Supabase verifies
 // The session lives in a cookie the page cannot read, so the token comes from our own route. It is kept in memory
