@@ -3,6 +3,7 @@ import './planner.css';
 import { ColorVariables } from '@/components/ui/colors';
 import { TypographyVariables } from '@/components/ui/typography';
 import { ElevationVariables } from '@/components/ui/elevation';
+import { StructureVariables } from '@/components/ui/StructureVariables';
 
 export const metadata: Metadata = {
   title: 'Moonshot — Magical Girl Training Plan',
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ColorVariables />
         <TypographyVariables />
         <ElevationVariables />
+        <StructureVariables />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* The root layout is the one place every page shares. The rule below is written for the Pages Router,

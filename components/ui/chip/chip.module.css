@@ -3,15 +3,15 @@
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-2);
   flex: none;
   white-space: nowrap;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   font-family: inherit;
   font-size: var(--text-md);
   box-sizing: border-box;
-  transition: background-color 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  transition: background-color var(--dur-state) var(--ease-standard), box-shadow var(--dur-state) var(--ease-standard), filter var(--dur-state) var(--ease-standard);
 }
 
 .sm { padding: 8px 14px; }
