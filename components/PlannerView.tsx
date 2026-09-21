@@ -1464,34 +1464,99 @@ export function PlannerView({ v }: { v: any }) {
                     pad="lg"
                     style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '18px' }}
                   >
+                    {/* The gem ring: the brand gradient, a white gap, then the photo (or the initial). The badge
+                        carries the gem of the current rank. */}
                     <div
                       style={{
                         position: 'relative',
-                        width: '74px',
-                        height: '74px',
+                        width: '86px',
+                        height: '86px',
                         flex: 'none',
                         borderRadius: '50%',
-                        background:
-                          'var(--gradient-gem)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        background: 'var(--gradient-gem)',
                       }}
                     >
-                      <Text variant="display" tone="inverse">
-                        {v.profileInitial}
-                      </Text>
-                      <span style={{ position: 'absolute', top: '-2px', right: '-2px' }}>
+                      <span
+                        style={{
+                          position: 'absolute',
+                          inset: '3px',
+                          borderRadius: '50%',
+                          background: 'var(--color-white)',
+                        }}
+                      ></span>
+                      <div
+                        style={{
+                          position: 'absolute',
+                          inset: '6px',
+                          borderRadius: '50%',
+                          background: 'var(--gradient-gem)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <Text variant="display" tone="inverse">
+                          {v.profileInitial}
+                        </Text>
+                        {v.profilePicture ? (
+                          // Covers the initial. If the photo will not load it hides itself and the initial shows.
+                          // No referrer, because Google's image host refuses some.
+                          <img
+                            src={v.profilePicture}
+                            alt=""
+                            referrerPolicy="no-referrer"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                            style={{
+                              position: 'absolute',
+                              inset: '0',
+                              width: '100%',
+                              height: '100%',
+                              borderRadius: '50%',
+                              objectFit: 'cover',
+                            }}
+                          />
+                        ) : null}
+                      </div>
+                      <span style={{ position: 'absolute', top: '0', right: '-3px' }}>
                         <Sparkle size={16} color={colors.goldLight} glow={0.6} />
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        style={{
+                          position: 'absolute',
+                          right: '-3px',
+                          bottom: '-3px',
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '50%',
+                          background: 'var(--color-white)',
+                          boxShadow: 'var(--elevation-raised)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: '10px',
+                            height: '14px',
+                            clipPath: 'polygon(50% 0,100% 35%,50% 100%,0 35%)',
+                            background: v.avatarGem,
+                          }}
+                        ></span>
                       </span>
                     </div>
                     <div style={{ minWidth: '0', flex: '1 1 200px' }}>
                       <Text variant="title" as="h1" style={{ margin: '0' }}>
                         {v.profileName}
                       </Text>
-                      <Text variant="body" as="p" tone="muted" style={{ margin: '5px 0 0' }}>
-                        {v.profileSince}
-                      </Text>
+                      {v.profileSince ? (
+                        <Text variant="body" as="p" tone="muted" style={{ margin: '5px 0 0' }}>
+                          {v.profileSince}
+                        </Text>
+                      ) : null}
                       <button
                         onClick={v.openRanks}
                         title="See all 20 ranks"

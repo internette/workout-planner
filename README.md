@@ -60,10 +60,11 @@ The planner has a landing page with Google and Apple sign-in (at `/welcome`; any
    ```js
    exports.onExecutePostLogin = async (event, api) => {
      api.idToken.setCustomClaim('role', 'authenticated');
+     api.idToken.setCustomClaim('created_at', event.user.created_at);
    };
    ```
 
-   Supabase reads the person's database role from this claim. It must go on the ID token: Auth0 drops un-namespaced custom claims from access tokens.
+   Supabase reads the person's database role from the first claim. Both must go on the ID token: Auth0 drops un-namespaced custom claims from access tokens. `created_at` is when the account was created; Profile shows it as "Training since". Sessions that began before it was added lack it, and Profile leaves that line out until the next sign-in.
 4. **Supabase.** Open Authentication → Third-Party Auth, add the Auth0 integration, and enter your tenant id and region. (Tenants signing with HS256 or PS256 are not supported; the default RS256 is.)
 5. **Environment.** Fill in the `AUTH0_*` and `APP_BASE_URL` variables from `.env.local.example`, and restart the dev server. (Leave `NEXT_PUBLIC_AUTH_REQUIRED` out, or remove any `false`.) `AUTH0_CLIENT_SECRET` and `AUTH0_SECRET` are secrets and are only ever read on the server.
 6. **Database.** Run [supabase/migrations/20260921000000_per_user_rls.sql](supabase/migrations/20260921000000_per_user_rls.sql) in the SQL editor. It gives every table an owner and lets only that person read or change their rows.

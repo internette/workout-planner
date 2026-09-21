@@ -28,7 +28,6 @@ export const QUESTS = [
   { title:'Seal the rift', note:'Two more sessions and it closes for good.',
     done:'The rift is sealed.' },
 ];
-export const PROFILE = { name:'Mika', since:'March 2026' };
 export const ICON_COLORS = [colors.pink, colors.periwinkle, colors.teal, colors.slate, colors.coral];
 export const TOKENS = ['star shard','moon sigil','prism','wand charge','sun ember','comet fragment','dawn ribbon','tide pearl'];
 export const RANK_STEPS = [3,6,10,15,21,28,36,45,55,66,78,91,105,120,136,153,171,190,210,240];

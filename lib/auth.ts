@@ -15,12 +15,26 @@ export const CONNECTION: Record<Provider, string> = { google: 'google-oauth2', a
 export const loginUrl = (provider: Provider) =>
   `/auth/login?connection=${encodeURIComponent(CONNECTION[provider])}&returnTo=${encodeURIComponent('/calendar')}`;
 
-/** Who is signed in, as far as the Account card on Profile needs to say. Each part is null when the session lacks it. */
+/** Who is signed in, as far as Profile needs to say. Each part is null when the session lacks it. */
 export interface Account {
+  name: string | null;
   email: string | null;
+  /** The provider's photo of them, an https address. */
+  picture: string | null;
+  /** When the account was created, as an ISO date. Auth0 records it; the Action in the README puts it in the token. */
+  createdAt: string | null;
   /** The provider the session used, as a person would say it: "Google" or "Apple". */
   provider: string | null;
 }
+
+/**
+ * What to call them. Apple can hide the name and Auth0 then fills it with the email, so a name that is just the email
+ * does not count; the part of the email before the @ is the next best thing.
+ */
+export const displayName = (a: Account | null): string => {
+  const named = a?.name && a.name !== a.email ? a.name.trim() : '';
+  return named || a?.email?.split('@')[0] || 'You';
+};
 
 /** What each provider is called on screen. */
 export const PROVIDER_NAME: Record<Provider, string> = { google: 'Google', apple: 'Apple' };

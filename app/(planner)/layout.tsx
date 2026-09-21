@@ -14,7 +14,13 @@ export default async function PlannerLayout({ children }: { children: React.Reac
   const session = auth0 ? await auth0.getSession() : null;
   if (AUTH_REQUIRED && !session) redirect('/welcome');
   const account: Account | null = session
-    ? { email: session.user.email ?? null, provider: providerName(session.user.sub) }
+    ? {
+        name: session.user.name ?? null,
+        email: session.user.email ?? null,
+        picture: session.user.picture?.startsWith('https://') ? session.user.picture : null,
+        createdAt: typeof session.user.created_at === 'string' ? session.user.created_at : null,
+        provider: providerName(session.user.sub),
+      }
     : null;
   return (
     <>

@@ -1,4 +1,5 @@
-import { DOW3, DOWFULL, MON3, MONTHS, PROFILE, RANKS } from '../constants';
+import { DOW3, DOWFULL, MON3, MONTHS, RANKS } from '../constants';
+import { displayName } from '@/lib/auth';
 import { questSeed } from '../helpers';
 import type { Ctx } from '../types';
 
@@ -76,9 +77,16 @@ export function progressVals(ctx: Ctx) {
         xp: 'flex:none;font-family:var(--font-heading);font-size:var(--text-sm);font-weight:var(--font-weight-semibold);opacity:.8',
       };
     }),
-    profileName: PROFILE.name,
-    profileInitial: PROFILE.name.charAt(0),
-    profileSince: 'Training since ' + PROFILE.since,
+    profileName: displayName(logic.auth.account),
+    profileInitial: displayName(logic.auth.account).charAt(0).toUpperCase(),
+    profilePicture: logic.auth.account?.picture ?? '',
+    // The gem on the avatar's badge. The last rank's own gem is white, which the white badge would hide.
+    avatarGem: derivedRank === RANKS.length - 1 ? 'var(--gradient-gem)' : RANKS[derivedRank].gem,
+    // When their account was created. Empty for a session that predates the claim, and the line then stays out.
+    profileSince: (() => {
+      const created = new Date(logic.auth.account?.createdAt ?? '');
+      return isNaN(created.getTime()) ? '' : 'Training since ' + MONTHS[created.getMonth()] + ' ' + created.getFullYear();
+    })(),
     rankPill:
       'display:inline-flex;align-items:center;gap:8px;margin-top:9px;padding:7px 15px 7px 12px;border-radius:999px;font-size:var(--text-md);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-loose);' +
       RANKS[derivedRank].pill,
