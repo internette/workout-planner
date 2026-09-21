@@ -28,12 +28,12 @@ input, textarea, button { font-family: inherit; }
 .mlabel { font-size: var(--text-sm); }
 @media (max-width: 324px) { .mlabel { font-size: var(--text-xs); } }
 
+/* The one focus ring. It sets nothing else: a control keeps its own shape, and its own focus colours where it has any
+   (Button's are its hover colours). */
 button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-offset);
-  border-radius: var(--radius-sm);
 }
-button:focus-visible { background-color: var(--hover-icon); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
