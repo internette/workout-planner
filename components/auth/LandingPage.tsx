@@ -66,7 +66,7 @@ function AuthCard({ cardRef, configured, returned }: { cardRef: React.RefObject<
           {signingUp ? 'FIRST TRANSFORMATION' : 'WELCOME BACK'}
         </Text>
         <Text variant="heading" as="h2" className={styles.authTitle} style={{ margin: '8px 0 0' }}>
-          {signingUp ? 'Answer the call' : 'Step back through'}
+          {signingUp ? 'Begin your ritual' : 'Step back through'}
         </Text>
         <Text variant="body" tone="muted" as="p" className={styles.authNote} style={{ margin: '8px 0 0' }}>
           {signingUp ? 'Two taps, and tomorrow already has a quest waiting on it.' : 'Your streak held the line while you were away.'}
@@ -95,7 +95,7 @@ function AuthCard({ cardRef, configured, returned }: { cardRef: React.RefObject<
             {signingUp ? 'Already sworn in?' : 'First time here?'}
           </Text>
           <button type="button" className={styles.toggleLink} onClick={() => setMode(signingUp ? 'signin' : 'signup')}>
-            {signingUp ? 'Step back through' : 'Answer the call'}
+            {signingUp ? 'Step back through' : 'Begin your ritual'}
           </button>
         </div>
       </Card>
