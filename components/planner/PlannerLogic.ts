@@ -3,6 +3,7 @@ import * as db from '@/lib/plannerData';
 import type { Model } from '@/lib/plannerData';
 import { MONTHS } from './constants';
 import type { Viewport } from './useViewport';
+import type { Account } from '@/lib/auth';
 import { buildContext } from './context';
 import { chromeVals } from './screens/chrome';
 import { calendarVals } from './screens/calendar';
@@ -15,8 +16,8 @@ import { progressVals } from './screens/progress';
 export class PlannerLogic extends DCLogic {
   /** Which layout the window calls for. The host component keeps it current. */
   viewport: Viewport = 'wide';
-  /** Whether someone is signed in, and how to sign out. The host component keeps it current. */
-  auth: { canSignOut: boolean; signOut: () => void } = { canSignOut: false, signOut: () => undefined };
+  /** Who is signed in (null when nobody is, or sign-in is off), and how to sign out. The host component keeps it current. */
+  auth: { account: Account | null; signOut: () => void } = { account: null, signOut: () => undefined };
   model: Model | null = null;
   status: 'loading' | 'error' | 'ready' = 'loading';
   loadError = '';

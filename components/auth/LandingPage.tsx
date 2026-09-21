@@ -8,11 +8,9 @@ import { Book, Calendar, Check, ChevronRight, Gem, Sparkle } from '@/components/
 import { colors } from '@/components/ui/colors';
 import { Text } from '@/components/ui/typography';
 import { RANKS, RANK_STEPS } from '@/components/planner/constants';
-import type { Provider } from '@/lib/auth';
+import { PROVIDER_NAME, type Provider } from '@/lib/auth';
 import { ProviderButton } from './ProviderButton';
 import styles from './landing.module.css';
-
-const PROVIDER_NAME: Record<Provider, string> = { google: 'Google', apple: 'Apple' };
 
 // A trail of stars that tapers off and wanders up and down: rose, periwinkle, cyan, repeating. Each one twinkles on
 // its own slower clock, so the trail never pulses in step.

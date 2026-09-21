@@ -102,8 +102,22 @@ export function chromeVals(ctx: Ctx) {
       e.preventDefault();
       go();
     },
-    canSignOut: logic.auth.canSignOut,
-    signOut: () => logic.auth.signOut(),
+    // Signing out asks first. Once confirmed the page is on its way to the server, so the dialog stays up, inert,
+    // rather than letting the person press it twice or close it half way.
+    canSignOut: !!logic.auth.account,
+    accountEmail: logic.auth.account?.email ?? '',
+    accountProvider: logic.auth.account?.provider ?? '',
+    signOutOpen: !!st.signOutOpen,
+    signingOut: !!st.signingOut,
+    openSignOut: () => logic.s({ signOutOpen: true }),
+    closeSignOut: () => {
+      if (!st.signingOut) logic.s({ signOutOpen: false });
+    },
+    confirmSignOut: () => {
+      if (st.signingOut) return;
+      logic.s({ signingOut: true });
+      logic.auth.signOut();
+    },
     // The browser dismisses a popover on its own (Escape, outside press) and may report it after another one has
     // opened, so each closes only itself.
     closeMonth: () => logic.s({ monthOpen: false }),

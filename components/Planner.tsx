@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { PlannerLogic } from './planner/PlannerLogic';
 import { useViewport } from './planner/useViewport';
 import { pathForScreen, screenForPath } from './planner/routes';
-import { logoutUrl } from '@/lib/auth';
+import { logoutUrl, type Account } from '@/lib/auth';
 import { PlannerView } from './PlannerView';
 
 const centered: React.CSSProperties = {
@@ -13,7 +13,7 @@ const centered: React.CSSProperties = {
   gap: 14, padding: 24, textAlign: 'center', color: 'var(--color-muted)',
 };
 
-export default function Planner({ signedIn = false }: { signedIn?: boolean }) {
+export default function Planner({ account = null }: { account?: Account | null }) {
   const pathname = usePathname();
   const [logic] = useState(() => {
     const l = new PlannerLogic();
@@ -28,7 +28,16 @@ export default function Planner({ signedIn = false }: { signedIn?: boolean }) {
   const screenPath = useRef<string | null>(null);
   logic.viewport = useViewport();
   // Signing out is a trip to the server's logout route, which ends the session and returns to the front door.
-  logic.auth = { canSignOut: signedIn, signOut: () => window.location.assign(logoutUrl()) };
+  logic.auth = { account, signOut: () => window.location.assign(logoutUrl()) };
+
+  // Back from the logout trip can restore this page as it was left, mid sign-out. Put the dialog away.
+  useEffect(() => {
+    const restored = (e: PageTransitionEvent) => {
+      if (e.persisted) logic.setState({ signOutOpen: false, signingOut: false });
+    };
+    window.addEventListener('pageshow', restored);
+    return () => window.removeEventListener('pageshow', restored);
+  }, [logic]);
 
   // The logic object owns the state; it asks this component to re-render whenever that changes.
   useEffect(() => {

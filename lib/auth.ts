@@ -15,6 +15,23 @@ export const CONNECTION: Record<Provider, string> = { google: 'google-oauth2', a
 export const loginUrl = (provider: Provider) =>
   `/auth/login?connection=${encodeURIComponent(CONNECTION[provider])}&returnTo=${encodeURIComponent('/calendar')}`;
 
+/** Who is signed in, as far as the Account card on Profile needs to say. Each part is null when the session lacks it. */
+export interface Account {
+  email: string | null;
+  /** The provider the session used, as a person would say it: "Google" or "Apple". */
+  provider: string | null;
+}
+
+/** What each provider is called on screen. */
+export const PROVIDER_NAME: Record<Provider, string> = { google: 'Google', apple: 'Apple' };
+
+/** "google-oauth2|1234" -> "Google". Auth0 user ids begin with the connection that made them. */
+export const providerName = (sub?: string | null): string | null => {
+  const connection = sub?.split('|')[0];
+  const provider = (Object.keys(CONNECTION) as Provider[]).find((p) => CONNECTION[p] === connection);
+  return provider ? PROVIDER_NAME[provider] : null;
+};
+
 // Auth0 only accepts an absolute post-logout address (and it must be listed under Allowed Logout URLs).
 export const logoutUrl = () =>
   `/auth/logout?returnTo=${encodeURIComponent(`${window.location.origin}/welcome`)}`;

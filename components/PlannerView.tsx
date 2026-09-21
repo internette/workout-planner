@@ -38,6 +38,7 @@ import {
   Plus,
   Repeat,
   Search,
+  SignOut,
   Sparkle,
   Swirl,
   User,
@@ -85,6 +86,22 @@ export function PlannerView({ v }: { v: any }) {
           ))}
         </div>
       </Dialog>
+      <Dialog
+        open={!!v.signOutOpen}
+        onClose={v.closeSignOut}
+        title="Sign out?"
+        description="Your plan, streak and chronicle stay exactly as they are. Sign back in with the same account and everything is where you left it."
+        actions={
+          <>
+            <Button type="neutral" ghost size="md" onClick={v.closeSignOut} disabled={!!v.signingOut}>
+              Stay signed in
+            </Button>
+            <Button type="danger" ghost size="md" onClick={v.confirmSignOut} disabled={!!v.signingOut}>
+              {v.signingOut ? 'Signing out…' : 'Sign out'}
+            </Button>
+          </>
+        }
+      />
       <Dialog
         open={!!v.confirmOpen}
         onClose={v.confirmCancel}
@@ -1553,11 +1570,6 @@ export function PlannerView({ v }: { v: any }) {
                         </IconButton>
                       </Popover>
                     </div>
-                                      {v.canSignOut ? (
-                      <Button type="neutral" ghost size="sm" onClick={v.signOut} style={{ alignSelf: 'flex-start', marginLeft: 'auto' }}>
-                        Sign out
-                      </Button>
-                    ) : null}
                   </Card>
                   <div id="profileStats" style={{ display: 'grid', gap: '12px', marginTop: '14px' }}>
                     {(v.profileStats ?? []).map((s, i) => (
@@ -1810,6 +1822,32 @@ export function PlannerView({ v }: { v: any }) {
                       </div>
                     </Card>
                   </div>
+                  {v.canSignOut ? (
+                    <Card style={{ marginTop: '14px' }}>
+                      <Text variant="eyebrow" as="div" tone="slate">
+                        ACCOUNT
+                      </Text>
+                      <div
+                        style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', marginTop: '12px' }}
+                      >
+                        <Text variant="body" as="p" tone="muted" style={{ flex: '1 1 180px', minWidth: '0', margin: '0' }}>
+                          {v.accountProvider ? 'Signed in with ' + v.accountProvider : 'Signed in'}
+                          {v.accountEmail ? (
+                            <>
+                              {' as '}
+                              <Text variant="body" tone="ink" weight="medium" style={{ overflowWrap: 'anywhere' }}>
+                                {v.accountEmail}
+                              </Text>
+                            </>
+                          ) : null}
+                        </Text>
+                        <Button type="danger" ghost size="sm" onClick={v.openSignOut} style={{ flex: 'none' }}>
+                          <SignOut size={16} />
+                          Sign out
+                        </Button>
+                      </div>
+                    </Card>
+                  ) : null}
                 </div>
               </>
             ) : null}
