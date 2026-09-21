@@ -4,6 +4,8 @@ import type { MetadataRoute } from 'next';
 // the central 80%, so the same file works as a plain icon and as a maskable one (Android rounds or crops it).
 export default function manifest(): MetadataRoute.Manifest {
   return {
+    // A fixed identity, so changing start_url later does not turn the installed app into a different one.
+    id: '/',
     name: 'Moonshot',
     short_name: 'Moonshot',
     description: 'Plan workouts, log how they felt, and rank up.',

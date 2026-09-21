@@ -9,6 +9,8 @@ import { logoutUrl, type Account } from '@/lib/auth';
 import { useWindowEvent } from './ui/useWindowEvent';
 import { PlannerView } from './PlannerView';
 import { StatusScreen } from './planner/StatusScreen';
+import { InstallPrompt } from './planner/InstallPrompt';
+import { useInstallPrompt } from './planner/useInstallPrompt';
 
 // How long the plan may take before the loading screen says so.
 const SLOW_AFTER_MS = 8000;
@@ -76,6 +78,9 @@ export default function Planner({ account = null }: { account?: Account | null }
     return () => clearTimeout(timer);
   }, [status]);
 
+  // Offers to install the app on a phone, once the plan has loaded.
+  const installPrompt = useInstallPrompt(status === 'ready');
+
   const retry = () => {
     logic.status = 'loading';
     setSlow(false);
@@ -87,5 +92,15 @@ export default function Planner({ account = null }: { account?: Account | null }
   if (status === 'error') {
     return <StatusScreen kind="error" detail={loadError} onRetry={retry} onSignOut={account ? logic.auth.signOut : undefined} />;
   }
-  return <PlannerView v={logic.renderVals()} />;
+  return (
+    <>
+      <PlannerView v={logic.renderVals()} />
+      <InstallPrompt
+        open={installPrompt.open}
+        notice={installPrompt.notice}
+        onInstall={installPrompt.install}
+        onNotNow={installPrompt.notNow}
+      />
+    </>
+  );
 }

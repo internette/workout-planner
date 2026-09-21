@@ -1,0 +1,54 @@
+/* A sheet from the bottom edge, over a scrim. A native <dialog>, so focus is held and Escape answers "Not now". */
+.sheet {
+  position: fixed;
+  inset: auto 0 0 0;
+  width: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: var(--space-3) var(--space-5) calc(var(--space-7) + env(safe-area-inset-bottom));
+  border: none;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  animation: rise var(--dur-bar) var(--ease-soft);
+}
+.sheet[open] { display: flex; flex-direction: column; gap: var(--space-4); }
+.sheet::backdrop { background: var(--scrim); }
+
+@keyframes rise {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.handle { align-self: center; width: 36px; height: 4px; border-radius: 2px; background: var(--color-divider); }
+.head { display: flex; align-items: center; gap: var(--space-4); }
+.icon {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22%;
+  background: var(--color-canvas);
+  box-shadow: var(--elevation-hairline);
+}
+.actions { display: flex; flex-direction: column; gap: var(--space-1); }
+
+/* The note that follows a final "no", above the tab bar on a phone. */
+.notice {
+  position: fixed;
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: calc(96px + env(safe-area-inset-bottom));
+  z-index: 60;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-ink);
+  color: var(--color-white);
+  box-shadow: var(--elevation-overlay);
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
+}

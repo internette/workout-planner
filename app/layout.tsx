@@ -4,6 +4,7 @@ import { ColorVariables } from '@/components/ui/colors';
 import { TypographyVariables } from '@/components/ui/typography';
 import { ElevationVariables } from '@/components/ui/elevation';
 import { StructureVariables } from '@/components/ui/StructureVariables';
+import { RegisterServiceWorker } from '@/components/RegisterServiceWorker';
 
 export const metadata: Metadata = {
   title: 'Moonshot — Magical Girl Training Plan',
@@ -30,7 +31,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <RegisterServiceWorker />
+        {children}
+      </body>
     </html>
   );
 }
