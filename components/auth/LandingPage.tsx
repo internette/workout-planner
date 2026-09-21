@@ -14,13 +14,21 @@ import styles from './landing.module.css';
 
 const PROVIDER_NAME: Record<Provider, string> = { google: 'Google', apple: 'Apple' };
 
-const SPARKLE_COLORS = [colors.pink, colors.periwinkle, colors.teal, colors.pink];
-function SparkleTrail() {
+// A trail of stars that tapers off and wanders up and down: rose, periwinkle, cyan, repeating. Each one twinkles on
+// its own slower clock, so the trail never pulses in step.
+const TRAIL_COLORS = [colors.pink, colors.periwinkle, colors.teal];
+const TRAIL_WANDER = [-9, 3, -4, 7, -7, 1, -2, 5, -5]; // px
+const TRAIL_SIZE = [11, 8, 9, 6, 7, 5, 6, 4, 3]; // px
+function SparkleTrail({ count = 7 }: { count?: number }) {
   return (
     <span className={styles.sparkles} aria-hidden="true">
-      {SPARKLE_COLORS.map((color, i) => (
-        <span key={i} className={styles.sparkle} style={{ animationDelay: `${i * 0.5}s` }}>
-          <Sparkle size={10 - i} color={color} glow={0.4} />
+      {Array.from({ length: count }, (_, i) => (
+        <span key={i} className={styles.sparkle} style={{ transform: `translateY(${TRAIL_WANDER[i]}px)` }}>
+          <Sparkle
+            size={TRAIL_SIZE[i]}
+            color={TRAIL_COLORS[i % TRAIL_COLORS.length]}
+            style={{ flex: 'none', animation: `twinkle ${3.4 + i * 0.4}s ease-in-out ${i * 0.25}s infinite` }}
+          />
         </span>
       ))}
     </span>
