@@ -6,13 +6,13 @@
   box-sizing: border-box;
 }
 
-.raised { border-radius: 20px; box-shadow: var(--elevation-raised); }
-.overlay { border-radius: 22px; box-shadow: var(--elevation-overlay); }
+.raised { border-radius: var(--radius-lg); box-shadow: var(--elevation-raised); }
+.overlay { border-radius: var(--radius-xl); box-shadow: var(--elevation-overlay); }
 
-.pad-xs { padding: 14px; }
-.pad-sm { padding: 18px 20px; }
-.pad-md { padding: 22px; }
-.pad-lg { padding: 26px; }
+.pad-xs { padding: var(--space-4); }
+.pad-sm { padding: var(--space-5); }
+.pad-md { padding: var(--space-6); }
+.pad-lg { padding: var(--space-7); }
 
 /* Clickable cards render as <button>, so reset the native look. */
 .interactive {
@@ -20,6 +20,6 @@
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: box-shadow 0.15s ease;
+  transition: box-shadow var(--dur-state) var(--ease-standard);
 }
 .interactive:hover { box-shadow: var(--elevation-overlay); }

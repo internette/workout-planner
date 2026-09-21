@@ -97,6 +97,7 @@ components/
   viewHelpers.tsx     css() and t() helpers used by the view
   ui/icons/           Design-system icons: glyphs, Sparkle, Gem, MoodFace, ExerciseIcon (gallery at /design-system/icons)
   ui/colors/          Design-system colour tokens, plus the crystal gradients and the dialog scrim, published as CSS variables (see /design-system/colors)
+  ui/radii, spacing, motion, interaction/   Design-system tokens for corner radii, spacing and breakpoints, durations and easings, hover washes and the focus ring. StructureVariables publishes them as CSS variables (see /design-system)
   ui/typography/      Design-system type tokens as CSS variables (including two fluid display sizes for marketing pages), plus named text styles and the Text component
   ui/elevation/       Design-system shadow tokens (hairline, raised, overlay) and the primary glow, as CSS variables
   ui/buttons/         Design-system Button and IconButton (variants, sizes, hover states)

@@ -56,6 +56,44 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'radii',
+    title: 'Radii',
+    category: 'foundations',
+    description: 'The corner radii, named for what they round.',
+    anchors: [{ id: 'scale', title: 'Scale' }],
+  },
+  {
+    slug: 'spacing',
+    title: 'Spacing',
+    category: 'foundations',
+    description: 'Padding and gaps, page measures and breakpoints.',
+    anchors: [
+      { id: 'scale', title: 'Scale' },
+      { id: 'layout', title: 'Layout' },
+      { id: 'breakpoints', title: 'Breakpoints' },
+    ],
+  },
+  {
+    slug: 'motion',
+    title: 'Motion',
+    category: 'foundations',
+    description: 'How long things take, and how they ease.',
+    anchors: [
+      { id: 'durations', title: 'Durations' },
+      { id: 'easings', title: 'Easings' },
+    ],
+  },
+  {
+    slug: 'interaction',
+    title: 'Interaction',
+    category: 'foundations',
+    description: 'The hover washes and the one focus ring.',
+    anchors: [
+      { id: 'hover', title: 'Hover' },
+      { id: 'focus', title: 'Focus' },
+    ],
+  },
+  {
     slug: 'elevation',
     title: 'Elevation',
     category: 'foundations',

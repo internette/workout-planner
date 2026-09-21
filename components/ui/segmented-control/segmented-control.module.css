@@ -2,14 +2,14 @@
 
 .tray {
   display: inline-flex;
-  gap: 4px;
+  gap: var(--space-1);
   box-sizing: border-box;
 }
 .wrap { flex-wrap: wrap; }
 .fullWidth { display: flex; width: 100%; }
 
-.tray-sm { padding: 4px; border-radius: 15px; }
-.tray-md { padding: 5px; border-radius: 16px; }
+.tray-sm { padding: var(--space-1); border-radius: var(--radius-md); }
+.tray-md { padding: 5px; border-radius: var(--radius-md); }
 
 /* brand: a white tray with the selected option in pink. quiet: a canvas tray for use inside cards. */
 .tone-brand { background: var(--color-white); box-shadow: var(--elevation-raised); }
@@ -22,12 +22,12 @@
   font-family: inherit;
   font-weight: var(--font-weight-semibold);
   color: var(--color-muted);
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color var(--dur-state) var(--ease-standard), color var(--dur-state) var(--ease-standard);
 }
 .equalWidth .segment { flex: 1; min-width: 0; }
 
-.segment-sm { padding: 9px 16px; border-radius: 11px; font-size: var(--text-md); }
-.segment-md { padding: 12px 20px; border-radius: 12px; font-size: var(--text-base); }
+.segment-sm { padding: 9px 16px; border-radius: var(--radius-sm); font-size: var(--text-md); }
+.segment-md { padding: 12px 20px; border-radius: var(--radius-sm); font-size: var(--text-base); }
 
 .tone-brand .selected { background: var(--color-pink); color: var(--color-white); }
 .tone-quiet .selected {

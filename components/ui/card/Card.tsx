@@ -4,7 +4,7 @@ import styles from './card.module.css';
 export interface CardProps extends HTMLAttributes<HTMLElement> {
   /** The element to render. A card that is clicked should be a button; a modal is a dialog. */
   as?: 'div' | 'section' | 'aside' | 'article' | 'button' | 'dialog';
-  /** Inner spacing: xs 14, sm 18/20, md 22, lg 26 px. */
+  /** Inner spacing: xs 16, sm 20, md 24, lg 28 px. */
   pad?: 'none' | 'xs' | 'sm' | 'md' | 'lg';
   /** raised: a card on the page. overlay: a dialog, menu or popover floating above it. */
   elevation?: 'raised' | 'overlay';

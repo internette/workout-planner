@@ -18,7 +18,7 @@ export default function CardPage() {
 
       <h2 id="padding" style={h2}>Padding</h2>
       <p style={note}>
-        <code>pad</code>: none, xs (14px), sm (18px 20px), md (22px, the default) and lg (26px).
+        <code>pad</code>: none, xs (16px), sm (20px), md (24px, the default) and lg (28px).
       </p>
       <div style={grid}>
         {(['xs', 'sm', 'md', 'lg'] as const).map((pad) => (
@@ -41,7 +41,7 @@ export default function CardPage() {
         </Card>
         <Card elevation="overlay">
           <div style={title}>overlay</div>
-          <p style={body}>Deeper shadow, 22px corners.</p>
+          <p style={body}>Deeper shadow, 24px corners.</p>
         </Card>
       </div>
 

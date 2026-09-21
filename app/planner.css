@@ -29,11 +29,11 @@ input, textarea, button { font-family: inherit; }
 @media (max-width: 324px) { .mlabel { font-size: var(--text-xs); } }
 
 button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
-  outline: 2px solid var(--color-pink);
-  outline-offset: 2px;
-  border-radius: 10px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+  border-radius: var(--radius-sm);
 }
-button:focus-visible { background-color: rgba(35, 42, 69, 0.06); }
+button:focus-visible { background-color: var(--hover-icon); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -49,7 +49,7 @@ button:focus-visible { background-color: rgba(35, 42, 69, 0.06); }
 }
 
 /* Generated from the design's style-hover attributes; !important so they beat inline styles. */
-.hv1:hover{background:rgba(35,42,69,.05) !important}
+.hv1:hover{background:var(--hover-neutral) !important}
 .hv3:hover{color:var(--color-pink-deep) !important;background:rgba(35,42,69,.04) !important}
 .hv6:hover{filter:brightness(.97) !important}
 .hv7:hover{background:var(--color-pink-tint) !important}

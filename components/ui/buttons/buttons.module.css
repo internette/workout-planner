@@ -4,13 +4,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-2);
   border: none;
   background: none;
   cursor: pointer;
   font-family: inherit;
   font-weight: var(--font-weight-semibold);
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color var(--dur-state) var(--ease-standard), color var(--dur-state) var(--ease-standard);
 }
 
 .base:disabled {
@@ -19,10 +19,10 @@
 }
 
 /* ---- Button sizes */
-.xs { min-height: 30px; padding: 0 12px; border-radius: 10px; font-size: var(--text-md); gap: 5px; }
-.sm { min-height: 44px; padding: 0 20px; border-radius: 15px; font-size: var(--text-base); }
-.md { min-height: 48px; padding: 0 22px; border-radius: 15px; font-size: var(--text-lg); }
-.lg { min-height: 52px; padding: 0 28px; border-radius: 16px; font-size: var(--text-lg); }
+.xs { min-height: 30px; padding: 0 12px; border-radius: var(--radius-xs); font-size: var(--text-md); gap: 5px; }
+.sm { min-height: 44px; padding: 0 20px; border-radius: var(--radius-md); font-size: var(--text-base); }
+.md { min-height: 48px; padding: 0 22px; border-radius: var(--radius-md); font-size: var(--text-lg); }
+.lg { min-height: 52px; padding: 0 28px; border-radius: var(--radius-md); font-size: var(--text-lg); }
 
 .fullWidth { display: flex; width: 100%; }
 
@@ -42,12 +42,12 @@
 .neutral { background: var(--color-canvas); color: var(--color-slate); }
 .neutral:hover:not(:disabled) { filter: brightness(0.97); }
 .neutral.ghost { background: none; }
-.neutral.ghost:hover:not(:disabled) { background: rgba(35, 42, 69, 0.05); filter: none; }
+.neutral.ghost:hover:not(:disabled) { background: var(--hover-neutral); filter: none; }
 
 .danger { background: var(--color-danger); color: var(--color-white); }
 .danger:hover:not(:disabled) { background: var(--color-danger-hover); }
 .danger.ghost { background: none; color: var(--color-danger); }
-.danger.ghost:hover:not(:disabled) { background: rgba(178, 58, 76, 0.08); }
+.danger.ghost:hover:not(:disabled) { background: var(--hover-danger-ghost); }
 
 .dashed {
   border: 1px dashed rgba(225, 105, 156, 0.5);
@@ -58,12 +58,12 @@
 
 /* ---- Icon buttons: square, icon only */
 .icon { padding: 0; flex: none; }
-.icon-xs { width: 24px; height: 24px; border-radius: 8px; }
-.icon-sm { width: 34px; height: 34px; border-radius: 11px; }
-.icon-md { width: 36px; height: 36px; border-radius: 12px; }
-.icon-lg { width: 44px; height: 44px; border-radius: 13px; }
-.circle { border-radius: 50%; }
+.icon-xs { width: 24px; height: 24px; border-radius: var(--radius-xs); }
+.icon-sm { width: 34px; height: 34px; border-radius: var(--radius-sm); }
+.icon-md { width: 36px; height: 36px; border-radius: var(--radius-sm); }
+.icon-lg { width: 44px; height: 44px; border-radius: var(--radius-sm); }
+.circle { border-radius: var(--radius-full); }
 
-.icon-default:hover:not(:disabled) { background: rgba(35, 42, 69, 0.06); }
-.icon-danger:hover:not(:disabled) { background: rgba(178, 58, 76, 0.09); }
-.icon-inverse:hover:not(:disabled) { background: rgba(255, 255, 255, 0.22); }
+.icon-default:hover:not(:disabled) { background: var(--hover-icon); }
+.icon-danger:hover:not(:disabled) { background: var(--hover-danger); }
+.icon-inverse:hover:not(:disabled) { background: var(--hover-inverse); }

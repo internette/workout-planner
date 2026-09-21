@@ -17,14 +17,14 @@
 .control {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-2);
   width: 100%;
   box-sizing: border-box;
   padding: 13px 15px;
-  border-radius: 13px;
+  border-radius: var(--radius-sm);
   background: var(--color-canvas);
 }
-.control:focus-within { outline: 2px solid var(--color-pink); outline-offset: 2px; }
+.control:focus-within { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
 .control.invalid { outline: 2px solid var(--color-danger); outline-offset: 0; }
 .suffix { flex: none; font-size: var(--text-md); font-weight: var(--font-weight-semibold); color: var(--color-muted); }
 
@@ -74,7 +74,7 @@
   box-sizing: border-box;
   padding: 18px;
   border: none;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   background: var(--color-white);
   box-shadow: var(--elevation-raised);
   font-family: inherit;
