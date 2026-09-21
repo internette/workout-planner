@@ -1,11 +1,11 @@
 import { colorGroups, cssVarName, gradients, overlays } from '@/components/ui/colors';
+import { DocPage } from '../docs';
 
 export const metadata = { title: 'Colors — Design system' };
 
 export default function ColorsPage() {
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Colors</h1>
+    <DocPage title="Colors">
       <p style={{ margin: '8px 0 32px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
         Every colour is a CSS variable on <code>:root</code>, for example <code>var(--color-pink)</code>. Import{' '}
         <code>colors</code> from <code>@/components/ui/colors</code> only where a real hex string is needed.
@@ -62,6 +62,6 @@ export default function ColorsPage() {
           ))}
         </div>
       </section>
-    </main>
+    </DocPage>
   );
 }

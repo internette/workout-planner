@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
+import { DocPage, h2, note } from '../docs';
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
-const note: React.CSSProperties = { margin: '0 0 16px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const panel: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 18, padding: 22, background: 'var(--color-white)', borderRadius: 18, boxShadow: 'var(--elevation-raised)', maxWidth: 460 };
 
 export default function CheckboxPage() {
@@ -13,8 +12,7 @@ export default function CheckboxPage() {
   const [follow, setFollow] = useState(true);
 
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Checkbox</h1>
+    <DocPage title="Checkbox">
       <p style={{ ...note, marginTop: 8 }}>
         A tick box with its label. Import it from <code>@/components/ui/checkbox</code>. The parent owns{' '}
         <code>checked</code>; the label is its children, written as a sentence that says what ticking it means.
@@ -48,6 +46,6 @@ export default function CheckboxPage() {
         <li>Keyboard focus draws a 2 px pink ring around the box.</li>
         <li>The box uses the hairline outline colour. If that outline is later darkened for contrast, this component follows.</li>
       </ul>
-    </main>
+    </DocPage>
   );
 }

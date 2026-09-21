@@ -5,9 +5,8 @@ import { Chip } from '@/components/ui/chip';
 import { Popover } from '@/components/ui/popover';
 import { Text } from '@/components/ui/typography';
 import { Calendar } from '@/components/ui/icons';
+import { DocPage, h2, note } from '../docs';
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
-const note: React.CSSProperties = { margin: '0 0 16px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: 24, padding: '18px 20px', background: 'var(--color-canvas)', borderRadius: 18, boxShadow: 'inset 0 0 0 1px rgba(35,42,69,.07)' };
 
 const Panel = ({ children }: { children: string }) => (
@@ -22,8 +21,7 @@ export default function PopoverPage() {
   const [padded, setPadded] = useState(false);
 
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Popover</h1>
+    <DocPage title="Popover">
       <p style={{ ...note, marginTop: 8 }}>
         A small floating card anchored under a trigger, built on the native <code>popover</code> attribute. Import it
         from <code>@/components/ui/popover</code>. Put the trigger inside it as <code>children</code>, and the panel as{' '}
@@ -87,6 +85,6 @@ export default function PopoverPage() {
         </li>
         <li>Needs the Popover API: Chrome 114, Safari 17 or Firefox 125 and later.</li>
       </ul>
-    </main>
+    </DocPage>
   );
 }

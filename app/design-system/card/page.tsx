@@ -1,18 +1,16 @@
 import { Button } from '@/components/ui/buttons';
 import { Card } from '@/components/ui/card';
+import { DocPage, h2, note } from '../docs';
 
 export const metadata = { title: 'Card — Design system' };
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
-const note: React.CSSProperties = { margin: '0 0 16px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const grid: React.CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 };
 const title: React.CSSProperties = { fontFamily: 'var(--font-heading)', fontWeight: 'var(--font-weight-bold)', fontSize: 'var(--text-xl)' };
 const body: React.CSSProperties = { margin: '6px 0 0', fontSize: 'var(--text-md)', color: 'var(--color-muted)', lineHeight: 'var(--leading-snug)' };
 
 export default function CardPage() {
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Card</h1>
+    <DocPage title="Card">
       <p style={{ ...note, marginTop: 8 }}>
         A white surface that sits above the page. Import it from <code>@/components/ui/card</code>. It takes layout
         props (<code>style</code>, <code>role</code>, <code>onClick</code>, and so on) like a normal element.
@@ -76,6 +74,6 @@ export default function CardPage() {
           </Button>
         </div>
       </Card>
-    </main>
+    </DocPage>
   );
 }

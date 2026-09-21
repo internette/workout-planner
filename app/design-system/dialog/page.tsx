@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/buttons';
 import { Dialog } from '@/components/ui/dialog';
+import { DocPage, h2, note } from '../docs';
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
-const note: React.CSSProperties = { margin: '0 0 16px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, padding: '18px 20px', background: 'var(--color-canvas)', borderRadius: 18, boxShadow: 'inset 0 0 0 1px rgba(35,42,69,.07)' };
 
 type Which = null | 'confirm' | 'question' | 'info';
@@ -15,8 +14,7 @@ export default function DialogPage() {
   const close = () => setOpen(null);
 
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Dialog</h1>
+    <DocPage title="Dialog">
       <p style={{ ...note, marginTop: 8 }}>
         A modal card centred over a dimmed page. Import it from <code>@/components/ui/dialog</code>. The parent owns{' '}
         <code>open</code> and passes <code>onClose</code>; the dialog handles the rest.
@@ -121,6 +119,6 @@ export default function DialogPage() {
           <code>dismissOnScrim</code>; leave that off for questions that need an answer.
         </li>
       </ul>
-    </main>
+    </DocPage>
   );
 }

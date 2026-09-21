@@ -88,7 +88,7 @@ Two things to know. Google and Apple sign-ins for the same person are **separate
 
 ```
 app/                  Next.js App Router: layout, global styles (planner.css), the (planner) group with a page per nav address, /welcome and /api/token
-  design-system/      The design-system site at /design-system: overview, sidebar and a page per section (registry.ts lists them)
+  design-system/      The design-system site at /design-system: overview, sidebar and a page per section (registry.ts lists them; docs.tsx is the frame and text styles they share)
 components/
   Planner.tsx         Host component: loading and error screens, renders the view
   PlannerLoader.tsx   Loads the planner on the client only (its layout depends on window width)

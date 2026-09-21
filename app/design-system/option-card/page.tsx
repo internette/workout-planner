@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
+import { DocPage, h2, note } from '../docs';
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
-const note: React.CSSProperties = { margin: '0 0 16px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const panel: React.CSSProperties = { padding: 20, background: 'var(--color-white)', borderRadius: 18, boxShadow: '0 4px 14px rgba(35,42,69,.07)', maxWidth: 440 };
 
 export default function OptionCardPage() {
@@ -13,8 +12,7 @@ export default function OptionCardPage() {
   const [also, setAlso] = useState(true);
 
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Option card</h1>
+    <DocPage title="Option card">
       <p style={{ ...note, marginTop: 8 }}>
         A card for one answer to a question. Import <code>OptionCard</code> and <code>OptionGroup</code> from{' '}
         <code>@/components/ui/option-card</code>. Use it when a choice needs a sentence of explanation each, so the
@@ -101,6 +99,6 @@ export default function OptionCardPage() {
         </li>
         <li>Nothing is selected for you: pass <code>checked</code> for whichever option should start selected.</li>
       </ul>
-    </main>
+    </DocPage>
   );
 }

@@ -4,9 +4,8 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Label, TextArea, TextField } from '@/components/ui/text-field';
 import { Search } from '@/components/ui/icons';
+import { DocPage, h2, note } from '../docs';
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
-const note: React.CSSProperties = { margin: '0 0 16px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', gap: 12 };
 
 export default function TextFieldPage() {
@@ -16,8 +15,7 @@ export default function TextFieldPage() {
   const [notes, setNotes] = useState('');
 
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Text field</h1>
+    <DocPage title="Text field">
       <p style={{ ...note, marginTop: 8 }}>
         <code>TextField</code>, <code>TextArea</code> and <code>Label</code> from{' '}
         <code>@/components/ui/text-field</code>. Pass any normal input props (<code>value</code>,{' '}
@@ -90,6 +88,6 @@ export default function TextFieldPage() {
       <h2 id="text-area" style={h2}>Text area</h2>
       <p style={note}>A white raised surface for notes.</p>
       <TextArea rows={4} placeholder="Energy, soreness, what worked…" value={notes} onChange={(e) => setNotes(e.target.value)} />
-    </main>
+    </DocPage>
   );
 }

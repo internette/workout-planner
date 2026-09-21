@@ -1,15 +1,9 @@
 import { Button, IconButton } from '@/components/ui/buttons';
 import { ChevronLeft, ChevronRight, Close, Pencil, Plus } from '@/components/ui/icons';
+import { DocPage, h2, note } from '../docs';
 
 export const metadata = { title: 'Buttons — Design system' };
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
-const note: React.CSSProperties = {
-  margin: '0 0 16px',
-  color: 'var(--color-muted)',
-  fontSize: 'var(--text-base)',
-  lineHeight: 'var(--leading-relaxed)',
-};
 const row: React.CSSProperties = {
   display: 'flex',
   flexWrap: 'wrap',
@@ -26,8 +20,7 @@ const sizes = ['xs', 'sm', 'md', 'lg'] as const;
 
 export default function ButtonsPage() {
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Buttons</h1>
+    <DocPage title="Buttons">
       <p style={{ ...note, marginTop: 8 }}>
         <code>Button</code> for actions with a text label, <code>IconButton</code> for icon-only controls.
         Both come from <code>@/components/ui/buttons</code>. Hover over any of them to see the hover state. The native HTML <code>type</code> (submit, reset) is passed as <code>htmlType</code>, since <code>type</code> here is the design type.
@@ -171,6 +164,6 @@ export default function ButtonsPage() {
           </IconButton>
         </div>
       </div>
-    </main>
+    </DocPage>
   );
 }

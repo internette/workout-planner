@@ -4,9 +4,8 @@ import { useState } from 'react';
 import { Chip } from '@/components/ui/chip';
 import { Calendar, Clock, Close, Repeat } from '@/components/ui/icons';
 import { IconButton } from '@/components/ui/buttons';
+import { DocPage, h2, note } from '../docs';
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
-const note: React.CSSProperties = { margin: '0 0 16px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, padding: '18px 20px', background: 'var(--color-canvas)', borderRadius: 18, boxShadow: 'inset 0 0 0 1px rgba(35,42,69,.07)' };
 
 const zones = ['Recovery', 'Endurance', 'Tempo', 'Intervals'];
@@ -18,8 +17,7 @@ export default function ChipPage() {
   const toggle = (a: string) => setPicked((p) => (p.includes(a) ? p.filter((x) => x !== a) : [...p, a]));
 
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Chip</h1>
+    <DocPage title="Chip">
       <p style={{ ...note, marginTop: 8 }}>
         A small pill for a fact, a tag or a choice. Import it from <code>@/components/ui/chip</code>. Give it an{' '}
         <code>onClick</code> (or use the choice tone) and it becomes a button; otherwise it is a plain label.
@@ -85,6 +83,6 @@ export default function ChipPage() {
         <Chip>sm</Chip>
         <Chip size="md">md</Chip>
       </div>
-    </main>
+    </DocPage>
   );
 }

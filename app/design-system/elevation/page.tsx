@@ -1,17 +1,15 @@
 import { elevations, glow } from '@/components/ui/elevation';
 import { Button } from '@/components/ui/buttons';
+import { DocPage, h2, note } from '../docs';
 
 export const metadata = { title: 'Elevation — Design system' };
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
-const note: React.CSSProperties = { margin: '0 0 16px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const row: React.CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20, padding: '28px 24px', background: 'var(--color-canvas)', borderRadius: 18, boxShadow: 'inset 0 0 0 1px rgba(35,42,69,.07)' };
 const meta: React.CSSProperties = { fontSize: 'var(--text-sm)', color: 'var(--color-muted)', lineHeight: 'var(--leading-snug)' };
 
 export default function ElevationPage() {
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Elevation</h1>
+    <DocPage title="Elevation">
       <p style={{ ...note, marginTop: 8 }}>
         The shadows the interface casts, as CSS variables. Nothing else in the app should cast a shadow of its own:
         write <code>box-shadow: var(--elevation-raised)</code>, not the values. <code>Card</code>, <code>Chip</code>,{' '}
@@ -47,6 +45,6 @@ export default function ElevationPage() {
           <code style={{ ...meta, display: 'block', marginTop: 8 }}>{glow.primary.value}</code>
         </div>
       </div>
-    </main>
+    </DocPage>
   );
 }

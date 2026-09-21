@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { SegmentedControl } from '@/components/ui/segmented-control';
+import { DocPage, h2, note } from '../docs';
 
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
-const note: React.CSSProperties = { margin: '0 0 16px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 18, padding: '18px 20px', background: 'var(--color-white)', borderRadius: 18 };
 
 const views = [
@@ -28,8 +27,7 @@ export default function SegmentedControlPage() {
   const [mode, setMode] = useState('lib');
 
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Segmented control</h1>
+    <DocPage title="Segmented control">
       <p style={{ ...note, marginTop: 8 }}>
         A row of mutually exclusive options in one tray. Import it from{' '}
         <code>@/components/ui/segmented-control</code>. The arrow keys, Home and End move the selection.
@@ -80,6 +78,6 @@ export default function SegmentedControlPage() {
         <code>fullWidth</code> stretches the tray to its container, as on a narrow screen.
       </p>
       <SegmentedControl label="Calendar view, full width" semantics="tabs" equalWidth fullWidth options={views} value={narrow} onChange={setNarrow} />
-    </main>
+    </DocPage>
   );
 }

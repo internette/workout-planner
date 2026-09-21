@@ -5,7 +5,7 @@ import { TypographyVariables } from '@/components/ui/typography';
 import { ElevationVariables } from '@/components/ui/elevation';
 
 export const metadata: Metadata = {
-  title: 'Ritual — Magical Girl Training Plan',
+  title: 'Moonshot — Magical Girl Training Plan',
   description: 'Plan workouts, log how they felt, and rank up.',
 };
 

@@ -9,6 +9,7 @@ import {
   textTones,
   tracking,
 } from '@/components/ui/typography';
+import { DocPage, h2 } from '../docs';
 
 export const metadata = { title: 'Typography — Design system' };
 
@@ -26,12 +27,10 @@ const meta: React.CSSProperties = {
   color: 'var(--color-muted)',
   lineHeight: 'var(--leading-snug)',
 };
-const h2: React.CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
 
 export default function TypographyPage() {
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Typography</h1>
+    <DocPage title="Typography">
       <p style={{ margin: '8px 0 0', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
         Two families, twelve sizes, four weights, and twelve named text styles built from them. Each token is
         a CSS variable, for example <code>var(--text-md)</code> or <code>var(--font-weight-bold)</code>.
@@ -242,6 +241,6 @@ export default function TypographyPage() {
           </div>
         </div>
       ))}
-    </main>
+    </DocPage>
   );
 }

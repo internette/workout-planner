@@ -1,6 +1,7 @@
 import * as glyphs from '@/components/ui/icons/glyphs';
 import { ExerciseIcon, EXERCISE_ICON_NAMES, Gem, MoodFace, Sparkle } from '@/components/ui/icons';
 import { colors } from '@/components/ui/colors';
+import { DocPage } from '../docs';
 
 export const metadata = { title: 'Icons — Design system' };
 
@@ -33,8 +34,7 @@ function Tile({ name, children }: { name: string; children: React.ReactNode }) {
 
 export default function IconsPage() {
   return (
-    <main style={{ maxWidth: 960, margin: '0 auto', padding: '12px 0 80px' }}>
-      <h1 style={{ margin: 0, fontSize: 'var(--text-5xl)' }}>Icons</h1>
+    <DocPage title="Icons">
       <p style={{ margin: '8px 0 32px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
         Everything is drawn on a 24×24 canvas and takes <code>size</code>, <code>color</code> and{' '}
         <code>strokeWidth</code>. Line icons default to the surrounding text colour.
@@ -107,6 +107,6 @@ export default function IconsPage() {
           </Tile>
         ))}
       </div>
-    </main>
+    </DocPage>
   );
 }
