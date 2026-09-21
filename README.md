@@ -47,7 +47,7 @@ Run both migrations once, in order, in the Supabase SQL editor. They are safe to
 
 ### Sign-in
 
-The planner has a landing page with Google and Apple sign-in (at `/welcome`, and reached from `/` when signed out and sign-in is required). Auth0 handles the sign-in on the server: the session lives in an encrypted cookie the page cannot read, and a middleware guards the planner. Supabase trusts an Auth0 token, so row-level security can tell whose data is whose. It is off by default, so the app keeps working until you set it up:
+The planner has a landing page with Google and Apple sign-in (at `/welcome`; anyone who is not signed in is sent there from every other page except `/design-system`). Auth0 handles the sign-in on the server: the session lives in an encrypted cookie the page cannot read, and a middleware guards the planner. Supabase trusts an Auth0 token, so row-level security can tell whose data is whose. Until it is set up nobody can sign in, so everyone sees the landing page. To work on the app locally before then, put `NEXT_PUBLIC_AUTH_REQUIRED=false` in `.env.local`. Setup:
 
 1. **Auth0 application.** Create a *Regular Web Application* (not a single-page one: it has a client secret). Under Settings, add `http://localhost:3000/auth/callback` (and your production address's `/auth/callback`) to *Allowed Callback URLs*, and `http://localhost:3000/welcome` (and the production equivalent) to *Allowed Logout URLs*. Under Advanced Settings → Grant Types, keep *Refresh Token* enabled.
 2. **Auth0 connections.** Under Authentication → Social, enable Google and Apple, and turn them on for the application. Google needs an OAuth client from Google Cloud (Auth0's development keys work for testing); Apple needs a Services ID and key from a paid Apple Developer account.
@@ -61,10 +61,10 @@ The planner has a landing page with Google and Apple sign-in (at `/welcome`, and
 
    Supabase reads the person's database role from this claim. It must go on the ID token: Auth0 drops un-namespaced custom claims from access tokens.
 4. **Supabase.** Open Authentication → Third-Party Auth, add the Auth0 integration, and enter your tenant id and region. (Tenants signing with HS256 or PS256 are not supported; the default RS256 is.)
-5. **Environment.** Fill in the `AUTH0_*` and `APP_BASE_URL` variables from `.env.local.example`, set `NEXT_PUBLIC_AUTH_REQUIRED=true`, and restart the dev server. `AUTH0_CLIENT_SECRET` and `AUTH0_SECRET` are secrets and are only ever read on the server.
+5. **Environment.** Fill in the `AUTH0_*` and `APP_BASE_URL` variables from `.env.local.example`, and restart the dev server. (Leave `NEXT_PUBLIC_AUTH_REQUIRED` out, or remove any `false`.) `AUTH0_CLIENT_SECRET` and `AUTH0_SECRET` are secrets and are only ever read on the server.
 6. **Database.** Run [supabase/migrations/20260921000000_per_user_rls.sql](supabase/migrations/20260921000000_per_user_rls.sql) in the SQL editor. It gives every table an owner and lets only that person read or change their rows.
 
-Until steps 1 to 5 are done, the provider buttons say "Sign-in is not set up yet." After step 6 the data you have today is hidden from every account (everyone starts fresh); the last section of the migration shows how to hand it to one account instead.
+Until steps 1 to 5 are done, the landing page's provider buttons say "Sign-in is not set up yet." After step 6 the data you have today is hidden from every account (everyone starts fresh); the last section of the migration shows how to hand it to one account instead.
 
 How it fits together: the buttons are links to `/auth/login?connection=…`, which the Auth0 SDK's middleware turns into a redirect to Auth0 and back to `/auth/callback`. The browser gets the ID token it needs for Supabase from `GET /api/token`, which reads the session cookie on the server, renews the token when it is close to expiring, and returns 401 when signed out. Signing out is `/auth/logout`, from the Sign out button on Profile.
 

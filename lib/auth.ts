@@ -3,10 +3,10 @@
 export type Provider = 'google' | 'apple';
 
 /**
- * Whether the planner needs a signed-in user. Off by default, so the app keeps working locally until Auth0 and
- * Supabase are set up and the per-user migration has been run (see the README).
+ * Whether the planner needs a signed-in user. On unless NEXT_PUBLIC_AUTH_REQUIRED=false, so a visitor who is not
+ * signed in always lands on the front door. Set it to false only to work locally before Auth0 is set up.
  */
-export const AUTH_REQUIRED = process.env.NEXT_PUBLIC_AUTH_REQUIRED === 'true';
+export const AUTH_REQUIRED = process.env.NEXT_PUBLIC_AUTH_REQUIRED !== 'false';
 
 /** The Auth0 connection names for each provider. Auth0 calls Google's "google-oauth2". */
 export const CONNECTION: Record<Provider, string> = { google: 'google-oauth2', apple: 'apple' };
