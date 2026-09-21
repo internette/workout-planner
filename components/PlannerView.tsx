@@ -1,6 +1,5 @@
 // Ported from the Claude Design prototype "Workout Planner.dc.html".
 // Pure template: every value it reads comes from the `v` object built in Planner.tsx.
-/* eslint-disable */
 // @ts-nocheck
 import { Fragment } from 'react';
 import { css, t } from './viewHelpers';
@@ -209,7 +208,7 @@ export function PlannerView({ v }: { v: any }) {
                   fontSize: 'var(--text-base)',
                 }}
               >
-                <span style={{ flex: '1', minWidth: '0' }}>Couldn't save: {v.saveError}</span>
+                <span style={{ flex: '1', minWidth: '0' }}>Couldn&apos;t save: {v.saveError}</span>
                 <Button type="danger" ghost size="xs" onClick={v.dismissError}>
                   Dismiss
                 </Button>
@@ -767,7 +766,7 @@ export function PlannerView({ v }: { v: any }) {
                             textWrap: 'pretty',
                           }}
                         >
-                          No quest today. Rest is how the power comes back — or add a workout if you're
+                          No quest today. Rest is how the power comes back — or add a workout if you&apos;re
                           feeling it.
                         </p>
                         <Button
@@ -1040,7 +1039,7 @@ export function PlannerView({ v }: { v: any }) {
                                 <Gem size={32} />
                               </div>
                               <Text variant="subheading" as="h3" style={{ margin: '20px 0 0' }}>
-                                Your wand's still charging
+                                Your wand&apos;s still charging
                               </Text>
                               <Text
                                 variant="body"
@@ -1500,7 +1499,9 @@ export function PlannerView({ v }: { v: any }) {
                         </Text>
                         {v.profilePicture ? (
                           // Covers the initial. If the photo will not load it hides itself and the initial shows.
-                          // No referrer, because Google's image host refuses some.
+                          // No referrer, because Google's image host refuses some. A plain <img>, since next/image would
+                          // need this address listed in the config and cannot hide itself on error.
+                          // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={v.profilePicture}
                             alt=""
@@ -2066,7 +2067,7 @@ export function PlannerView({ v }: { v: any }) {
                   <Card style={{ marginTop: '14px' }}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
                       <Text variant="eyebrow" tone="slate">
-                        THIS WEEK'S QUESTS
+                        THIS WEEK&apos;S QUESTS
                       </Text>
                       <Text variant="small" tone="muted" weight="medium" style={{ marginLeft: 'auto' }}>
                         {v.questsDoneLabel}
@@ -3027,7 +3028,7 @@ export function PlannerView({ v }: { v: any }) {
                     tone="muted"
                     style={{ margin: '10px 0 0', maxWidth: '620px', textWrap: 'pretty' }}
                   >
-                    Every session you've written down after the fact. Open one to read or edit it.
+                    Every session you&apos;ve written down after the fact. Open one to read or edit it.
                   </Text>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
                     <SegmentedControl

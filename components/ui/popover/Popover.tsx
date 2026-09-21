@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, type CSSProperties, type MouseEvent, type ReactNode, type PointerEvent, type SyntheticEvent } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, type CSSProperties, type MouseEvent, type ReactNode, type PointerEvent, type SyntheticEvent } from 'react';
 import { Card } from '../card';
 import { useWindowEvent } from '../useWindowEvent';
 
@@ -94,7 +94,7 @@ function PopoverPanel({
   });
 
   // The panel is in the top layer, so it is placed against the window, and follows the trigger on scroll.
-  const place = () => {
+  const place = useCallback(() => {
     const el = ref.current;
     const at = anchor.current;
     if (!el || !at) return;
@@ -102,7 +102,7 @@ function PopoverPanel({
     const left = align === 'center' ? r.left + r.width / 2 - width / 2 : r.left;
     el.style.left = Math.max(EDGE, Math.min(left, window.innerWidth - width - EDGE)) + 'px';
     el.style.top = r.top + top + 'px';
-  };
+  }, [anchor, align, width, top]);
   useWindowEvent('scroll', place, { capture: true });
   useWindowEvent('resize', place);
 
@@ -118,7 +118,7 @@ function PopoverPanel({
       if (el.matches(':popover-open')) el.hidePopover();
       panelRef.current = null;
     };
-  }, [anchor, panelRef, align, width, top]);
+  }, [anchor, panelRef, place]);
 
   // The browser closes it on Escape and outside presses; tell the parent so `open` follows. React 18 only wires
   // `toggle` for <details>, but it does listen for every event in the capture phase, hence the Capture form (and
