@@ -25,6 +25,15 @@ export function pathForScreen(screen: string): string | null {
   return null;
 }
 
+/**
+ * The address the planner's current state belongs to. The same as pathForScreen, except that creating a workout from the
+ * Arsenal stays under /arsenal: it is the Arsenal's flow, not the calendar's.
+ */
+export function pathForState(state: { screen: string; creating?: boolean; newFrom?: string | null }): string | null {
+  if (state.screen === 'edit' && state.creating && state.newFrom === 'arsenal') return TAB_PATHS.arsenal;
+  return pathForScreen(state.screen);
+}
+
 /** The screen an address opens. The calendar opens on the Day view. */
 export function screenForPath(path: string): string | null {
   switch (path) {

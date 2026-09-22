@@ -1,4 +1,4 @@
-import { DOW3, EDIT_OVERLAYS, ICON_COLORS, MON3, PINK } from '../constants';
+import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, MON3 } from '../constants';
 import { idOf, isoOf } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
@@ -227,15 +227,17 @@ export function editVals(ctx: Ctx) {
     },
     setEditName: (e) => logic.s({ renames: Object.assign({}, st.renames, { [baseName]: e.target.value }) }),
     eEyebrow: st.editing ? 'EDITING WORKOUT' : 'NEW WORKOUT',
-    eSaveLabel: st.editing ? 'Update workout' : 'Save workout',
+    eSaveLabel: st.editing ? 'Update workout' : creating && st.schedule === false ? 'Save to Arsenal' : 'Save workout',
     eCancelLabel: creating ? 'Cancel' : 'Delete workout',
     footerSecondary: creating
       ? () =>
           logic.s({
-            screen: 'day',
+            screen: st.newFrom === 'arsenal' ? 'arsenal' : 'day',
             creating: false,
             newType: null,
             newName: '',
+            newFrom: null,
+            schedule: null,
             extra: Object.assign({}, st.extra, { __draft: [] }),
           })
       : () =>
@@ -361,6 +363,8 @@ export function editVals(ctx: Ctx) {
       }
       const nm = (st.newName || '').trim() || 'Untitled workout';
       const isRide = st.newType === 'cycle';
+      // A workout is saved on its own; it only gets a session on the calendar when "Add to calendar" is on.
+      const scheduled = st.schedule !== false;
       return logic.save(
         () =>
           db.createWorkout({
@@ -374,10 +378,16 @@ export function editVals(ctx: Ctx) {
             iconColor: (st.iconColors || {}).__draft || null,
             areas: picked,
             exercises: selList.map(bare),
-            dates: [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weekly() : []),
-            repeat: !!st.repeat,
+            dates: scheduled ? [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weekly() : []) : [],
+            repeat: scheduled && !!st.repeat,
           }),
-        Object.assign({ screen: 'day', creating: false, newType: null, newName: '' }, cleared),
+        // Saved only: back to the Arsenal's workouts, where it now is. Scheduled: the day it was put on.
+        Object.assign(
+          scheduled
+            ? { screen: 'day', creating: false, newType: null, newName: '', newFrom: null, schedule: null }
+            : { screen: 'arsenal', arsenalView: 'workouts', creating: false, newType: null, newName: '', newFrom: null, schedule: null, repeat: false },
+          cleared,
+        ),
       );
     },
     discardLeave: () => {
@@ -406,10 +416,12 @@ export function editVals(ctx: Ctx) {
     },
     cancelEdit: () =>
       logic.s({
-        screen: creating ? 'day' : 'detail',
+        screen: creating ? (st.newFrom === 'arsenal' ? 'arsenal' : 'day') : 'detail',
         creating: false,
         newType: null,
         newName: '',
+        newFrom: null,
+        schedule: null,
         extra: Object.assign({}, st.extra, { __draft: [] }),
       }),
     eCancelType: creating ? 'neutral' : 'danger',
@@ -422,15 +434,18 @@ export function editVals(ctx: Ctx) {
       selDay,
     eStatus: doneSel ? 'Completed' : 'Planned',
     eTime: (selAct && selAct.time) || (creating ? 'Duration TBD' : '~50 min'),
-    toggleRepeat: () => logic.s({ repeat: !st.repeat }),
+    setRepeat: (on) => logic.s({ repeat: !!on }),
     repeatOn: !!st.repeat,
-    switchTrack:
-      'margin-left:auto;width:58px;height:34px;flex:none;border:none;border-radius:999px;padding:4px;cursor:pointer;display:flex;align-items:center;justify-content:' +
-      (st.repeat ? 'flex-end' : 'flex-start') +
-      ';background:' +
-      (st.repeat ? PINK : 'var(--color-hairline)'),
-    switchKnob:
-      'width:26px;height:26px;border-radius:50%;background:var(--color-white);box-shadow:0 1px 3px rgba(35,42,69,.35)',
+    repeatNote: 'Adds this workout every ' + DOWFULL[selDate.getDay()] + ' for the next 12 weeks, 13 sessions in all.',
+    // Creating: whether the new workout also goes on the calendar. Editing a session is always on the calendar.
+    isCreating: creating,
+    scheduleOn: creating ? st.schedule !== false : true,
+    showDate: !creating || st.schedule !== false,
+    setSchedule: (on) => logic.s({ schedule: !!on, repeat: on ? st.repeat : false }),
+    scheduleNote:
+      st.schedule !== false
+        ? 'Puts it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mi] + ' ' + selDay + ', and keeps it in your Arsenal.'
+        : 'Only saved to your Arsenal. You can add it to the calendar any time.',
     exercises: selList.map((e, ix) => {
       const cur = (st.exIcons || {})[e.name] || e.i;
       const set = (v) => () =>

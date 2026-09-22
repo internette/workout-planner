@@ -22,9 +22,9 @@ export function chromeVals(ctx: Ctx) {
     TODAY_M,
     TODAY_D,
   } = ctx;
-  const arsenalActive = ['arsenal', 'template', 'templateEdit', 'exercise', 'exerciseEdit'].includes(
-    st.screen,
-  );
+  const arsenalActive =
+    ['arsenal', 'template', 'templateEdit', 'exercise', 'exerciseEdit'].includes(st.screen) ||
+    (st.screen === 'edit' && !!st.creating && st.newFrom === 'arsenal');
   return {
     topTabsStyle: narrow ? 'display:none' : 'display:flex;flex-wrap:wrap;gap:6px;padding:18px 28px 0',
     sidebarStyle: narrow

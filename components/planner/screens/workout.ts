@@ -33,6 +33,7 @@ export function workoutVals(ctx: Ctx) {
     goDetail: () => logic.nav({ screen: 'detail', creating: false }),
     goEdit: () =>
       logic.nav({ screen: 'edit', editing: !!actFor(selDay), creating: false, editKey: mi + '-' + selDay }),
+    // From a day of the calendar the new workout goes on that day, and can be switched to saved-only.
     goNewWorkout: () =>
       logic.nav({
         screen: 'edit',
@@ -41,6 +42,21 @@ export function workoutVals(ctx: Ctx) {
         addOpen: false,
         newName: '',
         newType: null,
+        newFrom: 'calendar',
+        schedule: true,
+      }),
+    // From the Arsenal it is only saved. It goes on the calendar when the person chooses to.
+    goNewWorkoutFromArsenal: () =>
+      logic.nav({
+        screen: 'edit',
+        editing: false,
+        creating: true,
+        addOpen: false,
+        newName: '',
+        newType: null,
+        newFrom: 'arsenal',
+        schedule: false,
+        repeat: false,
       }),
     goDiary: () => logic.nav({ screen: 'diary', diaryFrom: 'day', diaryEdit: false }),
     wName: selAct ? nameOf(selAct.name) : '',

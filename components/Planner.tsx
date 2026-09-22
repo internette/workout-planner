@@ -4,7 +4,7 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { PlannerLogic } from './planner/PlannerLogic';
 import { useViewport } from './planner/useViewport';
-import { pathForScreen, screenForPath } from './planner/routes';
+import { pathForState, screenForPath } from './planner/routes';
 import { logoutUrl, type Account } from '@/lib/auth';
 import { useWindowEvent } from './ui/useWindowEvent';
 import { PlannerView } from './PlannerView';
@@ -51,8 +51,8 @@ export default function Planner({ account = null }: { account?: Account | null }
     if (seenPath.current === pathname) return;
     seenPath.current = pathname;
     const screen = screenForPath(pathname);
-    if (screen && pathForScreen(logic.state.screen) !== pathname) logic.setState({ screen, monthOpen: false });
-    screenPath.current = pathForScreen(logic.state.screen);
+    if (screen && pathForState(logic.state) !== pathname) logic.setState({ screen, monthOpen: false });
+    screenPath.current = pathForState(logic.state);
   }, [pathname, logic]);
 
   // Screen to address: when the screen moves to another nav item, push that item's address, so Back returns to where
@@ -60,7 +60,7 @@ export default function Planner({ account = null }: { account?: Account | null }
   // differs from the screen's for a moment, and pushing then would undo the Back. Screens inside a flow have no
   // address of their own, so they leave it alone.
   useEffect(() => {
-    const path = pathForScreen(logic.state.screen);
+    const path = pathForState(logic.state);
     if (!path || path === screenPath.current) return;
     screenPath.current = path;
     if (path !== window.location.pathname) {

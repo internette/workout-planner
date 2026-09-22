@@ -2136,7 +2136,7 @@ export function PlannerView({ v }: { v: any }) {
                       <Button
                         type="primary"
                         size="sm"
-                        onClick={v.goNewWorkout}
+                        onClick={v.goNewWorkoutFromArsenal}
                         style={{ marginLeft: 'auto' }}
                       >
                         <Plus color="var(--color-white)" strokeWidth={2.2} size={16} />
@@ -3422,7 +3422,7 @@ export function PlannerView({ v }: { v: any }) {
                         NEW WORKOUT
                       </Text>
                       <Text variant="heading" as="h1" style={{ margin: '3px 0 0' }}>
-                        What kind of session?
+                        What kind of workout?
                       </Text>
                     </div>
                   </div>
@@ -3632,6 +3632,7 @@ export function PlannerView({ v }: { v: any }) {
                     </div>
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '20px' }}>
+                    {v.showDate ? (
                     <Popover
                       open={!!v.dateOpen}
                       onClose={v.closeDate}
@@ -3689,6 +3690,7 @@ export function PlannerView({ v }: { v: any }) {
                         {t(v.eDate)}
                       </Chip>
                     </Popover>
+                    ) : null}
                     {v.repeatOn ? (
                       <>
                         <Chip tone="accent" icon={<Repeat color="var(--color-white)" size={15} />}>
@@ -3698,26 +3700,45 @@ export function PlannerView({ v }: { v: any }) {
                     ) : null}
                     <Chip icon={<Clock color="var(--color-muted)" size={17} />}>{t(v.eTime)}</Chip>
                   </div>
-                  <Card
-                    pad="sm"
-                    style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '16px' }}
-                  >
-                    <span style={{ display: 'flex' }}>
-                      <Repeat color="var(--color-muted)" size={20} />
-                    </span>
-                    <span style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-weight-semibold)' }}>
-                      Repeat weekly
-                    </span>
-                    <button
-                      onClick={v.toggleRepeat}
-                      role="switch"
-                      aria-checked={v.repeatOn}
-                      aria-label="Repeat weekly"
-                      style={css(v.switchTrack)}
-                    >
-                      <span style={css(v.switchKnob)}></span>
-                    </button>
-                  </Card>
+                  {v.isCreating ? (
+                    <Card pad="sm" style={{ marginTop: '16px' }}>
+                      <Checkbox switch checked={!!v.scheduleOn} onChange={v.setSchedule}>
+                        Add to calendar
+                      </Checkbox>
+                      <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+                        {v.scheduleNote}
+                      </Text>
+                      {v.scheduleOn ? (
+                        <div
+                          style={{
+                            marginTop: '14px',
+                            paddingTop: '14px',
+                            borderTop: '1px solid rgba(35,42,69,.07)',
+                          }}
+                        >
+                          <Checkbox switch checked={!!v.repeatOn} onChange={v.setRepeat}>
+                            Repeat weekly
+                          </Checkbox>
+                          {v.repeatOn ? (
+                            <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+                              {v.repeatNote}
+                            </Text>
+                          ) : null}
+                        </div>
+                      ) : null}
+                    </Card>
+                  ) : (
+                    <Card pad="sm" style={{ marginTop: '16px' }}>
+                      <Checkbox switch checked={!!v.repeatOn} onChange={v.setRepeat}>
+                        Repeat weekly
+                      </Checkbox>
+                      {v.repeatOn ? (
+                        <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+                          {v.repeatNote}
+                        </Text>
+                      ) : null}
+                    </Card>
+                  )}
                   {v.ridePlanStatic ? (
                     <>
                       <div style={{ marginTop: '18px' }}>

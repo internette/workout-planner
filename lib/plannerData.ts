@@ -393,11 +393,14 @@ export async function createWorkout(w: NewWorkout) {
     }
   }
 
-  await ok(
-    supabase
-      .from('plan_entries')
-      .insert(w.dates.map((d) => ({ workout_id: workoutId, scheduled_date: d, status: 'planned' }))),
-  );
+  // A workout saved on its own has no dates, and nothing to schedule.
+  if (w.dates.length) {
+    await ok(
+      supabase
+        .from('plan_entries')
+        .insert(w.dates.map((d) => ({ workout_id: workoutId, scheduled_date: d, status: 'planned' }))),
+    );
+  }
 }
 
 export interface WorkoutEdit {

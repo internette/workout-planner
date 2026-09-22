@@ -17,7 +17,9 @@ export function baseStage(ctx: Ctx): Ctx {
   const tablet = logic.viewport === 'tablet';
   const navExtra = (tablet ? ';flex:none;padding:11px 16px' : '') + ';text-decoration:none';
   const onCal = st.screen === 'day' || st.screen === 'rest' || st.screen === 'diary' || st.screen === 'edit';
-  const calActive = ['day', 'rest', 'edit', 'detail', 'newEntry'].indexOf(st.screen) > -1;
+  // Creating a workout from the Arsenal is the Arsenal's flow, so the Calendar tab is not lit for it.
+  const fromArsenal = st.screen === 'edit' && !!st.creating && st.newFrom === 'arsenal';
+  const calActive = ['day', 'rest', 'edit', 'detail', 'newEntry'].indexOf(st.screen) > -1 && !fromArsenal;
   const creating = st.screen === 'edit' && !!st.creating;
   return {
     st,
