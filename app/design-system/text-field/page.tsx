@@ -29,7 +29,8 @@ export default function TextFieldPage() {
       </p>
       <Card>
         <div style={row}>
-          <TextField label="Sets × reps" placeholder="3 × 10" containerStyle={{ flex: '1 1 120px' }} />
+          <TextField label="Sets" placeholder="3" inputMode="numeric" containerStyle={{ flex: '1 1 90px' }} />
+          <TextField label="Reps" placeholder="10" inputMode="numeric" containerStyle={{ flex: '1 1 90px' }} />
           <TextField label="Weight" placeholder="45 lb" containerStyle={{ flex: '1 1 110px' }} />
           <TextField
             label="Distance"

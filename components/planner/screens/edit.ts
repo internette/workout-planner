@@ -1,5 +1,5 @@
 import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, MON3 } from '../constants';
-import { idOf, isoOf } from '../helpers';
+import { idOf, isoOf, joinSetsReps, splitSetsReps } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
 import { optStyle } from '../styles';
@@ -150,10 +150,12 @@ export function editVals(ctx: Ctx) {
     })),
     draftName: st.dName || '',
     draftSets: st.dSets || '',
+    draftReps: st.dReps || '',
     draftWeight: st.dWeight || '',
     draftRest: st.dRest || '',
     setName: (e) => logic.s({ dName: e.target.value }),
     setSets: (e) => logic.s({ dSets: e.target.value }),
+    setReps: (e) => logic.s({ dReps: e.target.value }),
     setWeight: (e) => logic.s({ dWeight: e.target.value }),
     setRest: (e) => logic.s({ dRest: e.target.value }),
     iconGrid: EXERCISE_ICON_NAMES.map((name) => ({
@@ -167,7 +169,7 @@ export function editVals(ctx: Ctx) {
       if (!nm) return;
       const item = {
         name: nm,
-        sets: st.dSets || '3 × 10',
+        sets: joinSetsReps(st.dSets, st.dReps) || '3 × 10',
         weight: st.dWeight || '—',
         rest: st.dRest || '60 sec',
         i: st.dIcon || 'h',
@@ -177,6 +179,7 @@ export function editVals(ctx: Ctx) {
         addOpen: false,
         dName: '',
         dSets: '',
+        dReps: '',
         dWeight: '',
         dRest: '',
         dIcon: 'h',
@@ -458,12 +461,19 @@ export function editVals(ctx: Ctx) {
             }),
           }),
         });
+      // Sets and reps are two boxes on screen, but still one "4 × 8" field everywhere else (the row's stored
+      // value, "detail" below, and the database). Split it to show two boxes; each one writes the whole string
+      // back, filling in the other box's current value.
+      const setsParts = splitSetsReps(e.sets);
+      const setSets = setField('sets');
       return {
         name: e.name,
-        sets: e.sets,
+        sets: setsParts.sets,
+        reps: setsParts.reps,
         weight: e.weight,
         rest: e.rest,
-        setSets: setField('sets'),
+        setSets: (ev) => setSets({ target: { value: joinSetsReps(ev.target.value, setsParts.reps) } }),
+        setReps: (ev) => setSets({ target: { value: joinSetsReps(setsParts.sets, ev.target.value) } }),
         setWeight: setField('weight'),
         setRest: setField('rest'),
         icoSvg: iconSvg(cur),

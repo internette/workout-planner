@@ -2233,11 +2233,20 @@ export function PlannerView({ v }: { v: any }) {
                               style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '14px' }}
                             >
                               <TextField
-                                label="Sets × reps"
-                                containerStyle={{ flex: '1 1 120px', minWidth: '0' }}
+                                label="Sets"
+                                containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
                                 value={v.draftSets ?? ''}
                                 onChange={v.setSets}
-                                placeholder="3 × 10"
+                                placeholder="3"
+                                inputMode="numeric"
+                              />
+                              <TextField
+                                label="Reps"
+                                containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
+                                value={v.draftReps ?? ''}
+                                onChange={v.setReps}
+                                placeholder="10"
+                                inputMode="numeric"
                               />
                               <TextField
                                 label="Weight"
@@ -2803,10 +2812,18 @@ export function PlannerView({ v }: { v: any }) {
                               style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '12px' }}
                             >
                               <TextField
-                                label="Sets × reps"
-                                containerStyle={{ flex: '1 1 120px', minWidth: '0' }}
+                                label="Sets"
+                                containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
                                 value={r?.sets}
                                 onChange={r?.setSets}
+                                inputMode="numeric"
+                              />
+                              <TextField
+                                label="Reps"
+                                containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
+                                value={r?.reps}
+                                onChange={r?.setReps}
+                                inputMode="numeric"
                               />
                               <TextField
                                 label="Weight"
@@ -2882,11 +2899,20 @@ export function PlannerView({ v }: { v: any }) {
                     />
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '14px' }}>
                       <TextField
-                        label="Sets × reps"
-                        containerStyle={{ flex: '1 1 120px', minWidth: '0' }}
+                        label="Sets"
+                        containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
                         value={v.exerciseEdit.sets}
                         onChange={v.exerciseEdit.setSets}
-                        placeholder="3 × 10"
+                        placeholder="3"
+                        inputMode="numeric"
+                      />
+                      <TextField
+                        label="Reps"
+                        containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
+                        value={v.exerciseEdit.reps}
+                        onChange={v.exerciseEdit.setReps}
+                        placeholder="10"
+                        inputMode="numeric"
                       />
                       <TextField
                         label="Weight"
@@ -4110,10 +4136,18 @@ export function PlannerView({ v }: { v: any }) {
                                 style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}
                               >
                                 <TextField
-                                  label="Sets × reps"
-                                  containerStyle={{ flex: '1 1 120px', minWidth: '0' }}
+                                  label="Sets"
+                                  containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
                                   value={ex?.sets ?? ''}
                                   onChange={ex?.setSets}
+                                  inputMode="numeric"
+                                />
+                                <TextField
+                                  label="Reps"
+                                  containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
+                                  value={ex?.reps ?? ''}
+                                  onChange={ex?.setReps}
+                                  inputMode="numeric"
                                 />
                                 <TextField
                                   label="Weight"
@@ -4240,11 +4274,20 @@ export function PlannerView({ v }: { v: any }) {
                                 style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '14px' }}
                               >
                                 <TextField
-                                  label="Sets × reps"
-                                  containerStyle={{ flex: '1 1 120px', minWidth: '0' }}
+                                  label="Sets"
+                                  containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
                                   value={v.draftSets ?? ''}
                                   onChange={v.setSets}
-                                  placeholder="3 × 10"
+                                  placeholder="3"
+                                  inputMode="numeric"
+                                />
+                                <TextField
+                                  label="Reps"
+                                  containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
+                                  value={v.draftReps ?? ''}
+                                  onChange={v.setReps}
+                                  placeholder="10"
+                                  inputMode="numeric"
                                 />
                                 <TextField
                                   label="Weight"

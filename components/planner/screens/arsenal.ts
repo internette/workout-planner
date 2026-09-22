@@ -2,7 +2,7 @@ import { colors } from '@/components/ui/colors';
 import { iconSvg } from '../icons';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import * as db from '@/lib/plannerData';
-import { isoOf } from '../helpers';
+import { isoOf, joinSetsReps, splitSetsReps } from '../helpers';
 import { optStyle } from '../styles';
 import type { Ctx } from '../types';
 
@@ -104,7 +104,7 @@ export function arsenalVals(ctx: Ctx) {
             exFrom: null,
             exDraft: {
               name: found.ex.name,
-              sets: found.ex.sets,
+              ...splitSetsReps(found.ex.sets),
               weight: found.ex.weight,
               rest: found.ex.rest,
               i: found.ex.i,
@@ -114,7 +114,7 @@ export function arsenalVals(ctx: Ctx) {
     : null;
   // Set when the exercise editor was opened from the workout editor, so it returns there.
   const exFrom = st.exFrom || null;
-  const exDraft = st.exDraft || { name: '', sets: '', weight: '', rest: '', i: 'h' };
+  const exDraft = st.exDraft || { name: '', sets: '', reps: '', weight: '', rest: '', i: 'h' };
   const setExDraft = (field) => (e) => logic.s({ exDraft: { ...exDraft, [field]: e.target.value } });
   // Saving an exercise always asks how: update it, or keep it and save the edit as a new exercise.
   // Updating can also carry on to the workout's upcoming sessions. Completed and past sessions never change.
@@ -169,10 +169,12 @@ export function arsenalVals(ctx: Ctx) {
   const exerciseEdit = {
     name: exDraft.name,
     sets: exDraft.sets,
+    reps: exDraft.reps,
     weight: exDraft.weight,
     rest: exDraft.rest,
     setName: setExDraft('name'),
     setSets: setExDraft('sets'),
+    setReps: setExDraft('reps'),
     setWeight: setExDraft('weight'),
     setRest: setExDraft('rest'),
     icons: EXERCISE_ICON_NAMES.map((name) => ({
@@ -186,7 +188,7 @@ export function arsenalVals(ctx: Ctx) {
       if (!found || !exDraft.name.trim()) return;
       const patch = {
         name: exDraft.name.trim(),
-        sets: exDraft.sets,
+        sets: joinSetsReps(exDraft.sets, exDraft.reps),
         weight: exDraft.weight,
         rest: exDraft.rest,
         i: exDraft.i,
@@ -296,7 +298,7 @@ export function arsenalVals(ctx: Ctx) {
                     screen: 'exerciseEdit',
                     exerciseId: live.id,
                     exFrom: 'templateEdit',
-                    exDraft: { name: live.name, sets: live.sets, weight: live.weight, rest: live.rest, i: live.i },
+                    exDraft: { name: live.name, ...splitSetsReps(live.sets), weight: live.weight, rest: live.rest, i: live.i },
                   }),
                 remove: () => patchRow(r.key, { removed: true }),
               };
@@ -308,10 +310,12 @@ export function arsenalVals(ctx: Ctx) {
               key: r.key,
               name: r.name,
               sets: r.sets,
+              reps: r.reps,
               weight: r.weight,
               rest: r.rest,
               setName: (e) => patchRow(r.key, { name: e.target.value }),
               setSets: (e) => patchRow(r.key, { sets: e.target.value }),
+              setReps: (e) => patchRow(r.key, { reps: e.target.value }),
               setWeight: (e) => patchRow(r.key, { weight: e.target.value }),
               setRest: (e) => patchRow(r.key, { rest: e.target.value }),
               remove: () => patchDraft({ rows: draft.rows.filter((x) => x.key !== r.key) }),
@@ -324,7 +328,8 @@ export function arsenalVals(ctx: Ctx) {
                   key: 'new-' + Date.now(),
                   id: null,
                   name: '',
-                  sets: '3 × 10',
+                  sets: '3',
+                  reps: '10',
                   weight: '',
                   rest: '60 sec',
                   i: 'h',
@@ -354,7 +359,7 @@ export function arsenalVals(ctx: Ctx) {
                     .filter((r) => !r.id && !r.removed && r.name.trim())
                     .map((r) => ({
                       name: r.name.trim(),
-                      sets: r.sets,
+                      sets: joinSetsReps(r.sets, r.reps),
                       weight: r.weight,
                       rest: r.rest,
                       i: r.i,
@@ -448,13 +453,13 @@ export function arsenalVals(ctx: Ctx) {
     noWorkoutMatchNote: 'No workout matches “' + (st.arsenalQ || '').trim() + '”.',
     arsenalAddOpen: !!st.arsenalAdd,
     openArsenalAdd: () => logic.s({ arsenalAdd: true }),
-    closeArsenalAdd: () => logic.s({ arsenalAdd: false, dName: '', dSets: '', dWeight: '', dRest: '' }),
+    closeArsenalAdd: () => logic.s({ arsenalAdd: false, dName: '', dSets: '', dReps: '', dWeight: '', dRest: '' }),
     commitArsenal: () => {
       const nm = (st.dName || '').trim();
       if (!nm) return;
       const item = {
         name: nm,
-        sets: st.dSets || '3 × 10',
+        sets: joinSetsReps(st.dSets, st.dReps) || '3 × 10',
         weight: st.dWeight || '—',
         rest: st.dRest || '60 sec',
         i: st.dIcon || 'h',
@@ -463,6 +468,7 @@ export function arsenalVals(ctx: Ctx) {
         arsenalAdd: false,
         dName: '',
         dSets: '',
+        dReps: '',
         dWeight: '',
         dRest: '',
         dIcon: 'h',
