@@ -46,6 +46,10 @@ export function progressVals(ctx: Ctx) {
   return {
     monthLabel: MONTHS[TODAY_M].toUpperCase(),
     rankName: RANKS[derivedRank].name,
+    // For the rank-up transformation (components/planner/RankUp.tsx).
+    rankIndex: derivedRank,
+    rankNext: RANKS[derivedRank].next,
+    rankGemFill: derivedRank === RANKS.length - 1 ? 'var(--gradient-gem)' : RANKS[derivedRank].gem,
     rankStepLabel: 'Rank ' + (derivedRank + 1) + ' of ' + RANKS.length,
     xpInfoOpen: !!st.xpInfo,
     toggleXpInfo: () => logic.s({ xpInfo: !st.xpInfo }),

@@ -11,6 +11,7 @@ import { PlannerView } from './PlannerView';
 import { StatusScreen } from './planner/StatusScreen';
 import { InstallPrompt } from './planner/InstallPrompt';
 import { useInstallPrompt } from './planner/useInstallPrompt';
+import { RankUp } from './planner/RankUp';
 
 // How long the plan may take before the loading screen says so.
 const SLOW_AFTER_MS = 8000;
@@ -96,6 +97,25 @@ export default function Planner({ account = null }: { account?: Account | null }
     return () => clearInterval(id);
   }, [anyTimerRunning, logic]);
 
+  // The rank-up transformation plays the first time a new rank is reached. The highest rank already celebrated is
+  // kept per account in this browser. With nothing kept yet (a first visit, another device) the current rank is
+  // recorded quietly rather than celebrated, and a rank that drops and is earned back doesn't play again.
+  const view = status === 'ready' ? logic.renderVals() : null;
+  const rank: number | null = view ? view.rankIndex : null;
+  const [rankUp, setRankUp] = useState<number | null>(null);
+  useEffect(() => {
+    if (rank == null) return;
+    const key = 'moonshot.rankSeen.' + (account?.email || 'local');
+    try {
+      const seen = window.localStorage.getItem(key);
+      if (seen != null && rank <= Number(seen)) return;
+      window.localStorage.setItem(key, String(rank));
+      if (seen != null) setRankUp(rank);
+    } catch {
+      // Storage can be unavailable (private windows, blocked site data); then there's just no celebration.
+    }
+  }, [rank, account?.email]);
+
   const retry = () => {
     logic.status = 'loading';
     setSlow(false);
@@ -109,7 +129,15 @@ export default function Planner({ account = null }: { account?: Account | null }
   }
   return (
     <>
-      <PlannerView v={logic.renderVals()} />
+      <PlannerView v={view ?? logic.renderVals()} />
+      <RankUp
+        open={rankUp != null && rankUp === rank}
+        name={view?.rankName ?? ''}
+        step={view?.rankStepLabel ?? ''}
+        next={view?.rankNext ?? ''}
+        gem={view?.rankGemFill ?? 'var(--gradient-gem)'}
+        onClose={() => setRankUp(null)}
+      />
       <InstallPrompt
         open={installPrompt.open}
         notice={installPrompt.notice}
