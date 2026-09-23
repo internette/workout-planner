@@ -126,23 +126,6 @@ export function statsStage(ctx: Ctx): Ctx {
   const rankFloor = derivedRank === 0 ? 0 : XP_STEPS[derivedRank - 1];
   const rankCeil = XP_STEPS[derivedRank];
   const todayAct = seedAt(TODAY_M, TODAY_D);
-  const arsenalNames = (() => {
-    const s2 = {};
-    Object.keys(EX).forEach((k) =>
-      EX[k].forEach((e) => {
-        s2[e.name] = 1;
-      }),
-    );
-    Object.keys(st.extra || {}).forEach((k) =>
-      (st.extra[k] || []).forEach((e) => {
-        s2[e.name] = 1;
-      }),
-    );
-    logic.model.library.concat(logic.model.builtins).forEach((e) => {
-      s2[e.name] = 1;
-    });
-    return Object.keys(s2);
-  })();
   const rankPct = Math.min(100, Math.round(((xpTotal - rankFloor) / Math.max(1, rankCeil - rankFloor)) * 100));
   return {
     monthDays,
@@ -151,7 +134,6 @@ export function statsStage(ctx: Ctx): Ctx {
     nextUp,
     unloggedDays,
     todayWkStart,
-    arsenalNames,
     derivedRank,
     xpTotal,
     rankCeil,

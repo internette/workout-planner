@@ -11,8 +11,8 @@ export interface PopoverProps {
   onClose: () => void;
   /** The panel's contents. */
   content: ReactNode;
-  /** Panel width in px. */
-  width: number;
+  /** Panel width in px, or 'anchor' to match the trigger area's width. */
+  width: number | 'anchor';
   /** Gap in px between the top of the trigger area and the panel. */
   top: number;
   /** Which edge of the trigger area the panel lines up with. */
@@ -80,7 +80,7 @@ function PopoverPanel({
   anchor: React.RefObject<HTMLElement>;
   panelRef: React.MutableRefObject<HTMLElement | null>;
   onClose: () => void;
-  width: number;
+  width: number | 'anchor';
   top: number;
   align: 'start' | 'center';
   pad: 'xs' | 'sm' | 'md';
@@ -99,8 +99,10 @@ function PopoverPanel({
     const at = anchor.current;
     if (!el || !at) return;
     const r = at.getBoundingClientRect();
-    const left = align === 'center' ? r.left + r.width / 2 - width / 2 : r.left;
-    el.style.left = Math.max(EDGE, Math.min(left, window.innerWidth - width - EDGE)) + 'px';
+    const w = width === 'anchor' ? r.width : width;
+    el.style.width = w + 'px';
+    const left = align === 'center' ? r.left + r.width / 2 - w / 2 : r.left;
+    el.style.left = Math.max(EDGE, Math.min(left, window.innerWidth - w - EDGE)) + 'px';
     el.style.top = r.top + top + 'px';
   }, [anchor, align, width, top]);
   useWindowEvent('scroll', place, { capture: true });
@@ -135,7 +137,7 @@ function PopoverPanel({
       pad={pad}
       elevation="overlay"
       {...({ popover: 'auto', onToggleCapture: onToggle } as object)}
-      style={{ position: 'fixed', inset: 'auto', margin: 0, border: 'none', overflow: 'visible', width, zIndex: 30 }}
+      style={{ position: 'fixed', inset: 'auto', margin: 0, border: 'none', overflow: 'visible', zIndex: 30 }}
     >
       {children}
     </Card>

@@ -2231,6 +2231,85 @@ export function PlannerView({ v }: { v: any }) {
                       </>
                     ) : null}
                   </div>
+                  <Popover
+                    open={!!v.areaFilterOpen}
+                    onClose={v.closeAreaFilter}
+                    width="anchor"
+                    top={74}
+                    pad="sm"
+                    style={{ width: '100%', marginTop: '8px' }}
+                    content={
+                      <>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          {(v.areaFilterOptions ?? []).map((o) => (
+                            <Checkbox key={o?.name} checked={!!o?.on} onChange={o?.set}>
+                              {o?.name}
+                            </Checkbox>
+                          ))}
+                        </div>
+                        {v.areaFilterActive ? (
+                          <Button
+                            type="neutral"
+                            ghost
+                            size="sm"
+                            onClick={v.clearAreaFilter}
+                            style={{ marginTop: '12px' }}
+                          >
+                            Clear filter
+                          </Button>
+                        ) : null}
+                      </>
+                    }
+                  >
+                    <button
+                      type="button"
+                      aria-haspopup="true"
+                      aria-expanded={!!v.areaFilterOpen}
+                      aria-label={'Filter by target area: ' + v.areaFilterLabel}
+                      onClick={v.toggleAreaFilter}
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        columnGap: '10px',
+                        rowGap: '4px',
+                        width: '100%',
+                        padding: '12px 16px',
+                        background: 'var(--color-white)',
+                        border: 'none',
+                        borderRadius: '15px',
+                        boxShadow: '0 1px 3px rgba(35,42,69,.06)',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        fontFamily: 'inherit',
+                        fontSize: 'var(--text-lg)',
+                        fontWeight: 'var(--font-weight-medium)',
+                        color: 'var(--color-ink)',
+                      }}
+                    >
+                      <Text variant="eyebrow" as="span" tone="slate" style={{ flex: '1 1 100%' }}>
+                        TARGET AREAS
+                      </Text>
+                      <span
+                        style={{
+                          flex: '1',
+                          minWidth: '0',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          fontWeight: v.areaFilterActive ? 'var(--font-weight-semibold)' : 'var(--font-weight-medium)',
+                        }}
+                      >
+                        {v.areaFilterLabel}
+                      </span>
+                      <ChevronDown
+                        color="var(--color-muted)"
+                        strokeWidth={2.2}
+                        size={16}
+                        style={{ flex: 'none', transition: 'transform .2s', transform: v.areaFilterOpen ? 'rotate(180deg)' : 'none' }}
+                      />
+                    </button>
+                  </Popover>
                   {v.showArsenalExercises ? (
                     <>
                       {v.noMatches ? (

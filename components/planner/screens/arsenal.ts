@@ -9,7 +9,7 @@ import type { Ctx } from '../types';
 
 // Arsenal: the exercise library, its search and the add-exercise form.
 export function arsenalVals(ctx: Ctx) {
-  const { logic, st, EX, Y, TODAY_M, TODAY_D, arsenalNames } = ctx;
+  const { logic, st, EX, Y, TODAY_M, TODAY_D } = ctx;
 
   // ---- exercise count (shown in the header when the exercises view is open)
   // One per row in the list. Exercises are identified by id, so two with the same name are two exercises.
@@ -58,9 +58,22 @@ export function arsenalVals(ctx: Ctx) {
   // ---- saved workouts
   const view = st.arsenalView === 'workouts' ? 'workouts' : 'exercises';
   const q = (st.arsenalQ || '').trim().toLowerCase();
+  // Target-area filter, shared by both tabs: keeps anything that targets at least one of the chosen areas.
+  const areaFilter: string[] = st.arsenalAreas || [];
+  const inAreas = (areas) => !areaFilter.length || (areas || []).some((a) => areaFilter.includes(a));
+  const areaList = (list) =>
+    list.length === 1 ? list[0] : list.slice(0, -1).join(', ') + ' or ' + list[list.length - 1];
+  const noMatchText = (things) =>
+    q && areaFilter.length
+      ? 'No ' + things + ' match “' + (st.arsenalQ || '').trim() + '” for ' + areaList(areaFilter) + '.'
+      : areaFilter.length
+        ? 'No ' + things + ' target ' + areaList(areaFilter) + '.'
+        : 'No ' + things + ' match “' + (st.arsenalQ || '').trim() + '”.';
   const workouts = logic.model.workouts;
   const hits = workouts.filter(
-    (w) => !q || w.name.toLowerCase().includes(q) || w.exercises.some((n) => n.toLowerCase().includes(q)),
+    (w) =>
+      inAreas(w.areas) &&
+      (!q || w.name.toLowerCase().includes(q) || w.exercises.some((n) => n.toLowerCase().includes(q))),
   );
   const savedWorkouts = hits.map((w) => ({
     name: w.name,
@@ -432,6 +445,25 @@ export function arsenalVals(ctx: Ctx) {
         }
       : null;
 
+  // ---- the Exercises tab: the person's own groups, then the built-in catalog, narrowed by search and area filter
+  const exerciseRow = (e) => ({
+    name: e.name,
+    svg: iconSvg(e.i),
+    detail: e.sets + ' · ' + e.weight,
+    open: () => openExercise(e.id),
+  });
+  const moveGroups = [];
+  const pushGroup = (label, list) => {
+    const hit = list.filter((e) => inAreas(e.areas) && (!q || e.name.toLowerCase().includes(q))).map(exerciseRow);
+    if (hit.length) moveGroups.push({ label: label.toUpperCase(), count: plural(hit.length, 'exercise'), items: hit });
+  };
+  Object.keys(EX).forEach((w) => pushGroup(w, EX[w] || []));
+  pushGroup('Unassigned', logic.model.library);
+  // The shared starter catalog, after the person's own, grouped by each exercise's main target area.
+  TARGET_AREAS.forEach((area) =>
+    pushGroup('Built-in · ' + area, logic.model.builtins.filter((e) => (e.areas || [])[0] === area)),
+  );
+
   return {
     tplConfirmOpen: !!confirm,
     tplConfirmTitle: 'How should this change be saved?',
@@ -507,8 +539,8 @@ export function arsenalVals(ctx: Ctx) {
     arsenalSearchPlaceholder: view === 'workouts' ? 'Search workouts' : 'Search exercises',
     savedWorkouts,
     noSavedWorkouts: workouts.length === 0,
-    noWorkoutMatches: workouts.length > 0 && !!q && hits.length === 0,
-    noWorkoutMatchNote: 'No workout matches “' + (st.arsenalQ || '').trim() + '”.',
+    noWorkoutMatches: workouts.length > 0 && (!!q || areaFilter.length > 0) && hits.length === 0,
+    noWorkoutMatchNote: noMatchText('workouts'),
     arsenalAddOpen: !!st.arsenalAdd,
     openArsenalAdd: () => logic.s({ arsenalAdd: true }),
     closeArsenalAdd: () =>
@@ -537,51 +569,23 @@ export function arsenalVals(ctx: Ctx) {
     },
     movesCount: exerciseCount,
     arsenalQuery: st.arsenalQ || '',
-    noMatches:
-      !!(st.arsenalQ || '').trim() &&
-      !arsenalNames.some((n) => n.toLowerCase().indexOf((st.arsenalQ || '').trim().toLowerCase()) > -1),
-    noMatchNote: 'No exercise matches “' + (st.arsenalQ || '').trim() + '”.',
-    hasQuery: !!(st.arsenalQ || '').trim(),
+    noMatches: (!!q || areaFilter.length > 0) && moveGroups.length === 0,
+    noMatchNote: noMatchText('exercises'),
+    hasQuery: !!q,
     setArsenalQuery: (e) => logic.s({ arsenalQ: e.target.value }),
     clearArsenalQuery: () => logic.s({ arsenalQ: '' }),
-    moveGroups: (() => {
-      const q = (st.arsenalQ || '').trim().toLowerCase();
-      const groups = [];
-      const push = (label, items) => {
-        const hit = items.filter((e) => !q || e.name.toLowerCase().indexOf(q) > -1);
-        if (hit.length)
-          groups.push({
-            label: label.toUpperCase(),
-            count: hit.length + (hit.length === 1 ? ' exercise' : ' exercises'),
-            items: hit,
-          });
-      };
-      Object.keys(EX).forEach((w) => {
-        push(
-          w,
-          (EX[w] || []).map((e) => ({
-            name: e.name,
-            svg: iconSvg(e.i),
-            detail: e.sets + ' · ' + e.weight,
-            open: () => openExercise(e.id),
-          })),
-        );
-      });
-      const row = (e) => ({
-        name: e.name,
-        svg: iconSvg(e.i),
-        detail: e.sets + ' · ' + e.weight,
-        open: () => openExercise(e.id),
-      });
-      push('Unassigned', logic.model.library.map(row));
-      // The shared starter catalog, after the person's own, grouped by each exercise's main target area.
-      TARGET_AREAS.forEach((area) => {
-        push(
-          'Built-in · ' + area,
-          logic.model.builtins.filter((e) => (e.areas || [])[0] === area).map(row),
-        );
-      });
-      return groups;
-    })(),
+    moveGroups,
+    areaFilterOpen: !!st.arsenalAreasOpen,
+    toggleAreaFilter: () => logic.s({ arsenalAreasOpen: !st.arsenalAreasOpen }),
+    closeAreaFilter: () => logic.s({ arsenalAreasOpen: false }),
+    areaFilterLabel: areaFilter.length ? TARGET_AREAS.filter((a) => areaFilter.includes(a)).join(', ') : 'All',
+    areaFilterActive: areaFilter.length > 0,
+    areaFilterOptions: TARGET_AREAS.map((name) => ({
+      name,
+      on: areaFilter.includes(name),
+      set: (on) =>
+        logic.s({ arsenalAreas: on ? areaFilter.concat([name]) : areaFilter.filter((a) => a !== name) }),
+    })),
+    clearAreaFilter: () => logic.s({ arsenalAreas: [], arsenalAreasOpen: false }),
   };
 }
