@@ -182,7 +182,7 @@ export function progressVals(ctx: Ctx) {
         status:
           'flex:none;padding:5px 11px;border-radius:999px;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
           (x.done
-            ? 'background:var(--color-pink);color:var(--color-white)'
+            ? 'background:var(--color-pink-strong);color:var(--color-white)'
             : 'background:var(--color-white);color:var(--color-muted)'),
         open: () =>
           logic.nav({ screen: 'detail', creating: false, month: MONTHS[TODAY_M], day: x.d, entryId: x.av.id }),

@@ -19,7 +19,7 @@ export function workoutStage(ctx: Ctx): Ctx {
       pick: () => logic.s({ day: pd, dateOpen: false }),
       style:
         "height:34px;border:none;border-radius:10px;cursor:pointer;font-family:var(--font-heading);font-size:var(--text-md);font-weight:" +
-        (pd === selDay ? 'var(--font-weight-bold);background:var(--color-pink);color:var(--color-white)' : 'var(--font-weight-medium);background:none;color:var(--color-ink)'),
+        (pd === selDay ? 'var(--font-weight-bold);background:var(--color-pink-strong);color:var(--color-white)' : 'var(--font-weight-medium);background:none;color:var(--color-ink)'),
     });
   }
   // The session being edited, by id: its day may hold other workouts, and the date picker may be moving it.
