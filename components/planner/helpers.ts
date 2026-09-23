@@ -31,6 +31,6 @@ export const workoutDraftDirty = st => !!(
   st.renames || st.fields || st.removed || st.areas || st.newName ||
   st.rDist || st.rElev || st.rHrs || st.rMins ||
   st.aDist || st.aElev || st.aHrs || st.aMins ||
-  st.repeat || st.icons || st.iconColors ||
+  st.repeat || st.icons || st.iconColors || st.notes ||
   (st.extra && Object.keys(st.extra).some(k => (st.extra[k] || []).length))
 );

@@ -68,6 +68,7 @@ export function workoutStage(ctx: Ctx): Ctx {
   };
   const listKey = creating ? '__draft' : idOf(srcAct);
   const picked = (st.areas || {})[listKey] || (srcAct && srcAct.areas) || [];
+  const notesVal = (st.notes || {})[listKey] != null ? (st.notes || {})[listKey] : (srcAct && srcAct.notes) || '';
   const wIcon = (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (isCycleView ? 'bike' : 'h');
   const wColor = (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || colors.pink;
   const doneNames = (st.done || {})[listKey] || [];
@@ -128,6 +129,7 @@ export function workoutStage(ctx: Ctx): Ctx {
     aMins,
     ridePct,
     picked,
+    notesVal,
     libraryFor,
     added,
     gone,

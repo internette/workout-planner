@@ -4346,6 +4346,8 @@ export function PlannerView({ v }: { v: any }) {
                       aria-label="Workout notes"
                       rows={3}
                       placeholder="Cues, targets, anything to remember…"
+                      value={v.eNotes}
+                      onChange={v.setNotes}
                     />
                   </div>
                   <div

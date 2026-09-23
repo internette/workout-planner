@@ -35,6 +35,7 @@ export interface Entry {
   series?: string;
   repeat: boolean;
   actual: { dist: string; elev: string; hrs: string; mins: string } | null;
+  notes: string;
 }
 
 export interface DiaryEntry {
@@ -198,6 +199,7 @@ export async function loadModel(today: Date): Promise<Model> {
       iconColor: w.icon_color,
       areas: w.target_areas || [],
       repeat: !!w.repeat_enabled,
+      notes: w.notes || '',
       series: w.repeat_enabled ? w.id : undefined,
       ride: isRide
         ? {
@@ -347,6 +349,7 @@ export interface NewWorkout {
   exercises: Exercise[];
   dates: string[]; // ISO dates to schedule
   repeat: boolean;
+  notes: string;
 }
 
 // Creates the workout (or reuses one with the same name) and schedules it on every date.
@@ -371,6 +374,7 @@ export async function createWorkout(w: NewWorkout) {
           ride_elevation_ft: w.ride && w.ride.elev ? Number(w.ride.elev) : null,
           ride_zone: w.ride ? w.ride.zone : null,
           repeat_enabled: w.repeat,
+          notes: w.notes || null,
         })
         .select('id'),
     );
@@ -410,6 +414,7 @@ export interface WorkoutEdit {
   icon?: string | null;
   iconColor?: string | null;
   areas?: string[];
+  notes?: string;
   ride?: { dist: string; elev: string; zone: string; minutes: number } | null;
   moveTo?: string; // ISO date
   actual?: { dist: string; elev: string; minutes: number } | null;
@@ -443,6 +448,7 @@ export async function updateWorkout(e: WorkoutEdit) {
   if (e.icon !== undefined) patch.icon = e.icon;
   if (e.iconColor !== undefined) patch.icon_color = e.iconColor;
   if (e.areas) patch.target_areas = e.areas;
+  if (e.notes !== undefined) patch.notes = e.notes;
   if (e.ride) {
     patch.ride_distance_miles = e.ride.dist ? Number(e.ride.dist) : null;
     patch.ride_elevation_ft = e.ride.elev ? Number(e.ride.elev) : null;

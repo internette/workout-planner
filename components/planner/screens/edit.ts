@@ -28,6 +28,7 @@ export function editVals(ctx: Ctx) {
     aMins,
     ridePct,
     picked,
+    notesVal,
     listKey,
     libraryFor,
     added,
@@ -219,6 +220,8 @@ export function editVals(ctx: Ctx) {
         (c === wColor ? ';box-shadow:0 0 0 2px var(--color-white),0 0 0 4px ' + c : ''),
     })),
     eName: selName,
+    eNotes: notesVal,
+    setNotes: (e) => logic.s({ notes: Object.assign({}, st.notes, { [listKey]: e.target.value }) }),
     eCat: selRide ? selRide.zone || 'Endurance' : picked.length ? picked.join(' · ') : 'No target areas',
     areaPills: selRide ? [selRide.zone || 'Endurance'] : picked,
     inSeries: !!(selAct && selAct.series),
@@ -337,6 +340,7 @@ export function editVals(ctx: Ctx) {
               icon: (st.icons || {})[listKey],
               iconColor: (st.iconColors || {})[listKey],
               areas: (st.areas || {})[listKey],
+              notes: (st.notes || {})[listKey],
               ride: selRide
                 ? {
                     dist: rDist,
@@ -380,6 +384,7 @@ export function editVals(ctx: Ctx) {
             icon: (st.icons || {}).__draft || null,
             iconColor: (st.iconColors || {}).__draft || null,
             areas: picked,
+            notes: notesVal,
             exercises: selList.map(bare),
             dates: scheduled ? [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weekly() : []) : [],
             repeat: scheduled && !!st.repeat,
