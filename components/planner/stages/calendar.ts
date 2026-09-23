@@ -164,7 +164,9 @@ export function calendarStage(ctx: Ctx): Ctx {
       // One tab stop for the whole grid: the selected day. Arrow keys move between days.
       tabStop: sel ? 0 : -1,
       selected: sel,
-      pick: () => logic.s({ day: d }),
+      // A click means "go look at that day" — unlike arrow-key browsing of the grid, which only moves
+      // the selection so exploring the month doesn't keep bouncing you over to Day view.
+      pick: () => logic.s({ day: d, seg: 'Day' }),
       wrap:
         'height:50px;border:none;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;' +
         (sel
