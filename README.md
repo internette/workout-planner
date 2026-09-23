@@ -4,7 +4,7 @@
 
 ## Features
 
-- **Calendar:** day, week and month views, with the current day highlighted and past sessions marked done or missed.
+- **Calendar:** day, week and month views, with the current day highlighted and past sessions marked done or missed. A day can hold more than one workout: Day and Week views list each one, and a day counts as done (for its marker, the streak and its quest) once all of them are.
 - **Workouts:** lifting sessions (exercises with sets, reps, weight and rest) and cycling sessions (distance, elevation, duration, target effort). Both can repeat weekly for 12 weeks.
 - **Progress tracking:** tick exercises off, mark rides complete, and log what you actually rode against the plan.
 - **Chronicle:** a diary entry per session with mood, effort (1–5) and notes.
@@ -151,7 +151,6 @@ Ticks update the screen immediately. Other saves (creating or editing a workout,
 ## Limitations
 
 - **Sign-in is off until you turn it on.** Until the steps under Sign-in are done, the tables allow anonymous access with the publishable key, so anyone with that key can read and change your data. Do not share or deploy the app before then.
-- **One workout per day.** The UI shows one `plan_entries` row per date. A second workout on the same day is stored but not shown.
 - **Current year only.** Entries from other years don't appear on the calendar.
 - **Free-text exercise fields** such as "4 × 8", "135 lb" and "90 sec" are stored as numbers. Text that doesn't fit those shapes, like "3 × 45s", loses its detail on save.
 - **Duplicate exercise rows.** Adding an existing exercise to another workout creates a separate row rather than a link.

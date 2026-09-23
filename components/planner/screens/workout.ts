@@ -22,7 +22,6 @@ export function workoutVals(ctx: Ctx) {
     questCleared,
     listKey,
     srcAct,
-    all,
     hasEntry,
     selDate,
     doneSel,
@@ -31,8 +30,14 @@ export function workoutVals(ctx: Ctx) {
     timerState,
     timerRunning,
     timerElapsedSec,
+    dayEntries,
+    isDoneEntry,
+    instList,
+    DIARY,
   } = ctx;
   const goDetail = () => logic.nav({ screen: 'detail', creating: false });
+  // The quest belongs to the day, so on a day with several workouts it is cleared once all of them are.
+  const dayCleared = dayEntries.length > 1 ? dayEntries.every(isDoneEntry) : questCleared;
   const setTimer = (patch) =>
     logic.s({ workoutTimer: Object.assign({}, st.workoutTimer, { [timerKey]: patch }) });
   const startTimer = () => setTimer({ elapsed: 0, runningSince: Date.now() });
@@ -69,6 +74,77 @@ export function workoutVals(ctx: Ctx) {
     if (!timerRunning) resumeTimer();
     goDetail();
   };
+  // Day view shows a card for every workout on the day. A card's buttons pick its session first, then do what
+  // the same button does for the session on screen, so the detail, timer and diary all follow that session.
+  const exerciseRow = (e, doneNames) => ({
+    text: e.name + ' — ' + e.sets + ' · ' + e.weight,
+    isH: e.i === 'h',
+    isV: e.i === 'v',
+    isD: e.i === 'd',
+    textStyle:
+      'flex:1;min-width:0;font-size:var(--text-lg);font-weight:var(--font-weight-medium);' +
+      (doneNames.includes(e.name) ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
+  });
+  const dayCards = dayEntries.map((av) => {
+    const id = idOf(av);
+    const run = (action) => () => {
+      logic.s({ entryId: id });
+      logic.renderVals()[action]();
+    };
+    const list = instList(av.exKey, id).map((e) => Object.assign({}, e, (st.fields || {})[id + '|' + e.name] || {}));
+    const doneNames = (st.done || {})[id] || [];
+    const doneN = list.filter((e) => doneNames.includes(e.name)).length;
+    const ride = av.ride || null;
+    const rideIsDone = !!(st.rideDone || {})[id];
+    const complete = ride ? rideIsDone : list.length > 0 && doneN === list.length;
+    const logged = !!DIARY[id];
+    const timed = !!(st.workoutTimer || {})[id];
+    const rows = list.map((e) => exerciseRow(e, doneNames));
+    const expanded = !!(st.moreIds || {})[id];
+    return {
+      key: id,
+      name: nameOf(av.name),
+      meta: complete
+        ? 'Completed'
+        : ride
+          ? ride.dist
+            ? ride.dist + ' mi · ' + av.time
+            : av.time
+          : doneN > 0
+            ? doneN + ' of ' + list.length + ' done · ' + av.time
+            : plural(list.length, 'exercise') + ' · ' + av.time,
+      icoSvg: iconSvg(
+        (st.icons || {})[id] || av.icon || (ride ? 'bike' : 'h'),
+        (st.iconColors || {})[id] || av.iconColor || colors.pink,
+      ),
+      open: run('goDetail'),
+      isLift: !ride,
+      isRide: !!ride,
+      progLabel: doneN + '/' + list.length,
+      progBar:
+        'width:' +
+        (list.length ? Math.round((doneN / list.length) * 100) : 0) +
+        '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
+      rideStats: !ride
+        ? []
+        : [
+            { label: 'DISTANCE', value: ride.dist ? ride.dist + ' mi' : '—' },
+            { label: 'DURATION', value: av.time || '—' },
+            { label: 'ELEVATION', value: ride.elev ? ride.elev + ' ft' : '—' },
+            { label: 'EFFORT', value: ride.zone || 'Endurance' },
+          ],
+      preview: expanded ? rows : rows.slice(0, 3),
+      hasMore: rows.length > 3,
+      moreLabel: expanded ? 'Show less' : '+ ' + (rows.length - 3) + ' more',
+      moreCaret: 'width:15px;height:15px;flex:none;transition:transform .2s' + (expanded ? ';transform:rotate(180deg)' : ''),
+      toggleMore: () => logic.s({ moreIds: Object.assign({}, st.moreIds, { [id]: !expanded }) }),
+      ctaTwoButtons: !logged && timed,
+      ctaLabel: logged ? 'View chronicle entry' : 'Start workout',
+      cta: run(logged ? 'goDiary' : 'restartWorkout'),
+      restart: run('restartWorkout'),
+      continue: run('continueWorkout'),
+    };
+  });
   return {
     backToDay: () => askThenGo(() => logic.back()),
     goDetail,
@@ -92,7 +168,13 @@ export function workoutVals(ctx: Ctx) {
       if (pending && pending.proceed) pending.proceed();
     },
     goEdit: () =>
-      logic.nav({ screen: 'edit', editing: !!actFor(selDay), creating: false, editKey: mi + '-' + selDay }),
+      logic.nav({
+        screen: 'edit',
+        editing: !!selAct,
+        creating: false,
+        editKey: mi + '-' + selDay,
+        editId: selAct ? selAct.id : null,
+      }),
     // A new workout always starts blank: nothing carried over from a draft that was left behind elsewhere.
     // From a day of the calendar the new workout goes on that day, and can be switched to saved-only.
     goNewWorkout: () =>
@@ -126,34 +208,21 @@ export function workoutVals(ctx: Ctx) {
         }),
       ),
     goDiary,
-    wName: selAct ? nameOf(selAct.name) : '',
-    wMeta: !selAct
-      ? ''
-      : selRide
-        ? rideDone
-          ? 'Completed'
-          : selRide.dist
-            ? selRide.dist + ' mi · ' + selAct.time
-            : selAct.time
-        : selList.length > 0 && doneCount === selList.length
-          ? 'Completed'
-          : doneCount > 0
-            ? doneCount + ' of ' + selList.length + ' done · ' + selAct.time
-            : plural(selList.length, 'exercise') + ' · ' + selAct.time,
     showQuest: st.seg === 'Day' && !!actFor(selDay),
+    dayCards,
     questTitle: questSeed(selDay, mi).title,
-    questNote: questCleared ? questSeed(selDay, mi).done : questSeed(selDay, mi).note,
-    questDone: questCleared,
-    questOpen: !questCleared,
-    questEyebrow: questCleared ? 'QUEST CLEARED' : "TODAY'S QUEST",
+    questNote: dayCleared ? questSeed(selDay, mi).done : questSeed(selDay, mi).note,
+    questDone: dayCleared,
+    questOpen: !dayCleared,
+    questEyebrow: dayCleared ? 'QUEST CLEARED' : "TODAY'S QUEST",
     questIconWrap:
       'width:40px;height:40px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;' +
-      (questCleared
+      (dayCleared
         ? 'background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)'
         : 'background:var(--color-white);box-shadow:0 1px 3px rgba(35,42,69,.06)'),
     questTitleStyle:
       'font-family:var(--font-heading);font-size:var(--text-lg);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-snug);margin-top:4px;' +
-      (questCleared ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
+      (dayCleared ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
     isDone:
       (actFor(selDay) || {}).s === 'c' || rideDone || (selList.length > 0 && doneCount === selList.length),
     dayIsRide: !!selRide,
@@ -180,25 +249,7 @@ export function workoutVals(ctx: Ctx) {
           { label: 'ELEVATION', value: selRide.elev ? selRide.elev + ' ft' : '—' },
           { label: 'EFFORT', value: selRide.zone || 'Endurance' },
         ],
-    dayProgLabel: doneCount + '/' + selList.length,
-    dayProgBar:
-      'width:' +
-      (selList.length ? Math.round((doneCount / selList.length) * 100) : 0) +
-      '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
-    preview: st.more ? all : all.slice(0, 3),
-    hasMore: all.length > 3,
-    moreLabel: st.more ? 'Show less' : '+ ' + (all.length - 3) + ' more',
-    moreCaret:
-      'width:15px;height:15px;flex:none;transition:transform .2s' +
-      (st.more ? ';transform:rotate(180deg)' : ''),
     ctaLabel: hasEntry ? 'View chronicle entry' : 'Finish workout & log it',
-    // The day card's own CTA: nothing to log yet, so it starts the workout (its detail page) rather than
-    // jumping straight to logging it — that stays the detail screen's own button, once there's something to log.
-    // Once the clock has been started at least once (running or paused), the single button splits into two:
-    // pick up where it left off, or throw away the progress and start over.
-    dayCtaTwoButtons: !hasEntry && !!timerState,
-    dayCtaLabel: hasEntry ? 'View chronicle entry' : 'Start workout',
-    dayCta: hasEntry ? goDiary : restartWorkout,
     restartWorkout,
     continueWorkout,
     longDate: DOWFULL[selDate.getDay()] + ', ' + st.month + ' ' + selDay,
@@ -228,6 +279,5 @@ export function workoutVals(ctx: Ctx) {
           : doneCount === selList.length
             ? 'Transformation complete. Log how it felt to claim your ' + tokenFor(selDay + mi) + '.'
             : selList.length - doneCount + ' left to go.',
-    toggleMore: () => logic.s({ more: !st.more }),
   };
 }

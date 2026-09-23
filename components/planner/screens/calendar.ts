@@ -24,7 +24,7 @@ export function calendarVals(ctx: Ctx) {
     todayDate,
     TODAY_D,
     isCurMonth,
-    todayAct,
+    todayActs,
     nameOf,
     TODAY_M,
     metaFor,
@@ -109,9 +109,12 @@ export function calendarVals(ctx: Ctx) {
       tokenFor(wkStart.getDate() + mi * 3) +
       ' claimed this week.',
     todayLabel: 'TODAY · ' + DOW3[todayDate.getDay()] + ' ' + TODAY_D,
-    hasToday: isCurMonth && !!todayAct,
-    todayName: todayAct ? nameOf(todayAct.name) : '',
-    openToday: () => logic.nav({ screen: 'detail', creating: false, month: MONTHS[TODAY_M], day: TODAY_D }),
-    todayMeta: todayAct ? metaFor(todayAct) : '',
+    hasToday: isCurMonth && todayActs.length > 0,
+    todayCards: todayActs.map((a) => ({
+      name: nameOf(a.name),
+      meta: metaFor(a),
+      open: () =>
+        logic.nav({ screen: 'detail', creating: false, month: MONTHS[TODAY_M], day: TODAY_D, entryId: a.id }),
+    })),
   };
 }

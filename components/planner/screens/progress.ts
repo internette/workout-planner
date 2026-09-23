@@ -38,7 +38,7 @@ export function progressVals(ctx: Ctx) {
     weekAll,
     nextUp,
     todayDate,
-    seedAt,
+    entriesAt,
     isDoneEntry,
   } = ctx;
   return {
@@ -157,7 +157,8 @@ export function progressVals(ctx: Ctx) {
           (x.done
             ? 'background:var(--color-pink);color:var(--color-white)'
             : 'background:var(--color-white);color:var(--color-muted)'),
-        open: () => logic.nav({ screen: 'detail', creating: false, month: MONTHS[TODAY_M], day: x.d }),
+        open: () =>
+          logic.nav({ screen: 'detail', creating: false, month: MONTHS[TODAY_M], day: x.d, entryId: x.av.id }),
       })),
     chartCaption: (() => {
       const b = weekBuckets[barSel] || { planned: 0, done: 0 };
@@ -296,10 +297,11 @@ export function progressVals(ctx: Ctx) {
         d = 0;
       for (let i = 0; i < 7; i++) {
         const dt = new Date(Y, TODAY_M, TODAY_D - todayDate.getDay() + i);
-        const av = seedAt(dt.getMonth(), dt.getDate());
-        if (!av) continue;
+        // Counted by day, like the list of quests below it.
+        const list = entriesAt(dt.getMonth(), dt.getDate());
+        if (!list.length) continue;
         t++;
-        if (isDoneEntry(av)) d++;
+        if (list.every(isDoneEntry)) d++;
       }
       return d + ' of ' + t + ' cleared';
     })(),
@@ -308,9 +310,10 @@ export function progressVals(ctx: Ctx) {
       for (let i = 0; i < 7; i++) {
         const d = new Date(Y, TODAY_M, TODAY_D - todayDate.getDay() + i);
         const dm = d.getDate();
-        const av = seedAt(d.getMonth(), dm);
-        if (!av) continue;
-        const isDone = isDoneEntry(av);
+        // One quest per day: cleared once every workout that day is done.
+        const list = entriesAt(d.getMonth(), dm);
+        if (!list.length) continue;
+        const isDone = list.every(isDoneEntry);
         const q = questSeed(dm, d.getMonth());
         out.push({
           day: DOW3[d.getDay()].slice(0, 3),

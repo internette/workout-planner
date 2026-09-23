@@ -4,7 +4,7 @@ import { colors } from '@/components/ui/colors';
 
 // The selected workout: ride plan and actuals, exercise list, icons and completion state.
 export function workoutStage(ctx: Ctx): Ctx {
-  const { logic, Y, mi, dim, selDay, st, creating, seedAt, actFor, EX, EXV, TK, DIARY } = ctx;
+  const { logic, Y, mi, dim, selDay, st, creating, actFor, EX, EXV, TK, DIARY } = ctx;
   const pickLead = new Date(Y, mi, 1).getDay();
   const pickRows = Math.ceil((pickLead + dim) / 7);
   const pickerCells = [];
@@ -22,9 +22,10 @@ export function workoutStage(ctx: Ctx): Ctx {
         (pd === selDay ? 'var(--font-weight-bold);background:var(--color-pink);color:var(--color-white)' : 'var(--font-weight-medium);background:none;color:var(--color-ink)'),
     });
   }
+  // The session being edited, by id: its day may hold other workouts, and the date picker may be moving it.
   const editSrc =
-    st.screen === 'edit' && !creating && st.editKey
-      ? seedAt(Number(st.editKey.split('-')[0]), Number(st.editKey.split('-')[1]))
+    st.screen === 'edit' && !creating && st.editId
+      ? (logic.model.entries.find((x) => x.av.id === st.editId) || {}).av || null
       : null;
   // A workout being created starts blank; it must not inherit whatever is already on the selected day.
   const srcAct = creating ? null : editSrc || actFor(selDay);

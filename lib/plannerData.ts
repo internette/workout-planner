@@ -66,7 +66,7 @@ export interface WorkoutSummary {
 export interface Model {
   EX: Record<string, Exercise[]>; // saved workout name -> exercises
   EXV: Record<string, Exercise[]>; // exercises by version: a saved workout by name, an archived snapshot by name#id
-  SEED: Record<number, Record<number, Entry>>; // month -> day -> entry
+  SEED: Record<number, Record<number, Entry[]>>; // month -> day -> that day's entries, in a stable order
   entries: { m: number; d: number; iso: string; av: Entry }[]; // sorted by date
   DIARY: Record<string, DiaryEntry>; // plan entry id -> diary entry
   library: Exercise[]; // arsenal exercises not tied to a workout
@@ -156,7 +156,7 @@ export async function loadModel(today: Date): Promise<Model> {
   const [workouts, exercises, plan, diary, library, builtins] = await Promise.all([
     ok(supabase.from('workouts').select('*')),
     ok(supabase.from('workout_exercises').select('*').order('order_index')),
-    ok(supabase.from('plan_entries').select('*').order('scheduled_date')),
+    ok(supabase.from('plan_entries').select('*').order('scheduled_date').order('id')),
     ok(supabase.from('diary_entries').select('*')),
     ok(supabase.from('library_exercises').select('*').order('created_at')),
     ok(supabase.from('builtin_exercises').select('*').order('sort_order')),
@@ -191,7 +191,6 @@ export async function loadModel(today: Date): Promise<Model> {
     const [yy, mm, dd] = String(p.scheduled_date).split('-').map(Number);
     if (yy !== today.getFullYear()) return; // the calendar covers the current year
     const m = mm - 1;
-    if (SEED[m]?.[dd]) return; // the UI shows one workout per day
     const completed = p.status === 'completed';
     const isRide = w.kind === 'ride';
     const minutes = w.duration_minutes ?? (isRide ? 45 : 50);
@@ -228,7 +227,8 @@ export async function loadModel(today: Date): Promise<Model> {
           }
         : null,
     };
-    (SEED[m] = SEED[m] || {})[dd] = av;
+    const month = (SEED[m] = SEED[m] || {});
+    (month[dd] = month[dd] || []).push(av);
     entries.push({ m, d: dd, iso: p.scheduled_date, av });
     entryById[p.id] = av;
     if (isRide) rideDone[p.id] = completed;
@@ -406,13 +406,15 @@ export async function createWorkout(w: NewWorkout) {
   }
 
   // A workout saved on its own has no dates, and nothing to schedule.
-  if (w.dates.length) {
-    await ok(
-      supabase
-        .from('plan_entries')
-        .insert(w.dates.map((d) => ({ workout_id: workoutId, scheduled_date: d, status: 'planned' }))),
-    );
-  }
+  if (!w.dates.length) return { entryId: null };
+  const rows: { id: string; scheduled_date: string }[] = await ok(
+    supabase
+      .from('plan_entries')
+      .insert(w.dates.map((d) => ({ workout_id: workoutId, scheduled_date: d, status: 'planned' })))
+      .select('id, scheduled_date'),
+  );
+  // The session on the first date, so the screen can open on it even when that day has other workouts too.
+  return { entryId: rows.find((r) => r.scheduled_date === w.dates[0])?.id ?? null };
 }
 
 export interface WorkoutEdit {

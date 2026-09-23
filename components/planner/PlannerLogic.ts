@@ -22,7 +22,7 @@ export class PlannerLogic extends DCLogic {
   status: 'loading' | 'error' | 'ready' = 'loading';
   loadError = '';
   state: any = { screen:'day', day: new Date().getDate(), seg:'Day', monthOpen:false, month: MONTHS[new Date().getMonth()],
-    repeat:false, more:false, mood:'Happy', rpe:3, done: {}, rideDone: {} };
+    repeat:false, mood:'Happy', rpe:3, done: {}, rideDone: {} };
 
   // Fetches everything from Supabase and resets the ticks to what the database says.
   async load(patch: any = {}) {

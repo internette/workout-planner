@@ -77,6 +77,7 @@ export function entriesStage(ctx: Ctx): Ctx {
   }));
   return {
     isDoneEntry,
+    instList,
     nameOf,
     metaFor,
     ENTRIES,
