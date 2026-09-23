@@ -2883,12 +2883,12 @@ export function PlannerView({ v }: { v: any }) {
                       SAVED WORKOUT
                     </Text>
                     <Button
-                      type="primary"
+                      type="secondary"
                       size="sm"
                       onClick={v.template.edit}
                       style={{ marginLeft: 'auto' }}
                     >
-                      <Pencil color="var(--color-white)" size={16} />
+                      <Pencil color="var(--color-pink-deep)" size={16} />
                       Edit
                     </Button>
                   </div>
@@ -2919,6 +2919,53 @@ export function PlannerView({ v }: { v: any }) {
                       <Chip key={i}>{a}</Chip>
                     ))}
                   </div>
+                  <Button type="primary" size="lg" fullWidth onClick={v.template.schedule} style={{ marginTop: '18px' }}>
+                    <Calendar color="var(--color-white)" size={17} />
+                    Add to calendar
+                  </Button>
+                  {v.scheduleCalendar?.done ? (
+                    <Card pad="sm" style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }} role="status">
+                      <Check color="var(--color-pink-deep)" strokeWidth={2.6} size={16} />
+                      <Text variant="label" tone="ink" style={{ flex: '1 1 180px', minWidth: 0 }}>
+                        {v.scheduleCalendar.done}
+                      </Text>
+                      <Button type="neutral" ghost size="sm" onClick={v.scheduleCalendar.viewDay}>
+                        View day
+                      </Button>
+                    </Card>
+                  ) : null}
+                  <Dialog
+                    open={!!v.scheduleCalendar?.open}
+                    onClose={v.scheduleCalendar?.cancel}
+                    title={v.scheduleCalendar?.title ?? ''}
+                    actions={
+                      <>
+                        <Button type="neutral" ghost size="md" onClick={v.scheduleCalendar?.cancel}>
+                          Cancel
+                        </Button>
+                        <Button type="primary" size="md" onClick={v.scheduleCalendar?.add} disabled={!v.scheduleCalendar?.canAdd}>
+                          Add to calendar
+                        </Button>
+                      </>
+                    }
+                  >
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '16px' }}>
+                      <TextField
+                        label="Day"
+                        type="date"
+                        value={v.scheduleCalendar?.date ?? ''}
+                        min={v.scheduleCalendar?.min}
+                        max={v.scheduleCalendar?.max}
+                        onChange={v.scheduleCalendar?.setDate}
+                      />
+                      <Checkbox switch checked={!!v.scheduleCalendar?.repeat} onChange={v.scheduleCalendar?.setRepeat}>
+                        Repeat weekly
+                      </Checkbox>
+                      <Text variant="caption" tone="muted" as="p" style={{ margin: 0 }}>
+                        {v.scheduleCalendar?.note}
+                      </Text>
+                    </div>
+                  </Dialog>
                   {v.template.isRide ? (
                     <Card style={{ marginTop: '18px' }}>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '26px' }}>
