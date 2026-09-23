@@ -81,6 +81,14 @@ export default function Planner({ account = null }: { account?: Account | null }
   // Offers to install the app on a phone, once the plan has loaded.
   const installPrompt = useInstallPrompt(status === 'ready');
 
+  // A running workout stopwatch needs the screen to tick even though nothing else in state is changing.
+  const anyTimerRunning = Object.values(logic.state.workoutTimer || {}).some((t: any) => t && t.runningSince);
+  useEffect(() => {
+    if (!anyTimerRunning) return;
+    const id = setInterval(() => logic.forceUpdate(), 1000);
+    return () => clearInterval(id);
+  }, [anyTimerRunning, logic]);
+
   const retry = () => {
     logic.status = 'loading';
     setSlow(false);

@@ -1,5 +1,5 @@
 import { DOWFULL } from '../constants';
-import { idOf, questSeed, tokenFor } from '../helpers';
+import { formatElapsed, idOf, questSeed, tokenFor } from '../helpers';
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -27,12 +27,51 @@ export function workoutVals(ctx: Ctx) {
     selDate,
     doneSel,
     isCycleView,
+    timerKey,
+    timerState,
+    timerRunning,
+    timerElapsedSec,
   } = ctx;
   const goDetail = () => logic.nav({ screen: 'detail', creating: false });
   const goDiary = () => logic.nav({ screen: 'diary', diaryFrom: 'day', diaryEdit: false });
+  const setTimer = (patch) =>
+    logic.s({ workoutTimer: Object.assign({}, st.workoutTimer, { [timerKey]: patch }) });
+  const startTimer = () => setTimer({ elapsed: 0, runningSince: Date.now() });
+  const pauseTimer = () => setTimer({ elapsed: timerElapsedSec, runningSince: null });
+  const resumeTimer = () => setTimer({ elapsed: timerElapsedSec, runningSince: Date.now() });
+  // Leaving the detail screen while the clock is running asks first, so a stray tap on a nav item can't
+  // silently keep it running unattended (or lose track of it). Both the nav guard (chrome.ts) and this
+  // screen's own Back arrow route through the same prompt.
+  const askThenGo = (proceed) => {
+    if (st.screen === 'detail' && timerRunning) return logic.s({ pausePrompt: { proceed } });
+    proceed();
+  };
+  const restartWorkout = () => {
+    startTimer();
+    goDetail();
+  };
+  const continueWorkout = () => {
+    if (!timerRunning) resumeTimer();
+    goDetail();
+  };
   return {
-    backToDay: () => logic.back(),
+    backToDay: () => askThenGo(() => logic.back()),
     goDetail,
+    timerLabel: formatElapsed(timerElapsedSec),
+    timerButtonLabel: !timerState ? 'Start' : timerRunning ? 'Pause' : 'Resume',
+    timerButtonAction: !timerState ? startTimer : timerRunning ? pauseTimer : resumeTimer,
+    pausePromptOpen: !!st.pausePrompt,
+    keepGoing: () => logic.s({ pausePrompt: null }),
+    confirmPause: () => {
+      const pending = st.pausePrompt;
+      logic.s(
+        Object.assign(
+          { pausePrompt: null },
+          timerRunning ? { workoutTimer: Object.assign({}, st.workoutTimer, { [timerKey]: { elapsed: timerElapsedSec, runningSince: null } }) } : {},
+        ),
+      );
+      if (pending && pending.proceed) pending.proceed();
+    },
     goEdit: () =>
       logic.nav({ screen: 'edit', editing: !!actFor(selDay), creating: false, editKey: mi + '-' + selDay }),
     // From a day of the calendar the new workout goes on that day, and can be switched to saved-only.
@@ -129,8 +168,13 @@ export function workoutVals(ctx: Ctx) {
     ctaLabel: hasEntry ? 'View chronicle entry' : 'Finish workout & log it',
     // The day card's own CTA: nothing to log yet, so it starts the workout (its detail page) rather than
     // jumping straight to logging it — that stays the detail screen's own button, once there's something to log.
+    // Once the clock has been started at least once (running or paused), the single button splits into two:
+    // pick up where it left off, or throw away the progress and start over.
+    dayCtaTwoButtons: !hasEntry && !!timerState,
     dayCtaLabel: hasEntry ? 'View chronicle entry' : 'Start workout',
-    dayCta: hasEntry ? goDiary : goDetail,
+    dayCta: hasEntry ? goDiary : restartWorkout,
+    restartWorkout,
+    continueWorkout,
     longDate: DOWFULL[selDate.getDay()] + ', ' + st.month + ' ' + selDay,
     badgeStyle:
       'margin-left:auto;padding:7px 13px;border-radius:999px;font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);' +

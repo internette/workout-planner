@@ -705,15 +705,40 @@ export function PlannerView({ v }: { v: any }) {
                               </button>
                             </>
                           ) : null}
-                          <Button
-                            type="primary"
-                            size="lg"
-                            fullWidth
-                            onClick={v.dayCta}
-                            style={{ marginTop: '20px' }}
-                          >
-                            {v.dayCtaLabel}
-                          </Button>
+                          {v.dayCtaTwoButtons ? (
+                            <>
+                              <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                                <Button
+                                  type="secondary"
+                                  size="lg"
+                                  style={{ flex: '1' }}
+                                  onClick={v.restartWorkout}
+                                >
+                                  Restart workout
+                                </Button>
+                                <Button
+                                  type="primary"
+                                  size="lg"
+                                  style={{ flex: '1' }}
+                                  onClick={v.continueWorkout}
+                                >
+                                  Continue workout
+                                </Button>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <Button
+                                type="primary"
+                                size="lg"
+                                fullWidth
+                                onClick={v.dayCta}
+                                style={{ marginTop: '20px' }}
+                              >
+                                {v.dayCtaLabel}
+                              </Button>
+                            </>
+                          )}
                         </Card>
                         <aside style={{ display: 'flex', marginTop: '14px' }}>
                           <Button type="dashed" size="md" onClick={v.goNewWorkout} style={{ flex: '1' }}>
@@ -3229,6 +3254,22 @@ export function PlannerView({ v }: { v: any }) {
             {v.isDetail ? (
               <>
                 <div>
+                  <Dialog
+                    open={!!v.pausePromptOpen}
+                    onClose={v.keepGoing}
+                    title="Pause your workout?"
+                    description="You can pick up right where you left off."
+                    actions={
+                      <>
+                        <Button type="neutral" ghost size="md" onClick={v.keepGoing}>
+                          Keep going
+                        </Button>
+                        <Button type="primary" size="md" onClick={v.confirmPause}>
+                          Pause workout
+                        </Button>
+                      </>
+                    }
+                  />
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }}>
                     <IconButton label="Back" size="md" onClick={v.backToDay} style={{ marginLeft: '-8px' }}>
                       <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
@@ -3298,6 +3339,37 @@ export function PlannerView({ v }: { v: any }) {
                       </Fragment>
                     ))}
                   </div>
+                  <Card style={{ marginTop: '16px' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '12px',
+                      }}
+                    >
+                      <div>
+                        <Text variant="eyebrow" tone="slate">
+                          WORKOUT TIMER
+                        </Text>
+                        <Text
+                          variant="title"
+                          as="div"
+                          style={{ margin: '4px 0 0', fontVariantNumeric: 'tabular-nums' }}
+                        >
+                          {v.timerLabel}
+                        </Text>
+                      </div>
+                      <Button
+                        type={v.timerButtonLabel === 'Pause' ? 'neutral' : 'primary'}
+                        size="md"
+                        onClick={v.timerButtonAction}
+                      >
+                        {v.timerButtonLabel}
+                      </Button>
+                    </div>
+                  </Card>
                   {v.dayIsRide ? (
                     <>
                       <Card style={{ marginTop: '18px' }}>
