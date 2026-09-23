@@ -771,6 +771,51 @@ export function PlannerView({ v }: { v: any }) {
                       </div>
                     </>
                   ) : null}
+                  {v.firstRun ? (
+                    <div style={{ position: 'relative', marginTop: '48px', padding: '0 20px 80px', textAlign: 'center' }}>
+                      <div
+                        style={{
+                          width: '78px',
+                          height: '78px',
+                          margin: '0 auto',
+                          borderRadius: '50%',
+                          background: 'var(--gradient-gem-tint)',
+                          boxShadow: '0 4px 14px rgba(35,42,69,.07)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <Gem size={40} />
+                      </div>
+                      <Text variant="title" as="h2" style={{ margin: '22px 0 0' }}>
+                        The call is coming
+                      </Text>
+                      <p
+                        style={{
+                          margin: '10px auto 0',
+                          maxWidth: '340px',
+                          fontSize: 'var(--text-lg)',
+                          fontWeight: 'var(--font-weight-medium)',
+                          lineHeight: 'var(--leading-relaxed)',
+                          color: 'var(--color-muted)',
+                          textWrap: 'pretty',
+                        }}
+                      >
+                        Put your first lift or ride on the calendar. That day gets a quest, and every exercise you
+                        clear starts your climb from First spark.
+                      </p>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', marginTop: '24px' }}>
+                        <Button type="primary" size="lg" glow onClick={v.goNewWorkout}>
+                          <Plus color="var(--color-white)" size={16} />
+                          Plan your first workout
+                        </Button>
+                        <Button type="neutral" ghost size="md" onClick={v.goArsenal}>
+                          Browse the Spellbook
+                        </Button>
+                      </div>
+                    </div>
+                  ) : null}
                   {v.isRest ? (
                     <>
                       <div
@@ -1819,21 +1864,30 @@ export function PlannerView({ v }: { v: any }) {
                       <Text variant="eyebrow" tone="slate">
                         QUESTS CLEARED
                       </Text>
-                      <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
-                        {v.questsClearedLabel}
+                      {v.questsHas ? (
+                        <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
+                          {v.questsClearedLabel}
+                        </Text>
+                      ) : null}
+                    </div>
+                    {v.questsNone ? (
+                      <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
+                        Every day with a session gets a quest. The ones you clear gather here.
                       </Text>
-                    </div>
-                    <div
-                      style={{
-                        height: '8px',
-                        borderRadius: '5px',
-                        background: 'var(--color-mist)',
-                        marginTop: '12px',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      <div style={css(v.questsClearedBar)}></div>
-                    </div>
+                    ) : null}
+                    {v.questsHas ? (
+                      <div
+                        style={{
+                          height: '8px',
+                          borderRadius: '5px',
+                          background: 'var(--color-mist)',
+                          marginTop: '12px',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <div style={css(v.questsClearedBar)}></div>
+                      </div>
+                    ) : null}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '16px' }}>
                       {(v.questStats ?? []).map((q, i) => (
                         <Fragment key={i}>
@@ -1870,6 +1924,11 @@ export function PlannerView({ v }: { v: any }) {
                       <Text variant="eyebrow" as="div" tone="slate">
                         HOW IT FEELS
                       </Text>
+                      {v.moodEmpty ? (
+                        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
+                          Write about a session in the Chronicle and your moods gather here.
+                        </Text>
+                      ) : null}
                       <div
                         style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '18px' }}
                       >
@@ -1913,6 +1972,11 @@ export function PlannerView({ v }: { v: any }) {
                       <Text variant="eyebrow" as="div" tone="slate">
                         PERSONAL BESTS
                       </Text>
+                      {v.recordsEmpty ? (
+                        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
+                          Give your exercises a weight, or finish a ride, and your bests show up here.
+                        </Text>
+                      ) : null}
                       <div
                         style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '12px' }}
                       >
@@ -2038,6 +2102,11 @@ export function PlannerView({ v }: { v: any }) {
                       <Text variant="micro" as="div" tone="slate">
                         LAST SEVEN SESSIONS
                       </Text>
+                      {v.ticksEmpty ? (
+                        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '9px 0 0' }}>
+                          Finished sessions line up here.
+                        </Text>
+                      ) : null}
                       <div style={{ display: 'flex', gap: '6px', marginTop: '9px' }}>
                         {(v.streakTicks ?? []).map((t, i) => (
                           <Fragment key={i}>
@@ -2055,25 +2124,34 @@ export function PlannerView({ v }: { v: any }) {
                       <Text variant="eyebrow" as="div" tone="muted">
                         THIS WEEK
                       </Text>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
-                        <Text variant="subheading">{v.wkDone}</Text>
-                        <Text variant="caption" tone="muted" weight="medium">
-                          {'of '}
-                          {t(v.wkTotal)}
-                          {' ' + v.wkTotalUnit}
+                      {v.wkEmpty ? (
+                        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '6px 0 0' }}>
+                          Nothing planned this week yet.
                         </Text>
-                      </div>
-                      <div
-                        style={{
-                          height: '7px',
-                          borderRadius: '4px',
-                          background: 'var(--color-pink-tint)',
-                          marginTop: '14px',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <div style={css(v.wkBar)}></div>
-                      </div>
+                      ) : null}
+                      {v.wkHas ? (
+                        <>
+                          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
+                            <Text variant="subheading">{v.wkDone}</Text>
+                            <Text variant="caption" tone="muted" weight="medium">
+                              {'of '}
+                              {t(v.wkTotal)}
+                              {' ' + v.wkTotalUnit}
+                            </Text>
+                          </div>
+                          <div
+                            style={{
+                              height: '7px',
+                              borderRadius: '4px',
+                              background: 'var(--color-pink-tint)',
+                              marginTop: '14px',
+                              overflow: 'hidden',
+                            }}
+                          >
+                            <div style={css(v.wkBar)}></div>
+                          </div>
+                        </>
+                      ) : null}
                     </Card>
                     <Card pad="sm" style={{ flex: '1 1 260px' }}>
                       <Text variant="eyebrow" as="div" tone="muted">
@@ -2122,10 +2200,17 @@ export function PlannerView({ v }: { v: any }) {
                       <Text variant="eyebrow" tone="slate">
                         THIS WEEK&apos;S QUESTS
                       </Text>
-                      <Text variant="small" tone="muted" weight="medium" style={{ marginLeft: 'auto' }}>
-                        {v.questsDoneLabel}
-                      </Text>
+                      {v.wkHas ? (
+                        <Text variant="small" tone="muted" weight="medium" style={{ marginLeft: 'auto' }}>
+                          {v.questsDoneLabel}
+                        </Text>
+                      ) : null}
                     </div>
+                    {v.wkEmpty ? (
+                      <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
+                        No quests this week yet. Plan a session and its day gets one.
+                      </Text>
+                    ) : null}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '14px' }}>
                       {(v.weekQuests ?? []).map((q, i) => (
                         <Fragment key={i}>
@@ -3288,7 +3373,7 @@ export function PlannerView({ v }: { v: any }) {
                     {v.noUnlogged ? (
                       <>
                         <Text variant="body" as="p" tone="muted" style={{ margin: '16px 0 0' }}>
-                          Every workout on your plan already has an entry.
+                          {v.noUnloggedNote}
                         </Text>
                       </>
                     ) : null}

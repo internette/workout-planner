@@ -27,6 +27,7 @@ export function calendarVals(ctx: Ctx) {
     TODAY_M,
     metaFor,
   } = ctx;
+  const firstRun = logic.model.workouts.length === 0 && logic.model.entries.length === 0;
   return {
     weekRows,
     monthCells,
@@ -39,13 +40,16 @@ export function calendarVals(ctx: Ctx) {
       'display:inline-flex;align-items:center;gap:7px;margin-left:-10px;padding:8px 10px;border:none;border-radius:14px;background:' +
       (st.monthOpen ? 'rgba(35,42,69,.05)' : 'none') +
       ';cursor:pointer',
-    monthDone: monthDays.filter((x) => x.done).length,
-    monthDoneUnit: 'of ' + monthDays.length + ' done',
+    // Nothing planned this month: "— nothing planned yet", like Profile's weekly average, not "0 of 0 done".
+    monthDone: monthDays.length ? String(monthDays.filter((x) => x.done).length) : '—',
+    monthDoneUnit: monthDays.length ? 'of ' + monthDays.length + ' done' : 'nothing planned yet',
     dowLabels: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
     showDay: st.seg === 'Day',
     showWeek: st.seg === 'Week',
     showMonth: st.seg === 'Month',
-    isRest: st.seg === 'Day' && !actFor(selDay),
+    isRest: st.seg === 'Day' && !actFor(selDay) && !firstRun,
+    // A brand-new account (no saved workouts, nothing planned) gets a welcome on the Day view, not a rest day.
+    firstRun: st.seg === 'Day' && firstRun,
     hasWorkout: st.seg === 'Day' && !!actFor(selDay),
     // "No quest today" is only true when today is actually the day on screen — otherwise it needs to say which day.
     restDayPhrase:

@@ -115,6 +115,10 @@ export function diaryVals(ctx: Ctx) {
     openNewEntry: () => logic.nav({ screen: 'newEntry' }),
     closeNewEntry: () => logic.back(),
     noUnlogged: unloggedDays.length === 0,
+    // Nothing to list: either nothing was planned this month so far, or everything planned already has an entry.
+    noUnloggedNote: ctx.monthDays.some((x) => x.d <= ctx.TODAY_D)
+      ? 'Every session this month so far already has an entry.'
+      : 'No sessions this month to write about yet. Plan one, and once its day comes it shows up here.',
     unlogged: unloggedDays.map((x) => ({
       rowStyle:
         'display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px 22px;border:none;border-radius:999px;text-align:left;width:100%;background:var(--color-white);box-shadow:0 4px 14px rgba(35,42,69,.07);cursor:pointer',
