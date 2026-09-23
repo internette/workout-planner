@@ -31,8 +31,12 @@ export function workoutVals(ctx: Ctx) {
     timerState,
     timerRunning,
     timerElapsedSec,
+    dayEntries,
+    isDoneEntry,
   } = ctx;
   const goDetail = () => logic.nav({ screen: 'detail', creating: false });
+  // The quest belongs to the day, so on a day with several workouts it is cleared once all of them are.
+  const dayCleared = dayEntries.length > 1 ? dayEntries.every(isDoneEntry) : questCleared;
   const setTimer = (patch) =>
     logic.s({ workoutTimer: Object.assign({}, st.workoutTimer, { [timerKey]: patch }) });
   const startTimer = () => setTimer({ elapsed: 0, runningSince: Date.now() });
@@ -92,7 +96,13 @@ export function workoutVals(ctx: Ctx) {
       if (pending && pending.proceed) pending.proceed();
     },
     goEdit: () =>
-      logic.nav({ screen: 'edit', editing: !!actFor(selDay), creating: false, editKey: mi + '-' + selDay }),
+      logic.nav({
+        screen: 'edit',
+        editing: !!selAct,
+        creating: false,
+        editKey: mi + '-' + selDay,
+        editId: selAct ? selAct.id : null,
+      }),
     // A new workout always starts blank: nothing carried over from a draft that was left behind elsewhere.
     // From a day of the calendar the new workout goes on that day, and can be switched to saved-only.
     goNewWorkout: () =>
@@ -142,18 +152,18 @@ export function workoutVals(ctx: Ctx) {
             : plural(selList.length, 'exercise') + ' · ' + selAct.time,
     showQuest: st.seg === 'Day' && !!actFor(selDay),
     questTitle: questSeed(selDay, mi).title,
-    questNote: questCleared ? questSeed(selDay, mi).done : questSeed(selDay, mi).note,
-    questDone: questCleared,
-    questOpen: !questCleared,
-    questEyebrow: questCleared ? 'QUEST CLEARED' : "TODAY'S QUEST",
+    questNote: dayCleared ? questSeed(selDay, mi).done : questSeed(selDay, mi).note,
+    questDone: dayCleared,
+    questOpen: !dayCleared,
+    questEyebrow: dayCleared ? 'QUEST CLEARED' : "TODAY'S QUEST",
     questIconWrap:
       'width:40px;height:40px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;' +
-      (questCleared
+      (dayCleared
         ? 'background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)'
         : 'background:var(--color-white);box-shadow:0 1px 3px rgba(35,42,69,.06)'),
     questTitleStyle:
       'font-family:var(--font-heading);font-size:var(--text-lg);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-snug);margin-top:4px;' +
-      (questCleared ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
+      (dayCleared ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
     isDone:
       (actFor(selDay) || {}).s === 'c' || rideDone || (selList.length > 0 && doneCount === selList.length),
     dayIsRide: !!selRide,

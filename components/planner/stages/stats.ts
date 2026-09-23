@@ -4,13 +4,13 @@ import type { Ctx } from '../types';
 
 // Streaks, weekly buckets, XP and rank, records and quest counts, derived from every entry.
 export function statsStage(ctx: Ctx): Ctx {
-  const { logic, Y, TODAY_M, TODAY_D, actForDate, TK, seedAt, isDoneEntry, ENTRIES, st, EX, doneCountAt } = ctx;
+  const { logic, Y, TODAY_M, TODAY_D, listForDate, TK, entriesAt, isDoneEntry, ENTRIES, st, EX, doneCountAt } = ctx;
   const todayDate = new Date(Y, TODAY_M, TODAY_D);
   const todayWkStart = new Date(Y, TODAY_M, TODAY_D - todayDate.getDay());
   const weekAll = [];
   for (let i = 0; i < 7; i++) {
     const d = new Date(todayWkStart.getFullYear(), todayWkStart.getMonth(), todayWkStart.getDate() + i);
-    if (actForDate(d)) weekAll.push(actForDate(d));
+    weekAll.push(...listForDate(d));
   }
   let nextUp = null;
   const upcoming = logic.model.entries.find((x) => x.m * 100 + x.d > TK && x.av.s !== 'c');
@@ -33,8 +33,7 @@ export function statsStage(ctx: Ctx): Ctx {
   (TODAY_M > 0 ? [TODAY_M - 1, TODAY_M] : [TODAY_M]).forEach((m) => {
     const last = new Date(Y, m + 1, 0).getDate();
     for (let d = 1; d <= last; d++) {
-      const av = seedAt(m, d);
-      if (av) spanDays.push({ m, d, av, done: isDoneEntry(av) });
+      entriesAt(m, d).forEach((av) => spanDays.push({ m, d, av, done: isDoneEntry(av) }));
     }
   });
   const monthDays = spanDays.filter((x) => x.m === TODAY_M);
@@ -125,12 +124,12 @@ export function statsStage(ctx: Ctx): Ctx {
   while (derivedRank < XP_STEPS.length - 1 && xpTotal >= XP_STEPS[derivedRank]) derivedRank++;
   const rankFloor = derivedRank === 0 ? 0 : XP_STEPS[derivedRank - 1];
   const rankCeil = XP_STEPS[derivedRank];
-  const todayAct = seedAt(TODAY_M, TODAY_D);
+  const todayActs = entriesAt(TODAY_M, TODAY_D);
   const rankPct = Math.min(100, Math.round(((xpTotal - rankFloor) / Math.max(1, rankCeil - rankFloor)) * 100));
   return {
     monthDays,
     todayDate,
-    todayAct,
+    todayActs,
     nextUp,
     unloggedDays,
     todayWkStart,

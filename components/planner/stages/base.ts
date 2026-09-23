@@ -11,7 +11,13 @@ export function baseStage(ctx: Ctx): Ctx {
   const TODAY_M = nowDate.getMonth();
   const TODAY_D = nowDate.getDate();
   const TK = TODAY_M * 100 + TODAY_D;
-  const seedAt = (m, d) => (SEED[m] || {})[d] || null;
+  // A day can hold several workouts. entriesAt lists them all; seedAt is the one on screen for that day: the
+  // selected session (st.entryId) when it is on that day, otherwise the day's first.
+  const entriesAt = (m, d) => (SEED[m] || {})[d] || [];
+  const seedAt = (m, d) => {
+    const list = entriesAt(m, d);
+    return list.find((e) => e.id === st.entryId) || list[0] || null;
+  };
   const ACT = SEED[TODAY_M] || {};
   const narrow = logic.viewport === 'narrow';
   const tablet = logic.viewport === 'tablet';
@@ -32,6 +38,7 @@ export function baseStage(ctx: Ctx): Ctx {
     TODAY_M,
     TODAY_D,
     seedAt,
+    entriesAt,
     TK,
     ACT,
     creating,

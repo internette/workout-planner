@@ -449,6 +449,18 @@ export function PlannerView({ v }: { v: any }) {
                       </div>
                     </>
                   ) : null}
+                  {v.dayHasMany ? (
+                    <SegmentedControl
+                      label={v.dayWorkoutLabel}
+                      semantics="tabs"
+                      wrap
+                      fullWidth
+                      options={v.dayWorkoutOptions ?? []}
+                      value={v.dayWorkoutValue}
+                      onChange={v.setDayWorkout}
+                      style={{ marginTop: '22px' }}
+                    />
+                  ) : null}
                   {v.showQuest ? (
                     <>
                       <div
@@ -1290,35 +1302,39 @@ export function PlannerView({ v }: { v: any }) {
                               <Text variant="eyebrow" as="div" tone="muted">
                                 {v.todayLabel}
                               </Text>
-                              <Card
-                                as="button"
-                                interactive
-                                onClick={v.openToday}
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '14px',
-                                  width: '100%',
-                                  marginTop: '12px',
-                                }}
-                              >
-                                <span style={{ minWidth: '0' }}>
-                                  <Text variant="itemTitle" as="span" style={{ display: 'block' }}>
-                                    {v.todayName}
-                                  </Text>
-                                  <Text
-                                    variant="caption"
-                                    as="span"
-                                    tone="muted"
-                                    style={{ display: 'block', marginTop: '3px' }}
+                              {(v.todayCards ?? []).map((c, i) => (
+                                <Fragment key={i}>
+                                  <Card
+                                    as="button"
+                                    interactive
+                                    onClick={c?.open}
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '14px',
+                                      width: '100%',
+                                      marginTop: i ? '8px' : '12px',
+                                    }}
                                   >
-                                    {v.todayMeta}
-                                  </Text>
-                                </span>
-                                <span style={{ marginLeft: 'auto', display: 'flex' }}>
-                                  <ChevronRight color="var(--color-muted)" size={20} />
-                                </span>
-                              </Card>
+                                    <span style={{ minWidth: '0' }}>
+                                      <Text variant="itemTitle" as="span" style={{ display: 'block' }}>
+                                        {c?.name}
+                                      </Text>
+                                      <Text
+                                        variant="caption"
+                                        as="span"
+                                        tone="muted"
+                                        style={{ display: 'block', marginTop: '3px' }}
+                                      >
+                                        {c?.meta}
+                                      </Text>
+                                    </span>
+                                    <span style={{ marginLeft: 'auto', display: 'flex' }}>
+                                      <ChevronRight color="var(--color-muted)" size={20} />
+                                    </span>
+                                  </Card>
+                                </Fragment>
+                              ))}
                             </div>
                           </>
                         ) : null}

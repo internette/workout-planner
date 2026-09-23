@@ -397,7 +397,10 @@ export function editVals(ctx: Ctx) {
               repeatDates: st.repeat && !selAct.series ? weekly() : [],
             }),
           // Normally back to the workout's own detail screen; if a nav click was waiting on this save, go there instead.
-          Object.assign(st.pendingNav ? NAV_DESTINATIONS[st.pendingNav] : { screen: 'detail' }, cleared),
+          // Either way this session stays the selected one, even if it moved to a day that already had a workout.
+          Object.assign(st.pendingNav ? NAV_DESTINATIONS[st.pendingNav] : { screen: 'detail' }, cleared, {
+            entryId: selAct.id,
+          }),
         );
       }
       const nm = (st.newName || '').trim() || 'Untitled workout';
@@ -423,15 +426,18 @@ export function editVals(ctx: Ctx) {
         // Normally: saved only goes back to the Arsenal's workouts, where it now is; scheduled goes to the day it
         // was put on. If a nav click was waiting on this save, go there instead — that's what was actually asked
         // for. Either way this is leaving "creating" behind, so those fields always get reset, not just by default.
-        Object.assign(
-          st.pendingNav
-            ? NAV_DESTINATIONS[st.pendingNav]
-            : scheduled
-              ? { screen: 'day' }
-              : { screen: 'arsenal', arsenalView: 'workouts' },
-          { creating: false, newType: null, newName: '', newFrom: null, schedule: null },
-          cleared,
-        ),
+        // A scheduled workout opens on its new session, which matters when that day already had a workout.
+        (r) =>
+          Object.assign(
+            st.pendingNav
+              ? NAV_DESTINATIONS[st.pendingNav]
+              : scheduled
+                ? { screen: 'day' }
+                : { screen: 'arsenal', arsenalView: 'workouts' },
+            { creating: false, newType: null, newName: '', newFrom: null, schedule: null },
+            cleared,
+            r && r.entryId ? { entryId: r.entryId } : {},
+          ),
       );
     },
     discardLeave: () => {

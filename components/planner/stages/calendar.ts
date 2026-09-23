@@ -5,13 +5,17 @@ import type { Ctx } from '../types';
 
 // The selected month, week and day, plus the week list, month grid and its constellation.
 export function calendarStage(ctx: Ctx): Ctx {
-  const { logic, st, Y, TODAY_M, seedAt, TK, isDoneEntry, TODAY_D, nameOf, metaFor, ACT } = ctx;
+  const { logic, st, Y, TODAY_M, seedAt, entriesAt, TK, isDoneEntry, TODAY_D, nameOf, metaFor, ACT } = ctx;
   const mi = MONTHS.indexOf(st.month);
   const dim = new Date(Y, mi + 1, 0).getDate();
   const selDay = Math.min(st.day, dim);
   const isCurMonth = mi === TODAY_M;
   const actFor = (d) => seedAt(mi, d);
   const actForDate = (d) => seedAt(d.getMonth(), d.getDate());
+  const listForDate = (d) => entriesAt(d.getMonth(), d.getDate());
+  // A day's marker sums up all of its workouts: done once every one is, missed once it is past and any one isn't.
+  const allDone = (list) => list.length > 0 && list.every(isDoneEntry);
+  const workoutsWord = (list) => (list.length > 1 ? list.length + ' workouts, ' : '');
   const selDate = new Date(Y, mi, selDay);
   const wkStart = new Date(Y, mi, selDay - selDate.getDay());
   const cells = [];
@@ -24,17 +28,17 @@ export function calendarStage(ctx: Ctx): Ctx {
       : stamp(wkStart) + ' – ' + stamp(wkEnd);
   const spansMonths = cells[0].getMonth() !== cells[6].getMonth();
   const dayDefs = cells.map((d) => {
-    const av = actForDate(d);
+    const list = listForDate(d);
     const past = d.getMonth() * 100 + d.getDate() < TK;
-    const done = !!av && isDoneEntry(av);
-    return [DOW1[d.getDay()], d.getDate(), !!av, d.getMonth() === mi, d.getMonth(), done, !!av && !done && past];
+    const done = allDone(list);
+    return [DOW1[d.getDay()], d.getDate(), list.length > 0, d.getMonth() === mi, d.getMonth(), done, list.length > 0 && !done && past, list];
   });
-  const days = dayDefs.map(([letter, num, dot, same, cellMonth, done, miss]) => {
+  const days = dayDefs.map(([letter, num, dot, same, cellMonth, done, miss, list]) => {
     const on = selDay === num && same;
     return {
       letter,
       num,
-      pick: () => logic.s({ month: MONTHS[cellMonth], day: num, monthOpen: false }),
+      pick: () => logic.s({ month: MONTHS[cellMonth], day: num, monthOpen: false, entryId: null }),
       mon: spansMonths ? MON3[cellMonth].toUpperCase() : '',
       monStyle: spansMonths
         ? 'font-size:var(--text-2xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);color:' + (on ? 'rgba(255,255,255,.8)' : 'var(--color-subtle)')
@@ -46,7 +50,7 @@ export function calendarStage(ctx: Ctx): Ctx {
         ' ' +
         num +
         ' — ' +
-        (!dot ? 'rest day' : done ? 'completed' : miss ? 'missed' : 'planned'),
+        (!dot ? 'rest day' : workoutsWord(list) + (done ? 'completed' : miss ? 'missed' : 'planned')),
       isToday: cellMonth === TODAY_M && num === TODAY_D ? 'date' : false,
       wrapStyle:
         'flex:1;min-width:0;padding:8px 2px 10px;border:none;border-radius:16px;background:' +
@@ -82,9 +86,10 @@ export function calendarStage(ctx: Ctx): Ctx {
       'padding:11px 6px;border-radius:12px;font-size:var(--text-base);border:none;cursor:pointer;' +
       (st.month === name ? 'background:' + PINK + ';color:var(--color-white);font-weight:var(--font-weight-bold)' : 'color:var(--color-ink);font-weight:var(--font-weight-medium)'),
   }));
-  const weekRows = cells.map((d) => {
-    const a = actForDate(d);
-    if (!a) {
+  // One row per workout. A day with several shows its date once, above the first.
+  const weekRows = cells.flatMap((d) => {
+    const list = listForDate(d);
+    if (!list.length) {
       const today0 = d.getMonth() === TODAY_M && d.getDate() === TODAY_D;
       const lab =
         DOW3[d.getDay()] +
@@ -92,7 +97,7 @@ export function calendarStage(ctx: Ctx): Ctx {
         (d.getMonth() === mi ? '' : MON3[d.getMonth()].toUpperCase() + ' ') +
         d.getDate() +
         (today0 ? ' · TODAY' : '');
-      return {
+      return [{
         label: lab,
         isRest: true,
         hasRow: false,
@@ -100,8 +105,11 @@ export function calendarStage(ctx: Ctx): Ctx {
         eyebrow:
           'font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);margin:14px 0 9px;color:' +
           (today0 ? 'var(--color-pink-deep)' : 'var(--color-muted)'),
-      };
+      }];
     }
+    return list.map((a, ix) => weekRow(d, a, ix));
+  });
+  function weekRow(d, a, ix) {
     const today = a.s === 't';
     const label =
       DOW3[d.getDay()] +
@@ -116,12 +124,13 @@ export function calendarStage(ctx: Ctx): Ctx {
       name: nameOf(a.name),
       done: isDoneEntry(a),
       meta: metaFor(a),
-      isPush: CAT(a.name) === 'Push',
-      isPull: CAT(a.name) === 'Pull',
-      isLegs: CAT(a.name) === 'Legs',
-      isCore: CAT(a.name) === 'Core',
+      isPush: !a.ride && CAT(a.name) === 'Push',
+      isPull: !a.ride && CAT(a.name) === 'Pull',
+      isLegs: !a.ride && CAT(a.name) === 'Legs',
+      isCore: !a.ride && CAT(a.name) === 'Core',
       isRideRow: !!a.ride,
-      open: () => logic.nav({ screen: 'detail', creating: false, month: MONTHS[d.getMonth()], day: d.getDate() }),
+      open: () =>
+        logic.nav({ screen: 'detail', creating: false, month: MONTHS[d.getMonth()], day: d.getDate(), entryId: a.id }),
       aria:
         label.replace(' · ', ', ') +
         ': ' +
@@ -138,10 +147,12 @@ export function calendarStage(ctx: Ctx): Ctx {
             ? 'width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--color-muted)'
             : 'width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--color-teal)'),
       eyebrow:
-        'font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);margin:14px 0 9px;color:' +
-        (label.indexOf('TODAY') > -1 ? 'var(--color-pink-deep)' : 'var(--color-muted)'),
+        ix > 0
+          ? 'display:none'
+          : 'font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);margin:14px 0 9px;color:' +
+            (label.indexOf('TODAY') > -1 ? 'var(--color-pink-deep)' : 'var(--color-muted)'),
     };
-  });
+  }
   const lead = new Date(Y, mi, 1).getDay();
   const rows = Math.ceil((lead + dim) / 7);
   const monthCells = [];
@@ -152,9 +163,9 @@ export function calendarStage(ctx: Ctx): Ctx {
       monthCells.push({ blank: true, label: '', wrap: 'height:50px', num: 'display:none', dot: 'display:none' });
       continue;
     }
-    const av = actFor(d);
-    let a = av && av.s;
-    if (av && a !== 't' && isDoneEntry(av)) a = 'c';
+    const list = entriesAt(mi, d);
+    let a = list.length ? list[0].s : null;
+    if (list.length && a !== 't' && allDone(list)) a = 'c';
     const today = a === 't';
     const sel = d === selDay;
     const missed = !!a && a !== 'c' && a !== 't' && isCurMonth && d < TODAY_D;
@@ -166,7 +177,7 @@ export function calendarStage(ctx: Ctx): Ctx {
       selected: sel,
       // A click means "go look at that day" — unlike arrow-key browsing of the grid, which only moves
       // the selection so exploring the month doesn't keep bouncing you over to Day view.
-      pick: () => logic.s({ day: d, seg: 'Day' }),
+      pick: () => logic.s({ day: d, seg: 'Day', entryId: null }),
       wrap:
         'height:50px;border:none;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;' +
         (sel
@@ -184,6 +195,7 @@ export function calendarStage(ctx: Ctx): Ctx {
           ' ' +
           d +
           ' — ' +
+          (a ? workoutsWord(list) : '') +
           (a === 'c' ? 'completed' : missed ? 'missed' : a ? 'planned' : 'rest day') +
           (today ? ', today' : '')
         : '',
@@ -235,6 +247,8 @@ export function calendarStage(ctx: Ctx): Ctx {
   );
   return {
     actForDate,
+    listForDate,
+    dayEntries: entriesAt(mi, selDay),
     mi,
     dim,
     selDay,
