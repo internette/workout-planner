@@ -1,13 +1,14 @@
 import type { ReactNode } from 'react';
 import { Svg, type IconProps } from './Svg';
 
-// Line icon: round-capped strokes drawn in `color`.
+// Line icon: round-capped strokes drawn in `color`. `color` is also the CSS colour, so solid parts can use currentColor.
 export function strokeIcon(name: string, glyph: ReactNode) {
   const Icon = ({ size, color = 'currentColor', strokeWidth = 2, style, className }: IconProps) => (
     <Svg
       size={size}
       style={style}
       className={className}
+      color={color}
       fill="none"
       stroke={color}
       strokeWidth={strokeWidth}

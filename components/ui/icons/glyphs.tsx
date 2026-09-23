@@ -95,6 +95,32 @@ export const Quill = strokeIcon(
     <path d="M11 20h8" />
   </>,
 );
+// The Spellbook: a workout card with a spell card fanned out behind it, its star tucked under the front card.
+// Weights vary by part: the dumbbell is boldest, the card behind lightest. Solid parts fill with the icon colour.
+export const SpellCards = strokeIcon(
+  'SpellCards',
+  <>
+    <path
+      d="M9.79 5.59A2 2 0 0 1 10.93 4.81L17.24 3.24A2 2 0 0 1 19.66 4.69L22.32 15.37A2 2 0 0 1 20.87 17.79L14.56 19.36A2 2 0 0 1 13.91 19.41"
+      strokeWidth={1.25}
+    />
+    <path
+      d="M13.9 11.24C14.8 10.43 15.11 9.4 15.03 7.81C15.99 9.87 17.12 10.55 19.39 10.43C17.33 11.39 16.65 12.52 16.77 14.79C16.05 13.24 15.23 12.47 13.9 12.24Z"
+      fill="currentColor"
+      stroke="none"
+    />
+    <rect x="2.5" y="6.5" width="10.5" height="15" rx="2" strokeWidth={1.75} />
+    <g transform="translate(7.75 14) rotate(-40)">
+      <path d="M-1.79 0h3.58" strokeWidth={2.13} />
+      <g fill="currentColor" stroke="none">
+        <rect x="1.68" y="-2.74" width="1.68" height="5.49" rx=".62" />
+        <rect x="3.08" y="-1.74" width="1.4" height="3.47" rx=".5" />
+        <rect x="-3.36" y="-2.74" width="1.68" height="5.49" rx=".62" />
+        <rect x="-4.48" y="-1.74" width="1.4" height="3.47" rx=".5" />
+      </g>
+    </g>
+  </>,
+);
 export const BarChart = strokeIcon(
   'BarChart',
   <>
