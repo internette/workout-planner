@@ -53,6 +53,16 @@ export function workoutVals(ctx: Ctx) {
   };
   const restartWorkout = () => {
     startTimer();
+    // A fresh clock on a workout that still shows the last attempt's checkmarks isn't a restart — clear them too.
+    if (selAct) {
+      if (selRide) {
+        logic.s({ rideDone: Object.assign({}, st.rideDone, { [idOf(selAct)]: false }) });
+        logic.save(() => db.setRideDone(idOf(selAct), false));
+      } else {
+        logic.s({ done: Object.assign({}, st.done, { [listKey]: [] }) });
+        logic.save(() => db.setExercisesDone(listKey, [], false));
+      }
+    }
     goDetail();
   };
   const continueWorkout = () => {
