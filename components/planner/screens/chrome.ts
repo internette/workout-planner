@@ -104,9 +104,9 @@ export function chromeVals(ctx: Ctx) {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
       e.preventDefault();
       if (st.screen === 'edit' && workoutDraftDirty(st)) return logic.s({ leaveOpen: true, pendingNav: dest });
-      // A workout still being built, waiting underneath: opened the Arsenal from it, or an exercise's details from
+      // A workout still being built, waiting underneath: opened the Spellbook from it, or an exercise's details from
       // its Add exercise list. If it has anything in it, go back to it and ask there, the same "Keep your
-      // changes?"; otherwise just let it go. Either way picking ends and the person's own Arsenal filter returns.
+      // changes?"; otherwise just let it go. Either way picking ends and the person's own Spellbook filter returns.
       const draftBelow = st.screen !== 'edit' && (st.hist || []).some((h) => h.screen === 'edit');
       if (draftBelow || st.arsenalPick) {
         const endPick = st.arsenalPick ? { arsenalPick: null, arsenalAreas: st.arsenalPick.prevAreas || [] } : {};

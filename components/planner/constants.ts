@@ -36,10 +36,10 @@ export const RANK_STEPS = [3,6,10,15,21,28,36,45,55,66,78,91,105,120,136,153,171
 export const RANKS = [
   { name:'First spark', next:'Novice', pill:'background:var(--color-pink-tint);color:var(--color-pink-deep)', gem:'var(--color-pink)' },
   { name:'Novice guardian', next:'Moonlit', pill:'background:var(--color-pink-tint);color:var(--color-pink-deep)', gem:'var(--color-pink)' },
-  { name:'Moonlit cadet', next:'Starlit', pill:'background:var(--color-pink-tint);color:var(--color-pink-deep)', gem:'var(--color-pink)' },
-  { name:'Starlit cadet', next:'Dawn', pill:'background:var(--color-pink-tint);color:var(--color-pink-deep)', gem:'var(--color-pink)' },
-  { name:'Dawn sentry', next:'Twilight', pill:'background:var(--color-pink-tint);color:var(--color-pink-deep)', gem:'var(--color-pink)' },
-  { name:'Twilight sentry', next:'Prism', pill:'background:var(--color-periwinkle-tint);color:var(--color-periwinkle-deep)', gem:'var(--color-periwinkle)' },
+  { name:'Moonlit apprentice', next:'Starlit', pill:'background:var(--color-pink-tint);color:var(--color-pink-deep)', gem:'var(--color-pink)' },
+  { name:'Starlit apprentice', next:'Dawn', pill:'background:var(--color-pink-tint);color:var(--color-pink-deep)', gem:'var(--color-pink)' },
+  { name:'Dawn guardian', next:'Twilight', pill:'background:var(--color-pink-tint);color:var(--color-pink-deep)', gem:'var(--color-pink)' },
+  { name:'Twilight guardian', next:'Prism', pill:'background:var(--color-periwinkle-tint);color:var(--color-periwinkle-deep)', gem:'var(--color-periwinkle)' },
   { name:'Prism adept', next:'Tidecaller', pill:'background:var(--color-periwinkle-tint);color:var(--color-periwinkle-deep)', gem:'var(--color-periwinkle)' },
   { name:'Tidecaller adept', next:'Emberwing', pill:'background:var(--color-periwinkle-tint);color:var(--color-periwinkle-deep)', gem:'var(--color-periwinkle)' },
   { name:'Emberwing adept', next:'Stormveil', pill:'background:var(--color-periwinkle-tint);color:var(--color-periwinkle-deep)', gem:'var(--color-periwinkle)' },
@@ -52,7 +52,7 @@ export const RANKS = [
   { name:'Eclipse paragon', next:'Halcyon', pill:'background:var(--color-slate-tint);color:var(--color-slate-deep)', gem:'var(--color-slate)' },
   { name:'Halcyon paragon', next:'Radiant', pill:'background:var(--color-slate-tint);color:var(--color-slate-deep)', gem:'var(--color-slate)' },
   { name:'Radiant paragon', next:'Celestial', pill:'background:var(--color-slate-tint);color:var(--color-slate-deep)', gem:'var(--color-slate)' },
-  { name:'Celestial vanguard', next:'Eternal', pill:'background:var(--color-slate-tint);color:var(--color-slate-deep)', gem:'var(--color-slate)' },
+  { name:'Celestial champion', next:'Eternal', pill:'background:var(--color-slate-tint);color:var(--color-slate-deep)', gem:'var(--color-slate)' },
   { name:'Eternal sovereign', next:'the next season', pill:'background:var(--gradient-gem);color:var(--color-white);box-shadow:0 2px 8px rgba(225,105,156,.35)', gem:'var(--color-white)' },
 ];
 

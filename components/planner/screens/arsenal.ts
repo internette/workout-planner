@@ -7,7 +7,7 @@ import { digitsOnly, isoOf, joinSetsReps, numericOnly, plural, restDigits, split
 import { optStyle } from '../styles';
 import type { Ctx } from '../types';
 
-// Arsenal: the exercise library, its search and the add-exercise form.
+// Spellbook (the 'arsenal' screen): the exercise library, its search and the add-exercise form.
 export function arsenalVals(ctx: Ctx) {
   const { logic, st, EX, Y, TODAY_M, TODAY_D, narrow } = ctx;
 
@@ -453,7 +453,7 @@ export function arsenalVals(ctx: Ctx) {
         }
       : null;
 
-  // ---- "Add to workout". Opened from a workout's "Summon the full Arsenal", it goes into that workout and returns
+  // ---- "Add to workout". Opened from a workout's "Browse the full Spellbook", it goes into that workout and returns
   // there; opened any other way, it starts a new workout with this exercise already in it.
   const pick = st.arsenalPick || null;
   const addToWorkout = (e) => {

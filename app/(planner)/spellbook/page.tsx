@@ -1,4 +1,4 @@
-export const metadata = { title: 'Arsenal — Moonshot' };
+export const metadata = { title: 'Spellbook — Moonshot' };
 
 // The planner is rendered by the layout; the address alone picks the screen.
 export default function Page() {

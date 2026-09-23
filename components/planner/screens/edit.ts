@@ -174,8 +174,8 @@ export function editVals(ctx: Ctx) {
     closeAdd: () => logic.s({ addOpen: false }),
     addMode: st.addMode === 'new' ? 'new' : 'lib',
     setAddMode: (mode) => logic.s({ addMode: mode }),
-    // "Summon the full Arsenal": opens the real Arsenal, remembering this workout so "Add to workout" there puts
-    // the exercise here and comes back. The names already in it let the Arsenal mark those "In workout".
+    // "Browse the full Spellbook": opens the real Spellbook, remembering this workout so "Add to workout" there puts
+    // the exercise here and comes back. The names already in it let the Spellbook mark those "In workout".
     // It arrives narrowed to this workout's target areas, like the short list here; the person's own filter comes
     // back when picking ends.
     browseArsenal: () =>
@@ -197,7 +197,7 @@ export function editVals(ctx: Ctx) {
       ? 'Showing exercises for ' +
         (picked.length === 1 ? picked[0] : picked.slice(0, -1).join(', ') + ' and ' + picked[picked.length - 1])
       : '',
-    // A short pick, not the whole Arsenal: alphabetical, the first 10 — and once the workout's exercises have
+    // A short pick, not the whole Spellbook: alphabetical, the first 10 — and once the workout's exercises have
     // target areas, only exercises that share one of them. The full list is a tap away.
     library: libraryFor(listKey)
       .filter((e) => !picked.length || (e.areas || []).some((a) => picked.includes(a)))
@@ -206,7 +206,7 @@ export function editVals(ctx: Ctx) {
       .map((e) => ({
       name: e.name,
       detail: e.sets + ' · ' + e.weight,
-      // Same as the Arsenal: the row opens the exercise, "+" adds it. Back returns here with this panel still open.
+      // Same as the Spellbook: the row opens the exercise, "+" adds it. Back returns here with this panel still open.
       // An exercise only drafted in this visit has no saved page yet, so it can only be added.
       open: e.id ? () => logic.nav({ screen: 'exercise', exerciseId: e.id }) : null,
       add: () =>
@@ -313,7 +313,7 @@ export function editVals(ctx: Ctx) {
     },
     setEditName: (e) => logic.s({ renames: Object.assign({}, st.renames, { [baseName]: e.target.value }) }),
     eEyebrow: st.editing ? 'EDITING WORKOUT' : 'NEW WORKOUT',
-    eSaveLabel: st.editing ? 'Update workout' : creating && st.schedule === false ? 'Save to Arsenal' : 'Save workout',
+    eSaveLabel: st.editing ? 'Update workout' : creating && st.schedule === false ? 'Save to Spellbook' : 'Save workout',
     eCancelLabel: creating ? 'Cancel' : 'Delete workout',
     footerSecondary: creating
       ? () =>
@@ -431,7 +431,7 @@ export function editVals(ctx: Ctx) {
           tplConfirm: null,
         });
         // The date, the ride you logged and repeating belong to this session. Anything else changes the workout,
-        // which other sessions (and the Arsenal) share.
+        // which other sessions (and the Spellbook) share.
         const changesWorkout =
           edit.name !== undefined ||
           edit.icon !== undefined ||
@@ -506,7 +506,7 @@ export function editVals(ctx: Ctx) {
             dates: scheduled ? [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weekly() : []) : [],
             repeat: scheduled && !!st.repeat,
           }),
-        // Normally: saved only goes back to the Arsenal's workouts, where it now is; scheduled goes to the day it
+        // Normally: saved only goes back to the Spellbook's workouts, where it now is; scheduled goes to the day it
         // was put on. If a nav click was waiting on this save, go there instead — that's what was actually asked
         // for. Either way this is leaving "creating" behind, so those fields always get reset, not just by default.
         // A scheduled workout opens on its new session, which matters when that day already had a workout.
@@ -570,8 +570,8 @@ export function editVals(ctx: Ctx) {
     setSchedule: (on) => logic.s({ schedule: !!on, repeat: on ? st.repeat : false }),
     scheduleNote:
       st.schedule !== false
-        ? 'Puts it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mi] + ' ' + selDay + ', and keeps it in your Arsenal.'
-        : 'Only saved to your Arsenal. You can add it to the calendar any time.',
+        ? 'Puts it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mi] + ' ' + selDay + ', and keeps it in your Spellbook.'
+        : 'Only saved to your Spellbook. You can add it to the calendar any time.',
     exercises: selList.map((e, ix) => {
       const cur = (st.exIcons || {})[e.name] || e.i;
       const set = (v) => () =>

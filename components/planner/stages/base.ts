@@ -22,7 +22,7 @@ export function baseStage(ctx: Ctx): Ctx {
   const narrow = logic.viewport === 'narrow';
   const tablet = logic.viewport === 'tablet';
   const navExtra = (tablet ? ';flex:none;padding:11px 16px' : '') + ';text-decoration:none';
-  // Creating a workout from the Arsenal is the Arsenal's flow, so the Calendar tab is not lit for it.
+  // Creating a workout from the Spellbook is the Spellbook's flow, so the Calendar tab is not lit for it.
   const fromArsenal = st.screen === 'edit' && !!st.creating && st.newFrom === 'arsenal';
   const onCal =
     (st.screen === 'day' || st.screen === 'rest' || st.screen === 'diary' || st.screen === 'edit') && !fromArsenal;

@@ -209,7 +209,7 @@ export function workoutVals(ctx: Ctx) {
           arsenalPick: null,
         }),
       ),
-    // From the Arsenal it is only saved. It goes on the calendar when the person chooses to.
+    // From the Spellbook it is only saved. It goes on the calendar when the person chooses to.
     goNewWorkoutFromArsenal: () =>
       logic.nav(
         Object.assign({}, EDIT_OVERLAYS, {

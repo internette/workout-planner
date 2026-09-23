@@ -179,9 +179,9 @@ export function PlannerView({ v }: { v: any }) {
                 <Book color={v.navDiaryInk} size={18} />
                 {'Chronicle '}
               </a>
-              <a href="/arsenal" onClick={v.navGo(v.goArsenal, 'arsenal')} aria-current={v.navArsenalOn} style={css(v.navArsenal)}>
+              <a href="/spellbook" onClick={v.navGo(v.goArsenal, 'arsenal')} aria-current={v.navArsenalOn} style={css(v.navArsenal)}>
                 <Dumbbell color={v.navArsenalInk} size={18} />
-                {'Arsenal '}
+                {'Spellbook '}
               </a>
               <a href="/progress" onClick={v.navGo(v.goSummary, 'summary')} aria-current={v.navSummaryOn} style={css(v.navSummary)}>
                 <BarChart color={v.navSummaryInk} strokeWidth={2.2} size={18} />
@@ -2178,7 +2178,7 @@ export function PlannerView({ v }: { v: any }) {
                 <div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
                     <Text variant="title" as="h1" style={{ margin: '0' }}>
-                      Arsenal
+                      Spellbook
                     </Text>
                     <Text variant="label" tone="muted">
                       {v.arsenalCount}
@@ -2193,7 +2193,7 @@ export function PlannerView({ v }: { v: any }) {
                     {v.arsenalIntro}
                   </Text>
                   {v.arsenalPicking ? (
-                    // Stays in view down the long list, so it's always clear the Arsenal is picking for a workout.
+                    // Stays in view down the long list, so it's always clear the Spellbook is picking for a workout.
                     // The page-coloured band behind it keeps the list from showing through above the card.
                     <div
                       style={{
@@ -2231,7 +2231,7 @@ export function PlannerView({ v }: { v: any }) {
                     }}
                   >
                     <SegmentedControl
-                      label="Arsenal view"
+                      label="Spellbook view"
                       size="sm"
                       options={[
                         { value: 'workouts', label: 'Workouts' },
@@ -2471,7 +2471,7 @@ export function PlannerView({ v }: { v: any }) {
                                 disabled={v.commitDisabled}
                                 onClick={v.commitArsenal}
                               >
-                                Add to Arsenal
+                                Add to Spellbook
                               </Button>
                             </div>
                           </Card>
@@ -4541,7 +4541,7 @@ export function PlannerView({ v }: { v: any }) {
                             size="sm"
                             tone="quiet"
                             options={[
-                              { value: 'lib', label: 'From Arsenal' },
+                              { value: 'lib', label: 'From Spellbook' },
                               { value: 'new', label: 'Create new' },
                             ]}
                             value={v.addMode}
@@ -4636,7 +4636,7 @@ export function PlannerView({ v }: { v: any }) {
                                 onClick={v.browseArsenal}
                                 style={{ marginTop: '4px' }}
                               >
-                                Summon the full Arsenal
+                                Browse the full Spellbook
                                 <ChevronRight color="var(--color-pink-deep)" strokeWidth={2.2} size={14} />
                               </Button>
                             </div>
@@ -5060,10 +5060,10 @@ export function PlannerView({ v }: { v: any }) {
               Chronicle
             </span>
           </a>
-          <a href="/arsenal" onClick={v.navGo(v.goArsenal, 'arsenal')} aria-current={v.navArsenalOn} style={css(v.mTabArsenal)}>
+          <a href="/spellbook" onClick={v.navGo(v.goArsenal, 'arsenal')} aria-current={v.navArsenalOn} style={css(v.mTabArsenal)}>
             <Dumbbell color={v.mArsenalColor} size={22} />
             <span className="mlabel" style={css(v.mArsenalLabel)}>
-              Arsenal
+              Spellbook
             </span>
           </a>
           <a href="/progress" onClick={v.navGo(v.goSummary, 'summary')} aria-current={v.navSummaryOn} style={css(v.mTabSummary)}>

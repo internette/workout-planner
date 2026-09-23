@@ -19,7 +19,7 @@ export default function Planner({ account = null }: { account?: Account | null }
   const pathname = usePathname();
   const [logic] = useState(() => {
     const l = new PlannerLogic();
-    // Open on the screen the address names, such as /arsenal. The calendar address opens on today's Day view.
+    // Open on the screen the address names, such as /spellbook. The calendar address opens on today's Day view.
     const screen = screenForPath(pathname);
     if (screen) l.state = { ...l.state, screen };
     return l;
