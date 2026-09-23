@@ -159,7 +159,7 @@ export function progressVals(ctx: Ctx) {
             (dayComplete[k]
               ? 'linear-gradient(135deg,var(--color-pink),var(--color-periwinkle))'
               : pending
-                ? 'repeating-linear-gradient(135deg,rgba(214,52,121,.45) 0 3px,rgba(214,52,121,.16) 3px 6px)'
+                ? 'repeating-linear-gradient(135deg,rgba(213,49,129,.45) 0 3px,rgba(213,49,129,.16) 3px 6px)'
                 : 'rgba(35,42,69,.13)'),
           cap:
             'display:block;margin-top:6px;font-size:var(--text-2xs);font-weight:var(--font-weight-semibold);letter-spacing:var(--tracking-loose);text-align:center;color:' +
@@ -274,7 +274,7 @@ export function progressVals(ctx: Ctx) {
           'px;background:' +
           (ix === barSel
             ? 'linear-gradient(180deg,var(--color-pink) 0%,var(--color-periwinkle) 100%)'
-            : 'rgba(214,52,121,.3)'),
+            : 'rgba(213,49,129,.3)'),
         label:
           'font-size:var(--text-2xs);font-weight:' +
           (ix === barSel

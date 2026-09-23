@@ -142,10 +142,10 @@ function exerciseRow(e: Exercise) {
 }
 
 // A workout's own target areas aren't set directly any more — they're whatever its exercises target, combined.
-// Workout icon colours are saved as hex. The old primary pink (#E1699C) became #D63479, so a workout saved with the old
-// one shows the new one, and still matches the pink in the colour picker.
-const iconColorOf = (hex: string | null) =>
-  hex && hex.toUpperCase() === '#E1699C' ? colors.pink : hex;
+// Workout icon colours are saved as hex. The primary pink has changed over time (#E1699C, then #D63479), so a workout
+// saved with an earlier one shows today's, and still matches the pink in the colour picker.
+const OLD_PINKS = ['#E1699C', '#D63479'];
+const iconColorOf = (hex: string | null) => (hex && OLD_PINKS.includes(hex.toUpperCase()) ? colors.pink : hex);
 
 const areasOf = (list: Exercise[]) => Array.from(new Set(list.flatMap((e) => e.areas || [])));
 

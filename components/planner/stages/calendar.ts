@@ -189,7 +189,7 @@ export function calendarStage(ctx: Ctx): Ctx {
             : a
               ? 'background:var(--color-white);box-shadow:0 1px 3px rgba(35,42,69,.06)'
               : 'background:none') +
-        (today && !sel ? ';box-shadow:inset 0 0 0 1.5px rgba(214,52,121,.45)' : ''),
+        (today && !sel ? ';box-shadow:inset 0 0 0 1.5px rgba(213,49,129,.45)' : ''),
       aria: d
         ? DOWFULL[new Date(Y, mi, d).getDay()] +
           ', ' +
