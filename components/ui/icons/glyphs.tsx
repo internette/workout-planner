@@ -84,6 +84,17 @@ export const Notebook = strokeIcon(
     <line x1="9" y1="13" x2="14" y2="13" />
   </>,
 );
+// The Chronicle: a quill with a star, writing down how it felt.
+export const Quill = strokeIcon(
+  'Quill',
+  <>
+    <path d="M18.5 4.5c-6 1-9.6 5.2-10.8 11.3 5.9-1.1 10-4.9 10.8-11.3z" />
+    <path d="M7.7 15.8 14 9.5" />
+    <path d="M7.7 15.8 5 19.5" />
+    <path d="M6.8 4.2c.31 1.61.99 2.29 2.6 2.6-1.61.31-2.29.99-2.6 2.6-.31-1.61-.99-2.29-2.6-2.6 1.61-.31 2.29-.99 2.6-2.6z" />
+    <path d="M11 20h8" />
+  </>,
+);
 export const BarChart = strokeIcon(
   'BarChart',
   <>
