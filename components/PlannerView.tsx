@@ -3345,37 +3345,41 @@ export function PlannerView({ v }: { v: any }) {
                       </Fragment>
                     ))}
                   </div>
-                  <Card style={{ marginTop: '16px' }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '12px',
-                      }}
-                    >
-                      <div>
-                        <Text variant="eyebrow" tone="slate">
-                          WORKOUT TIMER
-                        </Text>
-                        <Text
-                          variant="title"
-                          as="div"
-                          style={{ margin: '4px 0 0', fontVariantNumeric: 'tabular-nums' }}
+                  {v.showTimer ? (
+                    <>
+                      <Card style={{ marginTop: '16px' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: '12px',
+                          }}
                         >
-                          {v.timerLabel}
-                        </Text>
-                      </div>
-                      <Button
-                        type={v.timerButtonLabel === 'Pause' ? 'secondary' : 'primary'}
-                        size="md"
-                        onClick={v.timerButtonAction}
-                      >
-                        {v.timerButtonLabel}
-                      </Button>
-                    </div>
-                  </Card>
+                          <div>
+                            <Text variant="eyebrow" tone="slate">
+                              WORKOUT TIMER
+                            </Text>
+                            <Text
+                              variant="title"
+                              as="div"
+                              style={{ margin: '4px 0 0', fontVariantNumeric: 'tabular-nums' }}
+                            >
+                              {v.timerLabel}
+                            </Text>
+                          </div>
+                          <Button
+                            type={v.timerButtonLabel === 'Pause' ? 'secondary' : 'primary'}
+                            size="md"
+                            onClick={v.timerButtonAction}
+                          >
+                            {v.timerButtonLabel}
+                          </Button>
+                        </div>
+                      </Card>
+                    </>
+                  ) : null}
                   {v.dayIsRide ? (
                     <>
                       <Card style={{ marginTop: '18px' }}>

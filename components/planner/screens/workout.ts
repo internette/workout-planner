@@ -60,6 +60,10 @@ export function workoutVals(ctx: Ctx) {
     timerLabel: formatElapsed(timerElapsedSec),
     timerButtonLabel: !timerState ? 'Start' : timerRunning ? 'Pause' : 'Resume',
     timerButtonAction: !timerState ? startTimer : timerRunning ? pauseTimer : resumeTimer,
+    // A workout that's already done, and was never timed, doesn't need a "Start" — that's for something you're
+    // about to do. But once a clock exists for it (started earlier this same session), keep showing it, so
+    // finishing the last exercise doesn't yank away the button that pauses or logs it.
+    showTimer: !!timerState || !doneSel,
     pausePromptOpen: !!st.pausePrompt,
     keepGoing: () => logic.s({ pausePrompt: null }),
     confirmPause: () => {
