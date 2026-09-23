@@ -4,7 +4,7 @@
 
 ## Features
 
-- **Calendar:** day, week and month views, with the current day highlighted and past sessions marked done or missed. A day can hold more than one workout: Day view shows a switcher above the card, Week view lists each one, and a day counts as done (for its marker, the streak and its quest) once all of them are.
+- **Calendar:** day, week and month views, with the current day highlighted and past sessions marked done or missed. A day can hold more than one workout: Day and Week views list each one, and a day counts as done (for its marker, the streak and its quest) once all of them are.
 - **Workouts:** lifting sessions (exercises with sets, reps, weight and rest) and cycling sessions (distance, elevation, duration, target effort). Both can repeat weekly for 12 weeks.
 - **Progress tracking:** tick exercises off, mark rides complete, and log what you actually rode against the plan.
 - **Chronicle:** a diary entry per session with mood, effort (1–5) and notes.
