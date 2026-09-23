@@ -171,23 +171,23 @@ export function PlannerView({ v }: { v: any }) {
         >
           <nav aria-label="Main" style={css(v.sidebarStyle)}>
             <div style={css(v.navListStyle)}>
-              <a href="/calendar" onClick={v.navGo(v.goDay)} aria-current={v.navCalOn} style={css(v.navCal)}>
+              <a href="/calendar" onClick={v.navGo(v.goDay, 'day')} aria-current={v.navCalOn} style={css(v.navCal)}>
                 <Calendar color={v.navCalInk} size={18} />
                 {'Calendar '}
               </a>
-              <a href="/chronicle" onClick={v.navGo(v.goDiaryList)} aria-current={v.navDiaryOn} style={css(v.navDiary)}>
+              <a href="/chronicle" onClick={v.navGo(v.goDiaryList, 'diaryList')} aria-current={v.navDiaryOn} style={css(v.navDiary)}>
                 <Book color={v.navDiaryInk} size={18} />
                 {'Chronicle '}
               </a>
-              <a href="/arsenal" onClick={v.navGo(v.goArsenal)} aria-current={v.navArsenalOn} style={css(v.navArsenal)}>
+              <a href="/arsenal" onClick={v.navGo(v.goArsenal, 'arsenal')} aria-current={v.navArsenalOn} style={css(v.navArsenal)}>
                 <Dumbbell color={v.navArsenalInk} size={18} />
                 {'Arsenal '}
               </a>
-              <a href="/progress" onClick={v.navGo(v.goSummary)} aria-current={v.navSummaryOn} style={css(v.navSummary)}>
+              <a href="/progress" onClick={v.navGo(v.goSummary, 'summary')} aria-current={v.navSummaryOn} style={css(v.navSummary)}>
                 <BarChart color={v.navSummaryInk} strokeWidth={2.2} size={18} />
                 {'Progress '}
               </a>
-              <a href="/profile" onClick={v.navGo(v.goProfile)} aria-current={v.navProfileOn} style={css(v.navProfile)}>
+              <a href="/profile" onClick={v.navGo(v.goProfile, 'profile')} aria-current={v.navProfileOn} style={css(v.navProfile)}>
                 <User color={v.navProfileInk} size={18} />
                 {'Profile '}
               </a>
@@ -4631,31 +4631,31 @@ export function PlannerView({ v }: { v: any }) {
           </main>
         </div>
         <nav aria-label="Main" style={css(v.tabbarStyle)}>
-          <a href="/calendar" onClick={v.navGo(v.goDay)} aria-current={v.navCalOn} style={css(v.mTabCal)}>
+          <a href="/calendar" onClick={v.navGo(v.goDay, 'day')} aria-current={v.navCalOn} style={css(v.mTabCal)}>
             <Calendar color={v.mCalColor} size={22} />
             <span className="mlabel" style={css(v.mCalLabel)}>
               Calendar
             </span>
           </a>
-          <a href="/chronicle" onClick={v.navGo(v.goDiaryList)} aria-current={v.navDiaryOn} style={css(v.mTabDiary)}>
+          <a href="/chronicle" onClick={v.navGo(v.goDiaryList, 'diaryList')} aria-current={v.navDiaryOn} style={css(v.mTabDiary)}>
             <Notebook color={v.mDiaryColor} size={22} />
             <span className="mlabel" style={css(v.mDiaryLabel)}>
               Chronicle
             </span>
           </a>
-          <a href="/arsenal" onClick={v.navGo(v.goArsenal)} aria-current={v.navArsenalOn} style={css(v.mTabArsenal)}>
+          <a href="/arsenal" onClick={v.navGo(v.goArsenal, 'arsenal')} aria-current={v.navArsenalOn} style={css(v.mTabArsenal)}>
             <Dumbbell color={v.mArsenalColor} size={22} />
             <span className="mlabel" style={css(v.mArsenalLabel)}>
               Arsenal
             </span>
           </a>
-          <a href="/progress" onClick={v.navGo(v.goSummary)} aria-current={v.navSummaryOn} style={css(v.mTabSummary)}>
+          <a href="/progress" onClick={v.navGo(v.goSummary, 'summary')} aria-current={v.navSummaryOn} style={css(v.mTabSummary)}>
             <BarChart color={v.mSummaryColor} size={22} />
             <span className="mlabel" style={css(v.mSummaryLabel)}>
               Progress
             </span>
           </a>
-          <a href="/profile" onClick={v.navGo(v.goProfile)} aria-current={v.navProfileOn} style={css(v.mTabProfile)}>
+          <a href="/profile" onClick={v.navGo(v.goProfile, 'profile')} aria-current={v.navProfileOn} style={css(v.mTabProfile)}>
             <User color={v.mProfileColor} size={22} />
             <span className="mlabel" style={css(v.mProfileLabel)}>
               Profile

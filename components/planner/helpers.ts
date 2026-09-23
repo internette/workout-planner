@@ -23,3 +23,14 @@ export const joinSetsReps = (sets, reps) => {
   const r = (reps || '').trim();
   return s && r ? s + ' × ' + r : s || r;
 };
+
+// Whether the create/edit workout screen has anything typed or toggled that a plain screen change would throw away.
+// Only meaningful while actually on that screen: these same keys can be left over (never cleared) after an old visit,
+// so a caller must also check the screen is 'edit' before treating this as "there's a draft in the way".
+export const workoutDraftDirty = st => !!(
+  st.renames || st.fields || st.removed || st.areas || st.newName ||
+  st.rDist || st.rElev || st.rHrs || st.rMins ||
+  st.aDist || st.aElev || st.aHrs || st.aMins ||
+  st.repeat || st.icons || st.iconColors ||
+  (st.extra && Object.keys(st.extra).some(k => (st.extra[k] || []).length))
+);

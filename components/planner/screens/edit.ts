@@ -1,5 +1,5 @@
-import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, MON3 } from '../constants';
-import { idOf, isoOf, joinSetsReps, splitSetsReps } from '../helpers';
+import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, MON3, MONTHS } from '../constants';
+import { idOf, isoOf, joinSetsReps, splitSetsReps, workoutDraftDirty } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
 import { optStyle } from '../styles';
@@ -50,7 +50,23 @@ export function editVals(ctx: Ctx) {
     selDate,
     doneSet,
     doneNames,
+    TODAY_M,
+    TODAY_D,
   } = ctx;
+  // Where each nav item actually goes, so a guarded nav click can land there after "Discard" or "Save changes" —
+  // exactly what pressing that nav item would have done, including the "come back here" history entry the ones
+  // through logic.nav() push (Calendar deliberately doesn't: it always starts fresh from today).
+  const navHistory = () => (st.hist || []).concat([{
+    screen: st.screen, month: st.month, day: st.day, seg: st.seg,
+    diaryFrom: st.diaryFrom, diaryEdit: st.diaryEdit, creating: st.creating,
+  }]);
+  const NAV_DESTINATIONS = {
+    day: { screen: 'day', month: MONTHS[TODAY_M], day: TODAY_D, monthOpen: false, seg: 'Day', creating: false },
+    diaryList: { screen: 'diaryList', monthOpen: false, hist: navHistory() },
+    arsenal: { screen: 'arsenal', monthOpen: false, hist: navHistory() },
+    summary: { screen: 'summary', monthOpen: false, hist: navHistory() },
+    profile: { screen: 'profile', monthOpen: false, hist: navHistory() },
+  };
   return {
     pickTypeLift: () => logic.s({ newType: 'lift' }),
     pickTypeCycle: () => logic.s({ newType: 'cycle' }),
@@ -261,29 +277,12 @@ export function editVals(ctx: Ctx) {
           }),
     leaveOpen: !!st.leaveOpen,
     tryLeave: () => {
-      const dirty = !!(
-        st.renames ||
-        st.fields ||
-        st.removed ||
-        st.areas ||
-        st.newName ||
-        st.rDist ||
-        st.rElev ||
-        st.rHrs ||
-        st.rMins ||
-        st.aDist ||
-        st.aElev ||
-        st.aHrs ||
-        st.aMins ||
-        st.repeat ||
-        st.icons ||
-        st.iconColors ||
-        (st.extra && Object.keys(st.extra).some((k) => (st.extra[k] || []).length))
-      );
-      if (!dirty) return logic.back();
+      if (!workoutDraftDirty(st)) return logic.back();
       logic.s({ leaveOpen: true });
     },
-    stayHere: () => logic.s({ leaveOpen: false }),
+    // Closing the dialog without choosing (Escape, the X, clicking outside) means "changed my mind, stay here" —
+    // never treated as "discard", so a stray dismissal can't lose anything.
+    stayHere: () => logic.s({ leaveOpen: false, pendingNav: null }),
     deleteWorkout: () =>
       logic.save(() => db.deletePlanEntries([idOf(srcAct)]), {
         screen: 'day',
@@ -361,7 +360,8 @@ export function editVals(ctx: Ctx) {
               },
               repeatDates: st.repeat && !selAct.series ? weekly() : [],
             }),
-          Object.assign({ screen: 'detail' }, cleared),
+          // Normally back to the workout's own detail screen; if a nav click was waiting on this save, go there instead.
+          Object.assign(st.pendingNav ? NAV_DESTINATIONS[st.pendingNav] : { screen: 'detail' }, cleared),
         );
       }
       const nm = (st.newName || '').trim() || 'Untitled workout';
@@ -384,37 +384,35 @@ export function editVals(ctx: Ctx) {
             dates: scheduled ? [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weekly() : []) : [],
             repeat: scheduled && !!st.repeat,
           }),
-        // Saved only: back to the Arsenal's workouts, where it now is. Scheduled: the day it was put on.
+        // Normally: saved only goes back to the Arsenal's workouts, where it now is; scheduled goes to the day it
+        // was put on. If a nav click was waiting on this save, go there instead — that's what was actually asked
+        // for. Either way this is leaving "creating" behind, so those fields always get reset, not just by default.
         Object.assign(
-          scheduled
-            ? { screen: 'day', creating: false, newType: null, newName: '', newFrom: null, schedule: null }
-            : { screen: 'arsenal', arsenalView: 'workouts', creating: false, newType: null, newName: '', newFrom: null, schedule: null, repeat: false },
+          st.pendingNav
+            ? NAV_DESTINATIONS[st.pendingNav]
+            : scheduled
+              ? { screen: 'day' }
+              : { screen: 'arsenal', arsenalView: 'workouts' },
+          { creating: false, newType: null, newName: '', newFrom: null, schedule: null },
           cleared,
         ),
       );
     },
     discardLeave: () => {
-      logic.s({
-        leaveOpen: false,
-        creating: false,
-        newType: null,
-        newName: '',
-        renames: null,
-        fields: null,
-        repeat: false,
-        areas: null,
-        icons: null,
-        iconColors: null,
-        rDist: null,
-        rElev: null,
-        rHrs: null,
-        rMins: null,
-        aDist: null,
-        aElev: null,
-        aHrs: null,
-        aMins: null,
-        extra: Object.assign({}, st.extra, { __draft: [] }),
-      });
+      const cleared = Object.assign(
+        {
+          leaveOpen: false,
+          creating: false,
+          newType: null,
+          newName: '',
+          extra: Object.assign({}, st.extra, { __draft: [] }),
+        },
+        EDIT_OVERLAYS,
+      );
+      // A nav item was waiting on this: go there, same as if the draft had never been in the way. Otherwise this is
+      // the in-screen Back arrow, which just steps back one screen as it always has.
+      if (st.pendingNav) return logic.s(Object.assign(cleared, NAV_DESTINATIONS[st.pendingNav]));
+      logic.s(cleared);
       logic.back();
     },
     cancelEdit: () =>

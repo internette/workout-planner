@@ -57,4 +57,4 @@ export const RANKS = [
 // Overlay state the edit screens accumulate; once a save lands in the database it is dropped.
 export const EDIT_OVERLAYS = { renames:null, fields:null, removed:null, areas:null, icons:null, iconColors:null, exIcons:null,
   extra:null, repeat:false, rDist:null, rElev:null, rHrs:null, rMins:null, rZone:null,
-  aDist:null, aElev:null, aHrs:null, aMins:null, editKey:null };
+  aDist:null, aElev:null, aHrs:null, aMins:null, editKey:null, pendingNav:null };

@@ -1,5 +1,5 @@
 import { MONTHS } from '../constants';
-import { idOf, isoOf } from '../helpers';
+import { idOf, isoOf, workoutDraftDirty } from '../helpers';
 import { mLabel, mTab, tab } from '../styles';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -96,10 +96,13 @@ export function chromeVals(ctx: Ctx) {
     saveError: st.saveError || '',
     dismissError: () => logic.s({ saveError: null }),
     yearLabel: String(Y),
-    // A nav item is a link, so it can open in a new tab. A plain click goes there without a page load.
-    navGo: (go) => (e) => {
+    // A nav item is a link, so it can open in a new tab. A plain click goes there without a page load. `dest` is
+    // which nav item this is ('day', 'arsenal', ...); if there's a workout draft in the way, the click is held and
+    // asks first, the same "Keep your changes?" the screen's own Back arrow already uses — the tab is going nowhere.
+    navGo: (go, dest) => (e) => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
       e.preventDefault();
+      if (st.screen === 'edit' && workoutDraftDirty(st)) return logic.s({ leaveOpen: true, pendingNav: dest });
       go();
     },
     // Signing out asks first. Once confirmed the page is on its way to the server, so the dialog stays up, inert,
