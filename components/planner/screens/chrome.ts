@@ -21,6 +21,7 @@ export function chromeVals(ctx: Ctx) {
     creating,
     TODAY_M,
     TODAY_D,
+    timerRunning,
   } = ctx;
   const arsenalActive =
     ['arsenal', 'template', 'templateEdit', 'exercise', 'exerciseEdit'].includes(st.screen) ||
@@ -103,6 +104,8 @@ export function chromeVals(ctx: Ctx) {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
       e.preventDefault();
       if (st.screen === 'edit' && workoutDraftDirty(st)) return logic.s({ leaveOpen: true, pendingNav: dest });
+      // Leaving the workout detail screen while its stopwatch is running asks first, same as its own Back arrow.
+      if (st.screen === 'detail' && timerRunning) return logic.s({ pausePrompt: { proceed: go } });
       go();
     },
     // Signing out asks first. Once confirmed the page is on its way to the server, so the dialog stays up, inert,

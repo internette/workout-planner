@@ -5,6 +5,15 @@ export const questSeed = (day, month) => questFor(day * 3 + month);
 export const tokenFor = seed => TOKENS[Math.abs(Math.round(seed)) % TOKENS.length];
 export const CAT = n => n.indexOf('Push')>-1 ? 'Push' : n.indexOf('Pull')>-1 ? 'Pull' : n.indexOf('Leg')>-1 ? 'Legs' : 'Core';
 export const idOf = av => (av && av.id) || 'unknown';
+// Seconds to a stopwatch readout: "12:34", or "1:02:34" past an hour.
+export const formatElapsed = totalSec => {
+  const sec = Math.max(0, Math.floor(totalSec));
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  const pad2 = n => String(n).padStart(2, '0');
+  return (h ? h + ':' + pad2(m) : String(m)) + ':' + pad2(s);
+};
 export const isoOf = dt => dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
 
 // An exercise's sets and reps are two separate inputs on screen, but one field everywhere else: the database column,

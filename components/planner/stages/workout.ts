@@ -46,6 +46,13 @@ export function workoutStage(ctx: Ctx): Ctx {
   const rodeDist = Number(aDist || 0);
   const ridePct = !rodeDist ? null : planDist ? Math.round((rodeDist / planDist) * 100) : 100;
   const selAct = creating ? null : srcAct;
+  // A stopwatch for the session on screen, keyed by its plan entry so a different day's workout never shares it.
+  const timerKey = idOf(selAct);
+  const timerState = (st.workoutTimer || {})[timerKey] || null;
+  const timerRunning = !!(timerState && timerState.runningSince);
+  const timerElapsedSec = timerState
+    ? timerState.elapsed + (timerRunning ? Math.floor((Date.now() - timerState.runningSince) / 1000) : 0)
+    : 0;
   const baseName = (srcAct && srcAct.name) || '';
   const baseKey = (srcAct && srcAct.exKey) || '';
   const selName = creating ? st.newName || '' : (st.renames || {})[baseName] != null ? st.renames[baseName] : baseName;
@@ -138,6 +145,10 @@ export function workoutStage(ctx: Ctx): Ctx {
     selName,
     baseName,
     baseKey,
+    timerKey,
+    timerState,
+    timerRunning,
+    timerElapsedSec,
     pickerCells,
     doneSet,
     doneNames,
