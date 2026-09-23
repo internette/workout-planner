@@ -49,6 +49,11 @@ export function calendarVals(ctx: Ctx) {
     showMonth: st.seg === 'Month',
     isRest: st.seg === 'Day' && !actFor(selDay),
     hasWorkout: st.seg === 'Day' && !!actFor(selDay),
+    // "No quest today" is only true when today is actually the day on screen — otherwise it needs to say which day.
+    restDayPhrase:
+      mi === TODAY_M && selDay === TODAY_D
+        ? 'today'
+        : 'on ' + DOW3[selDate.getDay()].charAt(0) + DOW3[selDate.getDay()].slice(1, 3).toLowerCase() + ', ' + MON3[mi] + ' ' + selDay,
     monthName: st.month,
     monthOpen: st.monthOpen,
     caretStyle:

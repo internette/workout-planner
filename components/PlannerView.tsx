@@ -792,8 +792,8 @@ export function PlannerView({ v }: { v: any }) {
                             textWrap: 'pretty',
                           }}
                         >
-                          No quest today. Rest is how the power comes back — or add a workout if you&apos;re
-                          feeling it.
+                          No quest {v.restDayPhrase}. Rest is how the power comes back — or add a workout if
+                          you&apos;re feeling it.
                         </p>
                         <Button
                           type="primary"
