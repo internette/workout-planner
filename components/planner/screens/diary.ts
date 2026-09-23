@@ -1,5 +1,5 @@
-import { DOW3, MON3, MONTHS } from '../constants';
-import { isoOf, plural } from '../helpers';
+import { DOW3, MON3 } from '../constants';
+import { isoOf, mod12, monthPatch, plural } from '../helpers';
 import { moodSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -29,6 +29,7 @@ export function diaryVals(ctx: Ctx) {
     moods,
     stars,
     RPE_WORDS,
+    relM,
   } = ctx;
   // Whether the session on screen already has an entry: then the diary screen reads it, and edits it on request.
   const hasEntry = !!ENTRIES[entryKey];
@@ -77,7 +78,7 @@ export function diaryVals(ctx: Ctx) {
       '/5 effort on ' +
       selName +
       ', ' +
-      MON3[mi] +
+      MON3[mod12(mi)] +
       ' ' +
       selDay +
       '.',
@@ -87,7 +88,7 @@ export function diaryVals(ctx: Ctx) {
       ? (nextEntry.m * 100 + nextEntry.d === TK
           ? 'Today'
           : DOW3[nextDate.getDay()].charAt(0) + DOW3[nextDate.getDay()].slice(1, 3).toLowerCase() + ', ' +
-            MON3[nextEntry.m] + ' ' + nextEntry.d) +
+            MON3[mod12(nextEntry.m)] + ' ' + nextEntry.d) +
         ' · ' +
         nextEntry.av.time
       : 'Nothing scheduled ahead',
@@ -98,13 +99,12 @@ export function diaryVals(ctx: Ctx) {
           screen: 'detail',
           creating: false,
           seg: 'Day',
-          month: MONTHS[nextEntry.m],
+          ...monthPatch(nextEntry.m),
           day: nextEntry.d,
           entryId: nextEntry.av.id,
         });
       const tomorrow = new Date(Y, TODAY_M, ctx.TODAY_D + 1);
-      const when = tomorrow.getFullYear() === Y ? tomorrow : new Date(Y, TODAY_M, ctx.TODAY_D);
-      logic.s({ month: MONTHS[when.getMonth()], day: when.getDate(), seg: 'Day' });
+      logic.s({ ...monthPatch(relM(tomorrow)), day: tomorrow.getDate(), seg: 'Day' });
       logic.renderVals().goNewWorkout();
     },
     loggedCount: Object.keys(ENTRIES).length,
@@ -126,7 +126,7 @@ export function diaryVals(ctx: Ctx) {
       pick: () =>
         logic.nav({
           screen: 'diary',
-          month: MONTHS[TODAY_M],
+          ...monthPatch(TODAY_M),
           day: x.d,
           entryId: x.av.id,
           mood: 'Happy',
@@ -167,6 +167,8 @@ export function diaryVals(ctx: Ctx) {
       const en = ENTRIES[id];
       const d = en.d;
       const dt = new Date(Y, en.m, en.d);
+      // An entry from another year says which.
+      const yr = dt.getFullYear() !== Y ? ' ' + dt.getFullYear() : '';
       const bg =
         en.mood === 'Happy'
           ? 'var(--color-pink)'
@@ -176,16 +178,17 @@ export function diaryVals(ctx: Ctx) {
               ? 'var(--color-periwinkle)'
               : 'var(--color-danger)';
       return {
-        date: DOW3[dt.getDay()] + ', ' + MON3[en.m].toUpperCase() + ' ' + en.d,
+        date: DOW3[dt.getDay()] + ', ' + MON3[mod12(en.m)].toUpperCase() + ' ' + en.d + yr,
         name: en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout',
         note: en.note,
         href: '#',
         aria:
           DOW3[dt.getDay()] +
           ', ' +
-          MON3[en.m] +
+          MON3[mod12(en.m)] +
           ' ' +
           en.d +
+          yr +
           ': ' +
           (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') +
           ', ' +
@@ -196,7 +199,7 @@ export function diaryVals(ctx: Ctx) {
         open: () =>
           logic.nav({
             screen: 'diary',
-            month: MONTHS[en.m],
+            ...monthPatch(en.m),
             day: en.d,
             entryId: id,
             mood: en.mood,
@@ -212,7 +215,7 @@ export function diaryVals(ctx: Ctx) {
               kind: 'entry',
               day: id,
               title: 'Delete this entry?',
-              body: 'Your reflection for ' + MON3[en.m] + ' ' + en.d + ' will be gone for good.',
+              body: 'Your reflection for ' + MON3[mod12(en.m)] + ' ' + en.d + ' will be gone for good.',
               label: 'Delete entry',
             },
           });
@@ -241,7 +244,7 @@ export function diaryVals(ctx: Ctx) {
           day: entryKey,
           after: 'diaryList',
           title: 'Delete this entry?',
-          body: 'Your reflection for ' + MON3[mi] + ' ' + selDay + ' will be gone for good.',
+          body: 'Your reflection for ' + MON3[mod12(mi)] + ' ' + selDay + ' will be gone for good.',
           label: 'Delete entry',
         },
       }),

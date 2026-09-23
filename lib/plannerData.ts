@@ -67,7 +67,9 @@ export interface WorkoutSummary {
 export interface Model {
   EX: Record<string, Exercise[]>; // saved workout name -> exercises
   EXV: Record<string, Exercise[]>; // exercises by version: a saved workout by name, an archived snapshot by name#id
-  SEED: Record<number, Record<number, Entry[]>>; // month -> day -> that day's entries, in a stable order
+  // month -> day -> that day's entries, in a stable order. Months count on from January of this year: 12 is next
+  // January, -1 last December.
+  SEED: Record<number, Record<number, Entry[]>>;
   entries: { m: number; d: number; iso: string; av: Entry }[]; // sorted by date
   DIARY: Record<string, DiaryEntry>; // plan entry id -> diary entry
   library: Exercise[]; // arsenal exercises not tied to a workout
@@ -195,8 +197,7 @@ export async function loadModel(today: Date): Promise<Model> {
     const w = byId[p.workout_id];
     if (!w) return;
     const [yy, mm, dd] = String(p.scheduled_date).split('-').map(Number);
-    if (yy !== today.getFullYear()) return; // the calendar covers the current year
-    const m = mm - 1;
+    const m = (yy - today.getFullYear()) * 12 + mm - 1;
     const completed = p.status === 'completed';
     const isRide = w.kind === 'ride';
     const minutes = w.duration_minutes ?? (isRide ? 45 : 50);
@@ -240,6 +241,9 @@ export async function loadModel(today: Date): Promise<Model> {
     if (isRide) rideDone[p.id] = completed;
     else done[p.id] = p.done_exercises ?? (completed ? EXV[keyOf(w)].map((e) => e.name) : []);
   });
+
+  // By date, whatever order the rows came back in: "what's next" and similar take the first match.
+  entries.sort((a, b) => (a.iso < b.iso ? -1 : a.iso > b.iso ? 1 : 0));
 
   const DIARY: Model['DIARY'] = {};
   diary.forEach((r: any) => {
@@ -527,6 +531,27 @@ export async function updateWorkout(e: WorkoutEdit) {
         ),
     );
   }
+}
+
+// Takes a saved workout out of the Spellbook. Its sessions still ahead (from today on, not completed) come off the
+// calendar; past and completed ones stay, pointing at it, so history keeps its exercises. Archiving rather than
+// deleting is what the edit snapshots already do, and it frees the name.
+export async function archiveWorkout(workoutId: string, todayIso: string) {
+  const ahead: { id: string }[] = await ok(
+    supabase
+      .from('plan_entries')
+      .select('id')
+      .eq('workout_id', workoutId)
+      .gte('scheduled_date', todayIso)
+      .neq('status', 'completed'),
+  );
+  await deletePlanEntries(ahead.map((r) => r.id));
+  await ok(supabase.from('workouts').update({ archived: true, repeat_enabled: false }).eq('id', workoutId));
+}
+
+// An exercise saved on its own. Workouts hold their own copies of exercises, so nothing else changes.
+export async function deleteLibraryExercise(id: string) {
+  await ok(supabase.from('library_exercises').delete().eq('id', id));
 }
 
 export async function addLibraryExercise(e: Exercise) {

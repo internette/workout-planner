@@ -21,7 +21,7 @@ export class PlannerLogic extends DCLogic {
   model: Model | null = null;
   status: 'loading' | 'error' | 'ready' = 'loading';
   loadError = '';
-  state: any = { screen:'day', day: new Date().getDate(), seg:'Day', monthOpen:false, month: MONTHS[new Date().getMonth()],
+  state: any = { screen:'day', day: new Date().getDate(), seg:'Day', monthOpen:false, month: MONTHS[new Date().getMonth()], yOff: 0,
     repeat:false, mood:'Happy', rpe:3, done: {}, rideDone: {} };
 
   // Fetches everything from Supabase and resets the ticks to what the database says.
@@ -45,7 +45,7 @@ export class PlannerLogic extends DCLogic {
   // Queues a database write; when the queue drains the model is reloaded and `patch` applied to the
   // UI state. A failed write shows in the error banner and the reload puts the UI back in sync.
   // `patch` may be a function of what the write returned, for state that depends on rows it created.
-  save(write: () => Promise<any>, patch: any = {}) {
+  save(write: () => Promise<any>, patch: any = {}): Promise<unknown> {
     this.pending++;
     if (typeof patch !== 'function') this.pendingPatch = { ...this.pendingPatch, ...patch };
     this.queue = this.queue
@@ -60,12 +60,30 @@ export class PlannerLogic extends DCLogic {
         this.pendingPatch = {};
         return this.load(p);
       });
+    return this.queue;
+  }
+
+  // Saves that make something new (a workout, a session, an exercise) or finish a form. A second press while the
+  // first is still on its way — a double tap on Save — is ignored rather than saving a second copy. `busy` is what
+  // a screen reads to show its button as working until the save has landed and the screen has moved on.
+  private inFlight = new Set<string>();
+  busy(key: string) {
+    return this.inFlight.has(key);
+  }
+  saveOnce(key: string, write: () => Promise<any>, patch: any = {}) {
+    if (this.inFlight.has(key)) return;
+    this.inFlight.add(key);
+    this.forceUpdate();
+    this.save(write, patch).finally(() => {
+      this.inFlight.delete(key);
+      this.forceUpdate();
+    });
   }
 
   s(p){ this.setState(p); }
   nav(p){
     const st = this.state;
-    const snap = { screen:st.screen, month:st.month, day:st.day, seg:st.seg,
+    const snap = { screen:st.screen, month:st.month, yOff:st.yOff, day:st.day, seg:st.seg,
       diaryFrom:st.diaryFrom, diaryEdit:st.diaryEdit, creating:st.creating };
     this.setState(Object.assign({ hist: (st.hist || []).concat([snap]) }, p));
   }

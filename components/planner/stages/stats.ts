@@ -1,10 +1,10 @@
 import { DOW3, MON3, RANK_STEPS } from '../constants';
-import { idOf, questSeed } from '../helpers';
+import { idOf, mod12, questSeed } from '../helpers';
 import type { Ctx } from '../types';
 
 // Streaks, weekly buckets, XP and rank, records and quest counts, derived from every entry.
 export function statsStage(ctx: Ctx): Ctx {
-  const { logic, Y, TODAY_M, TODAY_D, listForDate, TK, entriesAt, isDoneEntry, ENTRIES, st, EX, doneCountAt } = ctx;
+  const { logic, Y, TODAY_M, TODAY_D, listForDate, TK, relM, entriesAt, isDoneEntry, ENTRIES, st, EX, doneCountAt } = ctx;
   const todayDate = new Date(Y, TODAY_M, TODAY_D);
   const todayWkStart = new Date(Y, TODAY_M, TODAY_D - todayDate.getDay());
   const weekAll = [];
@@ -22,7 +22,7 @@ export function statsStage(ctx: Ctx): Ctx {
         DOW3[nd.getDay()].charAt(0) +
         DOW3[nd.getDay()].slice(1, 3).toLowerCase() +
         ', ' +
-        MON3[upcoming.m] +
+        MON3[mod12(upcoming.m)] +
         ' ' +
         upcoming.d +
         ' · ' +
@@ -30,7 +30,8 @@ export function statsStage(ctx: Ctx): Ctx {
     };
   }
   const spanDays = [];
-  (TODAY_M > 0 ? [TODAY_M - 1, TODAY_M] : [TODAY_M]).forEach((m) => {
+  // Last month and this one (in January, last month is last year's December).
+  [TODAY_M - 1, TODAY_M].forEach((m) => {
     const last = new Date(Y, m + 1, 0).getDate();
     for (let d = 1; d <= last; d++) {
       entriesAt(m, d).forEach((av) => spanDays.push({ m, d, av, done: isDoneEntry(av) }));
@@ -49,19 +50,20 @@ export function statsStage(ctx: Ctx): Ctx {
   spanDays.forEach((x) => {
     if (x.done) doneByDay[x.d] = 1;
   });
+  // Keyed "month|day". Not "-": last December is month -1.
   const plannedByDay = {},
     dayComplete = {};
   spanDays.forEach((x) => {
-    const k = x.m + '-' + x.d;
+    const k = x.m + '|' + x.d;
     plannedByDay[k] = (plannedByDay[k] || 0) + 1;
     dayComplete[k] = (dayComplete[k] === undefined ? true : dayComplete[k]) && x.done;
   });
-  const todayKey = TODAY_M + '-' + TODAY_D;
+  const todayKey = TODAY_M + '|' + TODAY_D;
   const todayLogged = !!plannedByDay[todayKey] && !!dayComplete[todayKey];
   let streak = 0;
   for (let back = 1; back <= 90; back++) {
     const dt = new Date(Y, TODAY_M, TODAY_D - back);
-    const k = dt.getMonth() + '-' + dt.getDate();
+    const k = relM(dt) + '|' + dt.getDate();
     if (!plannedByDay[k]) continue;
     if (dayComplete[k]) streak++;
     else break;
@@ -70,7 +72,7 @@ export function statsStage(ctx: Ctx): Ctx {
     run = 0;
   for (let back = 90; back >= 0; back--) {
     const dt = new Date(Y, TODAY_M, TODAY_D - back);
-    const k = dt.getMonth() + '-' + dt.getDate();
+    const k = relM(dt) + '|' + dt.getDate();
     if (!plannedByDay[k]) continue;
     if (dayComplete[k]) {
       run++;
@@ -88,7 +90,7 @@ export function statsStage(ctx: Ctx): Ctx {
     const wk = {};
     spanDays.forEach((x) => {
       const dt = new Date(Y, x.m, x.d);
-      wk[Math.floor((dt.getTime() - new Date(Y, Math.max(0, TODAY_M - 1), 1).getTime()) / 604800000)] = 1;
+      wk[Math.floor((dt.getTime() - new Date(Y, TODAY_M - 1, 1).getTime()) / 604800000)] = 1;
     });
     return Object.keys(wk).length || 1;
   })();
@@ -104,7 +106,7 @@ export function statsStage(ctx: Ctx): Ctx {
   const questDays = Object.keys(plannedByDay);
   const questsCleared = questDays.filter((k) => dayComplete[k]);
   questsCleared.forEach((k) => {
-    const [m, d] = k.split('-').map(Number);
+    const [m, d] = k.split('|').map(Number);
     const t = questSeed(d, m).title;
     questCounts[t] = (questCounts[t] || 0) + 1;
   });
@@ -120,7 +122,11 @@ export function statsStage(ctx: Ctx): Ctx {
     (max, x) => (x.av.ride && x.done ? Math.max(max, parseFloat(x.av.ride.dist) || 0) : max),
     0,
   );
-  const xpTotal = spanDays.reduce((sum, x) => sum + (x.av.ride ? 0 : doneCountAt(x.av) * 10) + (x.done ? 50 : 0), 0);
+  // XP counts everything ever done, so a rank never slips as old months pass.
+  const xpTotal = logic.model.entries.reduce(
+    (sum, x) => sum + (x.av.ride ? 0 : doneCountAt(x.av) * 10) + (isDoneEntry(x.av) ? 50 : 0),
+    0,
+  );
   const XP_STEPS = RANK_STEPS.map((s) => s * 100);
   let derivedRank = 0;
   while (derivedRank < XP_STEPS.length - 1 && xpTotal >= XP_STEPS[derivedRank]) derivedRank++;

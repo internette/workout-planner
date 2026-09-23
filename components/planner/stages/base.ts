@@ -11,6 +11,8 @@ export function baseStage(ctx: Ctx): Ctx {
   const TODAY_M = nowDate.getMonth();
   const TODAY_D = nowDate.getDate();
   const TK = TODAY_M * 100 + TODAY_D;
+  // A date's month in the planner's count (see monthPatch): 12 for next January, -1 for last December.
+  const relM = (d) => (d.getFullYear() - Y) * 12 + d.getMonth();
   // A day can hold several workouts. entriesAt lists them all; seedAt is the one on screen for that day: the
   // selected session (st.entryId) when it is on that day, otherwise the day's first.
   const entriesAt = (m, d) => (SEED[m] || {})[d] || [];
@@ -40,6 +42,7 @@ export function baseStage(ctx: Ctx): Ctx {
     seedAt,
     entriesAt,
     TK,
+    relM,
     ACT,
     creating,
     narrow,

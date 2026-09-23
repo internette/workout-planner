@@ -244,33 +244,13 @@ export function PlannerView({ v }: { v: any }) {
                               borderBottom: '1px solid rgba(35,42,69,.09)',
                             }}
                           >
-                            <span
-                              style={{
-                                width: '34px',
-                                height: '34px',
-                                borderRadius: '11px',
-                                border: '1px solid rgba(35,42,69,.12)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }}
-                            >
-                              <ChevronLeft color="var(--color-hairline)" size={17} />
-                            </span>
+                            <IconButton label="Previous year" size="md" onClick={v.prevYear}>
+                              <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={17} />
+                            </IconButton>
                             <Text variant="subheading">{v.yearLabel}</Text>
-                            <span
-                              style={{
-                                width: '34px',
-                                height: '34px',
-                                borderRadius: '11px',
-                                border: '1px solid rgba(35,42,69,.12)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }}
-                            >
-                              <ChevronRight color="var(--color-hairline)" size={17} />
-                            </span>
+                            <IconButton label="Next year" size="md" onClick={v.nextYear}>
+                              <ChevronRight color="var(--color-slate)" strokeWidth={2.2} size={17} />
+                            </IconButton>
                           </div>
                           <div
                             style={{
@@ -1257,7 +1237,7 @@ export function PlannerView({ v }: { v: any }) {
                         <div style={{ position: 'relative' }}>
                           <div
                             role="group"
-                            aria-label={v.monthName + ' ' + v.yearLabel + '. Use the arrow keys to move between days.'}
+                            aria-label={v.monthYear + '. Use the arrow keys to move between days.'}
                             onKeyDown={v.monthKeyDown}
                             style={{
                               position: 'relative',
@@ -2869,6 +2849,13 @@ export function PlannerView({ v }: { v: any }) {
                       )}
                     </>
                   )}
+                  {v.exercise.canDelete ? (
+                    <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid rgba(35,42,69,.07)' }}>
+                      <Button type="danger" ghost size="md" onClick={v.exercise.remove}>
+                        Delete exercise
+                      </Button>
+                    </div>
+                  ) : null}
                 </div>
               </>
             ) : null}
@@ -2954,8 +2941,6 @@ export function PlannerView({ v }: { v: any }) {
                         label="Day"
                         type="date"
                         value={v.scheduleCalendar?.date ?? ''}
-                        min={v.scheduleCalendar?.min}
-                        max={v.scheduleCalendar?.max}
                         onChange={v.scheduleCalendar?.setDate}
                       />
                       <Checkbox switch checked={!!v.scheduleCalendar?.repeat} onChange={v.scheduleCalendar?.setRepeat}>
@@ -3020,6 +3005,11 @@ export function PlannerView({ v }: { v: any }) {
                       ) : null}
                     </div>
                   )}
+                  <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid rgba(35,42,69,.07)' }}>
+                    <Button type="danger" ghost size="md" onClick={v.template.remove}>
+                      Delete workout
+                    </Button>
+                  </div>
                 </div>
               </>
             ) : null}
@@ -4126,13 +4116,13 @@ export function PlannerView({ v }: { v: any }) {
                       content={
                         <>
                           <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <IconButton label="Previous month" size="md" onClick={v.prevMonth}>
+                            <IconButton label="Previous month" size="md" onClick={v.pickPrevMonth}>
                               <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={15} />
                             </IconButton>
                             <Text variant="itemTitle" style={{ flex: '1', textAlign: 'center' }}>
-                              {v.monthName}
+                              {v.pickMonthName}
                             </Text>
-                            <IconButton label="Next month" size="md" onClick={v.nextMonth}>
+                            <IconButton label="Next month" size="md" onClick={v.pickNextMonth}>
                               <ChevronRight color="var(--color-slate)" strokeWidth={2.2} size={15} />
                             </IconButton>
                           </span>
@@ -4161,7 +4151,7 @@ export function PlannerView({ v }: { v: any }) {
                             ))}
                             {(v.pickerCells ?? []).map((p, i) => (
                               <Fragment key={i}>
-                                <button onClick={p?.pick} style={css(p?.style)}>
+                                <button onClick={p?.pick} aria-pressed={p?.pick ? !!p?.selected : undefined} style={css(p?.style)}>
                                   {p?.label}
                                 </button>
                               </Fragment>
@@ -4920,6 +4910,11 @@ export function PlannerView({ v }: { v: any }) {
                       borderTop: '1px solid rgba(35,42,69,.07)',
                     }}
                   >
+                    {v.saveHint ? (
+                      <Text variant="caption" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
+                        {v.saveHint}
+                      </Text>
+                    ) : null}
                     <Button type={v.eCancelType} ghost size="lg" onClick={v.footerSecondary}>
                       {v.eCancelLabel}
                     </Button>

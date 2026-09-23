@@ -1,5 +1,4 @@
-import { MONTHS } from '../constants';
-import { idOf, isoOf, workoutDraftDirty } from '../helpers';
+import { idOf, isoOf, monthPatch, workoutDraftDirty } from '../helpers';
 import { mLabel, mTab, tab } from '../styles';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -96,7 +95,6 @@ export function chromeVals(ctx: Ctx) {
     announce: st.announce || '',
     saveError: st.saveError || '',
     dismissError: () => logic.s({ saveError: null }),
-    yearLabel: String(Y),
     // A nav item is a link, so it can open in a new tab. A plain click goes there without a page load. `dest` is
     // which nav item this is ('day', 'arsenal', ...); if there's a workout draft in the way, the click is held and
     // asks first, the same "Keep your changes?" the screen's own Back arrow already uses — the tab is going nowhere.
@@ -152,6 +150,21 @@ export function chromeVals(ctx: Ctx) {
         logic.save(() => db.deletePlanEntries([idOf(srcAct)]), { screen: 'day', creating: false });
       if (c.kind === 'entry') logic.save(() => db.deleteDiary(c.day), { screen: c.after || st.screen });
       if (c.kind === 'series') logic.save(() => db.endSeries(c.sid, isoOf(new Date(Y, mi, selDay))));
+      // Deleting from the Spellbook goes back to the list it was opened from, which then no longer shows it.
+      const toList = (arsenalView) => {
+        const h = st.hist || [];
+        if (h.length && h[h.length - 1].screen === 'arsenal') logic.back();
+        else logic.s({ screen: 'arsenal' });
+        logic.s({ arsenalView });
+      };
+      if (c.kind === 'archiveWorkout') {
+        toList('workouts');
+        logic.saveOnce('archive', () => db.archiveWorkout(c.id, isoOf(new Date())));
+      }
+      if (c.kind === 'deleteExercise') {
+        toList('exercises');
+        logic.saveOnce('archive', () => db.deleteLibraryExercise(c.id));
+      }
     },
     isArsenal: st.screen === 'arsenal',
     isTemplate: st.screen === 'template',
@@ -174,7 +187,7 @@ export function chromeVals(ctx: Ctx) {
     goDay: () =>
       logic.s({
         screen: 'day',
-        month: MONTHS[TODAY_M],
+        ...monthPatch(TODAY_M),
         day: TODAY_D,
         monthOpen: false,
         seg: 'Day',
@@ -182,7 +195,7 @@ export function chromeVals(ctx: Ctx) {
       }),
     isDetail: st.screen === 'detail',
     goRest: () =>
-      logic.s({ screen: 'rest', month: MONTHS[TODAY_M], day: TODAY_D, monthOpen: false, seg: 'Day' }),
+      logic.s({ screen: 'rest', ...monthPatch(TODAY_M), day: TODAY_D, monthOpen: false, seg: 'Day' }),
     tabDay: tab(st.screen === 'day'),
     tabEdit: tab(st.screen === 'edit'),
     tabDiary: tab(st.screen === 'diary'),
