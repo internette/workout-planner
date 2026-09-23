@@ -29,7 +29,7 @@
 .segment-sm { padding: 9px 16px; border-radius: var(--radius-sm); font-size: var(--text-md); }
 .segment-md { padding: 12px 20px; border-radius: var(--radius-sm); font-size: var(--text-base); }
 
-.tone-brand .selected { background: var(--color-pink); color: var(--color-white); }
+.tone-brand .selected { background: var(--color-pink-strong); color: var(--color-white); }
 .tone-quiet .selected {
   background: var(--color-white);
   color: var(--color-pink-deep);

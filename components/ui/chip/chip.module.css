@@ -29,7 +29,7 @@
 
 /* accent: solid pink, for something that is switched on */
 .accent {
-  background: var(--color-pink);
+  background: var(--color-pink-strong);
   color: var(--color-white);
   font-weight: var(--font-weight-semibold);
 }
@@ -40,7 +40,7 @@
   color: var(--color-slate);
   font-weight: var(--font-weight-semibold);
 }
-.choice.selected { background: var(--color-pink); color: var(--color-white); }
+.choice.selected { background: var(--color-pink-strong); color: var(--color-white); }
 .choice:not(.selected):hover { filter: brightness(0.97); }
 
 .clickable { cursor: pointer; }
