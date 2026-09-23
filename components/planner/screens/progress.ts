@@ -43,7 +43,25 @@ export function progressVals(ctx: Ctx) {
     entriesAt,
     isDoneEntry,
   } = ctx;
+  // The stats cover last month and this one (just this one in January), or from when the account was made if later.
+  const statsSince = () => {
+    const start = new Date(Y, Math.max(0, TODAY_M - 1), 1);
+    const created = new Date(logic.auth.account?.createdAt ?? '');
+    const from = !isNaN(created.getTime()) && created > start ? created : start;
+    return MON3[from.getMonth()] + ' ' + from.getDate();
+  };
   return {
+    // Empty states: say what will show up, instead of "0 of 0" or a bare heading.
+    wkEmpty: weekAll.length === 0,
+    wkHas: weekAll.length > 0,
+    ticksEmpty: !Object.keys(plannedByDay).some((k) => {
+      const [m, d] = k.split('-').map(Number);
+      return m * 100 + d <= TODAY_M * 100 + TODAY_D;
+    }),
+    questsNone: questDayCount === 0,
+    questsHas: questDayCount > 0,
+    moodEmpty: Object.keys(moodCounts).length === 0,
+    recordsEmpty: Object.keys(bestByEx).length === 0 && !longestRide,
     monthLabel: MONTHS[TODAY_M].toUpperCase(),
     rankName: RANKS[derivedRank].name,
     // For the rank-up transformation (components/planner/RankUp.tsx).
@@ -218,8 +236,7 @@ export function progressVals(ctx: Ctx) {
       {
         label: 'SESSIONS DONE',
         value: String(completedSessions),
-        // The stats cover last month and this one (just this one in January).
-        unit: 'of ' + totalSessions + ' since ' + MON3[Math.max(0, TODAY_M - 1)] + ' 1',
+        unit: totalSessions ? 'of ' + totalSessions + ' since ' + statsSince() : 'none planned yet',
       },
       { label: 'CURRENT STREAK', value: String(streak), unit: streak === 1 ? 'day' : 'days' },
       { label: 'LONGEST STREAK', value: String(longest), unit: longest === 1 ? 'day' : 'days' },
@@ -263,7 +280,8 @@ export function progressVals(ctx: Ctx) {
             ? 'var(--font-weight-bold);color:var(--color-pink-deep)'
             : 'var(--font-weight-medium);color:var(--color-muted)'),
       })),
-    moodSplit: [
+    // No entries yet: no bars at 0%, the card says what will show up instead.
+    moodSplit: (Object.keys(moodCounts).length ? [
       ['Happy', 'var(--color-pink)'],
       ['Neutral', 'var(--color-slate)'],
       ['Sad', 'var(--color-periwinkle)'],
@@ -275,7 +293,7 @@ export function progressVals(ctx: Ctx) {
         pct: pct + '%',
         swatch: 'width:10px;height:10px;flex:none;border-radius:50%;background:' + color,
         bar: 'display:block;width:' + pct + '%;height:100%;border-radius:5px;background:' + color,
-      })),
+      })) : []),
     records: Object.keys(bestByEx)
       .sort((a, b) => bestByEx[b] - bestByEx[a])
       .slice(0, 4)
