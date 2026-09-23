@@ -56,10 +56,21 @@ export function workoutVals(ctx: Ctx) {
     if (st.screen === 'detail' && timerRunning) return logic.s({ pausePrompt: { proceed } });
     proceed();
   };
-  const restartWorkout = () => {
+  // Starting never touches what's already ticked: it only starts the clock (if it isn't going) and opens the workout.
+  const startWorkout = () => {
+    if (!timerState) startTimer();
+    goDetail();
+  };
+  const continueWorkout = () => {
+    if (!timerRunning) resumeTimer();
+    goDetail();
+  };
+  // Restarting starts the clock from zero and clears the ticks. Clearing them can't be undone, so when there are
+  // any it asks first; with nothing ticked there is nothing to lose and it just restarts.
+  const hasProgress = !!selAct && (selRide ? rideDone : doneCount > 0);
+  const doRestart = () => {
     startTimer();
-    // A fresh clock on a workout that still shows the last attempt's checkmarks isn't a restart — clear them too.
-    if (selAct) {
+    if (selAct && hasProgress) {
       if (selRide) {
         logic.s({ rideDone: Object.assign({}, st.rideDone, { [idOf(selAct)]: false }) });
         logic.save(() => db.setRideDone(idOf(selAct), false));
@@ -70,10 +81,7 @@ export function workoutVals(ctx: Ctx) {
     }
     goDetail();
   };
-  const continueWorkout = () => {
-    if (!timerRunning) resumeTimer();
-    goDetail();
-  };
+  const restartWorkout = () => (hasProgress ? logic.s({ restartPrompt: true }) : doRestart());
   // Day view shows a card for every workout on the day. A card's buttons pick its session first, then do what
   // the same button does for the session on screen, so the detail, timer and diary all follow that session.
   const exerciseRow = (e, doneNames) => ({
@@ -138,9 +146,11 @@ export function workoutVals(ctx: Ctx) {
       moreLabel: expanded ? 'Show less' : '+ ' + (rows.length - 3) + ' more',
       moreCaret: 'width:15px;height:15px;flex:none;transition:transform .2s' + (expanded ? ';transform:rotate(180deg)' : ''),
       toggleMore: () => logic.s({ moreIds: Object.assign({}, st.moreIds, { [id]: !expanded }) }),
-      ctaTwoButtons: !logged && timed,
-      ctaLabel: logged ? 'View chronicle entry' : 'Start workout',
-      cta: run(logged ? 'goDiary' : 'restartWorkout'),
+      // Logged: read it. Every exercise ticked but not logged yet: log it. Started (clock or ticks): carry on, or
+      // start over. Otherwise: start.
+      ctaTwoButtons: !logged && !complete && (timed || doneN > 0),
+      ctaLabel: logged ? 'View chronicle entry' : complete ? 'Log this workout' : 'Start workout',
+      cta: run(logged || complete ? 'goDiary' : 'startWorkout'),
       restart: run('restartWorkout'),
       continue: run('continueWorkout'),
     };
@@ -250,8 +260,20 @@ export function workoutVals(ctx: Ctx) {
           { label: 'EFFORT', value: selRide.zone || 'Endurance' },
         ],
     ctaLabel: hasEntry ? 'View chronicle entry' : 'Finish workout & log it',
+    startWorkout,
     restartWorkout,
     continueWorkout,
+    restartPromptOpen: !!st.restartPrompt,
+    restartPromptBody: selRide
+      ? 'This marks the ride as not done and starts the timer from zero.'
+      : 'This clears the ' +
+        plural(doneCount, 'exercise') +
+        " you've ticked off and starts the timer from zero. It can't be undone.",
+    cancelRestart: () => logic.s({ restartPrompt: false }),
+    confirmRestart: () => {
+      logic.s({ restartPrompt: false });
+      doRestart();
+    },
     longDate: DOWFULL[selDate.getDay()] + ', ' + st.month + ' ' + selDay,
     badgeStyle:
       'margin-left:auto;padding:7px 13px;border-radius:999px;font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);' +

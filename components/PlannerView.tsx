@@ -509,6 +509,22 @@ export function PlannerView({ v }: { v: any }) {
                       </div>
                     </>
                   ) : null}
+                  <Dialog
+                    open={!!v.restartPromptOpen}
+                    onClose={v.cancelRestart}
+                    title="Restart this workout?"
+                    description={v.restartPromptBody}
+                    actions={
+                      <>
+                        <Button type="neutral" ghost size="md" onClick={v.cancelRestart}>
+                          Keep my progress
+                        </Button>
+                        <Button type="danger" size="md" onClick={v.confirmRestart}>
+                          Restart
+                        </Button>
+                      </>
+                    }
+                  />
                   {v.hasWorkout ? (
                     <>
                       <div style={{ marginTop: '14px' }}>
