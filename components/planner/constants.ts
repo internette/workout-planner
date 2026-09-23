@@ -11,7 +11,7 @@ export const TARGET_AREAS = ['Core', 'Arms', 'Back', 'Legs', 'Chest', 'Shoulders
 export const QUESTS = [
   { title:'Hold the barrier', note:'Hold your ground to the very end. Nothing gets past you.',
     done:'The barrier held. Nothing got through.' },
-  { title:'Drive back the shadow', note:'Every set you finish pushes it further out of the city.',
+  { title:'Drive back the shadow', note:'Each push drives it further out of the city.',
     done:'The shadow is out of the city.' },
   { title:'Reach the next gate', note:'It only opens for someone who finishes what they started.',
     done:'You reached the gate. The way is open.' },
@@ -21,7 +21,7 @@ export const QUESTS = [
     done:'Another piece of the sigil is whole again.' },
   { title:'Escort the light home', note:'It\'s a long road. Stay with it to the end and the light gets home.',
     done:'The light made it home.' },
-  { title:'Break the illusion', note:'The hard set is the one telling you it\'s impossible.',
+  { title:'Break the illusion', note:'The hardest part is the one telling you it\'s impossible.',
     done:'The illusion broke. It was never impossible.' },
   { title:'Wake the sleeping ally', note:'They\'re listening for you. Don\'t stop halfway.',
     done:'Your ally is awake and back at your side.' },

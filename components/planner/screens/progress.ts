@@ -104,9 +104,11 @@ export function progressVals(ctx: Ctx) {
       rankPct +
       '%;height:100%;border-radius:5px;transition:width .35s ease;background:var(--gradient-gem)',
     rankProgress:
-      rankPct === 0
-        ? 'Just promoted — 0% to ' + RANKS[derivedRank].next
-        : rankPct + '% to ' + RANKS[derivedRank].next,
+      xpTotal === 0
+        ? 'Clear your first exercise to start toward ' + RANKS[derivedRank].next + '.'
+        : rankPct === 0
+          ? 'New rank: ' + RANKS[derivedRank].name + '. On to ' + RANKS[derivedRank].next + '.'
+          : rankPct + '% to ' + RANKS[derivedRank].next,
     rankTip:
       'XP ' + xpTotal + ' of ' + rankCeil + ' · 10 XP per exercise completed, 50 XP per workout finished',
     monthSummaryLabel: monthDays.filter((x) => x.done).length + ' of ' + monthDays.length + ' done',

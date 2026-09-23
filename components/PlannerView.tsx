@@ -1431,7 +1431,7 @@ export function PlannerView({ v }: { v: any }) {
                     </div>
                   </div>
                   <Text variant="title" as="h1" style={{ margin: '22px 0 0' }}>
-                    Entry saved
+                    Written into your chronicle
                   </Text>
                   <Text
                     variant="body"
@@ -3329,7 +3329,7 @@ export function PlannerView({ v }: { v: any }) {
                     tone="muted"
                     style={{ margin: '10px 0 0', maxWidth: '620px', textWrap: 'pretty' }}
                   >
-                    Every session you&apos;ve written down after the fact. Open one to read or edit it.
+                    Every session you&apos;ve written about, newest first. Open one to read or edit it.
                   </Text>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
                     <SegmentedControl

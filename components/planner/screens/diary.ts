@@ -82,7 +82,7 @@ export function diaryVals(ctx: Ctx) {
       MON3[mi] +
       ' ' +
       selDay +
-      '. Written into your chronicle.',
+      '.',
     savedCount: plural(Object.keys(ENTRIES).length, 'entry', 'entries') + ' so far',
     savedNextTitle: nextEntry ? 'Get ready for ' + nameOf(nextEntry.av.name) : 'Plan your next workout',
     savedNextMeta: nextEntry
