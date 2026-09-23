@@ -1,5 +1,4 @@
 import { DOW3, DOWFULL, MON3, MONTHS } from '../constants';
-import { tokenFor } from '../helpers';
 import type { Ctx } from '../types';
 
 // Calendar screen: month picker, day strip, week list and month grid.
@@ -20,7 +19,6 @@ export function calendarVals(ctx: Ctx) {
     days,
     selDate,
     weekLabel,
-    wkStart,
     todayDate,
     TODAY_D,
     isCurMonth,
@@ -97,17 +95,13 @@ export function calendarVals(ctx: Ctx) {
     monthName2: st.month,
     hasRows: weekRows.some((r) => r.hasRow),
     noRows: !weekRows.some((r) => r.hasRow),
-    emptyWeekNote:
-      "No sessions scheduled this week. Add one and there's a " +
-      tokenFor(wkStart.getDate() + 5) +
-      ' waiting — three a week keeps the streak alive.',
+    // Only what's true: a day with a session gets a quest.
+    emptyWeekNote: 'No sessions scheduled this week. Add one and that day gets a quest.',
     weekAllDone: weekRows.some((r) => r.hasRow) && weekRows.filter((r) => r.hasRow).every((r) => r.done),
     weekDoneNote:
       'All ' +
       weekRows.filter((r) => r.hasRow).length +
-      ' sessions logged. Every ' +
-      tokenFor(wkStart.getDate() + mi * 3) +
-      ' claimed this week.',
+      ' sessions done. Every quest this week is cleared.',
     todayLabel: 'TODAY · ' + DOW3[todayDate.getDay()] + ' ' + TODAY_D,
     hasToday: isCurMonth && todayActs.length > 0,
     todayCards: todayActs.map((a) => ({

@@ -5,15 +5,15 @@
 ## Features
 
 - **Calendar:** day, week and month views, with the current day highlighted and past sessions marked done or missed. A day can hold more than one workout: Day and Week views list each one, and a day counts as done (for its marker, the streak and its quest) once all of them are.
-- **Workouts:** lifting sessions (exercises with sets, reps, weight and rest) and cycling sessions (distance, elevation, duration, target effort). Both can repeat weekly for 12 weeks.
-- **Progress tracking:** tick exercises off, mark rides complete, and log what you actually rode against the plan.
+- **Workouts:** lifting sessions (exercises with sets, reps, weight and rest) and cycling sessions (distance, elevation, duration, target effort). Both can repeat weekly for 12 weeks. Workout names are unique (ignoring case): a name that's already taken can't be saved, and when adding to the calendar the editor offers to schedule the saved workout of that name instead. A workout left unnamed is saved as "Untitled workout", "Untitled workout 2" and so on. Editing a session from the calendar changes only that session's date, the ride you entered and repeat without asking; a change to the workout itself (name, icon, notes, ride plan, exercises) asks **Only this session** (the default: the session gets its own copy, and the saved workout and its other sessions stay as they are) or **This session and the saved workout** (upcoming sessions follow too). Past and completed sessions never change.
+- **Progress tracking:** tick exercises off, mark rides complete, and enter what you actually rode against the plan.
 - **Chronicle:** a diary entry per session with mood, effort (1–5) and notes.
-- **Arsenal:** two views, switched with a toggle. **Workouts** lists every saved workout with its exercises and target areas; **Exercises** is your exercise library, grouped by workout, plus exercises not yet assigned to one. Open either to read it without any date, and use Edit to change it. Editing a workout lists its exercises; each has an Edit button that opens the exercise editor and returns to the workout editor afterwards, with your unsaved workout changes kept. Saving a workout that has upcoming sessions asks how to save it. **Update** edits the workout, with an "Also update upcoming sessions" checkbox: ticked, upcoming sessions follow the edit, unticked they stay on the old version. **Save as new** leaves the original and all its sessions alone and saves your changes as a copy of the workout. Saving an exercise always asks. **Update** changes the exercise (in its workout, with the same checkbox for the workout's upcoming sessions); **Save as a new exercise** leaves the original and its workout exactly as they are and adds a separate exercise to the Arsenal's Unassigned group (a taken name becomes "… (copy)"). Exercises are identified by id, never by name, so two with the same name stay two exercises. Either way, past and completed sessions never change.
-- **Progress and Profile:** streaks, weekly counts, mood split, personal records, and XP with a 20-step rank ladder (10 XP per exercise, 50 XP per finished workout).
+- **Spellbook** (formerly the Spellbook): two views, switched with a toggle. **Workouts** lists every saved workout with its exercises and target areas; **Exercises** is your exercise library, grouped by workout, plus exercises not yet assigned to one. Open either to read it without any date, and use Edit to change it. Editing a workout lists its exercises; each has an Edit button that opens the exercise editor and returns to the workout editor afterwards, with your unsaved workout changes kept. Saving a workout that has upcoming sessions asks how to save it. **Update** edits the workout, with an "Also update upcoming sessions" checkbox: ticked, upcoming sessions follow the edit, unticked they stay on the old version. **Save as new** leaves the original and all its sessions alone and saves your changes as a copy of the workout. Saving an exercise always asks. **Update** changes the exercise (in its workout, with the same checkbox for the workout's upcoming sessions); **Save as a new exercise** leaves the original and its workout exactly as they are and adds a separate exercise to the Spellbook's Unassigned group (a taken name becomes "… (copy)"). Exercises are identified by id, never by name, so two with the same name stay two exercises. Either way, past and completed sessions never change.
+- **Progress and Profile:** streaks, weekly counts, mood split, personal records, and XP with a 20-step rank ladder (10 XP per exercise, 50 XP per finished workout). Reaching a new rank plays a short transformation sequence the first time you see it, wherever you are in the app (usually right as you tick the exercise that earns it); with reduced motion it shows the finished card. The highest rank already celebrated is kept per account in the browser, so a first visit on a new device records your rank quietly, and a rank that drops and is earned back doesn't replay.
 
 ## Addresses
 
-Each nav item has its own address: `/calendar` (opens on today's Day view), `/chronicle`, `/arsenal`, `/progress` and `/profile`. `/` goes to `/calendar`, and so does signing in. The nav items are real links, so they open in a new tab, and Back and Forward move between the places you have been. The planner stays loaded as you move between them. Screens inside a flow (an entry form, a workout editor) do not have addresses of their own yet; they keep the address of the nav item they were opened from. `/welcome` is the sign-in page and `/design-system` is the design-system site.
+Each nav item has its own address: `/calendar` (opens on today's Day view), `/chronicle`, `/spellbook`, `/progress` and `/profile`. `/` goes to `/calendar`, and so does signing in. The nav items are real links, so they open in a new tab, and Back and Forward move between the places you have been. The planner stays loaded as you move between them. Screens inside a flow (an entry form, a workout editor) do not have addresses of their own yet; they keep the address of the nav item they were opened from. `/arsenal`, the Spellbook's old address, redirects to `/spellbook`. `/welcome` is the sign-in page and `/design-system` is the design-system site.
 
 ## Getting started
 
@@ -43,15 +43,15 @@ The app expects these tables: `workouts`, `workout_exercises`, `plan_entries` an
 - `workouts`: `kind` (lift or ride), `duration_minutes`, `icon`, `icon_color`, `target_areas`, and the ride plan fields.
 - `plan_entries`: `done_exercises` and the actual ride figures.
 - `diary_entries`: `rpe`, and a unique `plan_entry_id` so saving an entry updates the existing one.
-- A new `library_exercises` table for the Arsenal.
+- A new `library_exercises` table for the Spellbook.
 
-A second migration, [supabase/migrations/20260920000000_workout_snapshots.sql](supabase/migrations/20260920000000_workout_snapshots.sql), adds `workouts.archived`. Editing a workout from the Arsenal (with upcoming sessions updated) saves the old version as an archived copy, so past sessions keep showing what you actually did.
+A second migration, [supabase/migrations/20260920000000_workout_snapshots.sql](supabase/migrations/20260920000000_workout_snapshots.sql), adds `workouts.archived`. Editing a workout from the Spellbook (with upcoming sessions updated) saves the old version as an archived copy, so past sessions keep showing what you actually did.
 
 Three later migrations:
 
 - [20260922000000_workout_notes.sql](supabase/migrations/20260922000000_workout_notes.sql) adds `workouts.notes`.
 - [20260924000000_exercise_target_areas.sql](supabase/migrations/20260924000000_exercise_target_areas.sql) adds `target_areas` to `workout_exercises` and `library_exercises`. A workout's target areas are now the union of its exercises' (the old `workouts.target_areas` column is no longer read).
-- [20260925000000_builtin_exercises.sql](supabase/migrations/20260925000000_builtin_exercises.sql) adds `builtin_exercises`, a shared catalog of 100 beginner exercises every account sees in its Arsenal. It is read-only to everyone (a read policy, no write policy); a person copies one to change it.
+- [20260925000000_builtin_exercises.sql](supabase/migrations/20260925000000_builtin_exercises.sql) adds `builtin_exercises`, a shared catalog of 100 beginner exercises every account sees in its Spellbook. It is read-only to everyone (a read policy, no write policy); a person copies one to change it.
 
 Run the migrations once, in order, in the Supabase SQL editor. They are safe to run again.
 
@@ -128,7 +128,7 @@ components/
     PlannerLogic.ts   UI state, navigation, loading and saving; renderVals() assembles the view's values
     context.ts        Runs the stages below in order to build a shared context
     stages/           Derived values, built up in order: base (clock, layout), entries, calendar, stats, workout
-    screens/          One builder per area of the UI: chrome, calendar, workout, edit, diary, arsenal, progress
+    screens/          One builder per area of the UI: chrome, calendar, workout, edit, diary, arsenal (the Spellbook), progress
     constants.ts      Names, quests, ranks and other fixed data
     helpers.ts        Small pure helpers (ids, ISO dates, quest lookup)
     icons.tsx         Exercise icons and mood faces
@@ -144,7 +144,7 @@ supabase/migrations/  SQL to run in the Supabase SQL editor
 
 **Data flow.** On load, `loadModel` reads all five tables and builds one model: exercises by workout, one entry per date, diary entries, ticks and the library. On each render, `PlannerLogic.renderVals()` builds a context from that model plus the UI state (the stages in `planner/stages/`), then each screen builder in `planner/screens/` turns the context into the values and handlers its part of the view needs.
 
-Ticks update the screen immediately. Other saves (creating or editing a workout, diary entries, deletes, the Arsenal) are written to Supabase first. When the writes finish, the model is reloaded and the UI state cleared. Writes run in order, and a failed one shows a dismissible error banner.
+Ticks update the screen immediately. Other saves (creating or editing a workout, diary entries, deletes, the Spellbook) are written to Supabase first. When the writes finish, the model is reloaded and the UI state cleared. Writes run in order, and a failed one shows a dismissible error banner.
 
 **The view is generated.** `PlannerView.tsx` was converted from the design's HTML template by a one-off script and is now ordinary source, so edit it directly. Colours and type are CSS variables such as `var(--color-pink)` and `var(--text-md)` (defined in `components/ui/colors` and `components/ui/typography`). Hover styles from the design are the `.hvN:hover` rules at the bottom of `app/planner.css`, and elements use them by class name.
 

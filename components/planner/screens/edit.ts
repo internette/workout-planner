@@ -1,5 +1,5 @@
 import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, MON3, MONTHS, TARGET_AREAS } from '../constants';
-import { digitsOnly, idOf, isoOf, joinSetsReps, numericOnly, restDigits, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
+import { digitsOnly, idOf, isoOf, joinSetsReps, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
 import { optStyle } from '../styles';
@@ -68,7 +68,38 @@ export function editVals(ctx: Ctx) {
     summary: { screen: 'summary', monthOpen: false, hist: navHistory() },
     profile: { screen: 'profile', monthOpen: false, hist: navHistory() },
   };
+  // Workout names are unique among saved workouts (ignoring case): the app looks workouts up by name, and two with
+  // one name used to be merged into one. The name being typed, and the saved workout that already has it, if any.
+  const sameName = (a, b) => a.trim().toLowerCase() === b.trim().toLowerCase();
+  const typedName = creating ? st.newName || '' : (st.renames || {})[baseName] || '';
+  const nameClash =
+    typedName.trim() && (creating || !sameName(typedName, baseName))
+      ? logic.model.workouts.find((w) => sameName(w.name, typedName) && (creating || w.id !== (selAct && selAct.workoutId))) ||
+        null
+      : null;
+  const todayIso = isoOf(new Date(Y, TODAY_M, TODAY_D));
   return {
+    nameError: nameClash ? 'You already have a workout called “' + nameClash.name + '”. Give this one another name.' : '',
+    saveBlocked: !!nameClash,
+    // Creating one for the calendar under a name that's taken: most likely the saved one was meant.
+    canUseSaved: !!nameClash && creating && st.schedule !== false,
+    useSavedLabel: nameClash ? 'Schedule your saved “' + nameClash.name + '” instead' : '',
+    useSaved: () => {
+      if (!nameClash) return;
+      const dates = [isoOf(new Date(Y, mi, selDay))];
+      if (st.repeat) for (let w = 1; w <= 12; w++) dates.push(isoOf(new Date(Y, mi, selDay + w * 7)));
+      logic.save(
+        () => db.scheduleWorkout(nameClash.id, dates, !!st.repeat),
+        (r) =>
+          Object.assign(
+            { screen: 'day' },
+            { creating: false, newType: null, newName: '', newFrom: null, schedule: null },
+            EDIT_OVERLAYS,
+            { extra: Object.assign({}, st.extra, { __draft: [] }) },
+            r && r.entryId ? { entryId: r.entryId } : {},
+          ),
+      );
+    },
     pickTypeLift: () => logic.s({ newType: 'lift' }),
     pickTypeCycle: () => logic.s({ newType: 'cycle' }),
     needsType: creating && !st.newType,
@@ -118,7 +149,7 @@ export function editVals(ctx: Ctx) {
       '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
     rideNote:
       ridePct == null
-        ? 'Log what you rode — a partial ride still counts.'
+        ? 'Enter what you rode — a partial ride still counts.'
         : ridePct >= 100
           ? 'Full route ridden. Plan met.'
           : ridePct + '% of the planned distance. The rest stays on the plan.',
@@ -143,8 +174,8 @@ export function editVals(ctx: Ctx) {
     closeAdd: () => logic.s({ addOpen: false }),
     addMode: st.addMode === 'new' ? 'new' : 'lib',
     setAddMode: (mode) => logic.s({ addMode: mode }),
-    // "Summon the full Arsenal": opens the real Arsenal, remembering this workout so "Add to workout" there puts
-    // the exercise here and comes back. The names already in it let the Arsenal mark those "In workout".
+    // "Browse the full Spellbook": opens the real Spellbook, remembering this workout so "Add to workout" there puts
+    // the exercise here and comes back. The names already in it let the Spellbook mark those "In workout".
     // It arrives narrowed to this workout's target areas, like the short list here; the person's own filter comes
     // back when picking ends.
     browseArsenal: () =>
@@ -166,7 +197,7 @@ export function editVals(ctx: Ctx) {
       ? 'Showing exercises for ' +
         (picked.length === 1 ? picked[0] : picked.slice(0, -1).join(', ') + ' and ' + picked[picked.length - 1])
       : '',
-    // A short pick, not the whole Arsenal: alphabetical, the first 10 — and once the workout's exercises have
+    // A short pick, not the whole Spellbook: alphabetical, the first 10 — and once the workout's exercises have
     // target areas, only exercises that share one of them. The full list is a tap away.
     library: libraryFor(listKey)
       .filter((e) => !picked.length || (e.areas || []).some((a) => picked.includes(a)))
@@ -175,7 +206,7 @@ export function editVals(ctx: Ctx) {
       .map((e) => ({
       name: e.name,
       detail: e.sets + ' · ' + e.weight,
-      // Same as the Arsenal: the row opens the exercise, "+" adds it. Back returns here with this panel still open.
+      // Same as the Spellbook: the row opens the exercise, "+" adds it. Back returns here with this panel still open.
       // An exercise only drafted in this visit has no saved page yet, so it can only be added.
       open: e.id ? () => logic.nav({ screen: 'exercise', exerciseId: e.id }) : null,
       add: () =>
@@ -282,7 +313,7 @@ export function editVals(ctx: Ctx) {
     },
     setEditName: (e) => logic.s({ renames: Object.assign({}, st.renames, { [baseName]: e.target.value }) }),
     eEyebrow: st.editing ? 'EDITING WORKOUT' : 'NEW WORKOUT',
-    eSaveLabel: st.editing ? 'Update workout' : creating && st.schedule === false ? 'Save to Arsenal' : 'Save workout',
+    eSaveLabel: st.editing ? 'Update workout' : creating && st.schedule === false ? 'Save to Spellbook' : 'Save workout',
     eCancelLabel: creating ? 'Cancel' : 'Delete workout',
     footerSecondary: creating
       ? () =>
@@ -339,6 +370,7 @@ export function editVals(ctx: Ctx) {
         for (let w = 1; w <= 12; w++) out.push(isoOf(new Date(Y, mi, selDay + w * 7)));
         return out;
       };
+      if (nameClash) return logic.s({ leaveOpen: false, pendingNav: null });
       const cleared = EDIT_OVERLAYS;
       const bare = (e) => ({ name: e.name, sets: e.sets, weight: e.weight, rest: e.rest, i: e.i, areas: e.areas || [] });
       if (!creating) {
@@ -364,44 +396,95 @@ export function editVals(ctx: Ctx) {
         });
         const moved = st.editKey && st.editKey !== mi + '-' + selDay;
         const actualEdited = st.aDist != null || st.aElev != null || st.aHrs != null || st.aMins != null;
-        return logic.save(
-          () =>
-            db.updateWorkout({
-              entryId: selAct.id,
-              workoutId: selAct.workoutId,
-              name: (st.renames || {})[baseName],
-              icon: (st.icons || {})[listKey],
-              iconColor: (st.iconColors || {})[listKey],
-              notes: (st.notes || {})[listKey],
-              ride: selRide
-                ? {
-                    dist: rDist,
-                    elev: rElev,
-                    zone: st.rZone || selRide.zone || 'Endurance',
-                    minutes: plannedMin,
-                  }
-                : null,
-              moveTo: moved ? isoOf(new Date(Y, mi, selDay)) : undefined,
-              actual:
-                selRide && actualEdited
-                  ? { dist: aDist, elev: aElev, minutes: Number(aHrs || 0) * 60 + Number(aMins || 0) }
-                  : null,
-              exercises: {
-                update,
-                removeIds: gone
-                  .map((n) => byName(n))
-                  .filter((e) => e && e.id)
-                  .map((e) => e.id),
-                add: added.map(bare),
+        const newName = ((st.renames || {})[baseName] || '').trim();
+        const notes = (st.notes || {})[listKey];
+        const rideEdited = !!selRide && [st.rDist, st.rElev, st.rHrs, st.rMins, st.rZone].some((v) => v != null);
+        const edit = {
+          entryId: selAct.id,
+          workoutId: selAct.workoutId,
+          name: newName && newName !== baseName ? newName : undefined,
+          icon: (st.icons || {})[listKey],
+          iconColor: (st.iconColors || {})[listKey],
+          notes: notes != null && notes !== (selAct.notes || '') ? notes : undefined,
+          ride: rideEdited
+            ? { dist: rDist, elev: rElev, zone: st.rZone || selRide.zone || 'Endurance', minutes: plannedMin }
+            : null,
+          moveTo: moved ? isoOf(new Date(Y, mi, selDay)) : undefined,
+          actual:
+            selRide && actualEdited
+              ? { dist: aDist, elev: aElev, minutes: Number(aHrs || 0) * 60 + Number(aMins || 0) }
+              : null,
+          exercises: {
+            update,
+            removeIds: gone
+              .map((n) => byName(n))
+              .filter((e) => e && e.id)
+              .map((e) => e.id),
+            add: added.map(bare),
+          },
+          repeatDates: st.repeat && !selAct.series ? weekly() : [],
+        };
+        // Normally back to the workout's own detail screen; if a nav click was waiting on this save, go there instead.
+        // Either way this session stays the selected one, even if it moved to a day that already had a workout.
+        const after = Object.assign(st.pendingNav ? NAV_DESTINATIONS[st.pendingNav] : { screen: 'detail' }, cleared, {
+          entryId: selAct.id,
+          tplConfirm: null,
+        });
+        // The date, the ride you logged and repeating belong to this session. Anything else changes the workout,
+        // which other sessions (and the Spellbook) share.
+        const changesWorkout =
+          edit.name !== undefined ||
+          edit.icon !== undefined ||
+          edit.iconColor !== undefined ||
+          edit.notes !== undefined ||
+          !!edit.ride ||
+          update.length > 0 ||
+          edit.exercises.removeIds.length > 0 ||
+          added.length > 0;
+        if (!changesWorkout) return logic.save(() => db.updateWorkout(edit), after);
+        // Shared with other sessions: ask whether the change is for this session only, or for the saved workout (and
+        // the sessions still ahead). Past and completed sessions keep the old version either way.
+        const workoutName = baseName;
+        return db
+          .sessionScope(selAct.workoutId, selAct.id, todayIso)
+          .then(({ others, upcoming }) => {
+            if (others === 0) return logic.save(() => db.updateWorkout(edit), after);
+            logic.s({
+              tplConfirm: {
+                name: workoutName,
+                count: 0,
+                choice: 'new',
+                upcoming: true,
+                body: '“' + workoutName + '” has ' + plural(others, 'other session') + '.',
+                options: [
+                  {
+                    value: 'new',
+                    title: 'Only this session',
+                    description: 'The saved workout and its other sessions stay as they are.',
+                  },
+                  {
+                    value: 'update',
+                    title: 'This session and the saved workout',
+                    description:
+                      (upcoming
+                        ? 'Also changes the ' + plural(upcoming, 'upcoming session') + '. '
+                        : '') + 'Past and completed sessions keep the old version.',
+                  },
+                ],
+                apply: (mode) =>
+                  logic.save(
+                    () =>
+                      db.updateWorkoutTemplate(edit, {
+                        mode: mode === 'new' ? 'session' : 'update',
+                        updateUpcoming: true,
+                        todayIso,
+                      }),
+                    after,
+                  ),
               },
-              repeatDates: st.repeat && !selAct.series ? weekly() : [],
-            }),
-          // Normally back to the workout's own detail screen; if a nav click was waiting on this save, go there instead.
-          // Either way this session stays the selected one, even if it moved to a day that already had a workout.
-          Object.assign(st.pendingNav ? NAV_DESTINATIONS[st.pendingNav] : { screen: 'detail' }, cleared, {
-            entryId: selAct.id,
-          }),
-        );
+            });
+          })
+          .catch((e) => logic.s({ saveError: e instanceof Error ? e.message : String(e) }));
       }
       const nm = (st.newName || '').trim() || 'Untitled workout';
       const isRide = st.newType === 'cycle';
@@ -423,7 +506,7 @@ export function editVals(ctx: Ctx) {
             dates: scheduled ? [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weekly() : []) : [],
             repeat: scheduled && !!st.repeat,
           }),
-        // Normally: saved only goes back to the Arsenal's workouts, where it now is; scheduled goes to the day it
+        // Normally: saved only goes back to the Spellbook's workouts, where it now is; scheduled goes to the day it
         // was put on. If a nav click was waiting on this save, go there instead — that's what was actually asked
         // for. Either way this is leaving "creating" behind, so those fields always get reset, not just by default.
         // A scheduled workout opens on its new session, which matters when that day already had a workout.
@@ -487,8 +570,8 @@ export function editVals(ctx: Ctx) {
     setSchedule: (on) => logic.s({ schedule: !!on, repeat: on ? st.repeat : false }),
     scheduleNote:
       st.schedule !== false
-        ? 'Puts it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mi] + ' ' + selDay + ', and keeps it in your Arsenal.'
-        : 'Only saved to your Arsenal. You can add it to the calendar any time.',
+        ? 'Puts it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mi] + ' ' + selDay + ', and keeps it in your Spellbook.'
+        : 'Only saved to your Spellbook. You can add it to the calendar any time.',
     exercises: selList.map((e, ix) => {
       const cur = (st.exIcons || {})[e.name] || e.i;
       const set = (v) => () =>

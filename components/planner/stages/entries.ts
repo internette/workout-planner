@@ -1,4 +1,4 @@
-import { idOf, isoOf } from '../helpers';
+import { idOf, isoOf, plural } from '../helpers';
 import type { Ctx } from '../types';
 
 // Per-entry helpers (names, exercise counts, done state), the chronicle filter and the mood / effort widgets.
@@ -30,10 +30,10 @@ export function entriesStage(ctx: Ctx): Ctx {
           ? av.ride.dist + ' mi · ' + av.time
           : av.time
         : isDoneEntry(av)
-          ? countAt(av) + ' exercises · ' + av.time
+          ? plural(countAt(av), 'exercise') + ' · ' + av.time
           : doneCountAt(av) > 0
             ? doneCountAt(av) + ' of ' + countAt(av) + ' done · ' + av.time
-            : countAt(av) + ' exercises · ' + av.time;
+            : plural(countAt(av), 'exercise') + ' · ' + av.time;
   const diaryDays = Object.keys(ENTRIES)
     .sort((a, b) => ENTRIES[b].m * 100 + ENTRIES[b].d - (ENTRIES[a].m * 100 + ENTRIES[a].d))
     .filter((id) => {

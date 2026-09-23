@@ -4,7 +4,7 @@
 export const TAB_PATHS = {
   calendar: '/calendar',
   chronicle: '/chronicle',
-  arsenal: '/arsenal',
+  arsenal: '/spellbook',
   progress: '/progress',
   profile: '/profile',
 } as const;
@@ -27,7 +27,7 @@ export function pathForScreen(screen: string): string | null {
 
 /**
  * The address the planner's current state belongs to. The same as pathForScreen, except that creating a workout from the
- * Arsenal stays under /arsenal: it is the Arsenal's flow, not the calendar's.
+ * Spellbook (the 'arsenal' screen) stays under /spellbook: it is the Spellbook's flow, not the calendar's.
  */
 export function pathForState(state: { screen: string; creating?: boolean; newFrom?: string | null }): string | null {
   if (state.screen === 'edit' && state.creating && state.newFrom === 'arsenal') return TAB_PATHS.arsenal;

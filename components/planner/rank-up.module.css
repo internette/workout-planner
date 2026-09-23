@@ -1,0 +1,280 @@
+/* The rank-up transformation: night falls, ribbons and sparkles spiral in, the gem forms, a flash, the new name. */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  overflow: hidden;
+  color: var(--color-white);
+}
+.overlay::backdrop {
+  background: transparent;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.night {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 42%, #3b416f 0%, var(--color-ink) 55%, #141830 100%);
+  animation: nightFall 0.45s ease-out both;
+}
+
+/* Thin ribbon arcs, each a ring cut from a conic gradient, that spiral inward to the gem. */
+.ribbon {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 150vmax;
+  height: 150vmax;
+  margin: -75vmax 0 0 -75vmax;
+  border-radius: 50%;
+  -webkit-mask: radial-gradient(circle, transparent 37%, #000 38%, #000 41.5%, transparent 42.5%);
+  mask: radial-gradient(circle, transparent 37%, #000 38%, #000 41.5%, transparent 42.5%);
+  opacity: 0;
+  animation: ribbonIn 1.5s cubic-bezier(0.55, 0, 0.3, 1) both;
+}
+.r1 {
+  background: conic-gradient(from 0deg, transparent 0 55%, var(--color-pink) 72%, transparent 88%);
+  animation-delay: 0.15s;
+}
+.r2 {
+  background: conic-gradient(from 120deg, transparent 0 55%, var(--color-periwinkle) 72%, transparent 88%);
+  animation-delay: 0.3s;
+  animation-direction: normal;
+}
+.r3 {
+  background: conic-gradient(from 240deg, transparent 0 55%, var(--color-teal) 72%, transparent 88%);
+  animation-delay: 0.45s;
+}
+
+/* Sparkles start on a wide circle and spiral into the centre. Each sets its own angle in --a. */
+.spark {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  opacity: 0;
+  animation: sparkIn 1.25s cubic-bezier(0.6, 0, 0.35, 1) both;
+}
+
+.gemWrap {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 104px;
+  height: 140px;
+  margin: -70px 0 0 -52px;
+  perspective: 600px;
+}
+.halo {
+  position: absolute;
+  inset: -70px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, rgba(225, 105, 156, 0.35) 30%, transparent 65%);
+  opacity: 0;
+  animation: haloPulse 2.4s ease-in-out 1.6s infinite both;
+}
+.gem {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(50% 0, 100% 35%, 50% 100%, 0 35%);
+  opacity: 0;
+  animation: gemForm 0.75s cubic-bezier(0.2, 1.4, 0.4, 1) 1.15s both;
+}
+/* Facets: a light top face and a darker lower right face over the rank's own colour. */
+.gem::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.1) 34%, transparent 35%),
+    linear-gradient(20deg, transparent 55%, rgba(35, 42, 69, 0.22) 56%);
+}
+
+.flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 42%, #fff 0%, rgba(255, 255, 255, 0.9) 18%, rgba(255, 255, 255, 0) 62%);
+  opacity: 0;
+  animation: flash 0.55s ease-out 1.55s both;
+}
+
+.twinkle {
+  position: absolute;
+  opacity: 0;
+  animation: twinkle 2.2s ease-in-out infinite both;
+}
+
+.copy {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: calc(42% + 96px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+.eyebrow {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.72);
+  animation: rise 0.6s ease-out 1.8s both;
+}
+.name {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(30px, 7vw, 44px);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  animation: rise 0.7s ease-out 1.9s both;
+}
+.sub {
+  margin: 0;
+  font-size: var(--text-md);
+  color: rgba(255, 255, 255, 0.75);
+  animation: rise 0.7s ease-out 2.05s both;
+}
+.action {
+  margin-top: 18px;
+  animation: rise 0.6s ease-out 2.3s both;
+}
+
+@keyframes nightFall {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes ribbonIn {
+  0% {
+    opacity: 0;
+    transform: rotate(0deg) scale(1.15);
+  }
+  25% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(540deg) scale(0.12);
+  }
+}
+@keyframes sparkIn {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(-46vmin) scale(0.6);
+  }
+  20% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(calc(var(--a) + 160deg)) translateY(0) scale(1.1);
+  }
+}
+@keyframes gemForm {
+  0% {
+    opacity: 0;
+    transform: scale(0.1) rotateY(540deg);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg);
+  }
+}
+@keyframes flash {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes haloPulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Without motion: no ribbons, sparkles or flash; the finished card appears at once. */
+@media (prefers-reduced-motion: reduce) {
+  .ribbon,
+  .spark,
+  .flash,
+  .twinkle {
+    display: none;
+  }
+  .night,
+  .gem,
+  .halo,
+  .eyebrow,
+  .name,
+  .sub,
+  .action {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .halo {
+    opacity: 0.6;
+  }
+}

@@ -1,8 +1,7 @@
-import { QUESTS, TOKENS } from './constants';
+import { QUESTS } from './constants';
 
 export const questFor = seed => QUESTS[Math.abs(Math.round(seed)) % QUESTS.length];
 export const questSeed = (day, month) => questFor(day * 3 + month);
-export const tokenFor = seed => TOKENS[Math.abs(Math.round(seed)) % TOKENS.length];
 export const CAT = n => n.indexOf('Push')>-1 ? 'Push' : n.indexOf('Pull')>-1 ? 'Pull' : n.indexOf('Leg')>-1 ? 'Legs' : 'Core';
 export const idOf = av => (av && av.id) || 'unknown';
 // Seconds to a stopwatch readout: "12:34", or "1:02:34" past an hour.

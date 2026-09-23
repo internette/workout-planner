@@ -179,9 +179,9 @@ export function PlannerView({ v }: { v: any }) {
                 <Book color={v.navDiaryInk} size={18} />
                 {'Chronicle '}
               </a>
-              <a href="/arsenal" onClick={v.navGo(v.goArsenal, 'arsenal')} aria-current={v.navArsenalOn} style={css(v.navArsenal)}>
+              <a href="/spellbook" onClick={v.navGo(v.goArsenal, 'arsenal')} aria-current={v.navArsenalOn} style={css(v.navArsenal)}>
                 <Dumbbell color={v.navArsenalInk} size={18} />
-                {'Arsenal '}
+                {'Spellbook '}
               </a>
               <a href="/progress" onClick={v.navGo(v.goSummary, 'summary')} aria-current={v.navSummaryOn} style={css(v.navSummary)}>
                 <BarChart color={v.navSummaryInk} strokeWidth={2.2} size={18} />
@@ -509,6 +509,22 @@ export function PlannerView({ v }: { v: any }) {
                       </div>
                     </>
                   ) : null}
+                  <Dialog
+                    open={!!v.restartPromptOpen}
+                    onClose={v.cancelRestart}
+                    title="Restart this workout?"
+                    description={v.restartPromptBody}
+                    actions={
+                      <>
+                        <Button type="neutral" ghost size="md" onClick={v.cancelRestart}>
+                          Keep my progress
+                        </Button>
+                        <Button type="danger" size="md" onClick={v.confirmRestart}>
+                          Restart
+                        </Button>
+                      </>
+                    }
+                  />
                   {v.hasWorkout ? (
                     <>
                       <div style={{ marginTop: '14px' }}>
@@ -1415,7 +1431,7 @@ export function PlannerView({ v }: { v: any }) {
                     </div>
                   </div>
                   <Text variant="title" as="h1" style={{ margin: '22px 0 0' }}>
-                    Entry saved
+                    Written into your chronicle
                   </Text>
                   <Text
                     variant="body"
@@ -2004,7 +2020,7 @@ export function PlannerView({ v }: { v: any }) {
                             }}
                           >
                             {t(v.streakUnit)}
-                            {' unbroken'}
+                            {' streak'}
                           </span>
                         </div>
                         <Text
@@ -2095,7 +2111,7 @@ export function PlannerView({ v }: { v: any }) {
                             weight="medium"
                             style={{ margin: '9px 0 0' }}
                           >
-                            No call to answer yet.
+                            No call yet. Plan a session and it shows up here.
                           </Text>
                         </>
                       ) : null}
@@ -2133,7 +2149,7 @@ export function PlannerView({ v }: { v: any }) {
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '14px' }}>
                     <Card pad="sm" style={{ flex: '1 1 170px' }}>
                       <Text variant="eyebrow" as="div" tone="muted">
-                        LOGGED
+                        CHRONICLE
                       </Text>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
                         <Text variant="subheading">{v.loggedCount}</Text>
@@ -2144,7 +2160,7 @@ export function PlannerView({ v }: { v: any }) {
                     </Card>
                     <Card pad="sm" style={{ flex: '1 1 170px' }}>
                       <Text variant="eyebrow" as="div" tone="muted">
-                        SEPTEMBER
+                        {v.monthLabel}
                       </Text>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
                         <Text variant="subheading">{v.monthDone}</Text>
@@ -2162,7 +2178,7 @@ export function PlannerView({ v }: { v: any }) {
                 <div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
                     <Text variant="title" as="h1" style={{ margin: '0' }}>
-                      Arsenal
+                      Spellbook
                     </Text>
                     <Text variant="label" tone="muted">
                       {v.arsenalCount}
@@ -2177,7 +2193,7 @@ export function PlannerView({ v }: { v: any }) {
                     {v.arsenalIntro}
                   </Text>
                   {v.arsenalPicking ? (
-                    // Stays in view down the long list, so it's always clear the Arsenal is picking for a workout.
+                    // Stays in view down the long list, so it's always clear the Spellbook is picking for a workout.
                     // The page-coloured band behind it keeps the list from showing through above the card.
                     <div
                       style={{
@@ -2215,7 +2231,7 @@ export function PlannerView({ v }: { v: any }) {
                     }}
                   >
                     <SegmentedControl
-                      label="Arsenal view"
+                      label="Spellbook view"
                       size="sm"
                       options={[
                         { value: 'workouts', label: 'Workouts' },
@@ -2455,7 +2471,7 @@ export function PlannerView({ v }: { v: any }) {
                                 disabled={v.commitDisabled}
                                 onClick={v.commitArsenal}
                               >
-                                Add to Arsenal
+                                Add to Spellbook
                               </Button>
                             </div>
                           </Card>
@@ -2577,7 +2593,7 @@ export function PlannerView({ v }: { v: any }) {
                     <>
                       {v.noSavedWorkouts ? (
                         <Text variant="body" as="p" tone="muted" style={{ margin: '20px 0 0' }}>
-                          No saved workouts yet. Add one from the calendar and it will show up here.
+                          Your spellbook is empty. Write your first workout with New.
                         </Text>
                       ) : null}
                       {v.noWorkoutMatches ? (
@@ -2898,6 +2914,7 @@ export function PlannerView({ v }: { v: any }) {
                       value={v.templateEdit.name}
                       onChange={v.templateEdit.setName}
                       placeholder="Name this workout"
+                      error={v.templateEdit.nameError || undefined}
                     />
                   </div>
                   {v.templateEdit.isRide ? (
@@ -3240,7 +3257,7 @@ export function PlannerView({ v }: { v: any }) {
                     tone="muted"
                     style={{ margin: '10px 0 0', maxWidth: '460px', textWrap: 'pretty' }}
                   >
-                    Entries attach to a workout on your plan. Only past sessions without an entry are listed.
+                    Entries attach to a workout on your plan. Listed: this month&apos;s sessions, up to today, that don&apos;t have one yet.
                   </Text>
                   <div style={{ marginTop: '22px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
@@ -3312,7 +3329,7 @@ export function PlannerView({ v }: { v: any }) {
                     tone="muted"
                     style={{ margin: '10px 0 0', maxWidth: '620px', textWrap: 'pretty' }}
                   >
-                    Every session you&apos;ve written down after the fact. Open one to read or edit it.
+                    Every session you&apos;ve written about, newest first. Open one to read or edit it.
                   </Text>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
                     <SegmentedControl
@@ -3947,6 +3964,7 @@ export function PlannerView({ v }: { v: any }) {
                             onChange={v.setNewName}
                             onKeyDown={v.commitOnEnter}
                             placeholder="Name this workout"
+                            error={v.nameError || undefined}
                           />
                         </>
                       ) : null}
@@ -3959,6 +3977,7 @@ export function PlannerView({ v }: { v: any }) {
                             onChange={v.setEditName}
                             onKeyDown={v.commitOnEnter}
                             placeholder="Name this workout"
+                            error={v.nameError || undefined}
                           />
                         </>
                       ) : null}
@@ -4033,6 +4052,11 @@ export function PlannerView({ v }: { v: any }) {
                     ) : null}
                     <Chip icon={<Clock color="var(--color-muted)" size={17} />}>{t(v.eTime)}</Chip>
                   </div>
+                  {v.canUseSaved ? (
+                    <Button type="secondary" size="md" onClick={v.useSaved} style={{ marginTop: '12px' }}>
+                      {v.useSavedLabel}
+                    </Button>
+                  ) : null}
                   {v.isCreating ? (
                     <Card pad="sm" style={{ marginTop: '16px' }}>
                       <Checkbox switch checked={!!v.scheduleOn} onChange={v.setSchedule}>
@@ -4517,7 +4541,7 @@ export function PlannerView({ v }: { v: any }) {
                             size="sm"
                             tone="quiet"
                             options={[
-                              { value: 'lib', label: 'From Arsenal' },
+                              { value: 'lib', label: 'From Spellbook' },
                               { value: 'new', label: 'Create new' },
                             ]}
                             value={v.addMode}
@@ -4612,7 +4636,7 @@ export function PlannerView({ v }: { v: any }) {
                                 onClick={v.browseArsenal}
                                 style={{ marginTop: '4px' }}
                               >
-                                Summon the full Arsenal
+                                Browse the full Spellbook
                                 <ChevronRight color="var(--color-pink-deep)" strokeWidth={2.2} size={14} />
                               </Button>
                             </div>
@@ -4756,7 +4780,7 @@ export function PlannerView({ v }: { v: any }) {
                     <Button type={v.eCancelType} ghost size="lg" onClick={v.footerSecondary}>
                       {v.eCancelLabel}
                     </Button>
-                    <Button type="primary" size="lg" onClick={v.saveWorkout}>
+                    <Button type="primary" size="lg" onClick={v.saveWorkout} disabled={!!v.saveBlocked}>
                       {v.eSaveLabel}
                     </Button>
                   </div>
@@ -5036,10 +5060,10 @@ export function PlannerView({ v }: { v: any }) {
               Chronicle
             </span>
           </a>
-          <a href="/arsenal" onClick={v.navGo(v.goArsenal, 'arsenal')} aria-current={v.navArsenalOn} style={css(v.mTabArsenal)}>
+          <a href="/spellbook" onClick={v.navGo(v.goArsenal, 'arsenal')} aria-current={v.navArsenalOn} style={css(v.mTabArsenal)}>
             <Dumbbell color={v.mArsenalColor} size={22} />
             <span className="mlabel" style={css(v.mArsenalLabel)}>
-              Arsenal
+              Spellbook
             </span>
           </a>
           <a href="/progress" onClick={v.navGo(v.goSummary, 'summary')} aria-current={v.navSummaryOn} style={css(v.mTabSummary)}>

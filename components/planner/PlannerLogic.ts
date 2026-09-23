@@ -77,7 +77,7 @@ export class PlannerLogic extends DCLogic {
     this.setState(Object.assign({}, prev, { hist: h.slice(0, -1), monthOpen:false }));
   }
   // Like back(), but all the way to the most recent visit to `screen`, skipping whatever was opened on the way
-  // (the Arsenal, then an exercise's details, then back to the workout that was being built).
+  // (the Spellbook, then an exercise's details, then back to the workout that was being built).
   backTo(screen, patch = {}){
     const h = this.state.hist || [];
     const i = h.map((x) => x.screen).lastIndexOf(screen);

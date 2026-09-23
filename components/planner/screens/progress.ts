@@ -29,6 +29,8 @@ export function progressVals(ctx: Ctx) {
     completedSessions,
     totalSessions,
     questCounts,
+    questDayCount,
+    questsClearedCount,
     longest,
     weeklyAvg,
     moodCounts,
@@ -42,7 +44,12 @@ export function progressVals(ctx: Ctx) {
     isDoneEntry,
   } = ctx;
   return {
+    monthLabel: MONTHS[TODAY_M].toUpperCase(),
     rankName: RANKS[derivedRank].name,
+    // For the rank-up transformation (components/planner/RankUp.tsx).
+    rankIndex: derivedRank,
+    rankNext: RANKS[derivedRank].next,
+    rankGemFill: derivedRank === RANKS.length - 1 ? 'var(--gradient-gem)' : RANKS[derivedRank].gem,
     rankStepLabel: 'Rank ' + (derivedRank + 1) + ' of ' + RANKS.length,
     xpInfoOpen: !!st.xpInfo,
     toggleXpInfo: () => logic.s({ xpInfo: !st.xpInfo }),
@@ -101,9 +108,11 @@ export function progressVals(ctx: Ctx) {
       rankPct +
       '%;height:100%;border-radius:5px;transition:width .35s ease;background:var(--gradient-gem)',
     rankProgress:
-      rankPct === 0
-        ? 'Just promoted — 0% to ' + RANKS[derivedRank].next
-        : rankPct + '% to ' + RANKS[derivedRank].next,
+      xpTotal === 0
+        ? 'Clear your first exercise to start toward ' + RANKS[derivedRank].next + '.'
+        : rankPct === 0
+          ? 'New rank: ' + RANKS[derivedRank].name + '. On to ' + RANKS[derivedRank].next + '.'
+          : rankPct + '% to ' + RANKS[derivedRank].next,
     rankTip:
       'XP ' + xpTotal + ' of ' + rankCeil + ' · 10 XP per exercise completed, 50 XP per workout finished',
     monthSummaryLabel: monthDays.filter((x) => x.done).length + ' of ' + monthDays.length + ' done',
@@ -111,7 +120,7 @@ export function progressVals(ctx: Ctx) {
     streakUnit: streak === 1 ? 'day' : 'days',
     streakPillLabel: (streak === 1 ? 'day' : 'day') + ' streak',
     streakNote: todayLogged
-      ? 'Today is in the books.'
+      ? 'Today is cleared.'
       : streak > 0
         ? plannedByDay[todayKey]
           ? 'Today still pending — finish it to reach ' + (streak + 1) + '.'
@@ -176,10 +185,10 @@ export function progressVals(ctx: Ctx) {
         (b.planned ? b.done + ' of ' + plural(b.planned, 'session') + ' done' : 'nothing planned')
       );
     })(),
-    questsClearedLabel: completedSessions + ' of ' + totalSessions,
+    questsClearedLabel: questsClearedCount + ' of ' + questDayCount,
     questsClearedBar:
       'width:' +
-      (totalSessions ? Math.round((completedSessions / totalSessions) * 100) : 0) +
+      (questDayCount ? Math.round((questsClearedCount / questDayCount) * 100) : 0) +
       '%;height:100%;border-radius:5px;background:var(--gradient-gem)',
     questStats: Object.keys(questCounts)
       .sort((a, b) => questCounts[b] - questCounts[a])
@@ -209,7 +218,8 @@ export function progressVals(ctx: Ctx) {
       {
         label: 'SESSIONS DONE',
         value: String(completedSessions),
-        unit: 'of ' + totalSessions + ' since Aug',
+        // The stats cover last month and this one (just this one in January).
+        unit: 'of ' + totalSessions + ' since ' + MON3[Math.max(0, TODAY_M - 1)] + ' 1',
       },
       { label: 'CURRENT STREAK', value: String(streak), unit: streak === 1 ? 'day' : 'days' },
       { label: 'LONGEST STREAK', value: String(longest), unit: longest === 1 ? 'day' : 'days' },

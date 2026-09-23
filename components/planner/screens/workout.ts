@@ -1,5 +1,5 @@
 import { DOWFULL, EDIT_OVERLAYS } from '../constants';
-import { formatElapsed, idOf, plural, questSeed, tokenFor } from '../helpers';
+import { formatElapsed, idOf, plural, questSeed } from '../helpers';
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -33,6 +33,8 @@ export function workoutVals(ctx: Ctx) {
     dayEntries,
     isDoneEntry,
     instList,
+    TODAY_M,
+    TODAY_D,
     DIARY,
   } = ctx;
   const goDetail = () => logic.nav({ screen: 'detail', creating: false });
@@ -45,9 +47,17 @@ export function workoutVals(ctx: Ctx) {
   const resumeTimer = () => setTimer({ elapsed: timerElapsedSec, runningSince: Date.now() });
   // "Finish workout & log it" (and reopening what you already logged) means the clock's job is done —
   // stop it here rather than leaving it running unnoticed under the diary screen.
+  // An entry that already exists opens to read, with its own mood and effort. A new one starts from a clean form,
+  // never from whatever mood and effort were last on screen.
   const goDiary = () => {
     if (timerRunning) pauseTimer();
-    logic.nav({ screen: 'diary', diaryFrom: 'day', diaryEdit: false });
+    const logged = DIARY[listKey];
+    logic.nav(
+      Object.assign(
+        { screen: 'diary', diaryFrom: 'day', diaryEdit: false, entryNote: null },
+        logged ? { mood: logged.mood, rpe: logged.rpe } : { mood: 'Happy', rpe: 3 },
+      ),
+    );
   };
   // Leaving the detail screen while the clock is running asks first, so a stray tap on a nav item can't
   // silently keep it running unattended (or lose track of it). Both the nav guard (chrome.ts) and this
@@ -56,10 +66,21 @@ export function workoutVals(ctx: Ctx) {
     if (st.screen === 'detail' && timerRunning) return logic.s({ pausePrompt: { proceed } });
     proceed();
   };
-  const restartWorkout = () => {
+  // Starting never touches what's already ticked: it only starts the clock (if it isn't going) and opens the workout.
+  const startWorkout = () => {
+    if (!timerState) startTimer();
+    goDetail();
+  };
+  const continueWorkout = () => {
+    if (!timerRunning) resumeTimer();
+    goDetail();
+  };
+  // Restarting starts the clock from zero and clears the ticks. Clearing them can't be undone, so when there are
+  // any it asks first; with nothing ticked there is nothing to lose and it just restarts.
+  const hasProgress = !!selAct && (selRide ? rideDone : doneCount > 0);
+  const doRestart = () => {
     startTimer();
-    // A fresh clock on a workout that still shows the last attempt's checkmarks isn't a restart — clear them too.
-    if (selAct) {
+    if (selAct && hasProgress) {
       if (selRide) {
         logic.s({ rideDone: Object.assign({}, st.rideDone, { [idOf(selAct)]: false }) });
         logic.save(() => db.setRideDone(idOf(selAct), false));
@@ -70,10 +91,7 @@ export function workoutVals(ctx: Ctx) {
     }
     goDetail();
   };
-  const continueWorkout = () => {
-    if (!timerRunning) resumeTimer();
-    goDetail();
-  };
+  const restartWorkout = () => (hasProgress ? logic.s({ restartPrompt: true }) : doRestart());
   // Day view shows a card for every workout on the day. A card's buttons pick its session first, then do what
   // the same button does for the session on screen, so the detail, timer and diary all follow that session.
   const exerciseRow = (e, doneNames) => ({
@@ -138,9 +156,11 @@ export function workoutVals(ctx: Ctx) {
       moreLabel: expanded ? 'Show less' : '+ ' + (rows.length - 3) + ' more',
       moreCaret: 'width:15px;height:15px;flex:none;transition:transform .2s' + (expanded ? ';transform:rotate(180deg)' : ''),
       toggleMore: () => logic.s({ moreIds: Object.assign({}, st.moreIds, { [id]: !expanded }) }),
-      ctaTwoButtons: !logged && timed,
-      ctaLabel: logged ? 'View chronicle entry' : 'Start workout',
-      cta: run(logged ? 'goDiary' : 'restartWorkout'),
+      // Logged: read it. Every exercise ticked but not logged yet: log it. Started (clock or ticks): carry on, or
+      // start over. Otherwise: start.
+      ctaTwoButtons: !logged && !complete && (timed || doneN > 0),
+      ctaLabel: logged ? 'View chronicle entry' : complete ? 'Write it up' : 'Start workout',
+      cta: run(logged || complete ? 'goDiary' : 'startWorkout'),
       restart: run('restartWorkout'),
       continue: run('continueWorkout'),
     };
@@ -191,7 +211,7 @@ export function workoutVals(ctx: Ctx) {
           arsenalPick: null,
         }),
       ),
-    // From the Arsenal it is only saved. It goes on the calendar when the person chooses to.
+    // From the Spellbook it is only saved. It goes on the calendar when the person chooses to.
     goNewWorkoutFromArsenal: () =>
       logic.nav(
         Object.assign({}, EDIT_OVERLAYS, {
@@ -214,7 +234,7 @@ export function workoutVals(ctx: Ctx) {
     questNote: dayCleared ? questSeed(selDay, mi).done : questSeed(selDay, mi).note,
     questDone: dayCleared,
     questOpen: !dayCleared,
-    questEyebrow: dayCleared ? 'QUEST CLEARED' : "TODAY'S QUEST",
+    questEyebrow: dayCleared ? 'QUEST CLEARED' : mi === TODAY_M && selDay === TODAY_D ? "TODAY'S QUEST" : 'QUEST',
     questIconWrap:
       'width:40px;height:40px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;' +
       (dayCleared
@@ -249,9 +269,21 @@ export function workoutVals(ctx: Ctx) {
           { label: 'ELEVATION', value: selRide.elev ? selRide.elev + ' ft' : '—' },
           { label: 'EFFORT', value: selRide.zone || 'Endurance' },
         ],
-    ctaLabel: hasEntry ? 'View chronicle entry' : 'Finish workout & log it',
+    ctaLabel: hasEntry ? 'View chronicle entry' : doneSel ? 'Write it up' : 'Write about it',
+    startWorkout,
     restartWorkout,
     continueWorkout,
+    restartPromptOpen: !!st.restartPrompt,
+    restartPromptBody: selRide
+      ? 'This marks the ride as not done and starts the timer from zero.'
+      : 'This clears the ' +
+        plural(doneCount, 'exercise') +
+        " you've ticked off and starts the timer from zero. It can't be undone.",
+    cancelRestart: () => logic.s({ restartPrompt: false }),
+    confirmRestart: () => {
+      logic.s({ restartPrompt: false });
+      doRestart();
+    },
     longDate: DOWFULL[selDate.getDay()] + ', ' + st.month + ' ' + selDay,
     badgeStyle:
       'margin-left:auto;padding:7px 13px;border-radius:999px;font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);' +
@@ -277,7 +309,7 @@ export function workoutVals(ctx: Ctx) {
         : doneCount === 0
           ? 'Mark each exercise as you clear it.'
           : doneCount === selList.length
-            ? 'Transformation complete. Log how it felt to claim your ' + tokenFor(selDay + mi) + '.'
+            ? 'Transformation complete. Write down how it felt while it\'s fresh.'
             : selList.length - doneCount + ' left to go.',
   };
 }

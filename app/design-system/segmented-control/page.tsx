@@ -63,7 +63,7 @@ export default function SegmentedControlPage() {
             size="sm"
             tone="quiet"
             options={[
-              { value: 'lib', label: 'From Arsenal' },
+              { value: 'lib', label: 'From Spellbook' },
               { value: 'new', label: 'Create new' },
             ]}
             value={mode}

@@ -99,13 +99,15 @@ export function statsStage(ctx: Ctx): Ctx {
     moodCounts[m] = (moodCounts[m] || 0) + 1;
   });
   const moodTotal = Object.keys(ENTRIES).length || 1;
+  // A quest belongs to a day, and is cleared when every session that day is done. So these count days, not sessions.
   const questCounts = {};
-  spanDays
-    .filter((x) => x.done)
-    .forEach((x) => {
-      const t = questSeed(x.d, x.m).title;
-      questCounts[t] = (questCounts[t] || 0) + 1;
-    });
+  const questDays = Object.keys(plannedByDay);
+  const questsCleared = questDays.filter((k) => dayComplete[k]);
+  questsCleared.forEach((k) => {
+    const [m, d] = k.split('-').map(Number);
+    const t = questSeed(d, m).title;
+    questCounts[t] = (questCounts[t] || 0) + 1;
+  });
   const bestByEx = {};
   Object.keys(EX).forEach((k) =>
     EX[k].forEach((e) => {
@@ -149,6 +151,8 @@ export function statsStage(ctx: Ctx): Ctx {
     completedSessions,
     totalSessions,
     questCounts,
+    questDayCount: questDays.length,
+    questsClearedCount: questsCleared.length,
     longest,
     weeklyAvg,
     moodCounts,

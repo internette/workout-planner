@@ -14,7 +14,7 @@ export function DocPage({ title, children }: { title: string; children: ReactNod
 }
 
 /** A section heading. Give it an id to get a link in the sidebar (see registry.ts). */
-export const h2: CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 16 };
+export const h2: CSSProperties = { fontSize: 'var(--text-2xl)', margin: '40px 0 4px', scrollMarginTop: 'var(--ds-anchor-offset)' };
 
 /** The muted paragraph that introduces a section. */
 export const note: CSSProperties = {
