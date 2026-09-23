@@ -1,5 +1,5 @@
 import { DOWFULL } from '../constants';
-import { formatElapsed, idOf, questSeed, tokenFor } from '../helpers';
+import { formatElapsed, idOf, plural, questSeed, tokenFor } from '../helpers';
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -117,7 +117,7 @@ export function workoutVals(ctx: Ctx) {
           ? 'Completed'
           : doneCount > 0
             ? doneCount + ' of ' + selList.length + ' done · ' + selAct.time
-            : selList.length + ' exercises · ' + selAct.time,
+            : plural(selList.length, 'exercise') + ' · ' + selAct.time,
     showQuest: st.seg === 'Day' && !!actFor(selDay),
     questTitle: questSeed(selDay, mi).title,
     questNote: questCleared ? questSeed(selDay, mi).done : questSeed(selDay, mi).note,

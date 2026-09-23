@@ -2034,7 +2034,7 @@ export function PlannerView({ v }: { v: any }) {
                         <Text variant="caption" tone="muted" weight="medium">
                           {'of '}
                           {t(v.wkTotal)}
-                          {' sessions'}
+                          {' ' + v.wkTotalUnit}
                         </Text>
                       </div>
                       <div
@@ -2128,7 +2128,7 @@ export function PlannerView({ v }: { v: any }) {
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
                         <Text variant="subheading">{v.loggedCount}</Text>
                         <Text variant="caption" tone="muted" weight="medium">
-                          entries
+                          {v.loggedUnit}
                         </Text>
                       </div>
                     </Card>

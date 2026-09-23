@@ -16,6 +16,10 @@ export const formatElapsed = totalSec => {
 };
 export const isoOf = dt => dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
 
+// "1 entry" vs "3 entries" (or exercise/exercises, session/sessions, ...) without repeating the count === 1 check
+// at every call site. Pass the plural form only when it isn't just the singular plus "s".
+export const plural = (n, singular, pluralForm) => n + ' ' + (n === 1 ? singular : pluralForm || singular + 's');
+
 // An exercise's sets and reps are two separate inputs on screen, but one field everywhere else: the database column,
 // the "4 × 8" shown in lists, and lib/plannerData.ts's own parser all expect one string. These two convert at the
 // edges, so the rest of the app never has to know the box was split in two.

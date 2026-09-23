@@ -1,6 +1,6 @@
 import { DOW3, DOWFULL, MON3, MONTHS, RANKS } from '../constants';
 import { displayName } from '@/lib/auth';
-import { questSeed } from '../helpers';
+import { plural, questSeed } from '../helpers';
 import type { Ctx } from '../types';
 
 // Progress and profile: streaks, weekly chart, records, XP and the rank ladder.
@@ -172,7 +172,7 @@ export function progressVals(ctx: Ctx) {
         '–' +
         to +
         ' · ' +
-        (b.planned ? b.done + ' of ' + b.planned + ' sessions done' : 'nothing planned')
+        (b.planned ? b.done + ' of ' + plural(b.planned, 'session') + ' done' : 'nothing planned')
       );
     })(),
     questsClearedLabel: completedSessions + ' of ' + totalSessions,
@@ -282,6 +282,7 @@ export function progressVals(ctx: Ctx) {
       })),
     wkDone: weekAll.filter((a) => a.s === 'c').length,
     wkTotal: weekAll.length,
+    wkTotalUnit: weekAll.length === 1 ? 'session' : 'sessions',
     wkBar:
       'width:' +
       (weekAll.length ? Math.round((weekAll.filter((a) => a.s === 'c').length / weekAll.length) * 100) : 0) +

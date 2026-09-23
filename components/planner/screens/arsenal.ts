@@ -2,7 +2,7 @@ import { colors } from '@/components/ui/colors';
 import { iconSvg } from '../icons';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import * as db from '@/lib/plannerData';
-import { digitsOnly, isoOf, joinSetsReps, numericOnly, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
+import { digitsOnly, isoOf, joinSetsReps, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
 import { optStyle } from '../styles';
 import type { Ctx } from '../types';
 
@@ -12,8 +12,10 @@ export function arsenalVals(ctx: Ctx) {
 
   // ---- exercise count (shown in the header when the exercises view is open)
   // One per row in the list. Exercises are identified by id, so two with the same name are two exercises.
-  const exerciseCount =
-    Object.keys(EX).reduce((n, k) => n + (EX[k] || []).length, 0) + logic.model.library.length + ' exercises';
+  const exerciseCount = plural(
+    Object.keys(EX).reduce((n, k) => n + (EX[k] || []).length, 0) + logic.model.library.length,
+    'exercise',
+  );
 
   // ---- edits to a saved workout never rewrite sessions that are already done. If sessions are still ahead
   // (from today on, not completed), ask whether they should follow the edit; past and completed ones never do.

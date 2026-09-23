@@ -1,5 +1,5 @@
 import { DOW3, MON3, MONTHS } from '../constants';
-import { isoOf, tokenFor } from '../helpers';
+import { isoOf, plural, tokenFor } from '../helpers';
 import { moodSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -74,12 +74,13 @@ export function diaryVals(ctx: Ctx) {
       '. One ' +
       tokenFor(selDay + 2) +
       ' added to your collection.',
-    savedCount: Object.keys(ENTRIES).length + ' entries so far',
+    savedCount: plural(Object.keys(ENTRIES).length, 'entry', 'entries') + ' so far',
     savedNextTitle: nextUp ? 'Get ready for ' + nextUp.name : 'Plan your next workout',
     savedNextMeta: nextUp ? nextUp.meta2 : 'Nothing scheduled ahead',
     goNextUp: () => logic.s({ screen: 'edit', editing: !!nextUp, seg: 'Day' }),
     loggedCount: Object.keys(ENTRIES).length,
-    diaryCount: Object.keys(ENTRIES).length + ' entries',
+    loggedUnit: Object.keys(ENTRIES).length === 1 ? 'entry' : 'entries',
+    diaryCount: plural(Object.keys(ENTRIES).length, 'entry', 'entries'),
     openNewEntry: () => logic.nav({ screen: 'newEntry' }),
     closeNewEntry: () => logic.back(),
     noUnlogged: unloggedDays.length === 0,
