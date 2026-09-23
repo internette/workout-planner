@@ -10,6 +10,7 @@ export interface Exercise {
   weight: string; // "135 lb", "body", "—"
   rest: string; // "90 sec"
   i: string; // icon key
+  areas: string[]; // body regions this exercise targets
 }
 
 export interface Ride {
@@ -117,6 +118,7 @@ const toExercise = (r: any): Exercise => ({
   weight: fmtWeight(r.weight_value, r.weight_unit),
   rest: fmtRest(r.rest_seconds),
   i: r.icon || 'h',
+  areas: r.target_areas || [],
 });
 
 function exerciseRow(e: Exercise) {
@@ -130,8 +132,12 @@ function exerciseRow(e: Exercise) {
     weight_unit: weight.unit,
     rest_seconds: parseRest(e.rest),
     icon: e.i || 'h',
+    target_areas: e.areas || [],
   };
 }
+
+// A workout's own target areas aren't set directly any more — they're whatever its exercises target, combined.
+const areasOf = (list: Exercise[]) => Array.from(new Set(list.flatMap((e) => e.areas || [])));
 
 const pad = (n: number) => String(n).padStart(2, '0');
 export const isoDate = (y: number, m: number, d: number) => `${y}-${pad(m + 1)}-${pad(d)}`;
@@ -197,7 +203,7 @@ export async function loadModel(today: Date): Promise<Model> {
       time: isRide ? rideTime(minutes) : `~${minutes} min`,
       icon: w.icon,
       iconColor: w.icon_color,
-      areas: w.target_areas || [],
+      areas: isRide ? [] : areasOf(EXV[keyOf(w)] || []),
       repeat: !!w.repeat_enabled,
       notes: w.notes || '',
       series: w.repeat_enabled ? w.id : undefined,
@@ -252,7 +258,7 @@ export async function loadModel(today: Date): Promise<Model> {
         kind: isRide ? 'ride' : 'lift',
         time: isRide ? rideTime(minutes) : `~${minutes} min`,
         minutes,
-        areas: w.target_areas || [],
+        areas: isRide ? [] : areasOf(EXV[keyOf(w)] || []),
         icon: w.icon,
         iconColor: w.icon_color,
         exercises: (EX[w.name] || []).map((e) => e.name),
@@ -345,7 +351,6 @@ export interface NewWorkout {
   ride: { dist: string; elev: string; zone: string } | null;
   icon: string | null;
   iconColor: string | null;
-  areas: string[];
   exercises: Exercise[];
   dates: string[]; // ISO dates to schedule
   repeat: boolean;
@@ -369,7 +374,6 @@ export async function createWorkout(w: NewWorkout) {
           duration_minutes: w.durationMinutes,
           icon: w.icon,
           icon_color: w.iconColor,
-          target_areas: w.areas,
           ride_distance_miles: w.ride && w.ride.dist ? Number(w.ride.dist) : null,
           ride_elevation_ft: w.ride && w.ride.elev ? Number(w.ride.elev) : null,
           ride_zone: w.ride ? w.ride.zone : null,
@@ -413,7 +417,6 @@ export interface WorkoutEdit {
   name?: string;
   icon?: string | null;
   iconColor?: string | null;
-  areas?: string[];
   notes?: string;
   ride?: { dist: string; elev: string; zone: string; minutes: number } | null;
   moveTo?: string; // ISO date
@@ -447,7 +450,6 @@ export async function updateWorkout(e: WorkoutEdit) {
   if (e.name != null && e.name.trim()) patch.name = e.name.trim();
   if (e.icon !== undefined) patch.icon = e.icon;
   if (e.iconColor !== undefined) patch.icon_color = e.iconColor;
-  if (e.areas) patch.target_areas = e.areas;
   if (e.notes !== undefined) patch.notes = e.notes;
   if (e.ride) {
     patch.ride_distance_miles = e.ride.dist ? Number(e.ride.dist) : null;

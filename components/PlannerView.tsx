@@ -2292,6 +2292,16 @@ export function PlannerView({ v }: { v: any }) {
                                 inputMode="numeric"
                               />
                             </div>
+                            <Label style={{ margin: '16px 0 8px' }}>Target areas</Label>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                              {(v.draftAreas ?? []).map((t, i) => (
+                                <Fragment key={i}>
+                                  <Chip tone="choice" size="md" selected={t?.on} onClick={t?.toggle}>
+                                    {t?.name}
+                                  </Chip>
+                                </Fragment>
+                              ))}
+                            </div>
                             <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
                             <div
                               style={{
@@ -2770,13 +2780,19 @@ export function PlannerView({ v }: { v: any }) {
                         <Text variant="eyebrow" tone="slate" as="div">
                           TARGET AREAS
                         </Text>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '14px' }}>
-                          {(v.templateEdit.areas ?? []).map((a, i) => (
-                            <Chip key={i} tone="choice" size="md" selected={a?.on} onClick={a?.toggle}>
-                              {a?.name}
-                            </Chip>
-                          ))}
-                        </div>
+                        {v.templateEdit.hasTargetAreas ? (
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '14px' }}>
+                            {(v.templateEdit.areaPills ?? []).map((a, i) => (
+                              <Fragment key={i}>
+                                <Chip size="md">{a}</Chip>
+                              </Fragment>
+                            ))}
+                          </div>
+                        ) : (
+                          <Text variant="body" tone="muted" style={{ display: 'block', marginTop: '10px' }}>
+                            Give an exercise below a target area to see it here.
+                          </Text>
+                        )}
                       </Card>
                       <div
                         style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}
@@ -2870,6 +2886,16 @@ export function PlannerView({ v }: { v: any }) {
                                 onChange={r?.setRest}
                                 inputMode="numeric"
                               />
+                            </div>
+                            <Label style={{ margin: '14px 0 7px' }}>Target areas</Label>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                              {(r?.areas ?? []).map((a, i) => (
+                                <Fragment key={i}>
+                                  <Chip tone="choice" size="md" selected={a?.on} onClick={a?.toggle}>
+                                    {a?.name}
+                                  </Chip>
+                                </Fragment>
+                              ))}
                             </div>
                           </Card>
                         ))}
@@ -2965,6 +2991,16 @@ export function PlannerView({ v }: { v: any }) {
                         placeholder="60"
                         inputMode="numeric"
                       />
+                    </div>
+                    <Label style={{ margin: '16px 0 8px' }}>Target areas</Label>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                      {(v.exerciseEdit.areas ?? []).map((a, i) => (
+                        <Fragment key={i}>
+                          <Chip tone="choice" size="md" selected={a?.on} onClick={a?.toggle}>
+                            {a?.name}
+                          </Chip>
+                        </Fragment>
+                      ))}
                     </div>
                     <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
                     <div
@@ -4063,15 +4099,19 @@ export function PlannerView({ v }: { v: any }) {
                         <Text variant="eyebrow" as="div" tone="slate">
                           TARGET AREAS
                         </Text>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '14px' }}>
-                          {(v.targetAreas ?? []).map((t, i) => (
-                            <Fragment key={i}>
-                              <Chip tone="choice" size="md" selected={t?.on} onClick={t?.toggle}>
-                                {t?.name}
-                              </Chip>
-                            </Fragment>
-                          ))}
-                        </div>
+                        {v.hasTargetAreas ? (
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '14px' }}>
+                            {(v.targetAreaPills ?? []).map((name, i) => (
+                              <Fragment key={i}>
+                                <Chip size="md">{name}</Chip>
+                              </Fragment>
+                            ))}
+                          </div>
+                        ) : (
+                          <Text variant="body" tone="muted" style={{ display: 'block', marginTop: '10px' }}>
+                            Give an exercise below a target area to see it here.
+                          </Text>
+                        )}
                       </Card>
                     </>
                   ) : null}
@@ -4254,6 +4294,16 @@ export function PlannerView({ v }: { v: any }) {
                                   inputMode="numeric"
                                 />
                               </div>
+                              <Label style={{ margin: '14px 0 7px' }}>Target areas</Label>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                {(ex?.areas ?? []).map((a, i) => (
+                                  <Fragment key={i}>
+                                    <Chip tone="choice" size="md" selected={a?.on} onClick={a?.toggle}>
+                                      {a?.name}
+                                    </Chip>
+                                  </Fragment>
+                                ))}
+                              </div>
                             </Card>
                           </Fragment>
                         ))}
@@ -4399,6 +4449,16 @@ export function PlannerView({ v }: { v: any }) {
                                   placeholder="60"
                                   inputMode="numeric"
                                 />
+                              </div>
+                              <Label style={{ margin: '16px 0 8px' }}>Target areas</Label>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                {(v.draftAreas ?? []).map((t, i) => (
+                                  <Fragment key={i}>
+                                    <Chip tone="choice" size="md" selected={t?.on} onClick={t?.toggle}>
+                                      {t?.name}
+                                    </Chip>
+                                  </Fragment>
+                                ))}
                               </div>
                             </div>
                           </>

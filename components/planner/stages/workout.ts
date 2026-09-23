@@ -74,7 +74,6 @@ export function workoutStage(ctx: Ctx): Ctx {
     return all;
   };
   const listKey = creating ? '__draft' : idOf(srcAct);
-  const picked = (st.areas || {})[listKey] || (srcAct && srcAct.areas) || [];
   const notesVal = (st.notes || {})[listKey] != null ? (st.notes || {})[listKey] : (srcAct && srcAct.notes) || '';
   const wIcon = (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (isCycleView ? 'bike' : 'h');
   const wColor = (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || colors.pink;
@@ -90,6 +89,8 @@ export function workoutStage(ctx: Ctx): Ctx {
     .concat(added)
     .filter((e) => gone.indexOf(e.name) === -1)
     .map((e) => Object.assign({}, e, (st.fields || {})[listKey + '|' + e.name] || {}));
+  // The workout's own target areas aren't picked directly any more — they're whatever its exercises target.
+  const picked = Array.from(new Set(selList.flatMap((e) => e.areas || [])));
   const all = selList.map((e) => ({
     text: e.name + ' — ' + e.sets + ' · ' + e.weight,
     isH: e.i === 'h',

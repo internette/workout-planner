@@ -54,7 +54,7 @@ export const withLb = digits => (digits ? digits + ' lb' : '');
 // Only meaningful while actually on that screen: these same keys can be left over (never cleared) after an old visit,
 // so a caller must also check the screen is 'edit' before treating this as "there's a draft in the way".
 export const workoutDraftDirty = st => !!(
-  st.renames || st.fields || st.removed || st.areas || st.newName ||
+  st.renames || st.fields || st.removed || st.newName ||
   st.rDist || st.rElev || st.rHrs || st.rMins ||
   st.aDist || st.aElev || st.aHrs || st.aMins ||
   st.repeat || st.icons || st.iconColors || st.notes ||

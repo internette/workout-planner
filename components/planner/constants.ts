@@ -6,6 +6,8 @@ export const MON3 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct'
 export const DOW1 = ['S','M','T','W','T','F','S'];
 export const DOW3 = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 export const DOWFULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+// The body regions an exercise can target. A workout's own target areas are the union of its exercises'.
+export const TARGET_AREAS = ['Core', 'Arms', 'Back', 'Legs', 'Chest', 'Shoulders'];
 export const QUESTS = [
   { title:'Hold the barrier', note:'Finish today\'s session and nothing gets through.',
     done:'The barrier held. Nothing got through.' },
@@ -55,6 +57,6 @@ export const RANKS = [
 ];
 
 // Overlay state the edit screens accumulate; once a save lands in the database it is dropped.
-export const EDIT_OVERLAYS = { renames:null, fields:null, removed:null, areas:null, icons:null, iconColors:null, exIcons:null,
+export const EDIT_OVERLAYS = { renames:null, fields:null, removed:null, icons:null, iconColors:null, exIcons:null,
   extra:null, repeat:false, rDist:null, rElev:null, rHrs:null, rMins:null, rZone:null,
   aDist:null, aElev:null, aHrs:null, aMins:null, editKey:null, pendingNav:null, notes:null };

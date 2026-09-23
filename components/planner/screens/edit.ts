@@ -1,4 +1,4 @@
-import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, MON3, MONTHS } from '../constants';
+import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, MON3, MONTHS, TARGET_AREAS } from '../constants';
 import { digitsOnly, idOf, isoOf, joinSetsReps, numericOnly, restDigits, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
@@ -133,19 +133,9 @@ export function editVals(ctx: Ctx) {
       logic.s({ rMins: v === '' ? '' : String(Math.min(59, Number(v))) });
     },
     setRideZone: (zone) => logic.s({ rZone: zone }),
-    targetAreas: ['Core', 'Arms', 'Back', 'Legs', 'Chest', 'Shoulders'].map((name) => {
-      const on = picked.indexOf(name) > -1;
-      return {
-        name,
-        toggle: () =>
-          logic.s({
-            areas: Object.assign({}, st.areas, {
-              [listKey]: on ? picked.filter((p) => p !== name) : picked.concat([name]),
-            }),
-          }),
-        on,
-      };
-    }),
+    // No longer picked by hand: a workout's target areas are whatever its exercises target, combined.
+    hasTargetAreas: picked.length > 0,
+    targetAreaPills: picked,
     addOpen: !!st.addOpen,
     addLib: st.addMode !== 'new',
     addNew: st.addMode === 'new',
@@ -175,21 +165,33 @@ export function editVals(ctx: Ctx) {
     setReps: (e) => logic.s({ dReps: digitsOnly(e.target.value) }),
     setWeight: (e) => logic.s({ dWeight: numericOnly(e.target.value) }),
     setRest: (e) => logic.s({ dRest: restDigits(e.target.value) }),
+    draftAreas: TARGET_AREAS.map((name) => {
+      const on = (st.dAreas || []).includes(name);
+      return {
+        name,
+        on,
+        toggle: () =>
+          logic.s({
+            dAreas: on ? (st.dAreas || []).filter((a) => a !== name) : (st.dAreas || []).concat([name]),
+          }),
+      };
+    }),
     iconGrid: EXERCISE_ICON_NAMES.map((name) => ({
       svg: iconSvg(name),
       pick: () => logic.s({ dIcon: name }),
       style: optStyle((st.dIcon || 'h') === name),
     })),
-    commitDisabled: !(st.dName || '').trim(),
+    commitDisabled: !(st.dName || '').trim() || !(st.dAreas || []).length,
     commitNew: () => {
       const nm = (st.dName || '').trim();
-      if (!nm) return;
+      if (!nm || !(st.dAreas || []).length) return;
       const item = {
         name: nm,
         sets: joinSetsReps(st.dSets, st.dReps) || '3 × 10',
         weight: withLb(st.dWeight) || '—',
         rest: withSec(st.dRest) || '60 sec',
         i: st.dIcon || 'h',
+        areas: st.dAreas || [],
       };
       logic.s({
         extra: Object.assign({}, st.extra, { [listKey]: added.concat([item]) }),
@@ -200,6 +202,7 @@ export function editVals(ctx: Ctx) {
         dWeight: '',
         dRest: '',
         dIcon: 'h',
+        dAreas: [],
       });
     },
     iconsOpen: !!st.iconsOpen,
@@ -307,7 +310,7 @@ export function editVals(ctx: Ctx) {
         return out;
       };
       const cleared = EDIT_OVERLAYS;
-      const bare = (e) => ({ name: e.name, sets: e.sets, weight: e.weight, rest: e.rest, i: e.i });
+      const bare = (e) => ({ name: e.name, sets: e.sets, weight: e.weight, rest: e.rest, i: e.i, areas: e.areas || [] });
       if (!creating) {
         const owned = EXV[baseKey] || [];
         const byName = (n) => owned.find((e) => e.name === n);
@@ -339,7 +342,6 @@ export function editVals(ctx: Ctx) {
               name: (st.renames || {})[baseName],
               icon: (st.icons || {})[listKey],
               iconColor: (st.iconColors || {})[listKey],
-              areas: (st.areas || {})[listKey],
               notes: (st.notes || {})[listKey],
               ride: selRide
                 ? {
@@ -383,7 +385,6 @@ export function editVals(ctx: Ctx) {
               : null,
             icon: (st.icons || {}).__draft || null,
             iconColor: (st.iconColors || {}).__draft || null,
-            areas: picked,
             notes: notesVal,
             exercises: selList.map(bare),
             dates: scheduled ? [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weekly() : []) : [],
@@ -471,6 +472,8 @@ export function editVals(ctx: Ctx) {
       const setSets = setField('sets');
       const setWeight = setField('weight');
       const setRest = setField('rest');
+      const setAreas = setField('areas');
+      const exAreas = e.areas || [];
       return {
         name: e.name,
         sets: setsParts.sets,
@@ -481,6 +484,15 @@ export function editVals(ctx: Ctx) {
         setReps: (ev) => setSets({ target: { value: joinSetsReps(setsParts.sets, digitsOnly(ev.target.value)) } }),
         setWeight: (ev) => setWeight({ target: { value: withLb(numericOnly(ev.target.value)) } }),
         setRest: (ev) => setRest({ target: { value: withSec(restDigits(ev.target.value)) } }),
+        areas: TARGET_AREAS.map((name) => {
+          const on = exAreas.includes(name);
+          return {
+            name,
+            on,
+            toggle: () =>
+              setAreas({ target: { value: on ? exAreas.filter((a) => a !== name) : exAreas.concat([name]) } }),
+          };
+        }),
         icoSvg: iconSvg(cur),
         hideLegacy: false,
         detail: e.sets + ' · ' + e.weight + ' · ' + e.rest + ' rest',
