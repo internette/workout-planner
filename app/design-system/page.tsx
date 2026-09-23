@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
 import { Text } from '@/components/ui/typography';
 import { Preview } from './previews';
+import { RankUpDemo } from './RankUpDemo';
 import { categories, planned, sections, type Category } from './registry';
 import styles from './design-system.module.css';
 
@@ -89,8 +90,8 @@ export default function DesignSystemPage() {
           Brand
         </Text>
         <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 16px' }}>
-          The Moonshot mark and name. The artwork is in <code>public/brand</code>; the colours and type it uses are under
-          Foundations.
+          The Moonshot mark and name, and the app&apos;s big moments. The artwork is in <code>public/brand</code>; the colours
+          and type it uses are under Foundations.
         </Text>
         <div className={styles.grid}>
           {BRAND.map((asset) => (
@@ -107,6 +108,7 @@ export default function DesignSystemPage() {
               </a>
             </Card>
           ))}
+          <RankUpDemo />
         </div>
       </section>
 

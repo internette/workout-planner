@@ -41,7 +41,7 @@ export default function IconsPage() {
         <code>strokeWidth</code>. Line icons default to the surrounding text colour.
       </p>
 
-      <h2 id="glyphs" style={{ scrollMarginTop: 16, fontSize: 'var(--text-2xl)' }}>
+      <h2 id="glyphs" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-2xl)' }}>
         Glyphs
       </h2>
       <div style={grid}>
@@ -52,7 +52,7 @@ export default function IconsPage() {
         ))}
       </div>
 
-      <h2 id="exercise-icons" style={{ scrollMarginTop: 16, fontSize: 'var(--text-2xl)', marginTop: 40 }}>
+      <h2 id="exercise-icons" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-2xl)', marginTop: 40 }}>
         Exercise icons
       </h2>
       <div style={grid}>
@@ -63,7 +63,7 @@ export default function IconsPage() {
         ))}
       </div>
 
-      <h2 id="decorative" style={{ scrollMarginTop: 16, fontSize: 'var(--text-2xl)', marginTop: 40 }}>
+      <h2 id="decorative" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-2xl)', marginTop: 40 }}>
         Decorative
       </h2>
       <div style={grid}>
@@ -87,7 +87,7 @@ export default function IconsPage() {
         </Tile>
       </div>
 
-      <h2 id="mood-faces" style={{ scrollMarginTop: 16, fontSize: 'var(--text-2xl)', marginTop: 40 }}>
+      <h2 id="mood-faces" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-2xl)', marginTop: 40 }}>
         Mood faces
       </h2>
       <div style={grid}>

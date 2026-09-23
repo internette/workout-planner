@@ -19,9 +19,14 @@
 
 .body { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; align-items: start; }
 
+/* The grid cell holding the navigation: the sidebar on wide screens, the sticky menu bar on narrow ones. */
+.navWrap { position: sticky; top: 20px; align-self: start; z-index: 20; }
+
 .nav {
-  position: sticky;
-  top: 20px;
+  /* Taller than the window with a section's headings open: it scrolls on its own rather than hiding its end. */
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -40,7 +45,6 @@
   text-transform: uppercase;
   color: var(--color-subtle);
 }
-.group:first-of-type { margin-top: 2px; }
 
 .link {
   display: block;
@@ -54,7 +58,8 @@
 .link:hover { background: rgba(35, 42, 69, 0.05); color: var(--color-ink); }
 .active, .active:hover { background: var(--color-pink-tint); color: var(--color-pink-deep); font-weight: var(--font-weight-semibold); }
 
-.content { min-width: 0; }
+/* How far below the top of the window a heading lands when its link is followed (headings use this variable). */
+.content { min-width: 0; --ds-anchor-offset: 16px; }
 
 /* Links to the headings of the current section, nested under it. */
 .sublinks {
@@ -78,10 +83,59 @@
 .subactive, .subactive:hover { color: var(--color-pink-deep); font-weight: var(--font-weight-semibold); }
 
 
+/* ---- narrow screens: the sidebar becomes a sticky bar that says where you are and opens the same menu */
+.mobileBar { display: none; }
+.menuButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 16px;
+  background: var(--color-white);
+  box-shadow: 0 4px 14px rgba(35, 42, 69, 0.07);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.menuButton:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+.menuWhere { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.menuGroup {
+  font-size: var(--text-2xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-subtle);
+}
+.menuTitle {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.menuCaret { flex: none; display: flex; transition: transform var(--dur-state) var(--ease-standard); }
+.menuCaretOpen { transform: rotate(180deg); }
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: min(70vh, 560px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px;
+}
+
 @media (max-width: 820px) {
   .body { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  .nav { position: static; flex-direction: row; flex-wrap: wrap; padding: 12px; }
-  .group, .sublinks { display: none; }
+  .navWrap { top: 0; margin: 0 -24px; padding: 8px 24px; background: var(--color-canvas); }
+  .nav { display: none; }
+  .mobileBar { display: block; }
+  /* Headings reached from the menu land below the sticky bar, not under it. */
+  .content { --ds-anchor-offset: 80px; }
 }
 
 /* ---- landing page */
@@ -101,7 +155,7 @@
   border-radius: 14px;
   overflow: hidden;
 }
-.section { margin-top: 44px; }
+.section { margin-top: 44px; scroll-margin-top: var(--ds-anchor-offset); }
 
 .brandStage {
   display: flex;
@@ -111,5 +165,10 @@
   margin-bottom: 14px;
   background: var(--color-canvas);
   border-radius: var(--radius-md);
+}
+.demoGem {
+  width: 44px;
+  height: 60px;
+  clip-path: polygon(50% 0, 100% 35%, 50% 100%, 0 35%);
 }
 .download { font-size: var(--text-md); font-weight: var(--font-weight-semibold); color: var(--color-pink-deep); }

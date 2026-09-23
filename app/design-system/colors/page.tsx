@@ -12,7 +12,7 @@ export default function ColorsPage() {
       </p>
       {Object.entries(colorGroups).map(([group, swatches]) => (
         <section key={group} style={{ marginBottom: 36 }}>
-          <h2 id={group.toLowerCase()} style={{ fontSize: 'var(--text-2xl)', scrollMarginTop: 16 }}>{group}</h2>
+          <h2 id={group.toLowerCase()} style={{ fontSize: 'var(--text-2xl)', scrollMarginTop: 'var(--ds-anchor-offset)' }}>{group}</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
             {Object.entries(swatches).map(([name, { hex, use }]) => (
               <div
@@ -40,7 +40,7 @@ export default function ColorsPage() {
         </section>
       ))}
       <section style={{ marginBottom: 36 }}>
-        <h2 id="gradients-and-overlays" style={{ fontSize: 'var(--text-2xl)', scrollMarginTop: 16 }}>Gradients and overlays</h2>
+        <h2 id="gradients-and-overlays" style={{ fontSize: 'var(--text-2xl)', scrollMarginTop: 'var(--ds-anchor-offset)' }}>Gradients and overlays</h2>
         <p style={{ margin: '0 0 16px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
           Composites built from the palette, also CSS variables. Write <code>var(--gradient-gem)</code>, not the
           gradient itself.

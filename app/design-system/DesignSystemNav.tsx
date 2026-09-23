@@ -4,15 +4,20 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useWindowEvent } from '@/components/ui/useWindowEvent';
+import { Popover } from '@/components/ui/popover';
+import { ChevronDown } from '@/components/ui/icons';
 import { categories, sections, type Category, type Section } from './registry';
 import styles from './design-system.module.css';
 
-// The sidebar: an overview link, then every section grouped by category. The section you are on
+// The sidebar: overview and brand links, then every section grouped by category. The section you are on
 // expands to show links to its headings, and the heading currently in view is highlighted.
+// On narrow screens the same menu opens from a sticky bar that names the page you are on.
 export function DesignSystemNav() {
   const pathname = usePathname();
   const current = sections.find((s) => pathname === `/design-system/${s.slug}`);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
   // The link you last clicked stays highlighted until you scroll yourself, since a heading near the
   // bottom of a short page can't always scroll to the top of the screen.
   const pinned = useRef<string | null>(null);
@@ -55,6 +60,7 @@ export function DesignSystemNav() {
     <Link
       key={href}
       href={href}
+      onClick={closeMenu}
       aria-current={active ? 'page' : undefined}
       className={[styles.link, active && styles.active].filter(Boolean).join(' ')}
     >
@@ -71,6 +77,7 @@ export function DesignSystemNav() {
           onClick={() => {
             pinned.current = a.id;
             setActiveId(a.id);
+            closeMenu();
           }}
           aria-current={activeId === a.id ? 'location' : undefined}
           className={[styles.sublink, activeId === a.id && styles.subactive].filter(Boolean).join(' ')}
@@ -81,9 +88,10 @@ export function DesignSystemNav() {
     </div>
   );
 
-  return (
-    <nav aria-label="Design system" className={styles.nav}>
+  const links = (
+    <>
       {link('/design-system', 'Overview', pathname === '/design-system')}
+      {link('/design-system#brand', 'Brand', false)}
       {(Object.keys(categories) as Category[]).map((category) => (
         <div key={category} style={{ display: 'contents' }}>
           <div className={styles.group}>{categories[category].title}</div>
@@ -97,6 +105,39 @@ export function DesignSystemNav() {
             ))}
         </div>
       ))}
-    </nav>
+    </>
+  );
+
+  return (
+    <div className={styles.navWrap}>
+      <nav aria-label="Design system" className={styles.nav}>
+        {links}
+      </nav>
+      <div className={styles.mobileBar}>
+        <Popover
+          open={menuOpen}
+          onClose={closeMenu}
+          width="anchor"
+          top={58}
+          pad="xs"
+          style={{ display: 'block' }}
+          content={
+            <nav aria-label="Design system" className={styles.menu}>
+              {links}
+            </nav>
+          }
+        >
+          <button type="button" className={styles.menuButton} aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>
+            <span className={styles.menuWhere}>
+              <span className={styles.menuGroup}>{current ? categories[current.category].title : 'Design system'}</span>
+              <span className={styles.menuTitle}>{current ? current.title : 'Overview'}</span>
+            </span>
+            <span className={[styles.menuCaret, menuOpen && styles.menuCaretOpen].filter(Boolean).join(' ')}>
+              <ChevronDown color="var(--color-muted)" size={18} />
+            </span>
+          </button>
+        </Popover>
+      </div>
+    </div>
   );
 }
