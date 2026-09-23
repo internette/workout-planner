@@ -14,7 +14,8 @@ export function diaryVals(ctx: Ctx) {
     selName,
     mi,
     selDay,
-    nextUp,
+    TK,
+    isDoneEntry,
     unloggedDays,
     Y,
     TODAY_M,
@@ -29,6 +30,14 @@ export function diaryVals(ctx: Ctx) {
     stars,
     RPE_WORDS,
   } = ctx;
+  // Whether the session on screen already has an entry: then the diary screen reads it, and edits it on request.
+  const hasEntry = !!ENTRIES[entryKey];
+  const reading = hasEntry && !st.diaryEdit;
+  // "Up next" after logging: the first session from today on that isn't done yet, other than the one just logged.
+  const nextEntry = logic.model.entries.find(
+    (x) => x.m * 100 + x.d >= TK && x.av.id !== entryKey && x.av.s !== 'c' && !isDoneEntry(x.av),
+  );
+  const nextDate = nextEntry ? new Date(Y, nextEntry.m, nextEntry.d) : null;
   const scopeHandlers = {
     all: () => logic.s({ diaryScope: 'all', rFrom: '', rTo: '' }),
     today: () => logic.s({ diaryScope: 'today', rFrom: isoToday, rTo: isoToday }),
@@ -42,7 +51,7 @@ export function diaryVals(ctx: Ctx) {
     range: () => logic.s({ diaryScope: 'range', rFrom: st.rFrom || iso30, rTo: st.rTo || isoToday }),
   };
   return {
-    saveEntryLabel: st.diaryFrom === 'list' ? 'Save changes' : 'Save entry',
+    saveEntryLabel: hasEntry ? 'Save changes' : 'Save entry',
     entryNote: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
     setEntryNote: (e) => logic.s({ entryNote: e.target.value }),
     saveEntry: () =>
@@ -56,7 +65,9 @@ export function diaryVals(ctx: Ctx) {
               'No notes for this one.',
           }),
         {
-          screen: st.diaryFrom === 'list' ? 'diary' : 'saved',
+          // Changing an entry, or writing one from the Chronicle, returns to reading it; a new one from a workout
+          // gets the "Entry saved" screen.
+          screen: hasEntry || st.diaryFrom === 'list' ? 'diary' : 'saved',
           diaryEdit: false,
           entryNote: null,
         },
@@ -75,9 +86,31 @@ export function diaryVals(ctx: Ctx) {
       tokenFor(selDay + 2) +
       ' added to your collection.',
     savedCount: plural(Object.keys(ENTRIES).length, 'entry', 'entries') + ' so far',
-    savedNextTitle: nextUp ? 'Get ready for ' + nextUp.name : 'Plan your next workout',
-    savedNextMeta: nextUp ? nextUp.meta2 : 'Nothing scheduled ahead',
-    goNextUp: () => logic.s({ screen: 'edit', editing: !!nextUp, seg: 'Day' }),
+    savedNextTitle: nextEntry ? 'Get ready for ' + nameOf(nextEntry.av.name) : 'Plan your next workout',
+    savedNextMeta: nextEntry
+      ? (nextEntry.m * 100 + nextEntry.d === TK
+          ? 'Today'
+          : DOW3[nextDate.getDay()].charAt(0) + DOW3[nextDate.getDay()].slice(1, 3).toLowerCase() + ', ' +
+            MON3[nextEntry.m] + ' ' + nextEntry.d) +
+        ' · ' +
+        nextEntry.av.time
+      : 'Nothing scheduled ahead',
+    // Opens that session. With nothing ahead, starts a new workout for tomorrow (today, on the year's last day).
+    goNextUp: () => {
+      if (nextEntry)
+        return logic.nav({
+          screen: 'detail',
+          creating: false,
+          seg: 'Day',
+          month: MONTHS[nextEntry.m],
+          day: nextEntry.d,
+          entryId: nextEntry.av.id,
+        });
+      const tomorrow = new Date(Y, TODAY_M, ctx.TODAY_D + 1);
+      const when = tomorrow.getFullYear() === Y ? tomorrow : new Date(Y, TODAY_M, ctx.TODAY_D);
+      logic.s({ month: MONTHS[when.getMonth()], day: when.getDate(), seg: 'Day' });
+      logic.renderVals().goNewWorkout();
+    },
     loggedCount: Object.keys(ENTRIES).length,
     loggedUnit: Object.keys(ENTRIES).length === 1 ? 'entry' : 'entries',
     diaryCount: plural(Object.keys(ENTRIES).length, 'entry', 'entries'),
@@ -198,8 +231,8 @@ export function diaryVals(ctx: Ctx) {
         ),
       };
     }),
-    diaryReading: st.diaryFrom === 'list' && !st.diaryEdit,
-    diaryEditing: !(st.diaryFrom === 'list' && !st.diaryEdit),
+    diaryReading: reading,
+    diaryEditing: !reading,
     editEntry: () => logic.s({ diaryEdit: true }),
     deleteEntry: () =>
       logic.s({
@@ -230,7 +263,7 @@ export function diaryVals(ctx: Ctx) {
             : 'var(--color-danger)'),
     readMoodSvg: moodSvg(st.mood),
     diaryBackLabel: st.diaryFrom === 'list' ? 'Chronicle' : 'Back',
-    diaryEyebrow: st.diaryFrom === 'list' ? 'CHRONICLE ENTRY' : 'COMPLETED',
+    diaryEyebrow: st.diaryFrom === 'list' || reading ? 'CHRONICLE ENTRY' : 'COMPLETED',
     diaryBack: () => logic.back(),
     moods,
     stars,

@@ -45,9 +45,17 @@ export function workoutVals(ctx: Ctx) {
   const resumeTimer = () => setTimer({ elapsed: timerElapsedSec, runningSince: Date.now() });
   // "Finish workout & log it" (and reopening what you already logged) means the clock's job is done —
   // stop it here rather than leaving it running unnoticed under the diary screen.
+  // An entry that already exists opens to read, with its own mood and effort. A new one starts from a clean form,
+  // never from whatever mood and effort were last on screen.
   const goDiary = () => {
     if (timerRunning) pauseTimer();
-    logic.nav({ screen: 'diary', diaryFrom: 'day', diaryEdit: false });
+    const logged = DIARY[listKey];
+    logic.nav(
+      Object.assign(
+        { screen: 'diary', diaryFrom: 'day', diaryEdit: false, entryNote: null },
+        logged ? { mood: logged.mood, rpe: logged.rpe } : { mood: 'Happy', rpe: 3 },
+      ),
+    );
   };
   // Leaving the detail screen while the clock is running asks first, so a stray tap on a nav item can't
   // silently keep it running unattended (or lose track of it). Both the nav guard (chrome.ts) and this
