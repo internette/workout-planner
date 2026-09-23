@@ -245,7 +245,8 @@ export async function loadModel(today: Date): Promise<Model> {
       d: hit.d,
       mood: r.mood.charAt(0).toUpperCase() + r.mood.slice(1),
       rpe: r.rpe ?? 3,
-      note: r.notes || '',
+      // Entries saved before empty notes were allowed hold this placeholder as their note.
+      note: r.notes === 'No notes for this one.' ? '' : r.notes || '',
       workout: av.name,
     };
   });

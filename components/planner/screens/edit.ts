@@ -53,6 +53,7 @@ export function editVals(ctx: Ctx) {
     doneNames,
     TODAY_M,
     TODAY_D,
+    DIARY,
   } = ctx;
   // Where each nav item actually goes, so a guarded nav click can land there after "Discard" or "Save changes" —
   // exactly what pressing that nav item would have done, including the "come back here" history entry the ones
@@ -289,6 +290,8 @@ export function editVals(ctx: Ctx) {
     eCat: selRide ? selRide.zone || 'Endurance' : picked.length ? picked.join(' · ') : 'No target areas',
     areaPills: selRide ? [selRide.zone || 'Endurance'] : picked,
     inSeries: !!(selAct && selAct.series),
+    canRepeat: !(selAct && selAct.series),
+    seriesNote: 'Part of a weekly series: it repeats every ' + DOWFULL[selDate.getDay()] + '. To stop the repeats, end the series from the workout’s page.',
     endSeries: () => {
       const sid = selAct && selAct.series;
       if (!sid) return;
@@ -338,7 +341,10 @@ export function editVals(ctx: Ctx) {
                 MON3[mi] +
                 ' ' +
                 selDay +
-                " will be removed from your plan. This can't be undone.",
+                (DIARY[idOf(srcAct)]
+                  ? ' will be removed from your plan, along with your chronicle entry for it.'
+                  : ' will be removed from your plan.') +
+                " This can't be undone.",
               label: 'Delete workout',
             },
           }),
