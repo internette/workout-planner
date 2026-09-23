@@ -39,6 +39,7 @@ import {
   Search,
   SignOut,
   Sparkle,
+  SpellCards,
   Swirl,
   User,
   Waves,
@@ -179,7 +180,7 @@ export function PlannerView({ v }: { v: any }) {
                 {'Chronicle '}
               </a>
               <a href="/spellbook" onClick={v.navGo(v.goArsenal, 'arsenal')} aria-current={v.navArsenalOn} style={css(v.navArsenal)}>
-                <Dumbbell color={v.navArsenalInk} size={18} />
+                <SpellCards color={v.navArsenalInk} size={18} />
                 {'Spellbook '}
               </a>
               <a href="/progress" onClick={v.navGo(v.goSummary, 'summary')} aria-current={v.navSummaryOn} style={css(v.navSummary)}>
@@ -5203,7 +5204,7 @@ export function PlannerView({ v }: { v: any }) {
             </span>
           </a>
           <a href="/spellbook" onClick={v.navGo(v.goArsenal, 'arsenal')} aria-current={v.navArsenalOn} style={css(v.mTabArsenal)}>
-            <Dumbbell color={v.mArsenalColor} size={22} />
+            <SpellCards color={v.mArsenalColor} size={22} />
             <span className="mlabel" style={css(v.mArsenalLabel)}>
               Spellbook
             </span>
