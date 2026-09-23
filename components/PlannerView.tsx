@@ -17,7 +17,6 @@ import { Button, IconButton } from '@/components/ui/buttons';
 import {
   BarChart,
   Bike,
-  Book,
   Calendar,
   Check,
   ChevronDown,
@@ -33,9 +32,9 @@ import {
   MoodFace,
   Moon,
   Mountain,
-  Notebook,
   Pencil,
   Plus,
+  Quill,
   Repeat,
   Search,
   SignOut,
@@ -176,7 +175,7 @@ export function PlannerView({ v }: { v: any }) {
                 {'Calendar '}
               </a>
               <a href="/chronicle" onClick={v.navGo(v.goDiaryList, 'diaryList')} aria-current={v.navDiaryOn} style={css(v.navDiary)}>
-                <Book color={v.navDiaryInk} size={18} />
+                <Quill color={v.navDiaryInk} size={18} />
                 {'Chronicle '}
               </a>
               <a href="/spellbook" onClick={v.navGo(v.goArsenal, 'arsenal')} aria-current={v.navArsenalOn} style={css(v.navArsenal)}>
@@ -5198,7 +5197,7 @@ export function PlannerView({ v }: { v: any }) {
             </span>
           </a>
           <a href="/chronicle" onClick={v.navGo(v.goDiaryList, 'diaryList')} aria-current={v.navDiaryOn} style={css(v.mTabDiary)}>
-            <Notebook color={v.mDiaryColor} size={22} />
+            <Quill color={v.mDiaryColor} size={22} />
             <span className="mlabel" style={css(v.mDiaryLabel)}>
               Chronicle
             </span>
