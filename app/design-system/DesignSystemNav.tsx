@@ -6,12 +6,15 @@ import { useEffect, useRef, useState } from 'react';
 import { useWindowEvent } from '@/components/ui/useWindowEvent';
 import { Popover } from '@/components/ui/popover';
 import { ChevronDown } from '@/components/ui/icons';
+import { Lockup } from '@/components/brand/Lockup';
+import { Mark } from '@/components/brand/Mark';
 import { categories, sections, type Category, type Section } from './registry';
 import styles from './design-system.module.css';
 
 // The sidebar: overview and brand links, then every section grouped by category. The section you are on
 // expands to show links to its headings, and the heading currently in view is highlighted.
-// On narrow screens the same menu opens from a sticky bar that names the page you are on.
+// On narrow screens a single sticky row (the lockup, and a button naming the page you are on) opens a compact
+// version: the page's headings as chips first, then every section in two columns.
 export function DesignSystemNav() {
   const pathname = usePathname();
   const current = sections.find((s) => pathname === `/design-system/${s.slug}`);
@@ -108,6 +111,61 @@ export function DesignSystemNav() {
     </>
   );
 
+  const headingChips = current?.anchors?.length ? (
+    <>
+      <div className={styles.mGroup}>On this page</div>
+      <div className={styles.mChips}>
+        {current.anchors.map((a) => (
+          <a
+            key={a.id}
+            href={`#${a.id}`}
+            onClick={() => {
+              pinned.current = a.id;
+              setActiveId(a.id);
+              closeMenu();
+            }}
+            aria-current={activeId === a.id ? 'location' : undefined}
+            className={[styles.mChip, activeId === a.id && styles.mChipActive].filter(Boolean).join(' ')}
+          >
+            {a.title}
+          </a>
+        ))}
+      </div>
+    </>
+  ) : null;
+
+  const mobileLink = (href: string, label: string, active: boolean) => (
+    <Link
+      key={href}
+      href={href}
+      onClick={closeMenu}
+      aria-current={active ? 'page' : undefined}
+      className={[styles.mLink, active && styles.mActive].filter(Boolean).join(' ')}
+    >
+      {label}
+    </Link>
+  );
+
+  const mobileMenu = (
+    <nav aria-label="Design system" className={styles.menu}>
+      {headingChips}
+      <div className={styles.mGrid}>
+        {mobileLink('/design-system', 'Overview', pathname === '/design-system')}
+        {mobileLink('/design-system#brand', 'Brand', false)}
+      </div>
+      {(Object.keys(categories) as Category[]).map((category) => (
+        <div key={category}>
+          <div className={styles.mGroup}>{categories[category].title}</div>
+          <div className={styles.mGrid}>
+            {sections
+              .filter((s) => s.category === category)
+              .map((s) => mobileLink(`/design-system/${s.slug}`, s.title, current?.slug === s.slug))}
+          </div>
+        </div>
+      ))}
+    </nav>
+  );
+
   return (
     <div className={styles.navWrap}>
       <nav aria-label="Design system" className={styles.nav}>
@@ -118,20 +176,21 @@ export function DesignSystemNav() {
           open={menuOpen}
           onClose={closeMenu}
           width="anchor"
-          top={58}
+          top={50}
           pad="xs"
-          style={{ display: 'block' }}
-          content={
-            <nav aria-label="Design system" className={styles.menu}>
-              {links}
-            </nav>
-          }
+          style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+          content={mobileMenu}
         >
-          <button type="button" className={styles.menuButton} aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>
-            <span className={styles.menuWhere}>
-              <span className={styles.menuGroup}>{current ? categories[current.category].title : 'Design system'}</span>
-              <span className={styles.menuTitle}>{current ? current.title : 'Overview'}</span>
+          <Link href="/" className={styles.mHome} aria-label="Moonshot home">
+            <span className={styles.mHomeFull}>
+              <Lockup height={22} />
             </span>
+            <span className={styles.mHomeMark}>
+              <Mark size={26} />
+            </span>
+          </Link>
+          <button type="button" className={styles.menuButton} aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>
+            <span className={styles.menuTitle}>{current ? current.title : 'Overview'}</span>
             <span className={[styles.menuCaret, menuOpen && styles.menuCaretOpen].filter(Boolean).join(' ')}>
               <ChevronDown color="var(--color-muted)" size={18} />
             </span>

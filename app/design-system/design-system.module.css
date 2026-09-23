@@ -85,15 +85,31 @@
 
 /* ---- narrow screens: the sidebar becomes a sticky bar that says where you are and opens the same menu */
 .mobileBar { display: none; }
+.mHome {
+  display: inline-flex;
+  flex: none;
+  padding: 6px;
+  margin-left: -6px;
+  border-radius: var(--radius-sm);
+}
+.mHome:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+/* Below 400px the name gives its room to the page title: just the mark. */
+.mHomeFull { display: inline-flex; }
+.mHomeMark { display: none; }
+@media (max-width: 400px) {
+  .mHomeFull { display: none; }
+  .mHomeMark { display: inline-flex; }
+}
 .menuButton {
   display: flex;
   align-items: center;
-  gap: 12px;
-  width: 100%;
-  min-height: 52px;
-  padding: 8px 16px;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px 12px 6px 16px;
   border: none;
-  border-radius: 16px;
+  border-radius: 14px;
   background: var(--color-white);
   box-shadow: 0 4px 14px rgba(35, 42, 69, 0.07);
   font: inherit;
@@ -101,15 +117,9 @@
   cursor: pointer;
 }
 .menuButton:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
-.menuWhere { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-.menuGroup {
-  font-size: var(--text-2xs);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
-  color: var(--color-subtle);
-}
 .menuTitle {
+  flex: 1;
+  min-width: 0;
   font-size: var(--text-base);
   font-weight: var(--font-weight-semibold);
   color: var(--color-ink);
@@ -119,23 +129,61 @@
 }
 .menuCaret { flex: none; display: flex; transition: transform var(--dur-state) var(--ease-standard); }
 .menuCaretOpen { transform: rotate(180deg); }
+
+/* The compact menu: headings as chips, then sections two to a row. */
 .menu {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  max-height: min(70vh, 560px);
+  max-height: min(75vh, 620px);
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 4px;
+  padding: 4px 4px 6px;
 }
+.mGroup {
+  margin: 10px 8px 4px;
+  font-size: var(--text-2xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-subtle);
+}
+.menu > .mGroup:first-child { margin-top: 4px; }
+.mGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.mLink {
+  display: block;
+  padding: 8px;
+  border-radius: 10px;
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mLink:hover { background: rgba(35, 42, 69, 0.05); color: var(--color-ink); }
+.mActive, .mActive:hover { background: var(--color-pink-tint); color: var(--color-pink-deep); font-weight: var(--font-weight-semibold); }
+.mChips { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 4px 8px; border-bottom: 1px solid rgba(35, 42, 69, 0.08); }
+.mChip {
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: var(--color-canvas);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-muted);
+  text-decoration: none;
+}
+.mChip:hover { color: var(--color-ink); }
+.mChipActive, .mChipActive:hover { background: var(--color-pink-tint); color: var(--color-pink-deep); font-weight: var(--font-weight-semibold); }
 
 @media (max-width: 820px) {
   .body { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  .navWrap { top: 0; margin: 0 -24px; padding: 8px 24px; background: var(--color-canvas); }
+  .top { display: none; }
+  .navWrap { top: 0; margin: 0 -24px; padding: 10px 24px 8px; background: var(--color-canvas); }
   .nav { display: none; }
   .mobileBar { display: block; }
   /* Headings reached from the menu land below the sticky bar, not under it. */
-  .content { --ds-anchor-offset: 80px; }
+  .content { --ds-anchor-offset: 72px; }
 }
 
 /* ---- landing page */
