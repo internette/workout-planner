@@ -71,6 +71,8 @@ export function workoutStage(ctx: Ctx): Ctx {
     Object.keys(EX).forEach((k) => EX[k].forEach(add));
     Object.keys(st.extra || {}).forEach((k) => (st.extra[k] || []).forEach(add));
     logic.model.library.forEach(add);
+    // Last, so a person's own exercise wins over a built-in with the same name.
+    logic.model.builtins.forEach(add);
     return all;
   };
   const listKey = creating ? '__draft' : idOf(srcAct);

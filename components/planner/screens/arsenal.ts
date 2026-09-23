@@ -14,7 +14,9 @@ export function arsenalVals(ctx: Ctx) {
   // ---- exercise count (shown in the header when the exercises view is open)
   // One per row in the list. Exercises are identified by id, so two with the same name are two exercises.
   const exerciseCount = plural(
-    Object.keys(EX).reduce((n, k) => n + (EX[k] || []).length, 0) + logic.model.library.length,
+    Object.keys(EX).reduce((n, k) => n + (EX[k] || []).length, 0) +
+      logic.model.library.length +
+      logic.model.builtins.length,
     'exercise',
   );
 
@@ -85,11 +87,19 @@ export function arsenalVals(ctx: Ctx) {
       const hit = (EX[w] || []).find((e) => e.id === id);
       if (hit) return { ex: hit, workout: workouts.find((x) => x.name === w) || null };
     }
-    const lib = logic.model.library.find((e) => e.id === id);
+    const lib = logic.model.library.find((e) => e.id === id) || logic.model.builtins.find((e) => e.id === id);
     return lib ? { ex: lib, workout: null } : null;
   };
   const onExerciseScreen = st.screen === 'exercise' || st.screen === 'exerciseEdit';
   const found = onExerciseScreen ? findExercise(st.exerciseId) : null;
+  const draftFrom = (ex, name) => ({
+    name,
+    ...splitSetsReps(ex.sets),
+    weight: ex.weight,
+    rest: ex.rest,
+    i: ex.i,
+    areas: ex.areas || [],
+  });
   const exercise = found
     ? {
         name: found.ex.name,
@@ -97,23 +107,19 @@ export function arsenalVals(ctx: Ctx) {
         sets: found.ex.sets,
         weight: found.ex.weight,
         rest: found.ex.rest,
+        areas: found.ex.areas || [],
+        builtin: !!found.ex.builtin,
         // By id, not by name: a same-named exercise in the Unassigned group is not part of any workout.
         usedIn: found.workout
           ? [{ name: found.workout.name, open: () => logic.nav({ screen: 'template', templateId: found.workout.id }) }]
           : [],
-        edit: () =>
-          logic.s({
-            screen: 'exerciseEdit',
-            exFrom: null,
-            exDraft: {
-              name: found.ex.name,
-              ...splitSetsReps(found.ex.sets),
-              weight: found.ex.weight,
-              rest: found.ex.rest,
-              i: found.ex.i,
-              areas: found.ex.areas || [],
-            },
-          }),
+        edit: () => logic.s({ screen: 'exerciseEdit', exFrom: null, exDraft: draftFrom(found.ex, found.ex.name) }),
+        // A built-in can't be changed, so "change it" means: make it the person's own, then open that in the editor.
+        copy: () =>
+          logic.save(
+            () => db.createLibraryExercise(found.ex),
+            (r) => ({ screen: 'exerciseEdit', exerciseId: r.id, exFrom: null, exDraft: draftFrom(found.ex, r.name) }),
+          ),
       }
     : null;
   // Set when the exercise editor was opened from the workout editor, so it returns there.
@@ -137,9 +143,9 @@ export function arsenalVals(ctx: Ctx) {
           apply: (choice, upcoming) => {
             if (choice === 'new') {
               // A new standalone exercise: the original and its workout stay exactly as they are.
-              logic.save(() => db.createLibraryExercise(patch), (id) => ({
+              logic.save(() => db.createLibraryExercise(patch), (r) => ({
                 screen: 'exercise',
-                exerciseId: id,
+                exerciseId: r.id,
                 exDraft: null,
                 exFrom: null,
                 tplDraft: null,
@@ -497,7 +503,7 @@ export function arsenalVals(ctx: Ctx) {
     arsenalIntro:
       view === 'workouts'
         ? "Every workout you've saved, ready to add to your plan."
-        : "Every exercise you've called on, grouped by the workout it belongs to.",
+        : "Your exercises, grouped by the workout they belong to, then built-in ones you can add to any workout or copy to make your own.",
     arsenalSearchPlaceholder: view === 'workouts' ? 'Search workouts' : 'Search exercises',
     savedWorkouts,
     noSavedWorkouts: workouts.length === 0,
@@ -561,15 +567,20 @@ export function arsenalVals(ctx: Ctx) {
           })),
         );
       });
-      push(
-        'Unassigned',
-        logic.model.library.map((e) => ({
-          name: e.name,
-          svg: iconSvg(e.i),
-          detail: e.sets + ' · ' + e.weight,
-          open: () => openExercise(e.id),
-        })),
-      );
+      const row = (e) => ({
+        name: e.name,
+        svg: iconSvg(e.i),
+        detail: e.sets + ' · ' + e.weight,
+        open: () => openExercise(e.id),
+      });
+      push('Unassigned', logic.model.library.map(row));
+      // The shared starter catalog, after the person's own, grouped by each exercise's main target area.
+      TARGET_AREAS.forEach((area) => {
+        push(
+          'Built-in · ' + area,
+          logic.model.builtins.filter((e) => (e.areas || [])[0] === area).map(row),
+        );
+      });
       return groups;
     })(),
   };

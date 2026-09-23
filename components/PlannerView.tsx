@@ -2508,17 +2508,29 @@ export function PlannerView({ v }: { v: any }) {
                       <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
                     </IconButton>
                     <Text variant="eyebrow" tone="slate">
-                      EXERCISE
+                      {v.exercise.builtin ? 'BUILT-IN EXERCISE' : 'EXERCISE'}
                     </Text>
-                    <Button
-                      type="primary"
-                      size="sm"
-                      onClick={v.exercise.edit}
-                      style={{ marginLeft: 'auto' }}
-                    >
-                      <Pencil color="var(--color-white)" size={16} />
-                      Edit
-                    </Button>
+                    {v.exercise.builtin ? (
+                      <Button
+                        type="primary"
+                        size="sm"
+                        onClick={v.exercise.copy}
+                        style={{ marginLeft: 'auto' }}
+                      >
+                        <Plus color="var(--color-white)" size={16} />
+                        Make a copy
+                      </Button>
+                    ) : (
+                      <Button
+                        type="primary"
+                        size="sm"
+                        onClick={v.exercise.edit}
+                        style={{ marginLeft: 'auto' }}
+                      >
+                        <Pencil color="var(--color-white)" size={16} />
+                        Edit
+                      </Button>
+                    )}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
                     <span
@@ -2568,22 +2580,38 @@ export function PlannerView({ v }: { v: any }) {
                         </Text>
                       </div>
                     </div>
+                    {(v.exercise.areas ?? []).length ? (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '18px' }}>
+                        {(v.exercise.areas ?? []).map((a, i) => (
+                          <Chip key={i}>{a}</Chip>
+                        ))}
+                      </div>
+                    ) : null}
                   </Card>
-                  <Text variant="eyebrow" tone="slate" as="div" style={{ margin: '24px 0 10px' }}>
-                    USED IN
-                  </Text>
-                  {(v.exercise.usedIn ?? []).length ? (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                      {(v.exercise.usedIn ?? []).map((w, i) => (
-                        <Chip key={i} onClick={w?.open}>
-                          {w?.name}
-                        </Chip>
-                      ))}
-                    </div>
-                  ) : (
-                    <Text variant="body" as="p" tone="muted" style={{ margin: '0' }}>
-                      Not part of a saved workout yet.
+                  {v.exercise.builtin ? (
+                    <Text variant="body" as="p" tone="muted" style={{ margin: '18px 0 0' }}>
+                      Built-in exercises can&apos;t be changed. Add it to any workout as it is, or make a copy to
+                      edit — the copy is yours.
                     </Text>
+                  ) : (
+                    <>
+                      <Text variant="eyebrow" tone="slate" as="div" style={{ margin: '24px 0 10px' }}>
+                        USED IN
+                      </Text>
+                      {(v.exercise.usedIn ?? []).length ? (
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                          {(v.exercise.usedIn ?? []).map((w, i) => (
+                            <Chip key={i} onClick={w?.open}>
+                              {w?.name}
+                            </Chip>
+                          ))}
+                        </div>
+                      ) : (
+                        <Text variant="body" as="p" tone="muted" style={{ margin: '0' }}>
+                          Not part of a saved workout yet.
+                        </Text>
+                      )}
+                    </>
                   )}
                 </div>
               </>

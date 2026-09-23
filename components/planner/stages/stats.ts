@@ -138,7 +138,7 @@ export function statsStage(ctx: Ctx): Ctx {
         s2[e.name] = 1;
       }),
     );
-    logic.model.library.forEach((e) => {
+    logic.model.library.concat(logic.model.builtins).forEach((e) => {
       s2[e.name] = 1;
     });
     return Object.keys(s2);

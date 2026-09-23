@@ -47,7 +47,13 @@ The app expects these tables: `workouts`, `workout_exercises`, `plan_entries` an
 
 A second migration, [supabase/migrations/20260920000000_workout_snapshots.sql](supabase/migrations/20260920000000_workout_snapshots.sql), adds `workouts.archived`. Editing a workout from the Arsenal (with upcoming sessions updated) saves the old version as an archived copy, so past sessions keep showing what you actually did.
 
-Run both migrations once, in order, in the Supabase SQL editor. They are safe to run again.
+Three later migrations:
+
+- [20260922000000_workout_notes.sql](supabase/migrations/20260922000000_workout_notes.sql) adds `workouts.notes`.
+- [20260924000000_exercise_target_areas.sql](supabase/migrations/20260924000000_exercise_target_areas.sql) adds `target_areas` to `workout_exercises` and `library_exercises`. A workout's target areas are now the union of its exercises' (the old `workouts.target_areas` column is no longer read).
+- [20260925000000_builtin_exercises.sql](supabase/migrations/20260925000000_builtin_exercises.sql) adds `builtin_exercises`, a shared catalog of 100 beginner exercises every account sees in its Arsenal. It is read-only to everyone (a read policy, no write policy); a person copies one to change it.
+
+Run the migrations once, in order, in the Supabase SQL editor. They are safe to run again.
 
 ### Sign-in
 

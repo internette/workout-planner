@@ -1,0 +1,143 @@
+-- Built-in exercises: one shared catalog every account can read, so a new account starts with a full Arsenal.
+-- Nobody can change it through the app or the API (there is a read policy and no write policy); to change one,
+-- a person copies it into their own exercises and edits the copy. Weights are pounds, blank for bodyweight;
+-- timed holds have no reps and carry their duration in the name. Safe to re-run: it updates rows by name.
+
+create table if not exists public.builtin_exercises (
+  id uuid primary key default gen_random_uuid(),
+  name text not null unique,
+  sets integer,
+  reps integer,
+  weight_value numeric,
+  weight_unit text,
+  rest_seconds integer,
+  icon text not null default 'h',
+  target_areas text[] not null default '{}',
+  sort_order integer not null default 0
+);
+
+alter table public.builtin_exercises enable row level security;
+drop policy if exists "anyone can read" on public.builtin_exercises;
+create policy "anyone can read" on public.builtin_exercises for select to anon, authenticated using (true);
+
+insert into public.builtin_exercises
+  (sort_order, name, sets, reps, weight_value, weight_unit, rest_seconds, icon, target_areas)
+values
+  -- Legs
+  (1, 'Bodyweight Squat', 3, 12, null, null, 60, 'v', '{Legs}'),
+  (2, 'Goblet Squat', 3, 10, 20, 'lb', 90, 'd', '{Legs,Core}'),
+  (3, 'Dumbbell Romanian Deadlift', 3, 10, 20, 'lb', 90, 'd', '{Legs,Back}'),
+  (4, 'Glute Bridge', 3, 12, null, null, 60, 'v', '{Legs,Core}'),
+  (5, 'Reverse Lunge', 3, 10, null, null, 60, 'v', '{Legs}'),
+  (6, 'Walking Lunge', 3, 10, null, null, 60, 'v', '{Legs}'),
+  (7, 'Step-Up', 3, 10, null, null, 60, 'v', '{Legs}'),
+  (8, 'Split Squat', 3, 8, null, null, 60, 'v', '{Legs}'),
+  (9, 'Wall Sit (30 sec)', 3, null, null, null, 45, 'v', '{Legs}'),
+  (10, 'Standing Calf Raise', 3, 15, null, null, 45, 'v', '{Legs}'),
+  (11, 'Leg Press', 3, 12, 90, 'lb', 90, 'h', '{Legs}'),
+  (12, 'Leg Extension', 3, 12, 40, 'lb', 60, 'h', '{Legs}'),
+  (13, 'Seated Leg Curl', 3, 12, 40, 'lb', 60, 'h', '{Legs}'),
+  (14, 'Barbell Back Squat', 3, 8, 45, 'lb', 120, 'h', '{Legs,Core}'),
+  (15, 'Sumo Squat', 3, 12, 20, 'lb', 60, 'd', '{Legs}'),
+  (16, 'Lateral Lunge', 3, 8, null, null, 60, 'v', '{Legs}'),
+  (17, 'Single-Leg Glute Bridge', 3, 10, null, null, 60, 'v', '{Legs,Core}'),
+  (18, 'Kettlebell Deadlift', 3, 10, 25, 'lb', 90, 'd', '{Legs,Back}'),
+  (19, 'Barbell Hip Thrust', 3, 10, 45, 'lb', 90, 'h', '{Legs}'),
+  (20, 'Box Squat', 3, 10, null, null, 60, 'v', '{Legs}'),
+  -- Chest
+  (21, 'Push-Up', 3, 8, null, null, 60, 'v', '{Chest,Arms,Core}'),
+  (22, 'Incline Push-Up', 3, 10, null, null, 60, 'v', '{Chest,Arms}'),
+  (23, 'Knee Push-Up', 3, 10, null, null, 60, 'v', '{Chest,Arms}'),
+  (24, 'Dumbbell Bench Press', 3, 10, 20, 'lb', 90, 'd', '{Chest,Arms,Shoulders}'),
+  (25, 'Incline Dumbbell Press', 3, 10, 15, 'lb', 90, 'd', '{Chest,Shoulders}'),
+  (26, 'Dumbbell Floor Press', 3, 10, 20, 'lb', 90, 'd', '{Chest,Arms}'),
+  (27, 'Dumbbell Chest Fly', 3, 12, 10, 'lb', 60, 'd', '{Chest}'),
+  (28, 'Barbell Bench Press', 3, 8, 45, 'lb', 120, 'h', '{Chest,Arms,Shoulders}'),
+  (29, 'Machine Chest Press', 3, 12, 50, 'lb', 90, 'h', '{Chest,Arms}'),
+  (30, 'Cable Chest Fly', 3, 12, 20, 'lb', 60, 'h', '{Chest}'),
+  (31, 'Pec Deck', 3, 12, 40, 'lb', 60, 'h', '{Chest}'),
+  (32, 'Wall Push-Up', 3, 12, null, null, 45, 'v', '{Chest,Arms}'),
+  (33, 'Dumbbell Pullover', 3, 12, 15, 'lb', 60, 'd', '{Chest,Back}'),
+  (34, 'Close-Grip Push-Up', 3, 8, null, null, 60, 'v', '{Chest,Arms}'),
+  -- Back
+  (35, 'Dumbbell Bent-Over Row', 3, 10, 20, 'lb', 90, 'd', '{Back,Arms}'),
+  (36, 'One-Arm Dumbbell Row', 3, 10, 20, 'lb', 60, 'd', '{Back,Arms}'),
+  (37, 'Seated Cable Row', 3, 12, 50, 'lb', 90, 'h', '{Back,Arms}'),
+  (38, 'Lat Pulldown', 3, 12, 50, 'lb', 90, 'h', '{Back,Arms}'),
+  (39, 'Assisted Pull-Up', 3, 8, null, null, 90, 'v', '{Back,Arms}'),
+  (40, 'Inverted Row', 3, 8, null, null, 60, 'v', '{Back,Arms}'),
+  (41, 'Superman', 3, 12, null, null, 45, 'v', '{Back,Core}'),
+  (42, 'Bird Dog', 3, 10, null, null, 45, 'v', '{Back,Core}'),
+  (43, 'Back Extension', 3, 12, null, null, 60, 'v', '{Back,Legs}'),
+  (44, 'Chest-Supported Dumbbell Row', 3, 10, 15, 'lb', 60, 'd', '{Back,Arms}'),
+  (45, 'Straight-Arm Pulldown', 3, 12, 30, 'lb', 60, 'h', '{Back}'),
+  (46, 'Band Pull-Apart', 3, 15, null, null, 45, 'v', '{Back,Shoulders}'),
+  (47, 'Face Pull', 3, 15, 25, 'lb', 60, 'h', '{Back,Shoulders}'),
+  (48, 'Dumbbell Shrug', 3, 12, 25, 'lb', 60, 'd', '{Back,Shoulders}'),
+  (49, 'Barbell Deadlift', 3, 5, 65, 'lb', 120, 'h', '{Back,Legs}'),
+  (50, 'Bodyweight Good Morning', 3, 10, null, null, 60, 'v', '{Back,Legs}'),
+  -- Shoulders
+  (51, 'Dumbbell Shoulder Press', 3, 10, 15, 'lb', 90, 'd', '{Shoulders,Arms}'),
+  (52, 'Seated Dumbbell Press', 3, 10, 15, 'lb', 90, 'd', '{Shoulders,Arms}'),
+  (53, 'Arnold Press', 3, 10, 10, 'lb', 90, 'd', '{Shoulders,Arms}'),
+  (54, 'Dumbbell Lateral Raise', 3, 12, 8, 'lb', 60, 'd', '{Shoulders}'),
+  (55, 'Dumbbell Front Raise', 3, 12, 8, 'lb', 60, 'd', '{Shoulders}'),
+  (56, 'Rear Delt Fly', 3, 12, 8, 'lb', 60, 'd', '{Shoulders,Back}'),
+  (57, 'Machine Shoulder Press', 3, 12, 40, 'lb', 90, 'h', '{Shoulders,Arms}'),
+  (58, 'Cable Lateral Raise', 3, 12, 10, 'lb', 60, 'h', '{Shoulders}'),
+  (59, 'Pike Push-Up', 3, 8, null, null, 60, 'v', '{Shoulders,Arms}'),
+  (60, 'Dumbbell Upright Row', 3, 12, 12, 'lb', 60, 'd', '{Shoulders,Back}'),
+  (61, 'Barbell Overhead Press', 3, 8, 45, 'lb', 120, 'h', '{Shoulders,Arms}'),
+  (62, 'Plate Front Raise', 3, 12, 10, 'lb', 60, 'd', '{Shoulders}'),
+  (63, 'Wall Slide', 3, 10, null, null, 45, 'v', '{Shoulders,Back}'),
+  (64, 'Arm Circles (30 sec)', 3, null, null, null, 30, 'v', '{Shoulders}'),
+  -- Arms
+  (65, 'Dumbbell Biceps Curl', 3, 12, 12, 'lb', 60, 'd', '{Arms}'),
+  (66, 'Hammer Curl', 3, 12, 12, 'lb', 60, 'd', '{Arms}'),
+  (67, 'Concentration Curl', 3, 10, 10, 'lb', 60, 'd', '{Arms}'),
+  (68, 'Cable Biceps Curl', 3, 12, 25, 'lb', 60, 'h', '{Arms}'),
+  (69, 'EZ-Bar Curl', 3, 10, 30, 'lb', 60, 'h', '{Arms}'),
+  (70, 'Machine Preacher Curl', 3, 12, 30, 'lb', 60, 'h', '{Arms}'),
+  (71, 'Triceps Pushdown', 3, 12, 30, 'lb', 60, 'h', '{Arms}'),
+  (72, 'Overhead Dumbbell Triceps Extension', 3, 12, 15, 'lb', 60, 'd', '{Arms}'),
+  (73, 'Bench Dip', 3, 10, null, null, 60, 'v', '{Arms,Chest}'),
+  (74, 'Dumbbell Skull Crusher', 3, 10, 10, 'lb', 60, 'd', '{Arms}'),
+  (75, 'Triceps Kickback', 3, 12, 8, 'lb', 60, 'd', '{Arms}'),
+  (76, 'Diamond Push-Up', 3, 6, null, null, 60, 'v', '{Arms,Chest}'),
+  (77, 'Zottman Curl', 3, 10, 10, 'lb', 60, 'd', '{Arms}'),
+  (78, 'Dumbbell Wrist Curl', 3, 15, 10, 'lb', 45, 'd', '{Arms}'),
+  (79, 'Reverse Curl', 3, 12, 10, 'lb', 60, 'd', '{Arms}'),
+  (80, 'Farmer''s Carry (30 sec)', 3, null, 25, 'lb', 60, 'd', '{Arms,Core,Back}'),
+  -- Core
+  (81, 'Forearm Plank (30 sec)', 3, null, null, null, 45, 'v', '{Core}'),
+  (82, 'Side Plank (20 sec)', 3, null, null, null, 45, 'v', '{Core}'),
+  (83, 'Dead Bug', 3, 10, null, null, 45, 'v', '{Core}'),
+  (84, 'Crunch', 3, 15, null, null, 45, 'v', '{Core}'),
+  (85, 'Bicycle Crunch', 3, 12, null, null, 45, 'v', '{Core}'),
+  (86, 'Reverse Crunch', 3, 12, null, null, 45, 'v', '{Core}'),
+  (87, 'Lying Leg Raise', 3, 10, null, null, 45, 'v', '{Core}'),
+  (88, 'Mountain Climber', 3, 20, null, null, 45, 'v', '{Core,Shoulders}'),
+  (89, 'Russian Twist', 3, 16, null, null, 45, 'v', '{Core}'),
+  (90, 'Flutter Kick', 3, 20, null, null, 45, 'v', '{Core}'),
+  (91, 'Hollow Body Hold (20 sec)', 3, null, null, null, 45, 'v', '{Core}'),
+  (92, 'Glute Bridge March', 3, 10, null, null, 45, 'v', '{Core,Legs}'),
+  (93, 'Pallof Press', 3, 10, 15, 'lb', 60, 'h', '{Core}'),
+  (94, 'Cable Woodchopper', 3, 10, 15, 'lb', 60, 'h', '{Core,Shoulders}'),
+  (95, 'Heel Tap', 3, 20, null, null, 45, 'v', '{Core}'),
+  (96, 'Plank Shoulder Tap', 3, 16, null, null, 45, 'v', '{Core,Shoulders}'),
+  (97, 'Toe Touch Crunch', 3, 12, null, null, 45, 'v', '{Core}'),
+  (98, 'Bear Crawl (30 sec)', 3, null, null, null, 60, 'v', '{Core,Shoulders}'),
+  (99, 'Stability Ball Crunch', 3, 15, null, null, 45, 'v', '{Core}'),
+  (100, 'Suitcase Carry (30 sec)', 3, null, 20, 'lb', 60, 'd', '{Core,Arms}')
+on conflict (name) do update set
+  sort_order = excluded.sort_order,
+  sets = excluded.sets,
+  reps = excluded.reps,
+  weight_value = excluded.weight_value,
+  weight_unit = excluded.weight_unit,
+  rest_seconds = excluded.rest_seconds,
+  icon = excluded.icon,
+  target_areas = excluded.target_areas;
+
+-- Make the API pick up the new table straight away.
+notify pgrst, 'reload schema';

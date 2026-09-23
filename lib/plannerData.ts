@@ -11,6 +11,7 @@ export interface Exercise {
   rest: string; // "90 sec"
   i: string; // icon key
   areas: string[]; // body regions this exercise targets
+  builtin?: boolean; // from the shared catalog: read-only, copy it to change it
 }
 
 export interface Ride {
@@ -69,6 +70,7 @@ export interface Model {
   entries: { m: number; d: number; iso: string; av: Entry }[]; // sorted by date
   DIARY: Record<string, DiaryEntry>; // plan entry id -> diary entry
   library: Exercise[]; // arsenal exercises not tied to a workout
+  builtins: Exercise[]; // the shared starter catalog every account sees
   workouts: WorkoutSummary[]; // every saved workout, by name
   done: Record<string, string[]>; // plan entry id -> ticked exercise names
   rideDone: Record<string, boolean>;
@@ -151,12 +153,13 @@ async function ok<T>(q: PromiseLike<{ data: T; error: any }>): Promise<T> {
 // ---------- read ----------
 
 export async function loadModel(today: Date): Promise<Model> {
-  const [workouts, exercises, plan, diary, library] = await Promise.all([
+  const [workouts, exercises, plan, diary, library, builtins] = await Promise.all([
     ok(supabase.from('workouts').select('*')),
     ok(supabase.from('workout_exercises').select('*').order('order_index')),
     ok(supabase.from('plan_entries').select('*').order('scheduled_date')),
     ok(supabase.from('diary_entries').select('*')),
     ok(supabase.from('library_exercises').select('*').order('created_at')),
+    ok(supabase.from('builtin_exercises').select('*').order('sort_order')),
   ]);
 
   const byId: Record<string, any> = {};
@@ -280,6 +283,7 @@ export async function loadModel(today: Date): Promise<Model> {
     entries,
     DIARY,
     library: library.map(toExercise),
+    builtins: builtins.map((r: any) => ({ ...toExercise(r), builtin: true })),
     workouts: saved,
     done,
     rideDone,
@@ -511,18 +515,22 @@ export async function addLibraryExercise(e: Exercise) {
   await ok(supabase.from('library_exercises').upsert(exerciseRow(e), { onConflict }));
 }
 
-// "Save as a new exercise": always a new row, never an overwrite. Library names are unique, so a taken name
-// becomes "<name> (copy)", "(copy 2)", ... Returns the new row's id so the screen can open it.
-export async function createLibraryExercise(e: Exercise): Promise<string> {
-  const rows: any[] = await ok(supabase.from('library_exercises').select('name'));
-  const taken = new Set(rows.map((r) => r.name));
+// "Save as a new exercise", or a copy of a built-in: always a new row, never an overwrite. A name already in the
+// Arsenal (the person's own or a built-in) becomes "<name> (copy)", "(copy 2)", ... Returns the new row's id and
+// the name it ended up with, so the screen can open it.
+export async function createLibraryExercise(e: Exercise): Promise<{ id: string; name: string }> {
+  const [own, builtin]: any[][] = await Promise.all([
+    ok(supabase.from('library_exercises').select('name')),
+    ok(supabase.from('builtin_exercises').select('name')),
+  ]);
+  const taken = new Set([...own, ...builtin].map((r) => r.name));
   let name = e.name;
   if (taken.has(name)) {
     name = e.name + ' (copy)';
     for (let n = 2; taken.has(name); n++) name = e.name + ' (copy ' + n + ')';
   }
   const [row]: any[] = await ok(supabase.from('library_exercises').insert(exerciseRow({ ...e, name })).select('id'));
-  return row.id;
+  return { id: row.id, name };
 }
 
 // Edits one exercise row: the copy inside a workout, or an exercise saved on its own in the Arsenal.
