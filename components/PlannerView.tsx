@@ -2914,6 +2914,7 @@ export function PlannerView({ v }: { v: any }) {
                       value={v.templateEdit.name}
                       onChange={v.templateEdit.setName}
                       placeholder="Name this workout"
+                      error={v.templateEdit.nameError || undefined}
                     />
                   </div>
                   {v.templateEdit.isRide ? (
@@ -3963,6 +3964,7 @@ export function PlannerView({ v }: { v: any }) {
                             onChange={v.setNewName}
                             onKeyDown={v.commitOnEnter}
                             placeholder="Name this workout"
+                            error={v.nameError || undefined}
                           />
                         </>
                       ) : null}
@@ -3975,6 +3977,7 @@ export function PlannerView({ v }: { v: any }) {
                             onChange={v.setEditName}
                             onKeyDown={v.commitOnEnter}
                             placeholder="Name this workout"
+                            error={v.nameError || undefined}
                           />
                         </>
                       ) : null}
@@ -4049,6 +4052,11 @@ export function PlannerView({ v }: { v: any }) {
                     ) : null}
                     <Chip icon={<Clock color="var(--color-muted)" size={17} />}>{t(v.eTime)}</Chip>
                   </div>
+                  {v.canUseSaved ? (
+                    <Button type="secondary" size="md" onClick={v.useSaved} style={{ marginTop: '12px' }}>
+                      {v.useSavedLabel}
+                    </Button>
+                  ) : null}
                   {v.isCreating ? (
                     <Card pad="sm" style={{ marginTop: '16px' }}>
                       <Checkbox switch checked={!!v.scheduleOn} onChange={v.setSchedule}>
@@ -4772,7 +4780,7 @@ export function PlannerView({ v }: { v: any }) {
                     <Button type={v.eCancelType} ghost size="lg" onClick={v.footerSecondary}>
                       {v.eCancelLabel}
                     </Button>
-                    <Button type="primary" size="lg" onClick={v.saveWorkout}>
+                    <Button type="primary" size="lg" onClick={v.saveWorkout} disabled={!!v.saveBlocked}>
                       {v.eSaveLabel}
                     </Button>
                   </div>

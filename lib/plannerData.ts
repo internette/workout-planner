@@ -361,48 +361,36 @@ export interface NewWorkout {
   notes: string;
 }
 
-// Creates the workout (or reuses one with the same name) and schedules it on every date.
+// Creates a new workout and schedules it on every date. It never joins an existing workout with the same name
+// (that used to merge the two); the screen stops a taken name, and a name taken in the meantime gets a number.
 export async function createWorkout(w: NewWorkout) {
-  const existing: any[] = await ok(supabase.from('workouts').select('id').eq('name', w.name).limit(1));
-  let workoutId: string;
-  if (existing.length) {
-    workoutId = existing[0].id;
-    if (w.repeat) await ok(supabase.from('workouts').update({ repeat_enabled: true }).eq('id', workoutId));
-  } else {
-    const row: any[] = await ok(
-      supabase
-        .from('workouts')
-        .insert({
-          name: w.name,
-          kind: w.isRide ? 'ride' : 'lift',
-          duration_minutes: w.durationMinutes,
-          icon: w.icon,
-          icon_color: w.iconColor,
-          ride_distance_miles: w.ride && w.ride.dist ? Number(w.ride.dist) : null,
-          ride_elevation_ft: w.ride && w.ride.elev ? Number(w.ride.elev) : null,
-          ride_zone: w.ride ? w.ride.zone : null,
-          repeat_enabled: w.repeat,
-          notes: w.notes || null,
-        })
-        .select('id'),
-    );
-    workoutId = row[0].id;
-  }
+  const name = await numberedWorkoutName(w.name);
+  const [row]: any[] = await ok(
+    supabase
+      .from('workouts')
+      .insert({
+        name,
+        kind: w.isRide ? 'ride' : 'lift',
+        duration_minutes: w.durationMinutes,
+        icon: w.icon,
+        icon_color: w.iconColor,
+        ride_distance_miles: w.ride && w.ride.dist ? Number(w.ride.dist) : null,
+        ride_elevation_ft: w.ride && w.ride.elev ? Number(w.ride.elev) : null,
+        ride_zone: w.ride ? w.ride.zone : null,
+        repeat_enabled: w.repeat,
+        notes: w.notes || null,
+      })
+      .select('id'),
+  );
+  const workoutId: string = row.id;
 
   if (w.exercises.length) {
-    const have: any[] = await ok(
-      supabase.from('workout_exercises').select('name, order_index').eq('workout_id', workoutId),
+    let order = 0;
+    await ok(
+      supabase
+        .from('workout_exercises')
+        .insert(w.exercises.map((e) => ({ workout_id: workoutId, order_index: order++, ...exerciseRow(e) }))),
     );
-    const names = new Set(have.map((r) => r.name));
-    let order = have.reduce((max, r) => Math.max(max, r.order_index ?? 0), have.length ? 0 : -1) + 1;
-    const fresh = w.exercises.filter((e) => !names.has(e.name));
-    if (fresh.length) {
-      await ok(
-        supabase
-          .from('workout_exercises')
-          .insert(fresh.map((e) => ({ workout_id: workoutId, order_index: order++, ...exerciseRow(e) }))),
-      );
-    }
   }
 
   // A workout saved on its own has no dates, and nothing to schedule.
@@ -415,6 +403,29 @@ export async function createWorkout(w: NewWorkout) {
   );
   // The session on the first date, so the screen can open on it even when that day has other workouts too.
   return { entryId: rows.find((r) => r.scheduled_date === w.dates[0])?.id ?? null };
+}
+
+// Puts an existing workout on the calendar: one session per date. Repeating dates also turn its weekly series on.
+export async function scheduleWorkout(workoutId: string, dates: string[], repeat: boolean) {
+  if (!dates.length) return { entryId: null };
+  if (repeat) await ok(supabase.from('workouts').update({ repeat_enabled: true }).eq('id', workoutId));
+  const rows: { id: string; scheduled_date: string }[] = await ok(
+    supabase
+      .from('plan_entries')
+      .insert(dates.map((d) => ({ workout_id: workoutId, scheduled_date: d, status: 'planned' })))
+      .select('id, scheduled_date'),
+  );
+  return { entryId: rows.find((r) => r.scheduled_date === dates[0])?.id ?? null };
+}
+
+// A name no current workout uses (ignoring case): the name itself, else "<name> 2", "<name> 3", ...
+async function numberedWorkoutName(wanted: string): Promise<string> {
+  const rows: any[] = await ok(supabase.from('workouts').select('name').eq('archived', false));
+  const taken = new Set(rows.map((r) => String(r.name).trim().toLowerCase()));
+  if (!taken.has(wanted.trim().toLowerCase())) return wanted;
+  let n = 2;
+  while (taken.has((wanted + ' ' + n).trim().toLowerCase())) n++;
+  return wanted + ' ' + n;
 }
 
 export interface WorkoutEdit {
@@ -563,6 +574,19 @@ export async function countUpcoming(workoutId: string, todayIso: string): Promis
   return rows.length;
 }
 
+// For an edit made to one session from the calendar: how many other sessions share its workout, and how many of
+// those are still ahead (from today on, not completed).
+export async function sessionScope(workoutId: string, entryId: string, todayIso: string) {
+  const rows: any[] = await ok(
+    supabase.from('plan_entries').select('id, scheduled_date, status').eq('workout_id', workoutId),
+  );
+  const others = rows.filter((r) => r.id !== entryId);
+  return {
+    others: others.length,
+    upcoming: others.filter((r) => r.scheduled_date >= todayIso && r.status !== 'completed').length,
+  };
+}
+
 export interface TemplateEditResult {
   workoutId: string; // the workout the edit ended up on: the same one, or the new copy
   created: boolean;
@@ -584,9 +608,13 @@ async function freeWorkoutName(wanted: string): Promise<string> {
 //   copied to an archived snapshot that they are moved onto. Upcoming sessions follow the edit if
 //   `updateUpcoming` is set, and otherwise are moved onto the snapshot too.
 // - mode 'new': the workout and all its sessions stay exactly as they are, and the edit is saved as a new workout.
+// - mode 'session' (an edit to one session, from the calendar): only that session (edit.entryId) changes. It moves
+//   onto its own archived copy of the workout with the edit applied; the saved workout and every other session
+//   stay exactly as they are.
+// With mode 'update', the session being edited (edit.entryId, if any) always follows the edit, even if it is past.
 export async function updateWorkoutTemplate(
   edit: WorkoutEdit,
-  opts: { mode: 'update' | 'new'; updateUpcoming: boolean; todayIso: string },
+  opts: { mode: 'update' | 'new' | 'session'; updateUpcoming: boolean; todayIso: string },
 ): Promise<TemplateEditResult> {
   const [old]: any[] = await ok(supabase.from('workouts').select('*').eq('id', edit.workoutId));
   const oldExercises: any[] = await ok(
@@ -603,6 +631,29 @@ export async function updateWorkoutTemplate(
     }
     return ids;
   };
+
+  const mapped = (edit: WorkoutEdit, exerciseIds: Record<string, string>, workoutId: string): WorkoutEdit => {
+    const map = (id: string) => exerciseIds[id] || id;
+    return {
+      ...edit,
+      workoutId,
+      exercises: {
+        update: edit.exercises.update.map((u) => ({ ...u, id: map(u.id) })),
+        removeIds: edit.exercises.removeIds.map(map),
+        add: edit.exercises.add,
+      },
+    };
+  };
+
+  if (opts.mode === 'session') {
+    const [fork]: any[] = await ok(
+      supabase.from('workouts').insert({ ...rest, archived: true, repeat_enabled: false }).select('id'),
+    );
+    const exerciseIds = await copyExercises(fork.id);
+    await ok(supabase.from('plan_entries').update({ workout_id: fork.id }).eq('id', edit.entryId));
+    await updateWorkout(mapped(edit, exerciseIds, fork.id));
+    return { workoutId: fork.id, created: false, exerciseIds };
+  }
 
   if (opts.mode === 'new') {
     const name = await freeWorkoutName((edit.name || '').trim() || old.name);
@@ -627,7 +678,8 @@ export async function updateWorkoutTemplate(
   const entries: any[] = await ok(
     supabase.from('plan_entries').select('id, scheduled_date, status').eq('workout_id', edit.workoutId),
   );
-  const isUpcoming = (e: any) => e.scheduled_date >= opts.todayIso && e.status !== 'completed';
+  const isUpcoming = (e: any) =>
+    e.id === edit.entryId || (e.scheduled_date >= opts.todayIso && e.status !== 'completed');
   const past = entries.filter((e) => !isUpcoming(e) || !opts.updateUpcoming);
   if (past.length) {
     const keepsUpcoming = past.some(isUpcoming);

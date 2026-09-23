@@ -1,5 +1,5 @@
 import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, MON3, MONTHS, TARGET_AREAS } from '../constants';
-import { digitsOnly, idOf, isoOf, joinSetsReps, numericOnly, restDigits, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
+import { digitsOnly, idOf, isoOf, joinSetsReps, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
 import { optStyle } from '../styles';
@@ -68,7 +68,38 @@ export function editVals(ctx: Ctx) {
     summary: { screen: 'summary', monthOpen: false, hist: navHistory() },
     profile: { screen: 'profile', monthOpen: false, hist: navHistory() },
   };
+  // Workout names are unique among saved workouts (ignoring case): the app looks workouts up by name, and two with
+  // one name used to be merged into one. The name being typed, and the saved workout that already has it, if any.
+  const sameName = (a, b) => a.trim().toLowerCase() === b.trim().toLowerCase();
+  const typedName = creating ? st.newName || '' : (st.renames || {})[baseName] || '';
+  const nameClash =
+    typedName.trim() && (creating || !sameName(typedName, baseName))
+      ? logic.model.workouts.find((w) => sameName(w.name, typedName) && (creating || w.id !== (selAct && selAct.workoutId))) ||
+        null
+      : null;
+  const todayIso = isoOf(new Date(Y, TODAY_M, TODAY_D));
   return {
+    nameError: nameClash ? 'You already have a workout called “' + nameClash.name + '”. Give this one another name.' : '',
+    saveBlocked: !!nameClash,
+    // Creating one for the calendar under a name that's taken: most likely the saved one was meant.
+    canUseSaved: !!nameClash && creating && st.schedule !== false,
+    useSavedLabel: nameClash ? 'Schedule your saved “' + nameClash.name + '” instead' : '',
+    useSaved: () => {
+      if (!nameClash) return;
+      const dates = [isoOf(new Date(Y, mi, selDay))];
+      if (st.repeat) for (let w = 1; w <= 12; w++) dates.push(isoOf(new Date(Y, mi, selDay + w * 7)));
+      logic.save(
+        () => db.scheduleWorkout(nameClash.id, dates, !!st.repeat),
+        (r) =>
+          Object.assign(
+            { screen: 'day' },
+            { creating: false, newType: null, newName: '', newFrom: null, schedule: null },
+            EDIT_OVERLAYS,
+            { extra: Object.assign({}, st.extra, { __draft: [] }) },
+            r && r.entryId ? { entryId: r.entryId } : {},
+          ),
+      );
+    },
     pickTypeLift: () => logic.s({ newType: 'lift' }),
     pickTypeCycle: () => logic.s({ newType: 'cycle' }),
     needsType: creating && !st.newType,
@@ -339,6 +370,7 @@ export function editVals(ctx: Ctx) {
         for (let w = 1; w <= 12; w++) out.push(isoOf(new Date(Y, mi, selDay + w * 7)));
         return out;
       };
+      if (nameClash) return logic.s({ leaveOpen: false, pendingNav: null });
       const cleared = EDIT_OVERLAYS;
       const bare = (e) => ({ name: e.name, sets: e.sets, weight: e.weight, rest: e.rest, i: e.i, areas: e.areas || [] });
       if (!creating) {
@@ -364,44 +396,95 @@ export function editVals(ctx: Ctx) {
         });
         const moved = st.editKey && st.editKey !== mi + '-' + selDay;
         const actualEdited = st.aDist != null || st.aElev != null || st.aHrs != null || st.aMins != null;
-        return logic.save(
-          () =>
-            db.updateWorkout({
-              entryId: selAct.id,
-              workoutId: selAct.workoutId,
-              name: (st.renames || {})[baseName],
-              icon: (st.icons || {})[listKey],
-              iconColor: (st.iconColors || {})[listKey],
-              notes: (st.notes || {})[listKey],
-              ride: selRide
-                ? {
-                    dist: rDist,
-                    elev: rElev,
-                    zone: st.rZone || selRide.zone || 'Endurance',
-                    minutes: plannedMin,
-                  }
-                : null,
-              moveTo: moved ? isoOf(new Date(Y, mi, selDay)) : undefined,
-              actual:
-                selRide && actualEdited
-                  ? { dist: aDist, elev: aElev, minutes: Number(aHrs || 0) * 60 + Number(aMins || 0) }
-                  : null,
-              exercises: {
-                update,
-                removeIds: gone
-                  .map((n) => byName(n))
-                  .filter((e) => e && e.id)
-                  .map((e) => e.id),
-                add: added.map(bare),
+        const newName = ((st.renames || {})[baseName] || '').trim();
+        const notes = (st.notes || {})[listKey];
+        const rideEdited = !!selRide && [st.rDist, st.rElev, st.rHrs, st.rMins, st.rZone].some((v) => v != null);
+        const edit = {
+          entryId: selAct.id,
+          workoutId: selAct.workoutId,
+          name: newName && newName !== baseName ? newName : undefined,
+          icon: (st.icons || {})[listKey],
+          iconColor: (st.iconColors || {})[listKey],
+          notes: notes != null && notes !== (selAct.notes || '') ? notes : undefined,
+          ride: rideEdited
+            ? { dist: rDist, elev: rElev, zone: st.rZone || selRide.zone || 'Endurance', minutes: plannedMin }
+            : null,
+          moveTo: moved ? isoOf(new Date(Y, mi, selDay)) : undefined,
+          actual:
+            selRide && actualEdited
+              ? { dist: aDist, elev: aElev, minutes: Number(aHrs || 0) * 60 + Number(aMins || 0) }
+              : null,
+          exercises: {
+            update,
+            removeIds: gone
+              .map((n) => byName(n))
+              .filter((e) => e && e.id)
+              .map((e) => e.id),
+            add: added.map(bare),
+          },
+          repeatDates: st.repeat && !selAct.series ? weekly() : [],
+        };
+        // Normally back to the workout's own detail screen; if a nav click was waiting on this save, go there instead.
+        // Either way this session stays the selected one, even if it moved to a day that already had a workout.
+        const after = Object.assign(st.pendingNav ? NAV_DESTINATIONS[st.pendingNav] : { screen: 'detail' }, cleared, {
+          entryId: selAct.id,
+          tplConfirm: null,
+        });
+        // The date, the ride you logged and repeating belong to this session. Anything else changes the workout,
+        // which other sessions (and the Arsenal) share.
+        const changesWorkout =
+          edit.name !== undefined ||
+          edit.icon !== undefined ||
+          edit.iconColor !== undefined ||
+          edit.notes !== undefined ||
+          !!edit.ride ||
+          update.length > 0 ||
+          edit.exercises.removeIds.length > 0 ||
+          added.length > 0;
+        if (!changesWorkout) return logic.save(() => db.updateWorkout(edit), after);
+        // Shared with other sessions: ask whether the change is for this session only, or for the saved workout (and
+        // the sessions still ahead). Past and completed sessions keep the old version either way.
+        const workoutName = baseName;
+        return db
+          .sessionScope(selAct.workoutId, selAct.id, todayIso)
+          .then(({ others, upcoming }) => {
+            if (others === 0) return logic.save(() => db.updateWorkout(edit), after);
+            logic.s({
+              tplConfirm: {
+                name: workoutName,
+                count: 0,
+                choice: 'new',
+                upcoming: true,
+                body: '“' + workoutName + '” has ' + plural(others, 'other session') + '.',
+                options: [
+                  {
+                    value: 'new',
+                    title: 'Only this session',
+                    description: 'The saved workout and its other sessions stay as they are.',
+                  },
+                  {
+                    value: 'update',
+                    title: 'This session and the saved workout',
+                    description:
+                      (upcoming
+                        ? 'Also changes the ' + plural(upcoming, 'upcoming session') + '. '
+                        : '') + 'Past and completed sessions keep the old version.',
+                  },
+                ],
+                apply: (mode) =>
+                  logic.save(
+                    () =>
+                      db.updateWorkoutTemplate(edit, {
+                        mode: mode === 'new' ? 'session' : 'update',
+                        updateUpcoming: true,
+                        todayIso,
+                      }),
+                    after,
+                  ),
               },
-              repeatDates: st.repeat && !selAct.series ? weekly() : [],
-            }),
-          // Normally back to the workout's own detail screen; if a nav click was waiting on this save, go there instead.
-          // Either way this session stays the selected one, even if it moved to a day that already had a workout.
-          Object.assign(st.pendingNav ? NAV_DESTINATIONS[st.pendingNav] : { screen: 'detail' }, cleared, {
-            entryId: selAct.id,
-          }),
-        );
+            });
+          })
+          .catch((e) => logic.s({ saveError: e instanceof Error ? e.message : String(e) }));
       }
       const nm = (st.newName || '').trim() || 'Untitled workout';
       const isRide = st.newType === 'cycle';

@@ -285,6 +285,10 @@ export function arsenalVals(ctx: Ctx) {
 
   // ---- the saved-workout editor: a draft that is written to the database on save
   const draft = st.tplDraft;
+  // Another saved workout with this name (ignoring case), which a rename can't take.
+  const nameTakenBy = (name, exceptId) =>
+    workouts.find((w) => w.id !== exceptId && w.name.trim().toLowerCase() === (name || '').trim().toLowerCase()) ||
+    null;
   const patchDraft = (patch) => logic.s({ tplDraft: { ...draft, ...patch } });
   const digits = (n) => (e) => patchDraft({ [n]: e.target.value.replace(/[^0-9.]/g, '') });
   const whole =
@@ -405,12 +409,16 @@ export function arsenalVals(ctx: Ctx) {
             }),
           // A new row only counts once it has a name — but from that point on it needs a target area too,
           // same as everywhere else an exercise is added.
+          nameError: nameTakenBy(draft.name, chosen.id)
+            ? 'You already have a workout called “' + nameTakenBy(draft.name, chosen.id).name + '”. Give this one another name.'
+            : '',
           canSave:
             !!draft.name.trim() &&
+            !nameTakenBy(draft.name, chosen.id) &&
             !draft.rows.some((r) => !r.id && !r.removed && r.name.trim() && !(r.areas || []).length),
           cancel: () => logic.s({ screen: 'template', tplDraft: null }),
           save: () => {
-            if (!draft.name.trim()) return;
+            if (!draft.name.trim() || nameTakenBy(draft.name, chosen.id)) return;
             if (draft.rows.some((r) => !r.id && !r.removed && r.name.trim() && !(r.areas || []).length)) return;
             const minutes = Number(draft.hrs || 0) * 60 + Number(draft.mins || 0);
             askThenApply(
@@ -499,10 +507,13 @@ export function arsenalVals(ctx: Ctx) {
     tplConfirmOpen: !!confirm,
     tplConfirmTitle: 'How should this change be saved?',
     // For a workout, its name once (the options carry the rest). An exercise names itself in its own options.
-    tplConfirmBody: confirm && !confirm.exercise ? 'Editing “' + confirm.name + '”.' : '',
+    // A caller can bring its own text and options (the calendar does, for an edit to one session).
+    tplConfirmBody: confirm?.body ?? (confirm && !confirm.exercise ? 'Editing “' + confirm.name + '”.' : ''),
     tplConfirmChoice: confirm?.choice === 'new' ? 'new' : 'update',
     tplConfirmSetChoice: (value) => confirm && logic.s({ tplConfirm: { ...confirm, choice: value } }),
-    tplConfirmOptions: confirm
+    tplConfirmOptions: confirm?.options
+      ? confirm.options
+      : confirm
       ? [
           confirm.exercise
             ? {
@@ -533,7 +544,7 @@ export function arsenalVals(ctx: Ctx) {
         ]
       : [],
     // Inside the Update option only, and only when the exercise's workout has upcoming sessions.
-    tplConfirmShowUpcoming: !!confirm && confirm.count > 0,
+    tplConfirmShowUpcoming: !!confirm && !confirm.options && confirm.count > 0,
     tplConfirmUpcoming: !!confirm?.upcoming,
     tplConfirmToggleUpcoming: () => confirm && logic.s({ tplConfirm: { ...confirm, upcoming: !confirm.upcoming } }),
     tplConfirmUpcomingLabel: confirm
