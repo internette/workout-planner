@@ -69,6 +69,13 @@ export default function Planner({ account = null }: { account?: Account | null }
     }
   });
 
+  // A new screen opens at its top. Without this the window keeps the last screen's scroll, and you can land in
+  // the middle of a long list with its heading (and anything it says about where you are) out of view.
+  const screen = logic.state.screen;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [screen]);
+
   const { status, loadError } = logic;
   const [slow, setSlow] = useState(false);
   // A load that has not finished after a while says so, and offers to try again.

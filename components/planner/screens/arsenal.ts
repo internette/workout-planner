@@ -1,5 +1,5 @@
 import { colors } from '@/components/ui/colors';
-import { TARGET_AREAS } from '../constants';
+import { EDIT_OVERLAYS, TARGET_AREAS } from '../constants';
 import { iconSvg } from '../icons';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import * as db from '@/lib/plannerData';
@@ -445,12 +445,43 @@ export function arsenalVals(ctx: Ctx) {
         }
       : null;
 
+  // ---- "Add to workout". Opened from a workout's "Summon the full Arsenal", it goes into that workout and returns
+  // there; opened any other way, it starts a new workout with this exercise already in it.
+  const pick = st.arsenalPick || null;
+  const addToWorkout = (e) => {
+    const ex = { name: e.name, sets: e.sets, weight: e.weight, rest: e.rest, i: e.i, areas: e.areas || [] };
+    if (pick) {
+      const gone = (st.removed || {})[pick.key] || [];
+      // Taken out of this workout earlier in the edit: bring the original back rather than adding a second copy.
+      const patch = gone.includes(e.name)
+        ? { removed: { ...st.removed, [pick.key]: gone.filter((n) => n !== e.name) } }
+        : { extra: { ...st.extra, [pick.key]: ((st.extra || {})[pick.key] || []).concat([ex]) } };
+      return logic.backTo('edit', { ...patch, arsenalPick: null, arsenalAreas: pick.prevAreas || [] });
+    }
+    logic.nav({
+      ...EDIT_OVERLAYS,
+      screen: 'edit',
+      editing: false,
+      creating: true,
+      addOpen: false,
+      newName: '',
+      newType: 'lift',
+      newFrom: 'arsenal',
+      schedule: false,
+      arsenalPick: null,
+      extra: { __draft: [ex] },
+    });
+  };
+
   // ---- the Exercises tab: the person's own groups, then the built-in catalog, narrowed by search and area filter
   const exerciseRow = (e) => ({
     name: e.name,
     svg: iconSvg(e.i),
     detail: e.sets + ' · ' + e.weight,
     open: () => openExercise(e.id),
+    // Already in the workout being built: one of each, since a workout tracks its exercises by name.
+    inWorkout: !!pick && pick.names.includes(e.name),
+    add: () => addToWorkout(e),
   });
   const moveGroups = [];
   const pushGroup = (label, list) => {
@@ -575,6 +606,10 @@ export function arsenalVals(ctx: Ctx) {
     setArsenalQuery: (e) => logic.s({ arsenalQ: e.target.value }),
     clearArsenalQuery: () => logic.s({ arsenalQ: '' }),
     moveGroups,
+    arsenalPicking: !!pick,
+    arsenalPickTitle: pick ? pick.title || 'your new workout' : '',
+    backToPickedWorkout: () =>
+      logic.backTo('edit', { arsenalPick: null, arsenalAreas: pick ? pick.prevAreas || [] : st.arsenalAreas }),
     areaFilterOpen: !!st.arsenalAreasOpen,
     toggleAreaFilter: () => logic.s({ arsenalAreasOpen: !st.arsenalAreasOpen }),
     closeAreaFilter: () => logic.s({ arsenalAreasOpen: false }),

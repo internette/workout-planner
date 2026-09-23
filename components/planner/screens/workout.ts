@@ -1,4 +1,4 @@
-import { DOWFULL } from '../constants';
+import { DOWFULL, EDIT_OVERLAYS } from '../constants';
 import { formatElapsed, idOf, plural, questSeed, tokenFor } from '../helpers';
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
@@ -93,31 +93,38 @@ export function workoutVals(ctx: Ctx) {
     },
     goEdit: () =>
       logic.nav({ screen: 'edit', editing: !!actFor(selDay), creating: false, editKey: mi + '-' + selDay }),
+    // A new workout always starts blank: nothing carried over from a draft that was left behind elsewhere.
     // From a day of the calendar the new workout goes on that day, and can be switched to saved-only.
     goNewWorkout: () =>
-      logic.nav({
-        screen: 'edit',
-        editing: false,
-        creating: true,
-        addOpen: false,
-        newName: '',
-        newType: null,
-        newFrom: 'calendar',
-        schedule: true,
-      }),
+      logic.nav(
+        Object.assign({}, EDIT_OVERLAYS, {
+          screen: 'edit',
+          editing: false,
+          creating: true,
+          addOpen: false,
+          newName: '',
+          newType: null,
+          newFrom: 'calendar',
+          schedule: true,
+          arsenalPick: null,
+        }),
+      ),
     // From the Arsenal it is only saved. It goes on the calendar when the person chooses to.
     goNewWorkoutFromArsenal: () =>
-      logic.nav({
-        screen: 'edit',
-        editing: false,
-        creating: true,
-        addOpen: false,
-        newName: '',
-        newType: null,
-        newFrom: 'arsenal',
-        schedule: false,
-        repeat: false,
-      }),
+      logic.nav(
+        Object.assign({}, EDIT_OVERLAYS, {
+          screen: 'edit',
+          editing: false,
+          creating: true,
+          addOpen: false,
+          newName: '',
+          newType: null,
+          newFrom: 'arsenal',
+          schedule: false,
+          repeat: false,
+          arsenalPick: null,
+        }),
+      ),
     goDiary,
     wName: selAct ? nameOf(selAct.name) : '',
     wMeta: !selAct

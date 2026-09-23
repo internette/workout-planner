@@ -104,6 +104,16 @@ export function chromeVals(ctx: Ctx) {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
       e.preventDefault();
       if (st.screen === 'edit' && workoutDraftDirty(st)) return logic.s({ leaveOpen: true, pendingNav: dest });
+      // A workout still being built, waiting underneath: opened the Arsenal from it, or an exercise's details from
+      // its Add exercise list. If it has anything in it, go back to it and ask there, the same "Keep your
+      // changes?"; otherwise just let it go. Either way picking ends and the person's own Arsenal filter returns.
+      const draftBelow = st.screen !== 'edit' && (st.hist || []).some((h) => h.screen === 'edit');
+      if (draftBelow || st.arsenalPick) {
+        const endPick = st.arsenalPick ? { arsenalPick: null, arsenalAreas: st.arsenalPick.prevAreas || [] } : {};
+        if (workoutDraftDirty(st))
+          return logic.backTo('edit', { ...endPick, leaveOpen: true, pendingNav: dest });
+        logic.s({ ...endPick, creating: false });
+      }
       // Leaving the workout detail screen while its stopwatch is running asks first, same as its own Back arrow.
       if (st.screen === 'detail' && timerRunning) return logic.s({ pausePrompt: { proceed: go } });
       go();
@@ -150,7 +160,7 @@ export function chromeVals(ctx: Ctx) {
     isExerciseEdit: st.screen === 'exerciseEdit',
     canGoBack: (st.hist || []).length > 0,
     goBack: () => logic.back(),
-    goArsenal: () => logic.nav({ screen: 'arsenal', monthOpen: false }),
+    goArsenal: () => logic.nav({ screen: 'arsenal', monthOpen: false, arsenalPick: null }),
     navArsenal:
       'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (arsenalActive

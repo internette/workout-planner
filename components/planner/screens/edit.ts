@@ -143,6 +143,24 @@ export function editVals(ctx: Ctx) {
     closeAdd: () => logic.s({ addOpen: false }),
     addMode: st.addMode === 'new' ? 'new' : 'lib',
     setAddMode: (mode) => logic.s({ addMode: mode }),
+    // "Summon the full Arsenal": opens the real Arsenal, remembering this workout so "Add to workout" there puts
+    // the exercise here and comes back. The names already in it let the Arsenal mark those "In workout".
+    // It arrives narrowed to this workout's target areas, like the short list here; the person's own filter comes
+    // back when picking ends.
+    browseArsenal: () =>
+      logic.nav({
+        screen: 'arsenal',
+        arsenalView: 'exercises',
+        addOpen: false,
+        monthOpen: false,
+        arsenalAreas: picked.length ? picked : st.arsenalAreas || [],
+        arsenalPick: {
+          key: listKey,
+          names: selList.map((e) => e.name),
+          title: selName,
+          prevAreas: st.arsenalAreas || [],
+        },
+      }),
     // Says what the list below is narrowed to, e.g. "Showing exercises for Chest, Arms and Shoulders".
     libraryFilterNote: picked.length
       ? 'Showing exercises for ' +
@@ -157,14 +175,15 @@ export function editVals(ctx: Ctx) {
       .map((e) => ({
       name: e.name,
       detail: e.sets + ' · ' + e.weight,
+      // Same as the Arsenal: the row opens the exercise, "+" adds it. Back returns here with this panel still open.
+      // An exercise only drafted in this visit has no saved page yet, so it can only be added.
+      open: e.id ? () => logic.nav({ screen: 'exercise', exerciseId: e.id }) : null,
       add: () =>
         logic.s({
           extra: Object.assign({}, st.extra, { [listKey]: added.concat([e]) }),
           removed: Object.assign({}, st.removed, { [listKey]: gone.filter((n) => n !== e.name) }),
           addOpen: false,
         }),
-      style:
-        'display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;border-radius:14px;background:var(--color-canvas);text-align:left;cursor:pointer;width:100%',
     })),
     draftName: st.dName || '',
     draftSets: st.dSets || '',

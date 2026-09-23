@@ -2187,6 +2187,34 @@ export function PlannerView({ v }: { v: any }) {
                   >
                     {v.arsenalIntro}
                   </Text>
+                  {v.arsenalPicking ? (
+                    // Stays in view down the long list, so it's always clear the Arsenal is picking for a workout.
+                    // The page-coloured band behind it keeps the list from showing through above the card.
+                    <div
+                      style={{
+                        position: 'sticky',
+                        top: '0',
+                        zIndex: 5,
+                        margin: '4px -4px 0',
+                        padding: '12px 4px 4px',
+                        background: 'var(--color-canvas)',
+                      }}
+                    >
+                      <Card
+                        pad="xs"
+                        elevation="overlay"
+                        style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 12px' }}
+                      >
+                        <Text variant="body" tone="ink" style={{ flex: '1 1 200px', minWidth: '0' }}>
+                          Adding to <strong>{v.arsenalPickTitle}</strong>
+                        </Text>
+                        <Button type="secondary" size="sm" onClick={v.backToPickedWorkout}>
+                          <ChevronLeft color="var(--color-pink-deep)" strokeWidth={2.2} size={14} />
+                          Back to workout
+                        </Button>
+                      </Card>
+                    </div>
+                  ) : null}
                   <SegmentedControl
                     label="Arsenal view"
                     size="sm"
@@ -2450,43 +2478,82 @@ export function PlannerView({ v }: { v: any }) {
                                 {(g?.items ?? []).map((m, i) => (
                                   <Fragment key={i}>
                                     <Card
-                                      as="button"
-                                      interactive
                                       pad="sm"
-                                      onClick={m?.open}
                                       style={{
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: '14px',
+                                        gap: '10px',
                                         width: '100%',
                                       }}
                                     >
-                                      <span
+                                      <button
+                                        type="button"
+                                        onClick={m?.open}
+                                        aria-label={'View details for ' + m?.name}
+                                        className="hv1"
                                         style={{
-                                          width: '34px',
-                                          height: '34px',
-                                          flex: 'none',
-                                          borderRadius: '11px',
-                                          background: 'var(--color-pink-tint)',
                                           display: 'flex',
                                           alignItems: 'center',
-                                          justifyContent: 'center',
+                                          gap: '14px',
+                                          flex: '1 1 200px',
+                                          minWidth: '0',
+                                          margin: '-6px',
+                                          padding: '6px',
+                                          border: 'none',
+                                          borderRadius: '12px',
+                                          background: 'none',
+                                          textAlign: 'left',
+                                          cursor: 'pointer',
+                                          fontFamily: 'inherit',
                                         }}
                                       >
-                                        {m?.svg}
-                                      </span>
-                                      <span style={{ flex: '1 1 180px', minWidth: '0' }}>
-                                        <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
-                                          {m?.name}
-                                        </Text>
-                                        <Text
-                                          variant="caption"
-                                          tone="muted"
-                                          style={{ display: 'block', marginTop: '3px' }}
+                                        <span
+                                          style={{
+                                            width: '34px',
+                                            height: '34px',
+                                            flex: 'none',
+                                            borderRadius: '11px',
+                                            background: 'var(--color-pink-tint)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                          }}
                                         >
-                                          {m?.detail}
+                                          {m?.svg}
+                                        </span>
+                                        <span style={{ flex: '1', minWidth: '0' }}>
+                                          <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+                                            {m?.name}
+                                          </Text>
+                                          <Text
+                                            variant="caption"
+                                            tone="muted"
+                                            style={{ display: 'block', marginTop: '3px' }}
+                                          >
+                                            {m?.detail}
+                                          </Text>
+                                        </span>
+                                        <ChevronRight color="var(--color-muted)" strokeWidth={2.2} size={16} />
+                                      </button>
+                                      {m?.inWorkout ? (
+                                        <Text
+                                          variant="small"
+                                          tone="muted"
+                                          weight="medium"
+                                          style={{ flex: 'none', whiteSpace: 'nowrap' }}
+                                        >
+                                          In workout
                                         </Text>
-                                      </span>
+                                      ) : (
+                                        <IconButton
+                                          label={'Add ' + m?.name + ' to workout'}
+                                          size="lg"
+                                          onClick={m?.add}
+                                          style={{ background: 'var(--color-pink-tint)' }}
+                                        >
+                                          <Plus color="var(--color-pink-deep)" strokeWidth={2.4} size={18} />
+                                        </IconButton>
+                                      )}
                                     </Card>
                                   </Fragment>
                                 ))}
@@ -4466,27 +4533,74 @@ export function PlannerView({ v }: { v: any }) {
                             >
                               {(v.library ?? []).map((l, i) => (
                                 <Fragment key={i}>
-                                  <button onClick={l?.add} style={css(l?.style)}>
-                                    <span
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '8px',
+                                      padding: '6px 6px 6px 16px',
+                                      borderRadius: '14px',
+                                      background: 'var(--color-canvas)',
+                                    }}
+                                  >
+                                    <button
+                                      type="button"
+                                      onClick={l?.open ?? undefined}
+                                      disabled={!l?.open}
+                                      aria-label={'View details for ' + l?.name}
                                       style={{
-                                        fontSize: 'var(--text-lg)',
-                                        fontWeight: 'var(--font-weight-semibold)',
-                                        color: 'var(--color-ink)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '10px',
+                                        flex: '1',
+                                        minWidth: '0',
+                                        minHeight: '44px',
+                                        padding: '0',
+                                        border: 'none',
+                                        background: 'none',
+                                        textAlign: 'left',
+                                        cursor: l?.open ? 'pointer' : 'default',
+                                        fontFamily: 'inherit',
                                       }}
                                     >
-                                      {l?.name}
-                                    </span>
-                                    <Text variant="caption" tone="muted" style={{ marginLeft: 'auto' }}>
-                                      {l?.detail}
-                                    </Text>
-                                  </button>
+                                      <span
+                                        style={{
+                                          flex: '1',
+                                          minWidth: '0',
+                                          fontSize: 'var(--text-lg)',
+                                          fontWeight: 'var(--font-weight-semibold)',
+                                          color: 'var(--color-ink)',
+                                        }}
+                                      >
+                                        {l?.name}
+                                      </span>
+                                      <Text
+                                        variant="caption"
+                                        tone="muted"
+                                        style={{ flex: 'none', whiteSpace: 'nowrap' }}
+                                      >
+                                        {l?.detail}
+                                      </Text>
+                                      {l?.open ? (
+                                        <ChevronRight color="var(--color-muted)" strokeWidth={2.2} size={16} />
+                                      ) : null}
+                                    </button>
+                                    <IconButton
+                                      label={'Add ' + l?.name + ' to workout'}
+                                      size="lg"
+                                      onClick={l?.add}
+                                      style={{ background: 'var(--color-white)' }}
+                                    >
+                                      <Plus color="var(--color-pink-deep)" strokeWidth={2.4} size={18} />
+                                    </IconButton>
+                                  </div>
                                 </Fragment>
                               ))}
                               <Button
                                 type="secondary"
                                 ghost
                                 size="sm"
-                                onClick={v.goArsenal}
+                                onClick={v.browseArsenal}
                                 style={{ marginTop: '4px' }}
                               >
                                 Summon the full Arsenal
