@@ -20,13 +20,13 @@ export const colorGroups = {
     slateTint: { hex: '#EDEFF6', use: 'Rank badge, slate tier' },
   },
   Pink: {
-    pink: { hex: '#E1699C', use: 'Brand accent: marks, bars, ticks and gems. Not behind text; use pink-strong there' },
-    pinkStrong: { hex: '#D63479', use: 'Fills behind white text: primary buttons, selected tabs, days and chips (4.5:1)' },
-    pinkHover: { hex: '#C7286C', use: 'Primary action, hovered' },
-    pinkDeep: { hex: '#B63F79', use: 'Accent text on light backgrounds (4.5:1 or more on white, canvas and pink tint)' },
+    // One pink, in steps of lightness on the same hue and saturation: pink, then hover one step darker, then deep.
+    pink: { hex: '#D63479', use: 'The primary pink: actions, selection, marks, bars, ticks and gems. White text on it is 4.5:1' },
+    pinkHover: { hex: '#C7286C', use: 'Primary action, hovered (one step darker than pink)' },
+    pinkDeep: { hex: '#B22461', use: 'Pink text on light backgrounds (two steps darker; 5.4:1 on pink tint, 6.3:1 on white)' },
     pinkPlum: { hex: '#8F4F78', use: 'Pending streak caption' },
     pinkTint: { hex: '#FCE8F1', use: 'Selected and active backgrounds' },
-    pinkMuted: { hex: '#E8BFD2', use: 'Disabled primary action' },
+    pinkMuted: { hex: '#E8BFD1', use: 'Disabled primary action' },
   },
   Periwinkle: {
     periwinkle: { hex: '#7C8FC9', use: 'Secondary accent, planned sessions' },

@@ -270,7 +270,7 @@ export function editVals(ctx: Ctx) {
     iconsOpen: !!st.iconsOpen,
     toggleIcons: () => logic.s({ iconsOpen: !st.iconsOpen }),
     iconBadge:
-      'width:46px;height:46px;border-radius:15px;background:var(--color-pink-tint);border:2px solid var(--color-white);box-shadow:0 2px 6px rgba(214,96,139,.28),0 0 0 1px rgba(35,42,69,.05);display:flex;align-items:center;justify-content:center;cursor:pointer',
+      'width:46px;height:46px;border-radius:15px;background:var(--color-pink-tint);border:2px solid var(--color-white);box-shadow:0 2px 6px rgba(214,52,121,.28),0 0 0 1px rgba(35,42,69,.05);display:flex;align-items:center;justify-content:center;cursor:pointer',
     workoutIcoSvg: iconSvg(wIcon, wColor),
     workoutIconGrid: EXERCISE_ICON_NAMES.map((name) => ({
       svg: iconSvg(name, wColor),
