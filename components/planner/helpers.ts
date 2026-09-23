@@ -33,6 +33,19 @@ export const joinSetsReps = (sets, reps) => {
   return s && r ? s + ' × ' + r : s || r;
 };
 
+// Digits only, for a field that should never hold anything else (sets, reps, and the number inside "90 sec").
+export const digitsOnly = text => (text || '').replace(/[^0-9]/g, '');
+
+// Rest is a plain number of seconds everywhere else ("90 sec" in the database, in lists, in the export), but the
+// box itself only needs the number. These convert at the edges, the same way sets/reps do.
+export const restDigits = text => digitsOnly(text);
+export const withSec = digits => (digits ? digits + ' sec' : '');
+
+// A number that may have a decimal point (weight, in pounds), nothing else.
+export const numericOnly = text => (text || '').replace(/[^0-9.]/g, '');
+// Weight is always pounds now; the box holds the bare number and this puts the unit back for storage/display.
+export const withLb = digits => (digits ? digits + ' lb' : '');
+
 // Whether the create/edit workout screen has anything typed or toggled that a plain screen change would throw away.
 // Only meaningful while actually on that screen: these same keys can be left over (never cleared) after an old visit,
 // so a caller must also check the screen is 'edit' before treating this as "there's a draft in the way".

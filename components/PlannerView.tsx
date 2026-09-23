@@ -2274,18 +2274,20 @@ export function PlannerView({ v }: { v: any }) {
                                 inputMode="numeric"
                               />
                               <TextField
-                                label="Weight"
+                                label="Weight (lbs)"
                                 containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                 value={v.draftWeight ?? ''}
                                 onChange={v.setWeight}
-                                placeholder="45 lb"
+                                placeholder="45"
+                                inputMode="decimal"
                               />
                               <TextField
-                                label="Rest"
+                                label="Rest (sec)"
                                 containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                 value={v.draftRest ?? ''}
                                 onChange={v.setRest}
-                                placeholder="60 sec"
+                                placeholder="60"
+                                inputMode="numeric"
                               />
                             </div>
                             <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
@@ -2851,16 +2853,18 @@ export function PlannerView({ v }: { v: any }) {
                                 inputMode="numeric"
                               />
                               <TextField
-                                label="Weight"
+                                label="Weight (lbs)"
                                 containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                 value={r?.weight}
                                 onChange={r?.setWeight}
+                                inputMode="decimal"
                               />
                               <TextField
-                                label="Rest"
+                                label="Rest (sec)"
                                 containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                 value={r?.rest}
                                 onChange={r?.setRest}
+                                inputMode="numeric"
                               />
                             </div>
                           </Card>
@@ -2940,18 +2944,20 @@ export function PlannerView({ v }: { v: any }) {
                         inputMode="numeric"
                       />
                       <TextField
-                        label="Weight"
+                        label="Weight (lbs)"
                         containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                         value={v.exerciseEdit.weight}
                         onChange={v.exerciseEdit.setWeight}
-                        placeholder="45 lb"
+                        placeholder="45"
+                        inputMode="decimal"
                       />
                       <TextField
-                        label="Rest"
+                        label="Rest (sec)"
                         containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                         value={v.exerciseEdit.rest}
                         onChange={v.exerciseEdit.setRest}
-                        placeholder="60 sec"
+                        placeholder="60"
+                        inputMode="numeric"
                       />
                     </div>
                     <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
@@ -4222,16 +4228,18 @@ export function PlannerView({ v }: { v: any }) {
                                   inputMode="numeric"
                                 />
                                 <TextField
-                                  label="Weight"
+                                  label="Weight (lbs)"
                                   containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                   value={ex?.weight ?? ''}
                                   onChange={ex?.setWeight}
+                                  inputMode="decimal"
                                 />
                                 <TextField
-                                  label="Rest"
+                                  label="Rest (sec)"
                                   containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                   value={ex?.rest ?? ''}
                                   onChange={ex?.setRest}
+                                  inputMode="numeric"
                                 />
                               </div>
                             </Card>
@@ -4362,18 +4370,20 @@ export function PlannerView({ v }: { v: any }) {
                                   inputMode="numeric"
                                 />
                                 <TextField
-                                  label="Weight"
+                                  label="Weight (lbs)"
                                   containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                   value={v.draftWeight ?? ''}
                                   onChange={v.setWeight}
-                                  placeholder="45 lb"
+                                  placeholder="45"
+                                  inputMode="decimal"
                                 />
                                 <TextField
-                                  label="Rest"
+                                  label="Rest (sec)"
                                   containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                   value={v.draftRest ?? ''}
                                   onChange={v.setRest}
-                                  placeholder="60 sec"
+                                  placeholder="60"
+                                  inputMode="numeric"
                                 />
                               </div>
                             </div>

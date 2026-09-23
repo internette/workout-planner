@@ -2,7 +2,7 @@ import { colors } from '@/components/ui/colors';
 import { iconSvg } from '../icons';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import * as db from '@/lib/plannerData';
-import { isoOf, joinSetsReps, splitSetsReps } from '../helpers';
+import { digitsOnly, isoOf, joinSetsReps, numericOnly, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
 import { optStyle } from '../styles';
 import type { Ctx } from '../types';
 
@@ -170,13 +170,13 @@ export function arsenalVals(ctx: Ctx) {
     name: exDraft.name,
     sets: exDraft.sets,
     reps: exDraft.reps,
-    weight: exDraft.weight,
-    rest: exDraft.rest,
+    weight: numericOnly(exDraft.weight),
+    rest: restDigits(exDraft.rest),
     setName: setExDraft('name'),
-    setSets: setExDraft('sets'),
-    setReps: setExDraft('reps'),
-    setWeight: setExDraft('weight'),
-    setRest: setExDraft('rest'),
+    setSets: (e) => logic.s({ exDraft: { ...exDraft, sets: digitsOnly(e.target.value) } }),
+    setReps: (e) => logic.s({ exDraft: { ...exDraft, reps: digitsOnly(e.target.value) } }),
+    setWeight: (e) => logic.s({ exDraft: { ...exDraft, weight: withLb(numericOnly(e.target.value)) } }),
+    setRest: (e) => logic.s({ exDraft: { ...exDraft, rest: withSec(restDigits(e.target.value)) } }),
     icons: EXERCISE_ICON_NAMES.map((name) => ({
       svg: iconSvg(name),
       pick: () => logic.s({ exDraft: { ...exDraft, i: name } }),
@@ -311,13 +311,13 @@ export function arsenalVals(ctx: Ctx) {
               name: r.name,
               sets: r.sets,
               reps: r.reps,
-              weight: r.weight,
-              rest: r.rest,
+              weight: numericOnly(r.weight),
+              rest: restDigits(r.rest),
               setName: (e) => patchRow(r.key, { name: e.target.value }),
-              setSets: (e) => patchRow(r.key, { sets: e.target.value }),
-              setReps: (e) => patchRow(r.key, { reps: e.target.value }),
-              setWeight: (e) => patchRow(r.key, { weight: e.target.value }),
-              setRest: (e) => patchRow(r.key, { rest: e.target.value }),
+              setSets: (e) => patchRow(r.key, { sets: digitsOnly(e.target.value) }),
+              setReps: (e) => patchRow(r.key, { reps: digitsOnly(e.target.value) }),
+              setWeight: (e) => patchRow(r.key, { weight: withLb(numericOnly(e.target.value)) }),
+              setRest: (e) => patchRow(r.key, { rest: withSec(restDigits(e.target.value)) }),
               remove: () => patchDraft({ rows: draft.rows.filter((x) => x.key !== r.key) }),
             })),
           addRow: () =>

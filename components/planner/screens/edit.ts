@@ -1,5 +1,5 @@
 import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, MON3, MONTHS } from '../constants';
-import { idOf, isoOf, joinSetsReps, splitSetsReps, workoutDraftDirty } from '../helpers';
+import { digitsOnly, idOf, isoOf, joinSetsReps, numericOnly, restDigits, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
 import { optStyle } from '../styles';
@@ -171,10 +171,10 @@ export function editVals(ctx: Ctx) {
     draftWeight: st.dWeight || '',
     draftRest: st.dRest || '',
     setName: (e) => logic.s({ dName: e.target.value }),
-    setSets: (e) => logic.s({ dSets: e.target.value }),
-    setReps: (e) => logic.s({ dReps: e.target.value }),
-    setWeight: (e) => logic.s({ dWeight: e.target.value }),
-    setRest: (e) => logic.s({ dRest: e.target.value }),
+    setSets: (e) => logic.s({ dSets: digitsOnly(e.target.value) }),
+    setReps: (e) => logic.s({ dReps: digitsOnly(e.target.value) }),
+    setWeight: (e) => logic.s({ dWeight: numericOnly(e.target.value) }),
+    setRest: (e) => logic.s({ dRest: restDigits(e.target.value) }),
     iconGrid: EXERCISE_ICON_NAMES.map((name) => ({
       svg: iconSvg(name),
       pick: () => logic.s({ dIcon: name }),
@@ -187,8 +187,8 @@ export function editVals(ctx: Ctx) {
       const item = {
         name: nm,
         sets: joinSetsReps(st.dSets, st.dReps) || '3 × 10',
-        weight: st.dWeight || '—',
-        rest: st.dRest || '60 sec',
+        weight: withLb(st.dWeight) || '—',
+        rest: withSec(st.dRest) || '60 sec',
         i: st.dIcon || 'h',
       };
       logic.s({
@@ -469,16 +469,18 @@ export function editVals(ctx: Ctx) {
       // back, filling in the other box's current value.
       const setsParts = splitSetsReps(e.sets);
       const setSets = setField('sets');
+      const setWeight = setField('weight');
+      const setRest = setField('rest');
       return {
         name: e.name,
         sets: setsParts.sets,
         reps: setsParts.reps,
-        weight: e.weight,
-        rest: e.rest,
-        setSets: (ev) => setSets({ target: { value: joinSetsReps(ev.target.value, setsParts.reps) } }),
-        setReps: (ev) => setSets({ target: { value: joinSetsReps(setsParts.sets, ev.target.value) } }),
-        setWeight: setField('weight'),
-        setRest: setField('rest'),
+        weight: numericOnly(e.weight),
+        rest: restDigits(e.rest),
+        setSets: (ev) => setSets({ target: { value: joinSetsReps(digitsOnly(ev.target.value), setsParts.reps) } }),
+        setReps: (ev) => setSets({ target: { value: joinSetsReps(setsParts.sets, digitsOnly(ev.target.value)) } }),
+        setWeight: (ev) => setWeight({ target: { value: withLb(numericOnly(ev.target.value)) } }),
+        setRest: (ev) => setRest({ target: { value: withSec(restDigits(ev.target.value)) } }),
         icoSvg: iconSvg(cur),
         hideLegacy: false,
         detail: e.sets + ' · ' + e.weight + ' · ' + e.rest + ' rest',
