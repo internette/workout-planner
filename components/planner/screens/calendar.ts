@@ -26,7 +26,6 @@ export function calendarVals(ctx: Ctx) {
     isCurMonth,
     todayActs,
     nameOf,
-    dayEntries,
     TODAY_M,
     metaFor,
   } = ctx;
@@ -50,15 +49,6 @@ export function calendarVals(ctx: Ctx) {
     showMonth: st.seg === 'Month',
     isRest: st.seg === 'Day' && !actFor(selDay),
     hasWorkout: st.seg === 'Day' && !!actFor(selDay),
-    // A day with more than one workout gets a switcher above its card; the card shows the one picked.
-    dayHasMany: st.seg === 'Day' && dayEntries.length > 1,
-    dayWorkoutLabel: 'Workouts on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mi] + ' ' + selDay,
-    dayWorkoutValue: (actFor(selDay) || {}).id || '',
-    dayWorkoutOptions: dayEntries.map((a) => ({
-      value: a.id,
-      label: nameOf(a.name),
-    })),
-    setDayWorkout: (id) => logic.s({ entryId: id, more: false }),
     // "No quest today" is only true when today is actually the day on screen — otherwise it needs to say which day.
     restDayPhrase:
       mi === TODAY_M && selDay === TODAY_D

@@ -449,18 +449,6 @@ export function PlannerView({ v }: { v: any }) {
                       </div>
                     </>
                   ) : null}
-                  {v.dayHasMany ? (
-                    <SegmentedControl
-                      label={v.dayWorkoutLabel}
-                      semantics="tabs"
-                      wrap
-                      fullWidth
-                      options={v.dayWorkoutOptions ?? []}
-                      value={v.dayWorkoutValue}
-                      onChange={v.setDayWorkout}
-                      style={{ marginTop: '22px' }}
-                    />
-                  ) : null}
                   {v.showQuest ? (
                     <>
                       <div
@@ -524,234 +512,240 @@ export function PlannerView({ v }: { v: any }) {
                   {v.hasWorkout ? (
                     <>
                       <div style={{ marginTop: '14px' }}>
-                        <Card pad="lg">
-                          <div
-                            style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '14px' }}
-                          >
-                            <div
-                              style={{
-                                width: '40px',
-                                height: '40px',
-                                flex: 'none',
-                                borderRadius: '13px',
-                                background: 'var(--color-pink-tint)',
-                                border: '2px solid var(--color-white)',
-                                boxShadow: '0 2px 6px rgba(214,96,139,.28),0 0 0 1px rgba(35,42,69,.05)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }}
-                            >
-                              {v.dayIcoSvg}
-                            </div>
-                            <div style={{ minWidth: '0' }}>
-                              <Text variant="heading" as="h2" style={{ margin: '0' }}>
-                                <button
-                                  onClick={v.goDetail}
-                                  style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '7px',
-                                    margin: '-6px -10px',
-                                    padding: '6px 10px',
-                                    minHeight: '36px',
-                                    border: 'none',
-                                    borderRadius: '12px',
-                                    background: 'none',
-                                    font: 'inherit',
-                                    color: 'inherit',
-                                    textAlign: 'left',
-                                    cursor: 'pointer',
-                                  }}
-                                  className="hv3"
-                                >
-                                  {t(v.wName)}
-                                  <ChevronRight color="var(--color-muted)" size={17} />
-                                </button>
-                              </Text>
-                              <Text variant="label" as="p" tone="muted" style={{ margin: '4px 0 0' }}>
-                                {v.wMeta}
-                              </Text>
-                            </div>
-                          </div>
-                          {v.dayIsLift ? (
-                            <>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '12px',
-                                  marginTop: '20px',
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    flex: '1',
-                                    height: '8px',
-                                    borderRadius: '5px',
-                                    background: 'var(--color-pink-tint)',
-                                    overflow: 'hidden',
-                                  }}
-                                >
-                                  <div style={css(v.dayProgBar)}></div>
-                                </div>
-                                <span
-                                  style={{
-                                    fontFamily: 'var(--font-heading)',
-                                    fontSize: 'var(--text-md)',
-                                    fontWeight: 'var(--font-weight-bold)',
-                                    color: 'var(--color-ink)',
-                                    flex: 'none',
-                                  }}
-                                >
-                                  {v.dayProgLabel}
-                                </span>
-                              </div>
-                            </>
-                          ) : null}
-                          {v.dayIsRide ? (
-                            <>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexWrap: 'wrap',
-                                  gap: '26px',
-                                  marginTop: '20px',
-                                  paddingTop: '18px',
-                                  borderTop: '1px solid rgba(35,42,69,.07)',
-                                }}
-                              >
-                                {(v.rideStats ?? []).map((r, i) => (
-                                  <Fragment key={i}>
-                                    <div>
-                                      <Text variant="micro" as="div" tone="subtle">
-                                        {r?.label}
-                                      </Text>
-                                      <Text
-                                        variant="cardTitle"
-                                        as="div"
-                                        tone="ink"
-                                        style={{ marginTop: '4px' }}
-                                      >
-                                        {r?.value}
-                                      </Text>
-                                    </div>
-                                  </Fragment>
-                                ))}
-                              </div>
-                            </>
-                          ) : null}
-                          {v.dayIsLift ? (
-                            <>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  gap: '2px',
-                                  marginTop: '16px',
-                                }}
-                              >
-                                {(v.preview ?? []).map((x, i) => (
-                                  <Fragment key={i}>
+                        {(v.dayCards ?? []).map((c, i) => (
+                          <Fragment key={c?.key}>
+                            <div style={{ marginTop: i ? '12px' : '0' }}>
+                              <Card pad="lg">
+                                  <div
+                                    style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '14px' }}
+                                  >
                                     <div
                                       style={{
+                                        width: '40px',
+                                        height: '40px',
+                                        flex: 'none',
+                                        borderRadius: '13px',
+                                        background: 'var(--color-pink-tint)',
+                                        border: '2px solid var(--color-white)',
+                                        boxShadow: '0 2px 6px rgba(214,96,139,.28),0 0 0 1px rgba(35,42,69,.05)',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: '11px',
-                                        padding: '9px 0',
-                                        borderBottom: '1px solid rgba(35,42,69,.055)',
+                                        justifyContent: 'center',
                                       }}
                                     >
-                                      {x?.isH ? (
-                                        <>
-                                          <Dumbbell color="var(--color-pink)" size={20} />
-                                        </>
-                                      ) : null}
-                                      {x?.isV ? (
-                                        <>
-                                          <Dumbbell
-                                            color="var(--color-pink)"
-                                            size={17}
-                                            style={{ transform: 'rotate(90deg)' }}
-                                          />
-                                        </>
-                                      ) : null}
-                                      {x?.isD ? (
-                                        <>
-                                          <DumbbellSmall color="var(--color-pink)" size={20} />
-                                        </>
-                                      ) : null}
-                                      <span style={css(x?.textStyle)}>{x?.text}</span>
+                                      {c?.icoSvg}
                                     </div>
-                                  </Fragment>
-                                ))}
-                              </div>
-                            </>
-                          ) : null}
-                          {v.hasMore ? (
-                            <>
-                              <button
-                                onClick={v.toggleMore}
-                                style={{
-                                  margin: '10px 0 0 -12px',
-                                  minHeight: '36px',
-                                  border: 'none',
-                                  borderRadius: '12px',
-                                  background: 'none',
-                                  padding: '0 12px',
-                                  color: 'var(--color-muted)',
-                                  fontSize: 'var(--text-base)',
-                                  fontWeight: 'var(--font-weight-medium)',
-                                  cursor: 'pointer',
-                                }}
-                                className="hv1"
-                              >
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                  {t(v.moreLabel)}
-                                  <ChevronDown
-                                    color="var(--color-muted)"
-                                    strokeWidth={2.2}
-                                    style={css(v.moreCaret)}
-                                  />
-                                </span>
-                              </button>
-                            </>
-                          ) : null}
-                          {v.dayCtaTwoButtons ? (
-                            <>
-                              <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                                <Button
-                                  type="secondary"
-                                  size="lg"
-                                  style={{ flex: '1' }}
-                                  onClick={v.restartWorkout}
-                                >
-                                  Restart workout
-                                </Button>
-                                <Button
-                                  type="primary"
-                                  size="lg"
-                                  style={{ flex: '1' }}
-                                  onClick={v.continueWorkout}
-                                >
-                                  Continue workout
-                                </Button>
-                              </div>
-                            </>
-                          ) : (
-                            <>
-                              <Button
-                                type="primary"
-                                size="lg"
-                                fullWidth
-                                onClick={v.dayCta}
-                                style={{ marginTop: '20px' }}
-                              >
-                                {v.dayCtaLabel}
-                              </Button>
-                            </>
-                          )}
-                        </Card>
+                                    <div style={{ minWidth: '0' }}>
+                                      <Text variant="heading" as="h2" style={{ margin: '0' }}>
+                                        <button
+                                          onClick={c?.open}
+                                          style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '7px',
+                                            margin: '-6px -10px',
+                                            padding: '6px 10px',
+                                            minHeight: '36px',
+                                            border: 'none',
+                                            borderRadius: '12px',
+                                            background: 'none',
+                                            font: 'inherit',
+                                            color: 'inherit',
+                                            textAlign: 'left',
+                                            cursor: 'pointer',
+                                          }}
+                                          className="hv3"
+                                        >
+                                          {t(c?.name)}
+                                          <ChevronRight color="var(--color-muted)" size={17} />
+                                        </button>
+                                      </Text>
+                                      <Text variant="label" as="p" tone="muted" style={{ margin: '4px 0 0' }}>
+                                        {c?.meta}
+                                      </Text>
+                                    </div>
+                                  </div>
+                                  {c?.isLift ? (
+                                    <>
+                                      <div
+                                        style={{
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          gap: '12px',
+                                          marginTop: '20px',
+                                        }}
+                                      >
+                                        <div
+                                          style={{
+                                            flex: '1',
+                                            height: '8px',
+                                            borderRadius: '5px',
+                                            background: 'var(--color-pink-tint)',
+                                            overflow: 'hidden',
+                                          }}
+                                        >
+                                          <div style={css(c?.progBar)}></div>
+                                        </div>
+                                        <span
+                                          style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: 'var(--text-md)',
+                                            fontWeight: 'var(--font-weight-bold)',
+                                            color: 'var(--color-ink)',
+                                            flex: 'none',
+                                          }}
+                                        >
+                                          {c?.progLabel}
+                                        </span>
+                                      </div>
+                                    </>
+                                  ) : null}
+                                  {c?.isRide ? (
+                                    <>
+                                      <div
+                                        style={{
+                                          display: 'flex',
+                                          flexWrap: 'wrap',
+                                          gap: '26px',
+                                          marginTop: '20px',
+                                          paddingTop: '18px',
+                                          borderTop: '1px solid rgba(35,42,69,.07)',
+                                        }}
+                                      >
+                                        {(c?.rideStats ?? []).map((r, i) => (
+                                          <Fragment key={i}>
+                                            <div>
+                                              <Text variant="micro" as="div" tone="subtle">
+                                                {r?.label}
+                                              </Text>
+                                              <Text
+                                                variant="cardTitle"
+                                                as="div"
+                                                tone="ink"
+                                                style={{ marginTop: '4px' }}
+                                              >
+                                                {r?.value}
+                                              </Text>
+                                            </div>
+                                          </Fragment>
+                                        ))}
+                                      </div>
+                                    </>
+                                  ) : null}
+                                  {c?.isLift ? (
+                                    <>
+                                      <div
+                                        style={{
+                                          display: 'flex',
+                                          flexDirection: 'column',
+                                          gap: '2px',
+                                          marginTop: '16px',
+                                        }}
+                                      >
+                                        {(c?.preview ?? []).map((x, i) => (
+                                          <Fragment key={i}>
+                                            <div
+                                              style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '11px',
+                                                padding: '9px 0',
+                                                borderBottom: '1px solid rgba(35,42,69,.055)',
+                                              }}
+                                            >
+                                              {x?.isH ? (
+                                                <>
+                                                  <Dumbbell color="var(--color-pink)" size={20} />
+                                                </>
+                                              ) : null}
+                                              {x?.isV ? (
+                                                <>
+                                                  <Dumbbell
+                                                    color="var(--color-pink)"
+                                                    size={17}
+                                                    style={{ transform: 'rotate(90deg)' }}
+                                                  />
+                                                </>
+                                              ) : null}
+                                              {x?.isD ? (
+                                                <>
+                                                  <DumbbellSmall color="var(--color-pink)" size={20} />
+                                                </>
+                                              ) : null}
+                                              <span style={css(x?.textStyle)}>{x?.text}</span>
+                                            </div>
+                                          </Fragment>
+                                        ))}
+                                      </div>
+                                    </>
+                                  ) : null}
+                                  {c?.hasMore ? (
+                                    <>
+                                      <button
+                                        onClick={c?.toggleMore}
+                                        style={{
+                                          margin: '10px 0 0 -12px',
+                                          minHeight: '36px',
+                                          border: 'none',
+                                          borderRadius: '12px',
+                                          background: 'none',
+                                          padding: '0 12px',
+                                          color: 'var(--color-muted)',
+                                          fontSize: 'var(--text-base)',
+                                          fontWeight: 'var(--font-weight-medium)',
+                                          cursor: 'pointer',
+                                        }}
+                                        className="hv1"
+                                      >
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                          {t(c?.moreLabel)}
+                                          <ChevronDown
+                                            color="var(--color-muted)"
+                                            strokeWidth={2.2}
+                                            style={css(c?.moreCaret)}
+                                          />
+                                        </span>
+                                      </button>
+                                    </>
+                                  ) : null}
+                                  {c?.ctaTwoButtons ? (
+                                    <>
+                                      <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                                        <Button
+                                          type="secondary"
+                                          size="lg"
+                                          style={{ flex: '1' }}
+                                          onClick={c?.restart}
+                                        >
+                                          Restart workout
+                                        </Button>
+                                        <Button
+                                          type="primary"
+                                          size="lg"
+                                          style={{ flex: '1' }}
+                                          onClick={c?.continue}
+                                        >
+                                          Continue workout
+                                        </Button>
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Button
+                                        type="primary"
+                                        size="lg"
+                                        fullWidth
+                                        onClick={c?.cta}
+                                        style={{ marginTop: '20px' }}
+                                      >
+                                        {c?.ctaLabel}
+                                      </Button>
+                                    </>
+                                  )}
+                                </Card>
+                            </div>
+                          </Fragment>
+                        ))}
                         <aside style={{ display: 'flex', marginTop: '14px' }}>
                           <Button type="dashed" size="md" onClick={v.goNewWorkout} style={{ flex: '1' }}>
                             <Plus color="var(--color-pink-deep)" size={17} />
