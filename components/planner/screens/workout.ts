@@ -159,7 +159,7 @@ export function workoutVals(ctx: Ctx) {
       // Logged: read it. Every exercise ticked but not logged yet: log it. Started (clock or ticks): carry on, or
       // start over. Otherwise: start.
       ctaTwoButtons: !logged && !complete && (timed || doneN > 0),
-      ctaLabel: logged ? 'View chronicle entry' : complete ? 'Log this workout' : 'Start workout',
+      ctaLabel: logged ? 'View chronicle entry' : complete ? 'Write it up' : 'Start workout',
       cta: run(logged || complete ? 'goDiary' : 'startWorkout'),
       restart: run('restartWorkout'),
       continue: run('continueWorkout'),
@@ -269,7 +269,7 @@ export function workoutVals(ctx: Ctx) {
           { label: 'ELEVATION', value: selRide.elev ? selRide.elev + ' ft' : '—' },
           { label: 'EFFORT', value: selRide.zone || 'Endurance' },
         ],
-    ctaLabel: hasEntry ? 'View chronicle entry' : 'Finish workout & log it',
+    ctaLabel: hasEntry ? 'View chronicle entry' : doneSel ? 'Write it up' : 'Write about it',
     startWorkout,
     restartWorkout,
     continueWorkout,
@@ -309,7 +309,7 @@ export function workoutVals(ctx: Ctx) {
         : doneCount === 0
           ? 'Mark each exercise as you clear it.'
           : doneCount === selList.length
-            ? 'Transformation complete. Log how it felt while it\'s fresh.'
+            ? 'Transformation complete. Write down how it felt while it\'s fresh.'
             : selList.length - doneCount + ' left to go.',
   };
 }

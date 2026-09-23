@@ -155,9 +155,9 @@ export function diaryVals(ctx: Ctx) {
       dScope === 'today'
         ? 'Nothing written down today yet.'
         : dScope === 'week'
-          ? 'Nothing logged this week yet.'
+          ? 'Nothing written this week yet.'
           : dScope === 'month'
-            ? 'Nothing logged in the last 30 days.'
+            ? 'Nothing written in the last 30 days.'
             : dScope === 'range'
               ? 'Nothing written down in that stretch.'
               : 'The chronicle is still blank.',

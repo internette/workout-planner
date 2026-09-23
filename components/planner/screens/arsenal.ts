@@ -580,7 +580,7 @@ export function arsenalVals(ctx: Ctx) {
         : exerciseCount,
     arsenalIntro:
       view === 'workouts'
-        ? "Every workout you've saved, ready to add to your plan."
+        ? "Every workout you've written. To schedule one, add a workout on the calendar and type its name."
         : "Your exercises, grouped by the workout they belong to, then built-in ones you can add to any workout or copy to make your own.",
     arsenalSearchPlaceholder: view === 'workouts' ? 'Search workouts' : 'Search exercises',
     savedWorkouts,

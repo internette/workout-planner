@@ -85,7 +85,7 @@ function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.R
 const STEPS = [
   { icon: Calendar, title: 'Set the week', body: 'Plan lifts and rides against the calendar. Anything that works, repeat it weekly and stop deciding.' },
   { icon: Check, title: 'Clear the day', body: 'Tick each exercise as you finish it. The bar fills, the streak holds, the quest resolves in its own words.' },
-  { icon: Book, title: 'Seal the chronicle', body: 'Log how it felt while it is still warm — a mood, an effort, a sentence. Read any of it back later.' },
+  { icon: Book, title: 'Seal the chronicle', body: 'Write down how it felt while it is still warm — a mood, an effort, a sentence. Read any of it back later.' },
 ];
 
 // The first three rungs of the real ladder, with their real thresholds.

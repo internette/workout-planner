@@ -149,7 +149,7 @@ export function editVals(ctx: Ctx) {
       '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
     rideNote:
       ridePct == null
-        ? 'Log what you rode — a partial ride still counts.'
+        ? 'Enter what you rode — a partial ride still counts.'
         : ridePct >= 100
           ? 'Full route ridden. Plan met.'
           : ridePct + '% of the planned distance. The rest stays on the plan.',

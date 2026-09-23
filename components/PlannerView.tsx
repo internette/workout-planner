@@ -2020,7 +2020,7 @@ export function PlannerView({ v }: { v: any }) {
                             }}
                           >
                             {t(v.streakUnit)}
-                            {' unbroken'}
+                            {' streak'}
                           </span>
                         </div>
                         <Text
@@ -2111,7 +2111,7 @@ export function PlannerView({ v }: { v: any }) {
                             weight="medium"
                             style={{ margin: '9px 0 0' }}
                           >
-                            No call to answer yet.
+                            No call yet. Plan a session and it shows up here.
                           </Text>
                         </>
                       ) : null}
@@ -2149,7 +2149,7 @@ export function PlannerView({ v }: { v: any }) {
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '14px' }}>
                     <Card pad="sm" style={{ flex: '1 1 170px' }}>
                       <Text variant="eyebrow" as="div" tone="muted">
-                        LOGGED
+                        CHRONICLE
                       </Text>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
                         <Text variant="subheading">{v.loggedCount}</Text>
@@ -2160,7 +2160,7 @@ export function PlannerView({ v }: { v: any }) {
                     </Card>
                     <Card pad="sm" style={{ flex: '1 1 170px' }}>
                       <Text variant="eyebrow" as="div" tone="muted">
-                        SEPTEMBER
+                        {v.monthLabel}
                       </Text>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
                         <Text variant="subheading">{v.monthDone}</Text>
@@ -2593,7 +2593,7 @@ export function PlannerView({ v }: { v: any }) {
                     <>
                       {v.noSavedWorkouts ? (
                         <Text variant="body" as="p" tone="muted" style={{ margin: '20px 0 0' }}>
-                          No saved workouts yet. Add one from the calendar and it will show up here.
+                          Your spellbook is empty. Write your first workout with New.
                         </Text>
                       ) : null}
                       {v.noWorkoutMatches ? (
@@ -3257,7 +3257,7 @@ export function PlannerView({ v }: { v: any }) {
                     tone="muted"
                     style={{ margin: '10px 0 0', maxWidth: '460px', textWrap: 'pretty' }}
                   >
-                    Entries attach to a workout on your plan. Only past sessions without an entry are listed.
+                    Entries attach to a workout on your plan. Listed: this month&apos;s sessions, up to today, that don&apos;t have one yet.
                   </Text>
                   <div style={{ marginTop: '22px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
