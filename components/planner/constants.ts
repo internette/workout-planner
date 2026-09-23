@@ -1,8 +1,6 @@
 import { colors } from '@/components/ui/colors';
 
 export const PINK = 'var(--color-pink)';
-// Behind white text (selected days, months): the stronger pink, which keeps the text at 4.5:1.
-export const PINK_STRONG = 'var(--color-pink-strong)';
 export const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 export const MON3 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 export const DOW1 = ['S','M','T','W','T','F','S'];
@@ -54,7 +52,7 @@ export const RANKS = [
   { name:'Halcyon paragon', next:'Radiant', pill:'background:var(--color-slate-tint);color:var(--color-slate-deep)', gem:'var(--color-slate)' },
   { name:'Radiant paragon', next:'Celestial', pill:'background:var(--color-slate-tint);color:var(--color-slate-deep)', gem:'var(--color-slate)' },
   { name:'Celestial champion', next:'Eternal', pill:'background:var(--color-slate-tint);color:var(--color-slate-deep)', gem:'var(--color-slate)' },
-  { name:'Eternal sovereign', next:'the next season', pill:'background:var(--gradient-gem);color:var(--color-white);box-shadow:0 2px 8px rgba(225,105,156,.35)', gem:'var(--color-white)' },
+  { name:'Eternal sovereign', next:'the next season', pill:'background:var(--gradient-gem);color:var(--color-white);box-shadow:0 2px 8px rgba(214,52,121,.35)', gem:'var(--color-white)' },
 ];
 
 // Overlay state the edit screens accumulate; once a save lands in the database it is dropped.

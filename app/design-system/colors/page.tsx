@@ -3,6 +3,11 @@ import { DocPage } from '../docs';
 
 export const metadata = { title: 'Colors — Design system' };
 
+// A line under a group's heading, where the group needs more than each swatch's own note.
+const groupNotes: Record<string, string> = {
+  Pink: 'One pink, in steps on the same hue: pink is the primary colour (buttons, selection, marks), pinkHover is one step darker, and pinkDeep two steps darker for pink text. pinkTint and pinkMuted are its light backgrounds; pinkPlum is a separate purple for one caption.',
+};
+
 export default function ColorsPage() {
   return (
     <DocPage title="Colors">
@@ -13,6 +18,11 @@ export default function ColorsPage() {
       {Object.entries(colorGroups).map(([group, swatches]) => (
         <section key={group} style={{ marginBottom: 36 }}>
           <h2 id={group.toLowerCase()} style={{ fontSize: 'var(--text-2xl)', scrollMarginTop: 'var(--ds-anchor-offset)' }}>{group}</h2>
+          {groupNotes[group] ? (
+            <p style={{ margin: '0 0 16px', maxWidth: 640, color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
+              {groupNotes[group]}
+            </p>
+          ) : null}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
             {Object.entries(swatches).map(([name, { hex, use }]) => (
               <div

@@ -1,4 +1,4 @@
-import { DOW1, DOW3, DOWFULL, MON3, MONTHS, PINK_STRONG } from '../constants';
+import { DOW1, DOW3, DOWFULL, MON3, MONTHS, PINK } from '../constants';
 import { CAT } from '../helpers';
 import React from 'react';
 import type { Ctx } from '../types';
@@ -54,7 +54,7 @@ export function calendarStage(ctx: Ctx): Ctx {
       isToday: cellMonth === TODAY_M && num === TODAY_D ? 'date' : false,
       wrapStyle:
         'flex:1;min-width:0;padding:8px 2px 10px;border:none;border-radius:16px;background:' +
-        (on ? PINK_STRONG : 'none') +
+        (on ? PINK : 'none') +
         ';display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer',
       letterStyle:
         "font-family:var(--font-heading);" +
@@ -84,7 +84,7 @@ export function calendarStage(ctx: Ctx): Ctx {
     style:
       "font-family:var(--font-heading);" +
       'padding:11px 6px;border-radius:12px;font-size:var(--text-base);border:none;cursor:pointer;' +
-      (st.month === name ? 'background:' + PINK_STRONG + ';color:var(--color-white);font-weight:var(--font-weight-bold)' : 'color:var(--color-ink);font-weight:var(--font-weight-medium)'),
+      (st.month === name ? 'background:' + PINK + ';color:var(--color-white);font-weight:var(--font-weight-bold)' : 'color:var(--color-ink);font-weight:var(--font-weight-medium)'),
   }));
   // One row per workout. A day with several shows its date once, above the first.
   const weekRows = cells.flatMap((d) => {
@@ -181,13 +181,13 @@ export function calendarStage(ctx: Ctx): Ctx {
       wrap:
         'height:50px;border:none;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;' +
         (sel
-          ? 'background:var(--color-pink-strong)'
+          ? 'background:var(--color-pink)'
           : missed
             ? 'background:rgba(255,255,255,.5)'
             : a
               ? 'background:var(--color-white);box-shadow:0 1px 3px rgba(35,42,69,.06)'
               : 'background:none') +
-        (today && !sel ? ';box-shadow:inset 0 0 0 1.5px rgba(225,105,156,.45)' : ''),
+        (today && !sel ? ';box-shadow:inset 0 0 0 1.5px rgba(214,52,121,.45)' : ''),
       aria: d
         ? DOWFULL[new Date(Y, mi, d).getDay()] +
           ', ' +
