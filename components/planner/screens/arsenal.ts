@@ -1,5 +1,5 @@
 import { colors } from '@/components/ui/colors';
-import { EDIT_OVERLAYS, TARGET_AREAS } from '../constants';
+import { DOWFULL, EDIT_OVERLAYS, MONTHS, TARGET_AREAS } from '../constants';
 import { iconSvg } from '../icons';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import * as db from '@/lib/plannerData';
@@ -258,6 +258,8 @@ export function arsenalVals(ctx: Ctx) {
           svg: iconSvg(e.i),
           detail: e.sets + ' · ' + e.weight + ' · ' + e.rest + ' rest',
         })),
+        // Puts this saved workout on the calendar: a date (and weekly repeats, if wanted) from a small dialog.
+        schedule: () => logic.s({ tplSchedule: { date: todayIso, repeat: false } }),
         edit: () =>
           logic.s({
             screen: 'templateEdit',
@@ -282,6 +284,61 @@ export function arsenalVals(ctx: Ctx) {
           }),
       }
     : null;
+
+  // ---- "Add to calendar" from a saved workout. The calendar shows one year, so the date stays within it.
+  const sched = onTemplateScreen && chosen ? st.tplSchedule : null;
+  const schedDate = (() => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec((sched && sched.date) || '');
+    if (!m) return null;
+    const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    return d.getFullYear() === Y ? d : null;
+  })();
+  const scheduleCalendar = {
+    open: !!sched,
+    title: chosen ? 'Add “' + chosen.name + '” to the calendar' : '',
+    date: (sched && sched.date) || '',
+    min: Y + '-01-01',
+    max: Y + '-12-31',
+    setDate: (e) => logic.s({ tplSchedule: { ...sched, date: e.target.value } }),
+    repeat: !!(sched && sched.repeat),
+    setRepeat: (on) => logic.s({ tplSchedule: { ...sched, repeat: !!on } }),
+    note: !schedDate
+      ? 'Pick a day this year.'
+      : sched && sched.repeat
+        ? 'Every ' + DOWFULL[schedDate.getDay()] + ' for the next 12 weeks too, 13 sessions in all.'
+        : 'Just ' + DOWFULL[schedDate.getDay()] + ', ' + MONTHS[schedDate.getMonth()] + ' ' + schedDate.getDate() + '.',
+    canAdd: !!schedDate,
+    cancel: () => logic.s({ tplSchedule: null }),
+    // Afterwards it stays here and says where the workout went, with a way to go and see that day.
+    add: () => {
+      if (!chosen || !schedDate) return;
+      const dates = [isoOf(schedDate)];
+      if (sched.repeat)
+        for (let w = 1; w <= 12; w++)
+          dates.push(isoOf(new Date(schedDate.getFullYear(), schedDate.getMonth(), schedDate.getDate() + w * 7)));
+      const when = DOWFULL[schedDate.getDay()] + ', ' + MONTHS[schedDate.getMonth()] + ' ' + schedDate.getDate();
+      logic.save(
+        () => db.scheduleWorkout(chosen.id, dates, !!sched.repeat),
+        (r) => ({
+          tplSchedule: null,
+          tplScheduled: {
+            templateId: chosen.id,
+            text: 'On the calendar: ' + when + (sched.repeat ? ', and every ' + DOWFULL[schedDate.getDay()] + ' for 12 weeks after.' : '.'),
+            month: MONTHS[schedDate.getMonth()],
+            day: schedDate.getDate(),
+            entryId: r && r.entryId,
+          },
+        }),
+      );
+    },
+    // The confirmation belongs to the workout it was added from.
+    done: chosen && st.tplScheduled && st.tplScheduled.templateId === chosen.id ? st.tplScheduled.text : '',
+    viewDay: () => {
+      const t = st.tplScheduled;
+      if (!t) return;
+      logic.nav({ screen: 'day', seg: 'Day', monthOpen: false, month: t.month, day: t.day, entryId: t.entryId, tplScheduled: null });
+    },
+  };
 
   // ---- the saved-workout editor: a draft that is written to the database on save
   const draft = st.tplDraft;
@@ -565,6 +622,7 @@ export function arsenalVals(ctx: Ctx) {
     exercise,
     exerciseEdit,
     template,
+    scheduleCalendar,
     templateEdit,
     arsenalView: view,
     setArsenalView: (next) => logic.s({ arsenalView: next, arsenalAdd: false }),
@@ -580,7 +638,7 @@ export function arsenalVals(ctx: Ctx) {
         : exerciseCount,
     arsenalIntro:
       view === 'workouts'
-        ? "Every workout you've written. To schedule one, add a workout on the calendar and type its name."
+        ? "Every workout you've written. Open one to add it to the calendar."
         : "Your exercises, grouped by the workout they belong to, then built-in ones you can add to any workout or copy to make your own.",
     arsenalSearchPlaceholder: view === 'workouts' ? 'Search workouts' : 'Search exercises',
     savedWorkouts,
