@@ -264,7 +264,7 @@ export function arsenalVals(ctx: Ctx) {
           isRide: chosen.kind === 'ride',
           name: draft.name,
           setName: (e) => patchDraft({ name: e.target.value }),
-          areas: ['Core', 'Arms', 'Back', 'Legs'].map((a) => ({
+          areas: ['Core', 'Arms', 'Back', 'Legs', 'Chest', 'Shoulders'].map((a) => ({
             name: a,
             on: draft.areas.includes(a),
             toggle: () =>

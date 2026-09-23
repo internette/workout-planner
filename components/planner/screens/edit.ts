@@ -133,7 +133,7 @@ export function editVals(ctx: Ctx) {
       logic.s({ rMins: v === '' ? '' : String(Math.min(59, Number(v))) });
     },
     setRideZone: (zone) => logic.s({ rZone: zone }),
-    targetAreas: ['Core', 'Arms', 'Back', 'Legs'].map((name) => {
+    targetAreas: ['Core', 'Arms', 'Back', 'Legs', 'Chest', 'Shoulders'].map((name) => {
       const on = picked.indexOf(name) > -1;
       return {
         name,
