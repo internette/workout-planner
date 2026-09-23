@@ -1222,10 +1222,10 @@ export function PlannerView({ v }: { v: any }) {
                             </div>
                             <div style={{ minWidth: '0' }}>
                               <Text variant="subheading" as="div">
-                                {v.monthDone}
+                                {v.shownMonthDone}
                               </Text>
                               <Text variant="small" as="div" tone="muted" style={{ marginTop: '2px' }}>
-                                {v.monthDoneUnit}
+                                {v.shownMonthDoneUnit}
                               </Text>
                             </div>
                           </Card>

@@ -24,10 +24,12 @@ export function calendarVals(ctx: Ctx) {
     isCurMonth,
     todayActs,
     nameOf,
+    isDoneEntry,
     TODAY_M,
     metaFor,
   } = ctx;
   const firstRun = logic.model.workouts.length === 0 && logic.model.entries.length === 0;
+  const shownMonth = logic.model.entries.filter((x) => x.m === mi).map((x) => x.av);
   return {
     weekRows,
     monthCells,
@@ -43,6 +45,9 @@ export function calendarVals(ctx: Ctx) {
     // Nothing planned this month: "— nothing planned yet", like Profile's weekly average, not "0 of 0 done".
     monthDone: monthDays.length ? String(monthDays.filter((x) => x.done).length) : '—',
     monthDoneUnit: monthDays.length ? 'of ' + monthDays.length + ' done' : 'nothing planned yet',
+    // The Month view's tile counts the month on screen (the values above are always this month, for Progress).
+    shownMonthDone: shownMonth.length ? String(shownMonth.filter(isDoneEntry).length) : '—',
+    shownMonthDoneUnit: shownMonth.length ? 'of ' + shownMonth.length + ' done' : 'nothing planned yet',
     dowLabels: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
     showDay: st.seg === 'Day',
     showWeek: st.seg === 'Week',
