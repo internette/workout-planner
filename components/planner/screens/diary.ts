@@ -60,9 +60,7 @@ export function diaryVals(ctx: Ctx) {
           db.saveDiary(entryKey, {
             mood: st.mood,
             rpe: st.rpe,
-            note:
-              (st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote) ||
-              'No notes for this one.',
+            note: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
           }),
         {
           // Changing an entry, or writing one from the Chronicle, returns to reading it; a new one from a workout
@@ -264,6 +262,8 @@ export function diaryVals(ctx: Ctx) {
             ? 'var(--color-periwinkle)'
             : 'var(--color-danger)'),
     readMoodSvg: moodSvg(st.mood),
+    // Entry saved: to the calendar, on the day of the workout just written about (not back one screen).
+    backToCalendar: () => logic.s({ screen: 'day', seg: 'Day', monthOpen: false, hist: [] }),
     diaryBackLabel: st.diaryFrom === 'list' ? 'Chronicle' : 'Back',
     diaryEyebrow: st.diaryFrom === 'list' || reading ? 'CHRONICLE ENTRY' : 'COMPLETED',
     diaryBack: () => logic.back(),

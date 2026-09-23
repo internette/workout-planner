@@ -1547,7 +1547,7 @@ export function PlannerView({ v }: { v: any }) {
                       <ChevronRight color="var(--color-muted)" size={20} />
                     </Card>
                   </div>
-                  <Button type="neutral" ghost size="md" onClick={v.backToDay} style={{ marginTop: '20px' }}>
+                  <Button type="neutral" ghost size="md" onClick={v.backToCalendar} style={{ marginTop: '20px' }}>
                     Back to calendar
                   </Button>
                 </div>
@@ -4217,16 +4217,27 @@ export function PlannerView({ v }: { v: any }) {
                       ) : null}
                     </Card>
                   ) : (
-                    <Card pad="sm" style={{ marginTop: '16px' }}>
-                      <Checkbox switch checked={!!v.repeatOn} onChange={v.setRepeat}>
-                        Repeat weekly
-                      </Checkbox>
-                      {v.repeatOn ? (
-                        <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
-                          {v.repeatNote}
-                        </Text>
+                    <>
+                      {v.inSeries ? (
+                        <Card pad="sm" style={{ marginTop: '16px' }}>
+                          <Text variant="caption" tone="muted" as="p" style={{ margin: 0 }}>
+                            {v.seriesNote}
+                          </Text>
+                        </Card>
                       ) : null}
-                    </Card>
+                      {v.canRepeat ? (
+                        <Card pad="sm" style={{ marginTop: '16px' }}>
+                          <Checkbox switch checked={!!v.repeatOn} onChange={v.setRepeat}>
+                            Repeat weekly
+                          </Checkbox>
+                          {v.repeatOn ? (
+                            <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+                              {v.repeatNote}
+                            </Text>
+                          ) : null}
+                        </Card>
+                      ) : null}
+                    </>
                   )}
                   {v.ridePlanStatic ? (
                     <>
