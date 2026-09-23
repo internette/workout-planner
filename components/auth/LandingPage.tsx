@@ -43,7 +43,7 @@ function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.R
           {signingUp ? 'Begin your ritual' : 'Step back through'}
         </Text>
         <Text variant="body" tone="muted" as="p" className={styles.authNote} style={{ margin: '8px 0 0' }}>
-          {signingUp ? 'Two taps, and tomorrow already has a quest waiting on it.' : 'Your streak held the line while you were away.'}
+          {signingUp ? 'Two taps, and your first quest is one planned session away.' : 'Your plan and your chronicle are right where you left them.'}
         </Text>
 
         <div className={styles.providers}>
@@ -138,7 +138,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                 Then do the sets.
               </Text>
               <Text variant="body" tone="muted" as="p" className={styles.subhead} style={{ fontSize: 'var(--text-lg)' }}>
-                Moonshot gives every training day a quest, every finished session a crystal, and every honest reflection somewhere to live.
+                Moonshot gives every training day a quest, every finished session its transformation, and every honest reflection somewhere to live.
               </Text>
             </div>
             <div className={styles.authWrap}>
@@ -178,7 +178,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                 Not a badge bolted on afterwards
               </Text>
               <Text variant="body" tone="slate" as="p" className={styles.questBody}>
-                Each quest is drawn from the session you already planned, and it resolves in its own words once the day is clear. On a rest day it says so and leaves you alone.
+                Every day with a session on your plan gets a quest, and it resolves in its own words once that day is clear. On a rest day it says so and leaves you alone.
               </Text>
             </div>
             <Card pad="md" className={styles.col} style={{ padding: 22 }}>
@@ -192,7 +192,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                     Break the illusion
                   </Text>
                   <Text variant="caption" tone="muted" as="div" style={{ marginTop: 3 }}>
-                    The illusion broke on the fourth set.
+                    The illusion broke. It was never impossible.
                   </Text>
                 </div>
               </div>
@@ -249,7 +249,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
               The city is quiet. That never lasts.
             </Text>
             <Text variant="body" tone="muted" as="p" className={styles.closingBody}>
-              Sign in and tomorrow has a quest on it.
+              Sign in, plan a session, and that day has a quest on it.
             </Text>
             <div className={styles.closingCta}>
               <Button type="primary" size="lg" glow onClick={toCard}>

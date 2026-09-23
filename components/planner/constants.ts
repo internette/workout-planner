@@ -9,29 +9,28 @@ export const DOWFULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Frid
 // The body regions an exercise can target. A workout's own target areas are the union of its exercises'.
 export const TARGET_AREAS = ['Core', 'Arms', 'Back', 'Legs', 'Chest', 'Shoulders'];
 export const QUESTS = [
-  { title:'Hold the barrier', note:'Finish today\'s session and nothing gets through.',
+  { title:'Hold the barrier', note:'Clear the day and nothing gets through.',
     done:'The barrier held. Nothing got through.' },
   { title:'Drive back the shadow', note:'Every set you finish pushes it further out of the city.',
     done:'The shadow is out of the city.' },
-  { title:'Reach the next gate', note:'Three sessions this week opens the way forward.',
+  { title:'Reach the next gate', note:'Clear the day and the gate opens.',
     done:'You reached the gate. The way is open.' },
-  { title:'Answer the call', note:'Someone out there is counting on you showing up today.',
+  { title:'Answer the call', note:'Someone out there is counting on you showing up.',
     done:'You answered. They\'re safe because you showed up.' },
-  { title:'Restore the broken sigil', note:'Log this workout to mend one more piece of it.',
+  { title:'Restore the broken sigil', note:'Clear the day to mend one more piece of it.',
     done:'Another piece of the sigil is whole again.' },
-  { title:'Escort the light home', note:'Keep the streak alive and it arrives safely.',
+  { title:'Escort the light home', note:'Clear the day and it arrives safely.',
     done:'The light made it home.' },
   { title:'Break the illusion', note:'The hard set is the one telling you it\'s impossible.',
     done:'The illusion broke. It was never impossible.' },
-  { title:'Wake the sleeping ally', note:'Consistency this week brings them back to your side.',
+  { title:'Wake the sleeping ally', note:'Clear the day and they start to stir.',
     done:'Your ally is awake and back at your side.' },
-  { title:'Climb toward the palace', note:'Each finished session is another floor cleared.',
+  { title:'Climb toward the palace', note:'Each day you clear is another floor behind you.',
     done:'Another floor cleared. The palace is closer.' },
-  { title:'Seal the rift', note:'Two more sessions and it closes for good.',
+  { title:'Seal the rift', note:'Clear the day and it closes for good.',
     done:'The rift is sealed.' },
 ];
 export const ICON_COLORS = [colors.pink, colors.periwinkle, colors.teal, colors.slate, colors.coral];
-export const TOKENS = ['star shard','moon sigil','prism','wand charge','sun ember','comet fragment','dawn ribbon','tide pearl'];
 export const RANK_STEPS = [3,6,10,15,21,28,36,45,55,66,78,91,105,120,136,153,171,190,210,240];
 export const RANKS = [
   { name:'First spark', next:'Novice', pill:'background:var(--color-pink-tint);color:var(--color-pink-deep)', gem:'var(--color-pink)' },

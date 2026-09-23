@@ -1,5 +1,5 @@
 import { DOWFULL, EDIT_OVERLAYS } from '../constants';
-import { formatElapsed, idOf, plural, questSeed, tokenFor } from '../helpers';
+import { formatElapsed, idOf, plural, questSeed } from '../helpers';
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -33,6 +33,8 @@ export function workoutVals(ctx: Ctx) {
     dayEntries,
     isDoneEntry,
     instList,
+    TODAY_M,
+    TODAY_D,
     DIARY,
   } = ctx;
   const goDetail = () => logic.nav({ screen: 'detail', creating: false });
@@ -232,7 +234,7 @@ export function workoutVals(ctx: Ctx) {
     questNote: dayCleared ? questSeed(selDay, mi).done : questSeed(selDay, mi).note,
     questDone: dayCleared,
     questOpen: !dayCleared,
-    questEyebrow: dayCleared ? 'QUEST CLEARED' : "TODAY'S QUEST",
+    questEyebrow: dayCleared ? 'QUEST CLEARED' : mi === TODAY_M && selDay === TODAY_D ? "TODAY'S QUEST" : 'QUEST',
     questIconWrap:
       'width:40px;height:40px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;' +
       (dayCleared
@@ -307,7 +309,7 @@ export function workoutVals(ctx: Ctx) {
         : doneCount === 0
           ? 'Mark each exercise as you clear it.'
           : doneCount === selList.length
-            ? 'Transformation complete. Log how it felt to claim your ' + tokenFor(selDay + mi) + '.'
+            ? 'Transformation complete. Log how it felt while it\'s fresh.'
             : selList.length - doneCount + ' left to go.',
   };
 }

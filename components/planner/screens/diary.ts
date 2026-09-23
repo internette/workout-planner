@@ -1,5 +1,5 @@
 import { DOW3, MON3, MONTHS } from '../constants';
-import { isoOf, plural, tokenFor } from '../helpers';
+import { isoOf, plural } from '../helpers';
 import { moodSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -82,9 +82,7 @@ export function diaryVals(ctx: Ctx) {
       MON3[mi] +
       ' ' +
       selDay +
-      '. One ' +
-      tokenFor(selDay + 2) +
-      ' added to your collection.',
+      '. Written into your chronicle.',
     savedCount: plural(Object.keys(ENTRIES).length, 'entry', 'entries') + ' so far',
     savedNextTitle: nextEntry ? 'Get ready for ' + nameOf(nextEntry.av.name) : 'Plan your next workout',
     savedNextMeta: nextEntry
