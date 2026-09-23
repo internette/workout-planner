@@ -9,7 +9,7 @@ export const elevations = {
 
 /** The pink glow on a primary button. Reserved for one call to action on an otherwise empty surface. */
 export const glow = {
-  primary: { value: '0 8px 20px rgba(214, 52, 121, 0.4)', use: 'One primary call to action on an empty surface' },
+  primary: { value: '0 8px 20px rgba(213, 49, 129, 0.4)', use: 'One primary call to action on an empty surface' },
 } as const;
 
 export type ElevationName = keyof typeof elevations;
