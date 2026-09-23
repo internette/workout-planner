@@ -143,7 +143,18 @@ export function editVals(ctx: Ctx) {
     closeAdd: () => logic.s({ addOpen: false }),
     addMode: st.addMode === 'new' ? 'new' : 'lib',
     setAddMode: (mode) => logic.s({ addMode: mode }),
-    library: libraryFor(listKey).map((e) => ({
+    // Says what the list below is narrowed to, e.g. "Showing exercises for Chest, Arms and Shoulders".
+    libraryFilterNote: picked.length
+      ? 'Showing exercises for ' +
+        (picked.length === 1 ? picked[0] : picked.slice(0, -1).join(', ') + ' and ' + picked[picked.length - 1])
+      : '',
+    // A short pick, not the whole Arsenal: alphabetical, the first 10 — and once the workout's exercises have
+    // target areas, only exercises that share one of them. The full list is a tap away.
+    library: libraryFor(listKey)
+      .filter((e) => !picked.length || (e.areas || []).some((a) => picked.includes(a)))
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .slice(0, 10)
+      .map((e) => ({
       name: e.name,
       detail: e.sets + ' · ' + e.weight,
       add: () =>

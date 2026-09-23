@@ -4370,6 +4370,11 @@ export function PlannerView({ v }: { v: any }) {
                             style={{ marginLeft: 'auto' }}
                           />
                         </div>
+                        {v.addLib && v.libraryFilterNote ? (
+                          <Text variant="caption" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
+                            {v.libraryFilterNote}
+                          </Text>
+                        ) : null}
                         {v.addLib ? (
                           <>
                             <div
@@ -4405,7 +4410,7 @@ export function PlannerView({ v }: { v: any }) {
                                 onClick={v.goArsenal}
                                 style={{ marginTop: '4px' }}
                               >
-                                Browse the Arsenal
+                                Summon the full Arsenal
                                 <ChevronRight color="var(--color-pink-deep)" strokeWidth={2.2} size={14} />
                               </Button>
                             </div>
