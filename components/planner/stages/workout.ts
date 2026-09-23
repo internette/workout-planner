@@ -1,25 +1,29 @@
-import { idOf } from '../helpers';
+import { idOf, monthPatch } from '../helpers';
 import type { Ctx } from '../types';
 import { colors } from '@/components/ui/colors';
 
 // The selected workout: ride plan and actuals, exercise list, icons and completion state.
 export function workoutStage(ctx: Ctx): Ctx {
   const { logic, Y, mi, dim, selDay, st, creating, actFor, EX, EXV, TK, DIARY } = ctx;
-  const pickLead = new Date(Y, mi, 1).getDay();
-  const pickRows = Math.ceil((pickLead + dim) / 7);
+  // The editor's date picker browses months on its own (st.pickM); only tapping a day moves the workout there.
+  const pickM = st.pickM != null ? st.pickM : mi;
+  const pickDim = new Date(Y, pickM + 1, 0).getDate();
+  const pickLead = new Date(Y, pickM, 1).getDay();
+  const pickRows = Math.ceil((pickLead + pickDim) / 7);
   const pickerCells = [];
   for (let i = 0; i < pickRows * 7; i++) {
     const pd = i - pickLead + 1;
-    if (pd < 1 || pd > dim) {
+    if (pd < 1 || pd > pickDim) {
       pickerCells.push({ label: '', style: 'height:34px;border:none;background:none;cursor:default' });
       continue;
     }
     pickerCells.push({
       label: String(pd),
-      pick: () => logic.s({ day: pd, dateOpen: false }),
+      pick: () => logic.s({ ...monthPatch(pickM), day: pd, dateOpen: false, pickM: null }),
+      selected: pickM === mi && pd === selDay,
       style:
         "height:34px;border:none;border-radius:10px;cursor:pointer;font-family:var(--font-heading);font-size:var(--text-md);font-weight:" +
-        (pd === selDay ? 'var(--font-weight-bold);background:var(--color-pink);color:var(--color-white)' : 'var(--font-weight-medium);background:none;color:var(--color-ink)'),
+        (pickM === mi && pd === selDay ? 'var(--font-weight-bold);background:var(--color-pink);color:var(--color-white)' : 'var(--font-weight-medium);background:none;color:var(--color-ink)'),
     });
   }
   // The session being edited, by id: its day may hold other workouts, and the date picker may be moving it.
@@ -154,6 +158,7 @@ export function workoutStage(ctx: Ctx): Ctx {
     timerRunning,
     timerElapsedSec,
     pickerCells,
+    pickM,
     doneSet,
     doneNames,
     entryKey,

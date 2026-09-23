@@ -3,13 +3,13 @@ import { DOWFULL, EDIT_OVERLAYS, MONTHS, TARGET_AREAS } from '../constants';
 import { iconSvg } from '../icons';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import * as db from '@/lib/plannerData';
-import { digitsOnly, isoOf, joinSetsReps, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
+import { digitsOnly, isoOf, joinSetsReps, monthPatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
 import { optStyle } from '../styles';
 import type { Ctx } from '../types';
 
 // Spellbook (the 'arsenal' screen): the exercise library, its search and the add-exercise form.
 export function arsenalVals(ctx: Ctx) {
-  const { logic, st, EX, Y, TODAY_M, TODAY_D, narrow } = ctx;
+  const { logic, st, EX, Y, TODAY_M, TODAY_D, narrow, relM } = ctx;
 
   // ---- exercise count (shown in the header when the exercises view is open)
   // One per row in the list. Exercises are identified by id, so two with the same name are two exercises.
@@ -25,7 +25,8 @@ export function arsenalVals(ctx: Ctx) {
   const todayIso = isoOf(new Date(Y, TODAY_M, TODAY_D));
   // When the edit becomes a new workout, the screen moves on to that copy (and to its copy of the exercise).
   const applyEdit = (edit, mode, updateUpcoming, patch) =>
-    logic.save(
+    logic.saveOnce(
+      'template',
       () => db.updateWorkoutTemplate(edit, { mode, updateUpcoming, todayIso }),
       (r) => ({
         ...patch,
@@ -127,9 +128,23 @@ export function arsenalVals(ctx: Ctx) {
           ? [{ name: found.workout.name, open: () => logic.nav({ screen: 'template', templateId: found.workout.id }) }]
           : [],
         edit: () => logic.s({ screen: 'exerciseEdit', exFrom: null, exDraft: draftFrom(found.ex, found.ex.name) }),
+        // Only an exercise saved on its own can be deleted here. One inside a workout is removed from that workout's
+        // editor, which keeps past sessions as they were; a built-in belongs to everyone.
+        canDelete: !found.ex.builtin && !found.workout,
+        remove: () =>
+          logic.s({
+            confirm: {
+              kind: 'deleteExercise',
+              id: found.ex.id,
+              title: 'Delete “' + found.ex.name + '”?',
+              body: 'It comes out of your Spellbook. Workouts keep their own copy of any exercise, so none of them change.',
+              label: 'Delete exercise',
+            },
+          }),
         // A built-in can't be changed, so "change it" means: make it the person's own, then open that in the editor.
         copy: () =>
-          logic.save(
+          logic.saveOnce(
+            'exercise',
             () => db.createLibraryExercise(found.ex),
             (r) => ({ screen: 'exerciseEdit', exerciseId: r.id, exFrom: null, exDraft: draftFrom(found.ex, r.name) }),
           ),
@@ -156,7 +171,7 @@ export function arsenalVals(ctx: Ctx) {
           apply: (choice, upcoming) => {
             if (choice === 'new') {
               // A new standalone exercise: the original and its workout stay exactly as they are.
-              logic.save(() => db.createLibraryExercise(patch), (r) => ({
+              logic.saveOnce('exercise', () => db.createLibraryExercise(patch), (r) => ({
                 screen: 'exercise',
                 exerciseId: r.id,
                 exDraft: null,
@@ -177,7 +192,7 @@ export function arsenalVals(ctx: Ctx) {
                 after,
               );
             } else {
-              logic.save(() => db.updateExerciseRow({ kind: 'library', id: found.ex.id }, patch), {
+              logic.saveOnce('exercise', () => db.updateExerciseRow({ kind: 'library', id: found.ex.id }, patch), {
                 ...after,
                 tplConfirm: null,
               });
@@ -258,6 +273,30 @@ export function arsenalVals(ctx: Ctx) {
           svg: iconSvg(e.i),
           detail: e.sets + ' · ' + e.weight + ' · ' + e.rest + ' rest',
         })),
+        // Takes it out of the Spellbook. Sessions still ahead come off the calendar; past ones stay in your history.
+        remove: async () => {
+          try {
+            const ahead = await db.countUpcoming(chosen.id, todayIso);
+            logic.s({
+              confirm: {
+                kind: 'archiveWorkout',
+                id: chosen.id,
+                title: 'Delete “' + chosen.name + '”?',
+                body:
+                  'It comes out of your Spellbook' +
+                  (ahead === 1
+                    ? ', and its upcoming session comes off the calendar'
+                    : ahead
+                      ? ', and its ' + ahead + ' upcoming sessions come off the calendar'
+                      : '') +
+                  '. Past and completed sessions stay in your history.',
+                label: 'Delete workout',
+              },
+            });
+          } catch (e) {
+            logic.s({ saveError: e instanceof Error ? e.message : String(e) });
+          }
+        },
         // Puts this saved workout on the calendar: a date (and weekly repeats, if wanted) from a small dialog.
         schedule: () => logic.s({ tplSchedule: { date: todayIso, repeat: false } }),
         edit: () =>
@@ -285,29 +324,32 @@ export function arsenalVals(ctx: Ctx) {
       }
     : null;
 
-  // ---- "Add to calendar" from a saved workout. The calendar shows one year, so the date stays within it.
+  // ---- "Add to calendar" from a saved workout, on any day.
   const sched = onTemplateScreen && chosen ? st.tplSchedule : null;
   const schedDate = (() => {
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec((sched && sched.date) || '');
     if (!m) return null;
     const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-    return d.getFullYear() === Y ? d : null;
+    return isNaN(d.getTime()) ? null : d;
   })();
+  // "Monday, September 5", with the year when it isn't this one.
+  const schedWhen = schedDate
+    ? DOWFULL[schedDate.getDay()] + ', ' + MONTHS[schedDate.getMonth()] + ' ' + schedDate.getDate() +
+      (schedDate.getFullYear() !== Y ? ', ' + schedDate.getFullYear() : '')
+    : '';
   const scheduleCalendar = {
     open: !!sched,
     title: chosen ? 'Add “' + chosen.name + '” to the calendar' : '',
     date: (sched && sched.date) || '',
-    min: Y + '-01-01',
-    max: Y + '-12-31',
     setDate: (e) => logic.s({ tplSchedule: { ...sched, date: e.target.value } }),
     repeat: !!(sched && sched.repeat),
     setRepeat: (on) => logic.s({ tplSchedule: { ...sched, repeat: !!on } }),
     note: !schedDate
-      ? 'Pick a day this year.'
+      ? 'Pick a day.'
       : sched && sched.repeat
         ? 'Every ' + DOWFULL[schedDate.getDay()] + ' for the next 12 weeks too, 13 sessions in all.'
-        : 'Just ' + DOWFULL[schedDate.getDay()] + ', ' + MONTHS[schedDate.getMonth()] + ' ' + schedDate.getDate() + '.',
-    canAdd: !!schedDate,
+        : 'Just ' + schedWhen + '.',
+    canAdd: !!schedDate && !logic.busy('schedule'),
     cancel: () => logic.s({ tplSchedule: null }),
     // Afterwards it stays here and says where the workout went, with a way to go and see that day.
     add: () => {
@@ -316,15 +358,16 @@ export function arsenalVals(ctx: Ctx) {
       if (sched.repeat)
         for (let w = 1; w <= 12; w++)
           dates.push(isoOf(new Date(schedDate.getFullYear(), schedDate.getMonth(), schedDate.getDate() + w * 7)));
-      const when = DOWFULL[schedDate.getDay()] + ', ' + MONTHS[schedDate.getMonth()] + ' ' + schedDate.getDate();
-      logic.save(
+      const when = schedWhen;
+      logic.saveOnce(
+        'schedule',
         () => db.scheduleWorkout(chosen.id, dates, !!sched.repeat),
         (r) => ({
           tplSchedule: null,
           tplScheduled: {
             templateId: chosen.id,
             text: 'On the calendar: ' + when + (sched.repeat ? ', and every ' + DOWFULL[schedDate.getDay()] + ' for 12 weeks after.' : '.'),
-            month: MONTHS[schedDate.getMonth()],
+            ...monthPatch(relM(schedDate)),
             day: schedDate.getDate(),
             entryId: r && r.entryId,
           },
@@ -336,7 +379,7 @@ export function arsenalVals(ctx: Ctx) {
     viewDay: () => {
       const t = st.tplScheduled;
       if (!t) return;
-      logic.nav({ screen: 'day', seg: 'Day', monthOpen: false, month: t.month, day: t.day, entryId: t.entryId, tplScheduled: null });
+      logic.nav({ screen: 'day', seg: 'Day', monthOpen: false, month: t.month, yOff: t.yOff || 0, day: t.day, entryId: t.entryId, tplScheduled: null });
     },
   };
 
@@ -660,7 +703,7 @@ export function arsenalVals(ctx: Ctx) {
         i: st.dIcon || 'h',
         areas: st.dAreas || [],
       };
-      logic.save(() => db.addLibraryExercise(item), {
+      logic.saveOnce('exercise', () => db.addLibraryExercise(item), {
         arsenalAdd: false,
         dName: '',
         dSets: '',

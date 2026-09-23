@@ -1,4 +1,10 @@
-import { QUESTS } from './constants';
+import { MONTHS, QUESTS } from './constants';
+
+// Months are counted from January of the current year and carry on past it: 12 is next January, -1 last December.
+// new Date(year, m, d) already reads them that way. mod12 turns one back into a place in MONTHS, and monthPatch into
+// the state that shows it (a month name, plus how many years away from this one).
+export const mod12 = m => ((m % 12) + 12) % 12;
+export const monthPatch = m => ({ month: MONTHS[mod12(m)], yOff: Math.floor(m / 12) });
 
 export const questFor = seed => QUESTS[Math.abs(Math.round(seed)) % QUESTS.length];
 export const questSeed = (day, month) => questFor(day * 3 + month);

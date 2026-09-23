@@ -1,5 +1,5 @@
 import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, MON3, MONTHS, TARGET_AREAS } from '../constants';
-import { digitsOnly, idOf, isoOf, joinSetsReps, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
+import { digitsOnly, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
 import { optStyle } from '../styles';
@@ -54,16 +54,19 @@ export function editVals(ctx: Ctx) {
     TODAY_M,
     TODAY_D,
     DIARY,
+    pickM,
   } = ctx;
+  // Another year than this one says which, next to the date.
+  const yearNote = Math.floor(mi / 12) ? ', ' + selDate.getFullYear() : '';
   // Where each nav item actually goes, so a guarded nav click can land there after "Discard" or "Save changes" —
   // exactly what pressing that nav item would have done, including the "come back here" history entry the ones
   // through logic.nav() push (Calendar deliberately doesn't: it always starts fresh from today).
   const navHistory = () => (st.hist || []).concat([{
-    screen: st.screen, month: st.month, day: st.day, seg: st.seg,
+    screen: st.screen, month: st.month, yOff: st.yOff, day: st.day, seg: st.seg,
     diaryFrom: st.diaryFrom, diaryEdit: st.diaryEdit, creating: st.creating,
   }]);
   const NAV_DESTINATIONS = {
-    day: { screen: 'day', month: MONTHS[TODAY_M], day: TODAY_D, monthOpen: false, seg: 'Day', creating: false },
+    day: { screen: 'day', ...monthPatch(TODAY_M), day: TODAY_D, monthOpen: false, seg: 'Day', creating: false },
     diaryList: { screen: 'diaryList', monthOpen: false, hist: navHistory() },
     arsenal: { screen: 'arsenal', monthOpen: false, hist: navHistory() },
     summary: { screen: 'summary', monthOpen: false, hist: navHistory() },
@@ -79,9 +82,23 @@ export function editVals(ctx: Ctx) {
         null
       : null;
   const todayIso = isoOf(new Date(Y, TODAY_M, TODAY_D));
+  // A new workout needs a name, and a lifting one at least one exercise, before it can be saved: an empty
+  // "Untitled workout" used to land in the Spellbook with one tap.
+  const needsName = creating && !(st.newName || '').trim();
+  const needsExercise = creating && st.newType !== 'cycle' && selList.length === 0;
+  const saving = logic.busy('workout');
   return {
     nameError: nameClash ? 'You already have a workout called “' + nameClash.name + '”. Give this one another name.' : '',
-    saveBlocked: !!nameClash,
+    saveBlocked: !!nameClash || needsName || needsExercise || saving,
+    saveHint: nameClash
+      ? ''
+      : needsName && needsExercise
+        ? 'Name it and add an exercise to save it.'
+        : needsName
+          ? 'Name this workout to save it.'
+          : needsExercise
+            ? 'Add at least one exercise to save it.'
+            : '',
     // Creating one for the calendar under a name that's taken: most likely the saved one was meant.
     canUseSaved: !!nameClash && creating && st.schedule !== false,
     useSavedLabel: nameClash ? 'Schedule your saved “' + nameClash.name + '” instead' : '',
@@ -89,7 +106,8 @@ export function editVals(ctx: Ctx) {
       if (!nameClash) return;
       const dates = [isoOf(new Date(Y, mi, selDay))];
       if (st.repeat) for (let w = 1; w <= 12; w++) dates.push(isoOf(new Date(Y, mi, selDay + w * 7)));
-      logic.save(
+      logic.saveOnce(
+        'workout',
         () => db.scheduleWorkout(nameClash.id, dates, !!st.repeat),
         (r) =>
           Object.assign(
@@ -316,7 +334,13 @@ export function editVals(ctx: Ctx) {
     },
     setEditName: (e) => logic.s({ renames: Object.assign({}, st.renames, { [baseName]: e.target.value }) }),
     eEyebrow: st.editing ? 'EDITING WORKOUT' : 'NEW WORKOUT',
-    eSaveLabel: st.editing ? 'Update workout' : creating && st.schedule === false ? 'Save to Spellbook' : 'Save workout',
+    eSaveLabel: saving
+      ? 'Saving…'
+      : st.editing
+        ? 'Update workout'
+        : creating && st.schedule === false
+          ? 'Save to Spellbook'
+          : 'Save workout',
     eCancelLabel: creating ? 'Cancel' : 'Delete workout',
     footerSecondary: creating
       ? () =>
@@ -338,7 +362,7 @@ export function editVals(ctx: Ctx) {
                 '"' +
                 selName +
                 '" on ' +
-                MON3[mi] +
+                MON3[mod12(mi)] +
                 ' ' +
                 selDay +
                 (DIARY[idOf(srcAct)]
@@ -364,7 +388,11 @@ export function editVals(ctx: Ctx) {
         newName: '',
       }),
     dateOpen: !!st.dateOpen,
-    toggleDate: () => logic.s({ dateOpen: !st.dateOpen }),
+    // Opens on the month of the workout's date; its arrows only change what the picker shows.
+    toggleDate: () => logic.s({ dateOpen: !st.dateOpen, pickM: null }),
+    pickMonthName: MONTHS[mod12(pickM)] + (Math.floor(pickM / 12) ? ' ' + new Date(Y, pickM, 1).getFullYear() : ''),
+    pickPrevMonth: () => logic.s({ pickM: pickM - 1 }),
+    pickNextMonth: () => logic.s({ pickM: pickM + 1 }),
     pickerCells,
     saveLeave: () => {
       logic.s({ leaveOpen: false });
@@ -376,7 +404,8 @@ export function editVals(ctx: Ctx) {
         for (let w = 1; w <= 12; w++) out.push(isoOf(new Date(Y, mi, selDay + w * 7)));
         return out;
       };
-      if (nameClash) return logic.s({ leaveOpen: false, pendingNav: null });
+      if (nameClash || needsName || needsExercise) return logic.s({ leaveOpen: false, pendingNav: null });
+      if (saving) return;
       const cleared = EDIT_OVERLAYS;
       const bare = (e) => ({ name: e.name, sets: e.sets, weight: e.weight, rest: e.rest, i: e.i, areas: e.areas || [] });
       if (!creating) {
@@ -447,38 +476,44 @@ export function editVals(ctx: Ctx) {
           update.length > 0 ||
           edit.exercises.removeIds.length > 0 ||
           added.length > 0;
-        if (!changesWorkout) return logic.save(() => db.updateWorkout(edit), after);
-        // Shared with other sessions: ask whether the change is for this session only, or for the saved workout (and
-        // the sessions still ahead). Past and completed sessions keep the old version either way.
+        if (!changesWorkout) return logic.saveOnce('workout', () => db.updateWorkout(edit), after);
+        // The workout is shared with the Spellbook, and maybe with other sessions: ask whether the change is for this
+        // session only, or for the saved workout too (and the sessions still ahead). Asked even when this is its only
+        // session, since changing what was lifted today shouldn't quietly rewrite the saved workout. Past and
+        // completed sessions keep the old version either way.
         const workoutName = baseName;
         return db
           .sessionScope(selAct.workoutId, selAct.id, todayIso)
           .then(({ others, upcoming }) => {
-            if (others === 0) return logic.save(() => db.updateWorkout(edit), after);
             logic.s({
               tplConfirm: {
                 name: workoutName,
                 count: 0,
                 choice: 'new',
                 upcoming: true,
-                body: '“' + workoutName + '” has ' + plural(others, 'other session') + '.',
+                body: others
+                  ? '“' + workoutName + '” has ' + plural(others, 'other session') + '.'
+                  : '“' + workoutName + '” is also saved in your Spellbook.',
                 options: [
                   {
                     value: 'new',
                     title: 'Only this session',
-                    description: 'The saved workout and its other sessions stay as they are.',
+                    description: others
+                      ? 'The saved workout and its other sessions stay as they are.'
+                      : 'The saved workout stays as it is.',
                   },
                   {
                     value: 'update',
                     title: 'This session and the saved workout',
-                    description:
-                      (upcoming
-                        ? 'Also changes the ' + plural(upcoming, 'upcoming session') + '. '
-                        : '') + 'Past and completed sessions keep the old version.',
+                    description: others
+                      ? (upcoming ? 'Also changes the ' + plural(upcoming, 'upcoming session') + '. ' : '') +
+                        'Past and completed sessions keep the old version.'
+                      : 'Changes “' + workoutName + '” in your Spellbook too.',
                   },
                 ],
                 apply: (mode) =>
-                  logic.save(
+                  logic.saveOnce(
+                    'workout',
                     () =>
                       db.updateWorkoutTemplate(edit, {
                         mode: mode === 'new' ? 'session' : 'update',
@@ -492,11 +527,12 @@ export function editVals(ctx: Ctx) {
           })
           .catch((e) => logic.s({ saveError: e instanceof Error ? e.message : String(e) }));
       }
-      const nm = (st.newName || '').trim() || 'Untitled workout';
+      const nm = (st.newName || '').trim();
       const isRide = st.newType === 'cycle';
       // A workout is saved on its own; it only gets a session on the calendar when "Add to calendar" is on.
       const scheduled = st.schedule !== false;
-      return logic.save(
+      return logic.saveOnce(
+        'workout',
         () =>
           db.createWorkout({
             name: nm,
@@ -561,9 +597,10 @@ export function editVals(ctx: Ctx) {
       DOW3[selDate.getDay()].charAt(0) +
       DOW3[selDate.getDay()].slice(1, 3).toLowerCase() +
       ', ' +
-      MON3[mi] +
+      MON3[mod12(mi)] +
       ' ' +
-      selDay,
+      selDay +
+      yearNote,
     eStatus: doneSel ? 'Completed' : 'Planned',
     eTime: (selAct && selAct.time) || (creating ? 'Duration TBD' : '~50 min'),
     setRepeat: (on) => logic.s({ repeat: !!on }),
@@ -576,7 +613,7 @@ export function editVals(ctx: Ctx) {
     setSchedule: (on) => logic.s({ schedule: !!on, repeat: on ? st.repeat : false }),
     scheduleNote:
       st.schedule !== false
-        ? 'Puts it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mi] + ' ' + selDay + ', and keeps it in your Spellbook.'
+        ? 'Puts it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mod12(mi)] + ' ' + selDay + yearNote + ', and keeps it in your Spellbook.'
         : 'Only saved to your Spellbook. You can add it to the calendar any time.',
     exercises: selList.map((e, ix) => {
       const cur = (st.exIcons || {})[e.name] || e.i;

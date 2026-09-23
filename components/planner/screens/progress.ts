@@ -1,6 +1,6 @@
 import { DOW3, DOWFULL, MON3, MONTHS, RANKS } from '../constants';
 import { displayName } from '@/lib/auth';
-import { plural, questSeed } from '../helpers';
+import { monthPatch, plural, questSeed } from '../helpers';
 import type { Ctx } from '../types';
 
 // Progress and profile: streaks, weekly chart, records, XP and the rank ladder.
@@ -21,6 +21,7 @@ export function progressVals(ctx: Ctx) {
     Y,
     TODAY_M,
     TODAY_D,
+    relM,
     dayComplete,
     weekBuckets,
     barSel,
@@ -43,9 +44,9 @@ export function progressVals(ctx: Ctx) {
     entriesAt,
     isDoneEntry,
   } = ctx;
-  // The stats cover last month and this one (just this one in January), or from when the account was made if later.
+  // The stats cover last month and this one, or from when the account was made if later.
   const statsSince = () => {
-    const start = new Date(Y, Math.max(0, TODAY_M - 1), 1);
+    const start = new Date(Y, TODAY_M - 1, 1);
     const created = new Date(logic.auth.account?.createdAt ?? '');
     const from = !isNaN(created.getTime()) && created > start ? created : start;
     return MON3[from.getMonth()] + ' ' + from.getDate();
@@ -55,7 +56,7 @@ export function progressVals(ctx: Ctx) {
     wkEmpty: weekAll.length === 0,
     wkHas: weekAll.length > 0,
     ticksEmpty: !Object.keys(plannedByDay).some((k) => {
-      const [m, d] = k.split('-').map(Number);
+      const [m, d] = k.split('|').map(Number);
       return m * 100 + d <= TODAY_M * 100 + TODAY_D;
     }),
     questsNone: questDayCount === 0,
@@ -148,7 +149,7 @@ export function progressVals(ctx: Ctx) {
       const out = [];
       for (let back = 0; back <= 90 && out.length < 7; back++) {
         const dt = new Date(Y, TODAY_M, TODAY_D - back);
-        const k = dt.getMonth() + '-' + dt.getDate();
+        const k = relM(dt) + '|' + dt.getDate();
         if (!plannedByDay[k]) continue;
         const pending = back === 0 && !dayComplete[k];
         out.unshift({
@@ -185,7 +186,7 @@ export function progressVals(ctx: Ctx) {
             ? 'background:var(--color-pink);color:var(--color-white)'
             : 'background:var(--color-white);color:var(--color-muted)'),
         open: () =>
-          logic.nav({ screen: 'detail', creating: false, month: MONTHS[TODAY_M], day: x.d, entryId: x.av.id }),
+          logic.nav({ screen: 'detail', creating: false, ...monthPatch(TODAY_M), day: x.d, entryId: x.av.id }),
       })),
     chartCaption: (() => {
       const b = weekBuckets[barSel] || { planned: 0, done: 0 };
@@ -326,7 +327,7 @@ export function progressVals(ctx: Ctx) {
       for (let i = 0; i < 7; i++) {
         const dt = new Date(Y, TODAY_M, TODAY_D - todayDate.getDay() + i);
         // Counted by day, like the list of quests below it.
-        const list = entriesAt(dt.getMonth(), dt.getDate());
+        const list = entriesAt(relM(dt), dt.getDate());
         if (!list.length) continue;
         t++;
         if (list.every(isDoneEntry)) d++;
@@ -339,10 +340,10 @@ export function progressVals(ctx: Ctx) {
         const d = new Date(Y, TODAY_M, TODAY_D - todayDate.getDay() + i);
         const dm = d.getDate();
         // One quest per day: cleared once every workout that day is done.
-        const list = entriesAt(d.getMonth(), dm);
+        const list = entriesAt(relM(d), dm);
         if (!list.length) continue;
         const isDone = list.every(isDoneEntry);
-        const q = questSeed(dm, d.getMonth());
+        const q = questSeed(dm, relM(d));
         out.push({
           day: DOW3[d.getDay()].slice(0, 3),
           name: isDone ? q.done : q.title,

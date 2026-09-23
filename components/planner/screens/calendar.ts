@@ -1,4 +1,5 @@
 import { DOW3, DOWFULL, MON3, MONTHS } from '../constants';
+import { mod12, monthPatch } from '../helpers';
 import type { Ctx } from '../types';
 
 // Calendar screen: month picker, day strip, week list and month grid.
@@ -27,7 +28,12 @@ export function calendarVals(ctx: Ctx) {
     isDoneEntry,
     TODAY_M,
     metaFor,
+    relM,
+    shownYOff,
   } = ctx;
+  // Another year than this one says which, wherever the month is named.
+  const shownYear = Y + shownYOff;
+  const monthTitle = MONTHS[mod12(mi)] + (shownYOff ? ' ' + shownYear : '');
   const firstRun = logic.model.workouts.length === 0 && logic.model.entries.length === 0;
   const shownMonth = logic.model.entries.filter((x) => x.m === mi).map((x) => x.av);
   return {
@@ -60,8 +66,12 @@ export function calendarVals(ctx: Ctx) {
     restDayPhrase:
       mi === TODAY_M && selDay === TODAY_D
         ? 'today'
-        : 'on ' + DOW3[selDate.getDay()].charAt(0) + DOW3[selDate.getDay()].slice(1, 3).toLowerCase() + ', ' + MON3[mi] + ' ' + selDay,
-    monthName: st.month,
+        : 'on ' + DOW3[selDate.getDay()].charAt(0) + DOW3[selDate.getDay()].slice(1, 3).toLowerCase() + ', ' + MON3[mod12(mi)] + ' ' + selDay + (shownYOff ? ', ' + shownYear : ''),
+    monthName: monthTitle,
+    yearLabel: String(shownYear),
+    monthYear: MONTHS[mod12(mi)] + ' ' + shownYear,
+    prevYear: () => logic.s({ yOff: shownYOff - 1, day: 1 }),
+    nextYear: () => logic.s({ yOff: shownYOff + 1, day: 1 }),
     monthOpen: st.monthOpen,
     caretStyle:
       'border:none;background:none;cursor:pointer;padding:4px;display:flex;align-items:center;transition:transform .2s;transform:rotate(' +
@@ -81,27 +91,27 @@ export function calendarVals(ctx: Ctx) {
         const m = mi + (e.key === 'PageUp' ? -1 : 1);
         to = new Date(Y, m, Math.min(selDay, new Date(Y, m + 1, 0).getDate()));
       }
-      if (!to || to.getFullYear() !== Y) return; // the planner shows one year
+      if (!to) return;
       e.preventDefault();
-      logic.s({ month: MONTHS[to.getMonth()], day: to.getDate() });
+      logic.s({ ...monthPatch(relM(to)), day: to.getDate() });
       requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-month-day="' + to.getDate() + '"]')?.focus());
     },
     prevWeek: () => {
       const d = new Date(Y, mi, selDay - 7);
-      logic.s({ month: MONTHS[d.getMonth()], day: d.getDate() });
+      logic.s({ ...monthPatch(relM(d)), day: d.getDate() });
     },
     nextWeek: () => {
       const d = new Date(Y, mi, selDay + 7);
-      logic.s({ month: MONTHS[d.getMonth()], day: d.getDate() });
+      logic.s({ ...monthPatch(relM(d)), day: d.getDate() });
     },
-    prevMonth: () => logic.s({ month: MONTHS[(mi + 11) % 12], day: 1 }),
-    nextMonth: () => logic.s({ month: MONTHS[(mi + 1) % 12], day: 1 }),
+    prevMonth: () => logic.s({ ...monthPatch(mi - 1), day: 1 }),
+    nextMonth: () => logic.s({ ...monthPatch(mi + 1), day: 1 }),
     months,
     days,
     dayName: DOWFULL[selDate.getDay()],
-    shortDate: MON3[mi] + ' ' + selDay,
+    shortDate: MON3[mod12(mi)] + ' ' + selDay,
     weekLabel,
-    monthName2: st.month,
+    monthName2: monthTitle,
     hasRows: weekRows.some((r) => r.hasRow),
     noRows: !weekRows.some((r) => r.hasRow),
     // Only what's true: a day with a session gets a quest.
@@ -117,7 +127,7 @@ export function calendarVals(ctx: Ctx) {
       name: nameOf(a.name),
       meta: metaFor(a),
       open: () =>
-        logic.nav({ screen: 'detail', creating: false, month: MONTHS[TODAY_M], day: TODAY_D, entryId: a.id }),
+        logic.nav({ screen: 'detail', creating: false, ...monthPatch(TODAY_M), day: TODAY_D, entryId: a.id }),
     })),
   };
 }

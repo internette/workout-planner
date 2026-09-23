@@ -284,7 +284,7 @@ export function workoutVals(ctx: Ctx) {
       logic.s({ restartPrompt: false });
       doRestart();
     },
-    longDate: DOWFULL[selDate.getDay()] + ', ' + st.month + ' ' + selDay,
+    longDate: DOWFULL[selDate.getDay()] + ', ' + st.month + ' ' + selDay + (st.yOff ? ', ' + selDate.getFullYear() : ''),
     badgeStyle:
       'margin-left:auto;padding:7px 13px;border-radius:999px;font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);' +
       (doneSel

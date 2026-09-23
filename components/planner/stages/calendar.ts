@@ -1,18 +1,19 @@
 import { DOW1, DOW3, DOWFULL, MON3, MONTHS, PINK } from '../constants';
-import { CAT } from '../helpers';
+import { CAT, mod12, monthPatch } from '../helpers';
 import React from 'react';
 import type { Ctx } from '../types';
 
 // The selected month, week and day, plus the week list, month grid and its constellation.
 export function calendarStage(ctx: Ctx): Ctx {
-  const { logic, st, Y, TODAY_M, seedAt, entriesAt, TK, isDoneEntry, TODAY_D, nameOf, metaFor, ACT } = ctx;
-  const mi = MONTHS.indexOf(st.month);
+  const { logic, st, Y, TODAY_M, seedAt, entriesAt, TK, relM, isDoneEntry, TODAY_D, nameOf, metaFor, ACT } = ctx;
+  // The month on screen, counted from January of this year (so it can run into next year, or back into last).
+  const mi = MONTHS.indexOf(st.month) + 12 * (st.yOff || 0);
   const dim = new Date(Y, mi + 1, 0).getDate();
   const selDay = Math.min(st.day, dim);
   const isCurMonth = mi === TODAY_M;
   const actFor = (d) => seedAt(mi, d);
-  const actForDate = (d) => seedAt(d.getMonth(), d.getDate());
-  const listForDate = (d) => entriesAt(d.getMonth(), d.getDate());
+  const actForDate = (d) => seedAt(relM(d), d.getDate());
+  const listForDate = (d) => entriesAt(relM(d), d.getDate());
   // A day's marker sums up all of its workouts: done once every one is, missed once it is past and any one isn't.
   const allDone = (list) => list.length > 0 && list.every(isDoneEntry);
   const workoutsWord = (list) => (list.length > 1 ? list.length + ' workouts, ' : '');
@@ -29,24 +30,24 @@ export function calendarStage(ctx: Ctx): Ctx {
   const spansMonths = cells[0].getMonth() !== cells[6].getMonth();
   const dayDefs = cells.map((d) => {
     const list = listForDate(d);
-    const past = d.getMonth() * 100 + d.getDate() < TK;
+    const past = relM(d) * 100 + d.getDate() < TK;
     const done = allDone(list);
-    return [DOW1[d.getDay()], d.getDate(), list.length > 0, d.getMonth() === mi, d.getMonth(), done, list.length > 0 && !done && past, list];
+    return [DOW1[d.getDay()], d.getDate(), list.length > 0, relM(d) === mi, relM(d), done, list.length > 0 && !done && past, list];
   });
   const days = dayDefs.map(([letter, num, dot, same, cellMonth, done, miss, list]) => {
     const on = selDay === num && same;
     return {
       letter,
       num,
-      pick: () => logic.s({ month: MONTHS[cellMonth], day: num, monthOpen: false, entryId: null }),
-      mon: spansMonths ? MON3[cellMonth].toUpperCase() : '',
+      pick: () => logic.s({ ...monthPatch(cellMonth), day: num, monthOpen: false, entryId: null }),
+      mon: spansMonths ? MON3[mod12(cellMonth)].toUpperCase() : '',
       monStyle: spansMonths
         ? 'font-size:var(--text-2xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);color:' + (on ? 'rgba(255,255,255,.8)' : 'var(--color-subtle)')
         : 'display:none',
       aria:
         DOWFULL[new Date(Y, cellMonth, num).getDay()] +
         ', ' +
-        MONTHS[cellMonth] +
+        MONTHS[mod12(cellMonth)] +
         ' ' +
         num +
         ' — ' +
@@ -77,10 +78,11 @@ export function calendarStage(ctx: Ctx): Ctx {
               (on ? 'var(--color-white)' : 'var(--color-teal)'),
     };
   });
+  const shownYOff = Math.floor(mi / 12);
   const months = MONTHS.map((name) => ({
     name,
     short: MON3[MONTHS.indexOf(name)],
-    pick: () => logic.s({ month: name, monthOpen: false, day: 1 }),
+    pick: () => logic.s({ month: name, yOff: shownYOff, monthOpen: false, day: 1 }),
     style:
       "font-family:var(--font-heading);" +
       'padding:11px 6px;border-radius:12px;font-size:var(--text-base);border:none;cursor:pointer;' +
@@ -90,11 +92,11 @@ export function calendarStage(ctx: Ctx): Ctx {
   const weekRows = cells.flatMap((d) => {
     const list = listForDate(d);
     if (!list.length) {
-      const today0 = d.getMonth() === TODAY_M && d.getDate() === TODAY_D;
+      const today0 = relM(d) === TODAY_M && d.getDate() === TODAY_D;
       const lab =
         DOW3[d.getDay()] +
         ' ' +
-        (d.getMonth() === mi ? '' : MON3[d.getMonth()].toUpperCase() + ' ') +
+        (relM(d) === mi ? '' : MON3[d.getMonth()].toUpperCase() + ' ') +
         d.getDate() +
         (today0 ? ' · TODAY' : '');
       return [{
@@ -114,7 +116,7 @@ export function calendarStage(ctx: Ctx): Ctx {
     const label =
       DOW3[d.getDay()] +
       ' ' +
-      (d.getMonth() === mi ? '' : MON3[d.getMonth()].toUpperCase() + ' ') +
+      (relM(d) === mi ? '' : MON3[d.getMonth()].toUpperCase() + ' ') +
       d.getDate() +
       (today ? ' · TODAY' : '');
     return {
@@ -130,7 +132,7 @@ export function calendarStage(ctx: Ctx): Ctx {
       isCore: !a.ride && CAT(a.name) === 'Core',
       isRideRow: !!a.ride,
       open: () =>
-        logic.nav({ screen: 'detail', creating: false, month: MONTHS[d.getMonth()], day: d.getDate(), entryId: a.id }),
+        logic.nav({ screen: 'detail', creating: false, ...monthPatch(relM(d)), day: d.getDate(), entryId: a.id }),
       aria:
         label.replace(' · ', ', ') +
         ': ' +
@@ -138,12 +140,12 @@ export function calendarStage(ctx: Ctx): Ctx {
         ', ' +
         metaFor(a) +
         ', ' +
-        (isDoneEntry(a) ? 'completed' : d.getMonth() * 100 + d.getDate() < TK ? 'missed' : 'planned'),
+        (isDoneEntry(a) ? 'completed' : relM(d) * 100 + d.getDate() < TK ? 'missed' : 'planned'),
       stateDot:
         'flex:none;margin-left:auto;' +
         (isDoneEntry(a)
           ? 'width:8px;height:8px;border-radius:50%;background:var(--color-slate)'
-          : d.getMonth() * 100 + d.getDate() < TK
+          : relM(d) * 100 + d.getDate() < TK
             ? 'width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--color-muted)'
             : 'width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--color-teal)'),
       eyebrow:
@@ -168,7 +170,7 @@ export function calendarStage(ctx: Ctx): Ctx {
     if (list.length && a !== 't' && allDone(list)) a = 'c';
     const today = a === 't';
     const sel = d === selDay;
-    const missed = !!a && a !== 'c' && a !== 't' && isCurMonth && d < TODAY_D;
+    const missed = !!a && a !== 'c' && a !== 't' && mi * 100 + d < TK;
     monthCells.push({
       label: String(d),
       day: d,
@@ -191,7 +193,7 @@ export function calendarStage(ctx: Ctx): Ctx {
       aria: d
         ? DOWFULL[new Date(Y, mi, d).getDay()] +
           ', ' +
-          st.month +
+          MONTHS[mod12(mi)] +
           ' ' +
           d +
           ' — ' +
@@ -262,5 +264,6 @@ export function calendarStage(ctx: Ctx): Ctx {
     weekLabel,
     wkStart,
     isCurMonth,
+    shownYOff,
   };
 }
