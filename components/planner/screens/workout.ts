@@ -28,9 +28,11 @@ export function workoutVals(ctx: Ctx) {
     doneSel,
     isCycleView,
   } = ctx;
+  const goDetail = () => logic.nav({ screen: 'detail', creating: false });
+  const goDiary = () => logic.nav({ screen: 'diary', diaryFrom: 'day', diaryEdit: false });
   return {
     backToDay: () => logic.back(),
-    goDetail: () => logic.nav({ screen: 'detail', creating: false }),
+    goDetail,
     goEdit: () =>
       logic.nav({ screen: 'edit', editing: !!actFor(selDay), creating: false, editKey: mi + '-' + selDay }),
     // From a day of the calendar the new workout goes on that day, and can be switched to saved-only.
@@ -58,7 +60,7 @@ export function workoutVals(ctx: Ctx) {
         schedule: false,
         repeat: false,
       }),
-    goDiary: () => logic.nav({ screen: 'diary', diaryFrom: 'day', diaryEdit: false }),
+    goDiary,
     wName: selAct ? nameOf(selAct.name) : '',
     wMeta: !selAct
       ? ''
@@ -125,6 +127,10 @@ export function workoutVals(ctx: Ctx) {
       'width:15px;height:15px;flex:none;transition:transform .2s' +
       (st.more ? ';transform:rotate(180deg)' : ''),
     ctaLabel: hasEntry ? 'View chronicle entry' : 'Finish workout & log it',
+    // The day card's own CTA: nothing to log yet, so it starts the workout (its detail page) rather than
+    // jumping straight to logging it — that stays the detail screen's own button, once there's something to log.
+    dayCtaLabel: hasEntry ? 'View chronicle entry' : 'Start workout',
+    dayCta: hasEntry ? goDiary : goDetail,
     longDate: DOWFULL[selDate.getDay()] + ', ' + st.month + ' ' + selDay,
     badgeStyle:
       'margin-left:auto;padding:7px 13px;border-radius:999px;font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);' +

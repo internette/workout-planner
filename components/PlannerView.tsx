@@ -709,10 +709,10 @@ export function PlannerView({ v }: { v: any }) {
                             type="primary"
                             size="lg"
                             fullWidth
-                            onClick={v.goDiary}
+                            onClick={v.dayCta}
                             style={{ marginTop: '20px' }}
                           >
-                            {v.ctaLabel}
+                            {v.dayCtaLabel}
                           </Button>
                         </Card>
                         <aside style={{ display: 'flex', marginTop: '14px' }}>
