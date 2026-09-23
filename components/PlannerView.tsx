@@ -2274,7 +2274,8 @@ export function PlannerView({ v }: { v: any }) {
                                 inputMode="numeric"
                               />
                               <TextField
-                                label="Weight (lbs)"
+                                label="Weight"
+                                suffix="lbs"
                                 containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                 value={v.draftWeight ?? ''}
                                 onChange={v.setWeight}
@@ -2282,7 +2283,8 @@ export function PlannerView({ v }: { v: any }) {
                                 inputMode="decimal"
                               />
                               <TextField
-                                label="Rest (sec)"
+                                label="Rest"
+                                suffix="sec"
                                 containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                 value={v.draftRest ?? ''}
                                 onChange={v.setRest}
@@ -2853,14 +2855,16 @@ export function PlannerView({ v }: { v: any }) {
                                 inputMode="numeric"
                               />
                               <TextField
-                                label="Weight (lbs)"
+                                label="Weight"
+                                suffix="lbs"
                                 containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                 value={r?.weight}
                                 onChange={r?.setWeight}
                                 inputMode="decimal"
                               />
                               <TextField
-                                label="Rest (sec)"
+                                label="Rest"
+                                suffix="sec"
                                 containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                 value={r?.rest}
                                 onChange={r?.setRest}
@@ -2944,7 +2948,8 @@ export function PlannerView({ v }: { v: any }) {
                         inputMode="numeric"
                       />
                       <TextField
-                        label="Weight (lbs)"
+                        label="Weight"
+                        suffix="lbs"
                         containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                         value={v.exerciseEdit.weight}
                         onChange={v.exerciseEdit.setWeight}
@@ -2952,7 +2957,8 @@ export function PlannerView({ v }: { v: any }) {
                         inputMode="decimal"
                       />
                       <TextField
-                        label="Rest (sec)"
+                        label="Rest"
+                        suffix="sec"
                         containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                         value={v.exerciseEdit.rest}
                         onChange={v.exerciseEdit.setRest}
@@ -4232,14 +4238,16 @@ export function PlannerView({ v }: { v: any }) {
                                   inputMode="numeric"
                                 />
                                 <TextField
-                                  label="Weight (lbs)"
+                                  label="Weight"
+                                  suffix="lbs"
                                   containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                   value={ex?.weight ?? ''}
                                   onChange={ex?.setWeight}
                                   inputMode="decimal"
                                 />
                                 <TextField
-                                  label="Rest (sec)"
+                                  label="Rest"
+                                  suffix="sec"
                                   containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                   value={ex?.rest ?? ''}
                                   onChange={ex?.setRest}
@@ -4374,7 +4382,8 @@ export function PlannerView({ v }: { v: any }) {
                                   inputMode="numeric"
                                 />
                                 <TextField
-                                  label="Weight (lbs)"
+                                  label="Weight"
+                                  suffix="lbs"
                                   containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                   value={v.draftWeight ?? ''}
                                   onChange={v.setWeight}
@@ -4382,7 +4391,8 @@ export function PlannerView({ v }: { v: any }) {
                                   inputMode="decimal"
                                 />
                                 <TextField
-                                  label="Rest (sec)"
+                                  label="Rest"
+                                  suffix="sec"
                                   containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                   value={v.draftRest ?? ''}
                                   onChange={v.setRest}

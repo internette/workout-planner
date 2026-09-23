@@ -462,8 +462,8 @@ export function arsenalVals(ctx: Ctx) {
       const item = {
         name: nm,
         sets: joinSetsReps(st.dSets, st.dReps) || '3 × 10',
-        weight: st.dWeight || '—',
-        rest: st.dRest || '60 sec',
+        weight: withLb(st.dWeight) || '—',
+        rest: withSec(st.dRest) || '60 sec',
         i: st.dIcon || 'h',
       };
       logic.save(() => db.addLibraryExercise(item), {
