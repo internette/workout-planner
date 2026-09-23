@@ -2157,27 +2157,6 @@ export function PlannerView({ v }: { v: any }) {
                     <Text variant="label" tone="muted">
                       {v.arsenalCount}
                     </Text>
-                    {v.showArsenalWorkouts ? (
-                      <Button
-                        type="primary"
-                        size="sm"
-                        onClick={v.goNewWorkoutFromArsenal}
-                        style={{ marginLeft: 'auto' }}
-                      >
-                        <Plus color="var(--color-white)" strokeWidth={2.2} size={16} />
-                        New workout
-                      </Button>
-                    ) : (
-                      <Button
-                        type="primary"
-                        size="sm"
-                        onClick={v.openArsenalAdd}
-                        style={{ marginLeft: 'auto' }}
-                      >
-                        <Plus color="var(--color-white)" strokeWidth={2.2} size={16} />
-                        New exercise
-                      </Button>
-                    )}
                   </div>
                   <Text
                     variant="body"
@@ -2215,17 +2194,37 @@ export function PlannerView({ v }: { v: any }) {
                       </Card>
                     </div>
                   ) : null}
-                  <SegmentedControl
-                    label="Arsenal view"
-                    size="sm"
-                    options={[
-                      { value: 'workouts', label: 'Workouts' },
-                      { value: 'exercises', label: 'Exercises' },
-                    ]}
-                    value={v.arsenalView}
-                    onChange={v.setArsenalView}
-                    style={{ marginTop: '18px' }}
-                  />
+                  {/* The "New" button sits with the toggle it follows: it makes whichever kind the list is showing. */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      alignItems: 'center',
+                      gap: '10px',
+                      marginTop: '18px',
+                    }}
+                  >
+                    <SegmentedControl
+                      label="Arsenal view"
+                      size="sm"
+                      options={[
+                        { value: 'workouts', label: 'Workouts' },
+                        { value: 'exercises', label: 'Exercises' },
+                      ]}
+                      value={v.arsenalView}
+                      onChange={v.setArsenalView}
+                    />
+                    <Button
+                      type="primary"
+                      size="sm"
+                      onClick={v.showArsenalWorkouts ? v.goNewWorkoutFromArsenal : v.openArsenalAdd}
+                      aria-label={v.arsenalNewName}
+                      style={{ marginLeft: 'auto' }}
+                    >
+                      <Plus color="var(--color-white)" strokeWidth={2.2} size={16} />
+                      {v.arsenalNewLabel}
+                    </Button>
+                  </div>
                   <div
                     style={{
                       display: 'flex',

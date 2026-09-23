@@ -9,7 +9,7 @@ import type { Ctx } from '../types';
 
 // Arsenal: the exercise library, its search and the add-exercise form.
 export function arsenalVals(ctx: Ctx) {
-  const { logic, st, EX, Y, TODAY_M, TODAY_D } = ctx;
+  const { logic, st, EX, Y, TODAY_M, TODAY_D, narrow } = ctx;
 
   // ---- exercise count (shown in the header when the exercises view is open)
   // One per row in the list. Exercises are identified by id, so two with the same name are two exercises.
@@ -558,6 +558,10 @@ export function arsenalVals(ctx: Ctx) {
     arsenalView: view,
     setArsenalView: (next) => logic.s({ arsenalView: next, arsenalAdd: false }),
     showArsenalWorkouts: view === 'workouts',
+    // The "New" button shares a row with the Workouts/Exercises toggle. On a phone there's only room for "New",
+    // and the toggle beside it already says which kind; screen readers still get the whole name.
+    arsenalNewLabel: narrow ? 'New' : view === 'workouts' ? 'New workout' : 'New exercise',
+    arsenalNewName: view === 'workouts' ? 'New workout' : 'New exercise',
     showArsenalExercises: view === 'exercises',
     arsenalCount:
       view === 'workouts'
