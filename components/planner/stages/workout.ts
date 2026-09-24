@@ -1,4 +1,4 @@
-import { idOf, monthPatch } from '../helpers';
+import { exLine, idOf, monthPatch } from '../helpers';
 import type { Ctx } from '../types';
 import { colors } from '@/components/ui/colors';
 
@@ -26,9 +26,42 @@ export function workoutStage(ctx: Ctx): Ctx {
         (pickM === mi && pd === selDay ? 'var(--font-weight-bold);background:var(--color-pink);color:var(--color-white)' : 'var(--font-weight-medium);background:none;color:var(--color-ink)'),
     });
   }
+  // Editing a saved workout from the Spellbook uses this same editor, with the workout standing in for a session: no
+  // date, nothing to tick off. Its edits are keyed "tpl:<id>" like a session's are keyed by its id.
+  const tplWorkout =
+    st.screen === 'edit' && !creating && st.editTemplate
+      ? logic.model.workouts.find((w) => w.id === st.editTemplate) || null
+      : null;
+  const tplMode = !!tplWorkout;
+  const tplEntry = tplWorkout
+    ? {
+        id: 'tpl:' + tplWorkout.id,
+        workoutId: tplWorkout.id,
+        name: tplWorkout.name,
+        exKey: tplWorkout.name,
+        s: 'p',
+        time: tplWorkout.time,
+        icon: tplWorkout.icon,
+        iconColor: tplWorkout.iconColor,
+        areas: tplWorkout.areas,
+        repeat: false,
+        notes: tplWorkout.notes,
+        actual: null,
+        ride: tplWorkout.ride
+          ? {
+              dist: tplWorkout.ride.dist,
+              elev: tplWorkout.ride.elev,
+              zone: tplWorkout.ride.zone,
+              hrs: Math.floor(tplWorkout.minutes / 60) ? String(Math.floor(tplWorkout.minutes / 60)) : '',
+              mins: tplWorkout.minutes % 60 ? String(tplWorkout.minutes % 60) : '',
+            }
+          : undefined,
+      }
+    : null;
   // The session being edited, by id: its day may hold other workouts, and the date picker may be moving it.
-  const editSrc =
-    st.screen === 'edit' && !creating && st.editId
+  const editSrc = tplEntry
+    ? tplEntry
+    : st.screen === 'edit' && !creating && st.editId
       ? (logic.model.entries.find((x) => x.av.id === st.editId) || {}).av || null
       : null;
   // A workout being created starts blank; it must not inherit whatever is already on the selected day.
@@ -99,7 +132,7 @@ export function workoutStage(ctx: Ctx): Ctx {
   // The workout's own target areas aren't picked directly any more — they're whatever its exercises target.
   const picked = Array.from(new Set(selList.flatMap((e) => e.areas || [])));
   const all = selList.map((e) => ({
-    text: e.name + ' — ' + e.sets + ' · ' + e.weight,
+    text: e.name + ' — ' + exLine(e),
     isH: e.i === 'h',
     isV: e.i === 'v',
     isD: e.i === 'd',
@@ -111,13 +144,15 @@ export function workoutStage(ctx: Ctx): Ctx {
       (doneSet[e.name] ? 'var(--color-pink)' : 'transparent'),
   }));
   const ridePast = mi * 100 + selDay < TK;
-  const ridePlanOpen = !!savedRide && !rideDone && !ridePast;
+  // A saved workout's plan is always editable; a session's only until it's done or past.
+  const ridePlanOpen = !!savedRide && (tplMode || (!rideDone && !ridePast));
   const entryKey = idOf(actFor(selDay));
   const hasEntry = !!DIARY[entryKey];
   const questCleared = !!selAct && (rideDone || (!selRide && selList.length > 0 && doneCount === selList.length));
   const doneSel =
     !!selAct && (selAct.s === 'c' || rideDone || (!selRide && selList.length > 0 && doneCount === selList.length));
   return {
+    tplMode,
     srcAct,
     selAct,
     selRide,

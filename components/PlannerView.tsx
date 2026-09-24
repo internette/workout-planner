@@ -2295,6 +2295,44 @@ export function PlannerView({ v }: { v: any }) {
             {v.isArsenal ? (
               <>
                 <div>
+                  <Dialog
+                    open={!!v.addToDialog?.open}
+                    onClose={v.addToDialog?.cancel}
+                    title={v.addToDialog?.title ?? ''}
+                    actions={
+                      <Button type="neutral" ghost size="md" onClick={v.addToDialog?.cancel}>
+                        Cancel
+                      </Button>
+                    }
+                  >
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
+                      {(v.addToDialog?.options ?? []).map((o, i) => (
+                        <Card
+                          key={i}
+                          as="button"
+                          pad="sm"
+                          interactive
+                          disabled={o?.disabled}
+                          onClick={o?.pick}
+                          style={{ display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left', width: '100%', opacity: o?.disabled ? 0.55 : 1 }}
+                        >
+                          <span style={{ flex: '1', minWidth: '0' }}>
+                            <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+                              {o?.name}
+                            </Text>
+                            <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
+                              {o?.meta}
+                            </Text>
+                          </span>
+                          <ChevronRight color="var(--color-muted)" size={16} />
+                        </Card>
+                      ))}
+                      <Button type="dashed" size="md" fullWidth onClick={v.addToDialog?.pickNew}>
+                        <Plus color="var(--color-pink-deep)" size={16} />
+                        New workout
+                      </Button>
+                    </div>
+                  </Dialog>
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
                     <Text variant="title" as="h1" style={{ margin: '0' }}>
                       Spellbook
@@ -2530,7 +2568,7 @@ export function PlannerView({ v }: { v: any }) {
                                 containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                 value={v.draftWeight ?? ''}
                                 onChange={v.setWeight}
-                                placeholder="45"
+                                placeholder="Optional"
                                 inputMode="decimal"
                               />
                               <TextField
@@ -2913,6 +2951,24 @@ export function PlannerView({ v }: { v: any }) {
                 </div>
               </>
             ) : null}
+            {(v.isTemplate && !v.template) || (v.isExercise && !v.exercise) ? (
+              <div>
+                <IconButton label="Back" size="md" onClick={v.goArsenal} style={{ marginLeft: '-8px' }}>
+                  <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
+                </IconButton>
+                <Text variant="title" as="h1" style={{ margin: '14px 0 0' }}>
+                  Not in your Spellbook
+                </Text>
+                <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+                  {v.isTemplate
+                    ? 'This workout has been deleted, or the link is to someone else’s Spellbook.'
+                    : 'This exercise has been deleted, or the link is to someone else’s Spellbook.'}
+                </Text>
+                <Button type="primary" size="md" onClick={v.goArsenal} style={{ marginTop: '18px' }}>
+                  Go to your Spellbook
+                </Button>
+              </div>
+            ) : null}
             {v.isTemplate && v.template ? (
               <>
                 <div>
@@ -2960,6 +3016,16 @@ export function PlannerView({ v }: { v: any }) {
                       <Chip key={i}>{a}</Chip>
                     ))}
                   </div>
+                  {v.template.notes ? (
+                    <Card pad="sm" style={{ marginTop: '14px' }}>
+                      <Text variant="micro" tone="subtle" as="div">
+                        NOTES
+                      </Text>
+                      <Text variant="body" tone="ink" as="p" style={{ margin: '6px 0 0', whiteSpace: 'pre-wrap' }}>
+                        {v.template.notes}
+                      </Text>
+                    </Card>
+                  ) : null}
                   <Button type="primary" size="lg" fullWidth onClick={v.template.schedule} style={{ marginTop: '18px' }}>
                     <Calendar color="var(--color-white)" size={17} />
                     Add to calendar
@@ -3067,248 +3133,6 @@ export function PlannerView({ v }: { v: any }) {
                 </div>
               </>
             ) : null}
-            {v.isTemplateEdit && v.templateEdit ? (
-              <>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <IconButton
-                      label="Cancel editing"
-                      size="md"
-                      onClick={v.templateEdit.cancel}
-                      style={{ marginLeft: '-8px' }}
-                    >
-                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
-                    </IconButton>
-                    <Text variant="eyebrow" tone="slate">
-                      EDIT WORKOUT
-                    </Text>
-                  </div>
-                  <div style={{ marginTop: '14px' }}>
-                    <TextField
-                      variant="title"
-                      aria-label="Workout name"
-                      value={v.templateEdit.name}
-                      onChange={v.templateEdit.setName}
-                      placeholder="Name this workout"
-                      error={v.templateEdit.nameError || undefined}
-                    />
-                  </div>
-                  {v.templateEdit.isRide ? (
-                    <Card style={{ marginTop: '18px' }}>
-                      <Text variant="eyebrow" tone="slate" as="div">
-                        RIDE PLAN
-                      </Text>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}>
-                        <TextField
-                          label="Distance"
-                          labelNote="(miles)"
-                          inputMode="decimal"
-                          containerStyle={{ flex: '1 1 130px', minWidth: '0' }}
-                          value={v.templateEdit.dist}
-                          onChange={v.templateEdit.setDist}
-                        />
-                        <TextField
-                          label="Elevation"
-                          labelNote="(feet)"
-                          inputMode="numeric"
-                          containerStyle={{ flex: '1 1 130px', minWidth: '0' }}
-                          value={v.templateEdit.elev}
-                          onChange={v.templateEdit.setElev}
-                        />
-                        <div style={{ flex: '1 1 210px', minWidth: '0' }}>
-                          <Label>Duration</Label>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <TextField
-                              suffix="hr"
-                              inputMode="numeric"
-                              containerStyle={{ flex: '1', minWidth: '0' }}
-                              value={v.templateEdit.hrs}
-                              onChange={v.templateEdit.setHrs}
-                            />
-                            <TextField
-                              suffix="min"
-                              inputMode="numeric"
-                              containerStyle={{ flex: '1', minWidth: '0' }}
-                              value={v.templateEdit.mins}
-                              onChange={v.templateEdit.setMins}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <Label style={{ margin: '18px 0 9px' }}>Target effort</Label>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                        {['Recovery', 'Endurance', 'Tempo', 'Intervals'].map((zone) => (
-                          <Chip
-                            key={zone}
-                            tone="choice"
-                            size="md"
-                            selected={v.templateEdit.zone === zone}
-                            onClick={() => v.templateEdit.setZone(zone)}
-                          >
-                            {zone}
-                          </Chip>
-                        ))}
-                      </div>
-                    </Card>
-                  ) : (
-                    <>
-                      <Card style={{ marginTop: '18px' }}>
-                        <Text variant="eyebrow" tone="slate" as="div">
-                          TARGET AREAS
-                        </Text>
-                        {v.templateEdit.hasTargetAreas ? (
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '14px' }}>
-                            {(v.templateEdit.areaPills ?? []).map((a, i) => (
-                              <Fragment key={i}>
-                                <Chip size="md">{a}</Chip>
-                              </Fragment>
-                            ))}
-                          </div>
-                        ) : (
-                          <Text variant="body" tone="muted" style={{ display: 'block', marginTop: '10px' }}>
-                            Give an exercise below a target area to see it here.
-                          </Text>
-                        )}
-                      </Card>
-                      <div
-                        style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}
-                      >
-                        {(v.templateEdit.rows ?? []).map((r) => (
-                          <Card key={r?.key} pad="sm" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                            <span
-                              style={{
-                                width: '34px',
-                                height: '34px',
-                                flex: 'none',
-                                borderRadius: '11px',
-                                background: 'var(--color-pink-tint)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }}
-                            >
-                              {r?.svg}
-                            </span>
-                            <span style={{ flex: '1', minWidth: '0' }}>
-                              <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
-                                {r?.name}
-                              </Text>
-                              <Text
-                                variant="caption"
-                                tone="muted"
-                                style={{ display: 'block', marginTop: '3px' }}
-                              >
-                                {r?.detail}
-                              </Text>
-                            </span>
-                            <Button type="neutral" ghost size="sm" onClick={r?.edit}>
-                              <Pencil color="var(--color-slate)" size={16} />
-                              Edit
-                            </Button>
-                            <IconButton label={'Remove ' + r?.name} size="md" onClick={r?.remove}>
-                              <Close color="var(--color-muted)" strokeWidth={2.2} size={16} />
-                            </IconButton>
-                          </Card>
-                        ))}
-                        {(v.templateEdit.newRows ?? []).map((r) => (
-                          <Card key={r?.key} pad="sm">
-                            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '10px' }}>
-                              <TextField
-                                label="Exercise"
-                                containerStyle={{ flex: '1', minWidth: '0' }}
-                                value={r?.name}
-                                onChange={r?.setName}
-                                placeholder="Exercise name"
-                              />
-                              <IconButton
-                                label={'Remove ' + (r?.name || 'exercise')}
-                                size="md"
-                                onClick={r?.remove}
-                                style={{ marginBottom: '6px' }}
-                              >
-                                <Close color="var(--color-muted)" strokeWidth={2.2} size={16} />
-                              </IconButton>
-                            </div>
-                            <div
-                              style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '12px' }}
-                            >
-                              <TextField
-                                label="Sets"
-                                containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
-                                value={r?.sets}
-                                onChange={r?.setSets}
-                                inputMode="numeric"
-                              />
-                              <TextField
-                                label="Reps"
-                                containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
-                                value={r?.reps}
-                                onChange={r?.setReps}
-                                inputMode="numeric"
-                              />
-                              <TextField
-                                label="Weight"
-                                suffix="lbs"
-                                containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
-                                value={r?.weight}
-                                onChange={r?.setWeight}
-                                inputMode="decimal"
-                              />
-                              <TextField
-                                label="Rest"
-                                suffix="sec"
-                                containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
-                                value={r?.rest}
-                                onChange={r?.setRest}
-                                inputMode="numeric"
-                              />
-                            </div>
-                            <Label style={{ margin: '14px 0 7px' }}>Target areas</Label>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                              {(r?.areas ?? []).map((a, i) => (
-                                <Fragment key={i}>
-                                  <Chip tone="choice" size="md" selected={a?.on} onClick={a?.toggle}>
-                                    {a?.name}
-                                  </Chip>
-                                </Fragment>
-                              ))}
-                            </div>
-                          </Card>
-                        ))}
-                        <Button type="dashed" size="lg" fullWidth onClick={v.templateEdit.addRow}>
-                          <Plus color="var(--color-pink-deep)" size={17} />
-                          Add exercise
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      justifyContent: 'flex-end',
-                      alignItems: 'center',
-                      gap: '10px',
-                      marginTop: '22px',
-                      paddingTop: '20px',
-                      borderTop: '1px solid rgba(35,42,69,.07)',
-                    }}
-                  >
-                    <Button type="neutral" ghost size="lg" onClick={v.templateEdit.cancel}>
-                      Cancel
-                    </Button>
-                    <Button
-                      type="primary"
-                      size="lg"
-                      disabled={!v.templateEdit.canSave}
-                      onClick={v.templateEdit.save}
-                    >
-                      Save changes
-                    </Button>
-                  </div>
-                </div>
-              </>
-            ) : null}
             {v.isExerciseEdit && v.exerciseEdit ? (
               <>
                 <div>
@@ -3355,7 +3179,7 @@ export function PlannerView({ v }: { v: any }) {
                         containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                         value={v.exerciseEdit.weight}
                         onChange={v.exerciseEdit.setWeight}
-                        placeholder="45"
+                        placeholder="Optional"
                         inputMode="decimal"
                       />
                       <TextField
@@ -4708,15 +4532,19 @@ export function PlannerView({ v }: { v: any }) {
                                   </button>
                                 </Popover>
                                 <span style={css(ex?.nameStyle)}>{ex?.name}</span>
-                                <button
-                                  onClick={ex?.toggleDone}
-                                  aria-pressed={ex?.isDone}
-                                  aria-label={ex?.doneAria}
-                                  style={css(ex?.doneBtn)}
-                                  className="hit"
-                                >
-                                  <Check color={ex?.doneStroke} strokeWidth={2.6} size={15} />
-                                </button>
+                                {ex?.showTick ? (
+                                  <button
+                                    onClick={ex?.toggleDone}
+                                    aria-pressed={ex?.isDone}
+                                    aria-label={ex?.doneAria}
+                                    style={css(ex?.doneBtn)}
+                                    className="hit"
+                                  >
+                                    <Check color={ex?.doneStroke} strokeWidth={2.6} size={15} />
+                                  </button>
+                                ) : (
+                                  <span style={{ marginLeft: 'auto' }} />
+                                )}
                                 <IconButton label={ex?.removeAria} size="sm" onClick={ex?.remove}>
                                   <Close color="var(--color-muted)" size={19} />
                                 </IconButton>
@@ -4950,7 +4778,7 @@ export function PlannerView({ v }: { v: any }) {
                                   containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                   value={v.draftWeight ?? ''}
                                   onChange={v.setWeight}
-                                  placeholder="45"
+                                  placeholder="Optional"
                                   inputMode="decimal"
                                 />
                                 <TextField

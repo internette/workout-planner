@@ -1,5 +1,5 @@
 import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, MON3, MONTHS, TARGET_AREAS } from '../constants';
-import { digitsOnly, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
+import { digitsOnly, exLine, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
 import { optStyle } from '../styles';
@@ -55,6 +55,7 @@ export function editVals(ctx: Ctx) {
     TODAY_D,
     DIARY,
     pickM,
+    tplMode,
   } = ctx;
   // Another year than this one says which, next to the date.
   const yearNote = Math.floor(mi / 12) ? ', ' + selDate.getFullYear() : '';
@@ -192,7 +193,13 @@ export function editVals(ctx: Ctx) {
     openAdd: () => logic.s({ addOpen: true, addMode: 'lib' }),
     closeAdd: () => logic.s({ addOpen: false }),
     addMode: st.addMode === 'new' ? 'new' : 'lib',
-    setAddMode: (mode) => logic.s({ addMode: mode }),
+    // "Create new" starts with real values (3 × 10, 60 sec rest), as in the Spellbook; weight starts empty.
+    setAddMode: (mode) =>
+      logic.s(
+        mode === 'new'
+          ? { addMode: mode, dSets: st.dSets || '3', dReps: st.dReps || '10', dRest: st.dRest || '60' }
+          : { addMode: mode },
+      ),
     // "Browse the full Spellbook": opens the real Spellbook, remembering this workout so "Add to workout" there puts
     // the exercise here and comes back. The names already in it let the Spellbook mark those "In workout".
     // It arrives narrowed to this workout's target areas, like the short list here; the person's own filter comes
@@ -224,7 +231,7 @@ export function editVals(ctx: Ctx) {
       .slice(0, 10)
       .map((e) => ({
       name: e.name,
-      detail: e.sets + ' · ' + e.weight,
+      detail: exLine(e),
       // Same as the Spellbook: the row opens the exercise, "+" adds it. Back returns here with this panel still open.
       // An exercise only drafted in this visit has no saved page yet, so it can only be added.
       open: e.id ? () => logic.nav({ screen: 'exercise', exerciseId: e.id }) : null,
@@ -308,7 +315,7 @@ export function editVals(ctx: Ctx) {
     eCat: selRide ? selRide.zone || 'Endurance' : picked.length ? picked.join(' · ') : 'No target areas',
     areaPills: selRide ? [selRide.zone || 'Endurance'] : picked,
     inSeries: !!(selAct && selAct.series),
-    canRepeat: !(selAct && selAct.series),
+    canRepeat: !tplMode && !(selAct && selAct.series),
     seriesNote: 'Part of a weekly series: it repeats every ' + DOWFULL[selDate.getDay()] + '. To stop the repeats, end the series from the workout’s page.',
     endSeries: () => {
       const sid = selAct && selAct.series;
@@ -333,16 +340,21 @@ export function editVals(ctx: Ctx) {
       }
     },
     setEditName: (e) => logic.s({ renames: Object.assign({}, st.renames, { [baseName]: e.target.value }) }),
-    eEyebrow: st.editing ? 'EDITING WORKOUT' : 'NEW WORKOUT',
+    eEyebrow: tplMode ? 'EDITING SAVED WORKOUT' : st.editing ? 'EDITING WORKOUT' : 'NEW WORKOUT',
     eSaveLabel: saving
       ? 'Saving…'
-      : st.editing
+      : tplMode
+        ? 'Save changes'
+        : st.editing
         ? 'Update workout'
         : creating && st.schedule === false
           ? 'Save to Spellbook'
           : 'Save workout',
-    eCancelLabel: creating ? 'Cancel' : 'Delete workout',
-    footerSecondary: creating
+    eCancelLabel: creating || tplMode ? 'Cancel' : 'Delete workout',
+    // Editing a saved workout: Cancel is Back, asking first if anything changed.
+    footerSecondary: tplMode
+      ? () => (workoutDraftDirty(st) ? logic.s({ leaveOpen: true }) : logic.back())
+      : creating
       ? () =>
           logic.s({
             screen: st.newFrom === 'arsenal' ? 'arsenal' : 'day',
@@ -476,6 +488,35 @@ export function editVals(ctx: Ctx) {
           update.length > 0 ||
           edit.exercises.removeIds.length > 0 ||
           added.length > 0;
+        // A saved workout, edited from the Spellbook: saved the way the Spellbook always has, asking whether sessions
+        // still ahead should follow (or saving it as a new workout). Then back to the saved workout's page.
+        if (tplMode) {
+          const id = selAct.workoutId;
+          const tplEdit = Object.assign({}, edit, { entryId: '', moveTo: undefined, actual: null, repeatDates: [] });
+          const back = Object.assign({}, cleared, {
+            screen: 'template',
+            templateId: id,
+            editTemplate: null,
+            editing: false,
+            tplConfirm: null,
+            hist: (st.hist || []).slice(0, -1),
+          });
+          if (!changesWorkout) return logic.s(back);
+          const apply = (mode, updateUpcoming) =>
+            logic.saveOnce(
+              'workout',
+              () => db.updateWorkoutTemplate(tplEdit, { mode, updateUpcoming, todayIso }),
+              (r) => Object.assign({}, back, r && r.created ? { templateId: r.workoutId } : {}),
+            );
+          return db
+            .countUpcoming(id, todayIso)
+            .then((count) =>
+              count === 0
+                ? apply('update', true)
+                : logic.s({ tplConfirm: { count, name: baseName, choice: 'update', upcoming: true, apply } }),
+            )
+            .catch((e) => logic.s({ saveError: e instanceof Error ? e.message : String(e) }));
+        }
         if (!changesWorkout) return logic.saveOnce('workout', () => db.updateWorkout(edit), after);
         // The workout is shared with the Spellbook, and maybe with other sessions: ask whether the change is for this
         // session only, or for the saved workout too (and the sessions still ahead). Asked even when this is its only
@@ -592,7 +633,7 @@ export function editVals(ctx: Ctx) {
         schedule: null,
         extra: Object.assign({}, st.extra, { __draft: [] }),
       }),
-    eCancelType: creating ? 'neutral' : 'danger',
+    eCancelType: creating || tplMode ? 'neutral' : 'danger',
     eDate:
       DOW3[selDate.getDay()].charAt(0) +
       DOW3[selDate.getDay()].slice(1, 3).toLowerCase() +
@@ -613,7 +654,7 @@ export function editVals(ctx: Ctx) {
     // Creating: whether the new workout also goes on the calendar. Editing a session is always on the calendar.
     isCreating: creating,
     scheduleOn: creating ? st.schedule !== false : true,
-    showDate: !creating || st.schedule !== false,
+    showDate: !tplMode && (!creating || st.schedule !== false),
     setSchedule: (on) => logic.s({ schedule: !!on, repeat: on ? st.repeat : false }),
     scheduleNote:
       st.schedule !== false
@@ -661,7 +702,7 @@ export function editVals(ctx: Ctx) {
         }),
         icoSvg: iconSvg(cur),
         hideLegacy: false,
-        detail: e.sets + ' · ' + e.weight + ' · ' + e.rest + ' rest',
+        detail: exLine(e, true),
         nameStyle:
           'display:block;font-family:var(--font-heading);font-size:var(--text-xl);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-snug);' +
           (doneSet[e.name]
@@ -674,6 +715,8 @@ export function editVals(ctx: Ctx) {
             : '1.5px solid rgba(35,42,69,.15);background:none'),
         doneStroke: doneSet[e.name] ? 'var(--color-white)' : 'rgba(35,42,69,0.22)',
         isDone: !!doneSet[e.name],
+        // Ticking off belongs to a session on the calendar, not to a workout being built or a saved one.
+        showTick: !creating && !tplMode,
         iconAria: 'Choose icon for ' + e.name,
         removeAria: 'Remove ' + e.name,
         doneAria: doneSet[e.name] ? 'Mark ' + e.name + ' not done' : 'Mark ' + e.name + ' done',

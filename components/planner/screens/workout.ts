@@ -1,5 +1,5 @@
 import { DOWFULL, EDIT_OVERLAYS } from '../constants';
-import { digitsOnly, formatElapsed, idOf, numericOnly, plural, questSeed } from '../helpers';
+import { digitsOnly, exLine, formatElapsed, idOf, numericOnly, plural, questSeed } from '../helpers';
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -157,7 +157,7 @@ export function workoutVals(ctx: Ctx) {
   // Day view shows a card for every workout on the day. A card's buttons pick its session first, then do what
   // the same button does for the session on screen, so the detail, timer and diary all follow that session.
   const exerciseRow = (e, doneNames) => ({
-    text: e.name + ' — ' + e.sets + ' · ' + e.weight,
+    text: e.name + ' — ' + exLine(e),
     isH: e.i === 'h',
     isV: e.i === 'v',
     isD: e.i === 'd',
@@ -378,7 +378,7 @@ export function workoutVals(ctx: Ctx) {
       (doneSel
         ? 'background:var(--color-cloud);color:var(--color-slate)'
         : 'background:var(--color-pink-tint);color:var(--color-pink-deep)'),
-    hasProgress: st.screen === 'edit' && !isCycleView && selList.length > 0,
+    hasProgress: st.screen === 'edit' && !isCycleView && selList.length > 0 && !ctx.creating && !ctx.tplMode,
     progLabel: doneCount + ' of ' + selList.length + ' done',
     allDone: selList.length > 0 && doneCount === selList.length,
     someDone: !(selList.length > 0 && doneCount === selList.length),

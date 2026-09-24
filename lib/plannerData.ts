@@ -62,6 +62,7 @@ export interface WorkoutSummary {
   iconColor: string | null;
   exercises: string[];
   ride?: { dist: string; elev: string; zone: string };
+  notes: string;
 }
 
 export interface Model {
@@ -276,6 +277,7 @@ export async function loadModel(today: Date): Promise<Model> {
         icon: w.icon,
         iconColor: iconColorOf(w.icon_color),
         exercises: (EX[w.name] || []).map((e) => e.name),
+        notes: w.notes || '',
         ride: isRide
           ? {
               dist: w.ride_distance_miles != null ? String(w.ride_distance_miles) : '',

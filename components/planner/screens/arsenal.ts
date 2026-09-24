@@ -3,7 +3,7 @@ import { DOWFULL, EDIT_OVERLAYS, MONTHS, TARGET_AREAS } from '../constants';
 import { iconSvg } from '../icons';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import * as db from '@/lib/plannerData';
-import { digitsOnly, isoOf, joinSetsReps, monthPatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
+import { digitsOnly, exLine, isoOf, joinSetsReps, monthPatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
 import { optStyle } from '../styles';
 import type { Ctx } from '../types';
 
@@ -32,28 +32,9 @@ export function arsenalVals(ctx: Ctx) {
         ...patch,
         ...(r.created ? { templateId: r.workoutId } : {}),
         // The workout being edited was left alone; its draft belongs to it, so open the copy read-only instead.
-        ...(r.created && patch.screen === 'templateEdit' ? { screen: 'template', tplDraft: null } : {}),
         tplConfirm: null,
       }),
     );
-  const askThenApply = async (edit, name, patch, exercise = '') => {
-    try {
-      const count = await db.countUpcoming(edit.workoutId, todayIso);
-      if (count === 0) return applyEdit(edit, 'update', true, patch);
-      logic.s({
-        tplConfirm: {
-          count,
-          name,
-          exercise,
-          choice: 'update',
-          upcoming: true,
-          apply: (mode, updateUpcoming) => applyEdit(edit, mode, updateUpcoming, patch),
-        },
-      });
-    } catch (e) {
-      logic.s({ saveError: e instanceof Error ? e.message : String(e) });
-    }
-  };
   const confirm = st.tplConfirm;
 
   // ---- saved workouts
@@ -127,7 +108,7 @@ export function arsenalVals(ctx: Ctx) {
         usedIn: found.workout
           ? [{ name: found.workout.name, open: () => logic.nav({ screen: 'template', templateId: found.workout.id }) }]
           : [],
-        edit: () => logic.s({ screen: 'exerciseEdit', exFrom: null, exDraft: draftFrom(found.ex, found.ex.name) }),
+        edit: () => logic.s({ screen: 'exerciseEdit', exDraft: draftFrom(found.ex, found.ex.name) }),
         // Only an exercise saved on its own can be deleted here. One inside a workout is removed from that workout's
         // editor, which keeps past sessions as they were; a built-in belongs to everyone.
         canDelete: !found.ex.builtin && !found.workout,
@@ -146,18 +127,16 @@ export function arsenalVals(ctx: Ctx) {
           logic.saveOnce(
             'exercise',
             () => db.createLibraryExercise(found.ex),
-            (r) => ({ screen: 'exerciseEdit', exerciseId: r.id, exFrom: null, exDraft: draftFrom(found.ex, r.name) }),
+            (r) => ({ screen: 'exerciseEdit', exerciseId: r.id, exDraft: draftFrom(found.ex, r.name) }),
           ),
       }
     : null;
-  // Set when the exercise editor was opened from the workout editor, so it returns there.
-  const exFrom = st.exFrom || null;
   const exDraft = st.exDraft || { name: '', sets: '', reps: '', weight: '', rest: '', i: 'h', areas: [] };
   const setExDraft = (field) => (e) => logic.s({ exDraft: { ...exDraft, [field]: e.target.value } });
   // Saving an exercise always asks how: update it, or keep it and save the edit as a new exercise.
   // Updating can also carry on to the workout's upcoming sessions. Completed and past sessions never change.
   const askExerciseSave = async (patch) => {
-    const after = { screen: exFrom ? 'templateEdit' : 'exercise', exDraft: null, exFrom: null };
+    const after = { screen: 'exercise', exDraft: null };
     const workout = found.workout;
     try {
       const count = workout ? await db.countUpcoming(workout.id, todayIso) : 0;
@@ -175,8 +154,6 @@ export function arsenalVals(ctx: Ctx) {
                 screen: 'exercise',
                 exerciseId: r.id,
                 exDraft: null,
-                exFrom: null,
-                tplDraft: null,
                 tplConfirm: null,
               }));
             } else if (workout) {
@@ -235,7 +212,7 @@ export function arsenalVals(ctx: Ctx) {
       style: optStyle(exDraft.i === name),
     })),
     canSave: !!exDraft.name.trim() && (exDraft.areas || []).length > 0,
-    cancel: () => logic.s({ screen: exFrom ? 'templateEdit' : 'exercise', exDraft: null, exFrom: null }),
+    cancel: () => logic.s({ screen: 'exercise', exDraft: null }),
     save: () => {
       if (!found || !exDraft.name.trim() || !(exDraft.areas || []).length) return;
       const patch = {
@@ -251,7 +228,7 @@ export function arsenalVals(ctx: Ctx) {
   };
 
   // ---- one saved workout, read-only: no date, no completion
-  const onTemplateScreen = st.screen === 'template' || st.screen === 'templateEdit';
+  const onTemplateScreen = st.screen === 'template';
   const chosen = onTemplateScreen ? workouts.find((w) => w.id === st.templateId) : null;
   const template = chosen
     ? {
@@ -271,7 +248,7 @@ export function arsenalVals(ctx: Ctx) {
         exercises: (EX[chosen.name] || []).map((e) => ({
           name: e.name,
           svg: iconSvg(e.i),
-          detail: e.sets + ' · ' + e.weight + ' · ' + e.rest + ' rest',
+          detail: exLine(e, true),
         })),
         // Takes it out of the Spellbook. Sessions still ahead come off the calendar; past ones stay in your history.
         remove: async () => {
@@ -299,28 +276,19 @@ export function arsenalVals(ctx: Ctx) {
         },
         // Puts this saved workout on the calendar: a date (and weekly repeats, if wanted) from a small dialog.
         schedule: () => logic.s({ tplSchedule: { date: todayIso, repeat: false } }),
+        // The same editor as building a workout, with this saved workout in it: no date, nothing to tick off.
         edit: () =>
-          logic.s({
-            screen: 'templateEdit',
-            tplDraft: {
-              name: chosen.name,
-              dist: chosen.ride ? chosen.ride.dist : '',
-              elev: chosen.ride ? chosen.ride.elev : '',
-              hrs: Math.floor(chosen.minutes / 60) ? String(Math.floor(chosen.minutes / 60)) : '',
-              mins: chosen.minutes % 60 ? String(chosen.minutes % 60) : '',
-              zone: chosen.ride ? chosen.ride.zone : 'Endurance',
-              rows: (EX[chosen.name] || []).map((e) => ({
-                key: e.id,
-                id: e.id,
-                name: e.name,
-                sets: e.sets,
-                weight: e.weight,
-                rest: e.rest,
-                i: e.i,
-                removed: false,
-              })),
-            },
+          logic.nav({
+            ...EDIT_OVERLAYS,
+            screen: 'edit',
+            editing: true,
+            creating: false,
+            editTemplate: chosen.id,
+            editId: null,
+            addOpen: false,
+            leaveOpen: false,
           }),
+        notes: chosen.notes || '',
       }
     : null;
 
@@ -383,178 +351,8 @@ export function arsenalVals(ctx: Ctx) {
     },
   };
 
-  // ---- the saved-workout editor: a draft that is written to the database on save
-  const draft = st.tplDraft;
-  // Another saved workout with this name (ignoring case), which a rename can't take.
-  const nameTakenBy = (name, exceptId) =>
-    workouts.find((w) => w.id !== exceptId && w.name.trim().toLowerCase() === (name || '').trim().toLowerCase()) ||
-    null;
-  const patchDraft = (patch) => logic.s({ tplDraft: { ...draft, ...patch } });
-  const digits = (n) => (e) => patchDraft({ [n]: e.target.value.replace(/[^0-9.]/g, '') });
-  const whole =
-    (n, max?, len = 2) =>
-    (e) => {
-      const v = e.target.value.replace(/[^0-9]/g, '').slice(0, len);
-      patchDraft({ [n]: v === '' || max == null ? v : String(Math.min(max, Number(v))) });
-    };
-  const patchRow = (key, patch) =>
-    patchDraft({ rows: draft.rows.map((r) => (r.key === key ? { ...r, ...patch } : r)) });
-  // The workout's own target areas while editing: the union of its rows' areas, live — an existing row looks
-  // up its current areas by id (kept fresh by whatever it's set to right now), a new row uses its own draft.
-  const liveAreas =
-    chosen && draft
-      ? Array.from(
-          new Set(
-            draft.rows
-              .filter((r) => !r.removed)
-              .flatMap((r) => {
-                if (!r.id) return r.areas || [];
-                const live = (EX[chosen.name] || []).find((e) => e.id === r.id);
-                return (live && live.areas) || [];
-              }),
-          ),
-        )
-      : [];
-  const templateEdit =
-    chosen && draft
-      ? {
-          isRide: chosen.kind === 'ride',
-          name: draft.name,
-          setName: (e) => patchDraft({ name: e.target.value }),
-          // No longer picked by hand here either: the union of what's below, live as rows are added/removed —
-          // not the saved workout's own areas, which wouldn't follow an edit still in progress.
-          hasTargetAreas: liveAreas.length > 0,
-          areaPills: liveAreas,
-          dist: draft.dist,
-          elev: draft.elev,
-          hrs: draft.hrs,
-          mins: draft.mins,
-          zone: draft.zone,
-          setDist: digits('dist'),
-          setElev: whole('elev', undefined, 6),
-          setHrs: whole('hrs'),
-          setMins: whole('mins', 59),
-          setZone: (zone) => patchDraft({ zone }),
-          // Exercises already in the workout are a list; each opens the exercise editor. Not-yet-saved ones have fields.
-          rows: draft.rows
-            .filter((r) => r.id && !r.removed)
-            .map((r) => {
-              const live = (EX[chosen.name] || []).find((e) => e.id === r.id);
-              if (!live) return null;
-              return {
-                key: r.key,
-                name: live.name,
-                svg: iconSvg(live.i),
-                detail: live.sets + ' · ' + live.weight + ' · ' + live.rest + ' rest',
-                edit: () =>
-                  logic.s({
-                    screen: 'exerciseEdit',
-                    exerciseId: live.id,
-                    exFrom: 'templateEdit',
-                    exDraft: {
-                    name: live.name,
-                    ...splitSetsReps(live.sets),
-                    weight: live.weight,
-                    rest: live.rest,
-                    i: live.i,
-                    areas: live.areas || [],
-                  },
-                  }),
-                remove: () => patchRow(r.key, { removed: true }),
-              };
-            })
-            .filter(Boolean),
-          newRows: draft.rows
-            .filter((r) => !r.id && !r.removed)
-            .map((r) => ({
-              key: r.key,
-              name: r.name,
-              sets: r.sets,
-              reps: r.reps,
-              weight: numericOnly(r.weight),
-              rest: restDigits(r.rest),
-              setName: (e) => patchRow(r.key, { name: e.target.value }),
-              setSets: (e) => patchRow(r.key, { sets: digitsOnly(e.target.value) }),
-              setReps: (e) => patchRow(r.key, { reps: digitsOnly(e.target.value) }),
-              setWeight: (e) => patchRow(r.key, { weight: withLb(numericOnly(e.target.value)) }),
-              setRest: (e) => patchRow(r.key, { rest: withSec(restDigits(e.target.value)) }),
-              areas: TARGET_AREAS.map((name) => {
-                const on = (r.areas || []).includes(name);
-                return {
-                  name,
-                  on,
-                  toggle: () =>
-                    patchRow(r.key, { areas: on ? r.areas.filter((a) => a !== name) : (r.areas || []).concat([name]) }),
-                };
-              }),
-              remove: () => patchDraft({ rows: draft.rows.filter((x) => x.key !== r.key) }),
-            })),
-          addRow: () =>
-            patchDraft({
-              rows: [
-                ...draft.rows,
-                {
-                  key: 'new-' + Date.now(),
-                  id: null,
-                  name: '',
-                  sets: '3',
-                  reps: '10',
-                  weight: '',
-                  rest: '60 sec',
-                  i: 'h',
-                  areas: [],
-                  removed: false,
-                },
-              ],
-            }),
-          // A new row only counts once it has a name — but from that point on it needs a target area too,
-          // same as everywhere else an exercise is added.
-          nameError: nameTakenBy(draft.name, chosen.id)
-            ? 'You already have a workout called “' + nameTakenBy(draft.name, chosen.id).name + '”. Give this one another name.'
-            : '',
-          canSave:
-            !!draft.name.trim() &&
-            !nameTakenBy(draft.name, chosen.id) &&
-            !draft.rows.some((r) => !r.id && !r.removed && r.name.trim() && !(r.areas || []).length),
-          cancel: () => logic.s({ screen: 'template', tplDraft: null }),
-          save: () => {
-            if (!draft.name.trim() || nameTakenBy(draft.name, chosen.id)) return;
-            if (draft.rows.some((r) => !r.id && !r.removed && r.name.trim() && !(r.areas || []).length)) return;
-            const minutes = Number(draft.hrs || 0) * 60 + Number(draft.mins || 0);
-            askThenApply(
-              {
-                entryId: '',
-                workoutId: chosen.id,
-                name: draft.name,
-                ride:
-                  chosen.kind === 'ride'
-                    ? { dist: draft.dist, elev: draft.elev, zone: draft.zone, minutes }
-                    : null,
-                exercises: {
-                  update: [],
-                  removeIds: draft.rows.filter((r) => r.id && r.removed).map((r) => r.id),
-                  add: draft.rows
-                    .filter((r) => !r.id && !r.removed && r.name.trim())
-                    .map((r) => ({
-                      name: r.name.trim(),
-                      sets: joinSetsReps(r.sets, r.reps),
-                      weight: r.weight,
-                      rest: r.rest,
-                      i: r.i,
-                      areas: r.areas || [],
-                    })),
-                },
-                repeatDates: [],
-              },
-              chosen.name,
-              { screen: 'template', tplDraft: null },
-            );
-          },
-        }
-      : null;
-
   // ---- "Add to workout". Opened from a workout's "Browse the full Spellbook", it goes into that workout and returns
-  // there; opened any other way, it starts a new workout with this exercise already in it.
+  // there; opened any other way, it asks which workout: a saved one (opened in the editor with it added) or a new one.
   const pick = st.arsenalPick || null;
   const addToWorkout = (e) => {
     const ex = { name: e.name, sets: e.sets, weight: e.weight, rest: e.rest, i: e.i, areas: e.areas || [] };
@@ -566,6 +364,25 @@ export function arsenalVals(ctx: Ctx) {
         : { extra: { ...st.extra, [pick.key]: ((st.extra || {})[pick.key] || []).concat([ex]) } };
       return logic.backTo('edit', { ...patch, arsenalPick: null, arsenalAreas: pick.prevAreas || [] });
     }
+    // Otherwise ask which workout it goes in: one of the saved ones, or a new one.
+    logic.s({ addTo: ex });
+  };
+  const addTo = st.addTo || null;
+  // Into a saved workout: its editor opens with the exercise already added, to look over and save.
+  const addToSaved = (w) =>
+    logic.nav({
+      ...EDIT_OVERLAYS,
+      screen: 'edit',
+      editing: true,
+      creating: false,
+      editTemplate: w.id,
+      editId: null,
+      addOpen: false,
+      leaveOpen: false,
+      addTo: null,
+      extra: { ['tpl:' + w.id]: [addTo] },
+    });
+  const addToNew = (ex) => {
     logic.nav({
       ...EDIT_OVERLAYS,
       screen: 'edit',
@@ -577,15 +394,36 @@ export function arsenalVals(ctx: Ctx) {
       newFrom: 'arsenal',
       schedule: false,
       arsenalPick: null,
+      addTo: null,
       extra: { __draft: [ex] },
     });
+  };
+  const addToDialog = {
+    open: !!addTo,
+    title: addTo ? 'Add “' + addTo.name + '” to…' : '',
+    // Lifting workouts only; one that already has this exercise says so instead.
+    options: addTo
+      ? workouts
+          .filter((w) => w.kind === 'lift')
+          .map((w) => {
+            const has = w.exercises.includes(addTo.name);
+            return {
+              name: w.name,
+              meta: has ? 'Already in it' : plural(w.exercises.length, 'exercise'),
+              disabled: has,
+              pick: () => addToSaved(w),
+            };
+          })
+      : [],
+    pickNew: () => addTo && addToNew(addTo),
+    cancel: () => logic.s({ addTo: null }),
   };
 
   // ---- the Exercises tab: the person's own groups, then the built-in catalog, narrowed by search and area filter
   const exerciseRow = (e) => ({
     name: e.name,
     svg: iconSvg(e.i),
-    detail: e.sets + ' · ' + e.weight,
+    detail: exLine(e),
     open: () => openExercise(e.id),
     // Already in the workout being built: one of each, since a workout tracks its exercises by name.
     inWorkout: !!pick && pick.names.includes(e.name),
@@ -664,9 +502,9 @@ export function arsenalVals(ctx: Ctx) {
     },
     exercise,
     exerciseEdit,
+    addToDialog,
     template,
     scheduleCalendar,
-    templateEdit,
     arsenalView: view,
     setArsenalView: (next) => logic.s({ arsenalView: next, arsenalAdd: false }),
     showArsenalWorkouts: view === 'workouts',
@@ -689,7 +527,9 @@ export function arsenalVals(ctx: Ctx) {
     noWorkoutMatches: workouts.length > 0 && (!!q || areaFilter.length > 0) && hits.length === 0,
     noWorkoutMatchNote: noMatchText('workouts'),
     arsenalAddOpen: !!st.arsenalAdd,
-    openArsenalAdd: () => logic.s({ arsenalAdd: true }),
+    // A new exercise starts with real values in its boxes (3 × 10, 60 sec rest) — what it saves if left alone —
+    // rather than grey examples that look like values. Weight starts empty: none is saved unless one is typed.
+    openArsenalAdd: () => logic.s({ arsenalAdd: true, dSets: st.dSets || '3', dReps: st.dReps || '10', dRest: st.dRest || '60' }),
     closeArsenalAdd: () =>
       logic.s({ arsenalAdd: false, dName: '', dSets: '', dReps: '', dWeight: '', dRest: '', dAreas: [] }),
     commitArsenal: () => {
