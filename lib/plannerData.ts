@@ -337,12 +337,15 @@ export async function finishSession(
   entryId: string,
   f: { ride: boolean; minutes: number; dist?: string; elev?: string },
 ) {
-  const patch: Record<string, unknown> = { actual_minutes: f.minutes || null };
+  // Finished is completed, for a lift as for a ride, so nothing later treats it as still to come.
+  const patch: Record<string, unknown> = {
+    actual_minutes: f.minutes || null,
+    status: 'completed',
+    completed_at: new Date().toISOString(),
+  };
   if (f.ride) {
     patch.actual_distance_miles = f.dist ? Number(f.dist) : null;
     patch.actual_elevation_ft = f.elev ? Number(f.elev) : null;
-    patch.status = 'completed';
-    patch.completed_at = new Date().toISOString();
   }
   await ok(supabase.from('plan_entries').update(patch).eq('id', entryId));
 }
@@ -384,12 +387,30 @@ export async function deletePlanEntries(entryIds: string[]) {
   await ok(supabase.from('plan_entries').delete().in('id', entryIds));
 }
 
-// Ends a weekly series: removes its later repeats and turns repeating off for the workout.
-export async function endSeries(workoutId: string, afterIso: string) {
-  const later: { id: string }[] = await ok(
-    supabase.from('plan_entries').select('id').eq('workout_id', workoutId).gt('scheduled_date', afterIso),
+// A session is finished once it's completed or has a recorded time (sessions finished before Finish marked
+// lifts completed have only the time).
+const isFinished = (r: any) => r.status === 'completed' || r.actual_minutes != null;
+
+// Of these sessions, the ones that can come off the calendar without losing anything: not finished, nothing
+// ticked off, and nothing written about them in the Chronicle.
+async function untouchedIds(rows: any[]): Promise<string[]> {
+  const open = rows.filter((r) => !isFinished(r) && !(r.done_exercises || []).length);
+  if (!open.length) return [];
+  const written: any[] = await ok(
+    supabase.from('diary_entries').select('plan_entry_id').in('plan_entry_id', open.map((r) => r.id)),
   );
-  await deletePlanEntries(later.map((r) => r.id));
+  const has = new Set(written.map((d) => d.plan_entry_id));
+  return open.filter((r) => !has.has(r.id)).map((r) => r.id);
+}
+const SESSION_COLS = 'id, scheduled_date, status, actual_minutes, done_exercises';
+
+// Ends a weekly series: removes its repeats still ahead (after the chosen day, and from today on) and turns
+// repeating off for the workout. Anything finished, started or written about stays.
+export async function endSeries(workoutId: string, afterIso: string, todayIso: string) {
+  const later: any[] = await ok(
+    supabase.from('plan_entries').select(SESSION_COLS).eq('workout_id', workoutId).gt('scheduled_date', afterIso),
+  );
+  await deletePlanEntries(await untouchedIds(later.filter((r) => r.scheduled_date >= todayIso)));
   await ok(supabase.from('workouts').update({ repeat_enabled: false }).eq('id', workoutId));
 }
 
@@ -576,20 +597,20 @@ export async function updateWorkout(e: WorkoutEdit) {
 // archived copy of it ("keep the upcoming sessions as they were", or "only this session"). Those copies carry the
 // workout's name; the saved workout itself is the one not archived.
 export async function upcomingOfWorkout(workoutId: string, todayIso: string): Promise<string[]> {
-  const [w]: any[] = await ok(supabase.from('workouts').select('id, name').eq('id', workoutId));
-  const copies: any[] = w
-    ? await ok(supabase.from('workouts').select('id').eq('archived', true).eq('name', w.name))
-    : [];
+  const [w]: any[] = await ok(supabase.from('workouts').select('*').eq('id', workoutId));
+  // Its archived copies: linked by id once the source_workout_id migration has run (a rename doesn't break that),
+  // by name before then.
+  const copies: any[] = !w
+    ? []
+    : 'source_workout_id' in w
+      ? await ok(supabase.from('workouts').select('id').eq('archived', true).eq('source_workout_id', workoutId))
+      : await ok(supabase.from('workouts').select('id').eq('archived', true).eq('name', w.name));
   const ids = [workoutId].concat(copies.map((c) => c.id));
-  const rows: { id: string }[] = await ok(
-    supabase
-      .from('plan_entries')
-      .select('id')
-      .in('workout_id', ids)
-      .gte('scheduled_date', todayIso)
-      .neq('status', 'completed'),
+  const rows: any[] = await ok(
+    supabase.from('plan_entries').select(SESSION_COLS).in('workout_id', ids).gte('scheduled_date', todayIso),
   );
-  return rows.map((r) => r.id);
+  // Only those that can go without losing anything: today's session, once started or written about, stays.
+  return untouchedIds(rows);
 }
 
 export async function archiveWorkout(workoutId: string, todayIso: string) {
@@ -646,24 +667,23 @@ export async function countUpcoming(workoutId: string, todayIso: string): Promis
   const rows: any[] = await ok(
     supabase
       .from('plan_entries')
-      .select('id')
+      .select(SESSION_COLS)
       .eq('workout_id', workoutId)
-      .gte('scheduled_date', todayIso)
-      .neq('status', 'completed'),
+      .gte('scheduled_date', todayIso),
   );
-  return rows.length;
+  return rows.filter((r) => !isFinished(r)).length;
 }
 
 // For an edit made to one session from the calendar: how many other sessions share its workout, and how many of
 // those are still ahead (from today on, not completed).
 export async function sessionScope(workoutId: string, entryId: string, todayIso: string) {
   const rows: any[] = await ok(
-    supabase.from('plan_entries').select('id, scheduled_date, status').eq('workout_id', workoutId),
+    supabase.from('plan_entries').select(SESSION_COLS).eq('workout_id', workoutId),
   );
   const others = rows.filter((r) => r.id !== entryId);
   return {
     others: others.length,
-    upcoming: others.filter((r) => r.scheduled_date >= todayIso && r.status !== 'completed').length,
+    upcoming: others.filter((r) => r.scheduled_date >= todayIso && !isFinished(r)).length,
   };
 }
 
@@ -701,6 +721,11 @@ export async function updateWorkoutTemplate(
     supabase.from('workout_exercises').select('*').eq('workout_id', edit.workoutId).order('order_index'),
   );
   const { id: _id, created_at: _created, ...rest } = old;
+  // Archived copies remember the workout they came from (once the source_workout_id migration has run), so it can
+  // still find them after a rename. A "new workout" copy is its own workout.
+  const hasSource = 'source_workout_id' in old;
+  const lineage = hasSource ? { source_workout_id: old.source_workout_id || old.id } : {};
+  const ownLineage = hasSource ? { source_workout_id: null } : {};
   const copyExercises = async (toId: string) => {
     const ids: Record<string, string> = {};
     for (const { id, created_at: _c, workout_id: _w, ...r } of oldExercises) {
@@ -727,7 +752,7 @@ export async function updateWorkoutTemplate(
 
   if (opts.mode === 'session') {
     const [fork]: any[] = await ok(
-      supabase.from('workouts').insert({ ...rest, archived: true, repeat_enabled: false }).select('id'),
+      supabase.from('workouts').insert({ ...rest, ...lineage, archived: true, repeat_enabled: false }).select('id'),
     );
     const exerciseIds = await copyExercises(fork.id);
     await ok(supabase.from('plan_entries').update({ workout_id: fork.id }).eq('id', edit.entryId));
@@ -738,7 +763,7 @@ export async function updateWorkoutTemplate(
   if (opts.mode === 'new') {
     const name = await freeWorkoutName((edit.name || '').trim() || old.name);
     const [copy]: any[] = await ok(
-      supabase.from('workouts').insert({ ...rest, name, archived: false, repeat_enabled: false }).select('id'),
+      supabase.from('workouts').insert({ ...rest, ...ownLineage, name, archived: false, repeat_enabled: false }).select('id'),
     );
     const exerciseIds = await copyExercises(copy.id);
     const map = (id: string) => exerciseIds[id] || id;
@@ -756,17 +781,16 @@ export async function updateWorkoutTemplate(
   }
 
   const entries: any[] = await ok(
-    supabase.from('plan_entries').select('id, scheduled_date, status').eq('workout_id', edit.workoutId),
+    supabase.from('plan_entries').select(SESSION_COLS).eq('workout_id', edit.workoutId),
   );
-  const isUpcoming = (e: any) =>
-    e.id === edit.entryId || (e.scheduled_date >= opts.todayIso && e.status !== 'completed');
+  const isUpcoming = (e: any) => e.id === edit.entryId || (e.scheduled_date >= opts.todayIso && !isFinished(e));
   const past = entries.filter((e) => !isUpcoming(e) || !opts.updateUpcoming);
   if (past.length) {
     const keepsUpcoming = past.some(isUpcoming);
     const [snapshot]: any[] = await ok(
       supabase
         .from('workouts')
-        .insert({ ...rest, archived: true, repeat_enabled: keepsUpcoming ? old.repeat_enabled : false })
+        .insert({ ...rest, ...lineage, archived: true, repeat_enabled: keepsUpcoming ? old.repeat_enabled : false })
         .select('id'),
     );
     await copyExercises(snapshot.id);

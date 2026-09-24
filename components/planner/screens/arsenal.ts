@@ -341,9 +341,9 @@ export function arsenalVals(ctx: Ctx) {
                       : '') +
                   '.' +
                   (kept === 1
-                    ? ' Its past session stays in your history.'
+                    ? ' Its other session stays in your history.'
                     : kept
-                      ? ' Its ' + kept + ' past sessions stay in your history.'
+                      ? ' Its ' + kept + ' other sessions stay in your history.'
                       : ''),
                 label: 'Delete workout',
               },
