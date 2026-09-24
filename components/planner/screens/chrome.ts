@@ -137,7 +137,7 @@ export function chromeVals(ctx: Ctx) {
     },
     // The browser dismisses a popover on its own (Escape, outside press) and may report it after another one has
     // opened, so each closes only itself.
-    closeMonth: () => logic.s({ monthOpen: false }),
+    closeMonth: () => logic.s({ monthOpen: false, pickYOff: null }),
     closeIcons: () => logic.s({ iconsOpen: false }),
     closeXp: () => logic.s({ xpInfo: false }),
     closeDate: () => logic.s({ dateOpen: false }),
