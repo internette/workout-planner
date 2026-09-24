@@ -85,10 +85,69 @@ export default function Planner({ account = null }: { account?: Account | null }
 
   // A new screen opens at its top. Without this the window keeps the last screen's scroll, and you can land in
   // the middle of a long list with its heading (and anything it says about where you are) out of view.
+  // Focus moves with it, so keyboard and screen-reader users land on the new screen rather than on the page behind:
+  // back to the control that opened this screen when returning with Back, otherwise to the screen's heading.
   const screen = logic.state.screen;
+  const firstScreen = useRef(true);
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [screen]);
+    if (firstScreen.current) {
+      firstScreen.current = false;
+      return;
+    }
+    const wanted = logic.focusBack;
+    logic.focusBack = null;
+    const id = requestAnimationFrame(() => {
+      if (document.querySelector('dialog[open]')) return;
+      const nameOf = (el: Element) => el.getAttribute('aria-label') || (el.textContent || '').trim().slice(0, 80);
+      const opener = wanted
+        ? Array.from(document.querySelectorAll<HTMLElement>('main button, main a, nav a, nav button')).find(
+            (el) => nameOf(el) === wanted,
+          )
+        : null;
+      if (opener) return opener.focus();
+      const heading = document.querySelector<HTMLElement>('main h1');
+      if (!heading) return;
+      if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+      heading.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [screen, logic]);
+
+  // Keyboard focus never sits hidden under the phone tab bar: whatever takes focus behind it is scrolled up clear of
+  // it. (Browsers scroll a focused element into the window, but not out from under something fixed on top of it.)
+  useWindowEvent('focusin', (e) => {
+    const bar = document.querySelector<HTMLElement>('[data-tabbar]');
+    const el = e.target as HTMLElement | null;
+    if (!bar || !el || bar.contains(el) || bar.offsetHeight === 0 || !el.getBoundingClientRect) return;
+    // After the browser's own scroll-into-view, which runs once this event has been handled.
+    requestAnimationFrame(() => {
+      const limit = bar.getBoundingClientRect().top - 12;
+      const r = el.getBoundingClientRect();
+      if (r.bottom > limit) window.scrollBy({ top: Math.min(r.bottom - limit, r.top - 16), behavior: 'instant' });
+    });
+  });
+
+  // Escape on a full-screen view does what its Back button does, unless something on top of it (a dialog, a popover)
+  // or a text field has the key.
+  useWindowEvent('keydown', (e) => {
+    if (e.key !== 'Escape' || e.defaultPrevented || !(logic.state.hist || []).length) return;
+    if (document.querySelector('dialog[open]')) return;
+    try {
+      if (document.querySelector(':popover-open')) return;
+    } catch {
+      // A browser without the popover API has no open popovers to worry about.
+    }
+    const t = e.target as HTMLElement | null;
+    if (t && (t.closest('input, textarea, select, [contenteditable="true"]'))) return;
+    const back = Array.from(document.querySelectorAll<HTMLButtonElement>('main button')).find(
+      (b) => b.getAttribute('aria-label') === 'Back' || (!b.getAttribute('aria-label') && (b.textContent || '').trim() === 'Back'),
+    );
+    if (back) {
+      e.preventDefault();
+      back.click();
+    }
+  });
 
   const { status, loadError } = logic;
   const [slow, setSlow] = useState(false);

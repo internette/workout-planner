@@ -35,7 +35,9 @@ export function chromeVals(ctx: Ctx) {
     navListStyle: tablet
       ? 'display:flex;flex-direction:row;gap:4px'
       : 'display:flex;flex-direction:column;gap:4px',
-    pageStyle: 'min-height:100vh;padding:0 0 ' + (narrow ? '108px' : '64px'),
+    // The page never scrolls sideways: a 44px tap area reaching past a control at the screen edge stays an invisible
+    // extra instead of widening the page. (clip, unlike hidden, keeps sticky bands working.)
+    pageStyle: 'min-height:100vh;overflow-x:clip;padding:0 0 ' + (narrow ? '108px' : '64px'),
     tabbarStyle: narrow
       ? 'position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;gap:2px;padding:8px 6px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid rgba(35,42,69,.07);box-shadow:0 -4px 14px rgba(35,42,69,.07)'
       : 'display:none',

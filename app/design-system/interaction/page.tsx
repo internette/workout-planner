@@ -3,7 +3,9 @@ import { DocPage, h2, note } from '../docs';
 
 export const metadata = { title: 'Interaction — Design system' };
 
-const table: React.CSSProperties = { width: '100%', borderCollapse: 'collapse', background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)' };
+const table: React.CSSProperties = { width: '100%', borderCollapse: 'collapse' };
+// The table's card. On a narrow screen the table scrolls sideways inside it instead of widening the page.
+const tableScroll: React.CSSProperties = { overflowX: 'auto', background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)' };
 const cell: React.CSSProperties = { padding: '12px 16px', textAlign: 'left', borderBottom: '1px solid rgba(35,42,69,.07)', fontSize: 'var(--text-base)', verticalAlign: 'middle' };
 const muted: React.CSSProperties = { ...cell, color: 'var(--color-muted)' };
 
@@ -17,7 +19,8 @@ export default function InteractionPage() {
 
       <h2 id="hover" style={h2}>Hover</h2>
       <p style={note}>Each wash is a tint laid over the control&apos;s own background. Shown on white, and on the dark surface for the inverse one.</p>
-      <table style={table}>
+      <div style={tableScroll} tabIndex={0} role="region" aria-label="Table, scrolls sideways">
+        <table style={table}>
         <tbody>
           {Object.entries(hovers).map(([name, { value, use }]) => (
             <tr key={name}>
@@ -33,6 +36,7 @@ export default function InteractionPage() {
           ))}
         </tbody>
       </table>
+      </div>
 
       <h2 id="focus" style={h2}>Focus</h2>
       <p style={note}>One ring for everything that can take keyboard focus. Never remove it without putting an equivalent in its place.</p>

@@ -80,8 +80,21 @@ export class PlannerLogic extends DCLogic {
     });
   }
 
+  // Where keyboard focus was when each screen in the history was opened, so Back can put it back there (the host
+  // component does the focusing once the screen is drawn). Matched by accessible name, since the element itself is
+  // redrawn in between.
+  private openers: (string | null)[] = [];
+  focusBack: string | null = null;
+  private focusedName() {
+    if (typeof document === 'undefined') return null;
+    const el = document.activeElement as HTMLElement | null;
+    if (!el || el === document.body) return null;
+    return el.getAttribute('aria-label') || (el.textContent || '').trim().slice(0, 80) || null;
+  }
+
   s(p){ this.setState(p); }
   nav(p){
+    this.openers = this.openers.concat([this.focusedName()]);
     const st = this.state;
     const snap = { screen:st.screen, month:st.month, yOff:st.yOff, day:st.day, seg:st.seg,
       diaryFrom:st.diaryFrom, diaryEdit:st.diaryEdit, creating:st.creating };
@@ -90,6 +103,8 @@ export class PlannerLogic extends DCLogic {
   back(){
     const st = this.state;
     const h = st.hist || [];
+    this.focusBack = this.openers.length ? this.openers[this.openers.length - 1] : null;
+    this.openers = this.openers.slice(0, -1);
     if (!h.length) return this.setState({ screen:'day', monthOpen:false, seg:'Day', creating:false });
     const prev = h[h.length - 1];
     this.setState(Object.assign({}, prev, { hist: h.slice(0, -1), monthOpen:false }));
@@ -100,6 +115,8 @@ export class PlannerLogic extends DCLogic {
     const h = this.state.hist || [];
     const i = h.map((x) => x.screen).lastIndexOf(screen);
     if (i < 0) return this.back();
+    this.focusBack = this.openers[i] ?? null;
+    this.openers = this.openers.slice(0, i);
     this.setState(Object.assign({}, h[i], { hist: h.slice(0, i), monthOpen:false }, patch));
   }
   renderVals() {

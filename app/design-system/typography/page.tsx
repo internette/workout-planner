@@ -142,7 +142,7 @@ export default function TypographyPage() {
               {px}px · var(--text-{name})
             </div>
           </div>
-          <div>
+          <div style={{ minWidth: 0, overflowWrap: 'anywhere' }}>
             <div style={{ fontSize: `var(--text-${name})`, lineHeight: 'var(--leading-snug)' }}>
               Every session, one step closer
             </div>
@@ -165,7 +165,7 @@ export default function TypographyPage() {
               {css} · var(--text-{name})
             </div>
           </div>
-          <div>
+          <div style={{ minWidth: 0, overflowWrap: 'anywhere' }}>
             <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 'var(--font-weight-bold)', fontSize: `var(--text-${name})`, lineHeight: 1.1, letterSpacing: 'var(--tracking-tight)' }}>
               Answer the call
             </div>

@@ -50,6 +50,7 @@ export function calendarStage(ctx: Ctx): Ctx {
     return {
       letter,
       num,
+      selected: on,
       pick: () => logic.s({ ...monthPatch(cellMonth), day: num, monthOpen: false, entryId: null }),
       mon: spansMonths ? MON3[mod12(cellMonth)].toUpperCase() : '',
       monStyle: spansMonths
@@ -94,6 +95,7 @@ export function calendarStage(ctx: Ctx): Ctx {
   const shownYOff = Math.floor(mi / 12);
   const months = MONTHS.map((name) => ({
     name,
+    current: st.month === name,
     short: MON3[MONTHS.indexOf(name)],
     pick: () => logic.s({ month: name, yOff: shownYOff, monthOpen: false, day: 1 }),
     style:

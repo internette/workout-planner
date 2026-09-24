@@ -4,7 +4,9 @@ import { DocPage, h2, note } from '../docs';
 
 export const metadata = { title: 'Motion — Design system' };
 
-const table: React.CSSProperties = { width: '100%', borderCollapse: 'collapse', background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)' };
+const table: React.CSSProperties = { width: '100%', borderCollapse: 'collapse' };
+// The table's card. On a narrow screen the table scrolls sideways inside it instead of widening the page.
+const tableScroll: React.CSSProperties = { overflowX: 'auto', background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)' };
 const cell: React.CSSProperties = { padding: '12px 16px', textAlign: 'left', borderBottom: '1px solid rgba(35,42,69,.07)', fontSize: 'var(--text-base)' };
 const muted: React.CSSProperties = { ...cell, color: 'var(--color-muted)' };
 
@@ -23,7 +25,8 @@ export default function MotionPage() {
       </div>
 
       <h2 id="durations" style={h2}>Durations</h2>
-      <table style={table}>
+      <div style={tableScroll} tabIndex={0} role="region" aria-label="Table, scrolls sideways">
+        <table style={table}>
         <tbody>
           {Object.entries(durations).map(([name, { value, use }]) => (
             <tr key={name}>
@@ -34,9 +37,11 @@ export default function MotionPage() {
           ))}
         </tbody>
       </table>
+      </div>
 
       <h2 id="easings" style={h2}>Easings</h2>
-      <table style={table}>
+      <div style={tableScroll} tabIndex={0} role="region" aria-label="Table, scrolls sideways">
+        <table style={table}>
         <tbody>
           {Object.entries(easings).map(([name, { value, use }]) => (
             <tr key={name}>
@@ -47,6 +52,7 @@ export default function MotionPage() {
           ))}
         </tbody>
       </table>
+      </div>
     </DocPage>
   );
 }

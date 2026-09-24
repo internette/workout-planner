@@ -43,5 +43,15 @@
 .choice.selected { background: var(--color-pink); color: var(--color-white); }
 .choice:not(.selected):hover { filter: brightness(0.97); }
 
-.clickable { cursor: pointer; }
+.clickable { cursor: pointer; position: relative; }
+/* A pressable chip is drawn about 36 px tall; its tap area is 44. */
+.clickable::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+}
 .icon, .trailing { display: inline-flex; }

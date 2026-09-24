@@ -25,6 +25,17 @@
   transition: background-color var(--dur-state) var(--ease-standard), color var(--dur-state) var(--ease-standard);
 }
 .equalWidth .segment { flex: 1; min-width: 0; }
+/* Segments are drawn 33–40 px tall; the tap area is 44. */
+.segment { position: relative; }
+.segment::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+}
 
 .segment-sm { padding: 9px 16px; border-radius: var(--radius-sm); font-size: var(--text-md); }
 .segment-md { padding: 12px 20px; border-radius: var(--radius-sm); font-size: var(--text-base); }
