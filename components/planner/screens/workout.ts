@@ -1,5 +1,5 @@
-import { DOWFULL, EDIT_OVERLAYS } from '../constants';
-import { digitsOnly, exLine, formatElapsed, idOf, numericOnly, plural, questSeed } from '../helpers';
+import { DOWFULL, EDIT_OVERLAYS, MON3 } from '../constants';
+import { digitsOnly, exLine, formatElapsed, idOf, isoOf, monthPatch, numericOnly, plural, questSeed } from '../helpers';
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -40,7 +40,37 @@ export function workoutVals(ctx: Ctx) {
     minText,
     distOf,
     timeOf,
+    TK,
+    Y,
   } = ctx;
+  // A session on a day still ahead can't be done yet: starting it early would count it for that day. It can be moved
+  // to today instead, and started there.
+  const isFutureDay = mi * 100 + selDay > TK;
+  const doToday = (av) => {
+    if (!av) return;
+    const id = idOf(av);
+    logic.saveOnce(
+      'move',
+      () =>
+        db.updateWorkout({
+          entryId: id,
+          workoutId: av.workoutId,
+          moveTo: isoOf(new Date(Y, TODAY_M, TODAY_D)),
+          exercises: { update: [], removeIds: [], add: [] },
+          repeatDates: [],
+        }),
+      {
+        screen: 'detail',
+        seg: 'Day',
+        creating: false,
+        ...monthPatch(TODAY_M),
+        day: TODAY_D,
+        entryId: id,
+        workoutTimer: Object.assign({}, st.workoutTimer, { [id]: { elapsed: 0, runningSince: Date.now() } }),
+        announce: nameOf(av.name) + ' moved to today and started.',
+      },
+    );
+  };
   const goDetail = () => logic.nav({ screen: 'detail', creating: false });
   // The quest belongs to the day, so on a day with several workouts it is cleared once all of them are.
   const dayCleared = dayEntries.length > 1 ? dayEntries.every(isDoneEntry) : questCleared;
@@ -59,7 +89,7 @@ export function workoutVals(ctx: Ctx) {
     logic.nav(
       Object.assign(
         { screen: 'diary', diaryFrom: 'day', diaryEdit: false, entryNote: null },
-        logged ? { mood: logged.mood, rpe: logged.rpe } : { mood: 'Happy', rpe: 3 },
+        logged ? { mood: logged.mood, rpe: logged.rpe } : { mood: null, rpe: null },
       ),
     );
   };
@@ -220,9 +250,9 @@ export function workoutVals(ctx: Ctx) {
       toggleMore: () => logic.s({ moreIds: Object.assign({}, st.moreIds, { [id]: !expanded }) }),
       // Logged: read it. Every exercise ticked but not logged yet: log it. Started (clock or ticks): carry on, or
       // start over. Otherwise: start.
-      ctaTwoButtons: !logged && !complete && (timed || doneN > 0),
-      ctaLabel: logged ? 'View chronicle entry' : complete ? 'Write it up' : 'Start workout',
-      cta: run(logged || complete ? 'goDiary' : 'startWorkout'),
+      ctaTwoButtons: !logged && !complete && !isFutureDay && (timed || doneN > 0),
+      ctaLabel: logged ? 'View chronicle entry' : complete ? 'Write it up' : isFutureDay ? 'Do it today' : 'Start workout',
+      cta: !logged && !complete && isFutureDay ? () => doToday(av) : run(logged || complete ? 'goDiary' : 'startWorkout'),
       restart: run('restartWorkout'),
       continue: run('continueWorkout'),
     };
@@ -235,7 +265,10 @@ export function workoutVals(ctx: Ctx) {
     timerButtonAction: !timerState ? startTimer : timerRunning ? pauseTimer : resumeTimer,
     // A workout that's already done or finished, and isn't being timed, doesn't need a "Start" — that's for
     // something you're about to do. But once a clock exists for it, keep showing it, with Finish beside it.
-    showTimer: !!timerState || (!doneSel && !finished),
+    showTimer: !isFutureDay && (!!timerState || (!doneSel && !finished)),
+    isFuture: isFutureDay && !!selAct && !doneSel,
+    futureNote: 'Planned for ' + DOWFULL[selDate.getDay()] + ', ' + MON3[selDate.getMonth()] + ' ' + selDay + '.',
+    doItToday: () => doToday(selAct),
     canFinish: !!timerState && !!selAct,
     openFinish,
     finishOpen: !!fin,

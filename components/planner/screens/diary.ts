@@ -53,10 +53,15 @@ export function diaryVals(ctx: Ctx) {
   };
   return {
     saveEntryLabel: hasEntry ? 'Save changes' : 'Save entry',
+    canSaveEntry: !!st.mood && !!st.rpe,
+    saveEntryHint: !st.mood && !st.rpe ? 'Pick a mood and how hard it felt.' : !st.mood ? 'Pick a mood.' : !st.rpe ? 'Pick how hard it felt.' : '',
     entryNote: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
     setEntryNote: (e) => logic.s({ entryNote: e.target.value }),
     saveEntry: () =>
-      logic.save(
+      st.mood &&
+      st.rpe &&
+      logic.saveOnce(
+        'entry',
         () =>
           db.saveDiary(entryKey, {
             mood: st.mood,
@@ -129,8 +134,9 @@ export function diaryVals(ctx: Ctx) {
           ...monthPatch(TODAY_M),
           day: x.d,
           entryId: x.av.id,
-          mood: 'Happy',
-          rpe: 3,
+          // Nothing picked yet: the entry says how it felt only once the person has said so.
+          mood: null,
+          rpe: null,
           entryNote: null,
           diaryFrom: 'list',
           diaryEdit: true,
@@ -272,6 +278,6 @@ export function diaryVals(ctx: Ctx) {
     diaryBack: () => logic.back(),
     moods,
     stars,
-    rpeLabel: RPE_WORDS[Math.max(1, Math.min(5, st.rpe)) - 1],
+    rpeLabel: st.rpe ? RPE_WORDS[Math.max(1, Math.min(5, st.rpe)) - 1] : '',
   };
 }
