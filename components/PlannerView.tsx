@@ -227,6 +227,7 @@ export function PlannerView({ v }: { v: any }) {
                       gap: '12px',
                     }}
                   >
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px', minWidth: 0 }}>
                     <Popover
                       open={!!v.monthOpen}
                       onClose={v.closeMonth}
@@ -272,6 +273,19 @@ export function PlannerView({ v }: { v: any }) {
                                 </button>
                               </Fragment>
                             ))}
+                          </div>
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              marginTop: '10px',
+                              paddingTop: '10px',
+                              borderTop: '1px solid rgba(35,42,69,.09)',
+                            }}
+                          >
+                            <Button type="secondary" ghost size="sm" onClick={v.goToday}>
+                              Go to today
+                            </Button>
                           </div>
                         </>
                       }
@@ -381,6 +395,12 @@ export function PlannerView({ v }: { v: any }) {
                         </span>
                       </button>
                     </Popover>
+                    {v.awayFromToday ? (
+                      <Button type="secondary" ghost size="xs" onClick={v.goToday}>
+                        Today
+                      </Button>
+                    ) : null}
+                    </span>
                     <SegmentedControl
                       label="Calendar view"
                       semantics="tabs"
@@ -1158,6 +1178,16 @@ export function PlannerView({ v }: { v: any }) {
                   {v.showMonth ? (
                     <>
                       <h1 className="sr-only">{v.monthName}</h1>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '8px', marginTop: '14px' }}>
+                        <Button type="neutral" ghost size="sm" onClick={v.prevMonth} aria-label={'Previous month, ' + v.prevMonthName}>
+                          <ChevronLeft color="var(--color-muted)" size={16} />
+                          {v.prevMonthShort}
+                        </Button>
+                        <Button type="neutral" ghost size="sm" onClick={v.nextMonth} aria-label={'Next month, ' + v.nextMonthName}>
+                          {v.nextMonthShort}
+                          <ChevronRight color="var(--color-muted)" size={16} />
+                        </Button>
+                      </div>
                       <div style={{ marginTop: '18px' }}>
                         <div
                           style={{

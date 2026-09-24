@@ -93,16 +93,27 @@ export function calendarStage(ctx: Ctx): Ctx {
     };
   });
   const shownYOff = Math.floor(mi / 12);
-  const months = MONTHS.map((name) => ({
-    name,
-    current: st.month === name,
-    short: MON3[MONTHS.indexOf(name)],
-    pick: () => logic.s({ month: name, yOff: shownYOff, monthOpen: false, day: 1 }),
-    style:
-      "font-family:var(--font-heading);" +
-      'padding:11px 6px;border-radius:12px;font-size:var(--text-base);border:none;cursor:pointer;' +
-      (st.month === name ? 'background:' + PINK + ';color:var(--color-white);font-weight:var(--font-weight-bold)' : 'color:var(--color-ink);font-weight:var(--font-weight-medium)'),
-  }));
+  // The picker's year arrows only browse: the calendar stays put until a month is picked.
+  const pickYOff = st.pickYOff == null ? shownYOff : st.pickYOff;
+  const months = MONTHS.map((name, k) => {
+    const current = st.month === name && pickYOff === shownYOff;
+    // The month that has today in it, so it can be found again from anywhere.
+    const now = k === TODAY_M && pickYOff === 0;
+    return {
+      name: name + (pickYOff ? ' ' + (Y + pickYOff) : '') + (now ? ', this month' : ''),
+      current,
+      short: MON3[k],
+      pick: () => logic.s({ month: name, yOff: pickYOff, pickYOff: null, monthOpen: false, day: now ? TODAY_D : 1 }),
+      style:
+        "font-family:var(--font-heading);" +
+        'padding:11px 6px;border-radius:12px;font-size:var(--text-base);border:none;cursor:pointer;' +
+        (current
+          ? 'background:' + PINK + ';color:var(--color-white);font-weight:var(--font-weight-bold)'
+          : now
+            ? 'box-shadow:inset 0 0 0 1.5px var(--color-pink);color:var(--color-pink-deep);font-weight:var(--font-weight-bold)'
+            : 'color:var(--color-ink);font-weight:var(--font-weight-medium)'),
+    };
+  });
   // One row per workout. A day with several shows its date once, above the first.
   const weekRows = cells.flatMap((d) => {
     const list = listForDate(d);
@@ -280,6 +291,7 @@ export function calendarStage(ctx: Ctx): Ctx {
     monthCells,
     constellation,
     months,
+    pickYOff,
     days,
     selDate,
     weekLabel,

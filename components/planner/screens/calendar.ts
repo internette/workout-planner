@@ -30,6 +30,7 @@ export function calendarVals(ctx: Ctx) {
     metaFor,
     relM,
     shownYOff,
+    pickYOff,
   } = ctx;
   // Another year than this one says which, wherever the month is named.
   const shownYear = Y + shownYOff;
@@ -68,16 +69,19 @@ export function calendarVals(ctx: Ctx) {
         ? 'today'
         : 'on ' + DOW3[selDate.getDay()].charAt(0) + DOW3[selDate.getDay()].slice(1, 3).toLowerCase() + ', ' + MON3[mod12(mi)] + ' ' + selDay + (shownYOff ? ', ' + shownYear : ''),
     monthName: monthTitle,
-    yearLabel: String(shownYear),
+    yearLabel: String(Y + pickYOff),
     monthYear: MONTHS[mod12(mi)] + ' ' + shownYear,
-    prevYear: () => logic.s({ yOff: shownYOff - 1, day: 1 }),
-    nextYear: () => logic.s({ yOff: shownYOff + 1, day: 1 }),
+    prevYear: () => logic.s({ pickYOff: pickYOff - 1 }),
+    nextYear: () => logic.s({ pickYOff: pickYOff + 1 }),
+    // Back to today, from any month, year or day.
+    awayFromToday: !(mi === TODAY_M && selDay === TODAY_D),
+    goToday: () => logic.s({ ...monthPatch(TODAY_M), day: TODAY_D, monthOpen: false, pickYOff: null }),
     monthOpen: st.monthOpen,
     caretStyle:
       'border:none;background:none;cursor:pointer;padding:4px;display:flex;align-items:center;transition:transform .2s;transform:rotate(' +
       (st.monthOpen ? '180' : '0') +
       'deg)',
-    toggleMonth: () => logic.s({ monthOpen: !st.monthOpen }),
+    toggleMonth: () => logic.s({ monthOpen: !st.monthOpen, pickYOff: null }),
     // Keyboard movement in the month grid: arrows by day and week, Home and End to the ends of the week,
     // PageUp and PageDown by month. The selected day is the grid's only tab stop, so focus follows it.
     monthKeyDown: (e) => {
@@ -104,6 +108,11 @@ export function calendarVals(ctx: Ctx) {
       const d = new Date(Y, mi, selDay + 7);
       logic.s({ ...monthPatch(relM(d)), day: d.getDate() });
     },
+    // Month view's arrows are named for where they go ("Aug", "Oct"), with the year when it changes.
+    prevMonthShort: MON3[mod12(mi - 1)] + (Math.floor((mi - 1) / 12) !== shownYOff ? ' ' + (Y + Math.floor((mi - 1) / 12)) : ''),
+    nextMonthShort: MON3[mod12(mi + 1)] + (Math.floor((mi + 1) / 12) !== shownYOff ? ' ' + (Y + Math.floor((mi + 1) / 12)) : ''),
+    prevMonthName: MONTHS[mod12(mi - 1)] + ' ' + (Y + Math.floor((mi - 1) / 12)),
+    nextMonthName: MONTHS[mod12(mi + 1)] + ' ' + (Y + Math.floor((mi + 1) / 12)),
     prevMonth: () => logic.s({ ...monthPatch(mi - 1), day: 1 }),
     nextMonth: () => logic.s({ ...monthPatch(mi + 1), day: 1 }),
     months,
