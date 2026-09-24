@@ -3,7 +3,7 @@ import { DOWFULL, EDIT_OVERLAYS, ICON_NAMES, MONTHS, TARGET_AREAS } from '../con
 import { iconSvg } from '../icons';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import * as db from '@/lib/plannerData';
-import { digitsOnly, exLine, isoOf, joinSetsReps, monthPatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
+import { digitsOnly, exerciseDraftDirty, exLine, isoOf, joinSetsReps, monthPatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
 import { optStyle } from '../styles';
 import type { Ctx } from '../types';
 
@@ -36,6 +36,15 @@ export function arsenalVals(ctx: Ctx) {
       }),
     );
   const confirm = st.tplConfirm;
+  const copyNameTrim = confirm && confirm.copyName != null && confirm.choice === 'new' ? confirm.copyName.trim() : null;
+  const copyNameError =
+    copyNameTrim == null
+      ? ''
+      : !copyNameTrim
+        ? 'Give the new workout a name.'
+        : logic.model.workouts.some((w) => w.name.trim().toLowerCase() === copyNameTrim.toLowerCase())
+          ? 'You already have a workout called “' + copyNameTrim + '”.'
+          : '';
 
   // ---- saved workouts
   const view = st.arsenalView === 'workouts' ? 'workouts' : 'exercises';
@@ -123,18 +132,28 @@ export function arsenalVals(ctx: Ctx) {
             confirm: {
               kind: 'deleteExercise',
               id: found.ex.id,
+              name: found.ex.name,
               title: 'Delete “' + found.ex.name + '”?',
               body: 'It comes out of your Spellbook. Workouts keep their own copy of any exercise, so none of them change.',
               label: 'Delete exercise',
             },
           }),
-        // A built-in can't be changed, so "change it" means: make it the person's own, then open that in the editor.
-        copy: () =>
-          logic.saveOnce(
-            'exercise',
-            () => db.createLibraryExercise(found.ex),
-            (r) => ({ screen: 'exerciseEdit', exerciseId: r.id, exDraft: draftFrom(found.ex, r.name) }),
-          ),
+        // A built-in can't be changed, so "change it" means: open a copy in the editor, under a name of its own. Nothing
+        // is saved until Save; Cancel leaves no copy behind.
+        copy: () => {
+          const taken = new Set(logic.model.library.concat(logic.model.builtins).map((e) => e.name.trim().toLowerCase()));
+          let name = found.ex.name + ' (copy)';
+          for (let n = 2; taken.has(name.toLowerCase()); n++) name = found.ex.name + ' (copy ' + n + ')';
+          logic.nav({
+            screen: 'exerciseEdit',
+            exDraft: draftFrom(found.ex, name),
+            exDraftOrig: draftFrom(found.ex, name),
+            exEditNav: true,
+            exCopy: true,
+          });
+        },
+        // Straight into a workout, as the list's "+" does.
+        add: () => addToWorkout(found.ex),
       }
     : null;
   const exDraft = st.exDraft || { name: '', sets: '', reps: '', weight: '', rest: '', i: 'h', areas: [] };
@@ -194,13 +213,20 @@ export function arsenalVals(ctx: Ctx) {
     }
   };
   const renameTo = (exDraft.name || '').trim().toLowerCase();
-  const renameClash =
-    found && renameTo && renameTo !== found.ex.name.trim().toLowerCase()
+  const copying = !!st.exCopy;
+  const renameClash = copying
+    ? (renameTo && logic.model.library.concat(logic.model.builtins).find((e) => e.name.trim().toLowerCase() === renameTo)) || null
+    : found && renameTo && renameTo !== found.ex.name.trim().toLowerCase()
       ? (found.workout
           ? EX[found.workout.name] || []
           : logic.model.library.concat(logic.model.builtins)
         ).find((e) => e.id !== found.ex.id && e.name.trim().toLowerCase() === renameTo) || null
       : null;
+  const cancelEdit = () => {
+    if (!st.exEditNav) return logic.s({ screen: 'exercise', exDraft: null, exDraftOrig: null, exCopy: false });
+    logic.s({ exDraft: null, exDraftOrig: null, exEditNav: false, exCopy: false });
+    logic.back();
+  };
   const exerciseEdit = {
     name: exDraft.name,
     sets: exDraft.sets,
@@ -241,13 +267,13 @@ export function arsenalVals(ctx: Ctx) {
         '”. Give this one another name.'
       : '',
     canSave: !!exDraft.name.trim() && (exDraft.areas || []).length > 0 && !renameClash,
-    cancel: () => {
-      if (!st.exEditNav) return logic.s({ screen: 'exercise', exDraft: null, exDraftOrig: null });
-      logic.s({ exDraft: null, exDraftOrig: null, exEditNav: false });
-      logic.back();
-    },
+    heading: copying ? 'COPY OF ' + (found ? found.ex.name.toUpperCase() : 'EXERCISE') : 'EDIT EXERCISE',
+    saveLabel: copying ? 'Save copy' : 'Save changes',
+    cancel: cancelEdit,
     save: () => {
       if (!found || !exDraft.name.trim() || !(exDraft.areas || []).length || renameClash) return;
+      // Nothing changed: nothing to ask about or save.
+      if (!copying && !exerciseDraftDirty(st)) return cancelEdit();
       const patch = {
         name: exDraft.name.trim(),
         sets: joinSetsReps(exDraft.sets, exDraft.reps),
@@ -256,6 +282,17 @@ export function arsenalVals(ctx: Ctx) {
         i: exDraft.i,
         areas: exDraft.areas || [],
       };
+      if (copying)
+        return logic.saveOnce('exercise', () => db.createLibraryExercise(patch), (r) => ({
+          screen: 'exercise',
+          exerciseId: r.id,
+          exDraft: null,
+          exDraftOrig: null,
+          exEditNav: false,
+          exCopy: false,
+          ...(st.exEditNav ? { hist: (st.hist || []).slice(0, -1) } : {}),
+          announce: '“' + r.name + '” saved to your Spellbook.',
+        }));
       askExerciseSave(patch);
     },
   };
@@ -287,10 +324,13 @@ export function arsenalVals(ctx: Ctx) {
         remove: async () => {
           try {
             const ahead = (await db.upcomingOfWorkout(chosen.id, todayIso)).length;
+            // Sessions it keeps: past and completed ones (its earlier versions carry the same name).
+            const kept = Math.max(0, logic.model.entries.filter((x) => x.av.name === chosen.name).length - ahead);
             logic.s({
               confirm: {
                 kind: 'archiveWorkout',
                 id: chosen.id,
+                name: chosen.name,
                 title: 'Delete “' + chosen.name + '”?',
                 body:
                   'It comes out of your Spellbook' +
@@ -299,7 +339,12 @@ export function arsenalVals(ctx: Ctx) {
                     : ahead
                       ? ', and its ' + ahead + ' upcoming sessions come off the calendar'
                       : '') +
-                  '. Past and completed sessions stay in your history.',
+                  '.' +
+                  (kept === 1
+                    ? ' Its past session stays in your history.'
+                    : kept
+                      ? ' Its ' + kept + ' past sessions stay in your history.'
+                      : ''),
                 label: 'Delete workout',
               },
             });
@@ -475,6 +520,9 @@ export function arsenalVals(ctx: Ctx) {
   );
 
   return {
+    // After a delete, the list says what went (and it's read out).
+    spellNotice: st.screen === 'arsenal' ? st.spellNotice || '' : '',
+    dismissSpellNotice: () => logic.s({ spellNotice: null }),
     tplConfirmOpen: !!confirm,
     tplConfirmTitle: 'How should this change be saved?',
     // For a workout, its name once (the options carry the rest). An exercise names itself in its own options.
@@ -528,10 +576,17 @@ export function arsenalVals(ctx: Ctx) {
           '”. Completed sessions never change.'
         : 'Also update ' + confirm.count + (confirm.count === 1 ? ' upcoming session' : ' upcoming sessions')
       : '',
+    // A saved workout's "Save as a new workout" takes a name for the copy, which has to be new.
+    tplConfirmShowName: !!confirm && confirm.copyName != null && confirm.choice === 'new',
+    tplConfirmName: confirm && confirm.copyName != null ? confirm.copyName : '',
+    tplConfirmSetName: (e) => confirm && logic.s({ tplConfirm: { ...confirm, copyName: e.target.value } }),
+    tplConfirmNameError: copyNameError,
+    tplConfirmBlocked: !!copyNameError,
     tplConfirmCancel: () => logic.s({ tplConfirm: null }),
     tplConfirmSave: () => {
+      if (!confirm || copyNameError) return;
       logic.s({ tplConfirm: null });
-      if (confirm) confirm.apply(confirm.choice === 'new' ? 'new' : 'update', !!confirm.upcoming);
+      confirm.apply(confirm.choice === 'new' ? 'new' : 'update', !!confirm.upcoming, (confirm.copyName || '').trim());
     },
     exercise,
     exerciseEdit,
