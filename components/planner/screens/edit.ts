@@ -114,10 +114,13 @@ export function editVals(ctx: Ctx) {
   // The "From Spellbook" list: narrowed to the workout's target areas (say so, and one tap shows everything),
   // searchable, and it stays open so several exercises can be added in a row.
   const pickQ = (st.pickQ || '').trim().toLowerCase();
-  const narrowToAreas = picked.length > 0 && !st.pickAll;
+  // Narrowed to the areas the workout had when the list was opened, so adding one doesn't shrink the list
+  // under you (in a new workout, the first add used to narrow it to that one exercise's areas).
+  const pickAreas = st.pickAreas || picked;
+  const narrowToAreas = pickAreas.length > 0 && !st.pickAll;
   const PICK_LIMIT = 25;
   const pickable = libraryFor(listKey)
-    .filter((e) => !narrowToAreas || (e.areas || []).some((a) => picked.includes(a)))
+    .filter((e) => !narrowToAreas || (e.areas || []).some((a) => pickAreas.includes(a)))
     .filter((e) => !pickQ || e.name.toLowerCase().includes(pickQ))
     .sort((a, b) => a.name.localeCompare(b.name));
   const areaWords = (list) =>
@@ -248,7 +251,7 @@ export function editVals(ctx: Ctx) {
     addOpen: !!st.addOpen,
     addLib: st.addMode !== 'new',
     addNew: st.addMode === 'new',
-    openAdd: () => logic.s({ addOpen: true, addMode: 'lib', pickQ: '', pickAll: false }),
+    openAdd: () => logic.s({ addOpen: true, addMode: 'lib', pickQ: '', pickAll: false, pickAreas: picked }),
     closeAdd: () => logic.s({ addOpen: false }),
     addMode: st.addMode === 'new' ? 'new' : 'lib',
     // "Create new" starts with real values (3 × 10, 60 sec rest), as in the Spellbook; weight starts empty.
@@ -277,24 +280,24 @@ export function editVals(ctx: Ctx) {
         },
       }),
     // Says what the list below is narrowed to, e.g. "Showing exercises for Chest, Arms and Shoulders", with a way out.
-    libraryFilterNote: narrowToAreas ? 'Showing exercises for ' + areaWords(picked) + '.' : '',
+    libraryFilterNote: narrowToAreas ? 'Showing exercises for ' + areaWords(pickAreas) + '.' : '',
     libraryShowAll: () => logic.s({ pickAll: true }),
-    libraryCanNarrow: picked.length > 0 && !!st.pickAll,
-    libraryNarrowLabel: 'Only ' + areaWords(picked),
+    libraryCanNarrow: pickAreas.length > 0 && !!st.pickAll,
+    libraryNarrowLabel: 'Only ' + areaWords(pickAreas),
     libraryNarrow: () => logic.s({ pickAll: false }),
     pickQuery: st.pickQ || '',
     setPickQuery: (e) => logic.s({ pickQ: e.target.value }),
     clearPickQuery: () => logic.s({ pickQ: '' }),
     libraryEmpty: pickable.length === 0,
     libraryEmptyNote: pickQ
-      ? 'No exercises match “' + (st.pickQ || '').trim() + '”' + (narrowToAreas ? ' for ' + areaWords(picked) + '.' : '.')
+      ? 'No exercises match “' + (st.pickQ || '').trim() + '”' + (narrowToAreas ? ' for ' + areaWords(pickAreas) + '.' : '.')
       : 'Everything that fits is already in this workout.',
     // Read out as the search narrows the list (the list itself changes silently).
     libraryAnnounce: !pickQ
       ? ''
       : pickable.length
         ? plural(pickable.length, 'exercise') + ' found.'
-        : 'No exercises match “' + (st.pickQ || '').trim() + '”' + (narrowToAreas ? ' for ' + areaWords(picked) + '.' : '.'),
+        : 'No exercises match “' + (st.pickQ || '').trim() + '”' + (narrowToAreas ? ' for ' + areaWords(pickAreas) + '.' : '.'),
     libraryMore: pickable.length > PICK_LIMIT ? plural(pickable.length - PICK_LIMIT, 'more exercise') + ' — search to find one.' : '',
     library: pickable.slice(0, PICK_LIMIT).map((e) => ({
       name: e.name,
@@ -799,11 +802,12 @@ export function editVals(ctx: Ctx) {
         isDone: !!doneSet[e.name],
         // Ticking off belongs to a session on the calendar, not to a workout being built or a saved one.
         showTick: !creating && !tplMode && mi * 100 + selDay <= ctx.TK,
-        // One line per exercise until it's opened to edit; one just added here opens ready to fill in.
-        expanded: ((st.exExpanded || {})[listKey + '|' + e.name] ?? added.some((a) => a.name === e.name)) as boolean,
+        // One line per exercise until it's opened to edit. Added ones too: they come with their sets, reps and
+        // rest already filled in, and opening each one made the page grow with every add.
+        expanded: !!(st.exExpanded || {})[listKey + '|' + e.name],
         toggleExpand: () => {
           const k = listKey + '|' + e.name;
-          const cur = (st.exExpanded || {})[k] ?? added.some((a) => a.name === e.name);
+          const cur = !!(st.exExpanded || {})[k];
           logic.s({ exExpanded: Object.assign({}, st.exExpanded, { [k]: !cur }) });
         },
         iconAria: 'Choose icon for ' + e.name,
