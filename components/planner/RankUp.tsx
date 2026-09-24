@@ -12,7 +12,7 @@ export interface RankUpProps {
   name: string;
   /** e.g. "Rank 2 of 20". */
   step: string;
-  /** The first word of the next rank, e.g. "Moonlit". */
+  /** The next rank's name, e.g. "Moonlit apprentice". */
   next: string;
   /** The rank's gem colour or gradient, as a CSS value. */
   gem: string;

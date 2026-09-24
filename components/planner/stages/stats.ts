@@ -13,12 +13,13 @@ export function statsStage(ctx: Ctx): Ctx {
     weekAll.push(...listForDate(d));
   }
   let nextUp = null;
-  const upcoming = logic.model.entries.find((x) => x.m * 100 + x.d > TK && x.av.s !== 'c');
+  // The next session not yet done, today's included.
+  const upcoming = logic.model.entries.find((x) => x.m * 100 + x.d >= TK && !isDoneEntry(x.av));
   if (upcoming) {
     const nd = new Date(Y, upcoming.m, upcoming.d);
     nextUp = {
       name: upcoming.av.name,
-      meta2:
+      meta2: upcoming.m * 100 + upcoming.d === TK ? 'Today · ' + upcoming.av.time :
         DOW3[nd.getDay()].charAt(0) +
         DOW3[nd.getDay()].slice(1, 3).toLowerCase() +
         ', ' +
@@ -98,6 +99,9 @@ export function statsStage(ctx: Ctx): Ctx {
   const firstWkStart = new Date(first.getFullYear(), first.getMonth(), first.getDate() - first.getDay());
   const weeksKnown = Math.min(WEEKS, Math.round((todayWkStart.getTime() - firstWkStart.getTime()) / 604800000) + 1);
   const weeklyAvg = (weekBuckets.reduce((n, b) => n + b.done, 0) / weeksKnown).toFixed(1);
+  // Says which weeks it's over: the chart's six, or, for a newer account, since its first week.
+  const weeklyAvgSpan =
+    weeksKnown < WEEKS ? 'Since ' + MON3[firstWkStart.getMonth()] + ' ' + firstWkStart.getDate() : 'Last ' + WEEKS + ' weeks';
   const moodCounts = {};
   Object.keys(ENTRIES).forEach((k) => {
     const m = ENTRIES[k].mood;
@@ -169,6 +173,7 @@ export function statsStage(ctx: Ctx): Ctx {
     questsClearedCount: questsCleared.length,
     longest,
     weeklyAvg,
+    weeklyAvgSpan,
     moodCounts,
     moodTotal,
     bestByEx,

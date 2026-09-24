@@ -34,6 +34,7 @@ export function progressVals(ctx: Ctx) {
     questsClearedCount,
     longest,
     weeklyAvg,
+    weeklyAvgSpan,
     moodCounts,
     moodTotal,
     bestByEx,
@@ -51,6 +52,8 @@ export function progressVals(ctx: Ctx) {
       : MON3[b.start.getMonth()] + ' ' + b.start.getDate() + ' – ' + MON3[b.end.getMonth()] + ' ' + b.end.getDate();
   const weekName = (ix) => (ix === thisWeekIx ? 'This week' : ix === thisWeekIx - 1 ? 'Last week' : 'Week of ' + weekRange(weekBuckets[ix]));
   const selWeek = weekBuckets[barSel] || { sessions: [], planned: 0, done: 0 };
+  // The next rank by its full name, as the ladder writes it ("Novice guardian"); past the top, the next season.
+  const nextRankName = RANKS[derivedRank + 1] ? RANKS[derivedRank + 1].name : RANKS[derivedRank].next;
   return {
     // Empty states: say what will show up, instead of "0 of 0" or a bare heading.
     wkEmpty: weekAll.length === 0,
@@ -67,12 +70,13 @@ export function progressVals(ctx: Ctx) {
     rankName: RANKS[derivedRank].name,
     // For the rank-up transformation (components/planner/RankUp.tsx).
     rankIndex: derivedRank,
-    rankNext: RANKS[derivedRank].next,
+    rankNext: nextRankName,
     rankGemFill: derivedRank === RANKS.length - 1 ? 'var(--gradient-gem)' : RANKS[derivedRank].gem,
     rankStepLabel: 'Rank ' + (derivedRank + 1) + ' of ' + RANKS.length,
+    ranksAside: 'Rank ' + (derivedRank + 1) + ' of ' + RANKS.length + ' · ' + xpTotal + ' XP',
     xpInfoOpen: !!st.xpInfo,
     toggleXpInfo: () => logic.s({ xpInfo: !st.xpInfo }),
-    xpLine: xpTotal + ' of ' + rankCeil + ' XP toward ' + RANKS[derivedRank].next,
+    xpLine: xpTotal + ' of ' + rankCeil + ' XP toward ' + nextRankName,
     ranksOpen: !!st.ranksOpen,
     openRanks: () => logic.s({ ranksOpen: true }),
     closeRanks: () => logic.s({ ranksOpen: false }),
@@ -129,10 +133,10 @@ export function progressVals(ctx: Ctx) {
       '%;height:100%;border-radius:5px;transition:width .35s ease;background:var(--gradient-gem)',
     rankProgress:
       xpTotal === 0
-        ? 'Clear your first exercise to start toward ' + RANKS[derivedRank].next + '.'
+        ? 'Clear your first exercise to start toward ' + nextRankName + '.'
         : rankPct === 0
-          ? 'New rank: ' + RANKS[derivedRank].name + '. On to ' + RANKS[derivedRank].next + '.'
-          : rankPct + '% to ' + RANKS[derivedRank].next,
+          ? 'New rank: ' + RANKS[derivedRank].name + '. On to ' + nextRankName + '.'
+          : rankPct + '% to ' + nextRankName,
     rankTip:
       'XP ' + xpTotal + ' of ' + rankCeil + ' · 10 XP per exercise completed, 50 XP per workout finished',
     monthSummaryLabel: monthDays.filter((x) => x.done).length + ' of ' + monthDays.length + ' done',
@@ -146,6 +150,15 @@ export function progressVals(ctx: Ctx) {
           ? 'Today still pending — finish it to reach ' + (streak + 1) + '.'
           : 'Rest day — the streak holds.'
         : 'Clear a full day to start one.',
+    // Up to seven, and it says how many when there are fewer.
+    ticksLabel: (() => {
+      let n = 0;
+      for (let back = 0; back <= 90 && n < 7; back++) {
+        const dt = new Date(Y, TODAY_M, TODAY_D - back);
+        if (plannedByDay[relM(dt) + '|' + dt.getDate()]) n++;
+      }
+      return n === 1 ? 'LAST TRAINING DAY' : 'LAST ' + (n || 7) + ' TRAINING DAYS';
+    })(),
     streakTicks: (() => {
       const out = [];
       for (let back = 0; back <= 90 && out.length < 7; back++) {
@@ -154,7 +167,8 @@ export function progressVals(ctx: Ctx) {
         if (!plannedByDay[k]) continue;
         const pending = back === 0 && !dayComplete[k];
         out.unshift({
-          label: ['S', 'M', 'T', 'W', 'T', 'F', 'S'][dt.getDay()] + ' ' + dt.getDate(),
+          // Two letters, so Tuesday and Thursday (and the weekend days) can be told apart.
+          label: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'][dt.getDay()] + ' ' + dt.getDate(),
           bar:
             'display:block;height:7px;border-radius:4px;background:' +
             (dayComplete[k]
@@ -179,12 +193,15 @@ export function progressVals(ctx: Ctx) {
       .map((x) => ({
         day: DOW3[x.date.getDay()] + ' ' + x.date.getDate(),
         name: nameOf(x.av.name),
-        statusLabel: x.done ? 'Done' : 'Planned',
+        // A day already gone by without the session done says so, rather than still "Planned".
+        statusLabel: x.done ? 'Done' : x.date < todayDate ? 'Missed' : 'Planned',
         status:
           'flex:none;padding:5px 11px;border-radius:999px;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
           (x.done
             ? 'background:var(--color-pink);color:var(--color-white)'
-            : 'background:var(--color-white);color:var(--color-muted)'),
+            : x.date < todayDate
+              ? 'background:var(--color-mist);color:var(--color-slate-deep)'
+              : 'background:var(--color-white);color:var(--color-muted)'),
         open: () =>
           logic.nav({ screen: 'detail', creating: false, ...monthPatch(relM(x.date)), day: x.date.getDate(), entryId: x.av.id }),
       })),
@@ -221,13 +238,13 @@ export function progressVals(ctx: Ctx) {
           'display:flex;align-items:center;gap:12px;padding:10px 0' +
           (ix === arr.length - 1 ? '' : ';border-bottom:1px solid rgba(35,42,69,.055)'),
       })),
-    // Each stat says what it covers. Totals and streaks are all time, up to today; the average matches the chart.
+    // Each stat says what it covers. Totals and streaks are all time, up to today; the average says which weeks.
     profileStats: [
       {
         label: 'SESSIONS DONE',
         value: String(completedSessions),
         unit: totalSessions ? 'of ' + totalSessions : 'none planned yet',
-        span: totalSessions ? 'All time' : '',
+        span: totalSessions ? 'Up to today' : '',
       },
       { label: 'CURRENT STREAK', value: String(streak), unit: streak === 1 ? 'day' : 'days', span: 'Training days' },
       { label: 'LONGEST STREAK', value: String(longest), unit: longest === 1 ? 'day' : 'days', span: 'All time' },
@@ -235,7 +252,7 @@ export function progressVals(ctx: Ctx) {
         label: 'WEEKLY AVERAGE',
         value: completedSessions ? weeklyAvg : '—',
         unit: completedSessions ? 'a week' : 'no sessions yet',
-        span: completedSessions ? 'Last ' + weekBuckets.length + ' weeks' : '',
+        span: completedSessions ? weeklyAvgSpan : '',
       },
     ],
     allTimeLabel: 'All time',
@@ -335,7 +352,9 @@ export function progressVals(ctx: Ctx) {
         const q = questSeed(dm, relM(d));
         out.push({
           day: DOW3[d.getDay()].slice(0, 3),
-          name: isDone ? q.done : q.title,
+          // Named by its title, as on Profile; once cleared, its "done" line sits under it.
+          name: q.title,
+          doneLine: isDone ? q.done : '',
           done: isDone,
           row:
             'display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid rgba(35,42,69,.055)',
@@ -354,8 +373,11 @@ export function progressVals(ctx: Ctx) {
       return out;
     })(),
     summarySub: (() => {
-      const b = weekBuckets[thisWeekIx] || { planned: 0, done: 0 };
-      const left = b.planned - b.done;
+      const b = weekBuckets[thisWeekIx] || { planned: 0, done: 0, sessions: [] };
+      // "Left" is what can still be done: today and later. Days already gone by count as missed.
+      const left = b.sessions.filter((x) => !x.done && x.date >= todayDate).length;
+      const missed = b.sessions.filter((x) => !x.done && x.date < todayDate).length;
+      const missedNote = missed ? ' ' + missed + ' missed.' : '';
       return (
         DOWFULL[todayDate.getDay()] +
         ', ' +
@@ -365,9 +387,11 @@ export function progressVals(ctx: Ctx) {
         '. ' +
         (b.planned === 0
           ? 'Nothing on the plan this week yet.'
-          : left === 0
+          : left === 0 && !missed
             ? 'Every session this week is done.'
-            : left + (left === 1 ? ' session' : ' sessions') + ' left this week.')
+            : left === 0
+              ? 'Nothing left this week.' + missedNote
+              : left + (left === 1 ? ' session' : ' sessions') + ' left this week.' + missedNote)
       );
     })(),
   };
