@@ -13,7 +13,9 @@
   transition: background-color var(--dur-state) var(--ease-standard), color var(--dur-state) var(--ease-standard);
 }
 
-.base:disabled {
+/* aria-disabled: looks disabled but stays in the Tab order, for a button that explains what it's waiting for. */
+.base:disabled,
+.base[aria-disabled='true'] {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -29,42 +31,42 @@
 /* ---- Button types. Each has a filled look and, with .ghost, a text-only look. */
 .primary { background: var(--color-pink); color: var(--color-white); }
 /* Keyboard focus looks the same as hover: a button's focus styles are its hover styles. The ring is the global one. */
-.primary:hover:not(:disabled),
-.primary:focus-visible:not(:disabled) { background: var(--color-pink-hover); }
+.primary:hover:not(:disabled):not([aria-disabled='true']),
+.primary:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-pink-hover); }
 .primary.ghost { background: none; color: var(--color-pink); }
-.primary.ghost:hover:not(:disabled),
-.primary.ghost:focus-visible:not(:disabled) { background: var(--color-pink-tint); }
+.primary.ghost:hover:not(:disabled):not([aria-disabled='true']),
+.primary.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-pink-tint); }
 
 .glow { box-shadow: var(--glow-primary); }
 
 .secondary { background: var(--color-pink-tint); color: var(--color-pink-deep); }
-.secondary:hover:not(:disabled),
-.secondary:focus-visible:not(:disabled) { filter: brightness(0.97); }
+.secondary:hover:not(:disabled):not([aria-disabled='true']),
+.secondary:focus-visible:not(:disabled):not([aria-disabled='true']) { filter: brightness(0.97); }
 .secondary.ghost { background: none; }
-.secondary.ghost:hover:not(:disabled),
-.secondary.ghost:focus-visible:not(:disabled) { background: var(--color-pink-tint); filter: none; }
+.secondary.ghost:hover:not(:disabled):not([aria-disabled='true']),
+.secondary.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-pink-tint); filter: none; }
 
 .neutral { background: var(--color-canvas); color: var(--color-slate); }
-.neutral:hover:not(:disabled),
-.neutral:focus-visible:not(:disabled) { filter: brightness(0.97); }
+.neutral:hover:not(:disabled):not([aria-disabled='true']),
+.neutral:focus-visible:not(:disabled):not([aria-disabled='true']) { filter: brightness(0.97); }
 .neutral.ghost { background: none; }
-.neutral.ghost:hover:not(:disabled),
-.neutral.ghost:focus-visible:not(:disabled) { background: var(--hover-neutral); filter: none; }
+.neutral.ghost:hover:not(:disabled):not([aria-disabled='true']),
+.neutral.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-neutral); filter: none; }
 
 .danger { background: var(--color-danger); color: var(--color-white); }
-.danger:hover:not(:disabled),
-.danger:focus-visible:not(:disabled) { background: var(--color-danger-hover); }
+.danger:hover:not(:disabled):not([aria-disabled='true']),
+.danger:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-danger-hover); }
 .danger.ghost { background: none; color: var(--color-danger); }
-.danger.ghost:hover:not(:disabled),
-.danger.ghost:focus-visible:not(:disabled) { background: var(--hover-danger-ghost); }
+.danger.ghost:hover:not(:disabled):not([aria-disabled='true']),
+.danger.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-danger-ghost); }
 
 .dashed {
   border: 1px dashed rgba(213, 49, 129, 0.5);
   background: rgba(252, 231, 239, 0.5);
   color: var(--color-pink-deep);
 }
-.dashed:hover:not(:disabled),
-.dashed:focus-visible:not(:disabled) { background: var(--color-pink-tint); }
+.dashed:hover:not(:disabled):not([aria-disabled='true']),
+.dashed:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-pink-tint); }
 
 /* Icon buttons and the extra-small button are drawn smaller than 44 px; their tap area isn't. */
 .icon, .xs { position: relative; }
@@ -86,9 +88,9 @@
 .icon-lg { width: 44px; height: 44px; border-radius: var(--radius-sm); }
 .circle { border-radius: var(--radius-full); }
 
-.icon-default:hover:not(:disabled),
-.icon-default:focus-visible:not(:disabled) { background: var(--hover-icon); }
-.icon-danger:hover:not(:disabled),
-.icon-danger:focus-visible:not(:disabled) { background: var(--hover-danger); }
-.icon-inverse:hover:not(:disabled),
-.icon-inverse:focus-visible:not(:disabled) { background: var(--hover-inverse); }
+.icon-default:hover:not(:disabled):not([aria-disabled='true']),
+.icon-default:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-icon); }
+.icon-danger:hover:not(:disabled):not([aria-disabled='true']),
+.icon-danger:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-danger); }
+.icon-inverse:hover:not(:disabled):not([aria-disabled='true']),
+.icon-inverse:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-inverse); }

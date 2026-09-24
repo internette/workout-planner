@@ -254,6 +254,7 @@ export function workoutVals(ctx: Ctx) {
       preview: expanded ? rows : rows.slice(0, 3),
       hasMore: rows.length > 3,
       moreLabel: expanded ? 'Show less' : '+ ' + (rows.length - 3) + ' more',
+      moreOpen: expanded,
       moreCaret: 'width:15px;height:15px;flex:none;transition:transform .2s' + (expanded ? ';transform:rotate(180deg)' : ''),
       toggleMore: () => logic.s({ moreIds: Object.assign({}, st.moreIds, { [id]: !expanded }) }),
       // Logged: read it. Every exercise ticked but not logged yet: log it. Started (clock or ticks): carry on, or
@@ -407,8 +408,8 @@ export function workoutVals(ctx: Ctx) {
     rideDoneType: rideDone ? 'secondary' : 'neutral',
     rideDoneMark:
       'width:24px;height:24px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;' +
-      (rideDone ? 'background:var(--color-pink)' : 'border:1.5px solid rgba(35,42,69,.18)'),
-    rideDoneStroke: rideDone ? 'var(--color-white)' : 'rgba(35,42,69,0.22)',
+      (rideDone ? 'background:var(--color-pink)' : 'border:1.5px solid var(--color-outline)'),
+    rideDoneStroke: rideDone ? 'var(--color-white)' : 'var(--color-outline)',
     dayIcoSvg: iconSvg(
       (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (selRide ? 'bike' : 'h'),
       (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || colors.pink,

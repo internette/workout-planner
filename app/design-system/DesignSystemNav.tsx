@@ -171,7 +171,8 @@ export function DesignSystemNav() {
       <nav aria-label="Design system" className={styles.nav}>
         {links}
       </nav>
-      <div className={styles.mobileBar}>
+      {/* The phone's bar: home and the page menu, in a landmark of their own. */}
+      <nav aria-label="Design system menu" className={styles.mobileBar}>
         <Popover
           open={menuOpen}
           onClose={closeMenu}
@@ -196,7 +197,7 @@ export function DesignSystemNav() {
             </span>
           </button>
         </Popover>
-      </div>
+      </nav>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, MON3, MONTHS, TARGET_AREAS } from '../constants';
+import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, ICON_COLOR_NAMES, ICON_NAMES, MON3, MONTHS, TARGET_AREAS } from '../constants';
 import { digitsOnly, exLine, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
@@ -283,6 +283,12 @@ export function editVals(ctx: Ctx) {
     libraryEmptyNote: pickQ
       ? 'No exercises match “' + (st.pickQ || '').trim() + '”' + (narrowToAreas ? ' for ' + areaWords(picked) + '.' : '.')
       : 'Everything that fits is already in this workout.',
+    // Read out as the search narrows the list (the list itself changes silently).
+    libraryAnnounce: !pickQ
+      ? ''
+      : pickable.length
+        ? plural(pickable.length, 'exercise') + ' found.'
+        : 'No exercises match “' + (st.pickQ || '').trim() + '”' + (narrowToAreas ? ' for ' + areaWords(picked) + '.' : '.'),
     libraryMore: pickable.length > PICK_LIMIT ? plural(pickable.length - PICK_LIMIT, 'more exercise') + ' — search to find one.' : '',
     library: pickable.slice(0, PICK_LIMIT).map((e) => ({
       name: e.name,
@@ -322,6 +328,8 @@ export function editVals(ctx: Ctx) {
     iconGrid: EXERCISE_ICON_NAMES.map((name) => ({
       svg: iconSvg(name),
       pick: () => logic.s({ dIcon: name }),
+      label: ICON_NAMES[name] + ' icon',
+      on: (st.dIcon || 'h') === name,
       style: optStyle((st.dIcon || 'h') === name),
     })),
     draftNameError,
@@ -357,9 +365,13 @@ export function editVals(ctx: Ctx) {
     workoutIconGrid: EXERCISE_ICON_NAMES.map((name) => ({
       svg: iconSvg(name, wColor),
       pick: () => logic.s({ icons: Object.assign({}, st.icons, { [listKey]: name }) }),
+      label: ICON_NAMES[name] + ' icon',
+      on: wIcon === name,
       style: optStyle(wIcon === name),
     })),
-    iconColors: ICON_COLORS.map((c) => ({
+    iconColors: ICON_COLORS.map((c, i) => ({
+      label: ICON_COLOR_NAMES[i],
+      on: c === wColor,
       pick: () => logic.s({ iconColors: Object.assign({}, st.iconColors, { [listKey]: c }) }),
       style:
         'width:34px;height:34px;border:none;border-radius:11px;cursor:pointer;background:' +
@@ -390,11 +402,10 @@ export function editVals(ctx: Ctx) {
     eNamePlaceholder: creating,
     eNameStatic: !creating,
     setNewName: (e) => logic.s({ newName: e.target.value }),
+    // Enter in the name field does nothing. Focus stays put: blurring it would leave focus on the page itself, where
+    // a screen reader loses its place and the next Escape leaves the editor.
     commitOnEnter: (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        e.target.blur();
-      }
+      if (e.key === 'Enter') e.preventDefault();
     },
     setEditName: (e) => logic.s({ renames: Object.assign({}, st.renames, { [baseName]: e.target.value }) }),
     eEyebrow: tplMode ? 'EDITING SAVED WORKOUT' : st.editing ? 'EDITING WORKOUT' : 'NEW WORKOUT',
@@ -751,8 +762,8 @@ export function editVals(ctx: Ctx) {
           'margin-left:auto;display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;border-radius:11px;cursor:pointer;border:' +
           (doneSet[e.name]
             ? 'none;background:var(--color-pink)'
-            : '1.5px solid rgba(35,42,69,.15);background:none'),
-        doneStroke: doneSet[e.name] ? 'var(--color-white)' : 'rgba(35,42,69,0.22)',
+            : '1.5px solid var(--color-outline);background:none'),
+        doneStroke: doneSet[e.name] ? 'var(--color-white)' : 'var(--color-outline)',
         isDone: !!doneSet[e.name],
         // Ticking off belongs to a session on the calendar, not to a workout being built or a saved one.
         showTick: !creating && !tplMode && mi * 100 + selDay <= ctx.TK,
@@ -765,7 +776,8 @@ export function editVals(ctx: Ctx) {
         },
         iconAria: 'Choose icon for ' + e.name,
         removeAria: 'Remove ' + e.name,
-        doneAria: doneSet[e.name] ? 'Mark ' + e.name + ' not done' : 'Mark ' + e.name + ' done',
+        // One name either way; aria-pressed says whether it's done.
+        doneAria: 'Mark ' + e.name + ' done',
         toggleDone: () => {
           const nowDone = !doneSet[e.name];
           const names = nowDone ? doneNames.concat([e.name]) : doneNames.filter((n) => n !== e.name);

@@ -10,6 +10,7 @@ export const colorGroups = {
     muted: { hex: '#6E6881', use: 'Tertiary text, inactive controls (4.5:1 or more on canvas, mist and pink tint)' },
     subtle: { hex: '#756B85', use: 'Inactive navigation icons, eyebrow labels (4.5:1 or more on white and canvas)' },
     hairline: { hex: '#C7C4D0', use: 'Disabled and empty states, switch track' },
+    outline: { hex: '#8A859A', use: 'Empty controls you can still use: unticked boxes, unrated stars (3:1 or more on canvas and white)' },
     divider: { hex: '#DAD7E0', use: 'Rest-day dashes' },
   },
   Surfaces: {
@@ -24,7 +25,6 @@ export const colorGroups = {
     pink: { hex: '#D53181', use: 'The primary pink: actions, selection, marks, bars, ticks and gems. White text on it is 4.5:1' },
     pinkHover: { hex: '#C42773', use: 'Primary action, hovered (one step darker than pink)' },
     pinkDeep: { hex: '#AF2367', use: 'Pink text on light backgrounds (two steps darker; 5.5:1 on pink tint, 6.4:1 on white)' },
-    pinkPlum: { hex: '#8F4F78', use: 'Pending streak caption' },
     pinkTint: { hex: '#FCE8F2', use: 'Selected and active backgrounds' },
     pinkMuted: { hex: '#E8BFD3', use: 'Disabled primary action' },
   },

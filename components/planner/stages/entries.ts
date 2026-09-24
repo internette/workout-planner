@@ -104,7 +104,7 @@ export function entriesStage(ctx: Ctx): Ctx {
     // 44px square to tap, however big the star glyph draws.
     style:
       'border:none;background:none;padding:0;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;font-size:var(--text-5xl);line-height:var(--leading-none);cursor:pointer;color:' +
-      (n <= st.rpe ? 'var(--color-ink)' : 'var(--color-hairline)'),
+      (n <= st.rpe ? 'var(--color-ink)' : 'var(--color-outline)'),
   }));
   return {
     isDoneEntry,

@@ -25,7 +25,7 @@ export default function MotionPage() {
       </div>
 
       <h2 id="durations" style={h2}>Durations</h2>
-      <div style={tableScroll} tabIndex={0} role="region" aria-label="Table, scrolls sideways">
+      <div style={tableScroll} tabIndex={0} role="region" aria-label="Durations table, scrolls sideways">
         <table style={table}>
         <tbody>
           {Object.entries(durations).map(([name, { value, use }]) => (
@@ -40,7 +40,7 @@ export default function MotionPage() {
       </div>
 
       <h2 id="easings" style={h2}>Easings</h2>
-      <div style={tableScroll} tabIndex={0} role="region" aria-label="Table, scrolls sideways">
+      <div style={tableScroll} tabIndex={0} role="region" aria-label="Easings table, scrolls sideways">
         <table style={table}>
         <tbody>
           {Object.entries(easings).map(([name, { value, use }]) => (

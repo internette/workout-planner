@@ -72,7 +72,7 @@ export function calendarStage(ctx: Ctx): Ctx {
       letterStyle:
         "font-family:var(--font-heading);" +
         'font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:' +
-        (on ? 'rgba(255,255,255,.85)' : 'var(--color-muted)'),
+        (on ? 'var(--color-white)' : 'var(--color-muted)'),
       numStyle:
         "font-family:var(--font-heading);" +
         'font-size:var(--text-xl);font-weight:' +

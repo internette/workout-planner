@@ -5,7 +5,7 @@ export const metadata = { title: 'Colors — Design system' };
 
 // A line under a group's heading, where the group needs more than each swatch's own note.
 const groupNotes: Record<string, string> = {
-  Pink: 'One pink, in steps on the same hue: pink is the primary colour (buttons, selection, marks), pinkHover is one step darker, and pinkDeep two steps darker for pink text. pinkTint and pinkMuted are its light backgrounds; pinkPlum is a separate purple for one caption.',
+  Pink: 'One pink, in steps on the same hue: pink is the primary colour (buttons, selection, marks), pinkHover is one step darker, and pinkDeep two steps darker for pink text. pinkTint and pinkMuted are its light backgrounds.',
 };
 
 export default function ColorsPage() {

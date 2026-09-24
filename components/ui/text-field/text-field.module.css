@@ -58,7 +58,7 @@
   width: 100%;
   box-sizing: border-box;
   margin: 3px 0 0;
-  min-height: 36px;
+  min-height: 44px;
   padding: 5px 0;
   border-bottom: 1.5px dashed rgba(35, 42, 69, 0.3);
   font-family: var(--font-heading);

@@ -31,6 +31,9 @@ export const QUESTS = [
     done:'The rift is sealed.' },
 ];
 export const ICON_COLORS = [colors.pink, colors.periwinkle, colors.teal, colors.slate, colors.coral];
+// What the icon and colour choices are called, for screen readers.
+export const ICON_COLOR_NAMES = ['Pink', 'Periwinkle', 'Teal', 'Slate', 'Coral'];
+export const ICON_NAMES: Record<string, string> = { h: 'Dumbbell', v: 'Upright dumbbell', d: 'Small dumbbell', bike: 'Bike' };
 export const RANK_STEPS = [3,6,10,15,21,28,36,45,55,66,78,91,105,120,136,153,171,190,210,240];
 export const RANKS = [
   { name:'First spark', next:'Novice', pill:'background:var(--color-pink-tint);color:var(--color-pink-deep)', gem:'var(--color-pink)' },

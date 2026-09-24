@@ -5,7 +5,7 @@ import styles from './design-system.module.css';
 
 export default function DesignSystemLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className={styles.shell}>
+    <div className={styles.shell} data-design-system>
       <header className={styles.top}>
         <Link href="/" className={styles.brand} aria-label="Moonshot home">
           <Lockup height={28} />
