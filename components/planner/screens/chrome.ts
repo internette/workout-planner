@@ -13,6 +13,7 @@ export function chromeVals(ctx: Ctx) {
     st,
     navExtra,
     calActive,
+    inChronicle,
     Y,
     srcAct,
     mi,
@@ -42,19 +43,19 @@ export function chromeVals(ctx: Ctx) {
       ? 'position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;gap:2px;padding:8px 6px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid rgba(35,42,69,.07);box-shadow:0 -4px 14px rgba(35,42,69,.07)'
       : 'display:none',
     mTabCal: mTab(onCal),
-    mTabDiary: mTab(st.screen === 'diaryList'),
+    mTabDiary: mTab(inChronicle),
     mTabSummary: mTab(st.screen === 'summary'),
     mTabArsenal: mTab(arsenalActive),
     mArsenalColor: arsenalActive ? 'var(--color-pink-deep)' : 'var(--color-muted)',
     mArsenalLabel: mLabel(arsenalActive),
     mCalColor: onCal ? 'var(--color-pink-deep)' : 'var(--color-muted)',
-    mDiaryColor: st.screen === 'diaryList' ? 'var(--color-pink-deep)' : 'var(--color-muted)',
+    mDiaryColor: inChronicle ? 'var(--color-pink-deep)' : 'var(--color-muted)',
     mSummaryColor: st.screen === 'summary' ? 'var(--color-pink-deep)' : 'var(--color-muted)',
     mTabProfile: mTab(st.screen === 'profile'),
     mProfileColor: st.screen === 'profile' ? 'var(--color-pink-deep)' : 'var(--color-muted)',
     mProfileLabel: mLabel(st.screen === 'profile'),
     mCalLabel: mLabel(onCal),
-    mDiaryLabel: mLabel(st.screen === 'diaryList'),
+    mDiaryLabel: mLabel(inChronicle),
     mSummaryLabel: mLabel(st.screen === 'summary'),
     isDiaryList: st.screen === 'diaryList',
     isProfile: st.screen === 'profile',
@@ -81,12 +82,12 @@ export function chromeVals(ctx: Ctx) {
       navExtra,
     navDiary:
       'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
-      (st.screen === 'diaryList'
+      (inChronicle
         ? 'background:var(--color-pink-tint);color:var(--color-pink-deep);font-weight:var(--font-weight-semibold)'
         : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
       navExtra,
     navCalInk: calActive ? 'var(--color-pink)' : 'var(--color-subtle)',
-    navDiaryInk: st.screen === 'diaryList' ? 'var(--color-pink)' : 'var(--color-subtle)',
+    navDiaryInk: inChronicle ? 'var(--color-pink)' : 'var(--color-subtle)',
     navSummary:
       'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (st.screen === 'summary'
@@ -203,7 +204,7 @@ export function chromeVals(ctx: Ctx) {
     tabDiary: tab(st.screen === 'diary'),
     tabRest: tab(st.screen === 'rest'),
     navCalOn: calActive ? 'page' : false,
-    navDiaryOn: st.screen === 'diaryList' ? 'page' : false,
+    navDiaryOn: inChronicle ? 'page' : false,
     navArsenalOn: arsenalActive ? 'page' : false,
     navSummaryOn: st.screen === 'summary' ? 'page' : false,
     navProfileOn: st.screen === 'profile' ? 'page' : false,
