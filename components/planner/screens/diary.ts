@@ -122,7 +122,7 @@ export function diaryVals(ctx: Ctx) {
         'display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px 22px;border:none;border-radius:999px;text-align:left;width:100%;background:var(--color-white);box-shadow:0 4px 14px rgba(35,42,69,.07);cursor:pointer',
       day: DOW3[new Date(Y, TODAY_M, x.d).getDay()] + ' ' + x.d,
       name: nameOf(x.av.name),
-      meta: x.av.ride ? (x.av.ride.dist ? x.av.ride.dist + ' mi' : x.av.time) : x.av.time,
+      meta: x.av.ride ? (ctx.distOf(x.av) ? ctx.distOf(x.av) + ' mi · ' : '') + ctx.timeOf(x.av) : ctx.timeOf(x.av),
       pick: () =>
         logic.nav({
           screen: 'diary',

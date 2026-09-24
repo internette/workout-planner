@@ -38,6 +38,19 @@ export default function Planner({ account = null }: { account?: Account | null }
     if (e.persisted) logic.setState({ signOutOpen: false, signingOut: false });
   });
 
+  // Workout timers are kept in this browser, per account, so a reload (or the phone dropping the page) picks up where
+  // the clock was. A running one is stored by when it started, so it has kept counting in the meantime.
+  const timersKey = 'moonshot.timers.' + (account?.email || 'local');
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(window.localStorage.getItem(timersKey) || 'null');
+      if (saved && typeof saved === 'object') logic.setState({ workoutTimer: saved });
+    } catch {
+      // Unreadable or unavailable storage: start without saved timers.
+    }
+  }, [logic, timersKey]);
+
   // The logic object owns the state; it asks this component to re-render whenever that changes.
   useEffect(() => {
     logic.__host = { forceUpdate: rerender };
@@ -88,6 +101,16 @@ export default function Planner({ account = null }: { account?: Account | null }
 
   // Offers to install the app on a phone, once the plan has loaded.
   const installPrompt = useInstallPrompt(status === 'ready');
+
+  const timers = logic.state.workoutTimer;
+  useEffect(() => {
+    try {
+      if (timers && Object.keys(timers).length) window.localStorage.setItem(timersKey, JSON.stringify(timers));
+      else window.localStorage.removeItem(timersKey);
+    } catch {
+      // Storage can be unavailable (private windows, blocked site data); the timer then lasts until a reload.
+    }
+  }, [timers, timersKey]);
 
   // A running workout stopwatch needs the screen to tick even though nothing else in state is changing.
   const anyTimerRunning = Object.values(logic.state.workoutTimer || {}).some((t: any) => t && t.runningSince);

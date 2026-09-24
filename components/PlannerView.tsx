@@ -622,6 +622,11 @@ export function PlannerView({ v }: { v: any }) {
                                               >
                                                 {r?.value}
                                               </Text>
+                                              {r?.note ? (
+                                                <Text variant="caption" as="div" tone="muted" style={{ marginTop: '2px' }}>
+                                                  {r.note}
+                                                </Text>
+                                              ) : null}
                                             </div>
                                           </Fragment>
                                         ))}
@@ -3627,19 +3632,72 @@ export function PlannerView({ v }: { v: any }) {
                   <Dialog
                     open={!!v.pausePromptOpen}
                     onClose={v.keepGoing}
-                    title="Pause your workout?"
-                    description="You can pick up right where you left off."
+                    title="Leave your workout?"
+                    description="The timer can keep counting while you're elsewhere, or wait for you. Either way, pick up from the day card."
                     actions={
                       <>
-                        <Button type="neutral" ghost size="md" onClick={v.keepGoing}>
-                          Keep going
+                        <Button type="neutral" ghost size="md" onClick={v.confirmPause}>
+                          Pause timer
                         </Button>
-                        <Button type="primary" size="md" onClick={v.confirmPause}>
-                          Pause workout
+                        <Button type="primary" size="md" onClick={v.leaveRunning}>
+                          Keep it running
                         </Button>
                       </>
                     }
                   />
+                  <Dialog
+                    open={!!v.finishOpen}
+                    onClose={v.cancelFinish}
+                    title={v.finishTitle}
+                    description={v.finishNote || undefined}
+                    actions={
+                      <>
+                        <Button type="neutral" ghost size="md" onClick={v.cancelFinish}>
+                          Not yet
+                        </Button>
+                        <Button type="primary" size="md" onClick={v.saveFinish} disabled={!v.canSaveFinish}>
+                          Finish
+                        </Button>
+                      </>
+                    }
+                  >
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}>
+                      {v.finishIsRide ? (
+                        <TextField
+                          label="Distance"
+                          labelNote="(miles)"
+                          inputMode="decimal"
+                          containerStyle={{ flex: '1 1 100%', minWidth: '0' }}
+                          value={v.finishDist}
+                          onChange={v.setFinishDist}
+                        />
+                      ) : null}
+                      <TextField
+                        label="Hours"
+                        inputMode="numeric"
+                        containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
+                        value={v.finishHrs}
+                        onChange={v.setFinishHrs}
+                      />
+                      <TextField
+                        label="Minutes"
+                        inputMode="numeric"
+                        containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
+                        value={v.finishMins}
+                        onChange={v.setFinishMins}
+                      />
+                      {v.finishIsRide ? (
+                        <TextField
+                          label="Elevation"
+                          labelNote="(feet)"
+                          inputMode="numeric"
+                          containerStyle={{ flex: '1 1 100%', minWidth: '0' }}
+                          value={v.finishElev}
+                          onChange={v.setFinishElev}
+                        />
+                      ) : null}
+                    </div>
+                  </Dialog>
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }}>
                     <IconButton label="Back" size="md" onClick={v.backToDay} style={{ marginLeft: '-8px' }}>
                       <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
@@ -3733,13 +3791,20 @@ export function PlannerView({ v }: { v: any }) {
                               {v.timerLabel}
                             </Text>
                           </div>
-                          <Button
-                            type={v.timerButtonLabel === 'Pause' ? 'secondary' : 'primary'}
-                            size="md"
-                            onClick={v.timerButtonAction}
-                          >
-                            {v.timerButtonLabel}
-                          </Button>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <Button
+                              type={v.canFinish || v.timerButtonLabel === 'Pause' ? 'secondary' : 'primary'}
+                              size="md"
+                              onClick={v.timerButtonAction}
+                            >
+                              {v.timerButtonLabel}
+                            </Button>
+                            {v.canFinish ? (
+                              <Button type="primary" size="md" onClick={v.openFinish}>
+                                Finish
+                              </Button>
+                            ) : null}
+                          </div>
                         </div>
                       </Card>
                     </>
@@ -3757,6 +3822,11 @@ export function PlannerView({ v }: { v: any }) {
                                 <Text variant="cardTitle" as="div" tone="ink" style={{ marginTop: '4px' }}>
                                   {r?.value}
                                 </Text>
+                                {r?.note ? (
+                                  <Text variant="caption" as="div" tone="muted" style={{ marginTop: '2px' }}>
+                                    {r.note}
+                                  </Text>
+                                ) : null}
                               </div>
                             </Fragment>
                           ))}

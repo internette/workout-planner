@@ -161,7 +161,7 @@ export function editVals(ctx: Ctx) {
       : 'No planned duration',
     plannedDistPh: rDist || '0',
     plannedElevPh: rElev || '0',
-    ridePctLabel: ridePct == null ? 'Not started' : ridePct + '% of plan',
+    ridePctLabel: ridePct != null ? ridePct + '% of plan' : rideDone ? 'Completed' : 'Not started',
     rideBar:
       'width:' +
       (ridePct == null ? 0 : Math.min(100, ridePct)) +
@@ -602,7 +602,11 @@ export function editVals(ctx: Ctx) {
       selDay +
       yearNote,
     eStatus: doneSel ? 'Completed' : 'Planned',
-    eTime: (selAct && selAct.time) || (creating ? 'Duration TBD' : '~50 min'),
+    // Once finished, how long it actually took; before that, the plan.
+    eTime:
+      selAct && ctx.actualMinutes(selAct)
+        ? 'Took ' + ctx.minText(ctx.actualMinutes(selAct))
+        : (selAct && selAct.time) || (creating ? 'Duration TBD' : '~50 min'),
     setRepeat: (on) => logic.s({ repeat: !!on }),
     repeatOn: !!st.repeat,
     repeatNote: 'Adds this workout every ' + DOWFULL[selDate.getDay()] + ' for the next 12 weeks, 13 sessions in all.',

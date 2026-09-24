@@ -22,15 +22,23 @@ export function entriesStage(ctx: Ctx): Ctx {
   const iso30 = isoOf(new Date(Y, TODAY_M, TODAY_D - 29));
   const rideDoneAt = (av) => !!(st.rideDone || {})[idOf(av)];
   const isDoneEntry = (av) => !!av && (av.ride ? rideDoneAt(av) : countAt(av) > 0 && doneCountAt(av) === countAt(av));
+  // What a finished session actually took (recorded by Finish), next to what was planned.
+  const actualMinutes = (av) =>
+    av && av.actual ? Number(av.actual.hrs || 0) * 60 + Number(av.actual.mins || 0) : 0;
+  const minText = (m) => (Math.floor(m / 60) ? Math.floor(m / 60) + ' h ' + (m % 60 ? (m % 60) + ' min' : '') : m + ' min').trim();
+  // A finished session's time, else the planned one ("~50 min").
+  const timeOf = (av) => (actualMinutes(av) ? minText(actualMinutes(av)) : av.time);
+  // A ride's distance: what was ridden once it's done and recorded, else the plan.
+  const distOf = (av) => (av.ride && isDoneEntry(av) && av.actual && av.actual.dist ? av.actual.dist : av.ride ? av.ride.dist : '');
   const metaFor = (av) =>
     !av
       ? ''
       : av.ride
-        ? av.ride.dist
-          ? av.ride.dist + ' mi · ' + av.time
-          : av.time
+        ? distOf(av)
+          ? distOf(av) + ' mi · ' + timeOf(av)
+          : timeOf(av)
         : isDoneEntry(av)
-          ? plural(countAt(av), 'exercise') + ' · ' + av.time
+          ? plural(countAt(av), 'exercise') + ' · ' + timeOf(av)
           : doneCountAt(av) > 0
             ? doneCountAt(av) + ' of ' + countAt(av) + ' done · ' + av.time
             : plural(countAt(av), 'exercise') + ' · ' + av.time;
@@ -77,6 +85,10 @@ export function entriesStage(ctx: Ctx): Ctx {
   }));
   return {
     isDoneEntry,
+    actualMinutes,
+    minText,
+    timeOf,
+    distOf,
     instList,
     nameOf,
     metaFor,
