@@ -171,7 +171,7 @@ export function chromeVals(ctx: Ctx) {
         const h = st.hist || [];
         if (h.length && h[h.length - 1].screen === 'arsenal') logic.back();
         else logic.s({ screen: 'arsenal' });
-        logic.s({ arsenalView });
+        logic.s({ arsenalView, spellNotice: '“' + c.name + '” deleted.', announce: '“' + c.name + '” deleted.' });
       };
       if (c.kind === 'archiveWorkout') {
         toList('workouts');
@@ -179,7 +179,7 @@ export function chromeVals(ctx: Ctx) {
       }
       // Browser Back from the exercise editor with changes: confirmed, so go back without them.
       if (c.kind === 'leaveExercise') {
-        logic.s({ exDraft: null, exDraftOrig: null, exEditNav: false });
+        logic.s({ exDraft: null, exDraftOrig: null, exEditNav: false, exCopy: false });
         logic.back();
       }
       if (c.kind === 'deleteExercise') {

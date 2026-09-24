@@ -489,6 +489,7 @@ export interface WorkoutEdit {
     add: Exercise[];
   };
   repeatDates: string[]; // extra weekly dates to schedule
+  durationMinutes?: number; // a lift's new length, when its exercises changed
 }
 
 // Exercise ticks are stored by name, so renaming an exercise has to rename its ticks too.
@@ -519,6 +520,7 @@ export async function updateWorkout(e: WorkoutEdit) {
     patch.ride_zone = e.ride.zone;
     patch.duration_minutes = e.ride.minutes;
   }
+  if (e.durationMinutes != null && !e.ride) patch.duration_minutes = e.durationMinutes;
   if (e.repeatDates.length) patch.repeat_enabled = true;
   if (Object.keys(patch).length) await ok(supabase.from('workouts').update(patch).eq('id', e.workoutId));
 

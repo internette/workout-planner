@@ -35,6 +35,13 @@ export const Pencil = strokeIcon(
     <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
   </>,
 );
+export const Copy = strokeIcon(
+  'Copy',
+  <>
+    <rect x="9" y="9" width="12" height="12" rx="2.5" />
+    <path d="M5 15H4.5A1.5 1.5 0 0 1 3 13.5v-9A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V5" />
+  </>,
+);
 export const Clock = strokeIcon(
   'Clock',
   <>

@@ -24,6 +24,7 @@ import {
   ChevronRight,
   Clock,
   Close,
+  Copy,
   Dumbbell,
   DumbbellSmall,
   Flame,
@@ -129,7 +130,7 @@ export function PlannerView({ v }: { v: any }) {
             <Button type="neutral" ghost size="md" onClick={v.tplConfirmCancel}>
               Cancel
             </Button>
-            <Button type="primary" size="md" onClick={v.tplConfirmSave}>
+            <Button type="primary" size="md" onClick={v.tplConfirmSave} disabled={!!v.tplConfirmBlocked}>
               Save
             </Button>
           </>
@@ -152,9 +153,56 @@ export function PlannerView({ v }: { v: any }) {
                     {v.tplConfirmUpcomingLabel}
                   </Checkbox>
                 ) : null}
+                {o.value === 'new' && v.tplConfirmShowName ? (
+                  <TextField
+                    aria-label="New workout name"
+                    value={v.tplConfirmName ?? ''}
+                    onChange={v.tplConfirmSetName}
+                    placeholder="Name the new workout"
+                    error={v.tplConfirmNameError || undefined}
+                  />
+                ) : null}
               </OptionCard>
             ))}
           </OptionGroup>
+        </div>
+      </Dialog>
+      <Dialog
+        open={!!v.addToDialog?.open}
+        onClose={v.addToDialog?.cancel}
+        title={v.addToDialog?.title ?? ''}
+        actions={
+          <Button type="neutral" ghost size="md" onClick={v.addToDialog?.cancel}>
+            Cancel
+          </Button>
+        }
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
+          {(v.addToDialog?.options ?? []).map((o, i) => (
+            <Card
+              key={i}
+              as="button"
+              pad="sm"
+              interactive
+              disabled={o?.disabled}
+              onClick={o?.pick}
+              style={{ display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left', width: '100%', opacity: o?.disabled ? 0.55 : 1 }}
+            >
+              <span style={{ flex: '1', minWidth: '0' }}>
+                <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+                  {o?.name}
+                </Text>
+                <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
+                  {o?.meta}
+                </Text>
+              </span>
+              {o?.disabled ? null : <ChevronRight color="var(--color-muted)" size={16} />}
+            </Card>
+          ))}
+          <Button type="dashed" size="md" fullWidth onClick={v.addToDialog?.pickNew}>
+            <Plus color="var(--color-pink-deep)" size={16} />
+            New workout
+          </Button>
         </div>
       </Dialog>
       <div style={css(v.pageStyle)}>
@@ -2335,44 +2383,6 @@ export function PlannerView({ v }: { v: any }) {
             {v.isArsenal ? (
               <>
                 <div>
-                  <Dialog
-                    open={!!v.addToDialog?.open}
-                    onClose={v.addToDialog?.cancel}
-                    title={v.addToDialog?.title ?? ''}
-                    actions={
-                      <Button type="neutral" ghost size="md" onClick={v.addToDialog?.cancel}>
-                        Cancel
-                      </Button>
-                    }
-                  >
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
-                      {(v.addToDialog?.options ?? []).map((o, i) => (
-                        <Card
-                          key={i}
-                          as="button"
-                          pad="sm"
-                          interactive
-                          disabled={o?.disabled}
-                          onClick={o?.pick}
-                          style={{ display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left', width: '100%', opacity: o?.disabled ? 0.55 : 1 }}
-                        >
-                          <span style={{ flex: '1', minWidth: '0' }}>
-                            <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
-                              {o?.name}
-                            </Text>
-                            <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
-                              {o?.meta}
-                            </Text>
-                          </span>
-                          <ChevronRight color="var(--color-muted)" size={16} />
-                        </Card>
-                      ))}
-                      <Button type="dashed" size="md" fullWidth onClick={v.addToDialog?.pickNew}>
-                        <Plus color="var(--color-pink-deep)" size={16} />
-                        New workout
-                      </Button>
-                    </div>
-                  </Dialog>
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
                     <Text variant="title" as="h1" style={{ margin: '0' }}>
                       Spellbook
@@ -2389,6 +2399,20 @@ export function PlannerView({ v }: { v: any }) {
                   >
                     {v.arsenalIntro}
                   </Text>
+                  {v.spellNotice ? (
+                    <Card
+                      pad="sm"
+                      style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '14px', background: 'var(--color-mist)', boxShadow: 'none' }}
+                    >
+                      <Check color="var(--color-slate-deep)" strokeWidth={2.4} size={16} />
+                      <Text variant="body" weight="medium" style={{ flex: '1', minWidth: '0', color: 'var(--color-slate-deep)' }}>
+                        {v.spellNotice}
+                      </Text>
+                      <IconButton label="Dismiss" size="sm" onClick={v.dismissSpellNotice}>
+                        <Close color="var(--color-muted)" strokeWidth={2.2} size={14} />
+                      </IconButton>
+                    </Card>
+                  ) : null}
                   {v.arsenalPicking ? (
                     // Stays in view down the long list, so it's always clear the Spellbook is picking for a workout.
                     // The page-coloured band behind it keeps the list from showing through above the card.
@@ -2877,18 +2901,19 @@ export function PlannerView({ v }: { v: any }) {
                       <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
                     </IconButton>
                     <Text variant="eyebrow" tone="slate">
-                      {v.exercise.builtin ? 'BUILT-IN EXERCISE' : 'EXERCISE'}
+                      {v.exercise.builtin ? 'BUILT-IN' : 'EXERCISE'}
                     </Text>
                     {v.exercise.builtin ? (
-                      <Button
-                        type="primary"
-                        size="sm"
-                        onClick={v.exercise.copy}
-                        style={{ marginLeft: 'auto' }}
-                      >
-                        <Plus color="var(--color-white)" size={16} />
-                        Make a copy
-                      </Button>
+                      <span style={{ display: 'flex', gap: '8px', marginLeft: 'auto', flex: 'none' }}>
+                        <Button type="secondary" size="sm" onClick={v.exercise.copy} style={{ whiteSpace: 'nowrap' }}>
+                          <Copy color="var(--color-pink-deep)" size={16} />
+                          Copy
+                        </Button>
+                        <Button type="primary" size="sm" onClick={v.exercise.add} style={{ whiteSpace: 'nowrap' }}>
+                          <Plus color="var(--color-white)" size={16} />
+                          Add
+                        </Button>
+                      </span>
                     ) : (
                       <Button
                         type="primary"
@@ -2959,8 +2984,8 @@ export function PlannerView({ v }: { v: any }) {
                   </Card>
                   {v.exercise.builtin ? (
                     <Text variant="body" as="p" tone="muted" style={{ margin: '18px 0 0' }}>
-                      Built-in exercises can&apos;t be changed. Add it to any workout as it is, or make a copy to
-                      edit — the copy is yours.
+                      Built-in exercises can&apos;t be changed. Add it to any workout as it is, or copy it to make
+                      your own version to edit.
                     </Text>
                   ) : (
                     <>
@@ -3187,7 +3212,7 @@ export function PlannerView({ v }: { v: any }) {
                       <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
                     </IconButton>
                     <Text variant="eyebrow" tone="slate">
-                      EDIT EXERCISE
+                      {v.exerciseEdit.heading}
                     </Text>
                   </div>
                   <Card style={{ marginTop: '18px' }}>
@@ -3276,7 +3301,7 @@ export function PlannerView({ v }: { v: any }) {
                       disabled={!v.exerciseEdit.canSave}
                       onClick={v.exerciseEdit.save}
                     >
-                      Save changes
+                      {v.exerciseEdit.saveLabel}
                     </Button>
                   </div>
                 </div>

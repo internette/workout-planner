@@ -86,8 +86,14 @@ export function editVals(ctx: Ctx) {
   const todayIso = isoOf(new Date(Y, TODAY_M, TODAY_D));
   // A new workout needs a name, and a lifting one at least one exercise, before it can be saved: an empty
   // "Untitled workout" used to land in the Spellbook with one tap.
-  const needsName = creating && !(st.newName || '').trim();
-  const needsExercise = creating && st.newType !== 'cycle' && selList.length === 0;
+  // The same holds when editing: a saved workout or session can't be left without a name, or a lift without exercises.
+  const needsName = !(selName || '').trim();
+  const needsExercise = (creating ? st.newType !== 'cycle' : !selRide) && selList.length === 0;
+  // A lift's length follows its exercises: about ten minutes each, at least twenty. An edit moves it by the
+  // exercises added or taken out, so a length set by hand keeps its difference.
+  const exDelta = creating ? 0 : selList.length - (EXV[baseKey] || []).length;
+  const baseMin = parseInt(String((selAct && selAct.time) || '').replace(/[^0-9]/g, ''), 10) || 50;
+  const estMin = creating ? Math.max(20, selList.length * 10) : Math.max(20, baseMin + exDelta * 10);
   const saving = logic.busy('workout');
   // A new exercise's name must be new where it's going: among the person's exercises and the built-ins in the Spellbook
   // (saving one there would otherwise overwrite the old one), or among this workout's exercises in the editor (a
@@ -527,6 +533,7 @@ export function editVals(ctx: Ctx) {
             add: added.map(bare),
           },
           repeatDates: st.repeat && !selAct.series ? weekly() : [],
+          durationMinutes: !selRide && exDelta !== 0 ? estMin : undefined,
         };
         // Normally back to the workout's own detail screen; if a nav click was waiting on this save, go there instead.
         // Either way this session stays the selected one, even if it moved to a day that already had a workout.
@@ -561,18 +568,37 @@ export function editVals(ctx: Ctx) {
             hist: (st.hist || []).slice(0, -1),
           });
           if (!changesWorkout) return logic.s(back);
-          const apply = (mode, updateUpcoming) =>
+          // "Save as a new workout" is named in the dialog: the name typed here if it's new, else "<name> (copy)".
+          const taken = (n) => logic.model.workouts.some((w) => sameName(w.name, n));
+          let copyName = (edit.name || '').trim();
+          if (!copyName || taken(copyName)) {
+            copyName = baseName + ' (copy)';
+            for (let n = 2; taken(copyName); n++) copyName = baseName + ' (copy ' + n + ')';
+          }
+          const apply = (mode, updateUpcoming, name) =>
             logic.saveOnce(
               'workout',
-              () => db.updateWorkoutTemplate(tplEdit, { mode, updateUpcoming, todayIso }),
-              (r) => Object.assign({}, back, r && r.created ? { templateId: r.workoutId } : {}),
+              () =>
+                db.updateWorkoutTemplate(mode === 'new' && name ? Object.assign({}, tplEdit, { name }) : tplEdit, {
+                  mode,
+                  updateUpcoming,
+                  todayIso,
+                }),
+              (r) =>
+                Object.assign(
+                  {},
+                  back,
+                  r && r.created
+                    ? { templateId: r.workoutId, announce: '“' + (name || copyName) + '” saved as a new workout.' }
+                    : {},
+                ),
             );
+          // Asked every time, so "Save as a new workout" is always there; the upcoming switch shows only when
+          // there are upcoming sessions.
           return db
             .countUpcoming(id, todayIso)
             .then((count) =>
-              count === 0
-                ? apply('update', true)
-                : logic.s({ tplConfirm: { count, name: baseName, choice: 'update', upcoming: true, apply } }),
+              logic.s({ tplConfirm: { count, name: baseName, choice: 'update', upcoming: true, copyName, apply } }),
             )
             .catch((e) => logic.s({ saveError: e instanceof Error ? e.message : String(e) }));
         }
@@ -637,7 +663,7 @@ export function editVals(ctx: Ctx) {
           db.createWorkout({
             name: nm,
             isRide,
-            durationMinutes: isRide ? plannedMin || 45 : Math.max(20, selList.length * 10),
+            durationMinutes: isRide ? plannedMin || 45 : estMin,
             ride: isRide
               ? { dist: st.rDist || '', elev: st.rElev || '', zone: st.rZone || 'Endurance' }
               : null,
@@ -697,7 +723,13 @@ export function editVals(ctx: Ctx) {
     eTime:
       selAct && ctx.actualMinutes(selAct)
         ? 'Took ' + ctx.minText(ctx.actualMinutes(selAct))
-        : (selAct && selAct.time) || (creating ? 'Duration TBD' : '~50 min'),
+        : creating
+          ? selList.length && st.newType !== 'cycle'
+            ? '~' + estMin + ' min'
+            : 'Duration TBD'
+          : !selRide && exDelta !== 0
+            ? '~' + estMin + ' min'
+            : (selAct && selAct.time) || '~50 min',
     setRepeat: (on) => logic.s({ repeat: !!on }),
     repeatOn: !!st.repeat,
     repeatNote: 'Adds this workout every ' + DOWFULL[selDate.getDay()] + ' for the next 12 weeks, 13 sessions in all.',
