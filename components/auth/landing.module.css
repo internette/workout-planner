@@ -26,6 +26,7 @@
 .legal { margin: 16px 0 0; text-wrap: pretty; }
 .toggle { display: flex; align-items: center; gap: 8px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--color-mist); }
 .toggleLink {
+  position: relative;
   padding: 0;
   border: none;
   background: none;
@@ -35,6 +36,8 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-pink-deep);
 }
+/* 44px to tap, without making the line taller. */
+.toggleLink::after { content: ''; position: absolute; left: -6px; right: -6px; top: 50%; height: 44px; transform: translateY(-50%); }
 .error {
   display: flex;
   gap: 10px;

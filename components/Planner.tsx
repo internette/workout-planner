@@ -206,8 +206,8 @@ export default function Planner({ account = null }: { account?: Account | null }
     });
   });
 
-  // Escape on a full-screen view does what its Back button does, unless something on top of it (a dialog, a popover)
-  // or a text field has the key.
+  // Escape on a full-screen view does what its Back button does, unless something on top of it (a dialog, a popover,
+  // the exercise picker) or a text field has the key.
   useWindowEvent('keydown', (e) => {
     if (e.key !== 'Escape' || e.defaultPrevented || !(logic.state.hist || []).length) return;
     if (document.querySelector('dialog[open]')) return;
@@ -215,6 +215,13 @@ export default function Planner({ account = null }: { account?: Account | null }
       if (document.querySelector(':popover-open')) return;
     } catch {
       // A browser without the popover API has no open popovers to worry about.
+    }
+    // The editor's exercise picker closes first, even from its search field, and focus goes back to "Add exercise".
+    if (logic.state.addOpen && document.querySelector('[data-add-exercise-panel]')) {
+      e.preventDefault();
+      logic.setState({ addOpen: false });
+      document.querySelector<HTMLElement>('[data-add-exercise]')?.focus();
+      return;
     }
     const t = e.target as HTMLElement | null;
     if (t && (t.closest('input, textarea, select, [contenteditable="true"]'))) return;

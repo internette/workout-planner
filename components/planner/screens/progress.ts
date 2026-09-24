@@ -165,10 +165,10 @@ export function progressVals(ctx: Ctx) {
           cap:
             'display:block;margin-top:6px;font-size:var(--text-2xs);font-weight:var(--font-weight-semibold);letter-spacing:var(--tracking-loose);text-align:center;color:' +
             (pending
-              ? 'var(--color-pink-plum)'
+              ? 'var(--color-pink-deep)'
               : dayComplete[k]
-                ? 'var(--color-slate)'
-                : 'var(--color-muted)'),
+                ? 'var(--color-ink)'
+                : 'var(--color-slate-deep)'),
         });
       }
       return out;

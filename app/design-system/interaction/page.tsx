@@ -19,7 +19,7 @@ export default function InteractionPage() {
 
       <h2 id="hover" style={h2}>Hover</h2>
       <p style={note}>Each wash is a tint laid over the control&apos;s own background. Shown on white, and on the dark surface for the inverse one.</p>
-      <div style={tableScroll} tabIndex={0} role="region" aria-label="Table, scrolls sideways">
+      <div style={tableScroll} tabIndex={0} role="region" aria-label="Hover table, scrolls sideways">
         <table style={table}>
         <tbody>
           {Object.entries(hovers).map(([name, { value, use }]) => (

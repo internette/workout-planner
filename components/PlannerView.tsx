@@ -417,7 +417,7 @@ export function PlannerView({ v }: { v: any }) {
                         <IconButton label="Previous week" size="md" onClick={v.prevWeek}>
                           <ChevronLeft color="var(--color-muted)" size={17} />
                         </IconButton>
-                        <div style={{ flex: '1', display: 'flex', gap: '4px' }}>
+                        <div style={{ flex: '1', display: 'flex' }}>
                           {(v.days ?? []).map((d, i) => (
                             <Fragment key={i}>
                               <button
@@ -488,8 +488,8 @@ export function PlannerView({ v }: { v: any }) {
                           <Text
                             variant="caption"
                             as="div"
-                            tone="slate"
                             style={{
+                              color: 'var(--color-slate-deep)',
                               lineHeight: 'var(--leading-snug)',
                               marginTop: '3px',
                               textWrap: 'pretty',
@@ -695,6 +695,7 @@ export function PlannerView({ v }: { v: any }) {
                                   {c?.hasMore ? (
                                     <>
                                       <button
+                                        aria-expanded={!!c?.moreOpen}
                                         onClick={c?.toggleMore}
                                         style={{
                                           margin: '10px 0 0 -12px',
@@ -889,7 +890,7 @@ export function PlannerView({ v }: { v: any }) {
                           <IconButton label="Previous week" size="md" onClick={v.prevWeek}>
                             <ChevronLeft color="var(--color-muted)" size={17} />
                           </IconButton>
-                          <Text variant="itemTitle" style={{ flex: 'none', whiteSpace: 'nowrap' }}>
+                          <Text variant="itemTitle" as="h1" style={{ flex: 'none', whiteSpace: 'nowrap', margin: 0 }}>
                             {v.weekLabel}
                           </Text>
                           <IconButton label="Next week" size="md" onClick={v.nextWeek}>
@@ -1156,6 +1157,7 @@ export function PlannerView({ v }: { v: any }) {
                   ) : null}
                   {v.showMonth ? (
                     <>
+                      <h1 className="sr-only">{v.monthName}</h1>
                       <div style={{ marginTop: '18px' }}>
                         <div
                           style={{
@@ -1671,6 +1673,8 @@ export function PlannerView({ v }: { v: any }) {
                       <button
                         onClick={v.openRanks}
                         title="See all 20 ranks"
+                        aria-label={v.rankName + ' — see all 20 ranks'}
+                        aria-haspopup="dialog"
                         style={css(v.rankPillBtn)}
                         className="hv6 hit"
                       >
@@ -2124,20 +2128,19 @@ export function PlannerView({ v }: { v: any }) {
                         <Text
                           variant="caption"
                           as="p"
-                          tone="muted"
                           weight="medium"
-                          style={{ margin: '6px 0 0' }}
+                          style={{ margin: '6px 0 0', color: 'var(--color-slate-deep)' }}
                         >
                           {v.streakNote}
                         </Text>
                       </div>
                     </div>
                     <div style={{ flex: '1 1 180px', minWidth: '0' }}>
-                      <Text variant="micro" as="div" tone="slate">
+                      <Text variant="micro" as="div" style={{ color: 'var(--color-slate-deep)' }}>
                         LAST 7 TRAINING DAYS
                       </Text>
                       {v.ticksEmpty ? (
-                        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '9px 0 0' }}>
+                        <Text variant="caption" as="p" weight="medium" style={{ margin: '9px 0 0', color: 'var(--color-slate-deep)' }}>
                           Finished sessions line up here.
                         </Text>
                       ) : null}
@@ -2602,7 +2605,7 @@ export function PlannerView({ v }: { v: any }) {
                             >
                               {(v.iconGrid ?? []).map((g, i) => (
                                 <Fragment key={i}>
-                                  <button onClick={g?.pick} style={css(g?.style)}>
+                                  <button onClick={g?.pick} aria-label={g?.label} aria-pressed={!!g?.on} style={css(g?.style)}>
                                     {g?.svg}
                                   </button>
                                 </Fragment>
@@ -3209,7 +3212,7 @@ export function PlannerView({ v }: { v: any }) {
                       style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: '8px' }}
                     >
                       {(v.exerciseEdit.icons ?? []).map((g, i) => (
-                        <button key={i} onClick={g?.pick} style={css(g?.style)}>
+                        <button key={i} onClick={g?.pick} aria-label={g?.label} aria-pressed={!!g?.on} style={css(g?.style)}>
                           {g?.svg}
                         </button>
                       ))}
@@ -3478,7 +3481,7 @@ export function PlannerView({ v }: { v: any }) {
                             </span>
                           </Card>
                           <IconButton
-                            label="Delete entry"
+                            label={e?.deleteLabel}
                             size="lg"
                             tone="danger"
                             onClick={e?.remove}
@@ -4059,7 +4062,7 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             {(v.workoutIconGrid ?? []).map((w, i) => (
                               <Fragment key={i}>
-                                <button onClick={w?.pick} style={css(w?.style)}>
+                                <button onClick={w?.pick} aria-label={w?.label} aria-pressed={!!w?.on} style={css(w?.style)}>
                                   {w?.svg}
                                 </button>
                               </Fragment>
@@ -4076,7 +4079,7 @@ export function PlannerView({ v }: { v: any }) {
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                             {(v.iconColors ?? []).map((c, i) => (
                               <Fragment key={i}>
-                                <button onClick={c?.pick} style={css(c?.style)}></button>
+                                <button onClick={c?.pick} aria-label={c?.label} aria-pressed={!!c?.on} style={css(c?.style)}></button>
                               </Fragment>
                             ))}
                           </div>
@@ -4544,17 +4547,17 @@ export function PlannerView({ v }: { v: any }) {
                                           gap: '7px',
                                         }}
                                       >
-                                        <button onClick={ex?.pickH} style={css(ex?.optH)}>
+                                        <button onClick={ex?.pickH} aria-label="Dumbbell icon" aria-pressed={!!ex?.isH} style={css(ex?.optH)}>
                                           <Dumbbell color="var(--color-pink)" size={20} />
                                         </button>
-                                        <button onClick={ex?.pickV} style={css(ex?.optV)}>
+                                        <button onClick={ex?.pickV} aria-label="Upright dumbbell icon" aria-pressed={!!ex?.isV} style={css(ex?.optV)}>
                                           <Dumbbell
                                             color="var(--color-pink)"
                                             size={20}
                                             style={{ transform: 'rotate(90deg)' }}
                                           />
                                         </button>
-                                        <button onClick={ex?.pickD} style={css(ex?.optD)}>
+                                        <button onClick={ex?.pickD} aria-label="Small dumbbell icon" aria-pressed={!!ex?.isD} style={css(ex?.optD)}>
                                           <DumbbellSmall color="var(--color-pink)" size={20} />
                                         </button>
                                       </div>
@@ -4563,6 +4566,7 @@ export function PlannerView({ v }: { v: any }) {
                                 >
                                   <button
                                     onClick={ex?.toggle}
+                                    className="hit"
                                     aria-label={ex?.iconAria}
                                     aria-expanded={ex?.open}
                                     style={{
@@ -4718,6 +4722,9 @@ export function PlannerView({ v }: { v: any }) {
                         size="lg"
                         fullWidth
                         onClick={v.openAdd}
+                        aria-expanded={!!v.addOpen}
+                        aria-controls={v.addOpen ? 'add-exercise' : undefined}
+                        data-add-exercise
                         style={{ marginTop: '16px' }}
                       >
                         <Plus color="var(--color-pink)" size={19} />
@@ -4727,7 +4734,7 @@ export function PlannerView({ v }: { v: any }) {
                   ) : null}
                   {v.addOpen ? (
                     <>
-                      <Card elevation="overlay" style={{ marginTop: '14px' }}>
+                      <Card elevation="overlay" id="add-exercise" data-add-exercise-panel style={{ marginTop: '14px' }}>
                         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
                           <Text variant="cardTitle">Add exercise</Text>
                           <SegmentedControl
@@ -4764,6 +4771,9 @@ export function PlannerView({ v }: { v: any }) {
                                 onChange={v.setPickQuery}
                                 placeholder="Search exercises"
                               />
+                              <span className="sr-only" role="status">
+                                {v.libraryAnnounce}
+                              </span>
                               {v.pickQuery ? (
                                 <IconButton label="Clear search" size="xs" onClick={v.clearPickQuery}>
                                   <Close color="var(--color-muted)" strokeWidth={2.2} size={14} />
@@ -4912,7 +4922,7 @@ export function PlannerView({ v }: { v: any }) {
                               >
                                 {(v.iconGrid ?? []).map((g, i) => (
                                   <Fragment key={i}>
-                                    <button onClick={g?.pick} style={css(g?.style)}>
+                                    <button onClick={g?.pick} aria-label={g?.label} aria-pressed={!!g?.on} style={css(g?.style)}>
                                       {g?.svg}
                                     </button>
                                   </Fragment>
@@ -5306,7 +5316,7 @@ export function PlannerView({ v }: { v: any }) {
                           placeholder="Energy, soreness, what worked, what didn't…"
                         />
                         {v.saveEntryHint ? (
-                          <Text variant="caption" tone="muted" as="p" style={{ margin: '18px 0 0', textAlign: 'center' }}>
+                          <Text id="save-entry-hint" variant="caption" tone="muted" as="p" style={{ margin: '18px 0 0', textAlign: 'center' }}>
                             {v.saveEntryHint}
                           </Text>
                         ) : null}
@@ -5316,7 +5326,8 @@ export function PlannerView({ v }: { v: any }) {
                           fullWidth
                           glow
                           onClick={v.saveEntry}
-                          disabled={!v.canSaveEntry}
+                          aria-disabled={!v.canSaveEntry}
+                          aria-describedby={v.saveEntryHint ? 'save-entry-hint' : undefined}
                           style={{ marginTop: v.saveEntryHint ? '10px' : '22px' }}
                         >
                           {v.saveEntryLabel}

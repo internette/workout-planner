@@ -38,6 +38,7 @@ export function Dialog(props: DialogProps) {
 // Mounted only while open, so showModal() runs once per opening.
 function DialogPanel({ onClose, title, aside, closeButton = true, description, actions, size = 'sm', children }: DialogProps) {
   const titleId = useId();
+  const descId = useId();
   const ref = useRef<HTMLDialogElement>(null);
   const live = useRef(true);
 
@@ -77,6 +78,8 @@ function DialogPanel({ onClose, title, aside, closeButton = true, description, a
       pad="lg"
       elevation="overlay"
       aria-labelledby={titleId}
+      // Read out with the title when it opens, since focus lands on a button past the text.
+      aria-describedby={description ? descId : undefined}
       className={`${styles.panel} ${styles[size]}`}
       onClick={onPress as never}
       // React supports these two events on <dialog>, but Card's props are typed for a generic element.
@@ -98,7 +101,7 @@ function DialogPanel({ onClose, title, aside, closeButton = true, description, a
         ) : null}
       </div>
       {description ? (
-        <Text variant="body" as="p" tone="muted" className={styles.description}>
+        <Text variant="body" as="p" tone="muted" id={descId} className={styles.description}>
           {description}
         </Text>
       ) : null}

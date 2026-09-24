@@ -51,31 +51,33 @@ export function diaryVals(ctx: Ctx) {
     month: () => logic.s({ diaryScope: 'month', rFrom: iso30, rTo: isoToday }),
     range: () => logic.s({ diaryScope: 'range', rFrom: st.rFrom || iso30, rTo: st.rTo || isoToday }),
   };
+  const entryHint = !st.mood && !st.rpe ? 'Pick a mood and how hard it felt.' : !st.mood ? 'Pick a mood.' : !st.rpe ? 'Pick how hard it felt.' : '';
   return {
     saveEntryLabel: hasEntry ? 'Save changes' : 'Save entry',
     canSaveEntry: !!st.mood && !!st.rpe,
-    saveEntryHint: !st.mood && !st.rpe ? 'Pick a mood and how hard it felt.' : !st.mood ? 'Pick a mood.' : !st.rpe ? 'Pick how hard it felt.' : '',
+    saveEntryHint: entryHint,
     entryNote: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
     setEntryNote: (e) => logic.s({ entryNote: e.target.value }),
+    // Stays focusable while it waits for a mood and effort; pressing it then says what's missing.
     saveEntry: () =>
-      st.mood &&
-      st.rpe &&
-      logic.saveOnce(
-        'entry',
-        () =>
-          db.saveDiary(entryKey, {
-            mood: st.mood,
-            rpe: st.rpe,
-            note: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
-          }),
-        {
-          // Changing an entry, or writing one from the Chronicle, returns to reading it; a new one from a workout
-          // gets the "Entry saved" screen.
-          screen: hasEntry || st.diaryFrom === 'list' ? 'diary' : 'saved',
-          diaryEdit: false,
-          entryNote: null,
-        },
-      ),
+      !st.mood || !st.rpe
+        ? logic.s({ announce: entryHint })
+        : logic.saveOnce(
+            'entry',
+            () =>
+              db.saveDiary(entryKey, {
+                mood: st.mood,
+                rpe: st.rpe,
+                note: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
+              }),
+            {
+              // Changing an entry, or writing one from the Chronicle, returns to reading it; a new one from a workout
+              // gets the "Entry saved" screen.
+              screen: hasEntry || st.diaryFrom === 'list' ? 'diary' : 'saved',
+              diaryEdit: false,
+              entryNote: null,
+            },
+          ),
     savedLine:
       st.mood +
       ' · ' +
@@ -186,6 +188,8 @@ export function diaryVals(ctx: Ctx) {
       return {
         date: DOW3[dt.getDay()] + ', ' + MON3[mod12(en.m)].toUpperCase() + ' ' + en.d + yr,
         name: en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout',
+        deleteLabel:
+          'Delete entry for ' + (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') + ', ' + MON3[mod12(en.m)] + ' ' + en.d + yr,
         note: en.note,
         href: '#',
         aria:
@@ -259,7 +263,7 @@ export function diaryVals(ctx: Ctx) {
     readStars: [1, 2, 3, 4, 5].map(
       (n) =>
         'font-size:var(--text-md);line-height:var(--leading-none);color:' +
-        (n <= st.rpe ? 'var(--color-ink)' : 'var(--color-hairline)'),
+        (n <= st.rpe ? 'var(--color-ink)' : 'var(--color-outline)'),
     ),
     readMoodFace:
       'width:44px;height:44px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:' +

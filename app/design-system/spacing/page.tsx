@@ -20,7 +20,7 @@ export default function SpacingPage() {
 
       <h2 id="scale" style={h2}>Scale</h2>
       <p style={note}>The bar is the step at its real width.</p>
-      <div style={tableScroll} tabIndex={0} role="region" aria-label="Table, scrolls sideways">
+      <div style={tableScroll} tabIndex={0} role="region" aria-label="Scale table, scrolls sideways">
         <table style={table}>
         <tbody>
           {Object.entries(space).map(([step, { value, use }]) => (
@@ -37,7 +37,7 @@ export default function SpacingPage() {
 
       <h2 id="layout" style={h2}>Layout</h2>
       <p style={note}>Measures for the page itself. The page gutter is step 7.</p>
-      <div style={tableScroll} tabIndex={0} role="region" aria-label="Table, scrolls sideways">
+      <div style={tableScroll} tabIndex={0} role="region" aria-label="Layout table, scrolls sideways">
         <table style={table}>
         <tbody>
           {Object.entries(layout).map(([name, { value, use }]) => (
@@ -56,7 +56,7 @@ export default function SpacingPage() {
         Where the layout changes. A media query cannot read a CSS variable, so these are numbers in{' '}
         <code>@/components/ui/spacing</code>, not variables.
       </p>
-      <div style={tableScroll} tabIndex={0} role="region" aria-label="Table, scrolls sideways">
+      <div style={tableScroll} tabIndex={0} role="region" aria-label="Breakpoints table, scrolls sideways">
         <table style={table}>
         <tbody>
           {Object.entries(breakpoints).map(([name, px]) => (
