@@ -70,7 +70,7 @@ export function PlannerView({ v }: { v: any }) {
         open={!!v.ranksOpen}
         onClose={v.closeRanks}
         title="Ranks"
-        aside={v.rankStepLabel}
+        aside={v.ranksAside}
         size="md"
         description="Earned with experience — 10 XP per exercise completed, 50 XP per workout finished."
       >
@@ -2167,7 +2167,7 @@ export function PlannerView({ v }: { v: any }) {
                     </div>
                     <div style={{ flex: '1 1 180px', minWidth: '0' }}>
                       <Text variant="micro" as="div" style={{ color: 'var(--color-slate-deep)' }}>
-                        LAST 7 TRAINING DAYS
+                        {v.ticksLabel}
                       </Text>
                       {v.ticksEmpty ? (
                         <Text variant="caption" as="p" weight="medium" style={{ margin: '9px 0 0', color: 'var(--color-slate-deep)' }}>
@@ -2292,7 +2292,14 @@ export function PlannerView({ v }: { v: any }) {
                             <Text variant="eyebrow" tone="muted" style={{ flex: 'none', width: '44px' }}>
                               {q?.day}
                             </Text>
-                            <span style={css(q?.title)}>{q?.name}</span>
+                            <span style={css(q?.title)}>
+                              {q?.name}
+                              {q?.doneLine ? (
+                                <Text variant="caption" tone="muted" as="span" style={{ display: 'block', marginTop: '2px', fontWeight: 'var(--font-weight-regular)' }}>
+                                  {q?.doneLine}
+                                </Text>
+                              ) : null}
+                            </span>
                           </div>
                         </Fragment>
                       ))}
