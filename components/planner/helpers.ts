@@ -19,6 +19,16 @@ export const formatElapsed = totalSec => {
   const pad2 = n => String(n).padStart(2, '0');
   return (h ? h + ':' + pad2(m) : String(m)) + ':' + pad2(s);
 };
+// An exercise in one line: "4 × 8 · 95 lb", "3 × 12 · bodyweight", or just "3 sets" when there's no weight to
+// show — never a dangling "· —". With rest: "… · 90 sec rest".
+export const exLine = (e, withRest = false) =>
+  [
+    e.sets && e.sets !== '—' ? e.sets : '',
+    e.weight && e.weight !== '—' ? (e.weight === 'body' ? 'bodyweight' : e.weight) : '',
+    withRest && e.rest && e.rest !== '—' ? e.rest + ' rest' : '',
+  ]
+    .filter(Boolean)
+    .join(' · ');
 export const isoOf = dt => dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
 
 // "1 entry" vs "3 entries" (or exercise/exercises, session/sessions, ...) without repeating the count === 1 check

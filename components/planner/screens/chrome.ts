@@ -24,8 +24,8 @@ export function chromeVals(ctx: Ctx) {
     timerRunning,
   } = ctx;
   const arsenalActive =
-    ['arsenal', 'template', 'templateEdit', 'exercise', 'exerciseEdit'].includes(st.screen) ||
-    (st.screen === 'edit' && !!st.creating && st.newFrom === 'arsenal');
+    ['arsenal', 'template', 'exercise', 'exerciseEdit'].includes(st.screen) ||
+    (st.screen === 'edit' && ((!!st.creating && st.newFrom === 'arsenal') || !!st.editTemplate));
   return {
     topTabsStyle: narrow ? 'display:none' : 'display:flex;flex-wrap:wrap;gap:6px;padding:18px 28px 0',
     sidebarStyle: narrow
@@ -172,7 +172,6 @@ export function chromeVals(ctx: Ctx) {
     isArsenal: st.screen === 'arsenal',
     isTemplate: st.screen === 'template',
     isExercise: st.screen === 'exercise',
-    isTemplateEdit: st.screen === 'templateEdit',
     isExerciseEdit: st.screen === 'exerciseEdit',
     canGoBack: (st.hist || []).length > 0,
     goBack: () => logic.back(),

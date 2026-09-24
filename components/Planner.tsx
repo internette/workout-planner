@@ -4,7 +4,7 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { PlannerLogic } from './planner/PlannerLogic';
 import { useViewport } from './planner/useViewport';
-import { pathForState, screenForPath } from './planner/routes';
+import { pathForState, stateForPath } from './planner/routes';
 import { logoutUrl, type Account } from '@/lib/auth';
 import { useWindowEvent } from './ui/useWindowEvent';
 import { PlannerView } from './PlannerView';
@@ -20,9 +20,10 @@ export default function Planner({ account = null }: { account?: Account | null }
   const pathname = usePathname();
   const [logic] = useState(() => {
     const l = new PlannerLogic();
-    // Open on the screen the address names, such as /spellbook. The calendar address opens on today's Day view.
-    const screen = screenForPath(pathname);
-    if (screen) l.state = { ...l.state, screen };
+    // Open on the screen the address names, such as /spellbook or /spellbook/workouts/<id>. The calendar address
+    // opens on today's Day view.
+    const opens = stateForPath(pathname);
+    if (opens) l.state = { ...l.state, ...opens };
     return l;
   });
   const [, rerender] = useReducer((n: number) => n + 1, 0);
@@ -64,8 +65,8 @@ export default function Planner({ account = null }: { account?: Account | null }
   useEffect(() => {
     if (seenPath.current === pathname) return;
     seenPath.current = pathname;
-    const screen = screenForPath(pathname);
-    if (screen && pathForState(logic.state) !== pathname) logic.setState({ screen, monthOpen: false });
+    const opens = stateForPath(pathname);
+    if (opens && pathForState(logic.state) !== pathname) logic.setState({ ...opens, monthOpen: false });
     screenPath.current = pathForState(logic.state);
   }, [pathname, logic]);
 
