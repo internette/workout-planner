@@ -56,7 +56,7 @@ export default function SegmentedControlPage() {
         <code>tone=&quot;quiet&quot;</code> is a canvas tray with a white selection, for placing inside a card.
       </p>
       <Card pad="md">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
           <strong style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-xl)' }}>Add exercise</strong>
           <SegmentedControl
             label="Add exercise from"

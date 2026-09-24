@@ -100,7 +100,8 @@ export function progressVals(ctx: Ctx) {
         name:
           'flex:1;min-width:0;font-size:var(--text-base);font-weight:' +
           (cur ? 'var(--font-weight-bold)' : 'var(--font-weight-medium)'),
-        xp: 'flex:none;font-family:var(--font-heading);font-size:var(--text-sm);font-weight:var(--font-weight-semibold);opacity:.8',
+        // Full strength: faded to 80% it fell under 4.5:1 on both the white and the pink rows.
+        xp: 'flex:none;font-family:var(--font-heading);font-size:var(--text-sm);font-weight:var(--font-weight-semibold)',
       };
     }),
     profileName: displayName(logic.auth.account),

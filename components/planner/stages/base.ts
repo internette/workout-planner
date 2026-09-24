@@ -26,9 +26,15 @@ export function baseStage(ctx: Ctx): Ctx {
   const navExtra = (tablet ? ';flex:none;padding:11px 16px' : '') + ';text-decoration:none';
   // Creating a workout from the Spellbook is the Spellbook's flow, so the Calendar tab is not lit for it.
   const fromArsenal = st.screen === 'edit' && !!st.creating && st.newFrom === 'arsenal';
-  const onCal =
-    (st.screen === 'day' || st.screen === 'rest' || st.screen === 'diary' || st.screen === 'edit') && !fromArsenal;
-  const calActive = ['day', 'rest', 'edit', 'detail', 'newEntry'].indexOf(st.screen) > -1 && !fromArsenal;
+  // Writing in the Chronicle is the Chronicle's flow: its list, "New entry", and an entry opened from the list. An
+  // entry opened from a workout on the calendar stays with the calendar. One rule for the sidebar and the tab bar.
+  const inChronicle =
+    st.screen === 'diaryList' ||
+    st.screen === 'newEntry' ||
+    ((st.screen === 'diary' || st.screen === 'saved') && st.diaryFrom === 'list');
+  const calActive =
+    ['day', 'rest', 'edit', 'detail', 'diary', 'saved'].indexOf(st.screen) > -1 && !fromArsenal && !inChronicle;
+  const onCal = calActive;
   const creating = st.screen === 'edit' && !!st.creating;
   return {
     st,
@@ -50,5 +56,6 @@ export function baseStage(ctx: Ctx): Ctx {
     onCal,
     navExtra,
     calActive,
+    inChronicle,
   };
 }

@@ -66,6 +66,18 @@
 .dashed:hover:not(:disabled),
 .dashed:focus-visible:not(:disabled) { background: var(--color-pink-tint); }
 
+/* Icon buttons and the extra-small button are drawn smaller than 44 px; their tap area isn't. */
+.icon, .xs { position: relative; }
+.icon::after, .xs::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+}
+
 /* ---- Icon buttons: square, icon only */
 .icon { padding: 0; flex: none; }
 .icon-xs { width: 24px; height: 24px; border-radius: var(--radius-xs); }

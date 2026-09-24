@@ -262,7 +262,12 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             {(v.months ?? []).map((m, i) => (
                               <Fragment key={i}>
-                                <button onClick={m?.pick} style={css(m?.style)}>
+                                <button
+                                  onClick={m?.pick}
+                                  aria-label={m?.name}
+                                  aria-current={m?.current ? 'date' : undefined}
+                                  style={css(m?.style)}
+                                >
                                   {m?.short}
                                 </button>
                               </Fragment>
@@ -271,7 +276,13 @@ export function PlannerView({ v }: { v: any }) {
                         </>
                       }
                     >
-                      <button onClick={v.toggleMonth} style={css(v.monthBtn)} className="hv1">
+                      <button
+                        onClick={v.toggleMonth}
+                        aria-expanded={!!v.monthOpen}
+                        aria-haspopup="true"
+                        style={css(v.monthBtn)}
+                        className="hv1"
+                      >
                         <Text variant="heading" tone="ink">
                           {v.monthName}
                         </Text>
@@ -413,6 +424,7 @@ export function PlannerView({ v }: { v: any }) {
                                 onClick={d?.pick}
                                 aria-label={d?.aria}
                                 aria-current={d?.isToday}
+                                aria-pressed={!!d?.selected}
                                 style={css(d?.wrapStyle)}
                               >
                                 <span style={css(d?.letterStyle)}>{d?.letter}</span>
@@ -550,7 +562,7 @@ export function PlannerView({ v }: { v: any }) {
                                             textAlign: 'left',
                                             cursor: 'pointer',
                                           }}
-                                          className="hv3"
+                                          className="hv3 hit"
                                         >
                                           {t(c?.name)}
                                           <ChevronRight color="var(--color-muted)" size={17} />
@@ -686,7 +698,7 @@ export function PlannerView({ v }: { v: any }) {
                                         onClick={c?.toggleMore}
                                         style={{
                                           margin: '10px 0 0 -12px',
-                                          minHeight: '36px',
+                                          minHeight: '44px',
                                           border: 'none',
                                           borderRadius: '12px',
                                           background: 'none',
@@ -711,11 +723,11 @@ export function PlannerView({ v }: { v: any }) {
                                   ) : null}
                                   {c?.ctaTwoButtons ? (
                                     <>
-                                      <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '20px' }}>
                                         <Button
                                           type="secondary"
                                           size="lg"
-                                          style={{ flex: '1' }}
+                                          style={{ flex: '1 1 120px', minWidth: '0' }}
                                           onClick={c?.restart}
                                         >
                                           Restart workout
@@ -723,7 +735,7 @@ export function PlannerView({ v }: { v: any }) {
                                         <Button
                                           type="primary"
                                           size="lg"
-                                          style={{ flex: '1' }}
+                                          style={{ flex: '1 1 120px', minWidth: '0' }}
                                           onClick={c?.continue}
                                         >
                                           Continue workout
@@ -1660,7 +1672,7 @@ export function PlannerView({ v }: { v: any }) {
                         onClick={v.openRanks}
                         title="See all 20 ranks"
                         style={css(v.rankPillBtn)}
-                        className="hv6"
+                        className="hv6 hit"
                       >
                         <span style={css(v.rankGem)}></span>
                         {t(v.rankName)}
@@ -1726,6 +1738,7 @@ export function PlannerView({ v }: { v: any }) {
                           label="How XP works"
                           size="md"
                           circle
+                          aria-expanded={!!v.xpInfoOpen}
                           onClick={v.toggleXpInfo}
                           title="How XP works"
                           style={{ margin: '-6px' }}
@@ -1777,7 +1790,7 @@ export function PlannerView({ v }: { v: any }) {
                       style={{
                         display: 'flex',
                         alignItems: 'flex-end',
-                        gap: '6px',
+                        gap: '4px',
                         height: '132px',
                         marginTop: '14px',
                       }}
@@ -1791,11 +1804,13 @@ export function PlannerView({ v }: { v: any }) {
                             style={{
                               flex: '1',
                               minWidth: '0',
+                              minHeight: '44px',
                               border: 'none',
                               background: 'none',
                               padding: '0',
                               display: 'flex',
                               flexDirection: 'column',
+                              justifyContent: 'flex-end',
                               alignItems: 'center',
                               gap: '6px',
                               cursor: 'pointer',
@@ -2080,7 +2095,7 @@ export function PlannerView({ v }: { v: any }) {
                         'var(--gradient-gem-tint)',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 'none' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: '0 1 auto', minWidth: '0' }}>
                       <Gem size={30} />
                       <div style={{ minWidth: '0' }}>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '7px' }}>
@@ -3954,6 +3969,7 @@ export function PlannerView({ v }: { v: any }) {
                                 aria-pressed={ex?.isDone}
                                 aria-label={ex?.doneAria}
                                 style={css(ex?.doneBtn)}
+                                className="hit"
                               >
                                 <Check color={ex?.doneStroke} strokeWidth={2.6} size={15} />
                               </button>
@@ -4178,7 +4194,7 @@ export function PlannerView({ v }: { v: any }) {
                       </button>
                     </Popover>
                     <div style={{ flex: '1 1 220px', minWidth: '0' }}>
-                      <Text variant="eyebrow" as="div" tone="slate">
+                      <Text variant="eyebrow" as="h1" tone="slate" style={{ margin: 0 }}>
                         {v.eEyebrow}
                       </Text>
                       {v.eNamePlaceholder ? (
@@ -4697,6 +4713,7 @@ export function PlannerView({ v }: { v: any }) {
                                   aria-pressed={ex?.isDone}
                                   aria-label={ex?.doneAria}
                                   style={css(ex?.doneBtn)}
+                                  className="hit"
                                 >
                                   <Check color={ex?.doneStroke} strokeWidth={2.6} size={15} />
                                 </button>
@@ -5182,17 +5199,27 @@ export function PlannerView({ v }: { v: any }) {
                         </p>
                       </div>
                       <div
+                        role="radiogroup"
+                        aria-label="How did it feel?"
                         style={{
                           display: 'flex',
                           flexWrap: 'wrap',
                           justifyContent: 'center',
-                          gap: '22px',
+                          gap: '12px',
                           marginTop: '34px',
                         }}
                       >
                         {(v.moods ?? []).map((m, i) => (
                           <Fragment key={i}>
-                            <button onClick={m?.pick} style={css(m?.wrap)}>
+                            <button
+                              role="radio"
+                              aria-checked={!!m?.checked}
+                              tabIndex={m?.tab}
+                              data-mood={m?.index}
+                              onKeyDown={m?.keys}
+                              onClick={m?.pick}
+                              style={css(m?.wrap)}
+                            >
                               <span style={css(m?.face)}>
                                 {m?.isHappy ? (
                                   <>
@@ -5245,11 +5272,20 @@ export function PlannerView({ v }: { v: any }) {
                             {v.rpeLabel}
                           </span>
                         </div>
-                        <div style={{ display: 'flex', gap: '14px', marginTop: '12px' }}>
+                        <div role="radiogroup" aria-label="How hard did it feel?" style={{ display: 'flex', gap: '4px', marginTop: '8px', marginLeft: '-6px' }}>
                           {(v.stars ?? []).map((s, i) => (
                             <Fragment key={i}>
-                              <button onClick={s?.pick} style={css(s?.style)}>
-                                {s?.glyph}
+                              <button
+                                role="radio"
+                                aria-checked={!!s?.checked}
+                                aria-label={s?.label}
+                                tabIndex={s?.tab}
+                                data-star={s?.index}
+                                onKeyDown={s?.keys}
+                                onClick={s?.pick}
+                                style={css(s?.style)}
+                              >
+                                <span aria-hidden="true">{s?.glyph}</span>
                               </button>
                             </Fragment>
                           ))}
@@ -5289,7 +5325,7 @@ export function PlannerView({ v }: { v: any }) {
             ) : null}
           </main>
         </div>
-        <nav aria-label="Main" style={css(v.tabbarStyle)}>
+        <nav aria-label="Main" data-tabbar style={css(v.tabbarStyle)}>
           <a href="/calendar" onClick={v.navGo(v.goDay, 'day')} aria-current={v.navCalOn} style={css(v.mTabCal)}>
             <Calendar color={v.mCalColor} size={22} />
             <span className="mlabel" style={css(v.mCalLabel)}>

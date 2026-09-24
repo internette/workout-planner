@@ -3,7 +3,9 @@ import { DocPage, h2, note } from '../docs';
 
 export const metadata = { title: 'Spacing — Design system' };
 
-const table: React.CSSProperties = { width: '100%', borderCollapse: 'collapse', background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)' };
+const table: React.CSSProperties = { width: '100%', borderCollapse: 'collapse' };
+// The table's card. On a narrow screen the table scrolls sideways inside it instead of widening the page.
+const tableScroll: React.CSSProperties = { overflowX: 'auto', background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)' };
 const cell: React.CSSProperties = { padding: '12px 16px', textAlign: 'left', borderBottom: '1px solid rgba(35,42,69,.07)', fontSize: 'var(--text-base)', verticalAlign: 'middle' };
 const muted: React.CSSProperties = { ...cell, color: 'var(--color-muted)' };
 
@@ -18,7 +20,8 @@ export default function SpacingPage() {
 
       <h2 id="scale" style={h2}>Scale</h2>
       <p style={note}>The bar is the step at its real width.</p>
-      <table style={table}>
+      <div style={tableScroll} tabIndex={0} role="region" aria-label="Table, scrolls sideways">
+        <table style={table}>
         <tbody>
           {Object.entries(space).map(([step, { value, use }]) => (
             <tr key={step}>
@@ -30,10 +33,12 @@ export default function SpacingPage() {
           ))}
         </tbody>
       </table>
+      </div>
 
       <h2 id="layout" style={h2}>Layout</h2>
       <p style={note}>Measures for the page itself. The page gutter is step 7.</p>
-      <table style={table}>
+      <div style={tableScroll} tabIndex={0} role="region" aria-label="Table, scrolls sideways">
+        <table style={table}>
         <tbody>
           {Object.entries(layout).map(([name, { value, use }]) => (
             <tr key={name}>
@@ -44,13 +49,15 @@ export default function SpacingPage() {
           ))}
         </tbody>
       </table>
+      </div>
 
       <h2 id="breakpoints" style={h2}>Breakpoints</h2>
       <p style={note}>
         Where the layout changes. A media query cannot read a CSS variable, so these are numbers in{' '}
         <code>@/components/ui/spacing</code>, not variables.
       </p>
-      <table style={table}>
+      <div style={tableScroll} tabIndex={0} role="region" aria-label="Table, scrolls sideways">
+        <table style={table}>
         <tbody>
           {Object.entries(breakpoints).map(([name, px]) => (
             <tr key={name}>
@@ -60,6 +67,7 @@ export default function SpacingPage() {
           ))}
         </tbody>
       </table>
+      </div>
     </DocPage>
   );
 }

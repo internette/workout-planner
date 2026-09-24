@@ -57,10 +57,23 @@ export function entriesStage(ctx: Ctx): Ctx {
     ['Sad', 'var(--color-periwinkle)'],
     ['Mad', 'var(--color-danger)'],
   ];
-  const moods = moodDefs.map(([name, bg]) => {
+  // Mood and effort are each a radio group: one tab stop (the picked one), arrow keys move the pick and the focus.
+  const radioKeys = (count, index, pick, attr) => (e) => {
+    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    const to = step ? (index + step + count) % count : e.key === 'Home' ? 0 : e.key === 'End' ? count - 1 : -1;
+    if (to < 0) return;
+    e.preventDefault();
+    pick(to);
+    requestAnimationFrame(() => document.querySelector<HTMLElement>('[' + attr + '="' + to + '"]')?.focus());
+  };
+  const moods = moodDefs.map(([name, bg], ix) => {
     const on = st.mood === name;
     return {
       name,
+      checked: on,
+      tab: on || (!st.mood && ix === 0) ? 0 : -1,
+      index: ix,
+      keys: radioKeys(moodDefs.length, ix, (to) => logic.s({ mood: moodDefs[to][0] }), 'data-mood'),
       pick: () => logic.s({ mood: name }),
       wrap: 'border:none;background:none;padding:6px;display:flex;flex-direction:column;align-items:center;gap:9px;cursor:pointer;border-radius:16px',
       face:
@@ -78,9 +91,15 @@ export function entriesStage(ctx: Ctx): Ctx {
   const RPE_WORDS = ['Easy', 'Steady', 'Solid', 'Hard', 'All out'];
   const stars = [1, 2, 3, 4, 5].map((n) => ({
     glyph: n <= st.rpe ? '★' : '☆',
+    label: n + ' of 5, ' + RPE_WORDS[n - 1],
+    checked: n === st.rpe,
+    tab: n === (st.rpe || 1) ? 0 : -1,
+    index: n - 1,
+    keys: radioKeys(5, n - 1, (to) => logic.s({ rpe: to + 1 }), 'data-star'),
     pick: () => logic.s({ rpe: n }),
+    // 44px square to tap, however big the star glyph draws.
     style:
-      'border:none;background:none;padding:0;font-size:var(--text-5xl);line-height:var(--leading-none);cursor:pointer;color:' +
+      'border:none;background:none;padding:0;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;font-size:var(--text-5xl);line-height:var(--leading-none);cursor:pointer;color:' +
       (n <= st.rpe ? 'var(--color-ink)' : 'var(--color-hairline)'),
   }));
   return {

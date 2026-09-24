@@ -43,7 +43,7 @@
 .control .input:focus-visible { outline: none; }
 
 /* ---- bare: for placing inside a container you style yourself */
-.bare { flex: 1; min-height: 36px; }
+.bare { flex: 1; min-height: 44px; }
 .bare-sm {
   flex: 1;
   min-height: 36px;
