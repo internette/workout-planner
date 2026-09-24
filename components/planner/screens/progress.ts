@@ -44,13 +44,13 @@ export function progressVals(ctx: Ctx) {
     entriesAt,
     isDoneEntry,
   } = ctx;
-  // The stats cover last month and this one, or from when the account was made if later.
-  const statsSince = () => {
-    const start = new Date(Y, TODAY_M - 1, 1);
-    const created = new Date(logic.auth.account?.createdAt ?? '');
-    const from = !isNaN(created.getTime()) && created > start ? created : start;
-    return MON3[from.getMonth()] + ' ' + from.getDate();
-  };
+  // A week by its dates: "Sep 20–26", or "Aug 30 – Sep 5" across a month.
+  const weekRange = (b) =>
+    b.start.getMonth() === b.end.getMonth()
+      ? MON3[b.start.getMonth()] + ' ' + b.start.getDate() + '–' + b.end.getDate()
+      : MON3[b.start.getMonth()] + ' ' + b.start.getDate() + ' – ' + MON3[b.end.getMonth()] + ' ' + b.end.getDate();
+  const weekName = (ix) => (ix === thisWeekIx ? 'This week' : ix === thisWeekIx - 1 ? 'Last week' : 'Week of ' + weekRange(weekBuckets[ix]));
+  const selWeek = weekBuckets[barSel] || { sessions: [], planned: 0, done: 0 };
   return {
     // Empty states: say what will show up, instead of "0 of 0" or a bare heading.
     wkEmpty: weekAll.length === 0,
@@ -172,12 +172,11 @@ export function progressVals(ctx: Ctx) {
       }
       return out;
     })(),
-    chartRangeLabel: MON3[TODAY_M] + ' · ' + weekBuckets.length + ' weeks',
-    weekEmpty: monthDays.filter((x) => x.d >= 1 + barSel * 7 && x.d <= 1 + barSel * 7 + 6).length === 0,
-    weekSessions: monthDays
-      .filter((x) => x.d >= 1 + barSel * 7 && x.d <= 1 + barSel * 7 + 6)
+    chartRangeLabel: 'Last ' + weekBuckets.length + ' weeks',
+    weekEmpty: selWeek.sessions.length === 0,
+    weekSessions: selWeek.sessions
       .map((x) => ({
-        day: DOW3[new Date(Y, TODAY_M, x.d).getDay()] + ' ' + x.d,
+        day: DOW3[x.date.getDay()] + ' ' + x.date.getDate(),
         name: nameOf(x.av.name),
         statusLabel: x.done ? 'Done' : 'Planned',
         status:
@@ -186,24 +185,12 @@ export function progressVals(ctx: Ctx) {
             ? 'background:var(--color-pink);color:var(--color-white)'
             : 'background:var(--color-white);color:var(--color-muted)'),
         open: () =>
-          logic.nav({ screen: 'detail', creating: false, ...monthPatch(TODAY_M), day: x.d, entryId: x.av.id }),
+          logic.nav({ screen: 'detail', creating: false, ...monthPatch(relM(x.date)), day: x.date.getDate(), entryId: x.av.id }),
       })),
-    chartCaption: (() => {
-      const b = weekBuckets[barSel] || { planned: 0, done: 0 };
-      const from = 1 + barSel * 7;
-      const to = Math.min(new Date(Y, TODAY_M + 1, 0).getDate(), from + 6);
-      return (
-        (barSel === thisWeekIx ? 'This week' : 'Week ' + (barSel + 1)) +
-        ' · ' +
-        MON3[TODAY_M] +
-        ' ' +
-        from +
-        '–' +
-        to +
-        ' · ' +
-        (b.planned ? b.done + ' of ' + plural(b.planned, 'session') + ' done' : 'nothing planned')
-      );
-    })(),
+    chartCaption:
+      (barSel >= thisWeekIx - 1 ? weekName(barSel) + ' · ' + weekRange(selWeek) : weekName(barSel)) +
+      ' · ' +
+      (selWeek.planned ? selWeek.done + ' of ' + plural(selWeek.planned, 'session') + ' done' : 'nothing planned'),
     questsClearedLabel: questsClearedCount + ' of ' + questDayCount,
     questsClearedBar:
       'width:' +
@@ -233,33 +220,34 @@ export function progressVals(ctx: Ctx) {
           'display:flex;align-items:center;gap:12px;padding:10px 0' +
           (ix === arr.length - 1 ? '' : ';border-bottom:1px solid rgba(35,42,69,.055)'),
       })),
+    // Each stat says what it covers. Totals and streaks are all time, up to today; the average matches the chart.
     profileStats: [
       {
         label: 'SESSIONS DONE',
         value: String(completedSessions),
-        unit: totalSessions ? 'of ' + totalSessions + ' since ' + statsSince() : 'none planned yet',
+        unit: totalSessions ? 'of ' + totalSessions : 'none planned yet',
+        span: totalSessions ? 'All time' : '',
       },
-      { label: 'CURRENT STREAK', value: String(streak), unit: streak === 1 ? 'day' : 'days' },
-      { label: 'LONGEST STREAK', value: String(longest), unit: longest === 1 ? 'day' : 'days' },
+      { label: 'CURRENT STREAK', value: String(streak), unit: streak === 1 ? 'day' : 'days', span: 'Training days' },
+      { label: 'LONGEST STREAK', value: String(longest), unit: longest === 1 ? 'day' : 'days', span: 'All time' },
       {
         label: 'WEEKLY AVERAGE',
         value: completedSessions ? weeklyAvg : '—',
-        unit: completedSessions ? 'sessions' : 'no sessions yet',
+        unit: completedSessions ? 'a week' : 'no sessions yet',
+        span: completedSessions ? 'Last ' + weekBuckets.length + ' weeks' : '',
       },
     ],
+    allTimeLabel: 'All time',
     weeklyBars: weekBuckets
       .map((b) => b.done)
       .map((n, ix) => ({
-        week: ix === thisWeekIx ? 'now' : 'w' + (ix + 1),
+        // The week's Sunday under each bar; "Now" for this week. The same words for screen readers.
+        week: ix === thisWeekIx ? 'Now' : MON3[weekBuckets[ix].start.getMonth()] + ' ' + weekBuckets[ix].start.getDate(),
         count: n,
-        tip: n + (n === 1 ? ' session' : ' sessions') + ' in week ' + (ix + 1),
+        tip: weekName(ix) + ': ' + plural(n, 'session') + ' done',
         pick: () => logic.s({ barSel: ix }),
         on: ix === barSel,
-        aria:
-          (ix === weekBuckets.length - 1 ? 'This week' : 'Week ' + (ix + 1)) +
-          ': ' +
-          n +
-          (n === 1 ? ' session' : ' sessions'),
+        aria: (ix >= thisWeekIx - 1 ? weekName(ix) + ', ' + weekRange(weekBuckets[ix]) : weekName(ix)) + ': ' + plural(n, 'session') + ' done',
         value:
           'font-family:var(--font-heading);font-size:var(--text-xs);font-weight:var(--font-weight-bold);color:' +
           (ix === barSel ? 'var(--color-pink-deep)' : 'var(--color-muted)'),
@@ -310,12 +298,12 @@ export function progressVals(ctx: Ctx) {
         deltaStyle:
           'flex:none;width:44px;text-align:right;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:var(--color-pink-deep)',
       })),
-    wkDone: weekAll.filter((a) => a.s === 'c').length,
+    wkDone: weekAll.filter(isDoneEntry).length,
     wkTotal: weekAll.length,
     wkTotalUnit: weekAll.length === 1 ? 'session' : 'sessions',
     wkBar:
       'width:' +
-      (weekAll.length ? Math.round((weekAll.filter((a) => a.s === 'c').length / weekAll.length) * 100) : 0) +
+      (weekAll.length ? Math.round((weekAll.filter(isDoneEntry).length / weekAll.length) * 100) : 0) +
       '%;height:100%;border-radius:4px;background:var(--color-pink)',
     hasNext: !!nextUp,
     noNext: !nextUp,

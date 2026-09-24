@@ -1311,6 +1311,22 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             <span
                               style={{
+                                width: '8px',
+                                height: '8px',
+                                borderRadius: '50%',
+                                boxShadow: 'inset 0 0 0 1.5px var(--color-slate)',
+                                background: 'linear-gradient(90deg,var(--color-slate) 50%,transparent 50%)',
+                              }}
+                            ></span>
+                            Partly done
+                          </Text>
+                          <Text
+                            variant="small"
+                            tone="muted"
+                            style={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+                          >
+                            <span
+                              style={{
                                 width: '7px',
                                 height: '7px',
                                 borderRadius: '50%',
@@ -1736,6 +1752,11 @@ export function PlannerView({ v }: { v: any }) {
                               {s?.unit}
                             </Text>
                           </div>
+                          {s?.span ? (
+                            <Text variant="caption" as="div" tone="muted" style={{ marginTop: '4px' }}>
+                              {s.span}
+                            </Text>
+                          ) : null}
                         </Card>
                       </Fragment>
                     ))}
@@ -1849,6 +1870,9 @@ export function PlannerView({ v }: { v: any }) {
                       <Text variant="eyebrow" tone="slate">
                         QUESTS CLEARED
                       </Text>
+                      <Text variant="small" tone="muted" weight="medium">
+                        {v.allTimeLabel}
+                      </Text>
                       {v.questsHas ? (
                         <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
                           {v.questsClearedLabel}
@@ -1906,9 +1930,14 @@ export function PlannerView({ v }: { v: any }) {
                     }}
                   >
                     <Card>
-                      <Text variant="eyebrow" as="div" tone="slate">
-                        HOW IT FEELS
-                      </Text>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
+                        <Text variant="eyebrow" tone="slate">
+                          HOW IT FEELS
+                        </Text>
+                        <Text variant="small" tone="muted" weight="medium" style={{ marginLeft: 'auto' }}>
+                          {v.allTimeLabel}
+                        </Text>
+                      </div>
                       {v.moodEmpty ? (
                         <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
                           Write about a session in the Chronicle and your moods gather here.
@@ -1954,12 +1983,17 @@ export function PlannerView({ v }: { v: any }) {
                       </div>
                     </Card>
                     <Card>
-                      <Text variant="eyebrow" as="div" tone="slate">
-                        PERSONAL BESTS
-                      </Text>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
+                        <Text variant="eyebrow" tone="slate">
+                          PERSONAL BESTS
+                        </Text>
+                        <Text variant="small" tone="muted" weight="medium" style={{ marginLeft: 'auto' }}>
+                          {v.allTimeLabel}
+                        </Text>
+                      </div>
                       {v.recordsEmpty ? (
                         <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
-                          Give your exercises a weight, or finish a ride, and your bests show up here.
+                          Tick off an exercise with a weight, or finish a ride, and your bests show up here.
                         </Text>
                       ) : null}
                       <div
@@ -2085,7 +2119,7 @@ export function PlannerView({ v }: { v: any }) {
                     </div>
                     <div style={{ flex: '1 1 180px', minWidth: '0' }}>
                       <Text variant="micro" as="div" tone="slate">
-                        LAST SEVEN SESSIONS
+                        LAST 7 TRAINING DAYS
                       </Text>
                       {v.ticksEmpty ? (
                         <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '9px 0 0' }}>

@@ -5,7 +5,7 @@ import type { Ctx } from '../types';
 
 // The selected month, week and day, plus the week list, month grid and its constellation.
 export function calendarStage(ctx: Ctx): Ctx {
-  const { logic, st, Y, TODAY_M, seedAt, entriesAt, TK, relM, isDoneEntry, TODAY_D, nameOf, metaFor, ACT } = ctx;
+  const { logic, st, Y, TODAY_M, seedAt, entriesAt, TK, relM, isDoneEntry, TODAY_D, nameOf, metaFor, ACT, doneCountAt, instList, actualMinutes } = ctx;
   // The month on screen, counted from January of this year (so it can run into next year, or back into last).
   const mi = MONTHS.indexOf(st.month) + 12 * (st.yOff || 0);
   const dim = new Date(Y, mi + 1, 0).getDate();
@@ -17,6 +17,16 @@ export function calendarStage(ctx: Ctx): Ctx {
   // A day's marker sums up all of its workouts: done once every one is, missed once it is past and any one isn't.
   const allDone = (list) => list.length > 0 && list.every(isDoneEntry);
   const workoutsWord = (list) => (list.length > 1 ? list.length + ' workouts, ' : '');
+  // A past day that isn't all done but where something was — a workout of several, an exercise, a finished session —
+  // is "partly done" (a half moon), not "missed". Today keeps its planned marker until it's over.
+  const someDone = (av) => isDoneEntry(av) || (!av.ride && doneCountAt(av) > 0) || actualMinutes(av) > 0;
+  const partly = (list) => list.length > 0 && !allDone(list) && list.some(someDone);
+  const partText = (list) =>
+    list.length > 1
+      ? list.filter(isDoneEntry).length + ' of ' + list.length + ' workouts done'
+      : doneCountAt(list[0]) + ' of ' + instList(list[0].exKey, list[0].id).length + ' exercises done';
+  const halfMoon = (color) =>
+    'width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px ' + color + ';background:linear-gradient(90deg,' + color + ' 50%,transparent 50%)';
   const selDate = new Date(Y, mi, selDay);
   const wkStart = new Date(Y, mi, selDay - selDate.getDay());
   const cells = [];
@@ -32,9 +42,10 @@ export function calendarStage(ctx: Ctx): Ctx {
     const list = listForDate(d);
     const past = relM(d) * 100 + d.getDate() < TK;
     const done = allDone(list);
-    return [DOW1[d.getDay()], d.getDate(), list.length > 0, relM(d) === mi, relM(d), done, list.length > 0 && !done && past, list];
+    const part = past && partly(list);
+    return [DOW1[d.getDay()], d.getDate(), list.length > 0, relM(d) === mi, relM(d), done, list.length > 0 && !done && past && !part, list, part];
   });
-  const days = dayDefs.map(([letter, num, dot, same, cellMonth, done, miss, list]) => {
+  const days = dayDefs.map(([letter, num, dot, same, cellMonth, done, miss, list, part]) => {
     const on = selDay === num && same;
     return {
       letter,
@@ -51,7 +62,7 @@ export function calendarStage(ctx: Ctx): Ctx {
         ' ' +
         num +
         ' — ' +
-        (!dot ? 'rest day' : workoutsWord(list) + (done ? 'completed' : miss ? 'missed' : 'planned')),
+        (!dot ? 'rest day' : workoutsWord(list) + (done ? 'completed' : part ? 'partly done, ' + partText(list) : miss ? 'missed' : 'planned')),
       isToday: cellMonth === TODAY_M && num === TODAY_D ? 'date' : false,
       wrapStyle:
         'flex:1;min-width:0;padding:8px 2px 10px;border:none;border-radius:16px;background:' +
@@ -71,11 +82,13 @@ export function calendarStage(ctx: Ctx): Ctx {
         ? 'width:10px;height:2px;border-radius:1px;background:' + (on ? 'rgba(255,255,255,.6)' : 'var(--color-divider)')
         : done
           ? 'width:6px;height:6px;border-radius:50%;background:' + (on ? 'var(--color-white)' : 'var(--color-slate)')
-          : miss
-            ? 'width:7px;height:7px;border-radius:50%;background:none;box-shadow:inset 0 0 0 1.5px ' +
-              (on ? 'rgba(255,255,255,.85)' : 'var(--color-muted)')
-            : 'width:6px;height:6px;border-radius:50%;background:none;box-shadow:inset 0 0 0 1.5px ' +
-              (on ? 'var(--color-white)' : 'var(--color-teal)'),
+          : part
+            ? halfMoon(on ? 'var(--color-white)' : 'var(--color-slate)')
+            : miss
+              ? 'width:7px;height:7px;border-radius:50%;background:none;box-shadow:inset 0 0 0 1.5px ' +
+                (on ? 'rgba(255,255,255,.85)' : 'var(--color-muted)')
+              : 'width:6px;height:6px;border-radius:50%;background:none;box-shadow:inset 0 0 0 1.5px ' +
+                (on ? 'var(--color-white)' : 'var(--color-teal)'),
     };
   });
   const shownYOff = Math.floor(mi / 12);
@@ -113,6 +126,8 @@ export function calendarStage(ctx: Ctx): Ctx {
   });
   function weekRow(d, a, ix) {
     const today = a.s === 't';
+    const past = relM(d) * 100 + d.getDate() < TK;
+    const part = past && partly([a]);
     const label =
       DOW3[d.getDay()] +
       ' ' +
@@ -140,12 +155,14 @@ export function calendarStage(ctx: Ctx): Ctx {
         ', ' +
         metaFor(a) +
         ', ' +
-        (isDoneEntry(a) ? 'completed' : relM(d) * 100 + d.getDate() < TK ? 'missed' : 'planned'),
+        (isDoneEntry(a) ? 'completed' : part ? 'partly done' : past ? 'missed' : 'planned'),
       stateDot:
         'flex:none;margin-left:auto;' +
         (isDoneEntry(a)
           ? 'width:8px;height:8px;border-radius:50%;background:var(--color-slate)'
-          : relM(d) * 100 + d.getDate() < TK
+          : part
+            ? halfMoon('var(--color-slate)')
+            : past
             ? 'width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--color-muted)'
             : 'width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--color-teal)'),
       eyebrow:
@@ -170,7 +187,8 @@ export function calendarStage(ctx: Ctx): Ctx {
     if (list.length && a !== 't' && allDone(list)) a = 'c';
     const today = a === 't';
     const sel = d === selDay;
-    const missed = !!a && a !== 'c' && a !== 't' && mi * 100 + d < TK;
+    const part = !!a && a !== 'c' && a !== 't' && mi * 100 + d < TK && partly(list);
+    const missed = !!a && a !== 'c' && a !== 't' && mi * 100 + d < TK && !part;
     monthCells.push({
       label: String(d),
       day: d,
@@ -198,7 +216,7 @@ export function calendarStage(ctx: Ctx): Ctx {
           d +
           ' — ' +
           (a ? workoutsWord(list) : '') +
-          (a === 'c' ? 'completed' : missed ? 'missed' : a ? 'planned' : 'rest day') +
+          (a === 'c' ? 'completed' : part ? 'partly done, ' + partText(list) : missed ? 'missed' : a ? 'planned' : 'rest day') +
           (today ? ', today' : '')
         : '',
       isToday: today ? 'date' : false,
@@ -207,8 +225,9 @@ export function calendarStage(ctx: Ctx): Ctx {
         (a ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)') +
         ';color:' +
         (sel ? 'var(--color-white)' : missed ? 'var(--color-muted)' : a ? 'var(--color-ink)' : 'var(--color-muted)'),
-      dot:
-        a === 'c' || (sel && a && !missed)
+      dot: part
+        ? halfMoon(sel ? 'var(--color-white)' : 'var(--color-slate)')
+        : a === 'c' || (sel && a && !missed)
           ? 'width:6px;height:6px;border-radius:50%;background:' + (sel ? 'var(--color-white)' : 'var(--color-slate)')
           : missed
             ? 'width:7px;height:7px;border-radius:50%;background:none;position:relative;box-shadow:inset 0 0 0 1.5px ' +
