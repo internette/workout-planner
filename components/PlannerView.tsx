@@ -3324,7 +3324,7 @@ export function PlannerView({ v }: { v: any }) {
                     tone="muted"
                     style={{ margin: '10px 0 0', maxWidth: '460px', textWrap: 'pretty' }}
                   >
-                    Entries attach to a workout on your plan. Listed: this month&apos;s sessions, up to today, that don&apos;t have one yet.
+                    Entries attach to a workout on your plan. Listed: sessions from the last 60 days, up to today, that don&apos;t have one yet.
                   </Text>
                   <div style={{ marginTop: '22px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
@@ -5265,6 +5265,8 @@ export function PlannerView({ v }: { v: any }) {
                             color: 'var(--color-muted)',
                           }}
                         >
+                          <span style={{ color: 'var(--color-ink)', fontWeight: 'var(--font-weight-semibold)' }}>{v.eName}</span>
+                          {' · '}
                           {v.longDate}
                         </p>
                       </div>
