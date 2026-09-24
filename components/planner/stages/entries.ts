@@ -21,10 +21,14 @@ export function entriesStage(ctx: Ctx): Ctx {
   const isoToday = isoOf(nowDate);
   const iso30 = isoOf(new Date(Y, TODAY_M, TODAY_D - 29));
   const rideDoneAt = (av) => !!(st.rideDone || {})[idOf(av)];
-  const isDoneEntry = (av) => !!av && (av.ride ? rideDoneAt(av) : countAt(av) > 0 && doneCountAt(av) === countAt(av));
   // What a finished session actually took (recorded by Finish), next to what was planned.
   const actualMinutes = (av) =>
     av && av.actual ? Number(av.actual.hrs || 0) * 60 + Number(av.actual.mins || 0) : 0;
+  // Done, everywhere: a ride marked complete; a lift with every exercise ticked, or finished with Finish (which records
+  // its time) even with some left unticked.
+  const isDoneEntry = (av) =>
+    !!av &&
+    (av.ride ? rideDoneAt(av) : (countAt(av) > 0 && doneCountAt(av) === countAt(av)) || actualMinutes(av) > 0);
   const minText = (m) => (Math.floor(m / 60) ? Math.floor(m / 60) + ' h ' + (m % 60 ? (m % 60) + ' min' : '') : m + ' min').trim();
   // A finished session's time, else the planned one ("~50 min").
   const timeOf = (av) => (actualMinutes(av) ? minText(actualMinutes(av)) : av.time);

@@ -2542,6 +2542,7 @@ export function PlannerView({ v }: { v: any }) {
                               onChange={v.setName}
                               onKeyDown={v.commitOnEnter}
                               placeholder="e.g. Bulgarian Split Squat"
+                              error={v.draftNameError || undefined}
                             />
                             <div
                               style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '14px' }}
@@ -3155,6 +3156,7 @@ export function PlannerView({ v }: { v: any }) {
                       value={v.exerciseEdit.name}
                       onChange={v.exerciseEdit.setName}
                       placeholder="e.g. Bulgarian Split Squat"
+                      error={v.exerciseEdit.nameError || undefined}
                     />
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '14px' }}>
                       <TextField
@@ -3612,7 +3614,13 @@ export function PlannerView({ v }: { v: any }) {
                     </div>
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '20px' }}>
-                    <Chip icon={<Clock color="var(--color-muted)" size={15} />}>{t(v.eTime)}</Chip>
+                    <Chip
+                      icon={<Clock color="var(--color-muted)" size={15} />}
+                      onClick={v.editTook}
+                      title={v.editTook ? 'Change what you recorded' : undefined}
+                    >
+                      {t(v.eTime)}
+                    </Chip>
                     {v.inSeries ? (
                       <>
                         <Chip
@@ -4889,6 +4897,7 @@ export function PlannerView({ v }: { v: any }) {
                                 value={v.draftName ?? ''}
                                 onChange={v.setName}
                                 placeholder="e.g. Bulgarian Split Squat"
+                                error={v.draftNameError || undefined}
                               />
                               <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
                               <div

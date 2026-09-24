@@ -114,6 +114,8 @@ export function workoutVals(ctx: Ctx) {
   const hasProgress = !!selAct && (selRide ? rideDone : doneCount > 0);
   const doRestart = () => {
     startTimer();
+    // Starting over also undoes Finish: what it recorded belonged to the go being thrown away.
+    if (selAct && actualMinutes(selAct) > 0) logic.save(() => db.reopenSession(idOf(selAct)));
     if (selAct && hasProgress) {
       if (selRide) {
         logic.s({ rideDone: Object.assign({}, st.rideDone, { [idOf(selAct)]: false }) });
@@ -133,12 +135,18 @@ export function workoutVals(ctx: Ctx) {
   const plannedRideMin = selRide ? Number(selRide.hrs || 0) * 60 + Number(selRide.mins || 0) : 0;
   const openFinish = () => {
     if (!selAct) return;
-    const fromTimer = timerState ? Math.max(1, Math.round(timerElapsedSec / 60)) : 0;
-    const mins = fromTimer || actualMinutes(selAct) || plannedRideMin;
+    // The timer's reading, unless the session already has a recorded time and the timer only ran a few seconds (a
+    // stray tap on Start, say): that mustn't overwrite what was recorded.
+    const recorded = actualMinutes(selAct);
+    const useTimer = !!timerState && (timerElapsedSec >= 60 || !recorded);
+    const fromTimer = useTimer ? Math.max(1, Math.round(timerElapsedSec / 60)) : 0;
+    const mins = fromTimer || recorded || plannedRideMin;
     const a = selAct.actual || {};
     if (timerRunning) pauseTimer();
     logic.s({
       finish: {
+        wasRunning: timerRunning,
+        correcting: !fromTimer && recorded > 0,
         ride: !!selRide,
         hrs: mins >= 60 ? String(Math.floor(mins / 60)) : '',
         mins: mins ? String(mins % 60) : '',
@@ -272,12 +280,14 @@ export function workoutVals(ctx: Ctx) {
     canFinish: !!timerState && !!selAct,
     openFinish,
     finishOpen: !!fin,
-    finishTitle: fin && fin.ride ? 'Finish your ride' : 'Finish your workout',
+    finishTitle: fin && fin.correcting ? 'Change your time' : fin && fin.ride ? 'Finish your ride' : 'Finish your workout',
     finishIsRide: !!(fin && fin.ride),
     finishNote: !fin
       ? ''
-      : (fin.fromTimer ? 'Filled in from your timer' : fin.ride ? 'Filled in from your plan' : '') +
-        (fin.fromTimer || fin.ride ? '. Change anything that went differently.' : '') +
+      : fin.correcting
+        ? 'Change what you recorded.'
+        : (fin.fromTimer ? 'Filled in from your timer' : fin.ride ? 'Filled in from your plan' : '') +
+          (fin.fromTimer || fin.ride ? '. Change anything that went differently.' : '') +
         (!fin.ride && selList.length > doneCount
           ? ' ' + plural(selList.length - doneCount, 'exercise') + (selList.length - doneCount === 1 ? " isn't" : " aren't") + ' ticked off. That stays as it is.'
           : ''),
@@ -293,7 +303,14 @@ export function workoutVals(ctx: Ctx) {
     setFinishDist: (e) => patchFinish({ dist: numericOnly(e.target.value) }),
     setFinishElev: (e) => patchFinish({ elev: digitsOnly(e.target.value).slice(0, 6) }),
     canSaveFinish: finMinutes > 0 && !logic.busy('finish'),
-    cancelFinish: () => logic.s({ finish: null }),
+    // "Not yet": the clock carries on where it was, running if it was running.
+    cancelFinish: () => {
+      const wasRunning = !!(fin && fin.wasRunning);
+      logic.s({ finish: null });
+      if (wasRunning && timerState && !timerState.runningSince) resumeTimer();
+    },
+    // "Took 35 min" on a finished session: tap to correct it.
+    editTook: finished ? openFinish : undefined,
     saveFinish,
     pausePromptOpen: !!st.pausePrompt,
     keepGoing: () => logic.s({ pausePrompt: null }),
@@ -369,15 +386,22 @@ export function workoutVals(ctx: Ctx) {
     questTitleStyle:
       'font-family:var(--font-heading);font-size:var(--text-lg);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-snug);margin-top:4px;' +
       (dayCleared ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
-    isDone:
-      (actFor(selDay) || {}).s === 'c' || rideDone || (selList.length > 0 && doneCount === selList.length),
+    isDone: doneSel,
     dayIsRide: !!selRide,
     dayIsLift: !selRide,
-    // Marking a ride complete is finishing it: it asks what was ridden. Unmarking one is a plain toggle.
+    // Marking a ride complete is finishing it: it asks what was ridden. Unmarking one asks first, since what was
+    // recorded for it goes too, so the ride is back to its plan everywhere.
     toggleRideDone: () => {
       if (!rideDone) return openFinish();
-      logic.s({ rideDone: Object.assign({}, st.rideDone, { [idOf(selAct)]: false }) });
-      logic.save(() => db.setRideDone(idOf(selAct), false));
+      logic.s({
+        confirm: {
+          kind: 'unfinishRide',
+          id: idOf(selAct),
+          title: 'Mark this ride not done?',
+          body: actualMinutes(selAct) > 0 ? 'The distance and time you recorded for it will be cleared.' : 'It goes back to planned.',
+          label: 'Mark not done',
+        },
+      });
     },
     rideDoneLabel: rideDone ? 'Ride completed' : 'Mark ride complete',
     rideDoneType: rideDone ? 'secondary' : 'neutral',
@@ -427,7 +451,9 @@ export function workoutVals(ctx: Ctx) {
     progNote:
       selList.length === 0
         ? ''
-        : doneCount === 0
+        : finished && doneCount < selList.length
+          ? 'Finished · ' + doneCount + ' of ' + selList.length + ' ticked off.'
+          : doneCount === 0
           ? 'Mark each exercise as you clear it.'
           : doneCount === selList.length
             ? 'Transformation complete. Write down how it felt while it\'s fresh.'

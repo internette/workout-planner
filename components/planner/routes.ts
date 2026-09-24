@@ -32,12 +32,16 @@ type RouteState = {
   templateId?: string | null;
   exerciseId?: string | null;
   editTemplate?: string | null;
+  entryId?: string | null;
+  editId?: string | null;
 };
 
 // The Spellbook's own pages: a saved workout, and an exercise. Back and Forward step through them, and a reload or a
 // link opens the same one.
 const workoutPath = (id: string) => TAB_PATHS.arsenal + '/workouts/' + encodeURIComponent(id);
 const exercisePath = (id: string) => TAB_PATHS.arsenal + '/exercises/' + encodeURIComponent(id);
+// A session on the calendar, and its editor. A reload of either reopens the session (an editor's draft doesn't survive).
+const sessionPath = (id: string) => TAB_PATHS.calendar + '/sessions/' + encodeURIComponent(id);
 
 /**
  * The address the planner's current state belongs to. The same as pathForScreen, except that the Spellbook's own
@@ -45,21 +49,26 @@ const exercisePath = (id: string) => TAB_PATHS.arsenal + '/exercises/' + encodeU
  * workout from the Spellbook stays at /spellbook, since it is the Spellbook's flow, not the calendar's.
  */
 export function pathForState(state: RouteState): string | null {
-  if (state.screen === 'edit' && state.editTemplate) return workoutPath(state.editTemplate);
+  if (state.screen === 'edit' && state.editTemplate) return workoutPath(state.editTemplate) + '/edit';
   if (state.screen === 'edit' && state.creating && state.newFrom === 'arsenal') return TAB_PATHS.arsenal;
+  if (state.screen === 'edit' && !state.creating && state.editId) return sessionPath(state.editId) + '/edit';
+  if (state.screen === 'detail' && state.entryId) return sessionPath(state.entryId);
   if (state.screen === 'template' && state.templateId) return workoutPath(state.templateId);
-  if ((state.screen === 'exercise' || state.screen === 'exerciseEdit') && state.exerciseId)
-    return exercisePath(state.exerciseId);
+  if (state.screen === 'exercise' && state.exerciseId) return exercisePath(state.exerciseId);
+  if (state.screen === 'exerciseEdit' && state.exerciseId) return exercisePath(state.exerciseId) + '/edit';
   return pathForScreen(state.screen);
 }
 
-/** What an address opens: its screen, and for a Spellbook page, which workout or exercise. */
+/** What an address opens: its screen, and for a session or a Spellbook page, which one. An editor's address opens the
+ * page it edits, since a draft doesn't survive a reload. */
 export function stateForPath(path: string): Record<string, string> | null {
-  const m = /^\/spellbook\/(workouts|exercises)\/([^/]+)\/?$/.exec(path);
+  const m = /^\/spellbook\/(workouts|exercises)\/([^/]+)(\/edit)?\/?$/.exec(path);
   if (m) {
     const id = decodeURIComponent(m[2]);
     return m[1] === 'workouts' ? { screen: 'template', templateId: id } : { screen: 'exercise', exerciseId: id };
   }
+  const s = /^\/calendar\/sessions\/([^/]+)(\/edit)?\/?$/.exec(path);
+  if (s) return { screen: 'detail', entryId: decodeURIComponent(s[1]), seg: 'Day' };
   const screen = screenForPath(path);
   return screen ? { screen } : null;
 }

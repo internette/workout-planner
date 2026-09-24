@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { PlannerLogic } from './planner/PlannerLogic';
 import { useViewport } from './planner/useViewport';
 import { pathForState, stateForPath } from './planner/routes';
+import { exerciseDraftDirty, workoutDraftDirty } from './planner/helpers';
 import { logoutUrl, type Account } from '@/lib/auth';
 import { useWindowEvent } from './ui/useWindowEvent';
 import { PlannerView } from './PlannerView';
@@ -27,9 +28,6 @@ export default function Planner({ account = null }: { account?: Account | null }
     return l;
   });
   const [, rerender] = useReducer((n: number) => n + 1, 0);
-  const seenPath = useRef(pathname);
-  // The address the current screen belongs to, as of the last time the screen or the address changed it.
-  const screenPath = useRef<string | null>(null);
   logic.viewport = useViewport();
   // Signing out is a trip to the server's logout route, which ends the session and returns to the front door.
   logic.auth = { account, signOut: () => window.location.assign(logoutUrl()) };
@@ -61,26 +59,105 @@ export default function Planner({ account = null }: { account?: Account | null }
     };
   }, [logic]);
 
-  // Address to screen: Back and Forward, or a link, changed the address to one the screen is not on.
+  // Browser history follows the planner's own. Every screen opened with logic.nav() — a session, an editor, a Spellbook
+  // page, the Chronicle's entry form — is a browser history entry, stamped with how deep it is (the length of the
+  // planner's history). Browser Back and Forward then step through the same screens as the app's Back arrow, and an
+  // editor with unsaved changes asks first, the same "Keep your changes?", instead of losing them.
+  // A browser move the planner asked for itself (history.go) is in flight until this time. Browsers don't always
+  // report one with a popstate (not one started from inside another popstate), so it's a short time, not an event.
+  const movingUntil = useRef(0);
+  const go = (n: number) => {
+    movingUntil.current = Date.now() + 400;
+    window.history.go(n);
+    window.setTimeout(() => {
+      movingUntil.current = 0;
+      logic.forceUpdate();
+    }, 420);
+  };
+  const stampOf = () => (window.history.state && window.history.state.moonshot) || 0;
+  const depthOf = () => (logic.state.hist || []).length;
+  // The address the planner last put in the bar. Anything else there is the browser's doing (Back, Forward), which the
+  // popstate handler deals with; until it has, the screen isn't pushed back over it.
+  const lastPath = useRef('');
+  const stamp = () => {
+    const path = pathForState(logic.state) || window.location.pathname;
+    window.history.replaceState({ ...window.history.state, moonshot: depthOf() }, '', path);
+    lastPath.current = path;
+  };
+  const push = (path: string) => {
+    window.history.pushState({ moonshot: depthOf() }, '', path);
+    lastPath.current = path;
+  };
+  // This page load starts the planner's history afresh; whatever the browser kept from before is just earlier pages.
   useEffect(() => {
-    if (seenPath.current === pathname) return;
-    seenPath.current = pathname;
-    const opens = stateForPath(pathname);
-    if (opens && pathForState(logic.state) !== pathname) logic.setState({ ...opens, monthOpen: false });
-    screenPath.current = pathForState(logic.state);
-  }, [pathname, logic]);
-
-  // Screen to address: when the screen moves to another nav item, push that item's address, so Back returns to where
-  // you were. Only a change of the screen's own address counts: while the address is changing under us (Back), it
-  // differs from the screen's for a moment, and pushing then would undo the Back. Screens inside a flow have no
-  // address of their own, so they leave it alone.
+    stamp();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  // After every change: a deeper history pushes an entry, a shallower one (the app's Back) steps the browser back to
+  // match, and the same depth keeps the address in step with the screen.
   useEffect(() => {
-    const path = pathForState(logic.state);
-    if (!path || path === screenPath.current) return;
-    screenPath.current = path;
-    if (path !== window.location.pathname) {
-      seenPath.current = path;
-      window.history.pushState(null, '', path);
+    if (Date.now() < movingUntil.current || window.location.pathname !== lastPath.current) return;
+    const depth = depthOf();
+    const cur = stampOf();
+    const path = pathForState(logic.state) || window.location.pathname;
+    // Moving to another tab (a different first part of the address) is an entry of its own too, so Back returns to
+    // the tab you came from; within a tab the address just follows the screen.
+    const section = (p: string) => p.split('/')[1] || '';
+    if (depth > cur) push(path);
+    else if (depth < cur) go(depth - cur);
+    else if (path !== window.location.pathname) {
+      if (section(path) !== section(window.location.pathname)) push(path);
+      else stamp();
+    }
+  });
+  useWindowEvent('popstate', (e) => {
+    // The planner's own step back (after its Back, or a delete) lands on an entry that may still hold a screen that's
+    // gone; the planner is already where it should be, so that entry just takes its address.
+    const ours = Date.now() < movingUntil.current;
+    movingUntil.current = 0;
+    const target = (e.state && e.state.moonshot) || 0;
+    const st = logic.state;
+    const cur = depthOf();
+    // Landed where the planner already is: the browser catching up with the app's own Back, or going forward again
+    // after a Back that asked first.
+    if (target === cur) {
+      const opens = stateForPath(window.location.pathname);
+      if (!ours && opens && pathForState(st) && pathForState(st) !== window.location.pathname) logic.setState({ ...opens, monthOpen: false });
+      stamp();
+      return;
+    }
+    if (target < cur) {
+      // Back. Unsaved changes ask first; the browser goes forward again meanwhile, so nothing has moved yet.
+      const dirtyWorkout = st.screen === 'edit' && workoutDraftDirty(st);
+      const dirtyExercise = exerciseDraftDirty(st);
+      if (dirtyWorkout || dirtyExercise) {
+        go(cur - target);
+        if (dirtyWorkout) logic.setState({ leaveOpen: true, pendingNav: null });
+        else
+          logic.setState({
+            confirm: {
+              kind: 'leaveExercise',
+              title: 'Discard your changes?',
+              body: 'You’ve edited this exercise. Leaving now throws those changes away.',
+              label: 'Discard changes',
+            },
+          });
+        return;
+      }
+      for (let i = cur; i > target; i--) logic.back();
+    } else {
+      // Forward: the screen that address belongs to.
+      const opens = stateForPath(window.location.pathname);
+      if (opens) logic.nav({ ...opens, monthOpen: false });
+    }
+    stamp();
+  });
+  // Closing or reloading the tab with unsaved changes asks the browser's own "Leave site?".
+  useWindowEvent('beforeunload', (e) => {
+    const st = logic.state;
+    if ((st.screen === 'edit' && workoutDraftDirty(st)) || exerciseDraftDirty(st)) {
+      e.preventDefault();
+      e.returnValue = '';
     }
   });
 

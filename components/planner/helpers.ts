@@ -65,6 +65,10 @@ export const numericOnly = text => (text || '').replace(/[^0-9.]/g, '');
 // Weight is always pounds now; the box holds the bare number and this puts the unit back for storage/display.
 export const withLb = digits => (digits ? digits + ' lb' : '');
 
+// Whether the exercise editor holds a change to the exercise it opened with.
+export const exerciseDraftDirty = st =>
+  st.screen === 'exerciseEdit' && !!st.exDraft && !!st.exDraftOrig && JSON.stringify(st.exDraft) !== JSON.stringify(st.exDraftOrig);
+
 // Whether the create/edit workout screen has anything typed or toggled that a plain screen change would throw away.
 // Only meaningful while actually on that screen: these same keys can be left over (never cleared) after an old visit,
 // so a caller must also check the screen is 'edit' before treating this as "there's a draft in the way".

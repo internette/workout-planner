@@ -108,7 +108,13 @@ export function arsenalVals(ctx: Ctx) {
         usedIn: found.workout
           ? [{ name: found.workout.name, open: () => logic.nav({ screen: 'template', templateId: found.workout.id }) }]
           : [],
-        edit: () => logic.s({ screen: 'exerciseEdit', exDraft: draftFrom(found.ex, found.ex.name) }),
+        edit: () =>
+          logic.nav({
+            screen: 'exerciseEdit',
+            exDraft: draftFrom(found.ex, found.ex.name),
+            exDraftOrig: draftFrom(found.ex, found.ex.name),
+            exEditNav: true,
+          }),
         // Only an exercise saved on its own can be deleted here. One inside a workout is removed from that workout's
         // editor, which keeps past sessions as they were; a built-in belongs to everyone.
         canDelete: !found.ex.builtin && !found.workout,
@@ -136,7 +142,14 @@ export function arsenalVals(ctx: Ctx) {
   // Saving an exercise always asks how: update it, or keep it and save the edit as a new exercise.
   // Updating can also carry on to the workout's upcoming sessions. Completed and past sessions never change.
   const askExerciseSave = async (patch) => {
-    const after = { screen: 'exercise', exDraft: null };
+    // Back to the exercise's page. Opened with its own history entry (Edit), that entry is left behind.
+    const after = {
+      screen: 'exercise',
+      exDraft: null,
+      exDraftOrig: null,
+      exEditNav: false,
+      ...(st.exEditNav ? { hist: (st.hist || []).slice(0, -1) } : {}),
+    };
     const workout = found.workout;
     try {
       const count = workout ? await db.countUpcoming(workout.id, todayIso) : 0;
@@ -151,9 +164,8 @@ export function arsenalVals(ctx: Ctx) {
             if (choice === 'new') {
               // A new standalone exercise: the original and its workout stay exactly as they are.
               logic.saveOnce('exercise', () => db.createLibraryExercise(patch), (r) => ({
-                screen: 'exercise',
+                ...after,
                 exerciseId: r.id,
-                exDraft: null,
                 tplConfirm: null,
               }));
             } else if (workout) {
@@ -181,6 +193,14 @@ export function arsenalVals(ctx: Ctx) {
       logic.s({ saveError: e instanceof Error ? e.message : String(e) });
     }
   };
+  const renameTo = (exDraft.name || '').trim().toLowerCase();
+  const renameClash =
+    found && renameTo && renameTo !== found.ex.name.trim().toLowerCase()
+      ? (found.workout
+          ? EX[found.workout.name] || []
+          : logic.model.library.concat(logic.model.builtins)
+        ).find((e) => e.id !== found.ex.id && e.name.trim().toLowerCase() === renameTo) || null
+      : null;
   const exerciseEdit = {
     name: exDraft.name,
     sets: exDraft.sets,
@@ -211,10 +231,21 @@ export function arsenalVals(ctx: Ctx) {
       pick: () => logic.s({ exDraft: { ...exDraft, i: name } }),
       style: optStyle(exDraft.i === name),
     })),
-    canSave: !!exDraft.name.trim() && (exDraft.areas || []).length > 0,
-    cancel: () => logic.s({ screen: 'exercise', exDraft: null }),
+    // A rename can't take a name another exercise in the same place already has: another of the person's own (or a
+    // built-in), or another exercise in the same workout.
+    nameError: renameClash
+      ? (renameClash.builtin ? 'There’s a built-in exercise called “' : 'You already have an exercise called “') +
+        renameClash.name +
+        '”. Give this one another name.'
+      : '',
+    canSave: !!exDraft.name.trim() && (exDraft.areas || []).length > 0 && !renameClash,
+    cancel: () => {
+      if (!st.exEditNav) return logic.s({ screen: 'exercise', exDraft: null, exDraftOrig: null });
+      logic.s({ exDraft: null, exDraftOrig: null, exEditNav: false });
+      logic.back();
+    },
     save: () => {
-      if (!found || !exDraft.name.trim() || !(exDraft.areas || []).length) return;
+      if (!found || !exDraft.name.trim() || !(exDraft.areas || []).length || renameClash) return;
       const patch = {
         name: exDraft.name.trim(),
         sets: joinSetsReps(exDraft.sets, exDraft.reps),
@@ -253,7 +284,7 @@ export function arsenalVals(ctx: Ctx) {
         // Takes it out of the Spellbook. Sessions still ahead come off the calendar; past ones stay in your history.
         remove: async () => {
           try {
-            const ahead = await db.countUpcoming(chosen.id, todayIso);
+            const ahead = (await db.upcomingOfWorkout(chosen.id, todayIso)).length;
             logic.s({
               confirm: {
                 kind: 'archiveWorkout',
@@ -535,6 +566,8 @@ export function arsenalVals(ctx: Ctx) {
     commitArsenal: () => {
       const nm = (st.dName || '').trim();
       if (!nm || !(st.dAreas || []).length) return;
+      const lower = nm.toLowerCase();
+      if (logic.model.library.concat(logic.model.builtins).some((e) => e.name.trim().toLowerCase() === lower)) return;
       const item = {
         name: nm,
         sets: joinSetsReps(st.dSets, st.dReps) || '3 × 10',

@@ -347,6 +347,22 @@ export async function finishSession(
   await ok(supabase.from('plan_entries').update(patch).eq('id', entryId));
 }
 
+// Undoes Finish: the session goes back to not done, and what it actually took is cleared.
+export async function reopenSession(entryId: string) {
+  await ok(
+    supabase
+      .from('plan_entries')
+      .update({
+        status: 'planned',
+        completed_at: null,
+        actual_minutes: null,
+        actual_distance_miles: null,
+        actual_elevation_ft: null,
+      })
+      .eq('id', entryId),
+  );
+}
+
 export async function saveDiary(entryId: string, e: { mood: string; rpe: number; note: string }) {
   await ok(
     supabase
@@ -554,16 +570,28 @@ export async function updateWorkout(e: WorkoutEdit) {
 // Takes a saved workout out of the Spellbook. Its sessions still ahead (from today on, not completed) come off the
 // calendar; past and completed ones stay, pointing at it, so history keeps its exercises. Archiving rather than
 // deleting is what the edit snapshots already do, and it frees the name.
-export async function archiveWorkout(workoutId: string, todayIso: string) {
-  const ahead: { id: string }[] = await ok(
+// The sessions still ahead (from today on, not completed) of a saved workout, including those an edit left on an
+// archived copy of it ("keep the upcoming sessions as they were", or "only this session"). Those copies carry the
+// workout's name; the saved workout itself is the one not archived.
+export async function upcomingOfWorkout(workoutId: string, todayIso: string): Promise<string[]> {
+  const [w]: any[] = await ok(supabase.from('workouts').select('id, name').eq('id', workoutId));
+  const copies: any[] = w
+    ? await ok(supabase.from('workouts').select('id').eq('archived', true).eq('name', w.name))
+    : [];
+  const ids = [workoutId].concat(copies.map((c) => c.id));
+  const rows: { id: string }[] = await ok(
     supabase
       .from('plan_entries')
       .select('id')
-      .eq('workout_id', workoutId)
+      .in('workout_id', ids)
       .gte('scheduled_date', todayIso)
       .neq('status', 'completed'),
   );
-  await deletePlanEntries(ahead.map((r) => r.id));
+  return rows.map((r) => r.id);
+}
+
+export async function archiveWorkout(workoutId: string, todayIso: string) {
+  await deletePlanEntries(await upcomingOfWorkout(workoutId, todayIso));
   await ok(supabase.from('workouts').update({ archived: true, repeat_enabled: false }).eq('id', workoutId));
 }
 
