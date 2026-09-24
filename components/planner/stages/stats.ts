@@ -36,10 +36,12 @@ export function statsStage(ctx: Ctx): Ctx {
   const pastDays = allDays.filter((x) => x.m * 100 + x.d <= TK);
   // This month's, for the month tiles and the Chronicle's list of sessions still to write about.
   const monthDays = allDays.filter((x) => x.m === TODAY_M);
-  const unloggedDays = monthDays
-    .filter((x) => !ENTRIES[idOf(x.av)] && x.d <= TODAY_D)
-    .slice()
-    .sort((a, b) => b.d - a.d);
+  // Sessions still to write about: the last 60 days up to today, newest first, so the start of a month can still
+  // reach the end of the one before.
+  const since = new Date(Y, TODAY_M, TODAY_D - 60);
+  const unloggedDays = pastDays
+    .filter((x) => !ENTRIES[idOf(x.av)] && new Date(Y, x.m, x.d) >= since)
+    .sort((a, b) => b.m * 100 + b.d - (a.m * 100 + a.d));
   const totalSessions = pastDays.length;
   const completedSessions = pastDays.filter((x) => x.done).length;
   // Keyed "month|day". Not "-": last December is month -1.

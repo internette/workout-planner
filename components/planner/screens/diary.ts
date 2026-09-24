@@ -120,20 +120,23 @@ export function diaryVals(ctx: Ctx) {
     openNewEntry: () => logic.nav({ screen: 'newEntry' }),
     closeNewEntry: () => logic.back(),
     noUnlogged: unloggedDays.length === 0,
-    // Nothing to list: either nothing was planned this month so far, or everything planned already has an entry.
-    noUnloggedNote: ctx.monthDays.some((x) => x.d <= ctx.TODAY_D)
-      ? 'Every session this month so far already has an entry.'
-      : 'No sessions this month to write about yet. Plan one, and once its day comes it shows up here.',
+    // Nothing to list: either nothing was planned yet, or every recent session already has an entry.
+    noUnloggedNote: logic.model.entries.some((x) => x.m * 100 + x.d <= TK)
+      ? 'Every session from the last 60 days already has an entry.'
+      : 'No sessions to write about yet. Plan one, and once its day comes it shows up here.',
     unlogged: unloggedDays.map((x) => ({
       rowStyle:
         'display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px 22px;border:none;border-radius:999px;text-align:left;width:100%;background:var(--color-white);box-shadow:0 4px 14px rgba(35,42,69,.07);cursor:pointer',
-      day: DOW3[new Date(Y, TODAY_M, x.d).getDay()] + ' ' + x.d,
+      // This month's by weekday and date; earlier ones name their month too.
+      day:
+        DOW3[new Date(Y, x.m, x.d).getDay()] +
+        (x.m === TODAY_M ? ' ' + x.d : ', ' + MON3[mod12(x.m)].toUpperCase() + ' ' + x.d + (Math.floor(x.m / 12) ? ' ' + (Y + Math.floor(x.m / 12)) : '')),
       name: nameOf(x.av.name),
       meta: x.av.ride ? (ctx.distOf(x.av) ? ctx.distOf(x.av) + ' mi · ' : '') + ctx.timeOf(x.av) : ctx.timeOf(x.av),
       pick: () =>
         logic.nav({
           screen: 'diary',
-          ...monthPatch(TODAY_M),
+          ...monthPatch(x.m),
           day: x.d,
           entryId: x.av.id,
           // Nothing picked yet: the entry says how it felt only once the person has said so.
