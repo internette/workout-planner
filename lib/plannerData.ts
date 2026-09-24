@@ -329,6 +329,22 @@ export async function setRideDone(entryId: string, completed: boolean) {
   );
 }
 
+// Finishing a session: what it actually took. A ride is also marked complete here; a lifting session is complete
+// when every exercise is ticked, so finishing one only records its time.
+export async function finishSession(
+  entryId: string,
+  f: { ride: boolean; minutes: number; dist?: string; elev?: string },
+) {
+  const patch: Record<string, unknown> = { actual_minutes: f.minutes || null };
+  if (f.ride) {
+    patch.actual_distance_miles = f.dist ? Number(f.dist) : null;
+    patch.actual_elevation_ft = f.elev ? Number(f.elev) : null;
+    patch.status = 'completed';
+    patch.completed_at = new Date().toISOString();
+  }
+  await ok(supabase.from('plan_entries').update(patch).eq('id', entryId));
+}
+
 export async function saveDiary(entryId: string, e: { mood: string; rpe: number; note: string }) {
   await ok(
     supabase

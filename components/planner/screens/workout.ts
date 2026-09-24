@@ -1,5 +1,5 @@
 import { DOWFULL, EDIT_OVERLAYS } from '../constants';
-import { formatElapsed, idOf, plural, questSeed } from '../helpers';
+import { digitsOnly, formatElapsed, idOf, numericOnly, plural, questSeed } from '../helpers';
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -36,6 +36,10 @@ export function workoutVals(ctx: Ctx) {
     TODAY_M,
     TODAY_D,
     DIARY,
+    actualMinutes,
+    minText,
+    distOf,
+    timeOf,
   } = ctx;
   const goDetail = () => logic.nav({ screen: 'detail', creating: false });
   // The quest belongs to the day, so on a day with several workouts it is cleared once all of them are.
@@ -92,6 +96,64 @@ export function workoutVals(ctx: Ctx) {
     goDetail();
   };
   const restartWorkout = () => (hasProgress ? logic.s({ restartPrompt: true }) : doRestart());
+  // Finishing: stops the clock and records what the session actually took — a ride's distance, time and climb, a
+  // lifting session's time — pre-filled from the timer (or the plan), so it's usually one tap. A ride is marked
+  // complete here too; a lifting session is complete once every exercise is ticked, as before.
+  const finished = !!selAct && actualMinutes(selAct) > 0;
+  const plannedRideMin = selRide ? Number(selRide.hrs || 0) * 60 + Number(selRide.mins || 0) : 0;
+  const openFinish = () => {
+    if (!selAct) return;
+    const fromTimer = timerState ? Math.max(1, Math.round(timerElapsedSec / 60)) : 0;
+    const mins = fromTimer || actualMinutes(selAct) || plannedRideMin;
+    const a = selAct.actual || {};
+    if (timerRunning) pauseTimer();
+    logic.s({
+      finish: {
+        ride: !!selRide,
+        hrs: mins >= 60 ? String(Math.floor(mins / 60)) : '',
+        mins: mins ? String(mins % 60) : '',
+        dist: a.dist || (selRide && selRide.dist) || '',
+        elev: a.elev || (selRide && selRide.elev) || '',
+        fromTimer: !!fromTimer,
+      },
+    });
+  };
+  const fin = st.finish || null;
+  const finMinutes = fin ? Number(fin.hrs || 0) * 60 + Number(fin.mins || 0) : 0;
+  const patchFinish = (patch) => logic.s({ finish: Object.assign({}, fin, patch) });
+  const saveFinish = () => {
+    if (!fin || !selAct || finMinutes <= 0) return;
+    const id = idOf(selAct);
+    const timers = Object.assign({}, st.workoutTimer);
+    delete timers[timerKey];
+    logic.s(
+      Object.assign(
+        { finish: null, workoutTimer: timers, announce: 'Finished. ' + minText(finMinutes) + ' recorded.' },
+        fin.ride ? { rideDone: Object.assign({}, st.rideDone, { [id]: true }) } : {},
+      ),
+    );
+    logic.saveOnce('finish', () =>
+      db.finishSession(id, { ride: fin.ride, minutes: finMinutes, dist: fin.dist, elev: fin.elev }),
+    );
+  };
+  // A stat next to its plan, once the ride is done and what was ridden differs from it.
+  const vsPlan = (actual, planned, unit) =>
+    actual && planned && actual !== planned ? 'Planned ' + planned + unit : '';
+  const rideStatsFor = (av, done) => {
+    const r = av.ride;
+    const a = done && av.actual ? av.actual : null;
+    const took = a ? actualMinutes(av) : 0;
+    return [
+      { label: 'DISTANCE', value: distOf(av) ? distOf(av) + ' mi' : '—', note: a ? vsPlan(a.dist, r.dist, ' mi') : '' },
+      { label: 'DURATION', value: timeOf(av) || '—', note: took ? 'Planned ' + av.time : '' },
+      {
+        label: 'ELEVATION',
+        value: (a && a.elev) || r.elev ? ((a && a.elev) || r.elev) + ' ft' : '—',
+        note: a ? vsPlan(a.elev, r.elev, ' ft') : '',
+      },
+      { label: 'EFFORT', value: r.zone || 'Endurance', note: '' },
+    ];
+  };
   // Day view shows a card for every workout on the day. A card's buttons pick its session first, then do what
   // the same button does for the session on screen, so the detail, timer and diary all follow that session.
   const exerciseRow = (e, doneNames) => ({
@@ -114,17 +176,24 @@ export function workoutVals(ctx: Ctx) {
     const doneN = list.filter((e) => doneNames.includes(e.name)).length;
     const ride = av.ride || null;
     const rideIsDone = !!(st.rideDone || {})[id];
-    const complete = ride ? rideIsDone : list.length > 0 && doneN === list.length;
+    // Finished with Finish counts as done here too, even with an exercise left unticked.
+    const complete = ride ? rideIsDone : (list.length > 0 && doneN === list.length) || actualMinutes(av) > 0;
     const logged = !!DIARY[id];
-    const timed = !!(st.workoutTimer || {})[id];
+    const timer = (st.workoutTimer || {})[id] || null;
+    const timed = !!timer;
+    const timerSec = timer
+      ? timer.elapsed + (timer.runningSince ? Math.floor((Date.now() - timer.runningSince) / 1000) : 0)
+      : 0;
     const rows = list.map((e) => exerciseRow(e, doneNames));
     const expanded = !!(st.moreIds || {})[id];
     return {
       key: id,
       name: nameOf(av.name),
       meta: complete
-        ? 'Completed'
-        : ride
+        ? 'Completed · ' + (ride ? (distOf(av) ? distOf(av) + ' mi · ' : '') + timeOf(av) : timeOf(av))
+        : timer
+          ? (timer.runningSince ? 'In progress · ' : 'Paused · ') + formatElapsed(timerSec)
+          : ride
           ? ride.dist
             ? ride.dist + ' mi · ' + av.time
             : av.time
@@ -143,14 +212,7 @@ export function workoutVals(ctx: Ctx) {
         'width:' +
         (list.length ? Math.round((doneN / list.length) * 100) : 0) +
         '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
-      rideStats: !ride
-        ? []
-        : [
-            { label: 'DISTANCE', value: ride.dist ? ride.dist + ' mi' : '—' },
-            { label: 'DURATION', value: av.time || '—' },
-            { label: 'ELEVATION', value: ride.elev ? ride.elev + ' ft' : '—' },
-            { label: 'EFFORT', value: ride.zone || 'Endurance' },
-          ],
+      rideStats: !ride ? [] : rideStatsFor(av, rideIsDone),
       preview: expanded ? rows : rows.slice(0, 3),
       hasMore: rows.length > 3,
       moreLabel: expanded ? 'Show less' : '+ ' + (rows.length - 3) + ' more',
@@ -171,12 +233,43 @@ export function workoutVals(ctx: Ctx) {
     timerLabel: formatElapsed(timerElapsedSec),
     timerButtonLabel: !timerState ? 'Start' : timerRunning ? 'Pause' : 'Resume',
     timerButtonAction: !timerState ? startTimer : timerRunning ? pauseTimer : resumeTimer,
-    // A workout that's already done, and was never timed, doesn't need a "Start" — that's for something you're
-    // about to do. But once a clock exists for it (started earlier this same session), keep showing it, so
-    // finishing the last exercise doesn't yank away the button that pauses or logs it.
-    showTimer: !!timerState || !doneSel,
+    // A workout that's already done or finished, and isn't being timed, doesn't need a "Start" — that's for
+    // something you're about to do. But once a clock exists for it, keep showing it, with Finish beside it.
+    showTimer: !!timerState || (!doneSel && !finished),
+    canFinish: !!timerState && !!selAct,
+    openFinish,
+    finishOpen: !!fin,
+    finishTitle: fin && fin.ride ? 'Finish your ride' : 'Finish your workout',
+    finishIsRide: !!(fin && fin.ride),
+    finishNote: !fin
+      ? ''
+      : (fin.fromTimer ? 'Filled in from your timer' : fin.ride ? 'Filled in from your plan' : '') +
+        (fin.fromTimer || fin.ride ? '. Change anything that went differently.' : '') +
+        (!fin.ride && selList.length > doneCount
+          ? ' ' + plural(selList.length - doneCount, 'exercise') + (selList.length - doneCount === 1 ? " isn't" : " aren't") + ' ticked off. That stays as it is.'
+          : ''),
+    finishHrs: fin ? fin.hrs : '',
+    finishMins: fin ? fin.mins : '',
+    finishDist: fin ? fin.dist : '',
+    finishElev: fin ? fin.elev : '',
+    setFinishHrs: (e) => patchFinish({ hrs: digitsOnly(e.target.value).slice(0, 2) }),
+    setFinishMins: (e) => {
+      const v = digitsOnly(e.target.value).slice(0, 2);
+      patchFinish({ mins: v === '' ? '' : String(Math.min(59, Number(v))) });
+    },
+    setFinishDist: (e) => patchFinish({ dist: numericOnly(e.target.value) }),
+    setFinishElev: (e) => patchFinish({ elev: digitsOnly(e.target.value).slice(0, 6) }),
+    canSaveFinish: finMinutes > 0 && !logic.busy('finish'),
+    cancelFinish: () => logic.s({ finish: null }),
+    saveFinish,
     pausePromptOpen: !!st.pausePrompt,
     keepGoing: () => logic.s({ pausePrompt: null }),
+    // Leaving with the clock still going: it keeps counting (it's kept by the wall clock), and the day card shows it.
+    leaveRunning: () => {
+      const pending = st.pausePrompt;
+      logic.s({ pausePrompt: null });
+      if (pending && pending.proceed) pending.proceed();
+    },
     confirmPause: () => {
       const pending = st.pausePrompt;
       logic.s(
@@ -247,9 +340,11 @@ export function workoutVals(ctx: Ctx) {
       (actFor(selDay) || {}).s === 'c' || rideDone || (selList.length > 0 && doneCount === selList.length),
     dayIsRide: !!selRide,
     dayIsLift: !selRide,
+    // Marking a ride complete is finishing it: it asks what was ridden. Unmarking one is a plain toggle.
     toggleRideDone: () => {
-      logic.s({ rideDone: Object.assign({}, st.rideDone, { [idOf(selAct)]: !rideDone }) });
-      logic.save(() => db.setRideDone(idOf(selAct), !rideDone));
+      if (!rideDone) return openFinish();
+      logic.s({ rideDone: Object.assign({}, st.rideDone, { [idOf(selAct)]: false }) });
+      logic.save(() => db.setRideDone(idOf(selAct), false));
     },
     rideDoneLabel: rideDone ? 'Ride completed' : 'Mark ride complete',
     rideDoneType: rideDone ? 'secondary' : 'neutral',
@@ -261,14 +356,7 @@ export function workoutVals(ctx: Ctx) {
       (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (selRide ? 'bike' : 'h'),
       (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || colors.pink,
     ),
-    rideStats: !selRide
-      ? []
-      : [
-          { label: 'DISTANCE', value: selRide.dist ? selRide.dist + ' mi' : '—' },
-          { label: 'DURATION', value: (selAct && selAct.time) || '—' },
-          { label: 'ELEVATION', value: selRide.elev ? selRide.elev + ' ft' : '—' },
-          { label: 'EFFORT', value: selRide.zone || 'Endurance' },
-        ],
+    rideStats: !selRide || !selAct ? [] : rideStatsFor(selAct, rideDone),
     ctaLabel: hasEntry ? 'View chronicle entry' : doneSel ? 'Write it up' : 'Write about it',
     startWorkout,
     restartWorkout,
