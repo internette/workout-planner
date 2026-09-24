@@ -405,7 +405,8 @@ export function editVals(ctx: Ctx) {
           kind: 'series',
           sid,
           title: 'End this weekly series?',
-          body: 'Later repeats of "' + selName + '" will be removed. Past sessions and this one stay.',
+          body:
+            'Its repeats still ahead come off the calendar. This one, past ones, and any you’ve started or written about stay.',
           label: 'End series',
         },
       });
@@ -840,7 +841,10 @@ export function editVals(ctx: Ctx) {
               ' done.',
           });
           if (!creating)
-            logic.save(() => db.setExercisesDone(listKey, names, tot > 0 && names.length === tot));
+            // A finished session stays completed while ticks change; otherwise it's done once all are ticked.
+            logic.save(() =>
+              db.setExercisesDone(listKey, names, (tot > 0 && names.length === tot) || !!(selAct && ctx.actualMinutes(selAct))),
+            );
         },
         remove: () =>
           logic.s({

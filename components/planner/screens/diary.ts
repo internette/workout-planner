@@ -34,6 +34,33 @@ export function diaryVals(ctx: Ctx) {
   // Whether the session on screen already has an entry: then the diary screen reads it, and edits it on request.
   const hasEntry = !!ENTRIES[entryKey];
   const reading = hasEntry && !st.diaryEdit;
+  // Writing or changing an entry, with changes not yet saved: leaving asks first.
+  const saved = ENTRIES[entryKey];
+  const writing = st.screen === 'diary' && !reading;
+  const entryDirty =
+    writing &&
+    (saved
+      ? st.mood !== saved.mood || st.rpe !== saved.rpe || (st.entryNote != null && st.entryNote !== (saved.note || ''))
+      : !!st.mood || !!st.rpe || !!(st.entryNote || '').trim());
+  // Back from changing an entry returns to reading it, as it was; from a new one, to wherever it was started.
+  const stopWriting = () =>
+    saved ? logic.s({ diaryEdit: false, mood: saved.mood, rpe: saved.rpe, entryNote: null }) : logic.back();
+  const leaveEntry = () =>
+    entryDirty
+      ? logic.s({
+          confirm: {
+            kind: 'leaveEntry',
+            title: 'Discard your changes?',
+            body: saved
+              ? 'You’ve changed this entry. Leaving now throws those changes away.'
+              : 'This entry isn’t saved yet. Leaving now throws it away.',
+            label: 'Discard changes',
+            then: stopWriting,
+          },
+        })
+      : writing
+        ? stopWriting()
+        : logic.back();
   // "Up next" after logging: the first session from today on that isn't done yet, other than the one just logged.
   const nextEntry = logic.model.entries.find(
     (x) => x.m * 100 + x.d >= TK && x.av.id !== entryKey && x.av.s !== 'c' && !isDoneEntry(x.av),
@@ -282,7 +309,9 @@ export function diaryVals(ctx: Ctx) {
     backToCalendar: () => logic.s({ screen: 'day', seg: 'Day', monthOpen: false, hist: [] }),
     diaryBackLabel: st.diaryFrom === 'list' ? 'Chronicle' : 'Back',
     diaryEyebrow: st.diaryFrom === 'list' || reading ? 'CHRONICLE ENTRY' : 'COMPLETED',
-    diaryBack: () => logic.back(),
+    diaryBack: leaveEntry,
+    entryDirty,
+    leaveEntry,
     moods,
     stars,
     rpeLabel: st.rpe ? RPE_WORDS[Math.max(1, Math.min(5, st.rpe)) - 1] : '',

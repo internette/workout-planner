@@ -130,9 +130,11 @@ export default function Planner({ account = null }: { account?: Account | null }
       // Back. Unsaved changes ask first; the browser goes forward again meanwhile, so nothing has moved yet.
       const dirtyWorkout = st.screen === 'edit' && workoutDraftDirty(st);
       const dirtyExercise = exerciseDraftDirty(st);
-      if (dirtyWorkout || dirtyExercise) {
+      const vals = logic.renderVals();
+      if (dirtyWorkout || dirtyExercise || vals.entryDirty) {
         go(cur - target);
         if (dirtyWorkout) logic.setState({ leaveOpen: true, pendingNav: null });
+        else if (vals.entryDirty) vals.leaveEntry();
         else
           logic.setState({
             confirm: {
@@ -155,7 +157,7 @@ export default function Planner({ account = null }: { account?: Account | null }
   // Closing or reloading the tab with unsaved changes asks the browser's own "Leave site?".
   useWindowEvent('beforeunload', (e) => {
     const st = logic.state;
-    if ((st.screen === 'edit' && workoutDraftDirty(st)) || exerciseDraftDirty(st)) {
+    if ((st.screen === 'edit' && workoutDraftDirty(st)) || exerciseDraftDirty(st) || logic.renderVals().entryDirty) {
       e.preventDefault();
       e.returnValue = '';
     }

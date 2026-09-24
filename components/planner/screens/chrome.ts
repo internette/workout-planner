@@ -1,4 +1,4 @@
-import { idOf, isoOf, monthPatch, workoutDraftDirty } from '../helpers';
+import { exerciseDraftDirty, idOf, isoOf, monthPatch, workoutDraftDirty } from '../helpers';
 import { mLabel, mTab, tab } from '../styles';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -105,6 +105,23 @@ export function chromeVals(ctx: Ctx) {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
       e.preventDefault();
       if (st.screen === 'edit' && workoutDraftDirty(st)) return logic.s({ leaveOpen: true, pendingNav: dest });
+      // An exercise or Chronicle entry being changed asks the same way before the tab takes it away.
+      const exDirty = exerciseDraftDirty(st);
+      if (exDirty || logic.renderVals().entryDirty)
+        return logic.s({
+          confirm: {
+            kind: 'leaveDraft',
+            title: 'Discard your changes?',
+            body: exDirty
+              ? 'You’ve edited this exercise. Leaving now throws those changes away.'
+              : 'You haven’t saved your changes to this entry. Leaving now throws them away.',
+            label: 'Discard changes',
+            then: () => {
+              logic.s({ exDraft: null, exDraftOrig: null, exEditNav: false, exCopy: false, diaryEdit: false, entryNote: null });
+              go();
+            },
+          },
+        });
       // A workout still being built, waiting underneath: opened the Spellbook from it, or an exercise's details from
       // its Add exercise list. If it has anything in it, go back to it and ask there, the same "Keep your
       // changes?"; otherwise just let it go. Either way picking ends and the person's own Spellbook filter returns.
@@ -149,6 +166,8 @@ export function chromeVals(ctx: Ctx) {
     confirmRun: () => {
       const c = st.confirm || {};
       logic.s({ confirm: null });
+      // A confirm can carry its own action (leaving a Chronicle entry being edited, say).
+      if (typeof c.then === 'function') return c.then();
       if (c.kind === 'workout') {
         // Its timer goes with it.
         const id = idOf(srcAct);
@@ -165,7 +184,10 @@ export function chromeVals(ctx: Ctx) {
         logic.save(() => db.reopenSession(c.id));
       }
       if (c.kind === 'entry') logic.save(() => db.deleteDiary(c.day), { screen: c.after || st.screen });
-      if (c.kind === 'series') logic.save(() => db.endSeries(c.sid, isoOf(new Date(Y, mi, selDay))));
+      if (c.kind === 'series')
+        logic.save(() => db.endSeries(c.sid, isoOf(new Date(Y, mi, selDay)), isoOf(new Date(Y, TODAY_M, TODAY_D))), {
+          announce: 'Series ended.',
+        });
       // Deleting from the Spellbook goes back to the list it was opened from, which then no longer shows it.
       const toList = (arsenalView) => {
         const h = st.hist || [];
