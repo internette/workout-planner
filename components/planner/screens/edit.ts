@@ -89,6 +89,22 @@ export function editVals(ctx: Ctx) {
   const needsName = creating && !(st.newName || '').trim();
   const needsExercise = creating && st.newType !== 'cycle' && selList.length === 0;
   const saving = logic.busy('workout');
+  // A new exercise's name must be new where it's going: among the person's exercises and the built-ins in the Spellbook
+  // (saving one there would otherwise overwrite the old one), or among this workout's exercises in the editor (a
+  // workout keeps track of its exercises by name).
+  const dName = (st.dName || '').trim();
+  const clash = !dName
+    ? null
+    : st.screen === 'arsenal'
+      ? logic.model.library.concat(logic.model.builtins).find((e) => e.name.trim().toLowerCase() === dName.toLowerCase())
+      : selList.find((e) => e.name.trim().toLowerCase() === dName.toLowerCase());
+  const draftNameError = !clash
+    ? ''
+    : st.screen === 'arsenal'
+      ? (clash.builtin ? 'There’s a built-in exercise called “' : 'You already have an exercise called “') +
+        clash.name +
+        '”. Give this one another name.'
+      : '“' + clash.name + '” is already in this workout.';
   // The "From Spellbook" list: narrowed to the workout's target areas (say so, and one tap shows everything),
   // searchable, and it stays open so several exercises can be added in a row.
   const pickQ = (st.pickQ || '').trim().toLowerCase();
@@ -308,10 +324,11 @@ export function editVals(ctx: Ctx) {
       pick: () => logic.s({ dIcon: name }),
       style: optStyle((st.dIcon || 'h') === name),
     })),
-    commitDisabled: !(st.dName || '').trim() || !(st.dAreas || []).length,
+    draftNameError,
+    commitDisabled: !(st.dName || '').trim() || !(st.dAreas || []).length || !!clash,
     commitNew: () => {
       const nm = (st.dName || '').trim();
-      if (!nm || !(st.dAreas || []).length) return;
+      if (!nm || !(st.dAreas || []).length || clash) return;
       const item = {
         name: nm,
         sets: joinSetsReps(st.dSets, st.dReps) || '3 × 10',
@@ -502,10 +519,12 @@ export function editVals(ctx: Ctx) {
         };
         // Normally back to the workout's own detail screen; if a nav click was waiting on this save, go there instead.
         // Either way this session stays the selected one, even if it moved to a day that already had a workout.
-        const after = Object.assign(st.pendingNav ? NAV_DESTINATIONS[st.pendingNav] : { screen: 'detail' }, cleared, {
-          entryId: selAct.id,
-          tplConfirm: null,
-        });
+        // Back where the editor was opened from: its own history entry is left behind with it.
+        const after = Object.assign(
+          st.pendingNav ? NAV_DESTINATIONS[st.pendingNav] : { screen: 'detail', hist: (st.hist || []).slice(0, -1) },
+          cleared,
+          { entryId: selAct.id, tplConfirm: null },
+        );
         // The date, the ride you logged and repeating belong to this session. Anything else changes the workout,
         // which other sessions (and the Spellbook) share.
         const changesWorkout =
@@ -626,9 +645,11 @@ export function editVals(ctx: Ctx) {
           Object.assign(
             st.pendingNav
               ? NAV_DESTINATIONS[st.pendingNav]
-              : scheduled
-                ? { screen: 'day' }
-                : { screen: 'arsenal', arsenalView: 'workouts' },
+              : Object.assign(
+                  scheduled ? { screen: 'day' } : { screen: 'arsenal', arsenalView: 'workouts' },
+                  // The new-workout screen's own history entry goes too.
+                  { hist: (st.hist || []).slice(0, -1) },
+                ),
             { creating: false, newType: null, newName: '', newFrom: null, schedule: null },
             cleared,
             r && r.entryId ? { entryId: r.entryId } : {},

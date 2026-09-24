@@ -2,6 +2,7 @@ import { DCLogic } from '../dcLogic';
 import * as db from '@/lib/plannerData';
 import type { Model } from '@/lib/plannerData';
 import { MONTHS } from './constants';
+import { monthPatch } from './helpers';
 import type { Viewport } from './useViewport';
 import type { Account } from '@/lib/auth';
 import { buildContext } from './context';
@@ -28,9 +29,22 @@ export class PlannerLogic extends DCLogic {
   async load(patch: any = {}) {
     try {
       const model = await db.loadModel(new Date());
+      const first = this.status !== 'ready';
       this.model = model;
       this.status = 'ready';
-      this.setState({ done: model.done, rideDone: model.rideDone, ...patch });
+      const ids = new Set(model.entries.map((x) => x.av.id));
+      // Timers only for sessions that still exist: a deleted session's clock doesn't keep ticking somewhere unseen.
+      const timers = this.state.workoutTimer || {};
+      const workoutTimer = Object.keys(timers).some((k) => !ids.has(k))
+        ? Object.fromEntries(Object.entries(timers).filter(([k]) => ids.has(k)))
+        : timers;
+      // Opened at a session's own address (a reload, or a link): its day, or the calendar if it's gone.
+      const opened: any = {};
+      if (first && this.state.screen === 'detail' && this.state.entryId) {
+        const hit = model.entries.find((x) => x.av.id === this.state.entryId);
+        Object.assign(opened, hit ? { ...monthPatch(hit.m), day: hit.d } : { screen: 'day', entryId: null });
+      }
+      this.setState({ done: model.done, rideDone: model.rideDone, workoutTimer, ...opened, ...patch });
     } catch (e) {
       this.status = 'error';
       this.loadError = e instanceof Error ? e.message : String(e);

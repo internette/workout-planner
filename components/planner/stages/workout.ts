@@ -148,9 +148,13 @@ export function workoutStage(ctx: Ctx): Ctx {
   const ridePlanOpen = !!savedRide && (tplMode || (!rideDone && !ridePast));
   const entryKey = idOf(actFor(selDay));
   const hasEntry = !!DIARY[entryKey];
-  const questCleared = !!selAct && (rideDone || (!selRide && selList.length > 0 && doneCount === selList.length));
+  // Finished with Finish counts as done, the same as everywhere else (entries' isDoneEntry).
+  const finishedSel = !!selAct && !selRide && ctx.actualMinutes(selAct) > 0;
+  const questCleared =
+    !!selAct && (rideDone || finishedSel || (!selRide && selList.length > 0 && doneCount === selList.length));
   const doneSel =
-    !!selAct && (selAct.s === 'c' || rideDone || (!selRide && selList.length > 0 && doneCount === selList.length));
+    !!selAct &&
+    (selAct.s === 'c' || rideDone || finishedSel || (!selRide && selList.length > 0 && doneCount === selList.length));
   return {
     tplMode,
     srcAct,

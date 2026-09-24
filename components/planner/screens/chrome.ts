@@ -149,8 +149,21 @@ export function chromeVals(ctx: Ctx) {
     confirmRun: () => {
       const c = st.confirm || {};
       logic.s({ confirm: null });
-      if (c.kind === 'workout')
-        logic.save(() => db.deletePlanEntries([idOf(srcAct)]), { screen: 'day', creating: false });
+      if (c.kind === 'workout') {
+        // Its timer goes with it.
+        const id = idOf(srcAct);
+        const timers = Object.assign({}, st.workoutTimer);
+        delete timers[id];
+        // Back to the day it was on, past the session's own pages (and their history entries), which are gone now.
+        logic.s({ workoutTimer: timers, creating: false });
+        if ((st.hist || []).some((h) => h.screen === 'day')) logic.backTo('day', { screen: 'day', entryId: null });
+        else logic.s({ screen: 'day', seg: 'Day', entryId: null, hist: [] });
+        logic.save(() => db.deletePlanEntries([id]));
+      }
+      if (c.kind === 'unfinishRide') {
+        logic.s({ rideDone: Object.assign({}, st.rideDone, { [c.id]: false }) });
+        logic.save(() => db.reopenSession(c.id));
+      }
       if (c.kind === 'entry') logic.save(() => db.deleteDiary(c.day), { screen: c.after || st.screen });
       if (c.kind === 'series') logic.save(() => db.endSeries(c.sid, isoOf(new Date(Y, mi, selDay))));
       // Deleting from the Spellbook goes back to the list it was opened from, which then no longer shows it.
@@ -163,6 +176,11 @@ export function chromeVals(ctx: Ctx) {
       if (c.kind === 'archiveWorkout') {
         toList('workouts');
         logic.saveOnce('archive', () => db.archiveWorkout(c.id, isoOf(new Date())));
+      }
+      // Browser Back from the exercise editor with changes: confirmed, so go back without them.
+      if (c.kind === 'leaveExercise') {
+        logic.s({ exDraft: null, exDraftOrig: null, exEditNav: false });
+        logic.back();
       }
       if (c.kind === 'deleteExercise') {
         toList('exercises');
