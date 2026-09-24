@@ -392,9 +392,14 @@ export function arsenalVals(ctx: Ctx) {
     setRepeat: (on) => logic.s({ tplSchedule: { ...sched, repeat: !!on } }),
     note: !schedDate
       ? 'Pick a day.'
-      : sched && sched.repeat
-        ? 'Every ' + DOWFULL[schedDate.getDay()] + ' for the next 12 weeks too, 13 sessions in all.'
-        : 'Just ' + schedWhen + '.',
+      : (sched && sched.repeat
+          ? 'Every ' + DOWFULL[schedDate.getDay()] + ' for the next 12 weeks too, 13 sessions in all.'
+          : 'Just ' + schedWhen + '.') +
+        // Said before adding: a second one on a day that has it, or a day already gone by.
+        (chosen && logic.model.entries.some((x) => x.m === relM(schedDate) && x.d === schedDate.getDate() && x.av.name === chosen.name)
+          ? ' “' + chosen.name + '” is already on that day, so it would be there twice.'
+          : '') +
+        (schedDate < new Date(Y, TODAY_M, TODAY_D) ? ' That day has already gone by.' : ''),
     canAdd: !!schedDate && !logic.busy('schedule'),
     cancel: () => logic.s({ tplSchedule: null }),
     // Afterwards it stays here and says where the workout went, with a way to go and see that day.
@@ -521,7 +526,7 @@ export function arsenalVals(ctx: Ctx) {
 
   return {
     // After a delete, the list says what went (and it's read out).
-    spellNotice: st.screen === 'arsenal' ? st.spellNotice || '' : '',
+    spellNotice: st.screen === 'arsenal' || st.screen === 'template' ? st.spellNotice || '' : '',
     dismissSpellNotice: () => logic.s({ spellNotice: null }),
     tplConfirmOpen: !!confirm,
     tplConfirmTitle: 'How should this change be saved?',

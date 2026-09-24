@@ -3076,6 +3076,20 @@ export function PlannerView({ v }: { v: any }) {
                       {v.template.name}
                     </Text>
                   </div>
+                  {v.spellNotice ? (
+                    <Card
+                      pad="sm"
+                      style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '14px', background: 'var(--color-mist)', boxShadow: 'none' }}
+                    >
+                      <Check color="var(--color-slate-deep)" strokeWidth={2.4} size={16} />
+                      <Text variant="body" weight="medium" style={{ flex: '1', minWidth: '0', color: 'var(--color-slate-deep)' }}>
+                        {v.spellNotice}
+                      </Text>
+                      <IconButton label="Dismiss" size="sm" onClick={v.dismissSpellNotice}>
+                        <Close color="var(--color-muted)" strokeWidth={2.2} size={14} />
+                      </IconButton>
+                    </Card>
+                  ) : null}
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '18px' }}>
                     <Chip icon={<Clock color="var(--color-muted)" size={15} />}>{v.template.time}</Chip>
                     {(v.template.areas ?? []).map((a, i) => (
