@@ -66,8 +66,8 @@ export function workoutVals(ctx: Ctx) {
         ...monthPatch(TODAY_M),
         day: TODAY_D,
         entryId: id,
-        workoutTimer: Object.assign({}, st.workoutTimer, { [id]: { elapsed: 0, runningSince: Date.now() } }),
-        announce: nameOf(av.name) + ' moved to today and started.',
+        // Only moved: the timer waits for Start, in case it was just the day that changed.
+        announce: nameOf(av.name) + ' moved to today.',
       },
     );
   };

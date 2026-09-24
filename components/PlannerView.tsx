@@ -3720,7 +3720,7 @@ export function PlannerView({ v }: { v: any }) {
                           COMING UP
                         </Text>
                         <Text variant="body" tone="ink" as="p" style={{ margin: '4px 0 0' }}>
-                          {v.futureNote} Doing it now? Move it to today and start.
+                          {v.futureNote} Doing it now? Move it to today.
                         </Text>
                       </div>
                       <Button type="primary" size="md" onClick={v.doItToday}>
@@ -3810,6 +3810,8 @@ export function PlannerView({ v }: { v: any }) {
                   ) : null}
                   {v.dayIsLift ? (
                     <>
+                      {/* Nothing to tick off before its day, so no progress to show. */}
+                      {!v.isFuture ? (
                       <Card style={{ marginTop: '16px' }}>
                         <div
                           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
@@ -3845,6 +3847,7 @@ export function PlannerView({ v }: { v: any }) {
                           {t(v.progNote)}
                         </p>
                       </Card>
+                      ) : null}
                       <div
                         style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}
                       >
