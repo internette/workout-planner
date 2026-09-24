@@ -439,7 +439,7 @@ export async function createWorkout(w: NewWorkout) {
   }
 
   // A workout saved on its own has no dates, and nothing to schedule.
-  if (!w.dates.length) return { entryId: null };
+  if (!w.dates.length) return { entryId: null, workoutId, name };
   const rows: { id: string; scheduled_date: string }[] = await ok(
     supabase
       .from('plan_entries')
@@ -447,7 +447,7 @@ export async function createWorkout(w: NewWorkout) {
       .select('id, scheduled_date'),
   );
   // The session on the first date, so the screen can open on it even when that day has other workouts too.
-  return { entryId: rows.find((r) => r.scheduled_date === w.dates[0])?.id ?? null };
+  return { entryId: rows.find((r) => r.scheduled_date === w.dates[0])?.id ?? null, workoutId, name };
 }
 
 // Puts an existing workout on the calendar: one session per date. Repeating dates also turn its weekly series on.

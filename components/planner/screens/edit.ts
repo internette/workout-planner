@@ -165,9 +165,11 @@ export function editVals(ctx: Ctx) {
       name: w.name,
       svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || colors.pink),
       meta:
-        w.kind === 'ride'
+        (w.kind === 'ride'
           ? ['Ride', w.ride && w.ride.dist ? w.ride.dist + ' mi' : '', w.time].filter(Boolean).join(' · ')
-          : plural(w.exercises.length, 'exercise') + ' · ' + w.time,
+          : plural(w.exercises.length, 'exercise') + ' · ' + w.time) +
+        // Already on this day: tapping it adds a second one, so say so first.
+        (logic.model.entries.some((x) => x.m === mi && x.d === selDay && x.av.name === w.name) ? ' · Already on this day' : ''),
       pick: () =>
         logic.saveOnce(
           'workout',
@@ -686,13 +688,21 @@ export function editVals(ctx: Ctx) {
             st.pendingNav
               ? NAV_DESTINATIONS[st.pendingNav]
               : Object.assign(
-                  scheduled ? { screen: 'day' } : { screen: 'arsenal', arsenalView: 'workouts' },
-                  // The new-workout screen's own history entry goes too.
-                  { hist: (st.hist || []).slice(0, -1) },
+                  // Saved only: its own page, so it's right there (not somewhere down the Spellbook's list).
+                  scheduled ? { screen: 'day' } : { screen: 'template', templateId: r.workoutId, arsenalView: 'workouts' },
+                  // Scheduled: back where it started, the new-workout screen's history entry gone too. Saved only:
+                  // its page takes that entry's place, so Back returns to where "New workout" was pressed.
+                  scheduled ? { hist: (st.hist || []).slice(0, -1) } : {},
                 ),
             { creating: false, newType: null, newName: '', newFrom: null, schedule: null },
             cleared,
             r && r.entryId ? { entryId: r.entryId } : {},
+            // And it says so.
+            st.pendingNav
+              ? {}
+              : scheduled
+                ? { announce: '“' + r.name + '” saved and added to ' + MON3[mod12(mi)] + ' ' + selDay + '.' }
+                : { spellNotice: '“' + r.name + '” saved to your Spellbook.', announce: '“' + r.name + '” saved to your Spellbook.' },
           ),
       );
     },

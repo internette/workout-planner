@@ -77,5 +77,7 @@ export const workoutDraftDirty = st => !!(
   st.rDist || st.rElev || st.rHrs || st.rMins ||
   st.aDist || st.aElev || st.aHrs || st.aMins ||
   st.repeat || st.icons || st.iconColors || st.notes ||
+  // A session moved to another day in the editor.
+  (st.editKey && st.editKey !== (MONTHS.indexOf(st.month) + 12 * (st.yOff || 0)) + '-' + st.day) ||
   (st.extra && Object.keys(st.extra).some(k => (st.extra[k] || []).length))
 );
