@@ -338,8 +338,7 @@ export function progressVals(ctx: Ctx) {
           name: isDone ? q.done : q.title,
           done: isDone,
           row:
-            'display:flex;align-items:center;gap:11px;padding:10px 0' +
-            (i === 6 ? '' : ';border-bottom:1px solid rgba(35,42,69,.055)'),
+            'display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid rgba(35,42,69,.055)',
           mark:
             'width:18px;height:18px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;' +
             (isDone ? 'background:var(--color-pink)' : 'background:transparent'),
@@ -350,6 +349,8 @@ export function progressVals(ctx: Ctx) {
               : 'font-weight:var(--font-weight-medium);color:var(--color-ink)'),
         });
       }
+      // A line between quests, not under the last one (days without a quest are skipped, so it isn't always Saturday).
+      if (out.length) out[out.length - 1].row = out[out.length - 1].row.replace(/;border-bottom:[^;]*/, '');
       return out;
     })(),
     summarySub: (() => {
