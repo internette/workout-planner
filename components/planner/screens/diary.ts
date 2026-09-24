@@ -201,6 +201,8 @@ export function diaryVals(ctx: Ctx) {
             : dScope === 'range'
               ? 'Nothing written down in that stretch.'
               : 'The chronicle is still blank.',
+    // Read out when the Chronicle's filter changes how many entries are listed.
+    diaryResults: plural(diaryDays.length, 'entry', 'entries') + ' shown.',
     diaryList: diaryDays.map((id) => {
       const en = ENTRIES[id];
       const d = en.d;
@@ -270,7 +272,7 @@ export function diaryVals(ctx: Ctx) {
         stars: [1, 2, 3, 4, 5].map(
           (i) =>
             'font-size:var(--text-md);line-height:var(--leading-none);color:' +
-            (i <= en.rpe ? 'var(--color-ink)' : 'var(--color-hairline)'),
+            (i <= en.rpe ? 'var(--color-ink)' : 'var(--color-outline)'),
         ),
       };
     }),

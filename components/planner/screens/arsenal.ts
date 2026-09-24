@@ -622,7 +622,11 @@ export function arsenalVals(ctx: Ctx) {
     arsenalAddOpen: !!st.arsenalAdd,
     // A new exercise starts with real values in its boxes (3 × 10, 60 sec rest) — what it saves if left alone —
     // rather than grey examples that look like values. Weight starts empty: none is saved unless one is typed.
-    openArsenalAdd: () => logic.s({ arsenalAdd: true, dSets: st.dSets || '3', dReps: st.dReps || '10', dRest: st.dRest || '60' }),
+    // Focus goes into the form, which opens further down the page.
+    openArsenalAdd: () => {
+      logic.s({ arsenalAdd: true, dSets: st.dSets || '3', dReps: st.dReps || '10', dRest: st.dRest || '60' });
+      requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-arsenal-add] input')?.focus());
+    },
     closeArsenalAdd: () =>
       logic.s({ arsenalAdd: false, dName: '', dSets: '', dReps: '', dWeight: '', dRest: '', dAreas: [] }),
     commitArsenal: () => {
@@ -652,6 +656,17 @@ export function arsenalVals(ctx: Ctx) {
     movesCount: exerciseCount,
     arsenalQuery: st.arsenalQ || '',
     noMatches: (!!q || areaFilter.length > 0) && moveGroups.length === 0,
+    // Read out when a search or area filter changes what's listed (the list itself changes silently).
+    arsenalResults:
+      !q && !areaFilter.length
+        ? ''
+        : view === 'workouts'
+          ? hits.length
+            ? plural(hits.length, 'workout') + ' found.'
+            : 'No workouts match.'
+          : moveGroups.length
+            ? plural(moveGroups.reduce((n, g) => n + g.items.length, 0), 'exercise') + ' found.'
+            : 'No exercises match.',
     noMatchNote: noMatchText('exercises'),
     hasQuery: !!q,
     setArsenalQuery: (e) => logic.s({ arsenalQ: e.target.value }),

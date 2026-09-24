@@ -107,6 +107,12 @@ function PopoverPanel({
   }, [anchor, align, width, top]);
   useWindowEvent('scroll', place, { capture: true });
   useWindowEvent('resize', place);
+  // Tabbing out of the trigger and panel closes it, so focus never goes on behind a panel still covering the page.
+  useWindowEvent('focusin', (e) => {
+    const to = e.target as Node | null;
+    if (!to || ref.current?.contains(to) || anchor.current?.contains(to)) return;
+    onCloseRef.current();
+  });
 
   useLayoutEffect(() => {
     const el = ref.current;

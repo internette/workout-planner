@@ -210,7 +210,16 @@ export function calendarStage(ctx: Ctx): Ctx {
       selected: sel,
       // A click means "go look at that day" — unlike arrow-key browsing of the grid, which only moves
       // the selection so exploring the month doesn't keep bouncing you over to Day view.
-      pick: () => logic.s({ day: d, seg: 'Day', entryId: null }),
+      // Focus follows to the Day view's heading, rather than being left on the grid that's gone.
+      pick: () => {
+        logic.s({ day: d, seg: 'Day', entryId: null });
+        requestAnimationFrame(() => {
+          const h = document.querySelector<HTMLElement>('main h1');
+          if (!h) return;
+          if (!h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1');
+          h.focus();
+        });
+      },
       wrap:
         'height:50px;border:none;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;' +
         (sel

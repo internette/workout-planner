@@ -1,25 +1,53 @@
+import { DOWFULL, MONTHS } from '../constants';
 import { exLine, idOf, monthPatch } from '../helpers';
 import type { Ctx } from '../types';
 import { colors } from '@/components/ui/colors';
 
 // The selected workout: ride plan and actuals, exercise list, icons and completion state.
 export function workoutStage(ctx: Ctx): Ctx {
-  const { logic, Y, mi, dim, selDay, st, creating, actFor, EX, EXV, TK, DIARY } = ctx;
+  const { logic, Y, mi, dim, selDay, st, creating, actFor, EX, EXV, TK, DIARY, TODAY_M, TODAY_D } = ctx;
   // The editor's date picker browses months on its own (st.pickM); only tapping a day moves the workout there.
   const pickM = st.pickM != null ? st.pickM : mi;
   const pickDim = new Date(Y, pickM + 1, 0).getDate();
   const pickLead = new Date(Y, pickM, 1).getDay();
   const pickRows = Math.ceil((pickLead + pickDim) / 7);
+  // One Tab stop in the grid (the day with focus: the chosen day, else the 1st); arrows move by day and week, Home
+  // and End to the ends of the week, PageUp and PageDown by month, as in the calendar's Month view.
+  const pickFocus = Math.min(st.pickFocus || (pickM === mi ? selDay : 1), pickDim);
+  const movePickFocus = (to: Date) => {
+    const m = (to.getFullYear() - Y) * 12 + to.getMonth();
+    logic.s({ pickM: m, pickFocus: to.getDate() });
+    requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-pick-day="' + to.getDate() + '"]')?.focus());
+  };
   const pickerCells = [];
   for (let i = 0; i < pickRows * 7; i++) {
     const pd = i - pickLead + 1;
     if (pd < 1 || pd > pickDim) {
-      pickerCells.push({ label: '', style: 'height:34px;border:none;background:none;cursor:default' });
+      pickerCells.push({ blank: true, label: '', style: 'height:34px' });
       continue;
     }
+    const date = new Date(Y, pickM, pd);
     pickerCells.push({
       label: String(pd),
-      pick: () => logic.s({ ...monthPatch(pickM), day: pd, dateOpen: false, pickM: null }),
+      day: pd,
+      aria: DOWFULL[date.getDay()] + ', ' + MONTHS[date.getMonth()] + ' ' + pd + (date.getFullYear() !== Y ? ', ' + date.getFullYear() : ''),
+      today: pickM === TODAY_M && pd === TODAY_D ? 'date' : undefined,
+      tab: pd === pickFocus ? 0 : -1,
+      keys: (e) => {
+        const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key];
+        let to: Date | null = null;
+        if (step) to = new Date(Y, pickM, pd + step);
+        else if (e.key === 'Home') to = new Date(Y, pickM, pd - date.getDay());
+        else if (e.key === 'End') to = new Date(Y, pickM, pd + (6 - date.getDay()));
+        else if (e.key === 'PageUp' || e.key === 'PageDown') {
+          const m = pickM + (e.key === 'PageUp' ? -1 : 1);
+          to = new Date(Y, m, Math.min(pd, new Date(Y, m + 1, 0).getDate()));
+        }
+        if (!to) return;
+        e.preventDefault();
+        movePickFocus(to);
+      },
+      pick: () => logic.s({ ...monthPatch(pickM), day: pd, dateOpen: false, pickM: null, pickFocus: null }),
       selected: pickM === mi && pd === selDay,
       style:
         "height:34px;border:none;border-radius:10px;cursor:pointer;font-family:var(--font-heading);font-size:var(--text-md);font-weight:" +

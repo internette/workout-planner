@@ -41,7 +41,8 @@ html { scroll-padding-top: 16px; scroll-padding-bottom: 104px; }
 
 /* The one focus ring. It sets nothing else: a control keeps its own shape, and its own focus colours where it has any
    (Button's are its hover colours). */
-button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible,
+summary:focus-visible, [tabindex]:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-offset);
 }
@@ -64,3 +65,30 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
 .hv3:hover{color:var(--color-pink-deep) !important;background:rgba(35,42,69,.04) !important}
 .hv6:hover{filter:brightness(.97) !important}
 .hv7:hover{background:var(--color-pink-tint) !important}
+
+/* Windows High Contrast and other forced-colour modes drop backgrounds and shadows, which is how selection and
+   buttons are drawn here. Give them outlines in system colours instead (outlines don't move anything), and keep the
+   real colours where colour is the meaning: filled against empty stars, and the mood faces. */
+@media (forced-colors: active) {
+  button,
+  [role='tab'],
+  [role='radio'] {
+    outline: 1px solid ButtonText;
+    outline-offset: -1px;
+  }
+  [aria-pressed='true'],
+  [aria-selected='true'],
+  [aria-checked='true'],
+  [aria-current='page'] {
+    outline: 3px solid Highlight;
+    outline-offset: -3px;
+  }
+  :focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 2px;
+  }
+  [data-star],
+  .fc-keep {
+    forced-color-adjust: none;
+  }
+}
