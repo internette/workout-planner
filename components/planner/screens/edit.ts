@@ -4,6 +4,7 @@ import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
 import { optStyle } from '../styles';
 import * as db from '@/lib/plannerData';
+import { colors } from '@/components/ui/colors';
 import type { Ctx } from '../types';
 
 // Create / edit workout screen: ride plan, exercise list, icons, date picker, save and delete.
@@ -88,6 +89,17 @@ export function editVals(ctx: Ctx) {
   const needsName = creating && !(st.newName || '').trim();
   const needsExercise = creating && st.newType !== 'cycle' && selList.length === 0;
   const saving = logic.busy('workout');
+  // The "From Spellbook" list: narrowed to the workout's target areas (say so, and one tap shows everything),
+  // searchable, and it stays open so several exercises can be added in a row.
+  const pickQ = (st.pickQ || '').trim().toLowerCase();
+  const narrowToAreas = picked.length > 0 && !st.pickAll;
+  const PICK_LIMIT = 25;
+  const pickable = libraryFor(listKey)
+    .filter((e) => !narrowToAreas || (e.areas || []).some((a) => picked.includes(a)))
+    .filter((e) => !pickQ || e.name.toLowerCase().includes(pickQ))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const areaWords = (list) =>
+    list.length === 1 ? list[0] : list.slice(0, -1).join(', ') + ' and ' + list[list.length - 1];
   return {
     nameError: nameClash ? 'You already have a workout called “' + nameClash.name + '”. Give this one another name.' : '',
     saveBlocked: !!nameClash || needsName || needsExercise || saving,
@@ -120,6 +132,30 @@ export function editVals(ctx: Ctx) {
           ),
       );
     },
+    // Or skip building one: put a saved workout on this day, straight from the calendar.
+    hasSavedChoices: creating && st.newFrom === 'calendar' && logic.model.workouts.length > 0,
+    savedChoicesNote:
+      'Tap one to put it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mod12(mi)] + ' ' + selDay + yearNote + '.',
+    savedChoices: logic.model.workouts.map((w) => ({
+      name: w.name,
+      svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || colors.pink),
+      meta:
+        w.kind === 'ride'
+          ? ['Ride', w.ride && w.ride.dist ? w.ride.dist + ' mi' : '', w.time].filter(Boolean).join(' · ')
+          : plural(w.exercises.length, 'exercise') + ' · ' + w.time,
+      pick: () =>
+        logic.saveOnce(
+          'workout',
+          () => db.scheduleWorkout(w.id, [isoOf(new Date(Y, mi, selDay))], false),
+          (r) =>
+            Object.assign(
+              { screen: 'day', seg: 'Day', creating: false, newType: null, newName: '', newFrom: null, schedule: null },
+              EDIT_OVERLAYS,
+              { hist: (st.hist || []).slice(0, -1), announce: w.name + ' added to ' + MON3[mod12(mi)] + ' ' + selDay + '.' },
+              r && r.entryId ? { entryId: r.entryId } : {},
+            ),
+        ),
+    })),
     pickTypeLift: () => logic.s({ newType: 'lift' }),
     pickTypeCycle: () => logic.s({ newType: 'cycle' }),
     needsType: creating && !st.newType,
@@ -190,7 +226,7 @@ export function editVals(ctx: Ctx) {
     addOpen: !!st.addOpen,
     addLib: st.addMode !== 'new',
     addNew: st.addMode === 'new',
-    openAdd: () => logic.s({ addOpen: true, addMode: 'lib' }),
+    openAdd: () => logic.s({ addOpen: true, addMode: 'lib', pickQ: '', pickAll: false }),
     closeAdd: () => logic.s({ addOpen: false }),
     addMode: st.addMode === 'new' ? 'new' : 'lib',
     // "Create new" starts with real values (3 × 10, 60 sec rest), as in the Spellbook; weight starts empty.
@@ -218,28 +254,32 @@ export function editVals(ctx: Ctx) {
           prevAreas: st.arsenalAreas || [],
         },
       }),
-    // Says what the list below is narrowed to, e.g. "Showing exercises for Chest, Arms and Shoulders".
-    libraryFilterNote: picked.length
-      ? 'Showing exercises for ' +
-        (picked.length === 1 ? picked[0] : picked.slice(0, -1).join(', ') + ' and ' + picked[picked.length - 1])
-      : '',
-    // A short pick, not the whole Spellbook: alphabetical, the first 10 — and once the workout's exercises have
-    // target areas, only exercises that share one of them. The full list is a tap away.
-    library: libraryFor(listKey)
-      .filter((e) => !picked.length || (e.areas || []).some((a) => picked.includes(a)))
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .slice(0, 10)
-      .map((e) => ({
+    // Says what the list below is narrowed to, e.g. "Showing exercises for Chest, Arms and Shoulders", with a way out.
+    libraryFilterNote: narrowToAreas ? 'Showing exercises for ' + areaWords(picked) + '.' : '',
+    libraryShowAll: () => logic.s({ pickAll: true }),
+    libraryCanNarrow: picked.length > 0 && !!st.pickAll,
+    libraryNarrowLabel: 'Only ' + areaWords(picked),
+    libraryNarrow: () => logic.s({ pickAll: false }),
+    pickQuery: st.pickQ || '',
+    setPickQuery: (e) => logic.s({ pickQ: e.target.value }),
+    clearPickQuery: () => logic.s({ pickQ: '' }),
+    libraryEmpty: pickable.length === 0,
+    libraryEmptyNote: pickQ
+      ? 'No exercises match “' + (st.pickQ || '').trim() + '”' + (narrowToAreas ? ' for ' + areaWords(picked) + '.' : '.')
+      : 'Everything that fits is already in this workout.',
+    libraryMore: pickable.length > PICK_LIMIT ? plural(pickable.length - PICK_LIMIT, 'more exercise') + ' — search to find one.' : '',
+    library: pickable.slice(0, PICK_LIMIT).map((e) => ({
       name: e.name,
       detail: exLine(e),
       // Same as the Spellbook: the row opens the exercise, "+" adds it. Back returns here with this panel still open.
       // An exercise only drafted in this visit has no saved page yet, so it can only be added.
       open: e.id ? () => logic.nav({ screen: 'exercise', exerciseId: e.id }) : null,
+      // Adding keeps the list open for the next one; the added exercise leaves the list and joins the workout above.
       add: () =>
         logic.s({
           extra: Object.assign({}, st.extra, { [listKey]: added.concat([e]) }),
           removed: Object.assign({}, st.removed, { [listKey]: gone.filter((n) => n !== e.name) }),
-          addOpen: false,
+          announce: e.name + ' added.',
         }),
     })),
     draftName: st.dName || '',
@@ -350,40 +390,36 @@ export function editVals(ctx: Ctx) {
         : creating && st.schedule === false
           ? 'Save to Spellbook'
           : 'Save workout',
-    eCancelLabel: creating || tplMode ? 'Cancel' : 'Delete workout',
-    // Editing a saved workout: Cancel is Back, asking first if anything changed.
-    footerSecondary: tplMode
-      ? () => (workoutDraftDirty(st) ? logic.s({ leaveOpen: true }) : logic.back())
-      : creating
-      ? () =>
-          logic.s({
-            screen: st.newFrom === 'arsenal' ? 'arsenal' : 'day',
-            creating: false,
-            newType: null,
-            newName: '',
-            newFrom: null,
-            schedule: null,
-            extra: Object.assign({}, st.extra, { __draft: [] }),
-          })
-      : () =>
-          logic.s({
-            confirm: {
-              kind: 'workout',
-              title: 'Delete this workout?',
-              body:
-                '"' +
-                selName +
-                '" on ' +
-                MON3[mod12(mi)] +
-                ' ' +
-                selDay +
-                (DIARY[idOf(srcAct)]
-                  ? ' will be removed from your plan, along with your chronicle entry for it.'
-                  : ' will be removed from your plan.') +
-                " This can't be undone.",
-              label: 'Delete workout',
-            },
-          }),
+    // Cancel is the same as Back everywhere: it asks first if anything would be lost. Deleting a session is its own
+    // button, apart from Cancel, so one can't be mistaken for the other.
+    footerSecondary: () => (workoutDraftDirty(st) ? logic.s({ leaveOpen: true }) : logic.back()),
+    canDeleteSession: !creating && !tplMode,
+    deleteSession: () =>
+      logic.s({
+        confirm: {
+          kind: 'workout',
+          title: 'Delete this workout?',
+          body:
+            '"' +
+            selName +
+            '" on ' +
+            MON3[mod12(mi)] +
+            ' ' +
+            selDay +
+            (DIARY[idOf(srcAct)]
+              ? ' will be removed from your plan, along with your chronicle entry for it.'
+              : ' will be removed from your plan.') +
+            " This can't be undone.",
+          label: 'Delete workout',
+        },
+      }),
+    // The "leave?" question says what's at stake: a workout not saved yet, or changes to one that is.
+    leaveTitle: creating ? 'Keep this workout?' : 'Keep your changes?',
+    leaveBody: creating
+      ? "You've started a new workout. Save it, or discard it."
+      : "You've edited this workout. Save what you changed, or leave it as it was.",
+    leaveDiscardLabel: creating ? 'Discard workout' : 'Discard changes',
+    leaveSaveLabel: creating ? 'Save workout' : 'Save changes',
     leaveOpen: !!st.leaveOpen,
     tryLeave: () => {
       if (!workoutDraftDirty(st)) return logic.back();
@@ -392,13 +428,6 @@ export function editVals(ctx: Ctx) {
     // Closing the dialog without choosing (Escape, the X, clicking outside) means "changed my mind, stay here" —
     // never treated as "discard", so a stray dismissal can't lose anything.
     stayHere: () => logic.s({ leaveOpen: false, pendingNav: null }),
-    deleteWorkout: () =>
-      logic.save(() => db.deletePlanEntries([idOf(srcAct)]), {
-        screen: 'day',
-        creating: false,
-        newType: null,
-        newName: '',
-      }),
     dateOpen: !!st.dateOpen,
     // Opens on the month of the workout's date; its arrows only change what the picker shows.
     toggleDate: () => logic.s({ dateOpen: !st.dateOpen, pickM: null }),
@@ -623,17 +652,6 @@ export function editVals(ctx: Ctx) {
       logic.s(cleared);
       logic.back();
     },
-    cancelEdit: () =>
-      logic.s({
-        screen: creating ? (st.newFrom === 'arsenal' ? 'arsenal' : 'day') : 'detail',
-        creating: false,
-        newType: null,
-        newName: '',
-        newFrom: null,
-        schedule: null,
-        extra: Object.assign({}, st.extra, { __draft: [] }),
-      }),
-    eCancelType: creating || tplMode ? 'neutral' : 'danger',
     eDate:
       DOW3[selDate.getDay()].charAt(0) +
       DOW3[selDate.getDay()].slice(1, 3).toLowerCase() +
@@ -716,7 +734,14 @@ export function editVals(ctx: Ctx) {
         doneStroke: doneSet[e.name] ? 'var(--color-white)' : 'rgba(35,42,69,0.22)',
         isDone: !!doneSet[e.name],
         // Ticking off belongs to a session on the calendar, not to a workout being built or a saved one.
-        showTick: !creating && !tplMode,
+        showTick: !creating && !tplMode && mi * 100 + selDay <= ctx.TK,
+        // One line per exercise until it's opened to edit; one just added here opens ready to fill in.
+        expanded: ((st.exExpanded || {})[listKey + '|' + e.name] ?? added.some((a) => a.name === e.name)) as boolean,
+        toggleExpand: () => {
+          const k = listKey + '|' + e.name;
+          const cur = (st.exExpanded || {})[k] ?? added.some((a) => a.name === e.name);
+          logic.s({ exExpanded: Object.assign({}, st.exExpanded, { [k]: !cur }) });
+        },
         iconAria: 'Choose icon for ' + e.name,
         removeAria: 'Remove ' + e.name,
         doneAria: doneSet[e.name] ? 'Mark ' + e.name + ' not done' : 'Mark ' + e.name + ' done',

@@ -3640,6 +3640,21 @@ export function PlannerView({ v }: { v: any }) {
                       </Fragment>
                     ))}
                   </div>
+                  {v.isFuture ? (
+                    <Card style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                      <div style={{ flex: '1 1 180px', minWidth: 0 }}>
+                        <Text variant="eyebrow" tone="slate" as="div">
+                          COMING UP
+                        </Text>
+                        <Text variant="body" tone="ink" as="p" style={{ margin: '4px 0 0' }}>
+                          {v.futureNote} Doing it now? Move it to today and start.
+                        </Text>
+                      </div>
+                      <Button type="primary" size="md" onClick={v.doItToday}>
+                        Do it today
+                      </Button>
+                    </Card>
+                  ) : null}
                   {v.showTimer ? (
                     <>
                       <Card style={{ marginTop: '16px' }}>
@@ -3704,17 +3719,19 @@ export function PlannerView({ v }: { v: any }) {
                             </Fragment>
                           ))}
                         </div>
-                        <Button
-                          type={v.rideDoneType}
-                          size="md"
-                          onClick={v.toggleRideDone}
-                          style={{ marginTop: '20px' }}
-                        >
-                          <span style={css(v.rideDoneMark)}>
-                            <Check color={v.rideDoneStroke} strokeWidth={2.8} size={13} />
-                          </span>
-                          {t(v.rideDoneLabel)}
-                        </Button>
+                        {!v.isFuture ? (
+                          <Button
+                            type={v.rideDoneType}
+                            size="md"
+                            onClick={v.toggleRideDone}
+                            style={{ marginTop: '20px' }}
+                          >
+                            <span style={css(v.rideDoneMark)}>
+                              <Check color={v.rideDoneStroke} strokeWidth={2.8} size={13} />
+                            </span>
+                            {t(v.rideDoneLabel)}
+                          </Button>
+                        ) : null}
                       </Card>
                     </>
                   ) : null}
@@ -3788,15 +3805,17 @@ export function PlannerView({ v }: { v: any }) {
                                   {ex?.detail}
                                 </Text>
                               </span>
-                              <button
-                                onClick={ex?.toggleDone}
-                                aria-pressed={ex?.isDone}
-                                aria-label={ex?.doneAria}
-                                style={css(ex?.doneBtn)}
-                                className="hit"
-                              >
-                                <Check color={ex?.doneStroke} strokeWidth={2.6} size={15} />
-                              </button>
+                              {ex?.showTick ? (
+                                <button
+                                  onClick={ex?.toggleDone}
+                                  aria-pressed={ex?.isDone}
+                                  aria-label={ex?.doneAria}
+                                  style={css(ex?.doneBtn)}
+                                  className="hit"
+                                >
+                                  <Check color={ex?.doneStroke} strokeWidth={2.6} size={15} />
+                                </button>
+                              ) : null}
                             </Card>
                           </Fragment>
                         ))}
@@ -3819,9 +3838,11 @@ export function PlannerView({ v }: { v: any }) {
                       <Pencil color="var(--color-slate)" size={17} />
                       Edit workout
                     </Button>
-                    <Button type="primary" size="lg" onClick={v.goDiary}>
-                      {v.ctaLabel}
-                    </Button>
+                    {!v.isFuture ? (
+                      <Button type="primary" size="lg" onClick={v.goDiary}>
+                        {v.ctaLabel}
+                      </Button>
+                    ) : null}
                   </div>
                 </div>
               </>
@@ -3939,6 +3960,52 @@ export function PlannerView({ v }: { v: any }) {
                       </span>
                     </Card>
                   </div>
+                  {v.hasSavedChoices ? (
+                    <>
+                      <Text variant="eyebrow" tone="slate" as="h2" style={{ margin: '28px 0 4px' }}>
+                        OR ONE FROM YOUR SPELLBOOK
+                      </Text>
+                      <Text variant="caption" tone="muted" as="p" style={{ margin: '0 0 12px' }}>
+                        {v.savedChoicesNote}
+                      </Text>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {(v.savedChoices ?? []).map((w, i) => (
+                          <Card
+                            key={i}
+                            as="button"
+                            pad="sm"
+                            interactive
+                            onClick={w?.pick}
+                            style={{ display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left', width: '100%' }}
+                          >
+                            <span
+                              style={{
+                                width: '34px',
+                                height: '34px',
+                                flex: 'none',
+                                borderRadius: '11px',
+                                background: 'var(--color-pink-tint)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              {w?.svg}
+                            </span>
+                            <span style={{ flex: '1', minWidth: '0' }}>
+                              <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+                                {w?.name}
+                              </Text>
+                              <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
+                                {w?.meta}
+                              </Text>
+                            </span>
+                            <Plus color="var(--color-pink-deep)" size={17} />
+                          </Card>
+                        ))}
+                      </div>
+                    </>
+                  ) : null}
                 </div>
               </>
             ) : null}
@@ -3948,15 +4015,15 @@ export function PlannerView({ v }: { v: any }) {
                   <Dialog
                     open={!!v.leaveOpen}
                     onClose={v.stayHere}
-                    title="Keep your changes?"
-                    description="You've edited this workout. Save what you changed, or leave it as it was."
+                    title={v.leaveTitle}
+                    description={v.leaveBody}
                     actions={
                       <>
                         <Button type="danger" ghost size="md" onClick={v.discardLeave}>
-                          Discard changes
+                          {v.leaveDiscardLabel}
                         </Button>
                         <Button type="primary" size="md" onClick={v.saveLeave}>
-                          Save changes
+                          {v.leaveSaveLabel}
                         </Button>
                       </>
                     }
@@ -4531,7 +4598,40 @@ export function PlannerView({ v }: { v: any }) {
                                     ) : null}
                                   </button>
                                 </Popover>
-                                <span style={css(ex?.nameStyle)}>{ex?.name}</span>
+                                <button
+                                  type="button"
+                                  onClick={ex?.toggleExpand}
+                                  aria-expanded={!!ex?.expanded}
+                                  className="hit"
+                                  style={{
+                                    flex: '1',
+                                    minWidth: '0',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    border: 'none',
+                                    background: 'none',
+                                    padding: '0',
+                                    textAlign: 'left',
+                                    font: 'inherit',
+                                    color: 'inherit',
+                                    cursor: 'pointer',
+                                  }}
+                                >
+                                  <span style={{ minWidth: '0' }}>
+                                    <span style={css(ex?.nameStyle)}>{ex?.name}</span>
+                                    {!ex?.expanded ? (
+                                      <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
+                                        {ex?.detail}
+                                      </Text>
+                                    ) : null}
+                                  </span>
+                                  <ChevronDown
+                                    color="var(--color-muted)"
+                                    size={16}
+                                    style={{ flex: 'none', transform: ex?.expanded ? 'rotate(180deg)' : 'none' }}
+                                  />
+                                </button>
                                 {ex?.showTick ? (
                                   <button
                                     onClick={ex?.toggleDone}
@@ -4549,6 +4649,8 @@ export function PlannerView({ v }: { v: any }) {
                                   <Close color="var(--color-muted)" size={19} />
                                 </IconButton>
                               </div>
+                              {ex?.expanded ? (
+                              <>
                               <div
                                 style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}
                               >
@@ -4593,6 +4695,8 @@ export function PlannerView({ v }: { v: any }) {
                                   </Fragment>
                                 ))}
                               </div>
+                              </>
+                              ) : null}
                             </Card>
                           </Fragment>
                         ))}
@@ -4631,10 +4735,52 @@ export function PlannerView({ v }: { v: any }) {
                             style={{ marginLeft: 'auto' }}
                           />
                         </div>
-                        {v.addLib && v.libraryFilterNote ? (
-                          <Text variant="caption" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
-                            {v.libraryFilterNote}
-                          </Text>
+                        {v.addLib ? (
+                          <>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                marginTop: '16px',
+                                padding: '0 14px',
+                                background: 'var(--color-canvas)',
+                                borderRadius: '14px',
+                              }}
+                            >
+                              <Search color="var(--color-subtle)" size={16} />
+                              <TextField
+                                variant="bare"
+                                aria-label="Search exercises"
+                                value={v.pickQuery ?? ''}
+                                onChange={v.setPickQuery}
+                                placeholder="Search exercises"
+                              />
+                              {v.pickQuery ? (
+                                <IconButton label="Clear search" size="xs" onClick={v.clearPickQuery}>
+                                  <Close color="var(--color-muted)" strokeWidth={2.2} size={14} />
+                                </IconButton>
+                              ) : null}
+                            </div>
+                            {v.libraryFilterNote || v.libraryCanNarrow ? (
+                              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px 8px', marginTop: '8px' }}>
+                                {v.libraryFilterNote ? (
+                                  <>
+                                    <Text variant="caption" tone="muted">
+                                      {v.libraryFilterNote}
+                                    </Text>
+                                    <Button type="secondary" ghost size="xs" onClick={v.libraryShowAll}>
+                                      Show all
+                                    </Button>
+                                  </>
+                                ) : (
+                                  <Button type="secondary" ghost size="xs" onClick={v.libraryNarrow}>
+                                    {v.libraryNarrowLabel}
+                                  </Button>
+                                )}
+                              </div>
+                            ) : null}
+                          </>
                         ) : null}
                         {v.addLib ? (
                           <>
@@ -4711,6 +4857,16 @@ export function PlannerView({ v }: { v: any }) {
                                   </div>
                                 </Fragment>
                               ))}
+                              {v.libraryEmpty ? (
+                                <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+                                  {v.libraryEmptyNote}
+                                </Text>
+                              ) : null}
+                              {v.libraryMore ? (
+                                <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+                                  {v.libraryMore}
+                                </Text>
+                              ) : null}
                               <Button
                                 type="secondary"
                                 ghost
@@ -4817,7 +4973,7 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                         >
                           <Button type="neutral" ghost size="lg" onClick={v.closeAdd}>
-                            Cancel
+                            Close
                           </Button>
                           {v.addNew ? (
                             <>
@@ -4864,8 +5020,13 @@ export function PlannerView({ v }: { v: any }) {
                         {v.saveHint}
                       </Text>
                     ) : null}
-                    <Button type={v.eCancelType} ghost size="lg" onClick={v.footerSecondary}>
-                      {v.eCancelLabel}
+                    {v.canDeleteSession ? (
+                      <Button type="danger" ghost size="lg" onClick={v.deleteSession} style={{ marginRight: 'auto' }}>
+                        Delete
+                      </Button>
+                    ) : null}
+                    <Button type="neutral" ghost size="lg" onClick={v.footerSecondary}>
+                      Cancel
                     </Button>
                     <Button type="primary" size="lg" onClick={v.saveWorkout} disabled={!!v.saveBlocked}>
                       {v.eSaveLabel}
@@ -5135,13 +5296,19 @@ export function PlannerView({ v }: { v: any }) {
                           onChange={v.setEntryNote}
                           placeholder="Energy, soreness, what worked, what didn't…"
                         />
+                        {v.saveEntryHint ? (
+                          <Text variant="caption" tone="muted" as="p" style={{ margin: '18px 0 0', textAlign: 'center' }}>
+                            {v.saveEntryHint}
+                          </Text>
+                        ) : null}
                         <Button
                           type="primary"
                           size="lg"
                           fullWidth
                           glow
                           onClick={v.saveEntry}
-                          style={{ marginTop: '22px' }}
+                          disabled={!v.canSaveEntry}
+                          style={{ marginTop: v.saveEntryHint ? '10px' : '22px' }}
                         >
                           {v.saveEntryLabel}
                         </Button>
