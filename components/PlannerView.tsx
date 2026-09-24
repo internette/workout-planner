@@ -1311,6 +1311,22 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             <span
                               style={{
+                                width: '8px',
+                                height: '8px',
+                                borderRadius: '50%',
+                                boxShadow: 'inset 0 0 0 1.5px var(--color-slate)',
+                                background: 'linear-gradient(90deg,var(--color-slate) 50%,transparent 50%)',
+                              }}
+                            ></span>
+                            Partly done
+                          </Text>
+                          <Text
+                            variant="small"
+                            tone="muted"
+                            style={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+                          >
+                            <span
+                              style={{
                                 width: '7px',
                                 height: '7px',
                                 borderRadius: '50%',
