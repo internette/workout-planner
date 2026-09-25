@@ -2513,84 +2513,222 @@ export function PlannerView({ v }: { v: any }) {
                       </>
                     ) : null}
                   </div>
-                  <Popover
-                    open={!!v.areaFilterOpen}
-                    onClose={v.closeAreaFilter}
-                    width="anchor"
-                    top={74}
-                    pad="sm"
-                    style={{ width: '100%', marginTop: '8px' }}
-                    content={
-                      <>
-                        <div role="group" aria-label="Show exercises for these target areas" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                          {(v.areaFilterOptions ?? []).map((o) => (
-                            <Checkbox key={o?.name} checked={!!o?.on} onChange={o?.set}>
-                              {o?.name}
-                            </Checkbox>
-                          ))}
-                        </div>
-                        {v.areaFilterActive ? (
-                          <Button
-                            type="neutral"
-                            ghost
-                            size="sm"
-                            onClick={v.clearAreaFilter}
-                            style={{ marginTop: '12px' }}
-                          >
-                            Clear filter
-                          </Button>
-                        ) : null}
-                      </>
-                    }
+                  {/* The two filters side by side, where there's room for both. */}
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: v.equipFilterShown ? 'repeat(auto-fit,minmax(150px,1fr))' : '1fr',
+                      gap: '10px',
+                      marginTop: '8px',
+                    }}
                   >
-                    <button
-                      type="button"
-                      aria-expanded={!!v.areaFilterOpen}
-                      aria-label={'Filter by target area: ' + v.areaFilterLabel}
-                      onClick={v.toggleAreaFilter}
-                      style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        alignItems: 'center',
-                        columnGap: '10px',
-                        rowGap: '4px',
-                        width: '100%',
-                        padding: '12px 16px',
-                        background: 'var(--color-white)',
-                        border: 'none',
-                        borderRadius: '15px',
-                        boxShadow: '0 1px 3px rgba(35,42,69,.06)',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                        fontFamily: 'inherit',
-                        fontSize: 'var(--text-lg)',
-                        fontWeight: 'var(--font-weight-medium)',
-                        color: 'var(--color-ink)',
-                      }}
+                    <Popover
+                      open={!!v.areaFilterOpen}
+                      onClose={v.closeAreaFilter}
+                      width="anchor"
+                      top={74}
+                      pad="sm"
+                      style={{ width: '100%' }}
+                      content={
+                        <>
+                          <div role="group" aria-label="Show exercises for these target areas" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            {(v.areaFilterOptions ?? []).map((o) => (
+                              <Checkbox key={o?.name} checked={!!o?.on} onChange={o?.set}>
+                                {o?.name}
+                              </Checkbox>
+                            ))}
+                          </div>
+                          {v.areaFilterActive ? (
+                            <Button
+                              type="neutral"
+                              ghost
+                              size="sm"
+                              onClick={v.clearAreaFilter}
+                              style={{ marginTop: '12px' }}
+                            >
+                              Clear filter
+                            </Button>
+                          ) : null}
+                        </>
+                      }
                     >
-                      <Text variant="eyebrow" as="span" tone="slate" style={{ flex: '1 1 100%' }}>
-                        TARGET AREAS
-                      </Text>
-                      <span
+                      <button
+                        type="button"
+                        aria-expanded={!!v.areaFilterOpen}
+                        aria-label={'Filter by target area: ' + v.areaFilterLabel}
+                        onClick={v.toggleAreaFilter}
                         style={{
-                          flex: '1',
-                          minWidth: '0',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          fontWeight: v.areaFilterActive ? 'var(--font-weight-semibold)' : 'var(--font-weight-medium)',
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          alignItems: 'center',
+                          columnGap: '10px',
+                          rowGap: '4px',
+                          width: '100%',
+                          padding: '12px 16px',
+                          background: 'var(--color-white)',
+                          border: 'none',
+                          borderRadius: '15px',
+                          boxShadow: '0 1px 3px rgba(35,42,69,.06)',
+                          cursor: 'pointer',
+                          textAlign: 'left',
+                          fontFamily: 'inherit',
+                          fontSize: 'var(--text-lg)',
+                          fontWeight: 'var(--font-weight-medium)',
+                          color: 'var(--color-ink)',
                         }}
                       >
-                        {v.areaFilterLabel}
-                      </span>
-                      <ChevronDown
-                        color="var(--color-muted)"
-                        strokeWidth={2.2}
-                        size={16}
-                        style={{ flex: 'none', transition: 'transform .2s', transform: v.areaFilterOpen ? 'rotate(180deg)' : 'none' }}
-                      />
-                    </button>
-                  </Popover>
+                        <Text variant="eyebrow" as="span" tone="slate" style={{ flex: '1 1 100%' }}>
+                          TARGET AREAS
+                        </Text>
+                        <span
+                          style={{
+                            flex: '1',
+                            minWidth: '0',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            fontWeight: v.areaFilterActive ? 'var(--font-weight-semibold)' : 'var(--font-weight-medium)',
+                          }}
+                        >
+                          {v.areaFilterLabel}
+                        </span>
+                        <ChevronDown
+                          color="var(--color-muted)"
+                          strokeWidth={2.2}
+                          size={16}
+                          style={{ flex: 'none', transition: 'transform .2s', transform: v.areaFilterOpen ? 'rotate(180deg)' : 'none' }}
+                        />
+                      </button>
+                    </Popover>
+                    {v.equipFilterShown ? (
+                      <Popover
+                        open={!!v.equipFilterOpen}
+                        onClose={v.closeEquipFilter}
+                        width={typeof window === 'undefined' ? 340 : Math.min(340, window.innerWidth - 32)}
+                        top={74}
+                        pad="sm"
+                        style={{ width: '100%' }}
+                        content={
+                          <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+                            <Text variant="caption" tone="slate" as="p" style={{ margin: '0 0 4px' }}>
+                              Show what you can do with the equipment you tick. Bodyweight exercises always show.
+                            </Text>
+                            {(v.equipFilterGroups ?? []).map((g, gi) => (
+                              <div key={g.label}>
+                                {/* Each group opens on its own; its ticks show on its row while it's closed. */}
+                                <button
+                                  type="button"
+                                  aria-expanded={g.open}
+                                  aria-controls={'equip-filter-' + gi}
+                                  onClick={g.toggle}
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    width: '100%',
+                                    minHeight: '44px',
+                                    padding: '0 2px',
+                                    border: 'none',
+                                    borderBottom: '1px solid rgba(35,42,69,.08)',
+                                    background: 'none',
+                                    fontFamily: 'inherit',
+                                    textAlign: 'left',
+                                    cursor: 'pointer',
+                                  }}
+                                >
+                                  <Text variant="eyebrow" as="span" tone="muted" style={{ flex: 'none' }}>
+                                    {g.label.toUpperCase()}
+                                  </Text>
+                                  <Text
+                                    variant="caption"
+                                    as="span"
+                                    tone="accent"
+                                    weight="semibold"
+                                    style={{ flex: '1', minWidth: '0', textAlign: 'right', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                                  >
+                                    {g.picked}
+                                  </Text>
+                                  <ChevronDown
+                                    color="var(--color-muted)"
+                                    strokeWidth={2.2}
+                                    size={16}
+                                    style={{ flex: 'none', transition: 'transform .2s', transform: g.open ? 'rotate(180deg)' : 'none' }}
+                                  />
+                                </button>
+                                {g.open ? (
+                                  <div
+                                    id={'equip-filter-' + gi}
+                                    role="group"
+                                    aria-label={g.label}
+                                    style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(130px,1fr))', gap: '10px 12px', padding: '12px 0 8px' }}
+                                  >
+                                    {g.items.map((o) => (
+                                      <Checkbox key={o.name} checked={o.on} onChange={o.set}>
+                                        {o.name}
+                                      </Checkbox>
+                                    ))}
+                                  </div>
+                                ) : null}
+                              </div>
+                            ))}
+                            {v.equipFilterActive ? (
+                              <Button type="neutral" ghost size="sm" onClick={v.clearEquipFilter} style={{ marginTop: '12px' }}>
+                                Clear filter
+                              </Button>
+                            ) : null}
+                          </div>
+                        }
+                      >
+                        <button
+                          type="button"
+                          aria-expanded={!!v.equipFilterOpen}
+                          aria-label={v.equipFilterName}
+                          onClick={v.toggleEquipFilter}
+                          style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            alignItems: 'center',
+                            columnGap: '10px',
+                            rowGap: '4px',
+                            width: '100%',
+                            padding: '12px 16px',
+                            background: 'var(--color-white)',
+                            border: 'none',
+                            borderRadius: '15px',
+                            boxShadow: '0 1px 3px rgba(35,42,69,.06)',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            fontFamily: 'inherit',
+                            fontSize: 'var(--text-lg)',
+                            fontWeight: 'var(--font-weight-medium)',
+                            color: 'var(--color-ink)',
+                          }}
+                        >
+                          <Text variant="eyebrow" as="span" tone="slate" style={{ flex: '1 1 100%' }}>
+                            EQUIPMENT
+                          </Text>
+                          <span
+                            style={{
+                              flex: '1',
+                              minWidth: '0',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              fontWeight: v.equipFilterActive ? 'var(--font-weight-semibold)' : 'var(--font-weight-medium)',
+                            }}
+                          >
+                            {v.equipFilterLabel}
+                          </span>
+                          <ChevronDown
+                            color="var(--color-muted)"
+                            strokeWidth={2.2}
+                            size={16}
+                            style={{ flex: 'none', transition: 'transform .2s', transform: v.equipFilterOpen ? 'rotate(180deg)' : 'none' }}
+                          />
+                        </button>
+                      </Popover>
+                    ) : null}
+                  </div>
                   {v.showArsenalExercises ? (
                     <>
                       {v.noMatches ? (
@@ -3017,6 +3155,18 @@ export function PlannerView({ v }: { v: any }) {
                         ))}
                       </div>
                     ) : null}
+                    {v.exercise.equipment ? (
+                      <>
+                        <Text variant="eyebrow" as="h2" tone="slate" style={{ margin: '16px 0 8px' }}>
+                          EQUIPMENT
+                        </Text>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                          {v.exercise.equipment.map((a, i) => (
+                            <Chip key={i}>{a}</Chip>
+                          ))}
+                        </div>
+                      </>
+                    ) : null}
                   </Card>
                   {v.exercise.builtin ? (
                     <Text variant="body" as="p" tone="muted" style={{ margin: '18px 0 0' }}>
@@ -3133,6 +3283,7 @@ export function PlannerView({ v }: { v: any }) {
                       <Chip key={i}>{a}</Chip>
                     ))}
                   </div>
+                  <NeedsLine text={v.template.needs} />
                   {v.template.notes ? (
                     <Card pad="sm" style={{ marginTop: '14px' }}>
                       <Text variant="micro" tone="subtle" as="div">
@@ -3325,6 +3476,67 @@ export function PlannerView({ v }: { v: any }) {
                         </Fragment>
                       ))}
                     </div>
+                    {v.exerciseEdit.equipmentGroups ? (
+                      <div style={{ marginTop: '16px' }}>
+                        {/* One row with what's picked; it opens to the picker, so the editor stays short. */}
+                        <button
+                          type="button"
+                          aria-expanded={v.exerciseEdit.equipmentOpen}
+                          aria-controls="exercise-equipment"
+                          onClick={v.exerciseEdit.toggleEquipment}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            width: '100%',
+                            minHeight: '52px',
+                            padding: '10px 14px',
+                            border: '1px solid var(--color-outline)',
+                            borderRadius: '14px',
+                            background: 'var(--color-canvas)',
+                            fontFamily: 'inherit',
+                            textAlign: 'left',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          <span style={{ flex: '1', minWidth: '0' }}>
+                            <Text variant="eyebrow" as="span" tone="slate" style={{ display: 'block' }}>
+                              EQUIPMENT
+                            </Text>
+                            <Text variant="body" as="span" tone="ink" weight="semibold" style={{ display: 'block', marginTop: '2px' }}>
+                              {v.exerciseEdit.equipmentSummary}
+                            </Text>
+                          </span>
+                          <ChevronDown
+                            color="var(--color-muted)"
+                            strokeWidth={2.2}
+                            size={18}
+                            style={{ flex: 'none', transition: 'transform .2s', transform: v.exerciseEdit.equipmentOpen ? 'rotate(180deg)' : 'none' }}
+                          />
+                        </button>
+                        {v.exerciseEdit.equipmentOpen ? (
+                          <div id="exercise-equipment" role="group" aria-label="Equipment" style={{ padding: '4px 2px 0' }}>
+                            <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+                              Leave it empty for a bodyweight exercise.
+                            </Text>
+                            {v.exerciseEdit.equipmentGroups.map((g, gi) => (
+                              <div key={gi} role="group" aria-label={g.label}>
+                                <Text variant="eyebrow" as="div" tone="muted" style={{ margin: '10px 0 6px' }}>
+                                  {g.label.toUpperCase()}
+                                </Text>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                  {g.items.map((a, i) => (
+                                    <Chip key={i} tone="choice" size="md" selected={a.on} onClick={a.toggle}>
+                                      {a.name}
+                                    </Chip>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : null}
                     <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
                     <div
                       style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: '8px' }}
@@ -3778,6 +3990,7 @@ export function PlannerView({ v }: { v: any }) {
                       </Fragment>
                     ))}
                   </div>
+                  <NeedsLine text={v.needs} />
                   {v.isFuture ? (
                     <Card style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
                       <div style={{ flex: '1 1 180px', minWidth: 0 }}>
@@ -5534,6 +5747,21 @@ export function PlannerView({ v }: { v: any }) {
 }
 
 // Back, named for where it goes ("‹ Calendar", "‹ Spellbook", "‹ Upper Push"). Every inner screen starts with one.
+/** "You'll need": the equipment a workout's exercises use, under its chips. Nothing when it isn't known. */
+function NeedsLine({ text }: { text?: string | null }) {
+  if (!text) return null;
+  return (
+    <p style={{ margin: '14px 0 0', lineHeight: 1.5 }}>
+      <Text variant="eyebrow" as="span" tone="slate" style={{ display: 'block' }}>
+        YOU&apos;LL NEED
+      </Text>
+      <Text variant="body" as="span" tone="ink" style={{ display: 'block', marginTop: '2px' }}>
+        {text}
+      </Text>
+    </p>
+  );
+}
+
 /** A Progress card that opens what it sums up: laid out as a card, not centred like a button. */
 function progCard(flex: string): React.CSSProperties {
   return { flex, display: 'block', textAlign: 'left', fontFamily: 'inherit', color: 'inherit' };

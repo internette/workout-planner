@@ -56,6 +56,7 @@ Later migrations:
 
 - [20260927000000_gym_equipment_exercises.sql](supabase/migrations/20260927000000_gym_equipment_exercises.sql) adds 20 built-in exercises for cable-trainer, lat pulldown / low row, glute-ham developer, plyo box and pull-up bar work. Exercises already in the catalog aren't added again.
 - [20260928000000_builtin_workouts.sql](supabase/migrations/20260928000000_builtin_workouts.sql) adds `builtin_workouts`: 30 beginner workouts, built from the built-in exercises, that every account sees in its Spellbook under its own workouts. Adding one to the calendar, or copying it, saves it to that person's workouts first.
+- [20260929000000_exercise_equipment.sql](supabase/migrations/20260929000000_exercise_equipment.sql) adds `equipment` to built-in exercises, your own exercises and the exercises in workouts: what each needs, from a fixed list (dumbbells, cable machine, leg press, bench, ...). Empty is bodyweight. It fills in the built-in exercises, and copies of them (by name) that people already have. Until it runs, the app shows no equipment.
 
 Run the migrations once, in order, in the Supabase SQL editor. They are safe to run again.
 

@@ -8,6 +8,15 @@ export const DOW3 = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 export const DOWFULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 // The body regions an exercise can target. A workout's own target areas are the union of its exercises'.
 export const TARGET_AREAS = ['Core', 'Arms', 'Back', 'Legs', 'Chest', 'Shoulders'];
+// What an exercise can need, in groups, in the order the app lists them. An exercise with none is bodyweight.
+export const EQUIPMENT_GROUPS: { label: string; items: string[] }[] = [
+  { label: 'Free weights', items: ['Dumbbells', 'Barbell', 'EZ bar', 'Kettlebell', 'Weight plate'] },
+  { label: 'Stations', items: ['Cable machine', 'Lat pulldown / row', 'Pull-up bar', 'Squat rack', 'Glute-ham developer'] },
+  { label: 'Machines', items: ['Leg press', 'Leg extension / curl', 'Chest press', 'Pec deck', 'Shoulder press', 'Preacher curl'] },
+  { label: 'Other', items: ['Bench', 'Plyo box', 'Resistance band', 'Stability ball'] },
+];
+export const EQUIPMENT = EQUIPMENT_GROUPS.flatMap((g) => g.items);
+
 export const QUESTS = [
   { title:'Hold the barrier', note:'Hold your ground to the very end. Nothing gets past you.',
     done:'The barrier held. Nothing got through.' },
