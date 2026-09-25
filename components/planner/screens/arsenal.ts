@@ -312,7 +312,7 @@ export function arsenalVals(ctx: Ctx) {
           exEditNav: false,
           exCopy: false,
           ...(st.exEditNav ? { hist: (st.hist || []).slice(0, -1) } : {}),
-          ...noticePatch('“' + r.name + '” saved to your Spellbook.', 'exercise'),
+          ...noticePatch('“' + r.name + '” is written into your Spellbook.', 'exercise'),
         }));
       askExerciseSave(patch);
     },

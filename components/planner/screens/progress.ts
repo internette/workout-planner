@@ -147,7 +147,7 @@ export function progressVals(ctx: Ctx) {
       ? 'Today is cleared.'
       : streak > 0
         ? plannedByDay[todayKey]
-          ? 'Today still pending — finish it to reach ' + (streak + 1) + '.'
+          ? 'Today’s quest is still open. Clear it to reach ' + (streak + 1) + '.'
           : 'Rest day — the streak holds.'
         : 'Clear a full day to start one.',
     // Up to seven, and it says how many when there are fewer.

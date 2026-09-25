@@ -1,5 +1,5 @@
-import { DOWFULL, EDIT_OVERLAYS, MON3 } from '../constants';
-import { digitsOnly, exLine, formatElapsed, idOf, isoOf, monthPatch, numericOnly, plural, questSeed } from '../helpers';
+import { DOW3, DOWFULL, EDIT_OVERLAYS, MON3 } from '../constants';
+import { digitsOnly, exLine, formatElapsed, idOf, isoOf, monthPatch, noticePatch, numericOnly, plural, questSeed } from '../helpers';
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -46,6 +46,13 @@ export function workoutVals(ctx: Ctx) {
   // A session on a day still ahead can't be done yet: starting it early would count it for that day. It can be moved
   // to today instead, and started there.
   const isFutureDay = mi * 100 + selDay > TK;
+  // "Sat 26": the day a session is on.
+  const leaveDay = (id) => {
+    const x = logic.model.entries.find((e) => e.av.id === id);
+    if (!x) return 'its day';
+    const dt = new Date(Y, x.m, x.d);
+    return DOW3[dt.getDay()].charAt(0) + DOW3[dt.getDay()].slice(1, 3).toLowerCase() + ' ' + x.d;
+  };
   const doToday = (av, sure = false) => {
     if (!av) return;
     const id = idOf(av);
@@ -55,8 +62,11 @@ export function workoutVals(ctx: Ctx) {
         confirm: {
           kind: 'doToday',
           title: '“' + nameOf(av.name) + '” is already on today',
-          body: 'Moving this one to today too puts it there twice. “Keep it” leaves it on its own day.',
-          label: 'Move it anyway',
+          body: 'Moving this one to today too puts it there twice.',
+          label: 'Move it to today',
+          // Not a destructive choice, so neither button is red, and staying names the day it stays on.
+          safe: true,
+          cancelLabel: 'Leave it on ' + leaveDay(id),
           then: () => doToday(av, true),
         },
       });
@@ -177,7 +187,7 @@ export function workoutVals(ctx: Ctx) {
     delete timers[timerKey];
     logic.s(
       Object.assign(
-        { finish: null, workoutTimer: timers, announce: 'Finished. ' + minText(finMinutes) + ' recorded.' },
+        { finish: null, workoutTimer: timers, ...noticePatch('Transformation complete. ' + minText(finMinutes) + ' recorded.', 'detail') },
         fin.ride ? { rideDone: Object.assign({}, st.rideDone, { [id]: true }) } : {},
       ),
     );
@@ -276,7 +286,7 @@ export function workoutVals(ctx: Ctx) {
       // Logged: read it. Every exercise ticked but not logged yet: log it. Started (clock or ticks): carry on, or
       // start over. Otherwise: start.
       ctaTwoButtons: !logged && !complete && !isFutureDay && (timed || doneN > 0),
-      ctaLabel: logged ? 'View chronicle entry' : complete ? 'Write it up' : isFutureDay ? 'Do it today' : 'Start workout',
+      ctaLabel: logged ? 'View Chronicle entry' : complete ? 'Write about it' : isFutureDay ? 'Do it today' : 'Start workout',
       cta: !logged && !complete && isFutureDay ? () => doToday(av) : run(logged || complete ? 'goDiary' : 'startWorkout'),
       restart: run('restartWorkout'),
       continue: run('continueWorkout'),
@@ -309,7 +319,7 @@ export function workoutVals(ctx: Ctx) {
         : (fin.fromTimer ? 'Filled in from your timer' : fin.ride ? 'Filled in from your plan' : '') +
           (fin.fromTimer || fin.ride ? '. Change anything that went differently.' : '') +
         (!fin.ride && selList.length > doneCount
-          ? ' ' + plural(selList.length - doneCount, 'exercise') + (selList.length - doneCount === 1 ? " isn't" : " aren't") + ' ticked off. That stays as it is.'
+          ? ' ' + plural(selList.length - doneCount, 'exercise') + (selList.length - doneCount === 1 ? " isn't" : " aren't") + ' ticked off. They’ll stay that way.'
           : ''),
     finishHrs: fin ? fin.hrs : '',
     finishMins: fin ? fin.mins : '',
@@ -436,7 +446,7 @@ export function workoutVals(ctx: Ctx) {
       (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || colors.pink,
     ),
     rideStats: !selRide || !selAct ? [] : rideStatsFor(selAct, rideDone),
-    ctaLabel: hasEntry ? 'View chronicle entry' : doneSel ? 'Write it up' : 'Write about it',
+    ctaLabel: hasEntry ? 'View Chronicle entry' : 'Write about it',
     startWorkout,
     restartWorkout,
     continueWorkout,

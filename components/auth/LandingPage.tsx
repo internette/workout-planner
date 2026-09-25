@@ -43,7 +43,7 @@ function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.R
           {signingUp ? 'Begin your ritual' : 'Step back through'}
         </Text>
         <Text variant="body" tone="muted" as="p" className={styles.authNote} style={{ margin: '8px 0 0' }}>
-          {signingUp ? 'Two taps, and your first quest is one planned session away.' : 'Your plan and your chronicle are right where you left them.'}
+          {signingUp ? 'Two taps, and your first quest is one planned session away.' : 'Your plan and your Chronicle are right where you left them.'}
         </Text>
 
         <div className={styles.providers}>
