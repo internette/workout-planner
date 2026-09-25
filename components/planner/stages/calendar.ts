@@ -1,5 +1,6 @@
 import { DOW1, DOW3, DOWFULL, MON3, MONTHS, PINK } from '../constants';
-import { CAT, mod12, monthPatch } from '../helpers';
+import { mod12, monthPatch } from '../helpers';
+import { iconSvg } from '../icons';
 import React from 'react';
 import type { Ctx } from '../types';
 
@@ -138,7 +139,8 @@ export function calendarStage(ctx: Ctx): Ctx {
     return list.map((a, ix) => weekRow(d, a, ix));
   });
   function weekRow(d, a, ix) {
-    const today = a.s === 't';
+    // By the date, not the session's status: a finished session today is still today's.
+    const today = relM(d) === TODAY_M && d.getDate() === TODAY_D;
     const past = relM(d) * 100 + d.getDate() < TK;
     const part = past && partly([a]);
     const label =
@@ -154,11 +156,8 @@ export function calendarStage(ctx: Ctx): Ctx {
       name: nameOf(a.name),
       done: isDoneEntry(a),
       meta: metaFor(a),
-      isPush: !a.ride && CAT(a.name) === 'Push',
-      isPull: !a.ride && CAT(a.name) === 'Pull',
-      isLegs: !a.ride && CAT(a.name) === 'Legs',
-      isCore: !a.ride && CAT(a.name) === 'Core',
-      isRideRow: !!a.ride,
+      // The icon and colour chosen for the workout, as on the Day view's cards.
+      icoSvg: iconSvg(a.icon || (a.ride ? 'bike' : 'h'), a.iconColor || undefined),
       open: () =>
         logic.nav({ screen: 'detail', creating: false, ...monthPatch(relM(d)), day: d.getDate(), entryId: a.id }),
       aria:

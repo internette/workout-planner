@@ -93,7 +93,19 @@ export function editVals(ctx: Ctx) {
   // exercises added or taken out, so a length set by hand keeps its difference.
   const exDelta = creating ? 0 : selList.length - (EXV[baseKey] || []).length;
   const baseMin = parseInt(String((selAct && selAct.time) || '').replace(/[^0-9]/g, ''), 10) || 50;
-  const estMin = creating ? Math.max(20, selList.length * 10) : Math.max(20, baseMin + exDelta * 10);
+  // More or fewer sets of an exercise move it too: each set about 40 seconds of work plus its rest.
+  const setsOf = (e) => parseInt(String(e.sets || ''), 10) || 0;
+  const restOf = (e) => parseInt(String(e.rest || ''), 10) || 60;
+  const setDeltaMin = creating
+    ? 0
+    : (EXV[baseKey] || []).reduce((sum, orig) => {
+        const now = selList.find((e) => e.name === orig.name);
+        return now ? sum + ((setsOf(now) - setsOf(orig)) * (restOf(now) + 40)) / 60 : sum;
+      }, 0);
+  const lengthChanged = exDelta !== 0 || Math.round(setDeltaMin) !== 0;
+  const estMin = creating
+    ? Math.max(20, selList.length * 10)
+    : Math.max(20, Math.round((baseMin + exDelta * 10 + setDeltaMin) / 5) * 5);
   const saving = logic.busy('workout');
   // A new exercise's name must be new where it's going: among the person's exercises and the built-ins in the Spellbook
   // (saving one there would otherwise overwrite the old one), or among this workout's exercises in the editor (a
@@ -396,7 +408,11 @@ export function editVals(ctx: Ctx) {
     areaPills: selRide ? [selRide.zone || 'Endurance'] : picked,
     inSeries: !!(selAct && selAct.series),
     canRepeat: !tplMode && !(selAct && selAct.series),
-    seriesNote: 'Part of a weekly series: it repeats every ' + DOWFULL[selDate.getDay()] + '. To stop the repeats, end the series from the workout’s page.',
+    // The series' own day, not this session's date (which may have just been moved in this editor).
+    seriesNote:
+      'Part of a weekly series: it repeats every ' +
+      DOWFULL[selAct && selAct.seriesDay != null ? selAct.seriesDay : selDate.getDay()] +
+      '. To stop the repeats, tap × on “Weekly series” on this session’s page.',
     endSeries: () => {
       const sid = selAct && selAct.series;
       if (!sid) return;
@@ -539,7 +555,7 @@ export function editVals(ctx: Ctx) {
             add: added.map(bare),
           },
           repeatDates: st.repeat && !selAct.series ? weekly() : [],
-          durationMinutes: !selRide && exDelta !== 0 ? estMin : undefined,
+          durationMinutes: !selRide && lengthChanged ? estMin : undefined,
         };
         // Normally back to the workout's own detail screen; if a nav click was waiting on this save, go there instead.
         // Either way this session stays the selected one, even if it moved to a day that already had a workout.
@@ -742,7 +758,7 @@ export function editVals(ctx: Ctx) {
           ? selList.length && st.newType !== 'cycle'
             ? '~' + estMin + ' min'
             : 'Duration TBD'
-          : !selRide && exDelta !== 0
+          : !selRide && lengthChanged
             ? '~' + estMin + ' min'
             : (selAct && selAct.time) || '~50 min',
     setRepeat: (on) => logic.s({ repeat: !!on }),

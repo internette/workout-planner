@@ -383,6 +383,8 @@ export function arsenalVals(ctx: Ctx) {
     ? DOWFULL[schedDate.getDay()] + ', ' + MONTHS[schedDate.getMonth()] + ' ' + schedDate.getDate() +
       (schedDate.getFullYear() !== Y ? ', ' + schedDate.getFullYear() : '')
     : '';
+  const schedPast = !!schedDate && schedDate < new Date(Y, TODAY_M, TODAY_D);
+  const logPast = schedPast && !(sched && sched.logDone === false);
   const scheduleCalendar = {
     open: !!sched,
     title: chosen ? 'Add “' + chosen.name + '” to the calendar' : '',
@@ -399,7 +401,11 @@ export function arsenalVals(ctx: Ctx) {
         (chosen && logic.model.entries.some((x) => x.m === relM(schedDate) && x.d === schedDate.getDate() && x.av.name === chosen.name)
           ? ' “' + chosen.name + '” is already on that day, so it would be there twice.'
           : '') +
-        (schedDate < new Date(Y, TODAY_M, TODAY_D) ? ' That day has already gone by.' : ''),
+        (schedPast ? (logPast ? ' It goes on the calendar as done.' : ' That day has gone by, so it will show as missed.') : ''),
+    // A day that has gone by is most likely a workout already done, so it's logged as done unless switched off.
+    showLogDone: schedPast,
+    logDone: logPast,
+    setLogDone: (on) => logic.s({ tplSchedule: { ...sched, logDone: !!on } }),
     canAdd: !!schedDate && !logic.busy('schedule'),
     cancel: () => logic.s({ tplSchedule: null }),
     // Afterwards it stays here and says where the workout went, with a way to go and see that day.
@@ -412,12 +418,18 @@ export function arsenalVals(ctx: Ctx) {
       const when = schedWhen;
       logic.saveOnce(
         'schedule',
-        () => db.scheduleWorkout(chosen.id, dates, !!sched.repeat),
+        () =>
+          db.scheduleWorkout(
+            chosen.id,
+            dates,
+            !!sched.repeat,
+            logPast ? { exercises: chosen.kind === 'ride' ? [] : chosen.exercises } : undefined,
+          ),
         (r) => ({
           tplSchedule: null,
           tplScheduled: {
             templateId: chosen.id,
-            text: 'On the calendar: ' + when + (sched.repeat ? ', and every ' + DOWFULL[schedDate.getDay()] + ' for 12 weeks after.' : '.'),
+            text: (logPast ? 'Logged as done: ' : 'On the calendar: ') + when + (sched.repeat ? ', and every ' + DOWFULL[schedDate.getDay()] + ' for 12 weeks after.' : '.'),
             ...monthPatch(relM(schedDate)),
             day: schedDate.getDate(),
             entryId: r && r.entryId,

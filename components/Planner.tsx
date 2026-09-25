@@ -2,7 +2,7 @@
 
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { PlannerLogic } from './planner/PlannerLogic';
+import { CALENDAR_KEY, PlannerLogic } from './planner/PlannerLogic';
 import { useViewport } from './planner/useViewport';
 import { pathForState, stateForPath } from './planner/routes';
 import { exerciseDraftDirty, workoutDraftDirty } from './planner/helpers';
@@ -93,6 +93,19 @@ export default function Planner({ account = null }: { account?: Account | null }
     stamp();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  // Remembers where the calendar was, so a reload can come back to it.
+  useEffect(() => {
+    const st = logic.state;
+    if (logic.status !== 'ready' || st.screen !== 'day') return;
+    try {
+      window.sessionStorage.setItem(
+        CALENDAR_KEY,
+        JSON.stringify({ seg: st.seg, month: st.month, yOff: st.yOff || 0, day: st.day, at: Date.now() }),
+      );
+    } catch {
+      // No storage: a reload just starts on today.
+    }
+  });
   const viewRef = useRef<any>(null);
   // The tab's title follows the screen: its section, and on an inner screen what it's about ("Leg Day — Spellbook").
   useEffect(() => {
@@ -166,6 +179,19 @@ export default function Planner({ account = null }: { account?: Account | null }
       const dirtyWorkout = st.screen === 'edit' && workoutDraftDirty(st);
       const dirtyExercise = exerciseDraftDirty(st);
       const vals = logic.renderVals();
+      // Leaving a session with its clock running asks first, as the screen's own Back arrow does.
+      if (vals.timerRunningHere) {
+        const steps = cur - target;
+        go(steps);
+        logic.setState({
+          pausePrompt: {
+            proceed: () => {
+              for (let i = 0; i < steps; i++) logic.back();
+            },
+          },
+        });
+        return;
+      }
       if (dirtyWorkout || dirtyExercise || vals.entryDirty) {
         go(cur - target);
         if (dirtyWorkout) logic.setState({ leaveOpen: true, pendingNav: null });

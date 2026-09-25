@@ -36,6 +36,7 @@ export interface Entry {
   areas: string[];
   ride?: Ride;
   series?: string;
+  seriesDay?: number; // the weekday (0 = Sunday) its workout's weekly series repeats on
   repeat: boolean;
   actual: { dist: string; elev: string; hrs: string; mins: string } | null;
   notes: string;
@@ -194,6 +195,24 @@ export async function loadModel(today: Date): Promise<Model> {
   const rideDone: Model['rideDone'] = {};
   const entryById: Record<string, Entry> = {};
 
+  // A repeating workout's series is on one weekday: the one most of its sessions fall on. A session of it on another
+  // day (put there on its own) isn't part of the series.
+  const dowOf = (iso: string) => {
+    const [y, mo, d] = String(iso).split('-').map(Number);
+    return new Date(y, mo - 1, d).getDay();
+  };
+  const seriesDay: Record<string, number> = {};
+  const dayCounts: Record<string, number[]> = {};
+  plan.forEach((p: any) => {
+    const w = byId[p.workout_id];
+    if (!w || !w.repeat_enabled) return;
+    (dayCounts[w.id] = dayCounts[w.id] || [0, 0, 0, 0, 0, 0, 0])[dowOf(p.scheduled_date)]++;
+  });
+  Object.keys(dayCounts).forEach((id) => {
+    const c = dayCounts[id];
+    seriesDay[id] = c.indexOf(Math.max(...c));
+  });
+
   plan.forEach((p: any) => {
     const w = byId[p.workout_id];
     if (!w) return;
@@ -216,7 +235,8 @@ export async function loadModel(today: Date): Promise<Model> {
       areas: isRide ? [] : areasOf(EXV[keyOf(w)] || []),
       repeat: !!w.repeat_enabled,
       notes: w.notes || '',
-      series: w.repeat_enabled ? w.id : undefined,
+      series: w.repeat_enabled && seriesDay[w.id] === dowOf(p.scheduled_date) ? w.id : undefined,
+      seriesDay: w.repeat_enabled ? seriesDay[w.id] : undefined,
       ride: isRide
         ? {
             dist: w.ride_distance_miles != null ? String(w.ride_distance_miles) : '',
@@ -410,7 +430,15 @@ export async function endSeries(workoutId: string, afterIso: string, todayIso: s
   const later: any[] = await ok(
     supabase.from('plan_entries').select(SESSION_COLS).eq('workout_id', workoutId).gt('scheduled_date', afterIso),
   );
-  await deletePlanEntries(await untouchedIds(later.filter((r) => r.scheduled_date >= todayIso)));
+  // Only the series' own weekday: a session of the same workout put on another day stays.
+  const dow = (iso: string) => {
+    const [y, mo, d] = iso.split('-').map(Number);
+    return new Date(y, mo - 1, d).getDay();
+  };
+  const day = dow(afterIso);
+  await deletePlanEntries(
+    await untouchedIds(later.filter((r) => r.scheduled_date >= todayIso && dow(String(r.scheduled_date)) === day)),
+  );
   await ok(supabase.from('workouts').update({ repeat_enabled: false }).eq('id', workoutId));
 }
 
@@ -472,13 +500,31 @@ export async function createWorkout(w: NewWorkout) {
 }
 
 // Puts an existing workout on the calendar: one session per date. Repeating dates also turn its weekly series on.
-export async function scheduleWorkout(workoutId: string, dates: string[], repeat: boolean) {
+// `done` logs the first date as already done (a workout added to a day that has gone by), with these exercises ticked.
+export async function scheduleWorkout(
+  workoutId: string,
+  dates: string[],
+  repeat: boolean,
+  done?: { exercises: string[] },
+) {
   if (!dates.length) return { entryId: null };
   if (repeat) await ok(supabase.from('workouts').update({ repeat_enabled: true }).eq('id', workoutId));
   const rows: { id: string; scheduled_date: string }[] = await ok(
     supabase
       .from('plan_entries')
-      .insert(dates.map((d) => ({ workout_id: workoutId, scheduled_date: d, status: 'planned' })))
+      .insert(
+        dates.map((d, i) =>
+          i === 0 && done
+            ? {
+                workout_id: workoutId,
+                scheduled_date: d,
+                status: 'completed',
+                completed_at: new Date().toISOString(),
+                done_exercises: done.exercises,
+              }
+            : { workout_id: workoutId, scheduled_date: d, status: 'planned' },
+        ),
+      )
       .select('id, scheduled_date'),
   );
   return { entryId: rows.find((r) => r.scheduled_date === dates[0])?.id ?? null };

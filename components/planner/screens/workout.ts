@@ -46,9 +46,20 @@ export function workoutVals(ctx: Ctx) {
   // A session on a day still ahead can't be done yet: starting it early would count it for that day. It can be moved
   // to today instead, and started there.
   const isFutureDay = mi * 100 + selDay > TK;
-  const doToday = (av) => {
+  const doToday = (av, sure = false) => {
     if (!av) return;
     const id = idOf(av);
+    // Already on today: moving this one too would put it there twice, so ask first.
+    if (!sure && logic.model.entries.some((x) => x.m === TODAY_M && x.d === TODAY_D && x.av.name === av.name && x.av.id !== id))
+      return logic.s({
+        confirm: {
+          kind: 'doToday',
+          title: '“' + nameOf(av.name) + '” is already on today',
+          body: 'Moving this one to today too puts it there twice. “Keep it” leaves it on its own day.',
+          label: 'Move it anyway',
+          then: () => doToday(av, true),
+        },
+      });
     logic.saveOnce(
       'move',
       () =>
@@ -183,7 +194,12 @@ export function workoutVals(ctx: Ctx) {
     const took = a ? actualMinutes(av) : 0;
     return [
       { label: 'DISTANCE', value: distOf(av) ? distOf(av) + ' mi' : '—', note: a ? vsPlan(a.dist, r.dist, ' mi') : '' },
-      { label: 'DURATION', value: timeOf(av) || '—', note: took ? 'Planned ' + av.time : '' },
+      // Like the others, only when what it took differs from the plan.
+      {
+        label: 'DURATION',
+        value: timeOf(av) || '—',
+        note: took && took !== Number(r.hrs || 0) * 60 + Number(r.mins || 0) ? 'Planned ' + av.time : '',
+      },
       {
         label: 'ELEVATION',
         value: (a && a.elev) || r.elev ? ((a && a.elev) || r.elev) + ' ft' : '—',
@@ -282,6 +298,9 @@ export function workoutVals(ctx: Ctx) {
     openFinish,
     finishOpen: !!fin,
     finishTitle: fin && fin.correcting ? 'Change your time' : fin && fin.ride ? 'Finish your ride' : 'Finish your workout',
+    // Correcting a recorded time is a plain edit: Cancel and Save, not "Not yet" and "Finish".
+    finishCancelLabel: fin && fin.correcting ? 'Cancel' : 'Not yet',
+    finishSaveLabel: fin && fin.correcting ? 'Save' : 'Finish',
     finishIsRide: !!(fin && fin.ride),
     finishNote: !fin
       ? ''
@@ -313,6 +332,8 @@ export function workoutVals(ctx: Ctx) {
     // "Took 35 min" on a finished session: tap to correct it.
     editTook: finished ? openFinish : undefined,
     saveFinish,
+    // For the browser's Back, which asks the same way.
+    timerRunningHere: st.screen === 'detail' && !!timerRunning,
     pausePromptOpen: !!st.pausePrompt,
     keepGoing: () => logic.s({ pausePrompt: null }),
     // Leaving with the clock still going: it keeps counting (it's kept by the wall clock), and the day card shows it.
@@ -436,7 +457,8 @@ export function workoutVals(ctx: Ctx) {
       (doneSel
         ? 'background:var(--color-cloud);color:var(--color-slate)'
         : 'background:var(--color-pink-tint);color:var(--color-pink-deep)'),
-    hasProgress: st.screen === 'edit' && !isCycleView && selList.length > 0 && !ctx.creating && !ctx.tplMode,
+    // Nothing to tick off before the session's day, so no progress card then either.
+    hasProgress: st.screen === 'edit' && !isCycleView && selList.length > 0 && !ctx.creating && !ctx.tplMode && !isFutureDay,
     progLabel: doneCount + ' of ' + selList.length + ' done',
     allDone: selList.length > 0 && doneCount === selList.length,
     someDone: !(selList.length > 0 && doneCount === selList.length),
