@@ -23,7 +23,8 @@
 /* ---- Button sizes */
 .xs { min-height: 30px; padding: 0 12px; border-radius: var(--radius-xs); font-size: var(--text-md); gap: 5px; }
 .sm { min-height: 44px; padding: 0 20px; border-radius: var(--radius-md); font-size: var(--text-base); }
-.md { min-height: 48px; padding: 0 22px; border-radius: var(--radius-md); font-size: var(--text-lg); }
+/* Two heights: 44 for actions in cards, dialogs and bars (sm, md), 52 for a screen's main action (lg). */
+.md { min-height: 44px; padding: 0 22px; border-radius: var(--radius-md); font-size: var(--text-lg); }
 .lg { min-height: 52px; padding: 0 28px; border-radius: var(--radius-md); font-size: var(--text-lg); }
 
 .fullWidth { display: flex; width: 100%; }

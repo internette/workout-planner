@@ -1,7 +1,7 @@
 import { DCLogic } from '../dcLogic';
 import * as db from '@/lib/plannerData';
 import type { Model } from '@/lib/plannerData';
-import { MONTHS } from './constants';
+import { HOME_OF, MONTHS } from './constants';
 import { monthPatch } from './helpers';
 import type { Viewport } from './useViewport';
 import type { Account } from '@/lib/auth';
@@ -133,7 +133,12 @@ export class PlannerLogic extends DCLogic {
     const h = st.hist || [];
     this.focusBack = this.openers.length ? this.openers[this.openers.length - 1] : null;
     this.openers = this.openers.slice(0, -1);
-    if (!h.length) return this.setState({ screen:'day', monthOpen:false, seg:'Day', creating:false });
+    // Nothing before this screen (it was opened from a link): up to its section's own page.
+    if (!h.length) {
+      const home = HOME_OF[st.screen];
+      if (home) return this.setState({ screen: home, monthOpen:false, creating:false });
+      return this.setState({ screen:'day', monthOpen:false, seg:'Day', creating:false });
+    }
     const prev = h[h.length - 1];
     this.setState(Object.assign({}, prev, { hist: h.slice(0, -1), monthOpen:false }));
   }

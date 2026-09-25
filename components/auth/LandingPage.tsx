@@ -148,7 +148,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
         </section>
 
         <Section>
-          <Text variant="eyebrow" tone="slate" as="div">
+          <Text variant="eyebrow" tone="slate" as="h2" style={{ margin: 0 }}>
             HOW A DAY GOES
           </Text>
           <div className={styles.steps}>

@@ -8,7 +8,7 @@
 
 .header { width: 100%; padding: 18px 28px; }
 .headerRow { max-width: 1040px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
-.signIn { margin-left: auto; }
+.signIn { margin-left: auto; white-space: nowrap; }
 
 .hero { padding-top: 34px; padding-bottom: 56px; }
 .heroText { max-width: 660px; margin: 0 auto; text-align: center; }
@@ -27,6 +27,7 @@
 .toggle { display: flex; align-items: center; gap: 8px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--color-mist); }
 .toggleLink {
   position: relative;
+  white-space: nowrap;
   padding: 0;
   border: none;
   background: none;

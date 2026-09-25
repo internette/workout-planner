@@ -2900,14 +2900,9 @@ export function PlannerView({ v }: { v: any }) {
               <>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <IconButton label="Back" size="md" onClick={v.goBack} style={{ marginLeft: '-8px' }}>
-                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
-                    </IconButton>
-                    <Text variant="eyebrow" tone="slate">
-                      {v.exercise.builtin ? 'BUILT-IN' : 'EXERCISE'}
-                    </Text>
+                    <BackLink label={v.backLabel} onClick={v.goBack} />
                     {v.exercise.builtin ? (
-                      <span style={{ display: 'flex', gap: '8px', marginLeft: 'auto', flex: 'none' }}>
+                      <span className="bar-actions" style={{ display: 'flex', gap: '8px', marginLeft: 'auto', flex: 'none' }}>
                         <Button type="secondary" size="sm" onClick={v.exercise.copy} style={{ whiteSpace: 'nowrap' }}>
                           <Copy color="var(--color-pink-deep)" size={16} />
                           Copy
@@ -2918,7 +2913,7 @@ export function PlannerView({ v }: { v: any }) {
                         </Button>
                       </span>
                     ) : (
-                      <span style={{ display: 'flex', gap: '8px', marginLeft: 'auto', flex: 'none' }}>
+                      <span className="bar-actions" style={{ display: 'flex', gap: '8px', marginLeft: 'auto', flex: 'none' }}>
                         <Button type="secondary" size="sm" onClick={v.exercise.edit} style={{ whiteSpace: 'nowrap' }}>
                           <Pencil color="var(--color-pink-deep)" size={16} />
                           Edit
@@ -2947,9 +2942,14 @@ export function PlannerView({ v }: { v: any }) {
                     >
                       {v.exercise.svg}
                     </span>
-                    <Text variant="title" as="h1" style={{ margin: '0' }}>
-                      {v.exercise.name}
-                    </Text>
+                    <div style={{ minWidth: 0 }}>
+                      <Text variant="eyebrow" as="div" tone="slate">
+                        {v.exercise.builtin ? 'BUILT-IN EXERCISE' : 'EXERCISE'}
+                      </Text>
+                      <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
+                        {v.exercise.name}
+                      </Text>
+                    </div>
                   </div>
                   <Card style={{ marginTop: '18px' }}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '26px' }}>
@@ -3028,9 +3028,7 @@ export function PlannerView({ v }: { v: any }) {
             ) : null}
             {(v.isTemplate && !v.template) || (v.isExercise && !v.exercise) ? (
               <div>
-                <IconButton label="Back" size="md" onClick={v.goArsenal} style={{ marginLeft: '-8px' }}>
-                  <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
-                </IconButton>
+                <BackLink label="Spellbook" onClick={v.goArsenal} />
                 <Text variant="title" as="h1" style={{ margin: '14px 0 0' }}>
                   Not in your Spellbook
                 </Text>
@@ -3048,12 +3046,7 @@ export function PlannerView({ v }: { v: any }) {
               <>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <IconButton label="Back" size="md" onClick={v.goBack} style={{ marginLeft: '-8px' }}>
-                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
-                    </IconButton>
-                    <Text variant="eyebrow" tone="slate">
-                      SAVED WORKOUT
-                    </Text>
+                    <BackLink label={v.backLabel} onClick={v.goBack} />
                     <Button
                       type="secondary"
                       size="sm"
@@ -3081,9 +3074,14 @@ export function PlannerView({ v }: { v: any }) {
                     >
                       {v.template.svg}
                     </span>
-                    <Text variant="title" as="h1" style={{ margin: '0' }}>
-                      {v.template.name}
-                    </Text>
+                    <div style={{ minWidth: 0 }}>
+                      <Text variant="eyebrow" as="div" tone="slate">
+                        SAVED WORKOUT
+                      </Text>
+                      <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
+                        {v.template.name}
+                      </Text>
+                    </div>
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '18px' }}>
                     <Chip icon={<Clock color="var(--color-muted)" size={15} />}>{v.template.time}</Chip>
@@ -3217,14 +3215,7 @@ export function PlannerView({ v }: { v: any }) {
               <>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <IconButton
-                      label="Cancel editing"
-                      size="md"
-                      onClick={v.exerciseEdit.cancel}
-                      style={{ marginLeft: '-8px' }}
-                    >
-                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
-                    </IconButton>
+                    <BackLink label={v.backLabel} onClick={v.exerciseEdit.cancel} />
                     <Text variant="eyebrow" tone="slate">
                       {v.exerciseEdit.heading}
                     </Text>
@@ -3330,9 +3321,7 @@ export function PlannerView({ v }: { v: any }) {
               <>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <IconButton label="Back" size="md" onClick={v.goBack} style={{ marginLeft: '-8px' }}>
-                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
-                    </IconButton>
+                    <BackLink label={v.backLabel} onClick={v.goBack} />
                   </div>
                   <Text variant="title" as="h1" style={{ margin: '24px 0 0' }}>
                     Which session are you writing about?
@@ -3662,10 +3651,14 @@ export function PlannerView({ v }: { v: any }) {
                       ) : null}
                     </div>
                   </Dialog>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }}>
-                    <IconButton label="Back" size="md" onClick={v.backToDay} style={{ marginLeft: '-8px' }}>
-                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
-                    </IconButton>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <BackLink label={v.backLabel} onClick={v.backToDay} />
+                    <Button type="secondary" size="sm" onClick={v.goEdit} style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+                      <Pencil color="var(--color-pink-deep)" size={16} />
+                      Edit
+                    </Button>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
                     <div
                       style={{
                         width: '46px',
@@ -3686,20 +3679,9 @@ export function PlannerView({ v }: { v: any }) {
                       <Text variant="eyebrow" as="div" tone="slate">
                         {v.eDate}
                       </Text>
-                      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '9px' }}>
-                        <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
-                          {v.eName}
-                        </Text>
-                        <IconButton
-                          label="Edit workout"
-                          size="md"
-                          onClick={v.goEdit}
-                          title="Edit workout"
-                          style={{ marginBottom: '-2px' }}
-                        >
-                          <Pencil color="var(--color-muted)" size={17} />
-                        </IconButton>
-                      </div>
+                      <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
+                        {v.eName}
+                      </Text>
                     </div>
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '20px' }}>
@@ -3951,9 +3933,7 @@ export function PlannerView({ v }: { v: any }) {
               <>
                 <div style={{ maxWidth: '560px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <IconButton label="Back" size="md" onClick={v.backToDay} style={{ marginLeft: '-8px' }}>
-                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
-                    </IconButton>
+                    <BackLink label={v.backLabel} onClick={v.backToDay} />
                     <div>
                       <Text variant="eyebrow" as="div" tone="slate">
                         NEW WORKOUT
@@ -4128,10 +4108,10 @@ export function PlannerView({ v }: { v: any }) {
                       </>
                     }
                   />
-                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 12px' }}>
-                    <IconButton label="Back" size="md" onClick={v.tryLeave} style={{ marginLeft: '-8px' }}>
-                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={18} />
-                    </IconButton>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <BackLink label={v.backLabel} onClick={v.tryLeave} />
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 12px', marginTop: '18px' }}>
                     <Popover
                       open={!!v.iconsOpen}
                       onClose={v.closeIcons}
@@ -5176,16 +5156,13 @@ export function PlannerView({ v }: { v: any }) {
               <>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Button
-                      type="neutral"
-                      ghost
-                      size="xs"
-                      onClick={v.diaryBack}
-                      style={{ marginLeft: '-4px' }}
-                    >
-                      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={17} />
-                      Back
-                    </Button>
+                    <BackLink label={v.diaryBackLabel || v.backLabel} onClick={v.diaryBack} />
+                    {v.diaryReading ? (
+                      <Button type="secondary" size="sm" onClick={v.editEntry} style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+                        <Pencil color="var(--color-pink-deep)" size={16} />
+                        Edit
+                      </Button>
+                    ) : null}
                   </div>
                   {v.diaryReading ? (
                     <>
@@ -5293,9 +5270,6 @@ export function PlannerView({ v }: { v: any }) {
                         >
                           <Button type="danger" ghost size="lg" onClick={v.deleteEntry}>
                             Delete entry
-                          </Button>
-                          <Button type="primary" size="lg" onClick={v.editEntry}>
-                            Edit entry
                           </Button>
                         </div>
                       </div>
@@ -5501,5 +5475,24 @@ export function PlannerView({ v }: { v: any }) {
         </nav>
       </div>
     </>
+  );
+}
+
+// Back, named for where it goes ("‹ Calendar", "‹ Spellbook", "‹ Upper Push"). Every inner screen starts with one.
+function BackLink({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <Button
+      type="neutral"
+      ghost
+      size="xs"
+      onClick={onClick}
+      className="hit"
+      data-back
+      aria-label={'Back to ' + label}
+      style={{ marginLeft: '-10px', minWidth: 0, maxWidth: '60%', flex: '0 1 auto' }}
+    >
+      <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={17} />
+      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{label}</span>
+    </Button>
   );
 }

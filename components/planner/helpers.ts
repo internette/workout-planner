@@ -27,6 +27,8 @@ export const exLine = (e, withRest = false) =>
     withRest && e.rest && e.rest !== '—' ? e.rest + ' rest' : '',
   ]
     .filter(Boolean)
+    // Each part stays on one line ("4 × 8", "95 lb"); a line only breaks between parts.
+    .map((part) => part.replace(/ /g, '\u00a0'))
     .join(' · ');
 export const isoOf = dt => dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
 
