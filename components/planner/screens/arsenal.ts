@@ -12,7 +12,8 @@ export function arsenalVals(ctx: Ctx) {
   const { logic, st, EX, Y, TODAY_M, TODAY_D, narrow, relM } = ctx;
 
   // ---- exercise count (shown in the header when the exercises view is open)
-  // One per row in the list. Exercises are identified by id, so two with the same name are two exercises.
+  // One per row in the list, so it matches what's listed: an exercise inside two workouts is listed (and counted)
+  // under each. The editor's picker shows each name once, and leaves out what the workout already has.
   const exerciseCount = plural(
     Object.keys(EX).reduce((n, k) => n + (EX[k] || []).length, 0) +
       logic.model.library.length +
@@ -514,6 +515,8 @@ export function arsenalVals(ctx: Ctx) {
       leaveOpen: false,
       addTo: null,
       extra: { ['tpl:' + w.id]: [addTo] },
+      // Added in the editor, not yet saved: says so, so leaving without Save isn't a surprise.
+      ...noticePatch('“' + addTo.name + '” added to “' + w.name + '”. Save to keep it.', 'edit'),
     });
   const addToNew = (ex) => {
     logic.nav({
@@ -529,6 +532,7 @@ export function arsenalVals(ctx: Ctx) {
       arsenalPick: null,
       addTo: null,
       extra: { __draft: [ex] },
+      ...noticePatch('“' + ex.name + '” is in a new workout. Name it and save to keep it.', 'edit'),
     });
   };
   const addToDialog = {
@@ -568,8 +572,9 @@ export function arsenalVals(ctx: Ctx) {
     if (hit.length) moveGroups.push({ label: label.toUpperCase(), count: plural(hit.length, 'exercise'), items: hit });
   };
   Object.keys(EX).forEach((w) => pushGroup(w, EX[w] || []));
-  // Exercises saved on their own, not inside any workout (adding one to a workout puts a copy there).
-  pushGroup('Saved on their own', logic.model.library);
+  // The person's own exercises, made in the Spellbook. Adding one to a workout puts a copy there, listed under that
+  // workout too, so this isn't "not in any workout": it's where their own ones live.
+  pushGroup('Your own exercises', logic.model.library);
   // The shared starter catalog, after the person's own, grouped by each exercise's main target area.
   TARGET_AREAS.forEach((area) =>
     pushGroup('Built-in · ' + area, logic.model.builtins.filter((e) => (e.areas || [])[0] === area)),
@@ -698,7 +703,7 @@ export function arsenalVals(ctx: Ctx) {
         areas: st.dAreas || [],
       };
       logic.saveOnce('exercise', () => db.addLibraryExercise(item), {
-        ...noticePatch('“' + nm + '” added to your Spellbook, under “Saved on their own”.', 'arsenal'),
+        ...noticePatch('“' + nm + '” added to your Spellbook, under “Your own exercises”.', 'arsenal'),
         arsenalAdd: false,
         dName: '',
         dSets: '',

@@ -147,6 +147,12 @@ export class PlannerLogic extends DCLogic {
     const prev = h[h.length - 1];
     this.setState(Object.assign({}, prev, { hist: h.slice(0, -1), monthOpen:false }));
   }
+  /** History without its last screen, for a screen that replaces the one it was opened from (a new Chronicle entry,
+   * once saved, stands in for the picker it was started from). */
+  histWithoutLast(){
+    this.openers = this.openers.slice(0, -1);
+    return (this.state.hist || []).slice(0, -1);
+  }
   // Like back(), but all the way to the most recent visit to `screen`, skipping whatever was opened on the way
   // (the Spellbook, then an exercise's details, then back to the workout that was being built).
   backTo(screen, patch = {}){

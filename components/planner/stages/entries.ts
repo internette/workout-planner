@@ -3,7 +3,7 @@ import type { Ctx } from '../types';
 
 // Per-entry helpers (names, exercise counts, done state), the chronicle filter and the mood / effort widgets.
 export function entriesStage(ctx: Ctx): Ctx {
-  const { logic, st, EXV, DIARY, nowDate, Y, TODAY_M, TODAY_D } = ctx;
+  const { logic, st, EXV, DIARY, nowDate, Y, TODAY_M, TODAY_D, TK } = ctx;
   const nameOf = (n) => ((st.renames || {})[n] != null && st.renames[n] !== '' ? st.renames[n] : n);
   // An entry's exercises come from the version of the workout it was scheduled with, not the current one.
   const instList = (exKey, key) =>
@@ -14,6 +14,16 @@ export function entriesStage(ctx: Ctx): Ctx {
   const doneCountAt = (av) => {
     const dn = (st.done || {})[idOf(av)] || [];
     return instList(av.exKey, idOf(av)).filter((e) => dn.indexOf(e.name) !== -1).length;
+  };
+  // A session's status, in the same words everywhere it's listed (Progress, the Chronicle's picker): done, partly
+  // done or missed once its day has gone by, in progress today once started, otherwise planned.
+  const sessionStatus = (m, d, av) => {
+    if (isDoneEntry(av)) return 'Done';
+    const started = !av.ride && doneCountAt(av) > 0;
+    const k = m * 100 + d;
+    if (k < TK) return started ? 'Partly done' : 'Missed';
+    if (k === TK && (started || (st.workoutTimer || {})[idOf(av)])) return 'In progress';
+    return 'Planned';
   };
   const ENTRIES = {};
   Object.assign(ENTRIES, DIARY);
@@ -34,12 +44,16 @@ export function entriesStage(ctx: Ctx): Ctx {
   const timeOf = (av) => (actualMinutes(av) ? minText(actualMinutes(av)) : av.time);
   // A ride's distance: what was ridden once it's done and recorded, else the plan.
   const distOf = (av) => (av.ride && isDoneEntry(av) && av.actual && av.actual.dist ? av.actual.dist : av.ride ? av.ride.dist : '');
+  // What a completed session took: its recorded time, or for a lift completed by ticking every exercise (no time
+  // recorded) how many it cleared, rather than the planned estimate.
+  const doneTimeOf = (av) =>
+    actualMinutes(av) ? minText(actualMinutes(av)) : av.ride ? av.time : plural(countAt(av), 'exercise');
   // Worded as the Day view's cards word it: a finished session says "Completed".
   const metaFor = (av) =>
     !av
       ? ''
       : isDoneEntry(av)
-        ? 'Completed · ' + (av.ride && distOf(av) ? distOf(av) + ' mi · ' : '') + timeOf(av)
+        ? 'Completed · ' + (av.ride && distOf(av) ? distOf(av) + ' mi · ' : '') + doneTimeOf(av)
         : av.ride
           ? distOf(av)
             ? distOf(av) + ' mi · ' + timeOf(av)
@@ -118,6 +132,8 @@ export function entriesStage(ctx: Ctx): Ctx {
     metaFor,
     ENTRIES,
     doneCountAt,
+    doneTimeOf,
+    sessionStatus,
     isoToday,
     iso30,
     dScope,

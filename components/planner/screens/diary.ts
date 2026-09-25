@@ -1,5 +1,5 @@
 import { DOW3, MON3 } from '../constants';
-import { isoOf, mod12, monthPatch, plural } from '../helpers';
+import { isoOf, mod12, monthPatch, noticePatch, plural } from '../helpers';
 import { moodSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -53,6 +53,10 @@ export function diaryVals(ctx: Ctx) {
     (saved
       ? st.mood !== saved.mood || st.rpe !== saved.rpe || (st.entryNote != null && st.entryNote !== (saved.note || ''))
       : !!st.mood || !!st.rpe || !!(st.entryNote || '').trim());
+  // What leaving an unsaved entry would lose, however it's left (Back, a tab, the browser).
+  const leaveBody = saved
+    ? 'You’ve changed this entry. Leaving now throws those changes away.'
+    : 'This entry isn’t saved yet. Leaving now throws it away.';
   // Back from changing an entry returns to reading it, as it was; from a new one, to wherever it was started.
   const stopWriting = () =>
     saved ? logic.s({ diaryEdit: false, mood: saved.mood, rpe: saved.rpe, entryNote: null }) : logic.back();
@@ -62,9 +66,7 @@ export function diaryVals(ctx: Ctx) {
           confirm: {
             kind: 'leaveEntry',
             title: 'Discard your changes?',
-            body: saved
-              ? 'You’ve changed this entry. Leaving now throws those changes away.'
-              : 'This entry isn’t saved yet. Leaving now throws it away.',
+            body: leaveBody,
             label: 'Discard changes',
             then: stopWriting,
           },
@@ -91,6 +93,7 @@ export function diaryVals(ctx: Ctx) {
   };
   const entryHint = !st.mood && !st.rpe ? 'Pick a mood and how hard it felt.' : !st.mood ? 'Pick a mood.' : !st.rpe ? 'Pick how hard it felt.' : '';
   return {
+    entryLeaveBody: leaveBody,
     saveEntryLabel: hasEntry ? 'Save changes' : 'Save entry',
     showMarkDone: offerMarkDone && !reading,
     markDoneOn: markDone,
@@ -111,7 +114,7 @@ export function diaryVals(ctx: Ctx) {
     saveEntry: () =>
       !st.mood || !st.rpe
         ? logic.s({ announce: entryHint })
-        : logic.saveOnce(
+        : ((fromPicker) => logic.saveOnce(
             'entry',
             () =>
               db
@@ -128,8 +131,17 @@ export function diaryVals(ctx: Ctx) {
               diaryEdit: false,
               entryNote: null,
               entryMarkDone: null,
+              // A new one written from the Chronicle's picker takes the picker's place: Back goes to the Chronicle.
+              ...(fromPicker ? { hist: logic.histWithoutLast() } : {}),
+              ...(hasEntry || st.diaryFrom === 'list'
+                ? noticePatch(
+                    (hasEntry ? 'Changes saved.' : 'Entry saved.') +
+                      (markDone ? (entrySession && entrySession.av.ride ? ' Ride' : ' Workout') + ' marked done.' : ''),
+                    'diary',
+                  )
+                : {}),
             },
-          ),
+          ))(!hasEntry && ((st.hist || [])[(st.hist || []).length - 1] || {}).screen === 'newEntry'),
     savedLine:
       st.mood +
       ' · ' +
@@ -188,7 +200,7 @@ export function diaryVals(ctx: Ctx) {
       name: nameOf(x.av.name),
       meta: x.av.ride ? (ctx.distOf(x.av) ? ctx.distOf(x.av) + ' mi · ' : '') + ctx.timeOf(x.av) : ctx.timeOf(x.av),
       // Whether it was done, so writing about a missed one is a choice, not a surprise.
-      status: x.done ? 'Done' : x.m * 100 + x.d < TK ? 'Missed' : 'Not done yet',
+      status: x.done ? 'Done' : ctx.sessionStatus(x.m, x.d, x.av),
       statusStyle:
         'flex:none;padding:4px 10px;border-radius:999px;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
         (x.done ? 'background:var(--color-pink-tint);color:var(--color-pink-deep)' : 'background:var(--color-mist);color:var(--color-slate-deep)'),

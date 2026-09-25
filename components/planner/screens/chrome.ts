@@ -112,14 +112,15 @@ export function chromeVals(ctx: Ctx) {
       if (st.screen === 'edit' && workoutDraftDirty(st)) return logic.s({ leaveOpen: true, pendingNav: dest });
       // An exercise or Chronicle entry being changed asks the same way before the tab takes it away.
       const exDirty = exerciseDraftDirty(st);
-      if (exDirty || logic.renderVals().entryDirty)
+      const entryVals = logic.renderVals();
+      if (exDirty || entryVals.entryDirty)
         return logic.s({
           confirm: {
             kind: 'leaveDraft',
             title: 'Discard your changes?',
             body: exDirty
               ? 'You’ve edited this exercise. Leaving now throws those changes away.'
-              : 'You haven’t saved your changes to this entry. Leaving now throws them away.',
+              : entryVals.entryLeaveBody,
             label: 'Discard changes',
             then: () => {
               logic.s({ exDraft: null, exDraftOrig: null, exEditNav: false, exCopy: false, diaryEdit: false, entryNote: null });
@@ -191,7 +192,15 @@ export function chromeVals(ctx: Ctx) {
         logic.s({ rideDone: Object.assign({}, st.rideDone, { [c.id]: false }) });
         logic.save(() => db.reopenSession(c.id), noticePatch('Marked not done.', 'detail'));
       }
-      if (c.kind === 'entry') logic.save(() => db.deleteDiary(c.day), { screen: c.after || st.screen });
+      if (c.kind === 'entry') {
+        // Deleted while reading it: back to the Chronicle's list, past the entry (and the picker it came from).
+        if (c.after === 'diaryList') {
+          const gone = noticePatch('Entry deleted.', 'diaryList');
+          if ((st.hist || []).some((h) => h.screen === 'diaryList')) logic.backTo('diaryList', { screen: 'diaryList', ...gone });
+          else logic.s({ screen: 'diaryList', hist: [], ...gone });
+          logic.save(() => db.deleteDiary(c.day));
+        } else logic.save(() => db.deleteDiary(c.day), noticePatch('Entry deleted.', st.screen));
+      }
       if (c.kind === 'series')
         logic.save(() => db.endSeries(c.sid, isoOf(new Date(Y, mi, selDay)), isoOf(new Date(Y, TODAY_M, TODAY_D))), {
           ...noticePatch('Weekly series ended. Its repeats still ahead are off the calendar.', 'detail'),

@@ -814,7 +814,7 @@ export function PlannerView({ v }: { v: any }) {
                                           style={{ flex: '1 1 120px', minWidth: '0' }}
                                           onClick={c?.restart}
                                         >
-                                          Restart workout
+                                          {c?.restartLabel}
                                         </Button>
                                         <Button
                                           type="primary"
@@ -822,7 +822,7 @@ export function PlannerView({ v }: { v: any }) {
                                           style={{ flex: '1 1 120px', minWidth: '0' }}
                                           onClick={c?.continue}
                                         >
-                                          Continue workout
+                                          {c?.continueLabel}
                                         </Button>
                                       </div>
                                     </>
@@ -2241,27 +2241,28 @@ export function PlannerView({ v }: { v: any }) {
                     </div>
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '26px' }}>
-                    <Card pad="sm" style={{ flex: '1 1 260px' }}>
-                      <Text variant="eyebrow" as="div" tone="muted">
+                    <Card as="button" interactive pad="sm" onClick={v.openWeek} style={progCard('1 1 260px')}>
+                      <Text variant="eyebrow" as="span" tone="muted" style={{ display: 'block' }}>
                         THIS WEEK
                       </Text>
                       {v.wkEmpty ? (
-                        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '6px 0 0' }}>
+                        <Text variant="caption" as="span" tone="muted" weight="medium" style={{ display: 'block', margin: '6px 0 0' }}>
                           Nothing planned this week yet.
                         </Text>
                       ) : null}
                       {v.wkHas ? (
                         <>
-                          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
+                          <span style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
                             <Text variant="subheading">{v.wkDone}</Text>
                             <Text variant="caption" tone="muted" weight="medium">
                               {'of '}
                               {t(v.wkTotal)}
                               {' ' + v.wkTotalUnit}
                             </Text>
-                          </div>
-                          <div
+                          </span>
+                          <span
                             style={{
+                              display: 'block',
                               height: '7px',
                               borderRadius: '4px',
                               background: 'var(--color-pink-tint)',
@@ -2269,33 +2270,41 @@ export function PlannerView({ v }: { v: any }) {
                               overflow: 'hidden',
                             }}
                           >
-                            <div style={css(v.wkBar)}></div>
-                          </div>
+                            <span style={{ display: 'block', ...css(v.wkBar) }}></span>
+                          </span>
                         </>
                       ) : null}
                     </Card>
-                    <Card pad="sm" style={{ flex: '1 1 260px' }}>
-                      <Text variant="eyebrow" as="div" tone="muted">
+                    <Card
+                      as={v.hasNext ? 'button' : 'div'}
+                      interactive={!!v.hasNext}
+                      pad="sm"
+                      onClick={v.hasNext ? v.openNext : undefined}
+                      style={progCard('1 1 260px')}
+                    >
+                      <Text variant="eyebrow" as="span" tone="muted" style={{ display: 'block' }}>
                         NEXT CALL
                       </Text>
                       {v.hasNext ? (
                         <>
-                          <p
+                          <span
                             style={{
+                              display: 'block',
                               fontFamily: 'var(--font-heading)',
                               margin: '9px 0 0',
                               fontSize: 'var(--text-lg)',
                               fontWeight: 'var(--font-weight-semibold)',
+                              color: 'var(--color-ink)',
                             }}
                           >
                             {v.nextName}
-                          </p>
+                          </span>
                           <Text
                             variant="caption"
-                            as="p"
+                            as="span"
                             tone="muted"
                             weight="medium"
-                            style={{ margin: '3px 0 0' }}
+                            style={{ display: 'block', margin: '3px 0 0' }}
                           >
                             {v.nextMeta}
                           </Text>
@@ -2335,7 +2344,7 @@ export function PlannerView({ v }: { v: any }) {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '14px' }}>
                       {(v.weekQuests ?? []).map((q, i) => (
                         <Fragment key={i}>
-                          <div style={css(q?.row)}>
+                          <button type="button" onClick={q?.open} aria-label={q?.aria} style={css(q?.row)}>
                             <span style={css(q?.mark)}>
                               {q?.done ? (
                                 <>
@@ -2354,33 +2363,33 @@ export function PlannerView({ v }: { v: any }) {
                                 </Text>
                               ) : null}
                             </span>
-                          </div>
+                          </button>
                         </Fragment>
                       ))}
                     </div>
                   </Card>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '14px' }}>
-                    <Card pad="sm" style={{ flex: '1 1 170px' }}>
-                      <Text variant="eyebrow" as="div" tone="muted">
+                    <Card as="button" interactive pad="sm" onClick={v.openChronicle} style={progCard('1 1 170px')}>
+                      <Text variant="eyebrow" as="span" tone="muted" style={{ display: 'block' }}>
                         CHRONICLE
                       </Text>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
+                      <span style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
                         <Text variant="subheading">{v.loggedCount}</Text>
                         <Text variant="caption" tone="muted" weight="medium">
                           {v.loggedUnit}
                         </Text>
-                      </div>
+                      </span>
                     </Card>
-                    <Card pad="sm" style={{ flex: '1 1 170px' }}>
-                      <Text variant="eyebrow" as="div" tone="muted">
+                    <Card as="button" interactive pad="sm" onClick={v.openMonth} style={progCard('1 1 170px')}>
+                      <Text variant="eyebrow" as="span" tone="muted" style={{ display: 'block' }}>
                         {v.monthLabel}
                       </Text>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
+                      <span style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
                         <Text variant="subheading">{v.monthDone}</Text>
                         <Text variant="caption" tone="muted" weight="medium">
                           {v.monthDoneUnit}
                         </Text>
-                      </div>
+                      </span>
                     </Card>
                   </div>
                 </div>
@@ -3644,6 +3653,7 @@ export function PlannerView({ v }: { v: any }) {
                         containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
                         value={v.finishMins}
                         onChange={v.setFinishMins}
+                        onBlur={v.rollFinishMins}
                       />
                       {v.finishIsRide ? (
                         <TextField
@@ -3910,28 +3920,25 @@ export function PlannerView({ v }: { v: any }) {
                       </div>
                     </>
                   ) : null}
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      justifyContent: 'flex-end',
-                      alignItems: 'center',
-                      gap: '10px',
-                      marginTop: '22px',
-                      paddingTop: '20px',
-                      borderTop: '1px solid rgba(35,42,69,.07)',
-                    }}
-                  >
-                    <Button type="neutral" ghost size="lg" onClick={v.goEdit}>
-                      <Pencil color="var(--color-slate)" size={17} />
-                      Edit workout
-                    </Button>
-                    {!v.isFuture ? (
+                  {/* Edit is in the top bar; down here, only writing about it. */}
+                  {!v.isFuture ? (
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center',
+                        gap: '10px',
+                        marginTop: '22px',
+                        paddingTop: '20px',
+                        borderTop: '1px solid rgba(35,42,69,.07)',
+                      }}
+                    >
                       <Button type="primary" size="lg" onClick={v.goDiary}>
                         {v.ctaLabel}
                       </Button>
-                    ) : null}
-                  </div>
+                    </div>
+                  ) : null}
                 </div>
               </>
             ) : null}
@@ -4054,6 +4061,13 @@ export function PlannerView({ v }: { v: any }) {
                       <Text variant="caption" tone="muted" as="p" style={{ margin: '0 0 12px' }}>
                         {v.savedChoicesNote}
                       </Text>
+                      {v.showLogDone ? (
+                        <Card pad="sm" style={{ margin: '0 0 12px' }}>
+                          <Checkbox switch checked={!!v.logDoneOn} onChange={v.setLogDone}>
+                            Log it as done
+                          </Checkbox>
+                        </Card>
+                      ) : null}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                         {(v.savedChoices ?? []).map((w, i) => (
                           <Card
@@ -4303,6 +4317,13 @@ export function PlannerView({ v }: { v: any }) {
                       <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
                         {v.scheduleNote}
                       </Text>
+                      {v.showLogDone ? (
+                        <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid rgba(35,42,69,.07)' }}>
+                          <Checkbox switch checked={!!v.logDoneOn} onChange={v.setLogDone}>
+                            Log it as done
+                          </Checkbox>
+                        </div>
+                      ) : null}
                       {v.scheduleOn ? (
                         <div
                           style={{
@@ -4438,6 +4459,7 @@ export function PlannerView({ v }: { v: any }) {
                                 aria-label="Duration, minutes"
                                 value={v.rideMins ?? ''}
                                 onChange={v.setMins}
+                                onBlur={v.rollMins}
                                 inputMode="numeric"
                                 placeholder="20"
                               />
@@ -4532,6 +4554,7 @@ export function PlannerView({ v }: { v: any }) {
                                 aria-label="Actual duration, minutes"
                                 value={v.actMins ?? ''}
                                 onChange={v.setActMins}
+                                onBlur={v.rollActMins}
                                 inputMode="numeric"
                                 placeholder="0"
                               />
@@ -5483,6 +5506,11 @@ export function PlannerView({ v }: { v: any }) {
 }
 
 // Back, named for where it goes ("‹ Calendar", "‹ Spellbook", "‹ Upper Push"). Every inner screen starts with one.
+/** A Progress card that opens what it sums up: laid out as a card, not centred like a button. */
+function progCard(flex: string): React.CSSProperties {
+  return { flex, display: 'block', textAlign: 'left', fontFamily: 'inherit', color: 'inherit' };
+}
+
 function BackLink({ label, onClick }: { label: string; onClick: () => void }) {
   return (
     <Button

@@ -95,3 +95,11 @@ export const workoutDraftDirty = st => !!(
 // A confirmation shown at the top of one screen (and read out), e.g. after a save or a delete. It belongs to that
 // screen: moving to another clears it.
 export const noticePatch = (text, screen) => ({ notice: { text, screen }, announce: text });
+
+// Hours and minutes typed into a duration: 90 minutes is 1 h 30, not cut to 59. Returns the two boxes' new text, or
+// null when there's nothing to roll over.
+export const rollMinutes = (hrs, mins) => {
+  const m = Number(mins || 0);
+  if (m < 60) return null;
+  return { hrs: String(Number(hrs || 0) + Math.floor(m / 60)), mins: String(m % 60) };
+};
