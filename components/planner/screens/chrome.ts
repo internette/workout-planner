@@ -1,4 +1,4 @@
-import { MON3 } from '../constants';
+import { HOME_OF, MON3 } from '../constants';
 import { exerciseDraftDirty, idOf, isoOf, mod12, monthPatch, noticePatch, workoutDraftDirty } from '../helpers';
 import { mLabel, mTab, tab } from '../styles';
 import * as db from '@/lib/plannerData';
@@ -223,6 +223,32 @@ export function chromeVals(ctx: Ctx) {
     isExerciseEdit: st.screen === 'exerciseEdit',
     canGoBack: (st.hist || []).length > 0,
     goBack: () => logic.back(),
+    // Back is named for where it goes: the screen before this one ("Calendar", "Spellbook", a workout's name), or
+    // the calendar when there's nothing before it (a page opened from a link).
+    backLabel: (() => {
+      const prev = (st.hist || [])[(st.hist || []).length - 1];
+      if (!prev) return HOME_OF[st.screen] === 'arsenal' ? 'Spellbook' : HOME_OF[st.screen] === 'diaryList' ? 'Chronicle' : 'Calendar';
+      const w = st.templateId && logic.model.workouts.find((x) => x.id === st.templateId);
+      const ex =
+        st.exerciseId &&
+        logic.model.library.concat(logic.model.builtins).find((x) => x.id === st.exerciseId);
+      const names = {
+        day: 'Calendar',
+        rest: 'Calendar',
+        detail: srcAct ? nameOf(srcAct.name) : 'Session',
+        arsenal: 'Spellbook',
+        template: w ? w.name : 'Workout',
+        exercise: ex ? ex.name : 'Exercise',
+        exerciseEdit: 'Exercise',
+        edit: 'Editor',
+        diary: 'Entry',
+        diaryList: 'Chronicle',
+        newEntry: 'New entry',
+        summary: 'Progress',
+        profile: 'Profile',
+      };
+      return names[prev.screen] || 'Back';
+    })(),
     goArsenal: () => logic.nav({ screen: 'arsenal', monthOpen: false, arsenalPick: null }),
     navArsenal:
       'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +

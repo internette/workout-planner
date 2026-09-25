@@ -92,3 +92,10 @@ summary:focus-visible, [tabindex]:focus-visible {
     forced-color-adjust: none;
   }
 }
+
+/* A screen's top bar with two actions (an exercise's Edit and Add): on the narrowest phones the actions drop their
+   icons and some padding, so Back keeps room to say where it goes. */
+@media (max-width: 359px) {
+  .bar-actions svg { display: none; }
+  .bar-actions button { padding-left: 14px; padding-right: 14px; }
+}

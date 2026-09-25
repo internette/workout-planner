@@ -336,7 +336,8 @@ export function diaryVals(ctx: Ctx) {
     readMoodSvg: moodSvg(st.mood),
     // Entry saved: to the calendar, on the day of the workout just written about (not back one screen).
     backToCalendar: () => logic.s({ screen: 'day', seg: 'Day', monthOpen: false, hist: [] }),
-    diaryBackLabel: st.diaryFrom === 'list' ? 'Chronicle' : 'Back',
+    // Changing a saved entry, Back returns to reading it; otherwise it goes where the screen was opened from.
+    diaryBackLabel: writing && saved ? 'Entry' : '',
     diaryEyebrow: st.diaryFrom === 'list' || reading ? 'CHRONICLE ENTRY' : 'COMPLETED',
     diaryBack: leaveEntry,
     entryDirty,

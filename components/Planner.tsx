@@ -299,9 +299,7 @@ export default function Planner({ account = null }: { account?: Account | null }
     }
     const t = e.target as HTMLElement | null;
     if (t && (t.closest('input, textarea, select, [contenteditable="true"]'))) return;
-    const back = Array.from(document.querySelectorAll<HTMLButtonElement>('main button')).find(
-      (b) => b.getAttribute('aria-label') === 'Back' || (!b.getAttribute('aria-label') && (b.textContent || '').trim() === 'Back'),
-    );
+    const back = document.querySelector<HTMLButtonElement>('main [data-back]');
     if (back) {
       e.preventDefault();
       back.click();

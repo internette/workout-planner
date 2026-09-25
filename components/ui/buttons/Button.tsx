@@ -11,6 +11,8 @@ export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
   type?: 'primary' | 'secondary' | 'neutral' | 'danger' | 'dashed';
   /** Drops the fill and keeps just the coloured text, for low-emphasis actions. Ignored for dashed. */
   ghost?: boolean;
+  /** sm and md are 44px tall (md with larger text), for cards, dialogs and bars; lg is 52px, for a screen's main
+   * action; xs is a small text link such as Back (its tap area is still 44px with the `hit` class). */
   size?: 'xs' | 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
   /** A pink glow under a primary button, for the one call to action on an empty screen. */
