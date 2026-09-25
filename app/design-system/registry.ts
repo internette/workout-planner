@@ -163,6 +163,7 @@ export const sections: Section[] = [
     anchors: [
       { id: 'brand-medium', title: 'Brand, medium' },
       { id: 'brand-small', title: 'Brand, small' },
+      { id: 'compact', title: 'Compact' },
       { id: 'quiet', title: 'Quiet' },
       { id: 'full-width', title: 'Full width' },
     ],

@@ -12,6 +12,12 @@ const views = [
   { value: 'Week', label: 'Week' },
   { value: 'Month', label: 'Month' },
 ];
+const caption: React.CSSProperties = { fontSize: 'var(--text-sm)', color: 'var(--color-muted)' };
+const kinds = [
+  { value: 'all', label: 'All' },
+  { value: 'main', label: 'Main workouts' },
+  { value: 'warmups', label: 'Warm-ups' },
+];
 const scopes = [
   { value: 'all', label: 'All' },
   { value: 'today', label: 'Today' },
@@ -23,6 +29,8 @@ const scopes = [
 export default function SegmentedControlPage() {
   const [view, setView] = useState('Day');
   const [scope, setScope] = useState('all');
+  const [compactScope, setCompactScope] = useState('all');
+  const [kind, setKind] = useState('all');
   const [narrow, setNarrow] = useState('Day');
   const [mode, setMode] = useState('lib');
 
@@ -49,6 +57,22 @@ export default function SegmentedControlPage() {
       </p>
       <div style={row}>
         <SegmentedControl label="Show entries from" size="sm" wrap options={scopes} value={scope} onChange={setScope} />
+      </div>
+
+      <h2 id="compact" style={h2}>Compact</h2>
+      <p style={note}>
+        <code>compact</code> trims each option&apos;s side padding to 10px (from 16px small, 20px medium), so more options
+        fit on a line on a phone. The height and the 44px tap area stay the same. The
+        Chronicle&apos;s date filter uses it with <code>size=&quot;sm&quot;</code> and <code>wrap</code>, and the
+        Spellbook&apos;s workout filter with <code>size=&quot;sm&quot;</code>.
+      </p>
+      <div style={{ ...row, flexDirection: 'column', alignItems: 'flex-start', gap: 8 }}>
+        <span style={caption}>Default</span>
+        <SegmentedControl label="Show entries from, default" size="sm" wrap options={scopes} value={scope} onChange={setScope} />
+        <span style={{ ...caption, marginTop: 10 }}>compact</span>
+        <SegmentedControl label="Show entries from, compact" size="sm" compact wrap options={scopes} value={compactScope} onChange={setCompactScope} />
+        <span style={{ ...caption, marginTop: 10 }}>compact, as the Spellbook&apos;s workout filter</span>
+        <SegmentedControl label="Show" size="sm" compact options={kinds} value={kind} onChange={setKind} />
       </div>
 
       <h2 id="quiet" style={h2}>Quiet</h2>
