@@ -87,10 +87,13 @@ export const sections: Section[] = [
     slug: 'interaction',
     title: 'Interaction',
     category: 'foundations',
-    description: 'The hover washes and the one focus ring.',
+    description: 'Hover washes, the one focus ring, tap targets and forced colours.',
     anchors: [
       { id: 'hover', title: 'Hover' },
       { id: 'focus', title: 'Focus' },
+      { id: 'tap-targets', title: 'Tap targets' },
+      { id: 'screen-readers', title: 'Screen readers' },
+      { id: 'forced-colours', title: 'Forced colours' },
     ],
   },
   {

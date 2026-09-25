@@ -94,6 +94,7 @@ export default function IconsPage() {
         {(['Happy', 'Neutral', 'Sad', 'Mad'] as const).map((mood, i) => (
           <Tile key={mood} name={mood}>
             <span
+              className="fc-keep"
               style={{
                 width: 48,
                 height: 48,
