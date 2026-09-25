@@ -5564,11 +5564,12 @@ export function PlannerView({ v }: { v: any }) {
                         role="radiogroup"
                         aria-label="How did it feel?"
                         style={{
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          justifyContent: 'center',
-                          gap: '12px',
-                          marginTop: '34px',
+                          // Four across at every width, like a row of buttons, never wrapping one onto its own line.
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(4,minmax(0,1fr))',
+                          gap: '4px',
+                          maxWidth: '360px',
+                          margin: '34px auto 0',
                         }}
                       >
                         {(v.moods ?? []).map((m, i) => (
