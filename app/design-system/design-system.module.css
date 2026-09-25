@@ -87,7 +87,13 @@
 .mobileBar { display: none; }
 .mHome {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex: none;
+  /* 44px to tap, however small the mark draws. */
+  min-width: 44px;
+  min-height: 44px;
+  box-sizing: border-box;
   padding: 6px;
   margin-left: -6px;
   border-radius: var(--radius-sm);

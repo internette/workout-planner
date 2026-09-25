@@ -113,6 +113,17 @@ function PopoverPanel({
     if (!to || ref.current?.contains(to) || anchor.current?.contains(to)) return;
     onCloseRef.current();
   });
+  // Tabbing out of the page altogether (Shift+Tab from the first control, into the browser's own toolbar) moves focus
+  // nowhere in the document, so there's no focusin: the page losing focus from the trigger or panel closes it too.
+  // A click on plain text inside the panel also blurs, but the page keeps focus then, so that doesn't close it.
+  useWindowEvent('focusout', (e) => {
+    const from = e.target as Node | null;
+    if (!from || !(ref.current?.contains(from) || anchor.current?.contains(from))) return;
+    if ((e as FocusEvent).relatedTarget) return;
+    requestAnimationFrame(() => {
+      if (live.current && !document.hasFocus()) onCloseRef.current();
+    });
+  });
 
   useLayoutEffect(() => {
     const el = ref.current;
