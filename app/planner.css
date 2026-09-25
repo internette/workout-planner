@@ -101,6 +101,12 @@ summary:focus-visible, [tabindex]:focus-visible {
   .fc-star[data-on] {
     color: CanvasText !important;
   }
+  /* The stars are drawn in colour: in forced colours they take the text colour above instead. */
+  [data-star] svg polygon,
+  .fc-star svg polygon {
+    fill: currentColor !important;
+    stroke: currentColor !important;
+  }
 }
 
 /* A screen's top bar with two actions (an exercise's Edit and Add): on the narrowest phones the actions drop their
