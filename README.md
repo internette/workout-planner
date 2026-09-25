@@ -55,6 +55,7 @@ Later migrations:
 - [20260926000000_workout_snapshot_source.sql](supabase/migrations/20260926000000_workout_snapshot_source.sql) adds `workouts.source_workout_id`, linking each archived copy to the workout it came from. Deleting a workout then also removes its upcoming sessions left on those copies, even after a rename. Until it runs, copies are matched by name.
 
 - [20260927000000_gym_equipment_exercises.sql](supabase/migrations/20260927000000_gym_equipment_exercises.sql) adds 20 built-in exercises for cable-trainer, lat pulldown / low row, glute-ham developer, plyo box and pull-up bar work. Exercises already in the catalog aren't added again.
+- [20260928000000_builtin_workouts.sql](supabase/migrations/20260928000000_builtin_workouts.sql) adds `builtin_workouts`: 30 beginner workouts, built from the built-in exercises, that every account sees in its Spellbook under its own workouts. Adding one to the calendar, or copying it, saves it to that person's workouts first.
 
 Run the migrations once, in order, in the Supabase SQL editor. They are safe to run again.
 

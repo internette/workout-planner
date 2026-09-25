@@ -2835,69 +2835,92 @@ export function PlannerView({ v }: { v: any }) {
                           {v.noWorkoutMatchNote}
                         </Text>
                       ) : null}
-                      <div
-                        style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '18px' }}
-                      >
-                        {(v.savedWorkouts ?? []).map((w, i) => (
-                          <Card
-                            key={i}
-                            as="button"
-                            interactive
-                            pad="sm"
-                            onClick={w?.open}
-                            style={{
-                              display: 'flex',
-                              flexWrap: 'wrap',
-                              alignItems: 'center',
-                              gap: '14px',
-                              width: '100%',
-                            }}
-                          >
-                            <span
-                              style={{
-                                width: '40px',
-                                height: '40px',
-                                flex: 'none',
-                                borderRadius: '13px',
-                                background: 'var(--color-pink-tint)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }}
-                            >
-                              {w?.svg}
-                            </span>
-                            <span style={{ flex: '1 1 200px', minWidth: '0' }}>
-                              <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
-                                {w?.name}
-                              </Text>
-                              <Text
-                                variant="caption"
-                                tone="muted"
-                                style={{ display: 'block', marginTop: '3px' }}
+                      {/* Grouped like the Exercises tab: the person's own, then the built-in ones by group. */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: '18px' }}>
+                        {(v.workoutGroups ?? []).map((g, gi) => (
+                          <div key={gi}>
+                            {g?.label ? (
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexWrap: 'wrap',
+                                  alignItems: 'baseline',
+                                  gap: '8px',
+                                  padding: '0 2px 10px',
+                                }}
                               >
-                                {w?.meta}
-                              </Text>
-                              {w?.exercises ? (
-                                <Text
-                                  variant="small"
-                                  tone="subtle"
-                                  style={{ display: 'block', marginTop: '3px' }}
-                                >
-                                  {w?.exercises}
+                                <Text variant="eyebrow" tone="slate" as="h2" style={{ margin: 0 }}>
+                                  {g?.label}
                                 </Text>
-                              ) : null}
-                              {(w?.areas ?? []).length ? (
-                                <span
-                                  style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}
-                                >
-                                  {(w?.areas ?? []).map((a, k) => (
-                                    <Chip key={k}>{a}</Chip>
-                                  ))}
-                                </span>
-                              ) : null}
-                            </span>
-                          </Card>
+                                <Text variant="small" tone="muted" weight="medium">
+                                  {g?.count}
+                                </Text>
+                              </div>
+                            ) : null}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                              {(g?.items ?? []).map((w, i) => (
+                                  <Card
+                                    key={i}
+                                    as="button"
+                                    interactive
+                                    pad="sm"
+                                    onClick={w?.open}
+                                    style={{
+                                      display: 'flex',
+                                      flexWrap: 'wrap',
+                                      alignItems: 'center',
+                                      gap: '14px',
+                                      width: '100%',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        width: '40px',
+                                        height: '40px',
+                                        flex: 'none',
+                                        borderRadius: '13px',
+                                        background: 'var(--color-pink-tint)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                      }}
+                                    >
+                                      {w?.svg}
+                                    </span>
+                                    <span style={{ flex: '1 1 200px', minWidth: '0' }}>
+                                      <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+                                        {w?.name}
+                                      </Text>
+                                      <Text
+                                        variant="caption"
+                                        tone="muted"
+                                        style={{ display: 'block', marginTop: '3px' }}
+                                      >
+                                        {w?.meta}
+                                      </Text>
+                                      {w?.exercises ? (
+                                        <Text
+                                          variant="small"
+                                          tone="subtle"
+                                          style={{ display: 'block', marginTop: '3px' }}
+                                        >
+                                          {w?.exercises}
+                                        </Text>
+                                      ) : null}
+                                      {(w?.areas ?? []).length ? (
+                                        <span
+                                          style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}
+                                        >
+                                          {(w?.areas ?? []).map((a, k) => (
+                                            <Chip key={k}>{a}</Chip>
+                                          ))}
+                                        </span>
+                                      ) : null}
+                                    </span>
+                                  </Card>
+                              ))}
+                            </div>
+                          </div>
                         ))}
                       </div>
                     </>
@@ -3056,15 +3079,27 @@ export function PlannerView({ v }: { v: any }) {
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '10px' }}>
                     <BackLink label={v.backLabel} onClick={v.goBack} />
-                    <Button
-                      type="secondary"
-                      size="sm"
-                      onClick={v.template.edit}
-                      style={{ marginLeft: 'auto' }}
-                    >
-                      <Pencil color="var(--color-pink-deep)" size={16} />
-                      Edit
-                    </Button>
+                    {v.template.builtin ? (
+                      <Button
+                        type="secondary"
+                        size="sm"
+                        onClick={v.template.copy}
+                        style={{ marginLeft: 'auto' }}
+                      >
+                        <Copy color="var(--color-pink-deep)" size={16} />
+                        {v.template.copyLabel}
+                      </Button>
+                    ) : (
+                      <Button
+                        type="secondary"
+                        size="sm"
+                        onClick={v.template.edit}
+                        style={{ marginLeft: 'auto' }}
+                      >
+                        <Pencil color="var(--color-pink-deep)" size={16} />
+                        Edit
+                      </Button>
+                    )}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
                     <span
@@ -3085,7 +3120,7 @@ export function PlannerView({ v }: { v: any }) {
                     </span>
                     <div style={{ minWidth: 0 }}>
                       <Text variant="eyebrow" as="div" tone="slate">
-                        SAVED WORKOUT
+                        {v.template.eyebrow}
                       </Text>
                       <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
                         {v.template.name}
@@ -3212,11 +3247,17 @@ export function PlannerView({ v }: { v: any }) {
                       ) : null}
                     </div>
                   )}
-                  <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid rgba(35,42,69,.07)' }}>
-                    <Button type="danger" ghost size="md" onClick={v.template.remove}>
-                      Delete workout
-                    </Button>
-                  </div>
+                  {v.template.builtin ? (
+                    <Text variant="body" as="p" tone="slate" style={{ margin: '28px 0 0', maxWidth: '520px' }}>
+                      {v.template.builtinNote}
+                    </Text>
+                  ) : (
+                    <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid rgba(35,42,69,.07)' }}>
+                      <Button type="danger" ghost size="md" onClick={v.template.remove}>
+                        Delete workout
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </>
             ) : null}

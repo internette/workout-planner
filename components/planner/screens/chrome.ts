@@ -237,7 +237,10 @@ export function chromeVals(ctx: Ctx) {
     backLabel: (() => {
       const prev = (st.hist || [])[(st.hist || []).length - 1];
       if (!prev) return HOME_OF[st.screen] === 'arsenal' ? 'Spellbook' : HOME_OF[st.screen] === 'diaryList' ? 'Chronicle' : 'Calendar';
-      const w = st.templateId && logic.model.workouts.find((x) => x.id === st.templateId);
+      const w =
+        st.templateId &&
+        (logic.model.workouts.find((x) => x.id === st.templateId) ||
+          (logic.model.builtinWorkouts || []).find((x) => x.id === st.templateId));
       // One of the person's own exercises, a built-in, or one inside a saved workout.
       const ex =
         st.exerciseId &&
