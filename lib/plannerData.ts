@@ -66,6 +66,13 @@ export interface WorkoutSummary {
   notes: string;
 }
 
+// A ready-made workout from the shared catalog: read-only, listed with its group. Its exercises are built-in ones.
+export interface BuiltinWorkout extends WorkoutSummary {
+  builtin: true;
+  category: string;
+  list: Exercise[];
+}
+
 export interface Model {
   EX: Record<string, Exercise[]>; // saved workout name -> exercises
   EXV: Record<string, Exercise[]>; // exercises by version: a saved workout by name, an archived snapshot by name#id
@@ -77,6 +84,7 @@ export interface Model {
   library: Exercise[]; // arsenal exercises not tied to a workout
   builtins: Exercise[]; // the shared starter catalog every account sees
   workouts: WorkoutSummary[]; // every saved workout, by name
+  builtinWorkouts: BuiltinWorkout[]; // the shared catalog of ready-made workouts, in catalog order
   done: Record<string, string[]>; // plan entry id -> ticked exercise names
   rideDone: Record<string, boolean>;
   year: number;
@@ -163,13 +171,19 @@ async function ok<T>(q: PromiseLike<{ data: T; error: any }>): Promise<T> {
 // ---------- read ----------
 
 export async function loadModel(today: Date): Promise<Model> {
-  const [workouts, exercises, plan, diary, library, builtins] = await Promise.all([
+  const [workouts, exercises, plan, diary, library, builtins, builtinWorkoutRows] = await Promise.all([
     ok(supabase.from('workouts').select('*')),
     ok(supabase.from('workout_exercises').select('*').order('order_index')),
     ok(supabase.from('plan_entries').select('*').order('scheduled_date').order('id')),
     ok(supabase.from('diary_entries').select('*')),
     ok(supabase.from('library_exercises').select('*').order('created_at')),
     ok(supabase.from('builtin_exercises').select('*').order('sort_order')),
+    // Until the built-in workouts migration has run there is no such table: the Spellbook just has none to show.
+    supabase
+      .from('builtin_workouts')
+      .select('*')
+      .order('sort_order')
+      .then((r: { data: any[] | null; error: any }) => (r.error ? [] : r.data || [])),
   ]);
 
   const byId: Record<string, any> = {};
@@ -309,6 +323,30 @@ export async function loadModel(today: Date): Promise<Model> {
     })
     .sort((a, b) => a.name.localeCompare(b.name));
 
+  const builtinList: Exercise[] = builtins.map((r: any) => ({ ...toExercise(r), builtin: true }));
+  const builtinByName: Record<string, Exercise> = {};
+  builtinList.forEach((e) => (builtinByName[e.name] = e));
+  const builtinWorkouts: BuiltinWorkout[] = builtinWorkoutRows.map((r: any) => {
+    const list = (r.exercises || []).map((n: string) => builtinByName[n]).filter(Boolean) as Exercise[];
+    // Estimated the way a new workout is: about ten minutes an exercise, at least twenty.
+    const minutes = Math.max(20, list.length * 10);
+    return {
+      id: r.id,
+      name: r.name,
+      kind: 'lift',
+      time: `~${minutes} min`,
+      minutes,
+      areas: areasOf(list),
+      icon: 'h',
+      iconColor: null,
+      exercises: list.map((e) => e.name),
+      notes: '',
+      builtin: true,
+      category: r.category,
+      list,
+    };
+  });
+
   return {
     EX,
     EXV,
@@ -316,7 +354,8 @@ export async function loadModel(today: Date): Promise<Model> {
     entries,
     DIARY,
     library: library.map(toExercise),
-    builtins: builtins.map((r: any) => ({ ...toExercise(r), builtin: true })),
+    builtins: builtinList,
+    builtinWorkouts,
     workouts: saved,
     done,
     rideDone,
@@ -440,6 +479,27 @@ export async function endSeries(workoutId: string, afterIso: string, todayIso: s
     await untouchedIds(later.filter((r) => r.scheduled_date >= todayIso && dow(String(r.scheduled_date)) === day)),
   );
   await ok(supabase.from('workouts').update({ repeat_enabled: false }).eq('id', workoutId));
+}
+
+// A built-in workout as one of the person's own, for the calendar or to edit: the saved workout of theirs with its
+// name (ignoring case) if there is one, otherwise a new copy of it.
+export async function ownCopyOfBuiltin(w: BuiltinWorkout): Promise<{ workoutId: string; created: boolean }> {
+  const mine: any[] = await ok(supabase.from('workouts').select('id, name').eq('archived', false));
+  const have = mine.find((r) => String(r.name).trim().toLowerCase() === w.name.trim().toLowerCase());
+  if (have) return { workoutId: have.id, created: false };
+  const { workoutId } = await createWorkout({
+    name: w.name,
+    isRide: false,
+    durationMinutes: w.minutes,
+    ride: null,
+    icon: w.icon,
+    iconColor: null,
+    exercises: w.list,
+    dates: [],
+    repeat: false,
+    notes: '',
+  });
+  return { workoutId, created: true };
 }
 
 export interface NewWorkout {

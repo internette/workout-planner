@@ -62,12 +62,15 @@ export function arsenalVals(ctx: Ctx) {
         ? 'No ' + things + ' target ' + areaList(areaFilter) + '.'
         : 'No ' + things + ' match “' + (st.arsenalQ || '').trim() + '”.';
   const workouts = logic.model.workouts;
-  const hits = workouts.filter(
-    (w) =>
-      inAreas(w.areas) &&
-      (!q || w.name.toLowerCase().includes(q) || w.exercises.some((n) => n.toLowerCase().includes(q))),
-  );
-  const savedWorkouts = hits.map((w) => ({
+  const builtinWorkouts = logic.model.builtinWorkouts || [];
+  const matches = (w) =>
+    inAreas(w.areas) &&
+    (!q || w.name.toLowerCase().includes(q) || w.exercises.some((n) => n.toLowerCase().includes(q)));
+  const hits = workouts.filter(matches);
+  const builtinHits = builtinWorkouts.filter(matches);
+  // The person's own workout a built-in one has become (added to the calendar, or copied): the one with its name.
+  const mineOf = (w) => workouts.find((x) => x.name.trim().toLowerCase() === w.name.trim().toLowerCase()) || null;
+  const workoutCard = (w) => ({
     name: w.name,
     svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || colors.pink),
     meta:
@@ -83,7 +86,28 @@ export function arsenalVals(ctx: Ctx) {
           (w.exercises.length > 3 ? ' +' + (w.exercises.length - 3) + ' more' : ''),
     areas: w.areas,
     open: () => logic.nav({ screen: 'template', templateId: w.id }),
-  }));
+  });
+  // The person's own workouts, then the built-in ones by group, as the Exercises tab lists exercises. With no built-in
+  // workouts (their migration not run yet) it's one list with no heading, as before.
+  const workoutGroups = [];
+  if (hits.length)
+    workoutGroups.push({
+      label: builtinWorkouts.length ? 'YOUR WORKOUTS' : '',
+      count: builtinWorkouts.length ? plural(hits.length, 'workout') : '',
+      items: hits.map(workoutCard),
+    });
+  builtinHits.forEach((w) => {
+    const label = 'BUILT-IN · ' + w.category.toUpperCase();
+    let g = workoutGroups.find((x) => x.label === label);
+    if (!g) workoutGroups.push((g = { label, count: '', items: [] }));
+    const card = workoutCard(w);
+    // Already one of theirs: said on the card, so it's clear adding it uses theirs.
+    if (mineOf(w)) card.meta += ' · In your workouts';
+    g.items.push(card);
+  });
+  workoutGroups.forEach((g) => {
+    if (g.label && !g.count) g.count = plural(g.items.length, 'workout');
+  });
 
   // ---- one exercise: a read-only view, and an editor for that one row
   const openExercise = (id) => logic.nav({ screen: 'exercise', exerciseId: id });
@@ -321,7 +345,11 @@ export function arsenalVals(ctx: Ctx) {
 
   // ---- one saved workout, read-only: no date, no completion
   const onTemplateScreen = st.screen === 'template';
-  const chosen = onTemplateScreen ? workouts.find((w) => w.id === st.templateId) : null;
+  const chosen = onTemplateScreen
+    ? workouts.find((w) => w.id === st.templateId) || builtinWorkouts.find((w) => w.id === st.templateId)
+    : null;
+  const builtin = !!(chosen && chosen.builtin);
+  const mine = builtin ? mineOf(chosen) : null;
   const template = chosen
     ? {
         name: chosen.name,
@@ -337,7 +365,8 @@ export function arsenalVals(ctx: Ctx) {
               { label: 'EFFORT', value: chosen.ride.zone },
             ]
           : [],
-        exercises: (EX[chosen.name] || []).map((e) => ({
+        // A built-in workout lists its own exercises: one of the person's might share its name.
+        exercises: (builtin ? chosen.list : EX[chosen.name] || []).map((e) => ({
           name: e.name,
           svg: iconSvg(e.i),
           detail: exLine(e, true),
@@ -389,6 +418,27 @@ export function arsenalVals(ctx: Ctx) {
             leaveOpen: false,
           }),
         notes: chosen.notes || '',
+        builtin,
+        eyebrow: builtin ? 'BUILT-IN WORKOUT' : 'SAVED WORKOUT',
+        // A built-in workout can't be changed: copied to the person's own to edit, or, once it is theirs, opened.
+        builtinNote: !builtin
+          ? ''
+          : mine
+            ? 'You have “' + mine.name + '” in your workouts. Adding it to the calendar uses yours; open yours to change it.'
+            : 'Built-in workouts can’t be changed. Add it to the calendar as it is (it’s saved to your workouts when you do), or copy it to make your own version to edit.',
+        copyLabel: mine ? 'Open yours' : 'Copy',
+        copy: () =>
+          mine
+            ? logic.nav({ screen: 'template', templateId: mine.id })
+            : logic.saveOnce(
+                'copy',
+                () => db.ownCopyOfBuiltin(chosen),
+                (r) => ({
+                  screen: 'template',
+                  templateId: r && r.workoutId,
+                  ...noticePatch('“' + chosen.name + '” copied to your workouts. Edit it to make it your own.', 'template'),
+                }),
+              ),
       }
     : null;
 
@@ -455,20 +505,26 @@ export function arsenalVals(ctx: Ctx) {
       const dates = [isoOf(schedDate)].concat(repeatDays.map(isoOf));
       const when = schedWhen;
       const then = repeatText;
+      // A built-in workout goes on the calendar as one of the person's own: theirs by that name, or a new copy.
+      const saving = builtin && !mine;
       logic.saveOnce(
         'schedule',
         () =>
-          db.scheduleWorkout(
-            chosen.id,
-            dates,
-            dates.length > 1,
-            logPast ? { exercises: chosen.kind === 'ride' ? [] : chosen.exercises } : undefined,
+          (builtin ? db.ownCopyOfBuiltin(chosen).then((c) => c.workoutId) : Promise.resolve(chosen.id)).then((id) =>
+            db.scheduleWorkout(
+              id,
+              dates,
+              dates.length > 1,
+              logPast ? { exercises: chosen.kind === 'ride' ? [] : chosen.exercises } : undefined,
+            ),
           ),
         (r) => ({
           tplSchedule: null,
           tplScheduled: {
             templateId: chosen.id,
-            text: (logPast ? 'Logged as done: ' : 'On the calendar: ') + when + (then ? '. On the calendar ' + then + '.' : '.'),
+            text:
+              (saving ? 'Saved to your workouts. ' : '') +
+              (logPast ? 'Logged as done: ' : 'On the calendar: ') + when + (then ? '. On the calendar ' + then + '.' : '.'),
             ...monthPatch(relM(schedDate)),
             day: schedDate.getDate(),
             entryId: r && r.entryId,
@@ -668,16 +724,20 @@ export function arsenalVals(ctx: Ctx) {
     // While searching or filtering, how many of them are showing.
     arsenalCount:
       view === 'workouts'
-        ? (q || areaFilter.length ? hits.length + ' of ' : '') + plural(workouts.length, 'workout')
+        ? (q || areaFilter.length ? hits.length + builtinHits.length + ' of ' : '') +
+          plural(workouts.length + builtinWorkouts.length, 'workout')
         : (q || areaFilter.length ? moveGroups.reduce((n, g) => n + g.items.length, 0) + ' of ' : '') + exerciseCount,
     arsenalIntro:
       view === 'workouts'
-        ? "Every workout you've written. Open one to add it to the calendar."
+        ? builtinWorkouts.length
+          ? 'Your own workouts, then built-in ones you can add to the calendar as they are or copy to make your own.'
+          : "Every workout you've written. Open one to add it to the calendar."
         : "Your exercises, grouped by the workout they belong to, then built-in ones you can add to any workout or copy to make your own.",
     arsenalSearchPlaceholder: view === 'workouts' ? 'Search workouts' : 'Search exercises',
-    savedWorkouts,
-    noSavedWorkouts: workouts.length === 0,
-    noWorkoutMatches: workouts.length > 0 && (!!q || areaFilter.length > 0) && hits.length === 0,
+    workoutGroups,
+    noSavedWorkouts: workouts.length + builtinWorkouts.length === 0,
+    noWorkoutMatches:
+      workouts.length + builtinWorkouts.length > 0 && (!!q || areaFilter.length > 0) && hits.length + builtinHits.length === 0,
     noWorkoutMatchNote: noMatchText('workouts'),
     arsenalAddOpen: !!st.arsenalAdd,
     // A new exercise starts with real values in its boxes (3 × 10, 60 sec rest) — what it saves if left alone —
@@ -722,8 +782,8 @@ export function arsenalVals(ctx: Ctx) {
       !q && !areaFilter.length
         ? ''
         : view === 'workouts'
-          ? hits.length
-            ? plural(hits.length, 'workout') + ' found.'
+          ? hits.length + builtinHits.length
+            ? plural(hits.length + builtinHits.length, 'workout') + ' found.'
             : 'No workouts match.'
           : moveGroups.length
             ? plural(moveGroups.reduce((n, g) => n + g.items.length, 0), 'exercise') + ' found.'
