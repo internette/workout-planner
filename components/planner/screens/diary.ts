@@ -92,6 +92,37 @@ export function diaryVals(ctx: Ctx) {
     range: () => logic.s({ diaryScope: 'range', rFrom: st.rFrom || iso30, rTo: st.rTo || isoToday }),
   };
   const entryHint = !st.mood && !st.rpe ? 'Pick a mood and how hard it felt.' : !st.mood ? 'Pick a mood.' : !st.rpe ? 'Pick how hard it felt.' : '';
+  const unloggedItem = (x) => ({
+      // The day in two short lines: weekday, then the date (with its month when it isn't this month's).
+      dayTop: DOW3[new Date(Y, x.m, x.d).getDay()],
+      dayBottom:
+        x.m === TODAY_M
+          ? String(x.d)
+          : MON3[mod12(x.m)].toUpperCase() + ' ' + x.d + (Math.floor(x.m / 12) ? ' ' + (Y + Math.floor(x.m / 12)) : ''),
+      name: nameOf(x.av.name),
+      meta: x.av.ride ? (ctx.distOf(x.av) ? ctx.distOf(x.av) + ' mi · ' : '') + ctx.timeOf(x.av) : ctx.timeOf(x.av),
+      // Whether it was done, so writing about a missed one is a choice, not a surprise.
+      status: x.done ? 'Done' : ctx.sessionStatus(x.m, x.d, x.av),
+      statusStyle:
+        'flex:none;padding:4px 10px;border-radius:999px;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
+        (x.done ? 'background:var(--color-pink-tint);color:var(--color-pink-deep)' : 'background:var(--color-mist);color:var(--color-slate-deep)'),
+      pick: () =>
+        logic.nav({
+          screen: 'diary',
+          ...monthPatch(x.m),
+          day: x.d,
+          entryId: x.av.id,
+          // Nothing picked yet: the entry says how it felt only once the person has said so.
+          mood: null,
+          rpe: null,
+          entryNote: null,
+          diaryFrom: 'list',
+          diaryEdit: true,
+          // Writing about a session not marked done: most likely it was done, so offer to mark it (on to start). Not
+          // for one partly done: some exercises were skipped, and that's kept unless asked.
+          entryMarkDone: !x.done && !(!x.av.ride && ctx.doneCountAt(x.av) > 0),
+        }),
+  });
   return {
     entryLeaveBody: leaveBody,
     saveEntryLabel: hasEntry ? 'Save changes' : 'Save entry',
@@ -193,37 +224,19 @@ export function diaryVals(ctx: Ctx) {
     noUnloggedNote: logic.model.entries.some((x) => x.m * 100 + x.d <= TK)
       ? 'Every session from the last 60 days already has an entry.'
       : 'No sessions to write about yet. Plan one, and once its day comes it shows up here.',
-    unlogged: unloggedDays.map((x) => ({
-      rowStyle:
-        'display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px 22px;border:none;border-radius:999px;text-align:left;width:100%;background:var(--color-white);box-shadow:0 4px 14px rgba(35,42,69,.07);cursor:pointer',
-      // This month's by weekday and date; earlier ones name their month too.
-      day:
-        DOW3[new Date(Y, x.m, x.d).getDay()] +
-        (x.m === TODAY_M ? ' ' + x.d : ', ' + MON3[mod12(x.m)].toUpperCase() + ' ' + x.d + (Math.floor(x.m / 12) ? ' ' + (Y + Math.floor(x.m / 12)) : '')),
-      name: nameOf(x.av.name),
-      meta: x.av.ride ? (ctx.distOf(x.av) ? ctx.distOf(x.av) + ' mi · ' : '') + ctx.timeOf(x.av) : ctx.timeOf(x.av),
-      // Whether it was done, so writing about a missed one is a choice, not a surprise.
-      status: x.done ? 'Done' : ctx.sessionStatus(x.m, x.d, x.av),
-      statusStyle:
-        'flex:none;padding:4px 10px;border-radius:999px;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
-        (x.done ? 'background:var(--color-pink-tint);color:var(--color-pink-deep)' : 'background:var(--color-mist);color:var(--color-slate-deep)'),
-      pick: () =>
-        logic.nav({
-          screen: 'diary',
-          ...monthPatch(x.m),
-          day: x.d,
-          entryId: x.av.id,
-          // Nothing picked yet: the entry says how it felt only once the person has said so.
-          mood: null,
-          rpe: null,
-          entryNote: null,
-          diaryFrom: 'list',
-          diaryEdit: true,
-          // Writing about a session not marked done: most likely it was done, so offer to mark it (on to start). Not
-          // for one partly done: some exercises were skipped, and that's kept unless asked.
-          entryMarkDone: !x.done && !(!x.av.ride && ctx.doneCountAt(x.av) > 0),
-        }),
-    })),
+    // Grouped by when: this week, last week, then earlier ones, each group one card of rows.
+    unloggedGroups: (() => {
+      const lastWkStart = new Date(todayWkStart.getFullYear(), todayWkStart.getMonth(), todayWkStart.getDate() - 7);
+      const groups = [];
+      unloggedDays.forEach((x) => {
+        const d = new Date(Y, x.m, x.d);
+        const label = d >= todayWkStart ? 'THIS WEEK' : d >= lastWkStart ? 'LAST WEEK' : 'EARLIER';
+        let g = groups.find((y) => y.label === label);
+        if (!g) groups.push((g = { label, items: [] }));
+        g.items.push(unloggedItem(x));
+      });
+      return groups;
+    })(),
     showRange: dScope === 'range',
     rangeFrom: st.rFrom || '',
     rangeTo: st.rTo || '',
@@ -356,6 +369,8 @@ export function diaryVals(ctx: Ctx) {
     diaryBackLabel: writing && saved ? nameOf(selName) : '',
     // Changing an entry looks like writing one, so it says which it is.
     writeEyebrow: writing && saved ? 'CHANGING YOUR ENTRY' : '',
+    // Beside the sidebar (not on a phone) the entry form sits in the page's column, where a saved entry is read.
+    entryLeft: logic.viewport !== 'narrow',
     // The session it's about, for the tab's title ("Leg Day entry").
     diaryTitle: selName ? nameOf(selName) : '',
     diaryEyebrow: st.diaryFrom === 'list' || reading ? 'CHRONICLE ENTRY' : 'COMPLETED',
