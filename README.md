@@ -58,6 +58,8 @@ Later migrations:
 
 Run the migrations once, in order, in the Supabase SQL editor. They are safe to run again.
 
+Optional: [supabase/scripts/starter_workouts.sql](supabase/scripts/starter_workouts.sql) adds 30 beginner workouts, built from the built-in exercises, to one person's Spellbook. It uses the one account in the database (or the Auth0 user id you set at its top), and skips any workout whose name that person already has.
+
 ### Sign-in
 
 The planner has a landing page with Google and Apple sign-in (at `/welcome`; anyone who is not signed in is sent there from every other page except `/design-system`). Auth0 handles the sign-in on the server: the session lives in an encrypted cookie the page cannot read, and a middleware guards the planner. Supabase trusts an Auth0 token, so row-level security can tell whose data is whose. Until it is set up nobody can sign in, so everyone sees the landing page. To work on the app locally before then, put `NEXT_PUBLIC_AUTH_REQUIRED=false` in `.env.local`. Setup:
