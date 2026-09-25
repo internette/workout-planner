@@ -109,17 +109,16 @@ export function entriesStage(ctx: Ctx): Ctx {
   });
   const RPE_WORDS = ['Easy', 'Steady', 'Solid', 'Hard', 'All out'];
   const stars = [1, 2, 3, 4, 5].map((n) => ({
-    glyph: n <= st.rpe ? '★' : '☆',
+    on: n <= st.rpe,
     label: n + ' of 5, ' + RPE_WORDS[n - 1],
     checked: n === st.rpe,
     tab: n === (st.rpe || 1) ? 0 : -1,
     index: n - 1,
     keys: radioKeys(5, n - 1, (to) => logic.s({ rpe: to + 1 }), 'data-star'),
     pick: () => logic.s({ rpe: n }),
-    // 44px square to tap, however big the star glyph draws.
+    // 44px square to tap, however big the star draws.
     style:
-      'border:none;background:none;padding:0;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;font-size:var(--text-5xl);line-height:var(--leading-none);cursor:pointer;color:' +
-      (n <= st.rpe ? 'var(--color-ink)' : 'var(--color-outline)'),
+      'border:none;border-radius:14px;background:none;padding:0;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer',
   }));
   return {
     isDoneEntry,

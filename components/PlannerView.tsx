@@ -40,6 +40,7 @@ import {
   Sparkle,
   SpellCards,
   User,
+  RatingStar,
 } from '@/components/ui/icons';
 import { colors } from '@/components/ui/colors';
 
@@ -3759,7 +3760,9 @@ export function PlannerView({ v }: { v: any }) {
                               >
                                 {(e?.stars ?? []).map((s, i) => (
                                   <Fragment key={i}>
-                                    <span className="fc-star" data-on={i < (e?.rpe ?? 0) ? '' : undefined} style={css(s)}>★</span>
+                                    <span className="fc-star" data-on={s ? '' : undefined} style={{ display: 'inline-flex' }}>
+                                      <RatingStar on={!!s} size={18} />
+                                    </span>
                                   </Fragment>
                                 ))}
                               </span>
@@ -5475,7 +5478,9 @@ export function PlannerView({ v }: { v: any }) {
                               <span style={{ display: 'flex', gap: '3px' }}>
                                 {(v.readStars ?? []).map((s, i) => (
                                   <Fragment key={i}>
-                                    <span className="fc-star" data-on={i < (v.readRpe ?? 0) ? '' : undefined} style={css(s)}>★</span>
+                                    <span className="fc-star" data-on={s ? '' : undefined} style={{ display: 'inline-flex' }}>
+                                      <RatingStar on={!!s} size={18} />
+                                    </span>
                                   </Fragment>
                                 ))}
                               </span>
@@ -5616,12 +5621,12 @@ export function PlannerView({ v }: { v: any }) {
                                 aria-label={s?.label}
                                 tabIndex={s?.tab}
                                 data-star={s?.index}
-                                data-on={s?.glyph === '★' ? '' : undefined}
+                                data-on={s?.on ? '' : undefined}
                                 onKeyDown={s?.keys}
                                 onClick={s?.pick}
                                 style={css(s?.style)}
                               >
-                                <span aria-hidden="true">{s?.glyph}</span>
+                                <RatingStar on={!!s?.on} size={36} />
                               </button>
                             </Fragment>
                           ))}
