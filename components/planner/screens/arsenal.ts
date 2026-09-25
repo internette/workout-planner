@@ -575,7 +575,7 @@ export function arsenalVals(ctx: Ctx) {
                 value: 'update',
                 title: 'Update “' + confirm.exercise + '”',
                 description: confirm.name
-                  ? 'Changes the exercise in “' + confirm.name + '”.'
+                  ? 'Changes the exercise in “' + confirm.name + '”. Past and completed sessions keep the old version.'
                   : confirm.copies
                     ? 'Changes this exercise. Workouts that use it keep their own copy.'
                     : 'Changes the exercise itself.',
@@ -583,7 +583,11 @@ export function arsenalVals(ctx: Ctx) {
             : {
                 value: 'update',
                 title: 'Update this workout',
-                description: 'Past sessions keep the old version.',
+                // Nothing on the calendar yet: there's no old version to keep.
+                description:
+                  confirm.sessions === 0
+                    ? 'Changes “' + confirm.name + '” in your Spellbook.'
+                    : 'Past and completed sessions keep the old version.',
               },
           confirm.exercise
             ? {
@@ -611,7 +615,7 @@ export function arsenalVals(ctx: Ctx) {
           (confirm.count === 1 ? ' upcoming session' : ' upcoming sessions') +
           ' of “' +
           confirm.name +
-          '”. Completed sessions never change.'
+          '”.'
         : 'Also update ' + confirm.count + (confirm.count === 1 ? ' upcoming session' : ' upcoming sessions')
       : '',
     // A saved workout's "Save as a new workout" takes a name for the copy, which has to be new.
@@ -639,10 +643,11 @@ export function arsenalVals(ctx: Ctx) {
     arsenalNewLabel: narrow ? 'New' : view === 'workouts' ? 'New workout' : 'New exercise',
     arsenalNewName: view === 'workouts' ? 'New workout' : 'New exercise',
     showArsenalExercises: view === 'exercises',
+    // While searching or filtering, how many of them are showing.
     arsenalCount:
       view === 'workouts'
-        ? workouts.length + (workouts.length === 1 ? ' workout' : ' workouts')
-        : exerciseCount,
+        ? (q || areaFilter.length ? hits.length + ' of ' : '') + plural(workouts.length, 'workout')
+        : (q || areaFilter.length ? moveGroups.reduce((n, g) => n + g.items.length, 0) + ' of ' : '') + exerciseCount,
     arsenalIntro:
       view === 'workouts'
         ? "Every workout you've written. Open one to add it to the calendar."

@@ -2627,7 +2627,7 @@ export function PlannerView({ v }: { v: any }) {
                               />
                               <TextField
                                 label="Weight"
-                                suffix="lbs"
+                                suffix="lb"
                                 containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                 value={v.draftWeight ?? ''}
                                 onChange={v.setWeight}
@@ -3256,7 +3256,7 @@ export function PlannerView({ v }: { v: any }) {
                       />
                       <TextField
                         label="Weight"
-                        suffix="lbs"
+                        suffix="lb"
                         containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                         value={v.exerciseEdit.weight}
                         onChange={v.exerciseEdit.setWeight}
@@ -4794,7 +4794,7 @@ export function PlannerView({ v }: { v: any }) {
                                 />
                                 <TextField
                                   label="Weight"
-                                  suffix="lbs"
+                                  suffix="lb"
                                   containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                   value={ex?.weight ?? ''}
                                   onChange={ex?.setWeight}
@@ -5062,7 +5062,7 @@ export function PlannerView({ v }: { v: any }) {
                                 />
                                 <TextField
                                   label="Weight"
-                                  suffix="lbs"
+                                  suffix="lb"
                                   containerStyle={{ flex: '1 1 110px', minWidth: '0' }}
                                   value={v.draftWeight ?? ''}
                                   onChange={v.setWeight}

@@ -34,15 +34,16 @@ export function entriesStage(ctx: Ctx): Ctx {
   const timeOf = (av) => (actualMinutes(av) ? minText(actualMinutes(av)) : av.time);
   // A ride's distance: what was ridden once it's done and recorded, else the plan.
   const distOf = (av) => (av.ride && isDoneEntry(av) && av.actual && av.actual.dist ? av.actual.dist : av.ride ? av.ride.dist : '');
+  // Worded as the Day view's cards word it: a finished session says "Completed".
   const metaFor = (av) =>
     !av
       ? ''
-      : av.ride
-        ? distOf(av)
-          ? distOf(av) + ' mi · ' + timeOf(av)
-          : timeOf(av)
-        : isDoneEntry(av)
-          ? plural(countAt(av), 'exercise') + ' · ' + timeOf(av)
+      : isDoneEntry(av)
+        ? 'Completed · ' + (av.ride && distOf(av) ? distOf(av) + ' mi · ' : '') + timeOf(av)
+        : av.ride
+          ? distOf(av)
+            ? distOf(av) + ' mi · ' + timeOf(av)
+            : timeOf(av)
           : doneCountAt(av) > 0
             ? doneCountAt(av) + ' of ' + countAt(av) + ' done · ' + av.time
             : plural(countAt(av), 'exercise') + ' · ' + av.time;

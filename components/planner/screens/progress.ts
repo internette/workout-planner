@@ -54,6 +54,15 @@ export function progressVals(ctx: Ctx) {
   const selWeek = weekBuckets[barSel] || { sessions: [], planned: 0, done: 0 };
   // The next rank by its full name, as the ladder writes it ("Novice guardian"); past the top, the next season.
   const nextRankName = RANKS[derivedRank + 1] ? RANKS[derivedRank + 1].name : RANKS[derivedRank].next;
+  const xpLeft = Math.max(0, rankCeil - xpTotal);
+  const xpToGo = xpLeft ? xpLeft + ' more to reach ' + nextRankName + '.' : 'The top rank.';
+  const statusOf = (x) => {
+    if (x.done) return 'Done';
+    const started = !x.av.ride && ctx.doneCountAt(x.av) > 0;
+    if (x.date < todayDate) return started ? 'Partly done' : 'Missed';
+    if (x.date.getTime() === todayDate.getTime() && (started || (st.workoutTimer || {})[x.av.id])) return 'In progress';
+    return 'Planned';
+  };
   return {
     // Empty states: say what will show up, instead of "0 of 0" or a bare heading.
     wkEmpty: weekAll.length === 0,
@@ -76,7 +85,8 @@ export function progressVals(ctx: Ctx) {
     ranksAside: 'Rank ' + (derivedRank + 1) + ' of ' + RANKS.length + ' · ' + xpTotal + ' XP',
     xpInfoOpen: !!st.xpInfo,
     toggleXpInfo: () => logic.s({ xpInfo: !st.xpInfo }),
-    xpLine: xpTotal + ' of ' + rankCeil + ' XP toward ' + nextRankName,
+    // Says how far is left, which matches the bar's "N% to …" (both count from this rank, not from zero).
+    xpLine: xpTotal + ' XP so far. ' + xpToGo,
     ranksOpen: !!st.ranksOpen,
     openRanks: () => logic.s({ ranksOpen: true }),
     closeRanks: () => logic.s({ ranksOpen: false }),
@@ -138,11 +148,12 @@ export function progressVals(ctx: Ctx) {
           ? 'New rank: ' + RANKS[derivedRank].name + '. On to ' + nextRankName + '.'
           : rankPct + '% to ' + nextRankName,
     rankTip:
-      'XP ' + xpTotal + ' of ' + rankCeil + ' · 10 XP per exercise completed, 50 XP per workout finished',
+      xpTotal + ' XP. ' + xpToGo + ' 10 XP per exercise completed, 50 XP per workout finished.',
     monthSummaryLabel: monthDays.filter((x) => x.done).length + ' of ' + monthDays.length + ' done',
     streakCount: streak,
-    streakUnit: streak === 1 ? 'day' : 'days',
-    streakPillLabel: (streak === 1 ? 'day' : 'day') + ' streak',
+    // "3 day streak", like the calendar's streak pill, whatever the number.
+    streakUnit: 'day',
+    streakPillLabel: 'day streak',
     streakNote: todayLogged
       ? 'Today is cleared.'
       : streak > 0
@@ -193,15 +204,15 @@ export function progressVals(ctx: Ctx) {
       .map((x) => ({
         day: DOW3[x.date.getDay()] + ' ' + x.date.getDate(),
         name: nameOf(x.av.name),
-        // A day already gone by without the session done says so, rather than still "Planned".
-        statusLabel: x.done ? 'Done' : x.date < todayDate ? 'Missed' : 'Planned',
+        // The same words as the calendar's legend: done, partly done, missed, in progress (today), planned.
+        statusLabel: statusOf(x),
         status:
           'flex:none;padding:5px 11px;border-radius:999px;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
           (x.done
             ? 'background:var(--color-pink);color:var(--color-white)'
-            : x.date < todayDate
-              ? 'background:var(--color-mist);color:var(--color-slate-deep)'
-              : 'background:var(--color-white);color:var(--color-muted)'),
+            : statusOf(x) === 'Planned'
+              ? 'background:var(--color-white);color:var(--color-muted)'
+              : 'background:var(--color-mist);color:var(--color-slate-deep)'),
         open: () =>
           logic.nav({ screen: 'detail', creating: false, ...monthPatch(relM(x.date)), day: x.date.getDate(), entryId: x.av.id }),
       })),
