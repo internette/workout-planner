@@ -145,7 +145,8 @@ export function workoutStage(ctx: Ctx): Ctx {
   const notesVal = (st.notes || {})[listKey] != null ? (st.notes || {})[listKey] : (srcAct && srcAct.notes) || '';
   const wIcon = (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (isCycleView ? 'bike' : 'h');
   const wColor = (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || colors.pink;
-  const doneNames = (st.done || {})[listKey] || [];
+  // In the editor, ticks are part of the draft until Save (st.editDone); elsewhere, what's saved.
+  const doneNames = (st.screen === 'edit' && st.editDone) || (st.done || {})[listKey] || [];
   const doneSet = {};
   doneNames.forEach((n) => {
     doneSet[n] = 1;

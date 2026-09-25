@@ -187,9 +187,9 @@ export function chromeVals(ctx: Ctx) {
         else logic.s({ screen: 'day', seg: 'Day', entryId: null, hist: [], ...gone });
         logic.save(() => db.deletePlanEntries([id]));
       }
-      if (c.kind === 'unfinishRide') {
+      if (c.kind === 'unfinish') {
         logic.s({ rideDone: Object.assign({}, st.rideDone, { [c.id]: false }) });
-        logic.save(() => db.reopenSession(c.id));
+        logic.save(() => db.reopenSession(c.id), noticePatch('Marked not done.', 'detail'));
       }
       if (c.kind === 'entry') logic.save(() => db.deleteDiary(c.day), { screen: c.after || st.screen });
       if (c.kind === 'series')

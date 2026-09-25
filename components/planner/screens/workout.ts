@@ -312,6 +312,21 @@ export function workoutVals(ctx: Ctx) {
     finishCancelLabel: fin && fin.correcting ? 'Cancel' : 'Not yet',
     finishSaveLabel: fin && fin.correcting ? 'Save' : 'Finish',
     finishIsRide: !!(fin && fin.ride),
+    // A lift finished with exercises left unticked is done only because of Finish, so Finish can be undone here (a
+    // ride has its own "Ride completed" switch; a lift with everything ticked is undone by unticking).
+    canUnfinish: !!(fin && fin.correcting && !fin.ride) && doneCount < selList.length,
+    unfinish: () => {
+      logic.s({
+        finish: null,
+        confirm: {
+          kind: 'unfinish',
+          id: idOf(selAct),
+          title: 'Mark this workout not done?',
+          body: 'The time you recorded is cleared. The exercises you ticked stay ticked.',
+          label: 'Mark not done',
+        },
+      });
+    },
     finishNote: !fin
       ? ''
       : fin.correcting
@@ -427,7 +442,7 @@ export function workoutVals(ctx: Ctx) {
       if (!rideDone) return openFinish();
       logic.s({
         confirm: {
-          kind: 'unfinishRide',
+          kind: 'unfinish',
           id: idOf(selAct),
           title: 'Mark this ride not done?',
           body: actualMinutes(selAct) > 0 ? 'The distance and time you recorded for it will be cleared.' : 'It goes back to planned.',

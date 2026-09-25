@@ -195,8 +195,8 @@ export function calendarStage(ctx: Ctx): Ctx {
       continue;
     }
     const list = entriesAt(mi, d);
-    let a = list.length ? list[0].s : null;
-    if (list.length && a !== 't' && allDone(list)) a = 'c';
+    // The day as a whole: today, done once every workout on it is, else planned (missed or partly done if past).
+    const a = !list.length ? null : mi === TODAY_M && d === TODAY_D ? 't' : allDone(list) ? 'c' : 'p';
     const today = a === 't';
     const sel = d === selDay;
     const part = !!a && a !== 'c' && a !== 't' && mi * 100 + d < TK && partly(list);
