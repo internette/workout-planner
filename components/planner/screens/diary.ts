@@ -95,7 +95,14 @@ export function diaryVals(ctx: Ctx) {
     showMarkDone: offerMarkDone && !reading,
     markDoneOn: markDone,
     setMarkDone: (on) => logic.s({ entryMarkDone: !!on }),
-    markDoneLabel: entrySession && entrySession.av.ride ? 'Mark this ride done' : 'Mark this workout done',
+    // A lift with some exercises already ticked says so: marking it done ticks the rest.
+    markDoneLabel:
+      entrySession && entrySession.av.ride
+        ? 'Mark this ride done'
+        : entrySession && ctx.doneCountAt(entrySession.av) > 0
+          ? 'Mark all ' + plural((ctx.EXV[entrySession.av.exKey] || []).length, 'exercise') + ' done (' +
+            ctx.doneCountAt(entrySession.av) + ' ticked so far)'
+          : 'Mark this workout done',
     canSaveEntry: !!st.mood && !!st.rpe,
     saveEntryHint: entryHint,
     entryNote: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
@@ -197,8 +204,9 @@ export function diaryVals(ctx: Ctx) {
           entryNote: null,
           diaryFrom: 'list',
           diaryEdit: true,
-          // Writing about a session not marked done: most likely it was done, so offer to mark it (on to start).
-          entryMarkDone: !x.done,
+          // Writing about a session not marked done: most likely it was done, so offer to mark it (on to start). Not
+          // for one partly done: some exercises were skipped, and that's kept unless asked.
+          entryMarkDone: !x.done && !(!x.av.ride && ctx.doneCountAt(x.av) > 0),
         }),
     })),
     showRange: dScope === 'range',

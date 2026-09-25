@@ -47,6 +47,7 @@ export function editVals(ctx: Ctx) {
     srcAct,
     pickerCells,
     Y,
+    relM,
     EXV,
     selList,
     selDate,
@@ -84,6 +85,20 @@ export function editVals(ctx: Ctx) {
         null
       : null;
   const todayIso = isoOf(new Date(Y, TODAY_M, TODAY_D));
+  // Repeating: this weekday for the 12 weeks after the day, leaving out days already gone by (they'd only show as
+  // missed) and days that already have this workout.
+  // An exercise's icon picked in this editor (not yet saved), kept per workout like its other fields.
+  const iconPick = (name) => (st.exIcons || {})[listKey + '|' + name];
+  const weeklyAfter = (name) => {
+    const out = [];
+    for (let w = 1; w <= 12; w++) {
+      const d = new Date(Y, mi, selDay + w * 7);
+      const iso = isoOf(d);
+      if (iso >= todayIso && !logic.model.entries.some((x) => x.m === relM(d) && x.d === d.getDate() && x.av.name === name))
+        out.push(iso);
+    }
+    return out;
+  };
   // A new workout needs a name, and a lifting one at least one exercise, before it can be saved: an empty
   // "Untitled workout" used to land in the Spellbook with one tap.
   // The same holds when editing: a saved workout or session can't be left without a name, or a lift without exercises.
@@ -158,11 +173,10 @@ export function editVals(ctx: Ctx) {
     useSavedLabel: nameClash ? 'Schedule your saved “' + nameClash.name + '” instead' : '',
     useSaved: () => {
       if (!nameClash) return;
-      const dates = [isoOf(new Date(Y, mi, selDay))];
-      if (st.repeat) for (let w = 1; w <= 12; w++) dates.push(isoOf(new Date(Y, mi, selDay + w * 7)));
+      const dates = [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weeklyAfter(nameClash.name) : []);
       logic.saveOnce(
         'workout',
-        () => db.scheduleWorkout(nameClash.id, dates, !!st.repeat),
+        () => db.scheduleWorkout(nameClash.id, dates, dates.length > 1),
         (r) =>
           Object.assign(
             { screen: 'day' },
@@ -510,11 +524,6 @@ export function editVals(ctx: Ctx) {
       logic.renderVals().saveWorkout();
     },
     saveWorkout: () => {
-      const weekly = () => {
-        const out = [];
-        for (let w = 1; w <= 12; w++) out.push(isoOf(new Date(Y, mi, selDay + w * 7)));
-        return out;
-      };
       if (nameClash || needsName || needsExercise) return logic.s({ leaveOpen: false, pendingNav: null });
       if (saving) return;
       const cleared = EDIT_OVERLAYS;
@@ -532,19 +541,32 @@ export function editVals(ctx: Ctx) {
             patch: Object.assign(
               {},
               u.patch,
-              (st.exIcons || {})[u.ex.name] ? { i: st.exIcons[u.ex.name] } : {},
+              iconPick(u.ex.name) ? { i: iconPick(u.ex.name) } : {},
             ),
           }));
-        Object.keys(st.exIcons || {}).forEach((n) => {
-          const ex = byName(n);
-          if (ex && ex.id && !update.some((u) => u.id === ex.id))
-            update.push({ id: ex.id, patch: { i: st.exIcons[n] } });
-        });
+        Object.keys(st.exIcons || {})
+          .filter((k) => k.indexOf(prefix) === 0)
+          .forEach((k) => {
+            const ex = byName(k.slice(prefix.length));
+            if (ex && ex.id && !update.some((u) => u.id === ex.id)) update.push({ id: ex.id, patch: { i: st.exIcons[k] } });
+          });
         const moved = st.editKey && st.editKey !== mi + '-' + selDay;
         const actualEdited = st.aDist != null || st.aElev != null || st.aHrs != null || st.aMins != null;
         const newName = ((st.renames || {})[baseName] || '').trim();
         const notes = (st.notes || {})[listKey];
         const rideEdited = !!selRide && [st.rDist, st.rElev, st.rHrs, st.rMins, st.rZone].some((v) => v != null);
+        // Exercises ticked in the editor. A finished session stays completed while ticks change; otherwise it's done
+        // once all are ticked.
+        const ticked = st.editDone ? st.editDone.filter((n) => selList.some((e) => e.name === n)) : null;
+        const saveTicks = (r?) =>
+          (ticked
+            ? db.setExercisesDone(
+                selAct.id,
+                ticked,
+                (selList.length > 0 && ticked.length === selList.length) || !!ctx.actualMinutes(selAct),
+              )
+            : Promise.resolve()
+          ).then(() => r);
         const edit = {
           entryId: selAct.id,
           workoutId: selAct.workoutId,
@@ -568,7 +590,7 @@ export function editVals(ctx: Ctx) {
               .map((e) => e.id),
             add: added.map(bare),
           },
-          repeatDates: st.repeat && !selAct.series ? weekly() : [],
+          repeatDates: st.repeat && !selAct.series ? weeklyAfter(baseName) : [],
           durationMinutes: !selRide && lengthChanged ? estMin : undefined,
         };
         // Normally back to the workout's own detail screen; if a nav click was waiting on this save, go there instead.
@@ -649,7 +671,7 @@ export function editVals(ctx: Ctx) {
             )
             .catch((e) => logic.s({ saveError: e instanceof Error ? e.message : String(e) }));
         }
-        if (!changesWorkout) return logic.saveOnce('workout', () => db.updateWorkout(edit), after);
+        if (!changesWorkout) return logic.saveOnce('workout', () => db.updateWorkout(edit).then(saveTicks), after);
         // The workout is shared with the Spellbook, and maybe with other sessions: ask whether the change is for this
         // session only, or for the saved workout too (and the sessions still ahead). Asked even when this is its only
         // session, since changing what was lifted today shouldn't quietly rewrite the saved workout. Past and
@@ -688,11 +710,13 @@ export function editVals(ctx: Ctx) {
                   logic.saveOnce(
                     'workout',
                     () =>
-                      db.updateWorkoutTemplate(edit, {
-                        mode: mode === 'new' ? 'session' : 'update',
-                        updateUpcoming: true,
-                        todayIso,
-                      }),
+                      db
+                        .updateWorkoutTemplate(edit, {
+                          mode: mode === 'new' ? 'session' : 'update',
+                          updateUpcoming: true,
+                          todayIso,
+                        })
+                        .then(saveTicks),
                     after,
                   ),
               },
@@ -717,9 +741,9 @@ export function editVals(ctx: Ctx) {
             icon: (st.icons || {}).__draft || null,
             iconColor: (st.iconColors || {}).__draft || null,
             notes: notesVal,
-            exercises: selList.map(bare),
-            dates: scheduled ? [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weekly() : []) : [],
-            repeat: scheduled && !!st.repeat,
+            exercises: selList.map((e) => bare(iconPick(e.name) ? { ...e, i: iconPick(e.name) } : e)),
+            dates: scheduled ? [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weeklyAfter(nm) : []) : [],
+            repeat: scheduled && !!st.repeat && weeklyAfter(nm).length > 0,
           }),
         // Normally: saved only goes back to the Spellbook's workouts, where it now is; scheduled goes to the day it
         // was put on. If a nav click was waiting on this save, go there instead — that's what was actually asked
@@ -808,9 +832,9 @@ export function editVals(ctx: Ctx) {
         ? 'Puts it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mod12(mi)] + ' ' + selDay + yearNote + ', and keeps it in your Spellbook.'
         : 'Only saved to your Spellbook. You can add it to the calendar any time.',
     exercises: selList.map((e, ix) => {
-      const cur = (st.exIcons || {})[e.name] || e.i;
+      const cur = iconPick(e.name) || e.i;
       const set = (v) => () =>
-        logic.s({ exIcons: Object.assign({}, st.exIcons, { [e.name]: v }), exOpen: null });
+        logic.s({ exIcons: Object.assign({}, st.exIcons, { [listKey + '|' + e.name]: v }), exOpen: null });
       const setField = (k) => (ev) =>
         logic.s({
           fields: Object.assign({}, st.fields, {
@@ -881,7 +905,8 @@ export function editVals(ctx: Ctx) {
           const names = nowDone ? doneNames.concat([e.name]) : doneNames.filter((n) => n !== e.name);
           const tot = selList.length;
           logic.s({
-            done: Object.assign({}, st.done, { [listKey]: names }),
+            // Saved with the rest of the edit, so Cancel and "Discard" leave the ticks as they were.
+            editDone: names,
             announce:
               e.name +
               (nowDone ? ' marked done' : ' unmarked') +
@@ -891,11 +916,6 @@ export function editVals(ctx: Ctx) {
               tot +
               ' done.',
           });
-          if (!creating)
-            // A finished session stays completed while ticks change; otherwise it's done once all are ticked.
-            logic.save(() =>
-              db.setExercisesDone(listKey, names, (tot > 0 && names.length === tot) || !!(selAct && ctx.actualMinutes(selAct))),
-            );
         },
         remove: () =>
           logic.s({

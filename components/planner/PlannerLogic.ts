@@ -42,10 +42,7 @@ export class PlannerLogic extends DCLogic {
         : timers;
       // Opened at a session's own address (a reload, or a link): its day, or the calendar if it's gone.
       const opened: any = {};
-      if (first && this.state.screen === 'detail' && this.state.entryId) {
-        const hit = model.entries.find((x) => x.av.id === this.state.entryId);
-        Object.assign(opened, hit ? { ...monthPatch(hit.m), day: hit.d } : { screen: 'day', entryId: null });
-      }
+      if (first && this.state.screen === 'detail' && this.state.entryId) Object.assign(opened, this.placeFor({ screen: 'detail', entryId: this.state.entryId }));
       // A reload on the calendar comes back to the view and day it was on (kept for this tab, for an hour).
       if (first && this.state.screen === 'day') {
         try {
@@ -64,6 +61,14 @@ export class PlannerLogic extends DCLogic {
       this.loadError = e instanceof Error ? e.message : String(e);
       this.forceUpdate();
     }
+  }
+
+  /** A session's address opens that session on its own day (month and day with it), or the calendar if it's gone.
+   * Anything else opens as the address says. */
+  placeFor(opens: any): any {
+    if (opens.screen !== 'detail' || !opens.entryId || !this.model) return opens;
+    const hit = this.model.entries.find((x) => x.av.id === opens.entryId);
+    return hit ? { ...opens, ...monthPatch(hit.m), day: hit.d } : { ...opens, screen: 'day', entryId: null };
   }
 
   private queue: Promise<unknown> = Promise.resolve();

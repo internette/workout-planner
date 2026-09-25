@@ -588,7 +588,6 @@ export async function updateWorkout(e: WorkoutEdit) {
     patch.duration_minutes = e.ride.minutes;
   }
   if (e.durationMinutes != null && !e.ride) patch.duration_minutes = e.durationMinutes;
-  if (e.repeatDates.length) patch.repeat_enabled = true;
   if (Object.keys(patch).length) await ok(supabase.from('workouts').update(patch).eq('id', e.workoutId));
 
   for (const u of e.exercises.update) {
@@ -625,13 +624,15 @@ export async function updateWorkout(e: WorkoutEdit) {
   if (Object.keys(entryPatch).length)
     await ok(supabase.from('plan_entries').update(entryPatch).eq('id', e.entryId));
 
+  // A weekly series belongs to a saved workout: a session saved on its own repeats the saved workout it came from.
   if (e.repeatDates.length) {
+    const [w]: any[] = await ok(supabase.from('workouts').select('*').eq('id', e.workoutId));
+    const seriesId = ((await savedWorkoutOf(w)) || w).id;
+    await ok(supabase.from('workouts').update({ repeat_enabled: true }).eq('id', seriesId));
     await ok(
       supabase
         .from('plan_entries')
-        .insert(
-          e.repeatDates.map((d) => ({ workout_id: e.workoutId, scheduled_date: d, status: 'planned' })),
-        ),
+        .insert(e.repeatDates.map((d) => ({ workout_id: seriesId, scheduled_date: d, status: 'planned' }))),
     );
   }
 }
@@ -720,11 +721,28 @@ export async function countUpcoming(workoutId: string, todayIso: string): Promis
   return rows.filter((r) => !isFinished(r)).length;
 }
 
+// The saved workout a workout row stands for: itself, or for an archived copy (a session saved "only this session",
+// or history kept from before an edit) the saved workout it came from, if that is still in the Spellbook. Null when
+// there is none (the saved workout was deleted).
+async function savedWorkoutOf(w: any): Promise<any | null> {
+  if (!w) return null;
+  if (!w.archived) return w;
+  const rows: any[] = w.source_workout_id
+    ? await ok(supabase.from('workouts').select('*').eq('id', w.source_workout_id).eq('archived', false))
+    : 'source_workout_id' in w
+      ? []
+      : await ok(supabase.from('workouts').select('*').eq('name', w.name).eq('archived', false));
+  return rows[0] || null;
+}
+
 // For an edit made to one session from the calendar: how many other sessions share its workout, and how many of
-// those are still ahead (from today on, not completed).
+// those are still ahead (from today on, not completed). A session already saved on its own counts the sessions of
+// the saved workout it came from.
 export async function sessionScope(workoutId: string, entryId: string, todayIso: string) {
+  const [w]: any[] = await ok(supabase.from('workouts').select('*').eq('id', workoutId));
+  const saved = await savedWorkoutOf(w);
   const rows: any[] = await ok(
-    supabase.from('plan_entries').select(SESSION_COLS).eq('workout_id', workoutId),
+    supabase.from('plan_entries').select(SESSION_COLS).eq('workout_id', saved ? saved.id : workoutId),
   );
   const others = rows.filter((r) => r.id !== entryId);
   return {
@@ -795,6 +813,45 @@ export async function updateWorkoutTemplate(
       },
     };
   };
+
+  // A session already saved on its own (its own archived copy of the workout).
+  if (old.archived && edit.entryId) {
+    const sharers: any[] = await ok(supabase.from('plan_entries').select('id').eq('workout_id', edit.workoutId));
+    const alone = sharers.every((r) => r.id === edit.entryId);
+    // "Only this session" again: its copy is already its own, so it's edited in place.
+    if (opts.mode === 'session' && alone) {
+      await updateWorkout(edit);
+      return { workoutId: edit.workoutId, created: false, exerciseIds: {} };
+    }
+    // "This session and the saved workout": the session's copy takes the edit, and so does the saved workout it came
+    // from (its exercises matched by name), the same way an edit to the saved workout itself is saved.
+    const saved = opts.mode === 'update' && alone ? await savedWorkoutOf(old) : null;
+    if (saved) {
+      await updateWorkout(edit);
+      const savedExercises: any[] = await ok(
+        supabase.from('workout_exercises').select('id, name').eq('workout_id', saved.id),
+      );
+      const nameOf = (id: string) => (oldExercises.find((x) => x.id === id) || {}).name;
+      const inSaved = (id: string) => (savedExercises.find((x) => x.name === nameOf(id)) || {}).id;
+      await updateWorkoutTemplate(
+        {
+          ...edit,
+          entryId: '',
+          workoutId: saved.id,
+          moveTo: undefined,
+          actual: null,
+          repeatDates: [],
+          exercises: {
+            update: edit.exercises.update.map((u) => ({ ...u, id: inSaved(u.id) })).filter((u) => !!u.id),
+            removeIds: edit.exercises.removeIds.map(inSaved).filter((id): id is string => !!id),
+            add: edit.exercises.add,
+          },
+        },
+        { mode: 'update', updateUpcoming: opts.updateUpcoming, todayIso: opts.todayIso },
+      );
+      return { workoutId: edit.workoutId, created: false, exerciseIds: {} };
+    }
+  }
 
   if (opts.mode === 'session') {
     const [fork]: any[] = await ok(

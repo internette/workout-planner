@@ -170,7 +170,7 @@ export default function Planner({ account = null }: { account?: Account | null }
     // after a Back that asked first.
     if (target === cur) {
       const opens = stateForPath(window.location.pathname);
-      if (!ours && opens && pathForState(st) && pathForState(st) !== window.location.pathname) logic.setState({ ...opens, monthOpen: false });
+      if (!ours && opens && pathForState(st) && pathForState(st) !== window.location.pathname) logic.setState({ ...logic.placeFor(opens), monthOpen: false });
       stamp();
       return;
     }
@@ -211,7 +211,7 @@ export default function Planner({ account = null }: { account?: Account | null }
     } else {
       // Forward: the screen that address belongs to.
       const opens = stateForPath(window.location.pathname);
-      if (opens) logic.nav({ ...opens, monthOpen: false });
+      if (opens) logic.nav({ ...logic.placeFor(opens), monthOpen: false });
     }
     stamp();
   });

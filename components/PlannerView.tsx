@@ -3605,6 +3605,11 @@ export function PlannerView({ v }: { v: any }) {
                     description={v.finishNote || undefined}
                     actions={
                       <>
+                        {v.canUnfinish ? (
+                          <Button type="neutral" ghost size="md" onClick={v.unfinish} style={{ marginRight: 'auto' }}>
+                            Mark not done
+                          </Button>
+                        ) : null}
                         <Button type="neutral" ghost size="md" onClick={v.cancelFinish}>
                           {v.finishCancelLabel}
                         </Button>

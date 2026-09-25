@@ -387,8 +387,10 @@ export function progressVals(ctx: Ctx) {
       const b = weekBuckets[thisWeekIx] || { planned: 0, done: 0, sessions: [] };
       // "Left" is what can still be done: today and later. Days already gone by count as missed.
       const left = b.sessions.filter((x) => !x.done && x.date >= todayDate).length;
-      const missed = b.sessions.filter((x) => !x.done && x.date < todayDate).length;
-      const missedNote = missed ? ' ' + missed + ' missed.' : '';
+      // Gone by with something done is partly done, not missed (the same as the calendar says).
+      const missed = b.sessions.filter((x) => statusOf(x) === 'Missed').length;
+      const partlyN = b.sessions.filter((x) => statusOf(x) === 'Partly done').length;
+      const missedNote = (partlyN ? ' ' + partlyN + ' partly done.' : '') + (missed ? ' ' + missed + ' missed.' : '');
       return (
         DOWFULL[todayDate.getDay()] +
         ', ' +
@@ -398,7 +400,7 @@ export function progressVals(ctx: Ctx) {
         '. ' +
         (b.planned === 0
           ? 'Nothing on the plan this week yet.'
-          : left === 0 && !missed
+          : left === 0 && !missed && !partlyN
             ? 'Every session this week is done.'
             : left === 0
               ? 'Nothing left this week.' + missedNote
