@@ -134,6 +134,7 @@ export function calendarVals(ctx: Ctx) {
     hasToday: isCurMonth && todayActs.length > 0,
     todayCards: todayActs.map((a) => ({
       name: nameOf(a.name),
+      warmup: !!a.warmup,
       meta: metaFor(a),
       open: () =>
         logic.nav({ screen: 'detail', creating: false, ...monthPatch(TODAY_M), day: TODAY_D, entryId: a.id }),

@@ -198,6 +198,7 @@ export function progressVals(ctx: Ctx) {
       .map((x) => ({
         day: DOW3[x.date.getDay()] + ' ' + x.date.getDate(),
         name: nameOf(x.av.name),
+        warmup: !!x.av.warmup,
         // The same words as the calendar's legend: done, partly done, missed, in progress (today), planned.
         statusLabel: statusOf(x),
         status:

@@ -74,6 +74,7 @@ export function workoutStage(ctx: Ctx): Ctx {
         areas: tplWorkout.areas,
         repeat: false,
         notes: tplWorkout.notes,
+        warmup: tplWorkout.warmup,
         actual: null,
         ride: tplWorkout.ride
           ? {

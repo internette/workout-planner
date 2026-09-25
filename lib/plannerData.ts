@@ -43,6 +43,7 @@ export interface Entry {
   repeat: boolean;
   actual: { dist: string; elev: string; hrs: string; mins: string } | null;
   notes: string;
+  warmup: boolean; // a warm-up: listed before the day's other workouts, and tagged WARM-UP
 }
 
 export interface DiaryEntry {
@@ -67,6 +68,7 @@ export interface WorkoutSummary {
   exercises: string[];
   ride?: { dist: string; elev: string; zone: string };
   notes: string;
+  warmup: boolean;
 }
 
 // A ready-made workout from the shared catalog: read-only, listed with its group. Its exercises are built-in ones.
@@ -91,6 +93,8 @@ export interface Model {
   done: Record<string, string[]>; // plan entry id -> ticked exercise names
   rideDone: Record<string, boolean>;
   year: number;
+  // Whether workouts can be marked as warm-ups yet (the warm-ups migration has added the column).
+  warmupReady: boolean;
 }
 
 // ---------- string <-> column conversion ----------
@@ -254,6 +258,7 @@ export async function loadModel(today: Date): Promise<Model> {
       areas: isRide ? [] : areasOf(EXV[keyOf(w)] || []),
       repeat: !!w.repeat_enabled,
       notes: w.notes || '',
+      warmup: !!w.is_warmup,
       series: w.repeat_enabled && seriesDay[w.id] === dowOf(p.scheduled_date) ? w.id : undefined,
       seriesDay: w.repeat_enabled ? seriesDay[w.id] : undefined,
       ride: isRide
@@ -282,8 +287,11 @@ export async function loadModel(today: Date): Promise<Model> {
     else done[p.id] = p.done_exercises ?? (completed ? EXV[keyOf(w)].map((e) => e.name) : []);
   });
 
+  // A day's warm-ups come before its other workouts, however they were added.
+  const warmupFirst = (a: Entry, b: Entry) => Number(b.warmup) - Number(a.warmup);
+  Object.values(SEED).forEach((month) => Object.values(month).forEach((list) => list.sort(warmupFirst)));
   // By date, whatever order the rows came back in: "what's next" and similar take the first match.
-  entries.sort((a, b) => (a.iso < b.iso ? -1 : a.iso > b.iso ? 1 : 0));
+  entries.sort((a, b) => (a.iso < b.iso ? -1 : a.iso > b.iso ? 1 : warmupFirst(a.av, b.av)));
 
   const DIARY: Model['DIARY'] = {};
   diary.forEach((r: any) => {
@@ -317,6 +325,7 @@ export async function loadModel(today: Date): Promise<Model> {
         iconColor: iconColorOf(w.icon_color),
         exercises: (EX[w.name] || []).map((e) => e.name),
         notes: w.notes || '',
+        warmup: !!w.is_warmup,
         ride: isRide
           ? {
               dist: w.ride_distance_miles != null ? String(w.ride_distance_miles) : '',
@@ -333,8 +342,8 @@ export async function loadModel(today: Date): Promise<Model> {
   builtinList.forEach((e) => (builtinByName[e.name] = e));
   const builtinWorkouts: BuiltinWorkout[] = builtinWorkoutRows.map((r: any) => {
     const list = (r.exercises || []).map((n: string) => builtinByName[n]).filter(Boolean) as Exercise[];
-    // Estimated the way a new workout is: about ten minutes an exercise, at least twenty.
-    const minutes = Math.max(20, list.length * 10);
+    // Estimated the way a new workout is: about ten minutes an exercise, at least twenty (a warm-up's are quicker).
+    const minutes = estimateMinutes(list.length, !!r.is_warmup);
     return {
       id: r.id,
       name: r.name,
@@ -346,6 +355,7 @@ export async function loadModel(today: Date): Promise<Model> {
       iconColor: null,
       exercises: list.map((e) => e.name),
       notes: '',
+      warmup: !!r.is_warmup,
       builtin: true,
       category: r.category,
       list,
@@ -365,7 +375,14 @@ export async function loadModel(today: Date): Promise<Model> {
     done,
     rideDone,
     year: today.getFullYear(),
+    warmupReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_warmup' in r),
   };
+}
+
+// How long a lift of this many exercises is likely to take: about ten minutes each, at least twenty. A warm-up's
+// exercises are quick ones, about two minutes each, at least five.
+export function estimateMinutes(count: number, warmup: boolean) {
+  return warmup ? Math.max(5, count * 2) : Math.max(20, count * 10);
 }
 
 // ---------- write ----------
@@ -503,6 +520,7 @@ export async function ownCopyOfBuiltin(w: BuiltinWorkout): Promise<{ workoutId: 
     dates: [],
     repeat: false,
     notes: '',
+    warmup: w.warmup,
   });
   return { workoutId, created: true };
 }
@@ -519,6 +537,7 @@ export interface NewWorkout {
   dates: string[]; // ISO dates to schedule
   repeat: boolean;
   notes: string;
+  warmup?: boolean;
 }
 
 // Creates a new workout and schedules it on every date. It never joins an existing workout with the same name
@@ -539,6 +558,8 @@ export async function createWorkout(w: NewWorkout) {
         ride_zone: w.ride ? w.ride.zone : null,
         repeat_enabled: w.repeat,
         notes: w.notes || null,
+        // Only when set, so a workout can still be saved before the warm-ups migration has run.
+        ...(w.warmup ? { is_warmup: true } : {}),
       })
       .select('id'),
   );
@@ -624,6 +645,7 @@ export interface WorkoutEdit {
     order?: string[];
   };
   repeatDates: string[]; // extra weekly dates to schedule
+  warmup?: boolean; // marked as a warm-up, or not, when that changed
   durationMinutes?: number; // a lift's new length, when its exercises changed
 }
 
@@ -656,6 +678,7 @@ export async function updateWorkout(e: WorkoutEdit) {
     patch.duration_minutes = e.ride.minutes;
   }
   if (e.durationMinutes != null && !e.ride) patch.duration_minutes = e.durationMinutes;
+  if (e.warmup !== undefined) patch.is_warmup = e.warmup;
   if (Object.keys(patch).length) await ok(supabase.from('workouts').update(patch).eq('id', e.workoutId));
 
   for (const u of e.exercises.update) {

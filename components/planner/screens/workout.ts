@@ -257,6 +257,7 @@ export function workoutVals(ctx: Ctx) {
     return {
       key: id,
       name: nameOf(av.name),
+      warmup: !!av.warmup,
       meta: complete
         ? 'Completed · ' + (ride && distOf(av) ? distOf(av) + ' mi · ' : '') + ctx.doneTimeOf(av)
         : timer

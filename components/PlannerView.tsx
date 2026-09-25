@@ -629,6 +629,7 @@ export function PlannerView({ v }: { v: any }) {
                                       {c?.icoSvg}
                                     </div>
                                     <div style={{ minWidth: '0' }}>
+                                      {c?.warmup ? <WarmupTag /> : null}
                                       <Text variant="heading" as="h2" style={{ margin: '0' }}>
                                         <button
                                           onClick={c?.open}
@@ -1047,6 +1048,7 @@ export function PlannerView({ v }: { v: any }) {
                                         {w?.icoSvg}
                                       </span>
                                       <div style={{ minWidth: '0', flex: '1' }}>
+                                        {w?.warmup ? <WarmupTag /> : null}
                                         <Text variant="itemTitle" as="div">
                                           {w?.name}
                                         </Text>
@@ -1473,6 +1475,7 @@ export function PlannerView({ v }: { v: any }) {
                                     }}
                                   >
                                     <span style={{ minWidth: '0' }}>
+                                      {c?.warmup ? <WarmupTag /> : null}
                                       <Text variant="itemTitle" as="span" style={{ display: 'block' }}>
                                         {c?.name}
                                       </Text>
@@ -1974,6 +1977,7 @@ export function PlannerView({ v }: { v: any }) {
                               }}
                             >
                               {w?.name}
+                              {w?.warmup ? <WarmupTag inline /> : null}
                             </span>
                             <span style={css(w?.status)}>{w?.statusLabel}</span>
                           </button>
@@ -3001,6 +3005,22 @@ export function PlannerView({ v }: { v: any }) {
                           {v.noWorkoutMatchNote}
                         </Text>
                       ) : null}
+                      {v.showKindFilter ? (
+                        <div style={{ marginTop: '14px' }}>
+                          <SegmentedControl
+                            label="Show"
+                            size="sm"
+                            compact
+                            options={[
+                              { value: 'all', label: 'All' },
+                              { value: 'main', label: 'Main workouts' },
+                              { value: 'warmups', label: 'Warm-ups' },
+                            ]}
+                            value={v.workoutKind}
+                            onChange={v.setWorkoutKind}
+                          />
+                        </div>
+                      ) : null}
                       {/* Grouped like the Exercises tab: the person's own, then the built-in ones by group. */}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: '18px' }}>
                         {(v.workoutGroups ?? []).map((g, gi) => (
@@ -3054,6 +3074,7 @@ export function PlannerView({ v }: { v: any }) {
                                       {w?.svg}
                                     </span>
                                     <span style={{ flex: '1 1 200px', minWidth: '0' }}>
+                                      {w?.warmup ? <WarmupTag /> : null}
                                       <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
                                         {w?.name}
                                       </Text>
@@ -3607,6 +3628,7 @@ export function PlannerView({ v }: { v: any }) {
                                 {u.dayBottom}
                               </Text>
                               <span style={{ flex: '1', minWidth: '0' }}>
+                                {u.warmup ? <WarmupTag /> : null}
                                 <Text variant="itemTitle" as="span" tone="ink" style={{ display: 'block' }}>
                                   {u.name}
                                 </Text>
@@ -3773,6 +3795,7 @@ export function PlannerView({ v }: { v: any }) {
                                 }}
                               >
                                 <Text variant="itemTitle">{e?.name}</Text>
+                                {e?.warmup ? <WarmupTag inline /> : null}
                                 <ChevronRight color="var(--color-subtle)" strokeWidth={2.2} size={16} />
                               </span>
                               <span
@@ -3934,6 +3957,7 @@ export function PlannerView({ v }: { v: any }) {
                     <div style={{ minWidth: '0' }}>
                       <Text variant="eyebrow" as="div" tone="slate">
                         {v.eDate}
+                        {v.eWarmup ? <WarmupTag inline /> : null}
                       </Text>
                       <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
                         {v.eName}
@@ -4343,6 +4367,7 @@ export function PlannerView({ v }: { v: any }) {
                                     {w?.svg}
                                   </span>
                                   <span style={{ flex: '1', minWidth: '0' }}>
+                                    {w?.warmup ? <WarmupTag /> : null}
                                     <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
                                       {w?.name}
                                     </Text>
@@ -4619,6 +4644,16 @@ export function PlannerView({ v }: { v: any }) {
                       ) : null}
                     </>
                   )}
+                  {v.warmupShown ? (
+                    <Card pad="sm" style={{ marginTop: '16px' }}>
+                      <Checkbox switch checked={!!v.warmupOn} onChange={v.setWarmup}>
+                        Warm-up
+                      </Checkbox>
+                      <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+                        Listed before the other workouts on its day, and tagged as a warm-up.
+                      </Text>
+                    </Card>
+                  ) : null}
                   {v.ridePlanStatic ? (
                     <>
                       <div style={{ marginTop: '18px' }}>
@@ -5972,6 +6007,29 @@ function DragHandle({
     >
       <Grip color="var(--color-muted)" strokeWidth={3} size={20} />
     </button>
+  );
+}
+
+// Marks a warm-up: a small label above its name, or beside it (inline) where a row has no room above.
+function WarmupTag({ inline }: { inline?: boolean }) {
+  return (
+    <>
+      {/* A real space, so it isn't read run together with the words before it. */}
+      {inline ? ' ' : null}
+      <Text
+        variant="micro"
+        as="span"
+        tone="accent"
+        weight="bold"
+        style={
+          inline
+            ? { display: 'inline-block', marginLeft: '4px', verticalAlign: 'middle' }
+            : { display: 'block', marginBottom: '3px' }
+        }
+      >
+        WARM-UP
+      </Text>
+    </>
   );
 }
 

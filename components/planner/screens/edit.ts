@@ -121,10 +121,17 @@ export function editVals(ctx: Ctx) {
         const now = selList.find((e) => e.name === orig.name);
         return now ? sum + ((setsOf(now) - setsOf(orig)) * (restOf(now) + 40)) / 60 : sum;
       }, 0);
-  const lengthChanged = exDelta !== 0 || Math.round(setDeltaMin) !== 0;
-  const estMin = creating
-    ? Math.max(20, selList.length * 10)
-    : Math.max(20, Math.round((baseMin + exDelta * 10 + setDeltaMin) / 5) * 5);
+  // Marked as a warm-up (lifts only, once the warm-ups migration has run): a draft value until Save.
+  const warmupShown = logic.model.warmupReady && (creating ? st.newType !== 'cycle' : !selRide);
+  const warmupOn = warmupShown && ((st.warmups || {})[listKey] ?? (!creating && !!(srcAct && srcAct.warmup)));
+  const warmupChanged = !creating && warmupShown && warmupOn !== !!(srcAct && srcAct.warmup);
+  const lengthChanged = exDelta !== 0 || Math.round(setDeltaMin) !== 0 || warmupChanged;
+  // A warm-up's length is a fresh estimate from its exercises (they're quick ones), as is a workout's that stopped
+  // being one.
+  const estMin =
+    creating || warmupChanged || warmupOn
+      ? db.estimateMinutes(selList.length, warmupOn)
+      : Math.max(20, Math.round((baseMin + exDelta * 10 + setDeltaMin) / 5) * 5);
   const saving = logic.busy('workout');
   // Every exercise needs at least one set of at least one rep.
   const badCounts = selRide ? null : selList.find((e) => !setsRepsOk(e.sets));
@@ -163,6 +170,7 @@ export function editVals(ctx: Ctx) {
   // saved to their workouts first, since a session needs a workout of their own.
   const choiceOf = (w, builtinOne) => ({
       name: w.name,
+      warmup: !!w.warmup && !builtinOne,
       svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || colors.pink),
       meta:
         (w.kind === 'ride'
@@ -682,6 +690,7 @@ export function editVals(ctx: Ctx) {
             order: reordered ? selList.map((e) => e.name) : undefined,
           },
           repeatDates: st.repeat && !selAct.series ? weeklyAfter(baseName) : [],
+          warmup: warmupChanged ? warmupOn : undefined,
           durationMinutes: !selRide && lengthChanged ? estMin : undefined,
         };
         // Normally back to the workout's own detail screen; if a nav click was waiting on this save, go there instead.
@@ -713,7 +722,8 @@ export function editVals(ctx: Ctx) {
           update.length > 0 ||
           edit.exercises.removeIds.length > 0 ||
           added.length > 0 ||
-          reordered;
+          reordered ||
+          warmupChanged;
         // A saved workout, edited from the Spellbook: saved the way the Spellbook always has, asking whether sessions
         // still ahead should follow (or saving it as a new workout). Then back to the saved workout's page.
         if (tplMode) {
@@ -846,6 +856,7 @@ export function editVals(ctx: Ctx) {
             dates: scheduled ? [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weeklyAfter(nm) : []) : [],
             repeat: scheduled && !!st.repeat && weeklyAfter(nm).length > 0,
             done: scheduled && logDoneOn,
+            warmup: warmupOn,
           }),
         // Normally: saved only goes back to the Spellbook's workouts, where it now is; scheduled goes to the day it
         // was put on. If a nav click was waiting on this save, go there instead — that's what was actually asked
@@ -908,6 +919,8 @@ export function editVals(ctx: Ctx) {
       ' ' +
       selDay +
       yearNote,
+    // A warm-up says so on its page, beside the date.
+    eWarmup: !creating && !!(srcAct && srcAct.warmup),
     eDateAria: DOWFULL[selDate.getDay()] + ', ' + MONTHS[mod12(mi)] + ' ' + selDay + yearNote,
     eStatus: doneSel ? 'Completed' : 'Planned',
     // Once finished, how long it actually took; before that, the plan.
@@ -923,6 +936,9 @@ export function editVals(ctx: Ctx) {
           : !selRide && lengthChanged
             ? '~' + estMin + ' min'
             : (selAct && selAct.time) || '~50 min',
+    warmupShown,
+    warmupOn,
+    setWarmup: (on) => logic.s({ warmups: Object.assign({}, st.warmups, { [listKey]: !!on }) }),
     setRepeat: (on) => logic.s({ repeat: !!on }),
     repeatOn: !!st.repeat,
     // Said from the dates it would add: weeks gone by, and days that already have it, are left out.
