@@ -90,7 +90,12 @@ export function arsenalVals(ctx: Ctx) {
           : 'No ' + things) + (equipFilter.length ? ' with the equipment you ticked.' : '.');
   const workouts = logic.model.workouts;
   const builtinWorkouts = logic.model.builtinWorkouts || [];
+  // Warm-ups, or the other workouts, on their own (once there are any warm-ups to tell apart).
+  const hasWarmups = workouts.some((w) => w.warmup) || builtinWorkouts.some((w) => w.warmup);
+  const kind = hasWarmups ? st.arsenalKind || 'all' : 'all';
+  const workoutFiltering = filtering || kind !== 'all';
   const matches = (w) =>
+    (kind === 'all' || (kind === 'warmups') === !!w.warmup) &&
     inAreas(w.areas) &&
     (w.builtin ? w.list : EX[w.name] || []).every(canDo) &&
     (!q || w.name.toLowerCase().includes(q) || w.exercises.some((n) => n.toLowerCase().includes(q)));
@@ -100,6 +105,8 @@ export function arsenalVals(ctx: Ctx) {
   const mineOf = (w) => workouts.find((x) => x.name.trim().toLowerCase() === w.name.trim().toLowerCase()) || null;
   const workoutCard = (w) => ({
     name: w.name,
+    // Built-in warm-ups are grouped under a WARM-UP heading already.
+    warmup: !!w.warmup && !w.builtin,
     svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || colors.pink),
     meta:
       w.kind === 'ride'
@@ -483,7 +490,7 @@ export function arsenalVals(ctx: Ctx) {
           }),
         notes: chosen.notes || '',
         builtin,
-        eyebrow: builtin ? 'BUILT-IN WORKOUT' : 'SAVED WORKOUT',
+        eyebrow: (builtin ? 'BUILT-IN ' : 'SAVED ') + (chosen.warmup ? 'WARM-UP' : 'WORKOUT'),
         // A built-in workout can't be changed: copied to the person's own to edit, or, once it is theirs, opened.
         builtinNote: !builtin
           ? ''
@@ -790,7 +797,7 @@ export function arsenalVals(ctx: Ctx) {
     // While searching or filtering, how many of them are showing.
     arsenalCount:
       view === 'workouts'
-        ? (filtering ? hits.length + builtinHits.length + ' of ' : '') +
+        ? (workoutFiltering ? hits.length + builtinHits.length + ' of ' : '') +
           plural(workouts.length + builtinWorkouts.length, 'workout')
         : (filtering ? moveGroups.reduce((n, g) => n + g.items.length, 0) + ' of ' : '') + exerciseCount,
     arsenalIntro:
@@ -803,8 +810,11 @@ export function arsenalVals(ctx: Ctx) {
     workoutGroups,
     noSavedWorkouts: workouts.length + builtinWorkouts.length === 0,
     noWorkoutMatches:
-      workouts.length + builtinWorkouts.length > 0 && filtering && hits.length + builtinHits.length === 0,
-    noWorkoutMatchNote: noMatchText('workouts'),
+      workouts.length + builtinWorkouts.length > 0 && workoutFiltering && hits.length + builtinHits.length === 0,
+    noWorkoutMatchNote: noMatchText(kind === 'warmups' ? 'warm-ups' : 'workouts'),
+    showKindFilter: hasWarmups,
+    workoutKind: kind,
+    setWorkoutKind: (k) => logic.s({ arsenalKind: k }),
     arsenalAddOpen: !!st.arsenalAdd,
     // A new exercise starts with real values in its boxes (3 × 10, 60 sec rest) — what it saves if left alone —
     // rather than grey examples that look like values. Weight starts empty: none is saved unless one is typed.

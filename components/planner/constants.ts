@@ -71,7 +71,7 @@ export const RANKS = [
 export const EDIT_OVERLAYS = { renames:null, fields:null, removed:null, icons:null, iconColors:null, exIcons:null,
   extra:null, repeat:false, rDist:null, rElev:null, rHrs:null, rMins:null, rZone:null,
   aDist:null, aElev:null, aHrs:null, aMins:null, editKey:null, editId:null, pendingNav:null, notes:null, editDone:null,
-  logDone:null, exOrder:null };
+  logDone:null, exOrder:null, warmups:null };
 
 // Where Back goes from a screen with nothing before it: its section's own page (the calendar otherwise).
 export const HOME_OF: Record<string, string> = {

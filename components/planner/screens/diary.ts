@@ -100,6 +100,7 @@ export function diaryVals(ctx: Ctx) {
           ? String(x.d)
           : MON3[mod12(x.m)].toUpperCase() + ' ' + x.d + (Math.floor(x.m / 12) ? ' ' + (Y + Math.floor(x.m / 12)) : ''),
       name: nameOf(x.av.name),
+      warmup: !!x.av.warmup,
       meta: x.av.ride ? (ctx.distOf(x.av) ? ctx.distOf(x.av) + ' mi · ' : '') + ctx.timeOf(x.av) : ctx.timeOf(x.av),
       // Whether it was done, so writing about a missed one is a choice, not a surprise.
       status: x.done ? 'Done' : ctx.sessionStatus(x.m, x.d, x.av),
@@ -283,6 +284,7 @@ export function diaryVals(ctx: Ctx) {
       return {
         date: DOW3[dt.getDay()] + ', ' + MON3[mod12(en.m)].toUpperCase() + ' ' + en.d + yr,
         name: en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout',
+        warmup: !!(logic.model.entries.find((x) => x.av.id === id) || { av: null }).av?.warmup,
         deleteLabel:
           'Delete entry for ' + (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') + ', ' + MON3[mod12(en.m)] + ' ' + en.d + yr,
         note: en.note,
