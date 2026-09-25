@@ -15,10 +15,10 @@ input, textarea, button { font-family: inherit; }
 /* Whatever gets focus or is scrolled to stays clear of the phone tab bar at the bottom (and off the very top edge). */
 html { scroll-padding-top: 16px; scroll-padding-bottom: 104px; }
 
-/* A tap area of at least 44 × 44 px around a control drawn smaller than that, without changing how it looks. */
 /* Read by screen readers, not shown. */
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
+/* A tap area of at least 44 × 44 px around a control drawn smaller than that, without changing how it looks. */
 .hit { position: relative; }
 .hit::after { content: ''; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
 
