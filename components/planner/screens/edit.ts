@@ -649,6 +649,14 @@ export function editVals(ctx: Ctx) {
               )
             : Promise.resolve()
           ).then(() => r);
+        // Dragged into a new order: the whole list's names go with the save, in that order.
+        const reordered =
+          selList.map((e) => e.name).join('\n') !==
+          (EXV[baseKey] || [])
+            .concat(added)
+            .filter((e) => gone.indexOf(e.name) === -1)
+            .map((e) => e.name)
+            .join('\n');
         const edit = {
           entryId: selAct.id,
           workoutId: selAct.workoutId,
@@ -671,6 +679,7 @@ export function editVals(ctx: Ctx) {
               .filter((e) => e && e.id)
               .map((e) => e.id),
             add: added.map(bare),
+            order: reordered ? selList.map((e) => e.name) : undefined,
           },
           repeatDates: st.repeat && !selAct.series ? weeklyAfter(baseName) : [],
           durationMinutes: !selRide && lengthChanged ? estMin : undefined,
@@ -703,7 +712,8 @@ export function editVals(ctx: Ctx) {
           !!edit.ride ||
           update.length > 0 ||
           edit.exercises.removeIds.length > 0 ||
-          added.length > 0;
+          added.length > 0 ||
+          reordered;
         // A saved workout, edited from the Spellbook: saved the way the Spellbook always has, asking whether sessions
         // still ahead should follow (or saving it as a new workout). Then back to the saved workout's page.
         if (tplMode) {
@@ -952,8 +962,30 @@ export function editVals(ctx: Ctx) {
       const setRest = setField('rest');
       const setAreas = setField('areas');
       const exAreas = e.areas || [];
+      const n = selList.length;
+      // Moves this exercise to another place in the list (dragged, or with the arrow keys on its handle).
+      const moveTo = (to) => {
+        to = Math.max(0, Math.min(n - 1, to));
+        if (to === ix) return;
+        const names = selList.map((x) => x.name).filter((x) => x !== e.name);
+        names.splice(to, 0, e.name);
+        logic.s({
+          exOrder: Object.assign({}, st.exOrder, { [listKey]: names }),
+          exOpen: null,
+          announce: e.name + ' moved to ' + (to + 1) + ' of ' + n + '.',
+        });
+      };
       return {
         name: e.name,
+        canMove: n > 1,
+        moveTo,
+        moveAria: 'Move ' + e.name + ', ' + (ix + 1) + ' of ' + n,
+        moveKeys: (ev) => {
+          const to = { ArrowUp: ix - 1, ArrowDown: ix + 1, Home: 0, End: n - 1 }[ev.key];
+          if (to === undefined) return;
+          ev.preventDefault();
+          moveTo(to);
+        },
         sets: setsParts.sets,
         reps: setsParts.reps,
         weight: numericOnly(e.weight),
