@@ -3570,35 +3570,55 @@ export function PlannerView({ v }: { v: any }) {
                     tone="muted"
                     style={{ margin: '10px 0 0', maxWidth: '460px', textWrap: 'pretty' }}
                   >
-                    Entries attach to a workout on your plan. Listed: sessions from the last 60 days, up to today, that don&apos;t have one yet.
+                    Pick a session from the last 60 days. Ones you&apos;ve already written about aren&apos;t listed.
                   </Text>
-                  <div style={{ marginTop: '22px' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
-                      {(v.unlogged ?? []).map((u, i) => (
-                        <Fragment key={i}>
-                          <button onClick={u?.pick} style={css(u?.rowStyle)} className="hv7">
-                            <Text variant="eyebrow" tone="muted" style={{ flex: 'none', width: '56px' }}>
-                              {u?.day}
-                            </Text>
-                            <span
+                  <div style={{ marginTop: '26px', maxWidth: '620px' }}>
+                    {/* One card per group (this week, last week, earlier), its sessions as rows. Back leaves. */}
+                    {(v.unloggedGroups ?? []).map((g) => (
+                      <div key={g.label} style={{ marginBottom: '16px' }}>
+                        <Text variant="eyebrow" as="h2" tone="slate" style={{ margin: '0 4px 8px' }}>
+                          {g.label}
+                        </Text>
+                        <Card pad="none" style={{ overflow: 'hidden' }}>
+                          {g.items.map((u, i) => (
+                            <button
+                              key={i}
+                              onClick={u.pick}
+                              className="hv7"
                               style={{
-                                flex: '1 1 140px',
-                                minWidth: '0',
-                                fontSize: 'var(--text-lg)',
-                                fontWeight: 'var(--font-weight-semibold)',
-                                color: 'var(--color-ink)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '14px',
+                                width: '100%',
+                                minHeight: '60px',
+                                padding: '12px 18px',
+                                border: 'none',
+                                borderTop: i ? '1px solid rgba(35,42,69,.07)' : 'none',
+                                background: 'none',
+                                fontFamily: 'inherit',
+                                textAlign: 'left',
+                                cursor: 'pointer',
                               }}
                             >
-                              {u?.name}
-                            </span>
-                            <Text variant="caption" tone="muted" weight="medium" style={{ flex: 'none' }}>
-                              {u?.meta}
-                            </Text>
-                            <span style={css(u?.statusStyle)}>{u?.status}</span>
-                          </button>
-                        </Fragment>
-                      ))}
-                    </div>
+                              <Text variant="eyebrow" as="span" tone="slate" style={{ flex: 'none', width: '52px', lineHeight: 1.35 }}>
+                                {u.dayTop}
+                                <br />
+                                {u.dayBottom}
+                              </Text>
+                              <span style={{ flex: '1', minWidth: '0' }}>
+                                <Text variant="itemTitle" as="span" tone="ink" style={{ display: 'block' }}>
+                                  {u.name}
+                                </Text>
+                                <Text variant="caption" as="span" tone="muted" style={{ display: 'block', marginTop: '1px' }}>
+                                  {u.meta}
+                                </Text>
+                              </span>
+                              <span style={css(u.statusStyle)}>{u.status}</span>
+                            </button>
+                          ))}
+                        </Card>
+                      </div>
+                    ))}
                     {v.noUnlogged ? (
                       <>
                         <Text variant="body" as="p" tone="muted" style={{ margin: '16px 0 0' }}>
@@ -3606,19 +3626,6 @@ export function PlannerView({ v }: { v: any }) {
                         </Text>
                       </>
                     ) : null}
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        marginTop: '18px',
-                        paddingTop: '16px',
-                        borderTop: '1px solid rgba(35,42,69,.07)',
-                      }}
-                    >
-                      <Button type="neutral" ghost size="md" onClick={v.closeNewEntry}>
-                        Cancel
-                      </Button>
-                    </div>
                   </div>
                 </div>
               </>
@@ -5532,7 +5539,8 @@ export function PlannerView({ v }: { v: any }) {
                   ) : null}
                   {v.diaryEditing ? (
                     <>
-                      <div style={{ marginTop: '34px', textAlign: 'center' }}>
+                      {/* Centred on a phone; beside the sidebar it sits in the page's column, like a saved entry. */}
+                      <div style={{ marginTop: '34px', textAlign: v.entryLeft ? 'left' : 'center' }}>
                         {v.writeEyebrow ? (
                           <Text variant="eyebrow" as="div" tone="slate" style={{ marginBottom: '6px' }}>
                             {v.writeEyebrow}
@@ -5569,7 +5577,7 @@ export function PlannerView({ v }: { v: any }) {
                           gridTemplateColumns: 'repeat(4,minmax(0,1fr))',
                           gap: '4px',
                           maxWidth: '360px',
-                          margin: '34px auto 0',
+                          margin: v.entryLeft ? '28px 0 0 -2px' : '34px auto 0',
                         }}
                       >
                         {(v.moods ?? []).map((m, i) => (
@@ -5610,7 +5618,7 @@ export function PlannerView({ v }: { v: any }) {
                           </Fragment>
                         ))}
                       </div>
-                      <div style={{ maxWidth: '560px', margin: '40px auto 0' }}>
+                      <div style={{ maxWidth: '560px', margin: v.entryLeft ? '40px 0 0' : '40px auto 0' }}>
                         <div
                           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
                         >
@@ -5624,35 +5632,40 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             How hard did it feel?
                           </p>
-                          <span
-                            style={{
-                              marginLeft: 'auto',
-                              fontSize: 'var(--text-md)',
-                              fontWeight: 'var(--font-weight-semibold)',
-                              color: 'var(--color-pink-deep)',
-                            }}
-                          >
-                            {v.rpeLabel}
-                          </span>
                         </div>
-                        <div role="radiogroup" aria-label="How hard did it feel?" style={{ display: 'flex', gap: '4px', marginTop: '8px', marginLeft: '-6px' }}>
-                          {(v.stars ?? []).map((s, i) => (
-                            <Fragment key={i}>
-                              <button
-                                role="radio"
-                                aria-checked={!!s?.checked}
-                                aria-label={s?.label}
-                                tabIndex={s?.tab}
-                                data-star={s?.index}
-                                data-on={s?.on ? '' : undefined}
-                                onKeyDown={s?.keys}
-                                onClick={s?.pick}
-                                style={css(s?.style)}
-                              >
-                                <RatingStar on={!!s?.on} size={36} />
-                              </button>
-                            </Fragment>
-                          ))}
+                        {/* The effort word right after the stars, as a saved entry shows it: "★★★★☆ Hard". */}
+                        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', marginTop: '8px' }}>
+                          <div role="radiogroup" aria-label="How hard did it feel?" style={{ display: 'flex', gap: '4px', marginLeft: '-6px' }}>
+                            {(v.stars ?? []).map((s, i) => (
+                              <Fragment key={i}>
+                                <button
+                                  role="radio"
+                                  aria-checked={!!s?.checked}
+                                  aria-label={s?.label}
+                                  tabIndex={s?.tab}
+                                  data-star={s?.index}
+                                  data-on={s?.on ? '' : undefined}
+                                  onKeyDown={s?.keys}
+                                  onClick={s?.pick}
+                                  style={css(s?.style)}
+                                >
+                                  <RatingStar on={!!s?.on} size={36} />
+                                </button>
+                              </Fragment>
+                            ))}
+                          </div>
+                          {v.rpeLabel ? (
+                            <span
+                              style={{
+                                marginLeft: '8px',
+                                fontSize: 'var(--text-lg)',
+                                fontWeight: 'var(--font-weight-semibold)',
+                                color: 'var(--color-pink-deep)',
+                              }}
+                            >
+                              {v.rpeLabel}
+                            </span>
+                          ) : null}
                         </div>
                         <p
                           style={{
