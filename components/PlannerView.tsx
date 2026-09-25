@@ -4873,8 +4873,9 @@ export function PlannerView({ v }: { v: any }) {
                                 alignItems: 'center',
                                 gap: '10px',
                                 marginTop: '16px',
-                                padding: '0 14px',
+                                padding: '0 13px',
                                 background: 'var(--color-canvas)',
+                                border: '1px solid var(--color-outline)',
                                 borderRadius: '14px',
                               }}
                             >
