@@ -107,9 +107,9 @@ export function PlannerView({ v }: { v: any }) {
         actions={
           <>
             <Button type="neutral" ghost size="md" onClick={v.confirmCancel}>
-              Keep it
+              {v.confirmCancelLabel}
             </Button>
-            <Button type="danger" size="md" onClick={v.confirmRun}>
+            <Button type={v.confirmSafe ? 'primary' : 'danger'} size="md" onClick={v.confirmRun}>
               {v.confirmLabel}
             </Button>
           </>
@@ -253,7 +253,10 @@ export function PlannerView({ v }: { v: any }) {
                   fontSize: 'var(--text-base)',
                 }}
               >
-                <span style={{ flex: '1', minWidth: '0' }}>Couldn&apos;t save: {v.saveError}</span>
+                <span style={{ flex: '1', minWidth: '0' }}>
+                  Couldn&apos;t save that. Check your connection and try again.
+                  <span style={{ display: 'block', marginTop: '2px', fontSize: 'var(--text-xs)', opacity: 0.8 }}>{v.saveError}</span>
+                </span>
                 <Button type="danger" ghost size="xs" onClick={v.dismissError}>
                   Dismiss
                 </Button>
@@ -1572,7 +1575,7 @@ export function PlannerView({ v }: { v: any }) {
                     </div>
                   </div>
                   <Text variant="title" as="h1" style={{ margin: '22px 0 0' }}>
-                    Written into your chronicle
+                    Written into your Chronicle
                   </Text>
                   <Text
                     variant="body"
@@ -1600,7 +1603,7 @@ export function PlannerView({ v }: { v: any }) {
                     >
                       <span style={{ flex: '1', minWidth: '0' }}>
                         <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
-                          Read your chronicle
+                          Read your Chronicle
                         </Text>
                         <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
                           {v.savedCount}
@@ -1959,7 +1962,7 @@ export function PlannerView({ v }: { v: any }) {
                       {v.weekEmpty ? (
                         <>
                           <Text variant="body" as="p" tone="muted" style={{ margin: '0' }}>
-                            No sessions were planned that week.
+                            A quiet week. Nothing was planned.
                           </Text>
                         </>
                       ) : null}
@@ -2222,7 +2225,7 @@ export function PlannerView({ v }: { v: any }) {
                       </Text>
                       {v.ticksEmpty ? (
                         <Text variant="caption" as="p" weight="medium" style={{ margin: '9px 0 0', color: 'var(--color-slate-deep)' }}>
-                          Finished sessions line up here.
+                          Clear a day and it lights up here.
                         </Text>
                       ) : null}
                       <div style={{ display: 'flex', gap: '6px', marginTop: '9px' }}>
@@ -2815,7 +2818,7 @@ export function PlannerView({ v }: { v: any }) {
                     <>
                       {v.noSavedWorkouts ? (
                         <Text variant="body" as="p" tone="muted" style={{ margin: '20px 0 0' }}>
-                          Your spellbook is empty. Write your first workout with New.
+                          Your Spellbook is empty. Write your first workout with New.
                         </Text>
                       ) : null}
                       {v.noWorkoutMatches ? (

@@ -167,6 +167,8 @@ export function chromeVals(ctx: Ctx) {
     confirmTitle: (st.confirm || {}).title,
     confirmBody: (st.confirm || {}).body,
     confirmLabel: (st.confirm || {}).label,
+    confirmCancelLabel: (st.confirm || {}).cancelLabel || 'Keep it',
+    confirmSafe: !!(st.confirm || {}).safe,
     confirmCancel: () => logic.s({ confirm: null }),
     confirmRun: () => {
       const c = st.confirm || {};

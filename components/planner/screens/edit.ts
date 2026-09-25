@@ -743,7 +743,7 @@ export function editVals(ctx: Ctx) {
                       (st.repeat ? ', and every ' + DOWFULL[selDate.getDay()] + ' for 12 weeks after (13 sessions).' : '.'),
                     'day',
                   )
-                : noticePatch('“' + r.name + '” saved to your Spellbook.', 'template'),
+                : noticePatch('“' + r.name + '” is written into your Spellbook.', 'template'),
           ),
       );
     },
