@@ -186,6 +186,7 @@ export function arsenalVals(ctx: Ctx) {
         edit: () =>
           logic.nav({
             screen: 'exerciseEdit',
+            exEquipOpen: false,
             exDraft: draftFrom(found.ex, found.ex.name),
             exDraftOrig: draftFrom(found.ex, found.ex.name),
             exEditNav: true,
@@ -212,6 +213,7 @@ export function arsenalVals(ctx: Ctx) {
           for (let n = 2; taken.has(name.toLowerCase()); n++) name = found.ex.name + ' (copy ' + n + ')';
           logic.nav({
             screen: 'exerciseEdit',
+            exEquipOpen: false,
             exDraft: draftFrom(found.ex, name),
             exDraftOrig: draftFrom(found.ex, name),
             exEditNav: true,
@@ -320,6 +322,11 @@ export function arsenalVals(ctx: Ctx) {
           }),
       };
     }),
+    // Equipment is one row that opens to the picker: what's picked, or "Bodyweight", while it's closed.
+    equipmentOpen: !!st.exEquipOpen,
+    toggleEquipment: () => logic.s({ exEquipOpen: !st.exEquipOpen }),
+    equipmentSummary:
+      exDraft.equipment === undefined ? '' : exDraft.equipment.length ? exDraft.equipment.join(', ') : 'Bodyweight',
     // What it needs, picked from the equipment list in its groups; none picked is bodyweight.
     equipmentGroups:
       exDraft.equipment === undefined
@@ -873,10 +880,19 @@ export function arsenalVals(ctx: Ctx) {
     equipFilterOpen: !!st.arsenalEquipOpen,
     toggleEquipFilter: () => logic.s({ arsenalEquipOpen: !st.arsenalEquipOpen }),
     closeEquipFilter: () => logic.s({ arsenalEquipOpen: false }),
-    equipFilterLabel: equipFilter.length ? 'What I have · ' + equipFilter.length : 'Any',
+    // Short enough for half a phone's width ("3 ticked"); the button's name spells out what's ticked.
+    equipFilterLabel: equipFilter.length ? equipFilter.length + ' ticked' : 'Any',
+    equipFilterName: 'Filter by equipment: ' + (equipFilter.length ? equipFilter.join(', ') : 'any'),
     equipFilterActive: equipFilter.length > 0,
+    // Each group of the filter opens and closes on its own; one with something ticked starts open.
     equipFilterGroups: EQUIPMENT_GROUPS.map((g) => ({
       label: g.label,
+      open: (st.equipGroupsOpen || {})[g.label] ?? g.items.some((x) => equipFilter.includes(x)),
+      picked: g.items.filter((x) => equipFilter.includes(x)).join(', '),
+      toggle: () => {
+        const isOpen = (st.equipGroupsOpen || {})[g.label] ?? g.items.some((x) => equipFilter.includes(x));
+        logic.s({ equipGroupsOpen: { ...(st.equipGroupsOpen || {}), [g.label]: !isOpen } });
+      },
       items: g.items.map((name) => {
         const on = equipFilter.includes(name);
         return {

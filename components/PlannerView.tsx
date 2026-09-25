@@ -2613,18 +2613,62 @@ export function PlannerView({ v }: { v: any }) {
                             <Text variant="caption" tone="slate" as="p" style={{ margin: '0 0 4px' }}>
                               Show what you can do with the equipment you tick. Bodyweight exercises always show.
                             </Text>
-                            {(v.equipFilterGroups ?? []).map((g) => (
-                              <div key={g.label} role="group" aria-label={g.label}>
-                                <Text variant="eyebrow" as="div" tone="muted" style={{ margin: '12px 0 8px' }}>
-                                  {g.label.toUpperCase()}
-                                </Text>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(130px,1fr))', gap: '10px 12px' }}>
-                                  {g.items.map((o) => (
-                                    <Checkbox key={o.name} checked={o.on} onChange={o.set}>
-                                      {o.name}
-                                    </Checkbox>
-                                  ))}
-                                </div>
+                            {(v.equipFilterGroups ?? []).map((g, gi) => (
+                              <div key={g.label}>
+                                {/* Each group opens on its own; its ticks show on its row while it's closed. */}
+                                <button
+                                  type="button"
+                                  aria-expanded={g.open}
+                                  aria-controls={'equip-filter-' + gi}
+                                  onClick={g.toggle}
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    width: '100%',
+                                    minHeight: '44px',
+                                    padding: '0 2px',
+                                    border: 'none',
+                                    borderBottom: '1px solid rgba(35,42,69,.08)',
+                                    background: 'none',
+                                    fontFamily: 'inherit',
+                                    textAlign: 'left',
+                                    cursor: 'pointer',
+                                  }}
+                                >
+                                  <Text variant="eyebrow" as="span" tone="muted" style={{ flex: 'none' }}>
+                                    {g.label.toUpperCase()}
+                                  </Text>
+                                  <Text
+                                    variant="caption"
+                                    as="span"
+                                    tone="accent"
+                                    weight="semibold"
+                                    style={{ flex: '1', minWidth: '0', textAlign: 'right', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                                  >
+                                    {g.picked}
+                                  </Text>
+                                  <ChevronDown
+                                    color="var(--color-muted)"
+                                    strokeWidth={2.2}
+                                    size={16}
+                                    style={{ flex: 'none', transition: 'transform .2s', transform: g.open ? 'rotate(180deg)' : 'none' }}
+                                  />
+                                </button>
+                                {g.open ? (
+                                  <div
+                                    id={'equip-filter-' + gi}
+                                    role="group"
+                                    aria-label={g.label}
+                                    style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(130px,1fr))', gap: '10px 12px', padding: '12px 0 8px' }}
+                                  >
+                                    {g.items.map((o) => (
+                                      <Checkbox key={o.name} checked={o.on} onChange={o.set}>
+                                        {o.name}
+                                      </Checkbox>
+                                    ))}
+                                  </div>
+                                ) : null}
                               </div>
                             ))}
                             {v.equipFilterActive ? (
@@ -2638,7 +2682,7 @@ export function PlannerView({ v }: { v: any }) {
                         <button
                           type="button"
                           aria-expanded={!!v.equipFilterOpen}
-                          aria-label={'Filter by equipment: ' + v.equipFilterLabel}
+                          aria-label={v.equipFilterName}
                           onClick={v.toggleEquipFilter}
                           style={{
                             display: 'flex',
@@ -3433,25 +3477,64 @@ export function PlannerView({ v }: { v: any }) {
                       ))}
                     </div>
                     {v.exerciseEdit.equipmentGroups ? (
-                      <div role="group" aria-label="Equipment">
-                        <Label style={{ margin: '16px 0 2px' }}>Equipment</Label>
-                        <Text variant="caption" tone="muted" as="p" style={{ margin: '0 0 4px' }}>
-                          Leave it empty for a bodyweight exercise.
-                        </Text>
-                        {v.exerciseEdit.equipmentGroups.map((g, gi) => (
-                          <div key={gi} role="group" aria-label={g.label}>
-                            <Text variant="eyebrow" as="div" tone="muted" style={{ margin: '10px 0 6px' }}>
-                              {g.label.toUpperCase()}
+                      <div style={{ marginTop: '16px' }}>
+                        {/* One row with what's picked; it opens to the picker, so the editor stays short. */}
+                        <button
+                          type="button"
+                          aria-expanded={v.exerciseEdit.equipmentOpen}
+                          aria-controls="exercise-equipment"
+                          onClick={v.exerciseEdit.toggleEquipment}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            width: '100%',
+                            minHeight: '52px',
+                            padding: '10px 14px',
+                            border: '1px solid var(--color-outline)',
+                            borderRadius: '14px',
+                            background: 'var(--color-canvas)',
+                            fontFamily: 'inherit',
+                            textAlign: 'left',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          <span style={{ flex: '1', minWidth: '0' }}>
+                            <Text variant="eyebrow" as="span" tone="slate" style={{ display: 'block' }}>
+                              EQUIPMENT
                             </Text>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                              {g.items.map((a, i) => (
-                                <Chip key={i} tone="choice" size="md" selected={a.on} onClick={a.toggle}>
-                                  {a.name}
-                                </Chip>
-                              ))}
-                            </div>
+                            <Text variant="body" as="span" tone="ink" weight="semibold" style={{ display: 'block', marginTop: '2px' }}>
+                              {v.exerciseEdit.equipmentSummary}
+                            </Text>
+                          </span>
+                          <ChevronDown
+                            color="var(--color-muted)"
+                            strokeWidth={2.2}
+                            size={18}
+                            style={{ flex: 'none', transition: 'transform .2s', transform: v.exerciseEdit.equipmentOpen ? 'rotate(180deg)' : 'none' }}
+                          />
+                        </button>
+                        {v.exerciseEdit.equipmentOpen ? (
+                          <div id="exercise-equipment" role="group" aria-label="Equipment" style={{ padding: '4px 2px 0' }}>
+                            <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+                              Leave it empty for a bodyweight exercise.
+                            </Text>
+                            {v.exerciseEdit.equipmentGroups.map((g, gi) => (
+                              <div key={gi} role="group" aria-label={g.label}>
+                                <Text variant="eyebrow" as="div" tone="muted" style={{ margin: '10px 0 6px' }}>
+                                  {g.label.toUpperCase()}
+                                </Text>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                  {g.items.map((a, i) => (
+                                    <Chip key={i} tone="choice" size="md" selected={a.on} onClick={a.toggle}>
+                                      {a.name}
+                                    </Chip>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        ) : null}
                       </div>
                     ) : null}
                     <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
