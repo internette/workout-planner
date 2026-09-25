@@ -142,17 +142,20 @@ export function diaryVals(ctx: Ctx) {
                 : {}),
             },
           ))(!hasEntry && ((st.hist || [])[(st.hist || []).length - 1] || {}).screen === 'newEntry'),
+    // "Neutral · Steady effort on Upper Push, Sep 25.": the effort in the same words the entry shows it.
     savedLine:
       st.mood +
       ' · ' +
-      st.rpe +
-      '/5 effort on ' +
+      (st.rpe ? RPE_WORDS[Math.max(1, Math.min(5, st.rpe)) - 1] + ' effort' : 'effort') +
+      ' on ' +
       selName +
       ', ' +
       MON3[mod12(mi)] +
       ' ' +
       selDay +
       '.',
+    // The entry just written, to read (or change) it. It takes this screen's place, so Back goes where this would.
+    readSavedEntry: () => logic.s({ screen: 'diary', diaryEdit: false }),
     savedCount: plural(Object.keys(ENTRIES).length, 'entry', 'entries') + ' so far',
     savedNextTitle: nextEntry ? 'Get ready for ' + nameOf(nextEntry.av.name) : 'Plan your next workout',
     savedNextMeta: nextEntry
@@ -321,7 +324,8 @@ export function diaryVals(ctx: Ctx) {
     }),
     diaryReading: reading,
     diaryEditing: !reading,
-    editEntry: () => logic.s({ diaryEdit: true }),
+    // The "Entry saved." notice is about the entry as it was; changing it starts without it.
+    editEntry: () => logic.s({ diaryEdit: true, notice: null }),
     deleteEntry: () =>
       logic.s({
         confirm: {
@@ -349,7 +353,11 @@ export function diaryVals(ctx: Ctx) {
     // Entry saved: to the calendar, on the day of the workout just written about (not back one screen).
     backToCalendar: () => logic.s({ screen: 'day', seg: 'Day', monthOpen: false, hist: [] }),
     // Changing a saved entry, Back returns to reading it; otherwise it goes where the screen was opened from.
-    diaryBackLabel: writing && saved ? 'Entry' : '',
+    diaryBackLabel: writing && saved ? nameOf(selName) : '',
+    // Changing an entry looks like writing one, so it says which it is.
+    writeEyebrow: writing && saved ? 'CHANGING YOUR ENTRY' : '',
+    // The session it's about, for the tab's title ("Leg Day entry").
+    diaryTitle: selName ? nameOf(selName) : '',
     diaryEyebrow: st.diaryFrom === 'list' || reading ? 'CHRONICLE ENTRY' : 'COMPLETED',
     diaryBack: leaveEntry,
     entryDirty,

@@ -1600,6 +1600,23 @@ export function PlannerView({ v }: { v: any }) {
                       as="button"
                       pad="sm"
                       interactive
+                      onClick={v.readSavedEntry}
+                      style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
+                    >
+                      <span style={{ flex: '1', minWidth: '0' }}>
+                        <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+                          Read this entry
+                        </Text>
+                        <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
+                          Change it any time
+                        </Text>
+                      </span>
+                      <ChevronRight color="var(--color-muted)" size={20} />
+                    </Card>
+                    <Card
+                      as="button"
+                      pad="sm"
+                      interactive
                       onClick={v.goDiaryList}
                       style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
                     >
@@ -5516,6 +5533,11 @@ export function PlannerView({ v }: { v: any }) {
                   {v.diaryEditing ? (
                     <>
                       <div style={{ marginTop: '34px', textAlign: 'center' }}>
+                        {v.writeEyebrow ? (
+                          <Text variant="eyebrow" as="div" tone="slate" style={{ marginBottom: '6px' }}>
+                            {v.writeEyebrow}
+                          </Text>
+                        ) : null}
                         <Text variant="title" as="h1" style={{ margin: '0' }}>
                           {'How did that feel? '}
                           <Sparkle

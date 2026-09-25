@@ -135,7 +135,7 @@ export default function Planner({ account = null }: { account?: Account | null }
               : st.screen === 'exerciseEdit'
                 ? 'Editing ' + (v.exerciseEdit?.name || v.exercise?.name || 'exercise')
               : st.screen === 'diary'
-                ? 'Entry'
+                ? (v.diaryTitle ? v.diaryTitle + ' entry' : 'Entry')
                 : st.screen === 'newEntry'
                   ? 'New entry'
                   : '';
