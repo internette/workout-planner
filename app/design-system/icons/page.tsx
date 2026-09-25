@@ -1,5 +1,5 @@
 import * as glyphs from '@/components/ui/icons/glyphs';
-import { ExerciseIcon, EXERCISE_ICON_NAMES, Gem, MoodFace, Sparkle, SparkleTrail } from '@/components/ui/icons';
+import { ExerciseIcon, EXERCISE_ICON_NAMES, Gem, MoodFace, RatingStar, Sparkle, SparkleTrail } from '@/components/ui/icons';
 import { Mark } from '@/components/brand/Mark';
 import { colors } from '@/components/ui/colors';
 import { DocPage } from '../docs';
@@ -113,6 +113,39 @@ export default function IconsPage() {
             </span>
           </Tile>
         ))}
+      </div>
+
+      <h2 id="rating-stars" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-2xl)', marginTop: 40 }}>
+        Rating stars
+      </h2>
+      <p style={{ margin: '8px 0 16px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
+        <code>RatingStar</code> takes <code>on</code> and <code>size</code>, not a colour: on, it fills with the pink →
+        periwinkle → teal gradient; off, it&apos;s a pale pink. Round joins on a stroke of the same paint soften its
+        points. The entry form draws five at 36px, each inside a 44px button, as a radio group. In forced colours the
+        gradient can&apos;t show, so a star inside <code>data-star</code> or <code>.fc-star</code> fills with the system
+        text colour when it has <code>data-on</code>, and greyed text colour when it doesn&apos;t.
+      </p>
+      <div style={grid}>
+        <Tile name="On">
+          <span className="fc-star" data-on="" style={{ display: 'flex' }}>
+            <RatingStar on size={36} />
+          </span>
+        </Tile>
+        <Tile name="Off">
+          <span className="fc-star" style={{ display: 'flex' }}>
+            <RatingStar on={false} size={36} />
+          </span>
+        </Tile>
+        <div style={{ ...card, gridColumn: 'span 2' }}>
+          <span style={{ display: 'flex', gap: 4 }}>
+            {[1, 2, 3, 4, 5].map((n) => (
+              <span key={n} className="fc-star" data-on={n <= 4 ? '' : undefined} style={{ display: 'flex' }}>
+                <RatingStar on={n <= 4} size={28} />
+              </span>
+            ))}
+          </span>
+          <span style={label}>4 of 5, as rated</span>
+        </div>
       </div>
     </DocPage>
   );

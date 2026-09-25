@@ -107,12 +107,13 @@ export const sections: Section[] = [
     slug: 'icons',
     title: 'Icons',
     category: 'foundations',
-    description: 'Glyphs, sparkles, gems and mood faces on a 24×24 canvas.',
+    description: 'Glyphs, sparkles, gems, mood faces and rating stars on a 24×24 canvas.',
     anchors: [
       { id: 'glyphs', title: 'Glyphs' },
       { id: 'exercise-icons', title: 'Exercise icons' },
       { id: 'decorative', title: 'Decorative' },
       { id: 'mood-faces', title: 'Mood faces' },
+      { id: 'rating-stars', title: 'Rating stars' },
     ],
   },
   {
