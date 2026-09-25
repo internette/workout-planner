@@ -177,7 +177,8 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
               <Text variant="headline" as="h2" className={styles.headline}>
                 Not a badge bolted on afterwards
               </Text>
-              <Text variant="body" tone="slate" as="p" className={styles.questBody}>
+              {/* The deeper slate: on the gradient's periwinkle middle, plain slate falls just under 4.5:1. */}
+              <Text variant="body" as="p" className={styles.questBody} style={{ color: 'var(--color-slate-deep)' }}>
                 Every day with a session on your plan gets a quest, and it resolves in its own words once that day is clear. On a rest day it says so and leaves you alone.
               </Text>
             </div>

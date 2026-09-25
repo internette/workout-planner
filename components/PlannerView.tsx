@@ -1245,7 +1245,8 @@ export function PlannerView({ v }: { v: any }) {
                         <div
                           style={{
                             display: 'grid',
-                            gridTemplateColumns: '1fr 1fr',
+                            // Side by side, until that leaves too little room to say "of 16 done" on one line.
+                            gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))',
                             gap: '12px',
                             alignItems: 'stretch',
                           }}
@@ -2521,7 +2522,7 @@ export function PlannerView({ v }: { v: any }) {
                     style={{ width: '100%', marginTop: '8px' }}
                     content={
                       <>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div role="group" aria-label="Show exercises for these target areas" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                           {(v.areaFilterOptions ?? []).map((o) => (
                             <Checkbox key={o?.name} checked={!!o?.on} onChange={o?.set}>
                               {o?.name}
@@ -2544,7 +2545,6 @@ export function PlannerView({ v }: { v: any }) {
                   >
                     <button
                       type="button"
-                      aria-haspopup="true"
                       aria-expanded={!!v.areaFilterOpen}
                       aria-label={'Filter by target area: ' + v.areaFilterLabel}
                       onClick={v.toggleAreaFilter}
@@ -2908,7 +2908,7 @@ export function PlannerView({ v }: { v: any }) {
             {v.isExercise && v.exercise ? (
               <>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '10px' }}>
                     <BackLink label={v.backLabel} onClick={v.goBack} />
                     {v.exercise.builtin ? (
                       <span className="bar-actions" style={{ display: 'flex', gap: '8px', marginLeft: 'auto', flex: 'none' }}>
@@ -3054,7 +3054,7 @@ export function PlannerView({ v }: { v: any }) {
             {v.isTemplate && v.template ? (
               <>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '10px' }}>
                     <BackLink label={v.backLabel} onClick={v.goBack} />
                     <Button
                       type="secondary"
@@ -3223,7 +3223,7 @@ export function PlannerView({ v }: { v: any }) {
             {v.isExerciseEdit && v.exerciseEdit ? (
               <>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px' }}>
                     <BackLink label={v.backLabel} onClick={v.exerciseEdit.cancel} />
                   </div>
                   {/* The same as the workout editor: Back on its own row, then what's being edited. */}
@@ -3330,7 +3330,7 @@ export function PlannerView({ v }: { v: any }) {
             {v.isNewEntry ? (
               <>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '10px' }}>
                     <BackLink label={v.backLabel} onClick={v.goBack} />
                   </div>
                   <Text variant="title" as="h1" style={{ margin: '24px 0 0' }}>
@@ -3454,6 +3454,7 @@ export function PlannerView({ v }: { v: any }) {
                             variant="bare"
                             size="sm"
                             aria-label="From date"
+                            style={{ minHeight: '44px' }}
                             value={v.rangeFrom ?? ''}
                             onChange={v.setRangeFrom}
                             type="date"
@@ -3472,6 +3473,7 @@ export function PlannerView({ v }: { v: any }) {
                             variant="bare"
                             size="sm"
                             aria-label="To date"
+                            style={{ minHeight: '44px' }}
                             value={v.rangeTo ?? ''}
                             onChange={v.setRangeTo}
                             type="date"
@@ -3667,7 +3669,7 @@ export function PlannerView({ v }: { v: any }) {
                       ) : null}
                     </div>
                   </Dialog>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '10px' }}>
                     <BackLink label={v.backLabel} onClick={v.backToDay} />
                     <Button type="secondary" size="sm" onClick={v.goEdit} style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
                       <Pencil color="var(--color-pink-deep)" size={16} />
@@ -3945,7 +3947,7 @@ export function PlannerView({ v }: { v: any }) {
             {v.needsType ? (
               <>
                 <div style={{ maxWidth: '560px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px' }}>
                     <BackLink label={v.backLabel} onClick={v.backToDay} />
                   </div>
                   <div style={{ marginTop: '18px' }}>
@@ -4128,7 +4130,7 @@ export function PlannerView({ v }: { v: any }) {
                       </>
                     }
                   />
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px' }}>
                     <BackLink label={v.backLabel} onClick={v.tryLeave} />
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 12px', marginTop: '18px' }}>
@@ -5181,7 +5183,7 @@ export function PlannerView({ v }: { v: any }) {
             {v.isDiary ? (
               <>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '10px' }}>
                     <BackLink label={v.diaryBackLabel || v.backLabel} onClick={v.diaryBack} />
                     {v.diaryReading ? (
                       <Button type="secondary" size="sm" onClick={v.editEntry} style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
@@ -5208,28 +5210,10 @@ export function PlannerView({ v }: { v: any }) {
                           <Text variant="display" as="h1" style={{ margin: '0' }}>
                             {v.eName}
                           </Text>
-                          <button
-                            onClick={v.goDetail}
-                            style={{
-                              alignSelf: 'center',
-                              height: '30px',
-                              padding: '0 12px',
-                              border: 'none',
-                              borderRadius: '10px',
-                              background: 'none',
-                              cursor: 'pointer',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '6px',
-                              fontSize: 'var(--text-md)',
-                              fontWeight: 'var(--font-weight-semibold)',
-                              color: 'var(--color-pink-deep)',
-                            }}
-                            className="hv7"
-                          >
+                          <Button type="secondary" ghost size="xs" onClick={v.goDetail} style={{ alignSelf: 'center' }}>
                             View workout
                             <ChevronRight color="var(--color-pink-deep)" strokeWidth={2.2} size={15} />
-                          </button>
+                          </Button>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '22px' }}>
                           <Card
@@ -5283,18 +5267,9 @@ export function PlannerView({ v }: { v: any }) {
                             {v.readNote}
                           </p>
                         </Card>
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            justifyContent: 'flex-end',
-                            gap: '10px',
-                            marginTop: '22px',
-                            paddingTop: '20px',
-                            borderTop: '1px solid rgba(35,42,69,.07)',
-                          }}
-                        >
-                          <Button type="danger" ghost size="lg" onClick={v.deleteEntry}>
+                        {/* Laid out like the other pages' own Delete (a saved workout's, an exercise's). */}
+                        <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid rgba(35,42,69,.07)' }}>
+                          <Button type="danger" ghost size="md" onClick={v.deleteEntry}>
                             Delete entry
                           </Button>
                         </div>
