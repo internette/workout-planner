@@ -4111,40 +4111,52 @@ export function PlannerView({ v }: { v: any }) {
                           </Checkbox>
                         </Card>
                       ) : null}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        {(v.savedChoices ?? []).map((w, i) => (
-                          <Card
-                            key={i}
-                            as="button"
-                            pad="sm"
-                            interactive
-                            onClick={w?.pick}
-                            style={{ display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left', width: '100%' }}
-                          >
-                            <span
-                              style={{
-                                width: '34px',
-                                height: '34px',
-                                flex: 'none',
-                                borderRadius: '11px',
-                                background: 'var(--color-pink-tint)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }}
-                            >
-                              {w?.svg}
-                            </span>
-                            <span style={{ flex: '1', minWidth: '0' }}>
-                              <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
-                                {w?.name}
+                      {/* The person's own, then the built-in ones by group, as the Spellbook lists them. */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                        {(v.savedChoiceGroups ?? []).map((g, gi) => (
+                          <div key={gi}>
+                            {g?.label ? (
+                              <Text variant="eyebrow" tone="muted" as="h3" style={{ margin: '0 2px 8px' }}>
+                                {g?.label}
                               </Text>
-                              <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
-                                {w?.meta}
-                              </Text>
-                            </span>
-                            <Plus color="var(--color-pink-deep)" size={17} />
-                          </Card>
+                            ) : null}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                              {(g?.items ?? []).map((w, i) => (
+                                <Card
+                                  key={i}
+                                  as="button"
+                                  pad="sm"
+                                  interactive
+                                  onClick={w?.pick}
+                                  style={{ display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left', width: '100%' }}
+                                >
+                                  <span
+                                    style={{
+                                      width: '34px',
+                                      height: '34px',
+                                      flex: 'none',
+                                      borderRadius: '11px',
+                                      background: 'var(--color-pink-tint)',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                    }}
+                                  >
+                                    {w?.svg}
+                                  </span>
+                                  <span style={{ flex: '1', minWidth: '0' }}>
+                                    <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+                                      {w?.name}
+                                    </Text>
+                                    <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
+                                      {w?.meta}
+                                    </Text>
+                                  </span>
+                                  <Plus color="var(--color-pink-deep)" size={17} />
+                                </Card>
+                              ))}
+                            </div>
+                          </div>
                         ))}
                       </div>
                     </>

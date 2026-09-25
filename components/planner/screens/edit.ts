@@ -158,6 +158,60 @@ export function editVals(ctx: Ctx) {
     .sort((a, b) => a.name.localeCompare(b.name));
   const areaWords = (list) =>
     list.length === 1 ? list[0] : list.slice(0, -1).join(', ') + ' and ' + list[list.length - 1];
+  // "Or one from your Spellbook": the person's own workouts, then the built-in ones they don't have yet (theirs by that
+  // name is already listed), grouped as the Spellbook groups them. Picking one puts it on this day; a built-in one is
+  // saved to their workouts first, since a session needs a workout of their own.
+  const choiceOf = (w, builtinOne) => ({
+      name: w.name,
+      svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || colors.pink),
+      meta:
+        (w.kind === 'ride'
+          ? ['Ride', w.ride && w.ride.dist ? w.ride.dist + ' mi' : '', w.time].filter(Boolean).join(' · ')
+          : plural(w.exercises.length, 'exercise') + ' · ' + w.time) +
+        // Already on this day: tapping it adds a second one, so say so first.
+        (logic.model.entries.some((x) => x.m === mi && x.d === selDay && x.av.name === w.name) ? ' · Already on this day' : ''),
+      pick: () =>
+        logic.saveOnce(
+          'workout',
+          () =>
+            (builtinOne ? db.ownCopyOfBuiltin(w).then((c) => c.workoutId) : Promise.resolve(w.id)).then((id) =>
+              db.scheduleWorkout(
+                id,
+                [isoOf(new Date(Y, mi, selDay))],
+                false,
+                logDoneOn ? { exercises: w.kind === 'ride' ? [] : w.exercises } : undefined,
+              ),
+            ),
+          (r) =>
+            Object.assign(
+              { screen: 'day', seg: 'Day', creating: false, newType: null, newName: '', newFrom: null, schedule: null },
+              EDIT_OVERLAYS,
+              {
+                hist: (st.hist || []).slice(0, -1),
+                ...noticePatch(
+                  '“' + w.name + '” ' + (builtinOne ? 'saved to your workouts and ' : '') +
+                    (logDoneOn ? 'logged as done on ' : 'added to ') + MON3[mod12(mi)] + ' ' + selDay + '.',
+                  'day',
+                ),
+              },
+              r && r.entryId ? { entryId: r.entryId } : {},
+            ),
+        ),
+  });
+  const ownNames = new Set(logic.model.workouts.map((w) => w.name.trim().toLowerCase()));
+  const builtinChoices = (logic.model.builtinWorkouts || []).filter((w) => !ownNames.has(w.name.trim().toLowerCase()));
+  const savedChoiceGroups = [];
+  if (logic.model.workouts.length)
+    savedChoiceGroups.push({
+      label: builtinChoices.length ? 'YOUR WORKOUTS' : '',
+      items: logic.model.workouts.map((w) => choiceOf(w, false)),
+    });
+  builtinChoices.forEach((w) => {
+    const label = 'BUILT-IN · ' + w.category.toUpperCase();
+    let g = savedChoiceGroups.find((x) => x.label === label);
+    if (!g) savedChoiceGroups.push((g = { label, items: [] }));
+    g.items.push(choiceOf(w, true));
+  });
   return {
     nameError: nameClash ? 'You already have a workout called “' + nameClash.name + '”. Give this one another name.' : '',
     saveBlocked: !!nameClash || needsName || needsExercise || !!badCounts || saving,
@@ -192,47 +246,15 @@ export function editVals(ctx: Ctx) {
       );
     },
     // Or skip building one: put a saved workout on this day, straight from the calendar.
-    hasSavedChoices: creating && st.newFrom === 'calendar' && logic.model.workouts.length > 0,
+    hasSavedChoices:
+      creating && st.newFrom === 'calendar' && logic.model.workouts.length + (logic.model.builtinWorkouts || []).length > 0,
     savedChoicesNote:
       'Tap one to put it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mod12(mi)] + ' ' + selDay + yearNote +
       (logDoneOn ? ', logged as done.' : '.'),
     showLogDone: pastDay && creating && st.schedule !== false,
     logDoneOn,
     setLogDone: (on) => logic.s({ logDone: !!on }),
-    savedChoices: logic.model.workouts.map((w) => ({
-      name: w.name,
-      svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || colors.pink),
-      meta:
-        (w.kind === 'ride'
-          ? ['Ride', w.ride && w.ride.dist ? w.ride.dist + ' mi' : '', w.time].filter(Boolean).join(' · ')
-          : plural(w.exercises.length, 'exercise') + ' · ' + w.time) +
-        // Already on this day: tapping it adds a second one, so say so first.
-        (logic.model.entries.some((x) => x.m === mi && x.d === selDay && x.av.name === w.name) ? ' · Already on this day' : ''),
-      pick: () =>
-        logic.saveOnce(
-          'workout',
-          () =>
-            db.scheduleWorkout(
-              w.id,
-              [isoOf(new Date(Y, mi, selDay))],
-              false,
-              logDoneOn ? { exercises: w.kind === 'ride' ? [] : w.exercises } : undefined,
-            ),
-          (r) =>
-            Object.assign(
-              { screen: 'day', seg: 'Day', creating: false, newType: null, newName: '', newFrom: null, schedule: null },
-              EDIT_OVERLAYS,
-              {
-                hist: (st.hist || []).slice(0, -1),
-                ...noticePatch(
-                  '“' + w.name + '” ' + (logDoneOn ? 'logged as done on ' : 'added to ') + MON3[mod12(mi)] + ' ' + selDay + '.',
-                  'day',
-                ),
-              },
-              r && r.entryId ? { entryId: r.entryId } : {},
-            ),
-        ),
-    })),
+    savedChoiceGroups,
     pickTypeLift: () => logic.s({ newType: 'lift' }),
     pickTypeCycle: () => logic.s({ newType: 'cycle' }),
     needsType: creating && !st.newType,
