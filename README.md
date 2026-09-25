@@ -54,6 +54,8 @@ Later migrations:
 - [20260925000000_builtin_exercises.sql](supabase/migrations/20260925000000_builtin_exercises.sql) adds `builtin_exercises`, a shared catalog of 100 beginner exercises every account sees in its Spellbook. It is read-only to everyone (a read policy, no write policy); a person copies one to change it.
 - [20260926000000_workout_snapshot_source.sql](supabase/migrations/20260926000000_workout_snapshot_source.sql) adds `workouts.source_workout_id`, linking each archived copy to the workout it came from. Deleting a workout then also removes its upcoming sessions left on those copies, even after a rename. Until it runs, copies are matched by name.
 
+- [20260927000000_gym_equipment_exercises.sql](supabase/migrations/20260927000000_gym_equipment_exercises.sql) adds 20 built-in exercises for cable-trainer, lat pulldown / low row, glute-ham developer, plyo box and pull-up bar work. Exercises already in the catalog aren't added again.
+
 Run the migrations once, in order, in the Supabase SQL editor. They are safe to run again.
 
 ### Sign-in
