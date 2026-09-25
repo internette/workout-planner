@@ -35,7 +35,7 @@ function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.R
 
   return (
     <div ref={cardRef}>
-      <Card pad="lg" elevation="overlay" className={styles.authCard} style={{ borderRadius: 24 }}>
+      <Card pad="lg" elevation="overlay" className={styles.authCard} style={{ borderRadius: 'var(--radius-xl)' }}>
         <Text variant="eyebrow" tone="accent" as="div">
           {signingUp ? 'FIRST TRANSFORMATION' : 'WELCOME BACK'}
         </Text>
@@ -242,7 +242,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
         </Section>
 
         <Section last>
-          <Card pad="lg" className={styles.closing} style={{ borderRadius: 24, padding: '44px 24px' }}>
+          <Card pad="lg" className={styles.closing} style={{ borderRadius: 'var(--radius-xl)', padding: '44px 24px' }}>
             <Text variant="headline" as="h2" style={{ margin: 0, lineHeight: 1.1, textWrap: 'balance' }}>
               The city is quiet. That never lasts.
             </Text>

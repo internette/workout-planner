@@ -27,7 +27,7 @@ export function calendarStage(ctx: Ctx): Ctx {
       ? list.filter(isDoneEntry).length + ' of ' + list.length + ' workouts done'
       : doneCountAt(list[0]) + ' of ' + instList(list[0].exKey, list[0].id).length + ' exercises done';
   const halfMoon = (color) =>
-    'width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px ' + color + ';background:linear-gradient(90deg,' + color + ' 50%,transparent 50%)';
+    'width:8px;height:8px;border-radius:var(--radius-full);box-shadow:inset 0 0 0 1.5px ' + color + ';background:linear-gradient(90deg,' + color + ' 50%,transparent 50%)';
   const selDate = new Date(Y, mi, selDay);
   const wkStart = new Date(Y, mi, selDay - selDate.getDay());
   const cells = [];
@@ -67,7 +67,7 @@ export function calendarStage(ctx: Ctx): Ctx {
         (!dot ? 'rest day' : workoutsWord(list) + (done ? 'completed' : part ? 'partly done, ' + partText(list) : miss ? 'missed' : 'planned')),
       isToday: cellMonth === TODAY_M && num === TODAY_D ? 'date' : false,
       wrapStyle:
-        'flex:1;min-width:0;padding:8px 2px 10px;border:none;border-radius:16px;background:' +
+        'flex:1;min-width:0;padding:8px 2px 10px;border:none;border-radius:var(--radius-md);background:' +
         (on ? PINK : 'none') +
         ';display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer',
       letterStyle:
@@ -83,13 +83,13 @@ export function calendarStage(ctx: Ctx): Ctx {
       dotStyle: !dot
         ? 'width:10px;height:2px;border-radius:1px;background:' + (on ? 'rgba(255,255,255,.6)' : 'var(--color-divider)')
         : done
-          ? 'width:6px;height:6px;border-radius:50%;background:' + (on ? 'var(--color-white)' : 'var(--color-slate)')
+          ? 'width:6px;height:6px;border-radius:var(--radius-full);background:' + (on ? 'var(--color-white)' : 'var(--color-slate)')
           : part
             ? halfMoon(on ? 'var(--color-white)' : 'var(--color-slate)')
             : miss
-              ? 'width:7px;height:7px;border-radius:50%;background:none;box-shadow:inset 0 0 0 1.5px ' +
+              ? 'width:7px;height:7px;border-radius:var(--radius-full);background:none;box-shadow:inset 0 0 0 1.5px ' +
                 (on ? 'rgba(255,255,255,.85)' : 'var(--color-muted)')
-              : 'width:6px;height:6px;border-radius:50%;background:none;box-shadow:inset 0 0 0 1.5px ' +
+              : 'width:6px;height:6px;border-radius:var(--radius-full);background:none;box-shadow:inset 0 0 0 1.5px ' +
                 (on ? 'var(--color-white)' : 'var(--color-teal)'),
     };
   });
@@ -107,7 +107,7 @@ export function calendarStage(ctx: Ctx): Ctx {
       pick: () => logic.s({ month: name, yOff: pickYOff, pickYOff: null, monthOpen: false, day: now ? TODAY_D : 1 }),
       style:
         "font-family:var(--font-heading);" +
-        'padding:11px 6px;border-radius:12px;font-size:var(--text-base);border:none;cursor:pointer;' +
+        'padding:11px 6px;border-radius:var(--radius-sm);font-size:var(--text-base);border:none;cursor:pointer;' +
         (current
           ? 'background:' + PINK + ';color:var(--color-white);font-weight:var(--font-weight-bold)'
           : now
@@ -131,9 +131,9 @@ export function calendarStage(ctx: Ctx): Ctx {
         isRest: true,
         hasRow: false,
         done: false,
-        eyebrow:
-          'font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);margin:14px 0 9px;color:' +
-          (today0 ? 'var(--color-pink-deep)' : 'var(--color-muted)'),
+        // The day's label above it, as an eyebrow: pink on today.
+        showLabel: true,
+        labelTone: today0 ? 'accent' : 'muted',
       }];
     }
     return list.map((a, ix) => weekRow(d, a, ix));
@@ -172,17 +172,15 @@ export function calendarStage(ctx: Ctx): Ctx {
       stateDot:
         'flex:none;margin-left:auto;' +
         (isDoneEntry(a)
-          ? 'width:8px;height:8px;border-radius:50%;background:var(--color-slate)'
+          ? 'width:8px;height:8px;border-radius:var(--radius-full);background:var(--color-slate)'
           : part
             ? halfMoon('var(--color-slate)')
             : past
-            ? 'width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--color-muted)'
-            : 'width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--color-teal)'),
-      eyebrow:
-        ix > 0
-          ? 'display:none'
-          : 'font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);margin:14px 0 9px;color:' +
-            (label.indexOf('TODAY') > -1 ? 'var(--color-pink-deep)' : 'var(--color-muted)'),
+            ? 'width:9px;height:9px;border-radius:var(--radius-full);box-shadow:inset 0 0 0 1.5px var(--color-muted)'
+            : 'width:8px;height:8px;border-radius:var(--radius-full);box-shadow:inset 0 0 0 1.5px var(--color-teal)'),
+      // Only the day's first row carries its label.
+      showLabel: ix === 0,
+      labelTone: label.indexOf('TODAY') > -1 ? 'accent' : 'muted',
     };
   }
   const lead = new Date(Y, mi, 1).getDay();
@@ -227,7 +225,7 @@ export function calendarStage(ctx: Ctx): Ctx {
           : missed
             ? 'background:rgba(255,255,255,.5)'
             : a
-              ? 'background:var(--color-white);box-shadow:0 1px 3px rgba(35,42,69,.06)'
+              ? 'background:var(--color-white);box-shadow:var(--elevation-hairline)'
               : 'background:none') +
         (today && !sel ? ';box-shadow:inset 0 0 0 1.5px rgba(213,49,129,.45)' : ''),
       aria: d
@@ -250,12 +248,12 @@ export function calendarStage(ctx: Ctx): Ctx {
       dot: part
         ? halfMoon(sel ? 'var(--color-white)' : 'var(--color-slate)')
         : a === 'c' || (sel && a && !missed)
-          ? 'width:6px;height:6px;border-radius:50%;background:' + (sel ? 'var(--color-white)' : 'var(--color-slate)')
+          ? 'width:6px;height:6px;border-radius:var(--radius-full);background:' + (sel ? 'var(--color-white)' : 'var(--color-slate)')
           : missed
-            ? 'width:7px;height:7px;border-radius:50%;background:none;position:relative;box-shadow:inset 0 0 0 1.5px ' +
+            ? 'width:7px;height:7px;border-radius:var(--radius-full);background:none;position:relative;box-shadow:inset 0 0 0 1.5px ' +
               (sel ? 'rgba(255,255,255,.85)' : 'var(--color-muted)')
             : a
-              ? 'width:6px;height:6px;border-radius:50%;background:none;box-shadow:inset 0 0 0 1.5px ' +
+              ? 'width:6px;height:6px;border-radius:var(--radius-full);background:none;box-shadow:inset 0 0 0 1.5px ' +
                 (sel ? 'var(--color-white)' : 'var(--color-teal)')
               : 'width:7px;height:1.5px;border-radius:1px;background:' + (sel ? 'rgba(255,255,255,.6)' : 'var(--color-divider)'),
     });

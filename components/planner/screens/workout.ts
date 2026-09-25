@@ -280,7 +280,7 @@ export function workoutVals(ctx: Ctx) {
       progBar:
         'width:' +
         (list.length ? Math.round((doneN / list.length) * 100) : 0) +
-        '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
+        '%;height:100%;border-radius:5px;transition:width var(--dur-bar) var(--ease-standard);background:var(--gradient-gem)',
       rideStats: !ride ? [] : rideStatsFor(av, rideIsDone),
       preview: expanded ? rows : rows.slice(0, 3),
       hasMore: rows.length > 3,
@@ -453,11 +453,10 @@ export function workoutVals(ctx: Ctx) {
     questIconWrap:
       'width:40px;height:40px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;' +
       (dayCleared
-        ? 'background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)'
-        : 'background:var(--color-white);box-shadow:0 1px 3px rgba(35,42,69,.06)'),
-    questTitleStyle:
-      'font-family:var(--font-heading);font-size:var(--text-lg);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-snug);margin-top:4px;' +
-      (dayCleared ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
+        ? 'background:var(--gradient-gem)'
+        : 'background:var(--color-white);box-shadow:var(--elevation-hairline)'),
+    // Cleared: the quest's title is struck through and muted.
+    questCleared: dayCleared,
     isDone: doneSel,
     dayIsRide: !!selRide,
     dayIsLift: !selRide,
@@ -478,7 +477,7 @@ export function workoutVals(ctx: Ctx) {
     rideDoneLabel: rideDone ? 'Ride completed' : 'Mark ride complete',
     rideDoneType: rideDone ? 'secondary' : 'neutral',
     rideDoneMark:
-      'width:24px;height:24px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;' +
+      'width:24px;height:24px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;' +
       (rideDone ? 'background:var(--color-pink)' : 'border:1.5px solid var(--color-outline)'),
     rideDoneStroke: rideDone ? 'var(--color-white)' : 'var(--color-outline)',
     dayIcoSvg: iconSvg(
@@ -502,11 +501,6 @@ export function workoutVals(ctx: Ctx) {
       doRestart();
     },
     longDate: DOWFULL[selDate.getDay()] + ', ' + st.month + ' ' + selDay + (st.yOff ? ', ' + selDate.getFullYear() : ''),
-    badgeStyle:
-      'margin-left:auto;padding:7px 13px;border-radius:999px;font-size:var(--text-xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);' +
-      (doneSel
-        ? 'background:var(--color-cloud);color:var(--color-slate)'
-        : 'background:var(--color-pink-tint);color:var(--color-pink-deep)'),
     // Nothing to tick off before the session's day, so no progress card then either.
     hasProgress: st.screen === 'edit' && !isCycleView && selList.length > 0 && !ctx.creating && !ctx.tplMode && !isFutureDay,
     progLabel: doneCount + ' of ' + selList.length + ' done',
@@ -520,7 +514,7 @@ export function workoutVals(ctx: Ctx) {
     progBar:
       'width:' +
       (selList.length ? Math.round((doneCount / selList.length) * 100) : 0) +
-      '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
+      '%;height:100%;border-radius:5px;transition:width var(--dur-bar) var(--ease-standard);background:var(--gradient-gem)',
     progNote:
       selList.length === 0
         ? ''

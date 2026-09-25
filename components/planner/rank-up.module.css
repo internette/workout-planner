@@ -108,7 +108,7 @@
 .flash {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 42%, #fff 0%, rgba(255, 255, 255, 0.9) 18%, rgba(255, 255, 255, 0) 62%);
+  background: radial-gradient(circle at 50% 42%, var(--color-white) 0%, rgba(255, 255, 255, 0.9) 18%, rgba(255, 255, 255, 0) 62%);
   opacity: 0;
   animation: flash 0.55s ease-out 1.55s both;
 }
@@ -143,7 +143,7 @@
   font-family: var(--font-heading);
   font-size: clamp(30px, 7vw, 44px);
   font-weight: var(--font-weight-bold);
-  letter-spacing: -0.01em;
+  letter-spacing: var(--tracking-snug);
   line-height: 1.1;
   animation: rise 0.7s ease-out 1.9s both;
 }

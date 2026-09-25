@@ -537,7 +537,7 @@ export function PlannerView({ v }: { v: any }) {
                           gap: '14px',
                           marginTop: '22px',
                           padding: '18px 20px',
-                          borderRadius: '20px',
+                          borderRadius: 'var(--radius-lg)',
                           background:
                             'var(--gradient-gem-tint)',
                           overflow: 'hidden',
@@ -569,7 +569,14 @@ export function PlannerView({ v }: { v: any }) {
                           <Text variant="micro" as="div" tone="accent">
                             {v.questEyebrow}
                           </Text>
-                          <div style={css(v.questTitleStyle)}>{v.questTitle}</div>
+                          <Text
+                            variant="itemTitle"
+                            as="div"
+                            tone={v.questCleared ? 'muted' : 'ink'}
+                            style={{ marginTop: '4px', textDecoration: v.questCleared ? 'line-through' : undefined }}
+                          >
+                            {v.questTitle}
+                          </Text>
                           <Text
                             variant="caption"
                             as="div"
@@ -641,7 +648,7 @@ export function PlannerView({ v }: { v: any }) {
                                             padding: '6px 10px',
                                             minHeight: '36px',
                                             border: 'none',
-                                            borderRadius: '12px',
+                                            borderRadius: 'var(--radius-sm)',
                                             background: 'none',
                                             font: 'inherit',
                                             color: 'inherit',
@@ -787,7 +794,7 @@ export function PlannerView({ v }: { v: any }) {
                                           margin: '10px 0 0 -12px',
                                           minHeight: '44px',
                                           border: 'none',
-                                          borderRadius: '12px',
+                                          borderRadius: 'var(--radius-sm)',
                                           background: 'none',
                                           padding: '0 12px',
                                           color: 'var(--color-muted)',
@@ -862,9 +869,9 @@ export function PlannerView({ v }: { v: any }) {
                           width: '78px',
                           height: '78px',
                           margin: '0 auto',
-                          borderRadius: '50%',
+                          borderRadius: 'var(--radius-full)',
                           background: 'var(--gradient-gem-tint)',
-                          boxShadow: '0 4px 14px rgba(35,42,69,.07)',
+                          boxShadow: 'var(--elevation-raised)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -916,9 +923,9 @@ export function PlannerView({ v }: { v: any }) {
                             width: '78px',
                             height: '78px',
                             margin: '0 auto',
-                            borderRadius: '50%',
+                            borderRadius: 'var(--radius-full)',
                             background: 'var(--color-white)',
-                            boxShadow: '0 4px 14px rgba(35,42,69,.07)',
+                            boxShadow: 'var(--elevation-raised)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -989,7 +996,11 @@ export function PlannerView({ v }: { v: any }) {
                           {(v.weekRows ?? []).map((w, i) => (
                             <Fragment key={i}>
                               <div>
-                                <div style={css(w?.eyebrow)}>{w?.label}</div>
+                                {w?.showLabel ? (
+                                  <Text variant="eyebrow" as="div" tone={w?.labelTone} style={{ margin: '14px 0 9px' }}>
+                                    {w?.label}
+                                  </Text>
+                                ) : null}
                                 {w?.isRest ? (
                                   <>
                                     <div
@@ -998,7 +1009,7 @@ export function PlannerView({ v }: { v: any }) {
                                         alignItems: 'center',
                                         gap: '12px',
                                         padding: '15px 20px',
-                                        borderRadius: '20px',
+                                        borderRadius: 'var(--radius-lg)',
                                         background: 'rgba(255,255,255,.5)',
                                       }}
                                     >
@@ -1038,7 +1049,7 @@ export function PlannerView({ v }: { v: any }) {
                                           width: '36px',
                                           height: '36px',
                                           flex: 'none',
-                                          borderRadius: '12px',
+                                          borderRadius: 'var(--radius-sm)',
                                           background: 'var(--color-pink-tint)',
                                           display: 'flex',
                                           alignItems: 'center',
@@ -1123,7 +1134,7 @@ export function PlannerView({ v }: { v: any }) {
                                   width: '56px',
                                   height: '56px',
                                   margin: '0 auto',
-                                  borderRadius: '50%',
+                                  borderRadius: 'var(--radius-full)',
                                   background:
                                     'var(--gradient-gem)',
                                   display: 'flex',
@@ -1154,7 +1165,7 @@ export function PlannerView({ v }: { v: any }) {
                                 position: 'relative',
                                 margin: '34px 0 0',
                                 padding: '34px 24px 30px',
-                                borderRadius: '24px',
+                                borderRadius: 'var(--radius-xl)',
                                 background:
                                   'var(--gradient-gem-tint)',
                                 textAlign: 'center',
@@ -1196,9 +1207,9 @@ export function PlannerView({ v }: { v: any }) {
                                   width: '66px',
                                   height: '66px',
                                   margin: '0 auto',
-                                  borderRadius: '50%',
+                                  borderRadius: 'var(--radius-full)',
                                   background: 'var(--color-white)',
-                                  boxShadow: '0 4px 14px rgba(35,42,69,.07)',
+                                  boxShadow: 'var(--elevation-raised)',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
@@ -1285,7 +1296,7 @@ export function PlannerView({ v }: { v: any }) {
                                 width: '40px',
                                 height: '40px',
                                 flex: 'none',
-                                borderRadius: '50%',
+                                borderRadius: 'var(--radius-full)',
                                 background:
                                   'var(--gradient-gem)',
                                 display: 'flex',
@@ -1297,7 +1308,7 @@ export function PlannerView({ v }: { v: any }) {
                                 style={{
                                   width: '28px',
                                   height: '28px',
-                                  borderRadius: '50%',
+                                  borderRadius: 'var(--radius-full)',
                                   background: 'var(--color-white)',
                                   display: 'flex',
                                   alignItems: 'center',
@@ -1384,7 +1395,7 @@ export function PlannerView({ v }: { v: any }) {
                               style={{
                                 width: '6px',
                                 height: '6px',
-                                borderRadius: '50%',
+                                borderRadius: 'var(--radius-full)',
                                 background: 'none',
                                 boxShadow: 'inset 0 0 0 1.5px var(--color-teal)',
                               }}
@@ -1400,7 +1411,7 @@ export function PlannerView({ v }: { v: any }) {
                               style={{
                                 width: '6px',
                                 height: '6px',
-                                borderRadius: '50%',
+                                borderRadius: 'var(--radius-full)',
                                 background: 'var(--color-slate)',
                               }}
                             ></span>
@@ -1415,7 +1426,7 @@ export function PlannerView({ v }: { v: any }) {
                               style={{
                                 width: '8px',
                                 height: '8px',
-                                borderRadius: '50%',
+                                borderRadius: 'var(--radius-full)',
                                 boxShadow: 'inset 0 0 0 1.5px var(--color-slate)',
                                 background: 'linear-gradient(90deg,var(--color-slate) 50%,transparent 50%)',
                               }}
@@ -1431,7 +1442,7 @@ export function PlannerView({ v }: { v: any }) {
                               style={{
                                 width: '7px',
                                 height: '7px',
-                                borderRadius: '50%',
+                                borderRadius: 'var(--radius-full)',
                                 background: 'none',
                                 boxShadow: 'inset 0 0 0 1.5px var(--color-muted)',
                               }}
@@ -1551,7 +1562,7 @@ export function PlannerView({ v }: { v: any }) {
                       width: '96px',
                       height: '96px',
                       margin: '0 auto',
-                      borderRadius: '50%',
+                      borderRadius: 'var(--radius-full)',
                       background:
                         'var(--gradient-gem-tint)',
                       display: 'flex',
@@ -1564,9 +1575,9 @@ export function PlannerView({ v }: { v: any }) {
                       style={{
                         width: '66px',
                         height: '66px',
-                        borderRadius: '50%',
+                        borderRadius: 'var(--radius-full)',
                         background: 'var(--color-white)',
-                        boxShadow: '0 4px 14px rgba(35,42,69,.07)',
+                        boxShadow: 'var(--elevation-raised)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -1690,7 +1701,7 @@ export function PlannerView({ v }: { v: any }) {
                         width: '86px',
                         height: '86px',
                         flex: 'none',
-                        borderRadius: '50%',
+                        borderRadius: 'var(--radius-full)',
                         background: 'var(--gradient-gem)',
                       }}
                     >
@@ -1698,7 +1709,7 @@ export function PlannerView({ v }: { v: any }) {
                         style={{
                           position: 'absolute',
                           inset: '3px',
-                          borderRadius: '50%',
+                          borderRadius: 'var(--radius-full)',
                           background: 'var(--color-white)',
                         }}
                       ></span>
@@ -1706,7 +1717,7 @@ export function PlannerView({ v }: { v: any }) {
                         style={{
                           position: 'absolute',
                           inset: '6px',
-                          borderRadius: '50%',
+                          borderRadius: 'var(--radius-full)',
                           background: 'var(--gradient-gem)',
                           display: 'flex',
                           alignItems: 'center',
@@ -1733,7 +1744,7 @@ export function PlannerView({ v }: { v: any }) {
                               inset: '0',
                               width: '100%',
                               height: '100%',
-                              borderRadius: '50%',
+                              borderRadius: 'var(--radius-full)',
                               objectFit: 'cover',
                             }}
                           />
@@ -1750,7 +1761,7 @@ export function PlannerView({ v }: { v: any }) {
                           bottom: '-3px',
                           width: '28px',
                           height: '28px',
-                          borderRadius: '50%',
+                          borderRadius: 'var(--radius-full)',
                           background: 'var(--color-white)',
                           boxShadow: 'var(--elevation-raised)',
                           display: 'flex',
@@ -2513,7 +2524,7 @@ export function PlannerView({ v }: { v: any }) {
                       padding: '12px 16px',
                       background: 'var(--color-white)',
                       borderRadius: '15px',
-                      boxShadow: '0 1px 3px rgba(35,42,69,.06)',
+                      boxShadow: 'var(--elevation-hairline)',
                     }}
                   >
                     <Search color="var(--color-subtle)" size={17} />
@@ -2591,7 +2602,7 @@ export function PlannerView({ v }: { v: any }) {
                           background: 'var(--color-white)',
                           border: 'none',
                           borderRadius: '15px',
-                          boxShadow: '0 1px 3px rgba(35,42,69,.06)',
+                          boxShadow: 'var(--elevation-hairline)',
                           cursor: 'pointer',
                           textAlign: 'left',
                           fontFamily: 'inherit',
@@ -2718,7 +2729,7 @@ export function PlannerView({ v }: { v: any }) {
                             background: 'var(--color-white)',
                             border: 'none',
                             borderRadius: '15px',
-                            boxShadow: '0 1px 3px rgba(35,42,69,.06)',
+                            boxShadow: 'var(--elevation-hairline)',
                             cursor: 'pointer',
                             textAlign: 'left',
                             fontFamily: 'inherit',
@@ -2929,7 +2940,7 @@ export function PlannerView({ v }: { v: any }) {
                                           margin: '-6px',
                                           padding: '6px',
                                           border: 'none',
-                                          borderRadius: '12px',
+                                          borderRadius: 'var(--radius-sm)',
                                           background: 'none',
                                           textAlign: 'left',
                                           cursor: 'pointer',
@@ -4159,7 +4170,13 @@ export function PlannerView({ v }: { v: any }) {
                                 {ex?.icoSvg}
                               </span>
                               <span style={{ minWidth: '0' }}>
-                                <span style={css(ex?.nameStyle)}>{ex?.name}</span>
+                                <Text
+                                  variant="cardTitle"
+                                  tone={ex?.nameDone ? 'muted' : 'ink'}
+                                  style={{ display: 'block', textDecoration: ex?.nameDone ? 'line-through' : undefined }}
+                                >
+                                  {ex?.name}
+                                </Text>
                                 <Text
                                   variant="caption"
                                   tone="muted"
@@ -5053,7 +5070,13 @@ export function PlannerView({ v }: { v: any }) {
                                 >
                                   {/* The name fills the row, so every chevron lines up in one column beside the tick and ✕. */}
                                   <span style={{ flex: '1', minWidth: '0' }}>
-                                    <span style={css(ex?.nameStyle)}>{ex?.name}</span>
+                                    <Text
+                                  variant="cardTitle"
+                                  tone={ex?.nameDone ? 'muted' : 'ink'}
+                                  style={{ display: 'block', textDecoration: ex?.nameDone ? 'line-through' : undefined }}
+                                >
+                                  {ex?.name}
+                                </Text>
                                     {!ex?.expanded ? (
                                       <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
                                         {ex?.detail}
@@ -6036,7 +6059,7 @@ function WarmupTag({ inline }: { inline?: boolean }) {
 function NeedsLine({ text }: { text?: string | null }) {
   if (!text) return null;
   return (
-    <p style={{ margin: '14px 0 0', lineHeight: 1.5 }}>
+    <p style={{ margin: '14px 0 0', lineHeight: 'var(--leading-snug)' }}>
       <Text variant="eyebrow" as="span" tone="slate" style={{ display: 'block' }}>
         YOU&apos;LL NEED
       </Text>

@@ -94,10 +94,11 @@ export function entriesStage(ctx: Ctx): Ctx {
       index: ix,
       keys: radioKeys(moodDefs.length, ix, (to) => logic.s({ mood: moodDefs[to][0] }), 'data-mood'),
       pick: () => logic.s({ mood: name }),
-      wrap: 'border:none;background:none;padding:6px 2px;min-width:0;display:flex;flex-direction:column;align-items:center;gap:9px;cursor:pointer;border-radius:16px',
+      wrap: 'border:none;background:none;padding:6px 2px;min-width:0;display:flex;flex-direction:column;align-items:center;gap:9px;cursor:pointer;border-radius:var(--radius-md)',
       // Sized to the screen (48–60px), so all four fit in one row on the narrowest phones. Once one is picked, the
       // others step back (their names stay at full strength), so the choice is plain at a glance.
       face:
+        // 50%, not --radius-full: the face is a fractional size on phones, and 50% keeps its edge the same.
         'width:clamp(48px,15vw,60px);height:clamp(48px,15vw,60px);border-radius:50%;background:' +
         bg +
         ';display:flex;align-items:center;justify-content:center;transition:opacity .2s ease;box-shadow:' +
