@@ -5003,7 +5003,8 @@ export function PlannerView({ v }: { v: any }) {
                                     cursor: 'pointer',
                                   }}
                                 >
-                                  <span style={{ minWidth: '0' }}>
+                                  {/* The name fills the row, so every chevron lines up in one column beside the tick and ✕. */}
+                                  <span style={{ flex: '1', minWidth: '0' }}>
                                     <span style={css(ex?.nameStyle)}>{ex?.name}</span>
                                     {!ex?.expanded ? (
                                       <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
