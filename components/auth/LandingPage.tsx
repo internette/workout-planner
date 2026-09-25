@@ -116,9 +116,6 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
       <header className={styles.header}>
         <div className={styles.headerRow}>
           <Lockup height={28} />
-          <Button type="neutral" ghost size="sm" onClick={focusCard} className={styles.signIn}>
-            Sign in
-          </Button>
         </div>
       </header>
 
