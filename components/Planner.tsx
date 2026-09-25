@@ -93,6 +93,41 @@ export default function Planner({ account = null }: { account?: Account | null }
     stamp();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const viewRef = useRef<any>(null);
+  // The tab's title follows the screen: its section, and on an inner screen what it's about ("Leg Day — Spellbook").
+  useEffect(() => {
+    if (logic.status !== 'ready') return;
+    const st = logic.state;
+    const sections: Record<string, string> = {
+      calendar: 'Calendar',
+      chronicle: 'Chronicle',
+      spellbook: 'Spellbook',
+      progress: 'Progress',
+      profile: 'Profile',
+    };
+    const section = sections[(window.location.pathname.split('/')[1] || '')] || '';
+    // This render's values (set below, before effects run), so they aren't built twice.
+    const v = viewRef.current || logic.renderVals();
+    const inner =
+      st.screen === 'edit'
+        ? st.creating
+          ? 'New workout'
+          : 'Editing ' + (v.eName || 'workout')
+        : st.screen === 'detail'
+          ? v.eName
+          : st.screen === 'template'
+            ? v.template?.name
+            : st.screen === 'exercise' || st.screen === 'exerciseEdit'
+              ? v.exercise?.name
+              : st.screen === 'diary'
+                ? 'Entry'
+                : st.screen === 'newEntry'
+                  ? 'New entry'
+                  : '';
+    const title = [inner, section, 'Moonshot'].filter(Boolean).join(' — ');
+    if (document.title !== title) document.title = title;
+  });
+
   // After every change: a deeper history pushes an entry, a shallower one (the app's Back) steps the browser back to
   // match, and the same depth keeps the address in step with the screen.
   useEffect(() => {
@@ -211,7 +246,15 @@ export default function Planner({ account = null }: { account?: Account | null }
   // Escape on a full-screen view does what its Back button does, unless something on top of it (a dialog, a popover,
   // the exercise picker) or a text field has the key.
   useWindowEvent('keydown', (e) => {
-    if (e.key !== 'Escape' || e.defaultPrevented || !(logic.state.hist || []).length) return;
+    if (e.key !== 'Escape' || e.defaultPrevented) return;
+    // The Spellbook's New exercise form closes, as Cancel does, and focus goes back to "New".
+    if (logic.state.arsenalAdd && document.querySelector('[data-arsenal-add]') && !document.querySelector('dialog[open]')) {
+      e.preventDefault();
+      logic.renderVals().closeArsenalAdd();
+      requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-arsenal-new]')?.focus());
+      return;
+    }
+    if (!(logic.state.hist || []).length) return;
     if (document.querySelector('dialog[open]')) return;
     try {
       if (document.querySelector(':popover-open')) return;
@@ -270,6 +313,7 @@ export default function Planner({ account = null }: { account?: Account | null }
   // kept per account in this browser. With nothing kept yet (a first visit, another device) the current rank is
   // recorded quietly rather than celebrated, and a rank that drops and is earned back doesn't play again.
   const view = status === 'ready' ? logic.renderVals() : null;
+  viewRef.current = view;
   const rank: number | null = view ? view.rankIndex : null;
   const [rankUp, setRankUp] = useState<number | null>(null);
   useEffect(() => {

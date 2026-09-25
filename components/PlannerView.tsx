@@ -460,9 +460,11 @@ export function PlannerView({ v }: { v: any }) {
                       ]}
                       value={v.calendarView}
                       onChange={v.setCalendarView}
+                      panelId="calendar-view"
                       style={v.segLayout}
                     />
                   </div>
+                  <div role="tabpanel" id="calendar-view" aria-labelledby={'calendar-view-' + v.calendarView}>
                   {v.showDay ? (
                     <>
                       <div
@@ -1489,6 +1491,7 @@ export function PlannerView({ v }: { v: any }) {
                       </div>
                     </>
                   ) : null}
+                  </div>
                 </div>
               </>
             ) : null}
@@ -2399,6 +2402,9 @@ export function PlannerView({ v }: { v: any }) {
                   >
                     {v.arsenalIntro}
                   </Text>
+                  <span className="sr-only" role="status">
+                    {v.arsenalResults}
+                  </span>
                   {v.spellNotice ? (
                     <Card
                       pad="sm"
@@ -2466,6 +2472,9 @@ export function PlannerView({ v }: { v: any }) {
                       size="sm"
                       onClick={v.showArsenalWorkouts ? v.goNewWorkoutFromArsenal : v.openArsenalAdd}
                       aria-label={v.arsenalNewName}
+                      aria-expanded={v.showArsenalWorkouts ? undefined : !!v.arsenalAddOpen}
+                      aria-controls={!v.showArsenalWorkouts && v.arsenalAddOpen ? 'new-exercise' : undefined}
+                      data-arsenal-new
                       style={{ marginLeft: 'auto' }}
                     >
                       <Plus color="var(--color-white)" strokeWidth={2.2} size={16} />
@@ -2595,7 +2604,7 @@ export function PlannerView({ v }: { v: any }) {
                       ) : null}
                       {v.arsenalAddOpen ? (
                         <>
-                          <Card elevation="overlay" style={{ marginTop: '18px' }}>
+                          <Card elevation="overlay" id="new-exercise" data-arsenal-add style={{ marginTop: '18px' }}>
                             <Text variant="cardTitle" style={{ display: 'block' }}>
                               New exercise
                             </Text>
@@ -3413,9 +3422,13 @@ export function PlannerView({ v }: { v: any }) {
                     Every session you&apos;ve written about, newest first. Open one to read or edit it.
                   </Text>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
+                    <span className="sr-only" role="status">
+                      {v.diaryResults}
+                    </span>
                     <SegmentedControl
                       label="Show entries from"
                       size="sm"
+                      compact
                       wrap
                       options={[
                         { value: 'all', label: 'All' },
@@ -3491,7 +3504,7 @@ export function PlannerView({ v }: { v: any }) {
                               padding: '18px 62px 18px 20px',
                             }}
                           >
-                            <span style={css(e?.faceWrap)}>
+                            <span className="fc-keep" style={css(e?.faceWrap)}>
                               {e?.isHappy ? (
                                 <>
                                   <MoodFace mood="Happy" size={24} />
@@ -3538,7 +3551,7 @@ export function PlannerView({ v }: { v: any }) {
                               >
                                 {(e?.stars ?? []).map((s, i) => (
                                   <Fragment key={i}>
-                                    <span style={css(s)}>★</span>
+                                    <span className="fc-keep" style={css(s)}>★</span>
                                   </Fragment>
                                 ))}
                               </span>
@@ -4238,6 +4251,7 @@ export function PlannerView({ v }: { v: any }) {
                             {(v.dowLabels ?? []).map((l, i) => (
                               <Fragment key={i}>
                                 <span
+                                  aria-hidden="true"
                                   style={{
                                     textAlign: 'center',
                                     fontSize: 'var(--text-2xs)',
@@ -4252,16 +4266,34 @@ export function PlannerView({ v }: { v: any }) {
                             ))}
                             {(v.pickerCells ?? []).map((p, i) => (
                               <Fragment key={i}>
-                                <button onClick={p?.pick} aria-pressed={p?.pick ? !!p?.selected : undefined} style={css(p?.style)}>
-                                  {p?.label}
-                                </button>
+                                {p?.blank ? (
+                                  <span aria-hidden="true" style={css(p?.style)} />
+                                ) : (
+                                  <button
+                                    onClick={p?.pick}
+                                    onKeyDown={p?.keys}
+                                    tabIndex={p?.tab}
+                                    data-pick-day={p?.day}
+                                    aria-label={p?.aria}
+                                    aria-current={p?.today}
+                                    aria-pressed={!!p?.selected}
+                                    style={css(p?.style)}
+                                  >
+                                    {p?.label}
+                                  </button>
+                                )}
                               </Fragment>
                             ))}
                           </span>
                         </>
                       }
                     >
-                      <Chip icon={<Calendar color="var(--color-muted)" size={15} />} onClick={v.toggleDate}>
+                      <Chip
+                        icon={<Calendar color="var(--color-muted)" size={15} />}
+                        onClick={v.toggleDate}
+                        aria-expanded={!!v.dateOpen}
+                        aria-label={'Date: ' + v.eDateAria + '. Change date'}
+                      >
                         {t(v.eDate)}
                       </Chip>
                     </Popover>
@@ -4411,6 +4443,7 @@ export function PlannerView({ v }: { v: any }) {
                               <TextField
                                 suffix="hr"
                                 containerStyle={{ flex: '1', minWidth: '0' }}
+                                aria-label="Duration, hours"
                                 value={v.rideHours ?? ''}
                                 onChange={v.setHours}
                                 inputMode="numeric"
@@ -4419,6 +4452,7 @@ export function PlannerView({ v }: { v: any }) {
                               <TextField
                                 suffix="min"
                                 containerStyle={{ flex: '1', minWidth: '0' }}
+                                aria-label="Duration, minutes"
                                 value={v.rideMins ?? ''}
                                 onChange={v.setMins}
                                 inputMode="numeric"
@@ -4503,6 +4537,7 @@ export function PlannerView({ v }: { v: any }) {
                               <TextField
                                 suffix="hr"
                                 containerStyle={{ flex: '1', minWidth: '0' }}
+                                aria-label="Actual duration, hours"
                                 value={v.actHours ?? ''}
                                 onChange={v.setActHours}
                                 inputMode="numeric"
@@ -4511,6 +4546,7 @@ export function PlannerView({ v }: { v: any }) {
                               <TextField
                                 suffix="min"
                                 containerStyle={{ flex: '1', minWidth: '0' }}
+                                aria-label="Actual duration, minutes"
                                 value={v.actMins ?? ''}
                                 onChange={v.setActMins}
                                 inputMode="numeric"
@@ -5194,7 +5230,7 @@ export function PlannerView({ v }: { v: any }) {
                             pad="sm"
                             style={{ flex: '1 1 200px', display: 'flex', alignItems: 'center', gap: '14px' }}
                           >
-                            <span style={css(v.readMoodFace)}>{v.readMoodSvg}</span>
+                            <span className="fc-keep" style={css(v.readMoodFace)}>{v.readMoodSvg}</span>
                             <div style={{ minWidth: '0' }}>
                               <Text variant="micro" as="div" tone="subtle">
                                 MOOD
@@ -5217,7 +5253,7 @@ export function PlannerView({ v }: { v: any }) {
                               <span style={{ display: 'flex', gap: '3px' }}>
                                 {(v.readStars ?? []).map((s, i) => (
                                   <Fragment key={i}>
-                                    <span style={css(s)}>★</span>
+                                    <span className="fc-keep" style={css(s)}>★</span>
                                   </Fragment>
                                 ))}
                               </span>
@@ -5309,7 +5345,7 @@ export function PlannerView({ v }: { v: any }) {
                               onClick={m?.pick}
                               style={css(m?.wrap)}
                             >
-                              <span style={css(m?.face)}>
+                              <span className="fc-keep" style={css(m?.face)}>
                                 {m?.isHappy ? (
                                   <>
                                     <MoodFace mood="Happy" size={34} />

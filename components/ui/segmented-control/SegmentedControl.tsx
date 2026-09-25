@@ -25,6 +25,11 @@ export interface SegmentedControlProps<T extends string> {
   fullWidth?: boolean;
   /** Let the options wrap onto a second line when there isn't room. */
   wrap?: boolean;
+  /** Tabs only: the id of the panel the tabs switch. The selected tab controls it, and each tab's id is
+   * `<panelId>-<value>`, for the panel's aria-labelledby. */
+  panelId?: string;
+  /** Tighter side padding, for a row of several short options on a phone. */
+  compact?: boolean;
   style?: CSSProperties;
   className?: string;
 }
@@ -40,6 +45,8 @@ export function SegmentedControl<T extends string>({
   equalWidth,
   fullWidth,
   wrap,
+  panelId,
+  compact,
   style,
   className,
 }: SegmentedControlProps<T>) {
@@ -99,9 +106,10 @@ export function SegmentedControl<T extends string>({
             type="button"
             role={isTabs ? 'tab' : 'radio'}
             {...(isTabs ? { 'aria-selected': on } : { 'aria-checked': on })}
+            {...(isTabs && panelId ? { id: panelId + '-' + option.value, 'aria-controls': on ? panelId : undefined } : {})}
             tabIndex={on ? 0 : -1}
             onClick={() => onChange(option.value)}
-            className={[styles.segment, styles[`segment-${size}`], on && styles.selected]
+            className={[styles.segment, styles[`segment-${size}`], compact && styles.compact, on && styles.selected]
               .filter(Boolean)
               .join(' ')}
           >

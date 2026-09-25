@@ -470,7 +470,7 @@ export function editVals(ctx: Ctx) {
     stayHere: () => logic.s({ leaveOpen: false, pendingNav: null }),
     dateOpen: !!st.dateOpen,
     // Opens on the month of the workout's date; its arrows only change what the picker shows.
-    toggleDate: () => logic.s({ dateOpen: !st.dateOpen, pickM: null }),
+    toggleDate: () => logic.s({ dateOpen: !st.dateOpen, pickM: null, pickFocus: null }),
     pickMonthName: MONTHS[mod12(pickM)] + (Math.floor(pickM / 12) ? ' ' + new Date(Y, pickM, 1).getFullYear() : ''),
     pickPrevMonth: () => logic.s({ pickM: pickM - 1 }),
     pickNextMonth: () => logic.s({ pickM: pickM + 1 }),
@@ -732,6 +732,7 @@ export function editVals(ctx: Ctx) {
       ' ' +
       selDay +
       yearNote,
+    eDateAria: DOWFULL[selDate.getDay()] + ', ' + MONTHS[mod12(mi)] + ' ' + selDay + yearNote,
     eStatus: doneSel ? 'Completed' : 'Planned',
     // Once finished, how long it actually took; before that, the plan.
     eTime:
