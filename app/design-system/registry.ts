@@ -139,6 +139,7 @@ export const sections: Section[] = [
       { id: 'padding', title: 'Padding' },
       { id: 'elevation', title: 'Elevation' },
       { id: 'clickable', title: 'Clickable' },
+      { id: 'as-a-list', title: 'As a list' },
       { id: 'as-a-section', title: 'As a section' },
     ],
   },
