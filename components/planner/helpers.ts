@@ -42,13 +42,22 @@ export const splitSetsReps = text => {
   if (!t || t === '—') return { sets: '', reps: '' };
   const both = t.match(/^(\d+)\s*[×xX*]\s*(\d+)/);
   if (both) return { sets: both[1], reps: both[2] };
+  // Reps with the sets cleared while editing ("× 8"): keep the reps.
+  const repsOnly = t.match(/^[×xX*]\s*(\d+)/);
+  if (repsOnly) return { sets: '', reps: repsOnly[1] };
   const setsOnly = t.match(/^(\d+)/);
   return { sets: setsOnly ? setsOnly[1] : '', reps: '' };
+};
+// An exercise needs at least one set of at least one rep.
+export const countsOk = (sets, reps) => Number(sets) >= 1 && Number(reps) >= 1;
+export const setsRepsOk = text => {
+  const p = splitSetsReps(text);
+  return countsOk(p.sets, p.reps);
 };
 export const joinSetsReps = (sets, reps) => {
   const s = (sets || '').trim();
   const r = (reps || '').trim();
-  return s && r ? s + ' × ' + r : s || r;
+  return s && r ? s + ' × ' + r : s || (r ? '× ' + r : '');
 };
 
 // Digits only, for a field that should never hold anything else (sets, reps, and the number inside "90 sec").
@@ -80,3 +89,7 @@ export const workoutDraftDirty = st => !!(
   (st.editKey && st.editKey !== (MONTHS.indexOf(st.month) + 12 * (st.yOff || 0)) + '-' + st.day) ||
   (st.extra && Object.keys(st.extra).some(k => (st.extra[k] || []).length))
 );
+
+// A confirmation shown at the top of one screen (and read out), e.g. after a save or a delete. It belongs to that
+// screen: moving to another clears it.
+export const noticePatch = (text, screen) => ({ notice: { text, screen }, announce: text });

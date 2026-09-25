@@ -1,5 +1,5 @@
 import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, ICON_COLOR_NAMES, ICON_NAMES, MON3, MONTHS, TARGET_AREAS } from '../constants';
-import { digitsOnly, exLine, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
+import { countsOk, digitsOnly, noticePatch, exLine, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, setsRepsOk, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
 import { optStyle } from '../styles';
@@ -107,6 +107,8 @@ export function editVals(ctx: Ctx) {
     ? Math.max(20, selList.length * 10)
     : Math.max(20, Math.round((baseMin + exDelta * 10 + setDeltaMin) / 5) * 5);
   const saving = logic.busy('workout');
+  // Every exercise needs at least one set of at least one rep.
+  const badCounts = selRide ? null : selList.find((e) => !setsRepsOk(e.sets));
   // A new exercise's name must be new where it's going: among the person's exercises and the built-ins in the Spellbook
   // (saving one there would otherwise overwrite the old one), or among this workout's exercises in the editor (a
   // workout keeps track of its exercises by name).
@@ -139,16 +141,18 @@ export function editVals(ctx: Ctx) {
     list.length === 1 ? list[0] : list.slice(0, -1).join(', ') + ' and ' + list[list.length - 1];
   return {
     nameError: nameClash ? 'You already have a workout called “' + nameClash.name + '”. Give this one another name.' : '',
-    saveBlocked: !!nameClash || needsName || needsExercise || saving,
+    saveBlocked: !!nameClash || needsName || needsExercise || !!badCounts || saving,
     saveHint: nameClash
       ? ''
-      : needsName && needsExercise
-        ? 'Name it and add an exercise to save it.'
-        : needsName
-          ? 'Name this workout to save it.'
-          : needsExercise
-            ? 'Add at least one exercise to save it.'
-            : '',
+      : badCounts
+        ? '“' + badCounts.name + '” needs at least 1 set and 1 rep.'
+        : needsName && needsExercise
+          ? 'Name it and add an exercise to save it.'
+          : needsName
+            ? 'Name this workout to save it.'
+            : needsExercise
+              ? 'Add at least one exercise to save it.'
+              : '',
     // Creating one for the calendar under a name that's taken: most likely the saved one was meant.
     canUseSaved: !!nameClash && creating && st.schedule !== false,
     useSavedLabel: nameClash ? 'Schedule your saved “' + nameClash.name + '” instead' : '',
@@ -356,10 +360,20 @@ export function editVals(ctx: Ctx) {
       style: optStyle((st.dIcon || 'h') === name),
     })),
     draftNameError,
-    commitDisabled: !(st.dName || '').trim() || !(st.dAreas || []).length || !!clash,
+    commitDisabled: !(st.dName || '').trim() || !(st.dAreas || []).length || !!clash || !countsOk(st.dSets, st.dReps),
+    // Why the button is off, when it is (a name clash says so on the field itself).
+    draftHint: clash
+      ? ''
+      : !(st.dName || '').trim()
+        ? 'Name it to save it.'
+        : !countsOk(st.dSets, st.dReps)
+          ? 'Sets and reps need to be at least 1.'
+          : !(st.dAreas || []).length
+            ? 'Pick at least one target area.'
+            : '',
     commitNew: () => {
       const nm = (st.dName || '').trim();
-      if (!nm || !(st.dAreas || []).length || clash) return;
+      if (!nm || !(st.dAreas || []).length || clash || !countsOk(st.dSets, st.dReps)) return;
       const item = {
         name: nm,
         sets: joinSetsReps(st.dSets, st.dReps) || '3 × 10',
@@ -564,6 +578,7 @@ export function editVals(ctx: Ctx) {
           st.pendingNav ? NAV_DESTINATIONS[st.pendingNav] : { screen: 'detail', hist: (st.hist || []).slice(0, -1) },
           cleared,
           { entryId: selAct.id, tplConfirm: null },
+          st.pendingNav ? {} : noticePatch('Changes saved.', 'detail'),
         );
         // The date, the ride you logged and repeating belong to this session. Anything else changes the workout,
         // which other sessions (and the Spellbook) share.
@@ -611,8 +626,8 @@ export function editVals(ctx: Ctx) {
                   {},
                   back,
                   r && r.created
-                    ? { templateId: r.workoutId, announce: '“' + (name || copyName) + '” saved as a new workout.' }
-                    : {},
+                    ? { templateId: r.workoutId, ...noticePatch('“' + (name || copyName) + '” saved as a new workout.', 'template') }
+                    : noticePatch('“' + (edit.name || baseName) + '” saved.', 'template'),
                 ),
             );
           // Asked every time, so "Save as a new workout" is always there; the upcoming switch shows only when
@@ -718,8 +733,17 @@ export function editVals(ctx: Ctx) {
             st.pendingNav
               ? {}
               : scheduled
-                ? { announce: '“' + r.name + '” saved and added to ' + MON3[mod12(mi)] + ' ' + selDay + '.' }
-                : { spellNotice: '“' + r.name + '” saved to your Spellbook.', announce: '“' + r.name + '” saved to your Spellbook.' },
+                ? noticePatch(
+                    '“' +
+                      r.name +
+                      '” saved and added to ' +
+                      MON3[mod12(mi)] +
+                      ' ' +
+                      selDay +
+                      (st.repeat ? ', and every ' + DOWFULL[selDate.getDay()] + ' for 12 weeks after (13 sessions).' : '.'),
+                    'day',
+                  )
+                : noticePatch('“' + r.name + '” saved to your Spellbook.', 'template'),
           ),
       );
     },

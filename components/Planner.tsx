@@ -232,6 +232,9 @@ export default function Planner({ account = null }: { account?: Account | null }
   const firstScreen = useRef(true);
   useEffect(() => {
     window.scrollTo(0, 0);
+    // A confirmation belongs to the screen it was shown on: leaving that screen ends it.
+    const notice = logic.state.notice;
+    if (notice && notice.screen !== screen) logic.setState({ notice: null });
     if (firstScreen.current) {
       firstScreen.current = false;
       return;

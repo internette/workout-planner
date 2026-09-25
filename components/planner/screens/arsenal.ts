@@ -3,7 +3,7 @@ import { DOWFULL, EDIT_OVERLAYS, ICON_NAMES, MONTHS, TARGET_AREAS } from '../con
 import { iconSvg } from '../icons';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import * as db from '@/lib/plannerData';
-import { digitsOnly, exerciseDraftDirty, exLine, isoOf, joinSetsReps, monthPatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
+import { countsOk, digitsOnly, noticePatch, exerciseDraftDirty, exLine, isoOf, joinSetsReps, monthPatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
 import { optStyle } from '../styles';
 import type { Ctx } from '../types';
 
@@ -104,6 +104,10 @@ export function arsenalVals(ctx: Ctx) {
     i: ex.i,
     areas: ex.areas || [],
   });
+  const copiesIn =
+    found && !found.workout && !found.ex.builtin
+      ? workouts.filter((w) => w.kind === 'lift' && w.exercises.some((n) => n.trim().toLowerCase() === found.ex.name.trim().toLowerCase()))
+      : [];
   const exercise = found
     ? {
         name: found.ex.name,
@@ -113,10 +117,14 @@ export function arsenalVals(ctx: Ctx) {
         rest: found.ex.rest,
         areas: found.ex.areas || [],
         builtin: !!found.ex.builtin,
-        // By id, not by name: a same-named exercise in the Unassigned group is not part of any workout.
+        // One inside a workout belongs to that workout. One saved on its own is copied into a workout when it's
+        // added, so it lists the workouts holding a copy (by name, which is how workouts keep their exercises).
         usedIn: found.workout
           ? [{ name: found.workout.name, open: () => logic.nav({ screen: 'template', templateId: found.workout.id }) }]
-          : [],
+          : copiesIn.map((w) => ({ name: w.name, open: () => logic.nav({ screen: 'template', templateId: w.id }) })),
+        usedInNote: !found.workout && copiesIn.length
+          ? 'Each workout has its own copy, so changing this one doesn’t change them.'
+          : '',
         edit: () =>
           logic.nav({
             screen: 'exerciseEdit',
@@ -168,6 +176,7 @@ export function arsenalVals(ctx: Ctx) {
       exDraftOrig: null,
       exEditNav: false,
       ...(st.exEditNav ? { hist: (st.hist || []).slice(0, -1) } : {}),
+      ...noticePatch('“' + patch.name + '” saved.', 'exercise'),
     };
     const workout = found.workout;
     try {
@@ -175,6 +184,7 @@ export function arsenalVals(ctx: Ctx) {
       logic.s({
         tplConfirm: {
           exercise: found.ex.name,
+          copies: copiesIn.length,
           name: workout ? workout.name : '',
           count,
           choice: 'update',
@@ -266,12 +276,23 @@ export function arsenalVals(ctx: Ctx) {
         renameClash.name +
         '”. Give this one another name.'
       : '',
-    canSave: !!exDraft.name.trim() && (exDraft.areas || []).length > 0 && !renameClash,
+    canSave: !!exDraft.name.trim() && (exDraft.areas || []).length > 0 && !renameClash && countsOk(exDraft.sets, exDraft.reps),
+    // Why Save is off, when it is (a name clash says so on the field itself).
+    saveHint: renameClash
+      ? ''
+      : !exDraft.name.trim()
+        ? 'Name it to save it.'
+        : !countsOk(exDraft.sets, exDraft.reps)
+          ? 'Sets and reps need to be at least 1.'
+          : !(exDraft.areas || []).length
+            ? 'Pick at least one target area.'
+            : '',
     heading: copying ? 'COPY OF ' + (found ? found.ex.name.toUpperCase() : 'EXERCISE') : 'EDIT EXERCISE',
     saveLabel: copying ? 'Save copy' : 'Save changes',
     cancel: cancelEdit,
     save: () => {
-      if (!found || !exDraft.name.trim() || !(exDraft.areas || []).length || renameClash) return;
+      if (!found || !exDraft.name.trim() || !(exDraft.areas || []).length || renameClash || !countsOk(exDraft.sets, exDraft.reps))
+        return;
       // Nothing changed: nothing to ask about or save.
       if (!copying && !exerciseDraftDirty(st)) return cancelEdit();
       const patch = {
@@ -291,7 +312,7 @@ export function arsenalVals(ctx: Ctx) {
           exEditNav: false,
           exCopy: false,
           ...(st.exEditNav ? { hist: (st.hist || []).slice(0, -1) } : {}),
-          announce: '“' + r.name + '” saved to your Spellbook.',
+          ...noticePatch('“' + r.name + '” saved to your Spellbook.', 'exercise'),
         }));
       askExerciseSave(patch);
     },
@@ -530,16 +551,14 @@ export function arsenalVals(ctx: Ctx) {
     if (hit.length) moveGroups.push({ label: label.toUpperCase(), count: plural(hit.length, 'exercise'), items: hit });
   };
   Object.keys(EX).forEach((w) => pushGroup(w, EX[w] || []));
-  pushGroup('Unassigned', logic.model.library);
+  // Exercises saved on their own, not inside any workout (adding one to a workout puts a copy there).
+  pushGroup('Saved on their own', logic.model.library);
   // The shared starter catalog, after the person's own, grouped by each exercise's main target area.
   TARGET_AREAS.forEach((area) =>
     pushGroup('Built-in · ' + area, logic.model.builtins.filter((e) => (e.areas || [])[0] === area)),
   );
 
   return {
-    // After a delete, the list says what went (and it's read out).
-    spellNotice: st.screen === 'arsenal' || st.screen === 'template' ? st.spellNotice || '' : '',
-    dismissSpellNotice: () => logic.s({ spellNotice: null }),
     tplConfirmOpen: !!confirm,
     tplConfirmTitle: 'How should this change be saved?',
     // For a workout, its name once (the options carry the rest). An exercise names itself in its own options.
@@ -557,7 +576,9 @@ export function arsenalVals(ctx: Ctx) {
                 title: 'Update “' + confirm.exercise + '”',
                 description: confirm.name
                   ? 'Changes the exercise in “' + confirm.name + '”.'
-                  : 'Changes the exercise itself.',
+                  : confirm.copies
+                    ? 'Changes this exercise. Workouts that use it keep their own copy.'
+                    : 'Changes the exercise itself.',
               }
             : {
                 value: 'update',
@@ -643,7 +664,7 @@ export function arsenalVals(ctx: Ctx) {
       logic.s({ arsenalAdd: false, dName: '', dSets: '', dReps: '', dWeight: '', dRest: '', dAreas: [] }),
     commitArsenal: () => {
       const nm = (st.dName || '').trim();
-      if (!nm || !(st.dAreas || []).length) return;
+      if (!nm || !(st.dAreas || []).length || !countsOk(st.dSets, st.dReps)) return;
       const lower = nm.toLowerCase();
       if (logic.model.library.concat(logic.model.builtins).some((e) => e.name.trim().toLowerCase() === lower)) return;
       const item = {
@@ -655,6 +676,7 @@ export function arsenalVals(ctx: Ctx) {
         areas: st.dAreas || [],
       };
       logic.saveOnce('exercise', () => db.addLibraryExercise(item), {
+        ...noticePatch('“' + nm + '” added to your Spellbook, under “Saved on their own”.', 'arsenal'),
         arsenalAdd: false,
         dName: '',
         dSets: '',
