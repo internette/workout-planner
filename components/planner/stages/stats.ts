@@ -19,6 +19,9 @@ export function statsStage(ctx: Ctx): Ctx {
     const nd = new Date(Y, upcoming.m, upcoming.d);
     nextUp = {
       name: upcoming.av.name,
+      m: upcoming.m,
+      d: upcoming.d,
+      id: upcoming.av.id,
       meta2: upcoming.m * 100 + upcoming.d === TK ? 'Today · ' + upcoming.av.time :
         DOW3[nd.getDay()].charAt(0) +
         DOW3[nd.getDay()].slice(1, 3).toLowerCase() +

@@ -56,13 +56,7 @@ export function progressVals(ctx: Ctx) {
   const nextRankName = RANKS[derivedRank + 1] ? RANKS[derivedRank + 1].name : RANKS[derivedRank].next;
   const xpLeft = Math.max(0, rankCeil - xpTotal);
   const xpToGo = xpLeft ? xpLeft + ' more to reach ' + nextRankName + '.' : 'The top rank.';
-  const statusOf = (x) => {
-    if (x.done) return 'Done';
-    const started = !x.av.ride && ctx.doneCountAt(x.av) > 0;
-    if (x.date < todayDate) return started ? 'Partly done' : 'Missed';
-    if (x.date.getTime() === todayDate.getTime() && (started || (st.workoutTimer || {})[x.av.id])) return 'In progress';
-    return 'Planned';
-  };
+  const statusOf = (x) => (x.done ? 'Done' : ctx.sessionStatus(relM(x.date), x.date.getDate(), x.av));
   return {
     // Empty states: say what will show up, instead of "0 of 0" or a bare heading.
     wkEmpty: weekAll.length === 0,
@@ -334,6 +328,15 @@ export function progressVals(ctx: Ctx) {
       'width:' +
       (weekAll.length ? Math.round((weekAll.filter(isDoneEntry).length / weekAll.length) * 100) : 0) +
       '%;height:100%;border-radius:4px;background:var(--color-pink)',
+    // The cards open what they sum up: the next session, this week and this month on the calendar, the Chronicle.
+    openNext: () =>
+      nextUp &&
+      logic.nav({ screen: 'detail', creating: false, seg: 'Day', monthOpen: false, ...monthPatch(nextUp.m), day: nextUp.d, entryId: nextUp.id }),
+    openWeek: () =>
+      logic.nav({ screen: 'day', seg: 'Week', monthOpen: false, ...monthPatch(TODAY_M), day: TODAY_D, entryId: null }),
+    openMonth: () =>
+      logic.nav({ screen: 'day', seg: 'Month', monthOpen: false, ...monthPatch(TODAY_M), day: TODAY_D, entryId: null }),
+    openChronicle: () => logic.nav({ screen: 'diaryList' }),
     hasNext: !!nextUp,
     noNext: !nextUp,
     nextName: nextUp && nextUp.name,
@@ -367,8 +370,10 @@ export function progressVals(ctx: Ctx) {
           name: q.title,
           doneLine: isDone ? q.done : '',
           done: isDone,
+          open: () => logic.nav({ screen: 'day', seg: 'Day', monthOpen: false, ...monthPatch(relM(d)), day: dm, entryId: null }),
+          aria: DOWFULL[d.getDay()] + ': ' + q.title + (isDone ? ', cleared' : ''),
           row:
-            'display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid rgba(35,42,69,.055)',
+            'display:flex;align-items:center;gap:11px;width:100%;min-height:44px;padding:10px 0;border:none;background:none;text-align:left;font-family:inherit;cursor:pointer;border-bottom:1px solid rgba(35,42,69,.055)',
           mark:
             'width:18px;height:18px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;' +
             (isDone ? 'background:var(--color-pink)' : 'background:transparent'),

@@ -1,5 +1,5 @@
 import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, ICON_COLOR_NAMES, ICON_NAMES, MON3, MONTHS, TARGET_AREAS } from '../constants';
-import { countsOk, digitsOnly, noticePatch, exLine, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, setsRepsOk, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
+import { countsOk, rollMinutes, digitsOnly, noticePatch, exLine, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, setsRepsOk, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
 import { optStyle } from '../styles';
@@ -87,6 +87,10 @@ export function editVals(ctx: Ctx) {
   const todayIso = isoOf(new Date(Y, TODAY_M, TODAY_D));
   // Repeating: this weekday for the 12 weeks after the day, leaving out days already gone by (they'd only show as
   // missed) and days that already have this workout.
+  // A day that has gone by: whatever is put on it is most likely already done, so it's logged as done unless
+  // switched off (as in the Spellbook's "Add to calendar").
+  const pastDay = isoOf(new Date(Y, mi, selDay)) < todayIso;
+  const logDoneOn = pastDay && st.logDone !== false;
   // An exercise's icon picked in this editor (not yet saved), kept per workout like its other fields.
   const iconPick = (name) => (st.exIcons || {})[listKey + '|' + name];
   const weeklyAfter = (name) => {
@@ -190,7 +194,11 @@ export function editVals(ctx: Ctx) {
     // Or skip building one: put a saved workout on this day, straight from the calendar.
     hasSavedChoices: creating && st.newFrom === 'calendar' && logic.model.workouts.length > 0,
     savedChoicesNote:
-      'Tap one to put it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mod12(mi)] + ' ' + selDay + yearNote + '.',
+      'Tap one to put it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mod12(mi)] + ' ' + selDay + yearNote +
+      (logDoneOn ? ', logged as done.' : '.'),
+    showLogDone: pastDay && creating && st.schedule !== false,
+    logDoneOn,
+    setLogDone: (on) => logic.s({ logDone: !!on }),
     savedChoices: logic.model.workouts.map((w) => ({
       name: w.name,
       svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || colors.pink),
@@ -203,12 +211,24 @@ export function editVals(ctx: Ctx) {
       pick: () =>
         logic.saveOnce(
           'workout',
-          () => db.scheduleWorkout(w.id, [isoOf(new Date(Y, mi, selDay))], false),
+          () =>
+            db.scheduleWorkout(
+              w.id,
+              [isoOf(new Date(Y, mi, selDay))],
+              false,
+              logDoneOn ? { exercises: w.kind === 'ride' ? [] : w.exercises } : undefined,
+            ),
           (r) =>
             Object.assign(
               { screen: 'day', seg: 'Day', creating: false, newType: null, newName: '', newFrom: null, schedule: null },
               EDIT_OVERLAYS,
-              { hist: (st.hist || []).slice(0, -1), announce: w.name + ' added to ' + MON3[mod12(mi)] + ' ' + selDay + '.' },
+              {
+                hist: (st.hist || []).slice(0, -1),
+                ...noticePatch(
+                  '“' + w.name + '” ' + (logDoneOn ? 'logged as done on ' : 'added to ') + MON3[mod12(mi)] + ' ' + selDay + '.',
+                  'day',
+                ),
+              },
               r && r.entryId ? { entryId: r.entryId } : {},
             ),
         ),
@@ -243,7 +263,11 @@ export function editVals(ctx: Ctx) {
     setActHours: (e) => logic.s({ aHrs: e.target.value.replace(/[^0-9]/g, '').slice(0, 2) }),
     setActMins: (e) => {
       const v = e.target.value.replace(/[^0-9]/g, '').slice(0, 2);
-      logic.s({ aMins: v === '' ? '' : String(Math.min(59, Number(v))) });
+      logic.s({ aMins: v });
+    },
+    rollActMins: () => {
+      const r = rollMinutes(aHrs, aMins);
+      if (r) logic.s({ aHrs: r.hrs, aMins: r.mins });
     },
     plannedDist: rDist ? 'Planned ' + rDist + ' mi' : 'No planned distance',
     plannedElev: rElev ? 'Planned ' + rElev + ' ft' : 'No planned elevation',
@@ -274,7 +298,11 @@ export function editVals(ctx: Ctx) {
     setHours: (e) => logic.s({ rHrs: e.target.value.replace(/[^0-9]/g, '').slice(0, 2) }),
     setMins: (e) => {
       const v = e.target.value.replace(/[^0-9]/g, '').slice(0, 2);
-      logic.s({ rMins: v === '' ? '' : String(Math.min(59, Number(v))) });
+      logic.s({ rMins: v });
+    },
+    rollMins: () => {
+      const r = rollMinutes(rHrs, rMins);
+      if (r) logic.s({ rHrs: r.hrs, rMins: r.mins });
     },
     setRideZone: (zone) => logic.s({ rZone: zone }),
     // No longer picked by hand: a workout's target areas are whatever its exercises target, combined.
@@ -600,7 +628,16 @@ export function editVals(ctx: Ctx) {
           st.pendingNav ? NAV_DESTINATIONS[st.pendingNav] : { screen: 'detail', hist: (st.hist || []).slice(0, -1) },
           cleared,
           { entryId: selAct.id, tplConfirm: null },
-          st.pendingNav ? {} : noticePatch('Changes saved.', 'detail'),
+          st.pendingNav
+            ? {}
+            : noticePatch(
+                'Changes saved.' +
+                  (edit.repeatDates.length
+                    ? ' Repeats every ' + DOWFULL[new Date(Y, mi, selDay).getDay()] + ', ' +
+                      plural(edit.repeatDates.length, 'more session') + ' on the calendar.'
+                    : ''),
+                'detail',
+              ),
         );
         // The date, the ride you logged and repeating belong to this session. Anything else changes the workout,
         // which other sessions (and the Spellbook) share.
@@ -744,6 +781,7 @@ export function editVals(ctx: Ctx) {
             exercises: selList.map((e) => bare(iconPick(e.name) ? { ...e, i: iconPick(e.name) } : e)),
             dates: scheduled ? [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weeklyAfter(nm) : []) : [],
             repeat: scheduled && !!st.repeat && weeklyAfter(nm).length > 0,
+            done: scheduled && logDoneOn,
           }),
         // Normally: saved only goes back to the Spellbook's workouts, where it now is; scheduled goes to the day it
         // was put on. If a nav click was waiting on this save, go there instead — that's what was actually asked
@@ -812,7 +850,9 @@ export function editVals(ctx: Ctx) {
     eTime:
       selAct && ctx.actualMinutes(selAct)
         ? 'Took ' + ctx.minText(ctx.actualMinutes(selAct))
-        : creating
+        : isCycleView && plannedMin && (creating || st.rHrs != null || st.rMins != null)
+          ? ctx.minText(plannedMin)
+          : creating
           ? selList.length && st.newType !== 'cycle'
             ? '~' + estMin + ' min'
             : 'Duration TBD'
@@ -821,7 +861,13 @@ export function editVals(ctx: Ctx) {
             : (selAct && selAct.time) || '~50 min',
     setRepeat: (on) => logic.s({ repeat: !!on }),
     repeatOn: !!st.repeat,
-    repeatNote: 'Adds this workout every ' + DOWFULL[selDate.getDay()] + ' for the next 12 weeks, 13 sessions in all.',
+    // Said from the dates it would add: weeks gone by, and days that already have it, are left out.
+    repeatNote: (() => {
+      const n = weeklyAfter(creating ? (st.newName || '').trim() : baseName).length;
+      return n
+        ? 'Adds this workout every ' + DOWFULL[selDate.getDay()] + ' after this one, ' + plural(n, 'more session') + '.'
+        : 'The weeks after this one have gone by or already have it.';
+    })(),
     // Creating: whether the new workout also goes on the calendar. Editing a session is always on the calendar.
     isCreating: creating,
     scheduleOn: creating ? st.schedule !== false : true,

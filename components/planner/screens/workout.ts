@@ -1,5 +1,5 @@
 import { DOW3, DOWFULL, EDIT_OVERLAYS, MON3 } from '../constants';
-import { digitsOnly, exLine, formatElapsed, idOf, isoOf, monthPatch, noticePatch, numericOnly, plural, questSeed } from '../helpers';
+import { digitsOnly, rollMinutes, exLine, formatElapsed, idOf, isoOf, monthPatch, noticePatch, numericOnly, plural, questSeed } from '../helpers';
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -46,6 +46,7 @@ export function workoutVals(ctx: Ctx) {
   // A session on a day still ahead can't be done yet: starting it early would count it for that day. It can be moved
   // to today instead, and started there.
   const isFutureDay = mi * 100 + selDay > TK;
+  const isPastDay = mi * 100 + selDay < TK;
   // "Sat 26": the day a session is on.
   const leaveDay = (id) => {
     const x = logic.model.entries.find((e) => e.av.id === id);
@@ -88,7 +89,7 @@ export function workoutVals(ctx: Ctx) {
         day: TODAY_D,
         entryId: id,
         // Only moved: the timer waits for Start, in case it was just the day that changed.
-        announce: nameOf(av.name) + ' moved to today.',
+        ...noticePatch('“' + nameOf(av.name) + '” moved to today.', 'detail'),
       },
     );
   };
@@ -187,7 +188,10 @@ export function workoutVals(ctx: Ctx) {
     delete timers[timerKey];
     logic.s(
       Object.assign(
-        { finish: null, workoutTimer: timers, ...noticePatch('Transformation complete. ' + minText(finMinutes) + ' recorded.', 'detail') },
+        { finish: null, workoutTimer: timers, ...noticePatch(
+          fin.correcting ? 'Time changed to ' + minText(finMinutes) + '.' : 'Transformation complete. ' + minText(finMinutes) + ' recorded.',
+          'detail',
+        ) },
         fin.ride ? { rideDone: Object.assign({}, st.rideDone, { [id]: true }) } : {},
       ),
     );
@@ -254,7 +258,7 @@ export function workoutVals(ctx: Ctx) {
       key: id,
       name: nameOf(av.name),
       meta: complete
-        ? 'Completed · ' + (ride ? (distOf(av) ? distOf(av) + ' mi · ' : '') + timeOf(av) : timeOf(av))
+        ? 'Completed · ' + (ride && distOf(av) ? distOf(av) + ' mi · ' : '') + ctx.doneTimeOf(av)
         : timer
           ? (timer.runningSince ? 'In progress · ' : 'Paused · ') + formatElapsed(timerSec)
           : ride
@@ -285,9 +289,24 @@ export function workoutVals(ctx: Ctx) {
       toggleMore: () => logic.s({ moreIds: Object.assign({}, st.moreIds, { [id]: !expanded }) }),
       // Logged: read it. Every exercise ticked but not logged yet: log it. Started (clock or ticks): carry on, or
       // start over. Otherwise: start.
-      ctaTwoButtons: !logged && !complete && !isFutureDay && (timed || doneN > 0),
-      ctaLabel: logged ? 'View Chronicle entry' : complete ? 'Write about it' : isFutureDay ? 'Do it today' : 'Start workout',
-      cta: !logged && !complete && isFutureDay ? () => doToday(av) : run(logged || complete ? 'goDiary' : 'startWorkout'),
+      // A day gone by isn't timed now: its session just opens, to tick off or mark done.
+      ctaTwoButtons: !logged && !complete && !isFutureDay && (timed || (doneN > 0 && !isPastDay)),
+      ctaLabel: logged
+        ? 'View Chronicle entry'
+        : complete
+          ? 'Write about it'
+          : isFutureDay
+            ? 'Do it today'
+            : isPastDay
+              ? ride ? 'Open ride' : 'Open workout'
+              : ride ? 'Start ride' : 'Start workout',
+      cta:
+        !logged && !complete && isFutureDay
+          ? () => doToday(av)
+          : run(logged || complete ? 'goDiary' : isPastDay ? 'goDetail' : 'startWorkout'),
+      // With the clock going it carries on; with only ticks, the clock starts from zero and the ticks stay.
+      restartLabel: 'Start over',
+      continueLabel: timed ? 'Continue' : 'Keep going',
       restart: run('restartWorkout'),
       continue: run('continueWorkout'),
     };
@@ -300,7 +319,8 @@ export function workoutVals(ctx: Ctx) {
     timerButtonAction: !timerState ? startTimer : timerRunning ? pauseTimer : resumeTimer,
     // A workout that's already done or finished, and isn't being timed, doesn't need a "Start" — that's for
     // something you're about to do. But once a clock exists for it, keep showing it, with Finish beside it.
-    showTimer: !isFutureDay && (!!timerState || (!doneSel && !finished)),
+    // Not on a day gone by: a timer started now would time today, not that day.
+    showTimer: !isFutureDay && (!!timerState || (!doneSel && !finished && !isPastDay)),
     isFuture: isFutureDay && !!selAct && !doneSel,
     futureNote: 'Planned for ' + DOWFULL[selDate.getDay()] + ', ' + MON3[selDate.getMonth()] + ' ' + selDay + '.',
     doItToday: () => doToday(selAct),
@@ -343,7 +363,11 @@ export function workoutVals(ctx: Ctx) {
     setFinishHrs: (e) => patchFinish({ hrs: digitsOnly(e.target.value).slice(0, 2) }),
     setFinishMins: (e) => {
       const v = digitsOnly(e.target.value).slice(0, 2);
-      patchFinish({ mins: v === '' ? '' : String(Math.min(59, Number(v))) });
+      patchFinish({ mins: v });
+    },
+    rollFinishMins: () => {
+      const r = fin && rollMinutes(fin.hrs, fin.mins);
+      if (r) patchFinish(r);
     },
     setFinishDist: (e) => patchFinish({ dist: numericOnly(e.target.value) }),
     setFinishElev: (e) => patchFinish({ elev: digitsOnly(e.target.value).slice(0, 6) }),
@@ -504,7 +528,9 @@ export function workoutVals(ctx: Ctx) {
           : doneCount === 0
           ? 'Mark each exercise as you clear it.'
           : doneCount === selList.length
-            ? 'Transformation complete. Write down how it felt while it\'s fresh.'
+            ? hasEntry
+              ? 'Transformation complete.'
+              : 'Transformation complete. Write down how it felt while it\'s fresh.'
             : selList.length - doneCount + ' left to go.',
   };
 }

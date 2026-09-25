@@ -450,6 +450,7 @@ export interface NewWorkout {
   icon: string | null;
   iconColor: string | null;
   exercises: Exercise[];
+  done?: boolean; // put on a day that has gone by, logged as already done (every exercise ticked)
   dates: string[]; // ISO dates to schedule
   repeat: boolean;
   notes: string;
@@ -487,16 +488,16 @@ export async function createWorkout(w: NewWorkout) {
     );
   }
 
-  // A workout saved on its own has no dates, and nothing to schedule.
+  // A workout saved on its own has no dates, and nothing to schedule. Otherwise the session on the first date comes
+  // back, so the screen can open on it even when that day has other workouts too.
   if (!w.dates.length) return { entryId: null, workoutId, name };
-  const rows: { id: string; scheduled_date: string }[] = await ok(
-    supabase
-      .from('plan_entries')
-      .insert(w.dates.map((d) => ({ workout_id: workoutId, scheduled_date: d, status: 'planned' })))
-      .select('id, scheduled_date'),
+  const { entryId } = await scheduleWorkout(
+    workoutId,
+    w.dates,
+    false,
+    w.done ? { exercises: w.exercises.map((e) => e.name) } : undefined,
   );
-  // The session on the first date, so the screen can open on it even when that day has other workouts too.
-  return { entryId: rows.find((r) => r.scheduled_date === w.dates[0])?.id ?? null, workoutId, name };
+  return { entryId, workoutId, name };
 }
 
 // Puts an existing workout on the calendar: one session per date. Repeating dates also turn its weekly series on.
