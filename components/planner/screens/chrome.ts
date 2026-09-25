@@ -229,9 +229,11 @@ export function chromeVals(ctx: Ctx) {
       const prev = (st.hist || [])[(st.hist || []).length - 1];
       if (!prev) return HOME_OF[st.screen] === 'arsenal' ? 'Spellbook' : HOME_OF[st.screen] === 'diaryList' ? 'Chronicle' : 'Calendar';
       const w = st.templateId && logic.model.workouts.find((x) => x.id === st.templateId);
+      // One of the person's own exercises, a built-in, or one inside a saved workout.
       const ex =
         st.exerciseId &&
-        logic.model.library.concat(logic.model.builtins).find((x) => x.id === st.exerciseId);
+        (logic.model.library.concat(logic.model.builtins).find((x) => x.id === st.exerciseId) ||
+          (Object.values(logic.model.EXV) as any[][]).flat().find((x) => x.id === st.exerciseId));
       const names = {
         day: 'Calendar',
         rest: 'Calendar',
@@ -239,7 +241,7 @@ export function chromeVals(ctx: Ctx) {
         arsenal: 'Spellbook',
         template: w ? w.name : 'Workout',
         exercise: ex ? ex.name : 'Exercise',
-        exerciseEdit: 'Exercise',
+        exerciseEdit: ex ? ex.name : 'Exercise',
         edit: 'Editor',
         diary: 'Entry',
         diaryList: 'Chronicle',

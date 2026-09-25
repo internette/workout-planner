@@ -304,6 +304,7 @@ export function diaryVals(ctx: Ctx) {
         isNeutral: en.mood === 'Neutral',
         isSad: en.mood === 'Sad',
         isMad: en.mood === 'Mad',
+        rpe: en.rpe || 0,
         stars: [1, 2, 3, 4, 5].map(
           (i) =>
             'font-size:var(--text-md);line-height:var(--leading-none);color:' +
@@ -327,6 +328,7 @@ export function diaryVals(ctx: Ctx) {
       }),
     readMood: st.mood,
     readNote: (ENTRIES[entryKey] || {}).note || 'No notes for this one.',
+    readRpe: st.rpe || 0,
     readStars: [1, 2, 3, 4, 5].map(
       (n) =>
         'font-size:var(--text-md);line-height:var(--leading-none);color:' +

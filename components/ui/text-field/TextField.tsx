@@ -55,16 +55,19 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
       {...rest}
     />
   );
+  // With no caption around it (named by aria-label), the box itself is the label, so a tap anywhere in it — its
+  // padding, its suffix — focuses the input, not only the line of text in the middle.
+  const Box = !label && !error && !hint ? 'label' : 'span';
   const control =
     variant === 'filled' ? (
-      <span
+      <Box
         className={[styles.control, error && styles.invalid, disabled && styles.disabled]
           .filter(Boolean)
           .join(' ')}
       >
         {input}
         {suffix ? <span className={styles.suffix}>{suffix}</span> : null}
-      </span>
+      </Box>
     ) : (
       input
     );

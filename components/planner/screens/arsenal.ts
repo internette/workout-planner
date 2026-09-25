@@ -287,7 +287,7 @@ export function arsenalVals(ctx: Ctx) {
           : !(exDraft.areas || []).length
             ? 'Pick at least one target area.'
             : '',
-    heading: copying ? 'COPY OF ' + (found ? found.ex.name.toUpperCase() : 'EXERCISE') : 'EDIT EXERCISE',
+    heading: copying ? 'COPY OF ' + (found ? found.ex.name.toUpperCase() : 'EXERCISE') : 'EDITING EXERCISE',
     saveLabel: copying ? 'Save copy' : 'Save changes',
     cancel: cancelEdit,
     save: () => {

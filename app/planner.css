@@ -87,9 +87,19 @@ summary:focus-visible, [tabindex]:focus-visible {
     outline: 3px solid Highlight;
     outline-offset: 2px;
   }
-  [data-star],
   .fc-keep {
     forced-color-adjust: none;
+  }
+  /* Rating stars in system colors: filled ones in the text color, empty ones grayed, so a rating reads the right
+     way round in any contrast theme. */
+  [data-star],
+  .fc-star {
+    forced-color-adjust: none;
+    color: GrayText !important;
+  }
+  [data-star][data-on],
+  .fc-star[data-on] {
+    color: CanvasText !important;
   }
 }
 
