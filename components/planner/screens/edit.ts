@@ -635,7 +635,17 @@ export function editVals(ctx: Ctx) {
           return db
             .countUpcoming(id, todayIso)
             .then((count) =>
-              logic.s({ tplConfirm: { count, name: baseName, choice: 'update', upcoming: true, copyName, apply } }),
+              logic.s({
+                tplConfirm: {
+                  count,
+                  name: baseName,
+                  sessions: logic.model.entries.filter((x) => x.av.name === baseName).length,
+                  choice: 'update',
+                  upcoming: true,
+                  copyName,
+                  apply,
+                },
+              }),
             )
             .catch((e) => logic.s({ saveError: e instanceof Error ? e.message : String(e) }));
         }

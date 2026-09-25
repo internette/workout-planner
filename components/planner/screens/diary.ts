@@ -161,7 +161,9 @@ export function diaryVals(ctx: Ctx) {
     },
     loggedCount: Object.keys(ENTRIES).length,
     loggedUnit: Object.keys(ENTRIES).length === 1 ? 'entry' : 'entries',
-    diaryCount: plural(Object.keys(ENTRIES).length, 'entry', 'entries'),
+    // With a filter on, how many of them are showing.
+    diaryCount:
+      (dScope !== 'all' ? diaryDays.length + ' of ' : '') + plural(Object.keys(ENTRIES).length, 'entry', 'entries'),
     openNewEntry: () => logic.nav({ screen: 'newEntry' }),
     closeNewEntry: () => logic.back(),
     noUnlogged: unloggedDays.length === 0,
