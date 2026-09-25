@@ -1,6 +1,6 @@
 import { HOME_OF, MON3 } from '../constants';
 import { exerciseDraftDirty, idOf, isoOf, mod12, monthPatch, noticePatch, workoutDraftDirty } from '../helpers';
-import { mLabel, mTab, tab } from '../styles';
+import { mLabel, mTab } from '../styles';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
 
@@ -29,12 +29,11 @@ export function chromeVals(ctx: Ctx) {
     ['arsenal', 'template', 'exercise', 'exerciseEdit'].includes(st.screen) ||
     (st.screen === 'edit' && ((!!st.creating && st.newFrom === 'arsenal') || !!st.editTemplate));
   return {
-    topTabsStyle: narrow ? 'display:none' : 'display:flex;flex-wrap:wrap;gap:6px;padding:18px 28px 0',
     sidebarStyle: narrow
       ? 'display:none'
       : tablet
-        ? 'flex:1 1 100%;width:100%;position:relative;background:var(--color-white);border-radius:18px;padding:8px;box-shadow:0 4px 14px rgba(35,42,69,.07)'
-        : 'flex:0 1 208px;min-width:180px;position:relative;background:var(--color-white);border-radius:22px;padding:18px 14px;box-shadow:0 4px 14px rgba(35,42,69,.07)',
+        ? 'flex:1 1 100%;width:100%;position:relative;background:var(--color-white);border-radius:18px;padding:8px;box-shadow:var(--elevation-raised)'
+        : 'flex:0 1 208px;min-width:180px;position:relative;background:var(--color-white);border-radius:22px;padding:18px 14px;box-shadow:var(--elevation-raised)',
     navListStyle: tablet
       ? 'display:flex;flex-direction:row;gap:4px'
       : 'display:flex;flex-direction:column;gap:4px',
@@ -62,7 +61,6 @@ export function chromeVals(ctx: Ctx) {
     isDiaryList: st.screen === 'diaryList',
     isProfile: st.screen === 'profile',
     goProfile: () => logic.nav({ screen: 'profile', monthOpen: false }),
-    tabProfile: tab(st.screen === 'profile'),
     navProfile:
       'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (st.screen === 'profile'
@@ -73,7 +71,6 @@ export function chromeVals(ctx: Ctx) {
     isSummary: st.screen === 'summary',
     isSaved: st.screen === 'saved',
     goSummary: () => logic.nav({ screen: 'summary', monthOpen: false }),
-    tabSummary: tab(st.screen === 'summary'),
     goDiaryList: () => logic.nav({ screen: 'diaryList', monthOpen: false }),
     isNewEntry: st.screen === 'newEntry',
     navCal:
@@ -286,10 +283,6 @@ export function chromeVals(ctx: Ctx) {
     isDetail: st.screen === 'detail',
     goRest: () =>
       logic.s({ screen: 'rest', ...monthPatch(TODAY_M), day: TODAY_D, monthOpen: false, seg: 'Day' }),
-    tabDay: tab(st.screen === 'day'),
-    tabEdit: tab(st.screen === 'edit'),
-    tabDiary: tab(st.screen === 'diary'),
-    tabRest: tab(st.screen === 'rest'),
     navCalOn: calActive ? 'page' : false,
     navDiaryOn: inChronicle ? 'page' : false,
     navArsenalOn: arsenalActive ? 'page' : false,

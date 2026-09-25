@@ -105,7 +105,7 @@ export function diaryVals(ctx: Ctx) {
       // Whether it was done, so writing about a missed one is a choice, not a surprise.
       status: x.done ? 'Done' : ctx.sessionStatus(x.m, x.d, x.av),
       statusStyle:
-        'flex:none;padding:4px 10px;border-radius:999px;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
+        'flex:none;padding:4px 10px;border-radius:var(--radius-full);font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
         (x.done ? 'background:var(--color-pink-tint);color:var(--color-pink-deep)' : 'background:var(--color-mist);color:var(--color-slate-deep)'),
       pick: () =>
         logic.nav({
@@ -328,7 +328,7 @@ export function diaryVals(ctx: Ctx) {
           });
         },
         faceWrap:
-          'width:48px;height:48px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:' +
+          'width:48px;height:48px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
           bg,
         isHappy: en.mood === 'Happy',
         isNeutral: en.mood === 'Neutral',
@@ -356,7 +356,7 @@ export function diaryVals(ctx: Ctx) {
     readNote: (ENTRIES[entryKey] || {}).note || 'No notes for this one.',
     readStars: [1, 2, 3, 4, 5].map((n) => n <= st.rpe),
     readMoodFace:
-      'width:44px;height:44px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:' +
+      'width:44px;height:44px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
       (st.mood === 'Happy'
         ? 'var(--color-pink)'
         : st.mood === 'Neutral'

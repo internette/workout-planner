@@ -122,11 +122,8 @@ export function progressVals(ctx: Ctx) {
       const created = new Date(logic.auth.account?.createdAt ?? '');
       return isNaN(created.getTime()) ? '' : 'Training since ' + MONTHS[created.getMonth()] + ' ' + created.getFullYear();
     })(),
-    rankPill:
-      'display:inline-flex;align-items:center;gap:8px;margin-top:9px;padding:7px 15px 7px 12px;border-radius:999px;font-size:var(--text-md);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-loose);' +
-      RANKS[derivedRank].pill,
     rankPillBtn:
-      'display:inline-flex;align-items:center;gap:8px;margin-top:9px;min-height:36px;padding:8px 15px 8px 14px;border:none;border-radius:999px;font-family:inherit;font-size:var(--text-md);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-loose);cursor:pointer;' +
+      'display:inline-flex;align-items:center;gap:8px;margin-top:9px;min-height:36px;padding:8px 15px 8px 14px;border:none;border-radius:var(--radius-full);font-family:inherit;font-size:var(--text-md);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-loose);cursor:pointer;' +
       RANKS[derivedRank].pill,
     rankGem:
       'width:10px;height:14px;flex:none;clip-path:polygon(50% 0,100% 35%,50% 100%,0 35%);background:' +
@@ -134,7 +131,7 @@ export function progressVals(ctx: Ctx) {
     rankBar:
       'width:' +
       rankPct +
-      '%;height:100%;border-radius:5px;transition:width .35s ease;background:var(--gradient-gem)',
+      '%;height:100%;border-radius:5px;transition:width var(--dur-bar) var(--ease-standard);background:var(--gradient-gem)',
     rankProgress:
       xpTotal === 0
         ? 'Clear your first exercise to start toward ' + nextRankName + '.'
@@ -202,7 +199,7 @@ export function progressVals(ctx: Ctx) {
         // The same words as the calendar's legend: done, partly done, missed, in progress (today), planned.
         statusLabel: statusOf(x),
         status:
-          'flex:none;padding:5px 11px;border-radius:999px;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
+          'flex:none;padding:5px 11px;border-radius:var(--radius-full);font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
           (x.done
             ? 'background:var(--color-pink);color:var(--color-white)'
             : statusOf(x) === 'Planned'
@@ -304,7 +301,7 @@ export function progressVals(ctx: Ctx) {
       .map(([name, color, pct]) => ({
         name,
         pct: pct + '%',
-        swatch: 'width:10px;height:10px;flex:none;border-radius:50%;background:' + color,
+        swatch: 'width:10px;height:10px;flex:none;border-radius:var(--radius-full);background:' + color,
         bar: 'display:block;width:' + pct + '%;height:100%;border-radius:5px;background:' + color,
       })) : []),
     records: Object.keys(bestByEx)
@@ -376,7 +373,7 @@ export function progressVals(ctx: Ctx) {
           row:
             'display:flex;align-items:center;gap:11px;width:100%;min-height:44px;padding:10px 0;border:none;background:none;text-align:left;font-family:inherit;cursor:pointer;border-bottom:1px solid rgba(35,42,69,.055)',
           mark:
-            'width:18px;height:18px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;' +
+            'width:18px;height:18px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;' +
             (isDone ? 'background:var(--color-pink)' : 'background:transparent'),
           title:
             'flex:1;min-width:0;font-size:var(--text-base);' +

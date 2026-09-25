@@ -47,7 +47,7 @@ export function calendarVals(ctx: Ctx) {
     setCalendarView: (seg) => logic.s({ seg }),
     monthBtn:
       'display:inline-flex;align-items:center;gap:7px;margin-left:-10px;min-height:44px;padding:8px 10px;border:none;border-radius:14px;background:' +
-      (st.monthOpen ? 'rgba(35,42,69,.05)' : 'none') +
+      (st.monthOpen ? 'var(--hover-neutral)' : 'none') +
       ';cursor:pointer',
     // Nothing planned this month: "— nothing planned yet", like Profile's weekly average, not "0 of 0 done".
     monthDone: monthDays.length ? String(monthDays.filter((x) => x.done).length) : '—',

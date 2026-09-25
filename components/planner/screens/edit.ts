@@ -313,7 +313,7 @@ export function editVals(ctx: Ctx) {
     rideBar:
       'width:' +
       (ridePct == null ? 0 : Math.min(100, ridePct)) +
-      '%;height:100%;border-radius:5px;transition:width .35s ease;background:linear-gradient(135deg,var(--color-pink) 0%,var(--color-periwinkle) 50%,var(--color-teal) 100%)',
+      '%;height:100%;border-radius:5px;transition:width var(--dur-bar) var(--ease-standard);background:var(--gradient-gem)',
     rideNote:
       ridePct == null
         ? 'Enter what you rode — a partial ride still counts.'
@@ -1022,11 +1022,8 @@ export function editVals(ctx: Ctx) {
         icoSvg: iconSvg(cur),
         hideLegacy: false,
         detail: exLine(e, true),
-        nameStyle:
-          'display:block;font-family:var(--font-heading);font-size:var(--text-xl);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-snug);' +
-          (doneSet[e.name]
-            ? 'color:var(--color-muted);text-decoration:line-through'
-            : 'color:var(--color-ink)'),
+        // Ticked off: its name is struck through and muted.
+        nameDone: !!doneSet[e.name],
         doneBtn:
           'margin-left:auto;display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;border-radius:11px;cursor:pointer;border:' +
           (doneSet[e.name]

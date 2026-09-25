@@ -175,7 +175,7 @@ export function workoutStage(ctx: Ctx): Ctx {
       'flex:1;min-width:0;font-size:var(--text-lg);font-weight:var(--font-weight-medium);' +
       (doneSet[e.name] ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
     tick:
-      'flex:none;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:' +
+      'flex:none;width:18px;height:18px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
       (doneSet[e.name] ? 'var(--color-pink)' : 'transparent'),
   }));
   const ridePast = mi * 100 + selDay < TK;
