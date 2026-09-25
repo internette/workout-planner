@@ -4,6 +4,18 @@ import { solidIcon, strokeIcon } from './factories';
 export const ChevronRight = strokeIcon('ChevronRight', <polyline points="9 18 15 12 9 6" />);
 export const ChevronLeft = strokeIcon('ChevronLeft', <polyline points="15 18 9 12 15 6" />);
 export const ChevronDown = strokeIcon('ChevronDown', <polyline points="6 9 12 15 18 9" />);
+// Six dots: a handle to drag something by.
+export const Grip = strokeIcon(
+  'Grip',
+  <>
+    <circle cx="9" cy="6" r="0.6" />
+    <circle cx="15" cy="6" r="0.6" />
+    <circle cx="9" cy="12" r="0.6" />
+    <circle cx="15" cy="12" r="0.6" />
+    <circle cx="9" cy="18" r="0.6" />
+    <circle cx="15" cy="18" r="0.6" />
+  </>,
+);
 export const Check = strokeIcon('Check', <polyline points="20 6 9 17 4 12" />);
 export const Close = strokeIcon(
   'Close',

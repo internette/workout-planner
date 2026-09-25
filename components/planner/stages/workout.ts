@@ -154,10 +154,15 @@ export function workoutStage(ctx: Ctx): Ctx {
   const doneCount = doneNames.length;
   const gone = (st.removed || {})[listKey] || [];
   const added = (st.extra || {})[listKey] || [];
+  // In the order they were dragged to (st.exOrder, by name); anything added since goes at the end.
+  const exOrder = (st.exOrder || {})[listKey] || [];
+  const orderRank = (e) => (exOrder.indexOf(e.name) === -1 ? exOrder.length : exOrder.indexOf(e.name));
   const selList = (creating ? [] : EXV[baseKey] || [])
     .concat(added)
     .filter((e) => gone.indexOf(e.name) === -1)
-    .map((e) => Object.assign({}, e, (st.fields || {})[listKey + '|' + e.name] || {}));
+    .map((e, ix) => ({ e, ix }))
+    .sort((a, b) => orderRank(a.e) - orderRank(b.e) || a.ix - b.ix)
+    .map(({ e }) => Object.assign({}, e, (st.fields || {})[listKey + '|' + e.name] || {}));
   // The workout's own target areas aren't picked directly any more — they're whatever its exercises target.
   const picked = Array.from(new Set(selList.flatMap((e) => e.areas || [])));
   const all = selList.map((e) => ({

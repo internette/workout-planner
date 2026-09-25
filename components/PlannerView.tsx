@@ -1,7 +1,7 @@
 // Ported from the Claude Design prototype "Workout Planner.dc.html".
 // Pure template: every value it reads comes from the `v` object built in Planner.tsx.
 // @ts-nocheck
-import { Fragment } from 'react';
+import { Fragment, useRef } from 'react';
 import { css, t } from './viewHelpers';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -20,6 +20,7 @@ import {
   Calendar,
   Check,
   ChevronDown,
+  Grip,
   ChevronLeft,
   ChevronRight,
   Clock,
@@ -4891,13 +4892,25 @@ export function PlannerView({ v }: { v: any }) {
                   ) : null}
                   {v.isLift ? (
                     <>
+                      <p id="ex-move-hint" className="sr-only">
+                        Drag to reorder, or use the up and down arrow keys.
+                      </p>
                       <div
+                        data-exlist=""
                         style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '16px' }}
                       >
                         {(v.exercises ?? []).map((ex, i) => (
-                          <Fragment key={i}>
+                          <div key={ex?.name ?? i} data-exrow="">
                             <Card pad="sm">
                               <div style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
+                                {ex?.canMove ? (
+                                  <DragHandle
+                                    index={i}
+                                    label={ex?.moveAria ?? ''}
+                                    onKeyDown={ex?.moveKeys}
+                                    onMove={ex?.moveTo}
+                                  />
+                                ) : null}
                                 <Popover
                                   open={!!ex?.open}
                                   onClose={ex?.close}
@@ -5084,7 +5097,7 @@ export function PlannerView({ v }: { v: any }) {
                               </>
                               ) : null}
                             </Card>
-                          </Fragment>
+                          </div>
                         ))}
                       </div>
                     </>
@@ -5833,6 +5846,135 @@ function EquipmentPicker({
 }
 
 /** "You'll need": the equipment a workout's exercises use, under its chips. Nothing when it isn't known. */
+// The handle an exercise row in the editor is dragged by. While dragging, the row follows the pointer and the
+// others slide aside to show where it will land; it moves there on release. The arrow keys (and Home, End) move it
+// one place at a time for anyone not using a pointer.
+function DragHandle({
+  index,
+  label,
+  onKeyDown,
+  onMove,
+}: {
+  index: number;
+  label: string;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
+  onMove?: (to: number) => void;
+}) {
+  const drag = useRef<{ stop: () => void } | null>(null);
+  const start = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (e.button !== 0 || drag.current) return;
+    const handle = e.currentTarget;
+    const rows = Array.from(
+      handle.closest('[data-exlist]')?.querySelectorAll<HTMLElement>(':scope > [data-exrow]') ?? [],
+    );
+    const row = rows[index];
+    if (!row) return;
+    e.preventDefault();
+    handle.setPointerCapture(e.pointerId);
+    // Measured once, in page coordinates, so scrolling while dragging doesn't throw them off.
+    const top = (el: HTMLElement) => el.getBoundingClientRect().top + window.scrollY;
+    const tops = rows.map(top);
+    const heights = rows.map((r) => r.offsetHeight);
+    const gap = rows.length > 1 ? tops[1] - tops[0] - heights[0] : 0;
+    const shift = heights[index] + gap;
+    const startY = e.clientY + window.scrollY;
+    let pointerY = e.clientY;
+    let to = index;
+    let frame = 0;
+    rows.forEach((r) => {
+      if (r !== row) r.style.transition = 'transform .16s ease';
+    });
+    Object.assign(row.style, {
+      position: 'relative',
+      zIndex: '2',
+      transition: 'none',
+      cursor: 'grabbing',
+      filter: 'drop-shadow(0 10px 18px rgba(35,42,69,.14))',
+    });
+    document.body.style.cursor = 'grabbing';
+    const place = () => {
+      const dy = pointerY + window.scrollY - startY;
+      row.style.transform = 'translateY(' + dy + 'px) scale(1.02)';
+      const mid = tops[index] + heights[index] / 2 + dy;
+      to = index;
+      rows.forEach((r, j) => {
+        const theirs = tops[j] + heights[j] / 2;
+        let move = 0;
+        if (j < index && mid < theirs) move = shift;
+        if (j > index && mid > theirs) move = -shift;
+        if (move > 0) to--;
+        if (move < 0) to++;
+        if (j !== index) r.style.transform = move ? 'translateY(' + move + 'px)' : '';
+      });
+    };
+    // Near the top or bottom of the window, the page scrolls so the row can be carried past what's in view.
+    const tick = () => {
+      const edge = 64;
+      const speed =
+        pointerY < edge ? -Math.ceil((edge - pointerY) / 6) : pointerY > window.innerHeight - edge
+          ? Math.ceil((pointerY - (window.innerHeight - edge)) / 6)
+          : 0;
+      if (speed) {
+        window.scrollBy(0, speed);
+        place();
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    const move = (ev: PointerEvent) => {
+      pointerY = ev.clientY;
+      place();
+    };
+    const stop = () => {
+      cancelAnimationFrame(frame);
+      handle.removeEventListener('pointermove', move);
+      handle.removeEventListener('pointerup', end);
+      handle.removeEventListener('pointercancel', stop);
+      rows.forEach((r) => {
+        Object.assign(r.style, { transform: '', transition: '', position: '', zIndex: '', cursor: '', filter: '' });
+      });
+      document.body.style.cursor = '';
+      drag.current = null;
+    };
+    const end = () => {
+      const landed = to;
+      stop();
+      if (landed !== index) onMove?.(landed);
+    };
+    handle.addEventListener('pointermove', move);
+    handle.addEventListener('pointerup', end);
+    handle.addEventListener('pointercancel', stop);
+    drag.current = { stop };
+  };
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      aria-describedby="ex-move-hint"
+      onPointerDown={start}
+      onKeyDown={onKeyDown}
+      className="hit"
+      style={{
+        flex: 'none',
+        width: '28px',
+        height: '44px',
+        margin: '0 -7px 0 -8px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: 'none',
+        borderRadius: '10px',
+        background: 'none',
+        padding: '0',
+        cursor: 'grab',
+        touchAction: 'none',
+      }}
+    >
+      <Grip color="var(--color-muted)" strokeWidth={3} size={20} />
+    </button>
+  );
+}
+
 function NeedsLine({ text }: { text?: string | null }) {
   if (!text) return null;
   return (

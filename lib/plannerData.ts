@@ -620,6 +620,8 @@ export interface WorkoutEdit {
     update: { id: string; patch: Partial<Exercise> }[];
     removeIds: string[];
     add: Exercise[];
+    // Every exercise's name, in the order it should now run, when it was reordered.
+    order?: string[];
   };
   repeatDates: string[]; // extra weekly dates to schedule
   durationMinutes?: number; // a lift's new length, when its exercises changed
@@ -678,6 +680,21 @@ export async function updateWorkout(e: WorkoutEdit) {
           e.exercises.add.map((x) => ({ workout_id: e.workoutId, order_index: order++, ...exerciseRow(x) })),
         ),
     );
+  }
+  if (e.exercises.order?.length) {
+    // Numbered by the order given; any exercise it doesn't name keeps its place after those.
+    const rows: any[] = await ok(
+      supabase.from('workout_exercises').select('id, name, order_index').eq('workout_id', e.workoutId).order('order_index'),
+    );
+    const rank = (r: any) => {
+      const at = e.exercises.order!.indexOf(r.name);
+      return at === -1 ? e.exercises.order!.length : at;
+    };
+    const sorted = rows.map((r, ix) => ({ r, ix })).sort((a, b) => rank(a.r) - rank(b.r) || a.ix - b.ix);
+    for (let ix = 0; ix < sorted.length; ix++) {
+      const { r } = sorted[ix];
+      if (r.order_index !== ix) await ok(supabase.from('workout_exercises').update({ order_index: ix }).eq('id', r.id));
+    }
   }
 
   const entryPatch: Record<string, unknown> = {};
@@ -876,6 +893,7 @@ export async function updateWorkoutTemplate(
         update: edit.exercises.update.map((u) => ({ ...u, id: map(u.id) })),
         removeIds: edit.exercises.removeIds.map(map),
         add: edit.exercises.add,
+        order: edit.exercises.order,
       },
     };
   };
@@ -911,6 +929,7 @@ export async function updateWorkoutTemplate(
             update: edit.exercises.update.map((u) => ({ ...u, id: inSaved(u.id) })).filter((u) => !!u.id),
             removeIds: edit.exercises.removeIds.map(inSaved).filter((id): id is string => !!id),
             add: edit.exercises.add,
+            order: edit.exercises.order,
           },
         },
         { mode: 'update', updateUpcoming: opts.updateUpcoming, todayIso: opts.todayIso },
@@ -944,6 +963,7 @@ export async function updateWorkoutTemplate(
         update: edit.exercises.update.map((u) => ({ ...u, id: map(u.id) })),
         removeIds: edit.exercises.removeIds.map(map),
         add: edit.exercises.add,
+        order: edit.exercises.order,
       },
     });
     return { workoutId: copy.id, created: true, exerciseIds };
