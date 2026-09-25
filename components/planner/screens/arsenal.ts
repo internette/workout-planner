@@ -814,7 +814,7 @@ export function arsenalVals(ctx: Ctx) {
       requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-arsenal-add] input')?.focus());
     },
     closeArsenalAdd: () =>
-      logic.s({ arsenalAdd: false, dName: '', dSets: '', dReps: '', dWeight: '', dRest: '', dAreas: [] }),
+      logic.s({ arsenalAdd: false, dName: '', dSets: '', dReps: '', dWeight: '', dRest: '', dAreas: [], dEquip: [], dEquipOpen: false }),
     commitArsenal: () => {
       const nm = (st.dName || '').trim();
       if (!nm || !(st.dAreas || []).length || !countsOk(st.dSets, st.dReps)) return;
@@ -827,6 +827,7 @@ export function arsenalVals(ctx: Ctx) {
         rest: withSec(st.dRest) || '60 sec',
         i: st.dIcon || 'h',
         areas: st.dAreas || [],
+        ...(logic.model.builtins.some((e) => e.equipment !== undefined) ? { equipment: st.dEquip || [] } : {}),
       };
       logic.saveOnce('exercise', () => db.addLibraryExercise(item), {
         ...noticePatch('“' + nm + '” added to your Spellbook, under “Your own exercises”.', 'arsenal'),
@@ -838,6 +839,8 @@ export function arsenalVals(ctx: Ctx) {
         dRest: '',
         dIcon: 'h',
         dAreas: [],
+        dEquip: [],
+        dEquipOpen: false,
       });
     },
     movesCount: exerciseCount,
