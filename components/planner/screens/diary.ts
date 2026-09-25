@@ -34,6 +34,17 @@ export function diaryVals(ctx: Ctx) {
   // Whether the session on screen already has an entry: then the diary screen reads it, and edits it on request.
   const hasEntry = !!ENTRIES[entryKey];
   const reading = hasEntry && !st.diaryEdit;
+  // The session this entry is about, and whether it's done: an entry for one that isn't can mark it done too.
+  const entrySession = logic.model.entries.find((x) => x.av.id === entryKey) || null;
+  const offerMarkDone = !!entrySession && !isDoneEntry(entrySession.av) && entrySession.m * 100 + entrySession.d <= TK;
+  const markDone = offerMarkDone && !!st.entryMarkDone;
+  const markSessionDone = () => {
+    if (!markDone || !entrySession) return Promise.resolve();
+    const av = entrySession.av;
+    return av.ride
+      ? db.setRideDone(av.id, true)
+      : db.setExercisesDone(av.id, (ctx.EXV[av.exKey] || []).map((e) => e.name), true);
+  };
   // Writing or changing an entry, with changes not yet saved: leaving asks first.
   const saved = ENTRIES[entryKey];
   const writing = st.screen === 'diary' && !reading;
@@ -81,6 +92,10 @@ export function diaryVals(ctx: Ctx) {
   const entryHint = !st.mood && !st.rpe ? 'Pick a mood and how hard it felt.' : !st.mood ? 'Pick a mood.' : !st.rpe ? 'Pick how hard it felt.' : '';
   return {
     saveEntryLabel: hasEntry ? 'Save changes' : 'Save entry',
+    showMarkDone: offerMarkDone && !reading,
+    markDoneOn: markDone,
+    setMarkDone: (on) => logic.s({ entryMarkDone: !!on }),
+    markDoneLabel: entrySession && entrySession.av.ride ? 'Mark this ride done' : 'Mark this workout done',
     canSaveEntry: !!st.mood && !!st.rpe,
     saveEntryHint: entryHint,
     entryNote: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
@@ -92,17 +107,20 @@ export function diaryVals(ctx: Ctx) {
         : logic.saveOnce(
             'entry',
             () =>
-              db.saveDiary(entryKey, {
-                mood: st.mood,
-                rpe: st.rpe,
-                note: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
-              }),
+              db
+                .saveDiary(entryKey, {
+                  mood: st.mood,
+                  rpe: st.rpe,
+                  note: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
+                })
+                .then(markSessionDone),
             {
               // Changing an entry, or writing one from the Chronicle, returns to reading it; a new one from a workout
               // gets the "Entry saved" screen.
               screen: hasEntry || st.diaryFrom === 'list' ? 'diary' : 'saved',
               diaryEdit: false,
               entryNote: null,
+              entryMarkDone: null,
             },
           ),
     savedLine:
@@ -160,6 +178,11 @@ export function diaryVals(ctx: Ctx) {
         (x.m === TODAY_M ? ' ' + x.d : ', ' + MON3[mod12(x.m)].toUpperCase() + ' ' + x.d + (Math.floor(x.m / 12) ? ' ' + (Y + Math.floor(x.m / 12)) : '')),
       name: nameOf(x.av.name),
       meta: x.av.ride ? (ctx.distOf(x.av) ? ctx.distOf(x.av) + ' mi · ' : '') + ctx.timeOf(x.av) : ctx.timeOf(x.av),
+      // Whether it was done, so writing about a missed one is a choice, not a surprise.
+      status: x.done ? 'Done' : x.m * 100 + x.d < TK ? 'Missed' : 'Not done yet',
+      statusStyle:
+        'flex:none;padding:4px 10px;border-radius:999px;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
+        (x.done ? 'background:var(--color-pink-tint);color:var(--color-pink-deep)' : 'background:var(--color-mist);color:var(--color-slate-deep)'),
       pick: () =>
         logic.nav({
           screen: 'diary',
@@ -172,6 +195,8 @@ export function diaryVals(ctx: Ctx) {
           entryNote: null,
           diaryFrom: 'list',
           diaryEdit: true,
+          // Writing about a session not marked done: most likely it was done, so offer to mark it (on to start).
+          entryMarkDone: !x.done,
         }),
     })),
     showRange: dScope === 'range',

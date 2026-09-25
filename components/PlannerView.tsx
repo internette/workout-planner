@@ -259,6 +259,20 @@ export function PlannerView({ v }: { v: any }) {
                 </Button>
               </div>
             ) : null}
+            {v.notice ? (
+              <Card
+                pad="sm"
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', background: 'var(--color-mist)', boxShadow: 'none' }}
+              >
+                <Check color="var(--color-slate-deep)" strokeWidth={2.4} size={16} />
+                <Text variant="body" weight="medium" style={{ flex: '1', minWidth: '0', color: 'var(--color-slate-deep)' }}>
+                  {v.notice}
+                </Text>
+                <IconButton label="Dismiss" size="sm" onClick={v.dismissNotice}>
+                  <Close color="var(--color-muted)" strokeWidth={2.2} size={14} />
+                </IconButton>
+              </Card>
+            ) : null}
             {v.isCal ? (
               <>
                 <div style={{ position: 'relative' }}>
@@ -2391,20 +2405,6 @@ export function PlannerView({ v }: { v: any }) {
                   <span className="sr-only" role="status">
                     {v.arsenalResults}
                   </span>
-                  {v.spellNotice ? (
-                    <Card
-                      pad="sm"
-                      style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '14px', background: 'var(--color-mist)', boxShadow: 'none' }}
-                    >
-                      <Check color="var(--color-slate-deep)" strokeWidth={2.4} size={16} />
-                      <Text variant="body" weight="medium" style={{ flex: '1', minWidth: '0', color: 'var(--color-slate-deep)' }}>
-                        {v.spellNotice}
-                      </Text>
-                      <IconButton label="Dismiss" size="sm" onClick={v.dismissSpellNotice}>
-                        <Close color="var(--color-muted)" strokeWidth={2.2} size={14} />
-                      </IconButton>
-                    </Card>
-                  ) : null}
                   {v.arsenalPicking ? (
                     // Stays in view down the long list, so it's always clear the Spellbook is picking for a workout.
                     // The page-coloured band behind it keeps the list from showing through above the card.
@@ -2679,6 +2679,11 @@ export function PlannerView({ v }: { v: any }) {
                                 borderTop: '1px solid rgba(35,42,69,.07)',
                               }}
                             >
+                              {v.draftHint ? (
+                                <Text variant="caption" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
+                                  {v.draftHint}
+                                </Text>
+                              ) : null}
                               <Button type="neutral" ghost size="lg" onClick={v.closeArsenalAdd}>
                                 Cancel
                               </Button>
@@ -2910,15 +2915,16 @@ export function PlannerView({ v }: { v: any }) {
                         </Button>
                       </span>
                     ) : (
-                      <Button
-                        type="primary"
-                        size="sm"
-                        onClick={v.exercise.edit}
-                        style={{ marginLeft: 'auto' }}
-                      >
-                        <Pencil color="var(--color-white)" size={16} />
-                        Edit
-                      </Button>
+                      <span style={{ display: 'flex', gap: '8px', marginLeft: 'auto', flex: 'none' }}>
+                        <Button type="secondary" size="sm" onClick={v.exercise.edit} style={{ whiteSpace: 'nowrap' }}>
+                          <Pencil color="var(--color-pink-deep)" size={16} />
+                          Edit
+                        </Button>
+                        <Button type="primary" size="sm" onClick={v.exercise.add} style={{ whiteSpace: 'nowrap' }}>
+                          <Plus color="var(--color-white)" size={16} />
+                          Add
+                        </Button>
+                      </span>
                     )}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
@@ -3000,6 +3006,11 @@ export function PlannerView({ v }: { v: any }) {
                           Not part of a saved workout yet.
                         </Text>
                       )}
+                      {v.exercise.usedInNote ? (
+                        <Text variant="caption" as="p" tone="muted" style={{ margin: '10px 0 0' }}>
+                          {v.exercise.usedInNote}
+                        </Text>
+                      ) : null}
                     </>
                   )}
                   {v.exercise.canDelete ? (
@@ -3071,20 +3082,6 @@ export function PlannerView({ v }: { v: any }) {
                       {v.template.name}
                     </Text>
                   </div>
-                  {v.spellNotice ? (
-                    <Card
-                      pad="sm"
-                      style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '14px', background: 'var(--color-mist)', boxShadow: 'none' }}
-                    >
-                      <Check color="var(--color-slate-deep)" strokeWidth={2.4} size={16} />
-                      <Text variant="body" weight="medium" style={{ flex: '1', minWidth: '0', color: 'var(--color-slate-deep)' }}>
-                        {v.spellNotice}
-                      </Text>
-                      <IconButton label="Dismiss" size="sm" onClick={v.dismissSpellNotice}>
-                        <Close color="var(--color-muted)" strokeWidth={2.2} size={14} />
-                      </IconButton>
-                    </Card>
-                  ) : null}
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '18px' }}>
                     <Chip icon={<Clock color="var(--color-muted)" size={15} />}>{v.template.time}</Chip>
                     {(v.template.areas ?? []).map((a, i) => (
@@ -3306,6 +3303,11 @@ export function PlannerView({ v }: { v: any }) {
                       borderTop: '1px solid rgba(35,42,69,.07)',
                     }}
                   >
+                    {v.exerciseEdit.saveHint ? (
+                      <Text variant="caption" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
+                        {v.exerciseEdit.saveHint}
+                      </Text>
+                    ) : null}
                     <Button type="neutral" ghost size="lg" onClick={v.exerciseEdit.cancel}>
                       Cancel
                     </Button>
@@ -3362,6 +3364,7 @@ export function PlannerView({ v }: { v: any }) {
                             <Text variant="caption" tone="muted" weight="medium" style={{ flex: 'none' }}>
                               {u?.meta}
                             </Text>
+                            <span style={css(u?.statusStyle)}>{u?.status}</span>
                           </button>
                         </Fragment>
                       ))}
@@ -5098,6 +5101,11 @@ export function PlannerView({ v }: { v: any }) {
                             borderTop: '1px solid rgba(35,42,69,.07)',
                           }}
                         >
+                          {v.addNew && v.draftHint ? (
+                            <Text variant="caption" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
+                              {v.draftHint}
+                            </Text>
+                          ) : null}
                           <Button type="neutral" ghost size="lg" onClick={v.closeAdd}>
                             Close
                           </Button>
@@ -5424,6 +5432,13 @@ export function PlannerView({ v }: { v: any }) {
                           onChange={v.setEntryNote}
                           placeholder="Energy, soreness, what worked, what didn't…"
                         />
+                        {v.showMarkDone ? (
+                          <div style={{ marginTop: '18px' }}>
+                            <Checkbox switch checked={!!v.markDoneOn} onChange={v.setMarkDone}>
+                              {v.markDoneLabel}
+                            </Checkbox>
+                          </div>
+                        ) : null}
                         {v.saveEntryHint ? (
                           <Text id="save-entry-hint" variant="caption" tone="muted" as="p" style={{ margin: '18px 0 0', textAlign: 'center' }}>
                             {v.saveEntryHint}

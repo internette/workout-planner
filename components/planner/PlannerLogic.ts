@@ -126,7 +126,7 @@ export class PlannerLogic extends DCLogic {
     const st = this.state;
     const snap = { screen:st.screen, month:st.month, yOff:st.yOff, day:st.day, seg:st.seg,
       diaryFrom:st.diaryFrom, diaryEdit:st.diaryEdit, creating:st.creating };
-    this.setState(Object.assign({ hist: (st.hist || []).concat([snap]), spellNotice: null }, p));
+    this.setState(Object.assign({ hist: (st.hist || []).concat([snap]), notice: null }, p));
   }
   back(){
     const st = this.state;

@@ -1,4 +1,5 @@
-import { exerciseDraftDirty, idOf, isoOf, monthPatch, workoutDraftDirty } from '../helpers';
+import { MON3 } from '../constants';
+import { exerciseDraftDirty, idOf, isoOf, mod12, monthPatch, noticePatch, workoutDraftDirty } from '../helpers';
 import { mLabel, mTab, tab } from '../styles';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
@@ -22,6 +23,7 @@ export function chromeVals(ctx: Ctx) {
     TODAY_M,
     TODAY_D,
     timerRunning,
+    nameOf,
   } = ctx;
   const arsenalActive =
     ['arsenal', 'template', 'exercise', 'exerciseEdit'].includes(st.screen) ||
@@ -96,6 +98,9 @@ export function chromeVals(ctx: Ctx) {
       navExtra,
     navSummaryInk: st.screen === 'summary' ? 'var(--color-pink)' : 'var(--color-subtle)',
     announce: st.announce || '',
+    // The confirmation for this screen, if there is one.
+    notice: st.notice && st.notice.screen === st.screen ? st.notice.text : '',
+    dismissNotice: () => logic.s({ notice: null }),
     saveError: st.saveError || '',
     dismissError: () => logic.s({ saveError: null }),
     // A nav item is a link, so it can open in a new tab. A plain click goes there without a page load. `dest` is
@@ -174,9 +179,10 @@ export function chromeVals(ctx: Ctx) {
         const timers = Object.assign({}, st.workoutTimer);
         delete timers[id];
         // Back to the day it was on, past the session's own pages (and their history entries), which are gone now.
+        const gone = noticePatch('“' + nameOf(srcAct.name) + '” removed from ' + MON3[mod12(mi)] + ' ' + selDay + '.', 'day');
         logic.s({ workoutTimer: timers, creating: false });
-        if ((st.hist || []).some((h) => h.screen === 'day')) logic.backTo('day', { screen: 'day', entryId: null });
-        else logic.s({ screen: 'day', seg: 'Day', entryId: null, hist: [] });
+        if ((st.hist || []).some((h) => h.screen === 'day')) logic.backTo('day', { screen: 'day', entryId: null, ...gone });
+        else logic.s({ screen: 'day', seg: 'Day', entryId: null, hist: [], ...gone });
         logic.save(() => db.deletePlanEntries([id]));
       }
       if (c.kind === 'unfinishRide') {
@@ -186,14 +192,14 @@ export function chromeVals(ctx: Ctx) {
       if (c.kind === 'entry') logic.save(() => db.deleteDiary(c.day), { screen: c.after || st.screen });
       if (c.kind === 'series')
         logic.save(() => db.endSeries(c.sid, isoOf(new Date(Y, mi, selDay)), isoOf(new Date(Y, TODAY_M, TODAY_D))), {
-          announce: 'Series ended.',
+          ...noticePatch('Weekly series ended. Its repeats still ahead are off the calendar.', 'detail'),
         });
       // Deleting from the Spellbook goes back to the list it was opened from, which then no longer shows it.
       const toList = (arsenalView) => {
         const h = st.hist || [];
         if (h.length && h[h.length - 1].screen === 'arsenal') logic.back();
         else logic.s({ screen: 'arsenal' });
-        logic.s({ arsenalView, spellNotice: '“' + c.name + '” deleted.', announce: '“' + c.name + '” deleted.' });
+        logic.s({ arsenalView, ...noticePatch('“' + c.name + '” deleted.', 'arsenal') });
       };
       if (c.kind === 'archiveWorkout') {
         toList('workouts');
