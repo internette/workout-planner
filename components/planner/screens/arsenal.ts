@@ -1,13 +1,32 @@
 import { colors } from '@/components/ui/colors';
-import { DOWFULL, EDIT_OVERLAYS, ICON_NAMES, MONTHS, TARGET_AREAS } from '../constants';
+import { DOWFULL, EDIT_OVERLAYS, EQUIPMENT, EQUIPMENT_GROUPS, ICON_NAMES, MONTHS, TARGET_AREAS } from '../constants';
 import { iconSvg } from '../icons';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import * as db from '@/lib/plannerData';
-import { countsOk, digitsOnly, noticePatch, exerciseDraftDirty, exLine, isoOf, joinSetsReps, monthPatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
+import { countsOk, digitsOnly, exerciseDraftDirty, exLine, isoOf, joinSetsReps, monthPatch, needsLine, noticePatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
 import { optStyle } from '../styles';
 import type { Ctx } from '../types';
 
 // Spellbook (the 'arsenal' screen): the exercise library, its search and the add-exercise form.
+// The equipment ticked in the Spellbook's filter, kept in this browser so it's there next time. Storage can be off
+// (private windows, blocked site data): the filter then just starts empty.
+const EQUIPMENT_KEY = 'moonshot.equipment';
+function savedEquipment(): string[] {
+  try {
+    const kept = JSON.parse(window.localStorage.getItem(EQUIPMENT_KEY) || '[]');
+    return Array.isArray(kept) ? EQUIPMENT.filter((x) => kept.includes(x)) : [];
+  } catch {
+    return [];
+  }
+}
+function saveEquipment(list: string[]) {
+  try {
+    window.localStorage.setItem(EQUIPMENT_KEY, JSON.stringify(list));
+  } catch {
+    // Not kept, then: it still filters for now.
+  }
+}
+
 export function arsenalVals(ctx: Ctx) {
   const { logic, st, EX, Y, TODAY_M, TODAY_D, narrow, relM } = ctx;
 
@@ -53,18 +72,27 @@ export function arsenalVals(ctx: Ctx) {
   // Target-area filter, shared by both tabs: keeps anything that targets at least one of the chosen areas.
   const areaFilter: string[] = st.arsenalAreas || [];
   const inAreas = (areas) => !areaFilter.length || (areas || []).some((a) => areaFilter.includes(a));
+  // Equipment filter, shared by both tabs: what the person has ticked, remembered in this browser. An exercise shows
+  // when it needs nothing else (bodyweight ones always do); a workout shows when every one of its exercises does.
+  const equipFilter: string[] = st.arsenalEquip !== undefined ? st.arsenalEquip : savedEquipment();
+  const canDo = (e) => !equipFilter.length || e.equipment === undefined || e.equipment.every((x) => equipFilter.includes(x));
+  // Anything narrowing the lists: a search, target areas, or equipment.
+  const filtering = !!q || areaFilter.length > 0 || equipFilter.length > 0;
   const areaList = (list) =>
     list.length === 1 ? list[0] : list.slice(0, -1).join(', ') + ' or ' + list[list.length - 1];
   const noMatchText = (things) =>
-    q && areaFilter.length
-      ? 'No ' + things + ' match “' + (st.arsenalQ || '').trim() + '” for ' + areaList(areaFilter) + '.'
+    (q && areaFilter.length
+      ? 'No ' + things + ' match “' + (st.arsenalQ || '').trim() + '” for ' + areaList(areaFilter)
       : areaFilter.length
-        ? 'No ' + things + ' target ' + areaList(areaFilter) + '.'
-        : 'No ' + things + ' match “' + (st.arsenalQ || '').trim() + '”.';
+        ? 'No ' + things + ' target ' + areaList(areaFilter)
+        : q
+          ? 'No ' + things + ' match “' + (st.arsenalQ || '').trim() + '”'
+          : 'No ' + things) + (equipFilter.length ? ' with the equipment you ticked.' : '.');
   const workouts = logic.model.workouts;
   const builtinWorkouts = logic.model.builtinWorkouts || [];
   const matches = (w) =>
     inAreas(w.areas) &&
+    (w.builtin ? w.list : EX[w.name] || []).every(canDo) &&
     (!q || w.name.toLowerCase().includes(q) || w.exercises.some((n) => n.toLowerCase().includes(q)));
   const hits = workouts.filter(matches);
   const builtinHits = builtinWorkouts.filter(matches);
@@ -128,6 +156,8 @@ export function arsenalVals(ctx: Ctx) {
     rest: ex.rest,
     i: ex.i,
     areas: ex.areas || [],
+    // Left out until the database has equipment, and the editor then shows no picker for it.
+    ...(ex.equipment !== undefined ? { equipment: ex.equipment } : {}),
   });
   const copiesIn =
     found && !found.workout && !found.ex.builtin
@@ -141,6 +171,9 @@ export function arsenalVals(ctx: Ctx) {
         weight: found.ex.weight,
         rest: found.ex.rest,
         areas: found.ex.areas || [],
+        // What it needs; none is bodyweight. Not shown until the database has equipment at all.
+        equipment:
+          found.ex.equipment === undefined ? null : found.ex.equipment.length ? found.ex.equipment : ['Bodyweight'],
         builtin: !!found.ex.builtin,
         // One inside a workout belongs to that workout. One saved on its own is copied into a workout when it's
         // added, so it lists the workouts holding a copy (by name, which is how workouts keep their exercises).
@@ -287,6 +320,28 @@ export function arsenalVals(ctx: Ctx) {
           }),
       };
     }),
+    // What it needs, picked from the equipment list in its groups; none picked is bodyweight.
+    equipmentGroups:
+      exDraft.equipment === undefined
+        ? null
+        : EQUIPMENT_GROUPS.map((g) => ({
+            label: g.label,
+            items: g.items.map((name) => {
+              const on = exDraft.equipment.includes(name);
+              return {
+                name,
+                on,
+                toggle: () =>
+                  logic.s({
+                    exDraft: {
+                      ...exDraft,
+                      // Kept in the list's order, so the same picks compare equal however they were made.
+                      equipment: EQUIPMENT.filter((x) => (x === name ? !on : exDraft.equipment.includes(x))),
+                    },
+                  }),
+              };
+            }),
+          })),
     icons: EXERCISE_ICON_NAMES.map((name) => ({
       svg: iconSvg(name),
       pick: () => logic.s({ exDraft: { ...exDraft, i: name } }),
@@ -327,6 +382,7 @@ export function arsenalVals(ctx: Ctx) {
         rest: exDraft.rest,
         i: exDraft.i,
         areas: exDraft.areas || [],
+        ...(exDraft.equipment !== undefined ? { equipment: exDraft.equipment } : {}),
       };
       if (copying)
         return logic.saveOnce('exercise', () => db.createLibraryExercise(patch), (r) => ({
@@ -356,6 +412,7 @@ export function arsenalVals(ctx: Ctx) {
         svg: iconSvg(chosen.icon || (chosen.kind === 'ride' ? 'bike' : 'h'), chosen.iconColor || colors.pink),
         time: chosen.time,
         areas: chosen.areas,
+        needs: chosen.kind === 'ride' ? null : needsLine(builtin ? chosen.list : EX[chosen.name] || []),
         isRide: chosen.kind === 'ride',
         rideStats: chosen.ride
           ? [
@@ -624,7 +681,9 @@ export function arsenalVals(ctx: Ctx) {
   });
   const moveGroups = [];
   const pushGroup = (label, list) => {
-    const hit = list.filter((e) => inAreas(e.areas) && (!q || e.name.toLowerCase().includes(q))).map(exerciseRow);
+    const hit = list
+      .filter((e) => inAreas(e.areas) && canDo(e) && (!q || e.name.toLowerCase().includes(q)))
+      .map(exerciseRow);
     if (hit.length) moveGroups.push({ label: label.toUpperCase(), count: plural(hit.length, 'exercise'), items: hit });
   };
   Object.keys(EX).forEach((w) => pushGroup(w, EX[w] || []));
@@ -724,9 +783,9 @@ export function arsenalVals(ctx: Ctx) {
     // While searching or filtering, how many of them are showing.
     arsenalCount:
       view === 'workouts'
-        ? (q || areaFilter.length ? hits.length + builtinHits.length + ' of ' : '') +
+        ? (filtering ? hits.length + builtinHits.length + ' of ' : '') +
           plural(workouts.length + builtinWorkouts.length, 'workout')
-        : (q || areaFilter.length ? moveGroups.reduce((n, g) => n + g.items.length, 0) + ' of ' : '') + exerciseCount,
+        : (filtering ? moveGroups.reduce((n, g) => n + g.items.length, 0) + ' of ' : '') + exerciseCount,
     arsenalIntro:
       view === 'workouts'
         ? builtinWorkouts.length
@@ -737,7 +796,7 @@ export function arsenalVals(ctx: Ctx) {
     workoutGroups,
     noSavedWorkouts: workouts.length + builtinWorkouts.length === 0,
     noWorkoutMatches:
-      workouts.length + builtinWorkouts.length > 0 && (!!q || areaFilter.length > 0) && hits.length + builtinHits.length === 0,
+      workouts.length + builtinWorkouts.length > 0 && filtering && hits.length + builtinHits.length === 0,
     noWorkoutMatchNote: noMatchText('workouts'),
     arsenalAddOpen: !!st.arsenalAdd,
     // A new exercise starts with real values in its boxes (3 × 10, 60 sec rest) — what it saves if left alone —
@@ -776,10 +835,10 @@ export function arsenalVals(ctx: Ctx) {
     },
     movesCount: exerciseCount,
     arsenalQuery: st.arsenalQ || '',
-    noMatches: (!!q || areaFilter.length > 0) && moveGroups.length === 0,
+    noMatches: filtering && moveGroups.length === 0,
     // Read out when a search or area filter changes what's listed (the list itself changes silently).
     arsenalResults:
-      !q && !areaFilter.length
+      !filtering
         ? ''
         : view === 'workouts'
           ? hits.length + builtinHits.length
@@ -809,5 +868,31 @@ export function arsenalVals(ctx: Ctx) {
         logic.s({ arsenalAreas: on ? areaFilter.concat([name]) : areaFilter.filter((a) => a !== name) }),
     })),
     clearAreaFilter: () => logic.s({ arsenalAreas: [], arsenalAreasOpen: false }),
+    // Shown once exercises know their equipment (the equipment migration has run).
+    equipFilterShown: logic.model.builtins.some((e) => e.equipment !== undefined),
+    equipFilterOpen: !!st.arsenalEquipOpen,
+    toggleEquipFilter: () => logic.s({ arsenalEquipOpen: !st.arsenalEquipOpen }),
+    closeEquipFilter: () => logic.s({ arsenalEquipOpen: false }),
+    equipFilterLabel: equipFilter.length ? 'What I have · ' + equipFilter.length : 'Any',
+    equipFilterActive: equipFilter.length > 0,
+    equipFilterGroups: EQUIPMENT_GROUPS.map((g) => ({
+      label: g.label,
+      items: g.items.map((name) => {
+        const on = equipFilter.includes(name);
+        return {
+          name,
+          on,
+          set: (tick) => {
+            const next = EQUIPMENT.filter((x) => (x === name ? !!tick : equipFilter.includes(x)));
+            saveEquipment(next);
+            logic.s({ arsenalEquip: next });
+          },
+        };
+      }),
+    })),
+    clearEquipFilter: () => {
+      saveEquipment([]);
+      logic.s({ arsenalEquip: [], arsenalEquipOpen: false });
+    },
   };
 }

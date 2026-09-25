@@ -12,6 +12,9 @@ export interface Exercise {
   rest: string; // "90 sec"
   i: string; // icon key
   areas: string[]; // body regions this exercise targets
+  // What it needs (from EQUIPMENT); empty is bodyweight. Missing until the equipment migration has run, and then left
+  // out of every write, so the app keeps working against a database without the column.
+  equipment?: string[];
   builtin?: boolean; // from the shared catalog: read-only, copy it to change it
 }
 
@@ -134,6 +137,7 @@ const toExercise = (r: any): Exercise => ({
   rest: fmtRest(r.rest_seconds),
   i: r.icon || 'h',
   areas: r.target_areas || [],
+  equipment: Array.isArray(r.equipment) ? r.equipment : undefined,
 });
 
 function exerciseRow(e: Exercise) {
@@ -148,6 +152,7 @@ function exerciseRow(e: Exercise) {
     rest_seconds: parseRest(e.rest),
     icon: e.i || 'h',
     target_areas: e.areas || [],
+    ...(e.equipment !== undefined ? { equipment: e.equipment } : {}),
   };
 }
 

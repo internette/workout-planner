@@ -1,5 +1,5 @@
 import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, ICON_COLOR_NAMES, ICON_NAMES, MON3, MONTHS, TARGET_AREAS } from '../constants';
-import { countsOk, rollMinutes, digitsOnly, noticePatch, exLine, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, setsRepsOk, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
+import { countsOk, needsLine, rollMinutes, digitsOnly, noticePatch, exLine, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, setsRepsOk, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
 import { optStyle } from '../styles';
@@ -484,6 +484,7 @@ export function editVals(ctx: Ctx) {
     setNotes: (e) => logic.s({ notes: Object.assign({}, st.notes, { [listKey]: e.target.value }) }),
     eCat: selRide ? selRide.zone || 'Endurance' : picked.length ? picked.join(' · ') : 'No target areas',
     areaPills: selRide ? [selRide.zone || 'Endurance'] : picked,
+    needs: selRide ? null : needsLine(selList),
     inSeries: !!(selAct && selAct.series),
     canRepeat: !tplMode && !(selAct && selAct.series),
     // The series' own day, not this session's date (which may have just been moved in this editor).

@@ -1,4 +1,4 @@
-import { MONTHS, QUESTS } from './constants';
+import { EQUIPMENT, MONTHS, QUESTS } from './constants';
 
 // Months are counted from January of the current year and carry on past it: 12 is next January, -1 last December.
 // new Date(year, m, d) already reads them that way. mod12 turns one back into a place in MONTHS, and monthPatch into
@@ -102,4 +102,18 @@ export const rollMinutes = (hrs, mins) => {
   const m = Number(mins || 0);
   if (m < 60) return null;
   return { hrs: String(Number(hrs || 0) + Math.floor(m / 60)), mins: String(m % 60) };
+};
+
+// Everything a list of exercises needs, once each, in the order the equipment list gives it.
+export const equipmentOf = (list) => {
+  const need = new Set((list || []).flatMap((e) => e.equipment || []));
+  return EQUIPMENT.filter((x) => need.has(x));
+};
+
+// "You'll need" for a workout or session: what its exercises need, or that it's bodyweight only. Null until the
+// database has equipment at all (no exercise knows its equipment yet), so nothing is shown rather than "bodyweight".
+export const needsLine = (list) => {
+  if (!(list || []).some((e) => e.equipment !== undefined)) return null;
+  const need = equipmentOf(list);
+  return need.length ? need.join(' · ') : 'Nothing: it’s all bodyweight.';
 };
