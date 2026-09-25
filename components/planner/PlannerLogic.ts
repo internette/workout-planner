@@ -14,6 +14,8 @@ import { diaryVals } from './screens/diary';
 import { arsenalVals } from './screens/arsenal';
 import { progressVals } from './screens/progress';
 
+export const CALENDAR_KEY = 'moonshot.calendar';
+
 export class PlannerLogic extends DCLogic {
   /** Which layout the window calls for. The host component keeps it current. */
   viewport: Viewport = 'wide';
@@ -43,6 +45,18 @@ export class PlannerLogic extends DCLogic {
       if (first && this.state.screen === 'detail' && this.state.entryId) {
         const hit = model.entries.find((x) => x.av.id === this.state.entryId);
         Object.assign(opened, hit ? { ...monthPatch(hit.m), day: hit.d } : { screen: 'day', entryId: null });
+      }
+      // A reload on the calendar comes back to the view and day it was on (kept for this tab, for an hour).
+      if (first && this.state.screen === 'day') {
+        try {
+          const kept = JSON.parse(window.sessionStorage.getItem(CALENDAR_KEY) || 'null');
+          // Only a recent visit: coming back hours later starts on today again.
+          const recent = kept && Date.now() - Number(kept.at || 0) < 60 * 60 * 1000;
+          if (recent && ['Day', 'Week', 'Month'].includes(kept.seg) && MONTHS.includes(kept.month))
+            Object.assign(opened, { seg: kept.seg, month: kept.month, yOff: Number(kept.yOff) || 0, day: Number(kept.day) || 1 });
+        } catch {
+          // Storage can be off (private windows, blocked site data): start on today, as before.
+        }
       }
       this.setState({ done: model.done, rideDone: model.rideDone, workoutTimer, ...opened, ...patch });
     } catch (e) {

@@ -27,12 +27,10 @@ import {
   Copy,
   Dumbbell,
   DumbbellSmall,
-  Flame,
   Gem,
   Info,
   MoodFace,
   Moon,
-  Mountain,
   Pencil,
   Plus,
   Quill,
@@ -41,9 +39,7 @@ import {
   SignOut,
   Sparkle,
   SpellCards,
-  Swirl,
   User,
-  Waves,
 } from '@/components/ui/icons';
 import { colors } from '@/components/ui/colors';
 
@@ -1016,31 +1012,21 @@ export function PlannerView({ v }: { v: any }) {
                                         gap: '13px',
                                       }}
                                     >
-                                      {w?.isRideRow ? (
-                                        <>
-                                          <Bike color="var(--color-periwinkle)" size={19} />
-                                        </>
-                                      ) : null}
-                                      {w?.isPush ? (
-                                        <>
-                                          <Flame color="var(--color-pink)" size={16} />
-                                        </>
-                                      ) : null}
-                                      {w?.isPull ? (
-                                        <>
-                                          <Waves color="var(--color-periwinkle)" size={20} />
-                                        </>
-                                      ) : null}
-                                      {w?.isLegs ? (
-                                        <>
-                                          <Mountain color="var(--color-slate)" size={16} />
-                                        </>
-                                      ) : null}
-                                      {w?.isCore ? (
-                                        <>
-                                          <Swirl color="var(--color-teal)" size={20} />
-                                        </>
-                                      ) : null}
+                                      <span
+                                        aria-hidden="true"
+                                        style={{
+                                          width: '36px',
+                                          height: '36px',
+                                          flex: 'none',
+                                          borderRadius: '12px',
+                                          background: 'var(--color-pink-tint)',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                        }}
+                                      >
+                                        {w?.icoSvg}
+                                      </span>
                                       <div style={{ minWidth: '0', flex: '1' }}>
                                         <Text variant="itemTitle" as="div">
                                           {w?.name}
@@ -3155,6 +3141,11 @@ export function PlannerView({ v }: { v: any }) {
                       <Checkbox switch checked={!!v.scheduleCalendar?.repeat} onChange={v.scheduleCalendar?.setRepeat}>
                         Repeat weekly
                       </Checkbox>
+                      {v.scheduleCalendar?.showLogDone ? (
+                        <Checkbox switch checked={!!v.scheduleCalendar?.logDone} onChange={v.scheduleCalendar?.setLogDone}>
+                          Log it as done
+                        </Checkbox>
+                      ) : null}
                       <Text variant="caption" tone="muted" as="p" style={{ margin: 0 }}>
                         {v.scheduleCalendar?.note}
                       </Text>
@@ -3620,10 +3611,10 @@ export function PlannerView({ v }: { v: any }) {
                     actions={
                       <>
                         <Button type="neutral" ghost size="md" onClick={v.cancelFinish}>
-                          Not yet
+                          {v.finishCancelLabel}
                         </Button>
                         <Button type="primary" size="md" onClick={v.saveFinish} disabled={!v.canSaveFinish}>
-                          Finish
+                          {v.finishSaveLabel}
                         </Button>
                       </>
                     }
