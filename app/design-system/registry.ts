@@ -231,12 +231,11 @@ export const sections: Section[] = [
 // Ideas for what to build next. These are proposals, not commitments.
 export const planned: { title: string; why: string }[] = [
   { title: 'Progress bar', why: 'The same gradient track appears four times.' },
-  { title: 'Badge', why: 'Status pills that Chip does not cover.' },
+  { title: 'Badge', why: 'Status pills and the WARM-UP tag, which Chip does not cover.' },
   { title: 'Empty state', why: 'Six near-identical gradient panels with sparkles.' },
   { title: 'Stat tile', why: 'An icon, a number and a label, repeated on three screens.' },
-  { title: 'Switch', why: 'The "Repeat weekly" toggle is a hand-styled one-off.' },
-  { title: 'Elevation and radius', why: 'Shadows and corner radii still need merging into a few steps.' },
-  { title: 'Spacing scale', why: 'Twenty-six distinct gap, margin and padding values.' },
+  { title: 'Rating', why: 'The mood faces and effort stars are radio groups built by hand in the entry form.' },
+  { title: 'Reorderable list', why: 'Drag-to-reorder, with its handle and arrow keys, lives only in the workout editor.' },
 ];
 
 export const bySlug = (slug: string) => sections.find((s) => s.slug === slug);

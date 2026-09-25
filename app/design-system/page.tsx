@@ -170,7 +170,7 @@ export default function DesignSystemPage() {
           Planned
         </Text>
         <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 16px' }}>
-          Candidates for what to build next, based on what the planner still repeats by hand.
+          Candidates for what to build next: patterns the planner still builds by hand.
         </Text>
         <div className={styles.grid}>
           {planned.map((p) => (
