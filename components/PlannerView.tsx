@@ -2597,9 +2597,9 @@ export function PlannerView({ v }: { v: any }) {
                             <Text variant="cardTitle" style={{ display: 'block' }}>
                               New exercise
                             </Text>
-                            <Label style={{ margin: '16px 0 7px' }}>Exercise name</Label>
                             <TextField
-                              aria-label="Exercise name"
+                              label="Exercise name"
+                              containerStyle={{ marginTop: '16px' }}
                               value={v.draftName ?? ''}
                               onChange={v.setName}
                               onKeyDown={v.commitOnEnter}
@@ -3214,12 +3214,13 @@ export function PlannerView({ v }: { v: any }) {
             {v.isExerciseEdit && v.exerciseEdit ? (
               <>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <BackLink label={v.backLabel} onClick={v.exerciseEdit.cancel} />
-                    <Text variant="eyebrow" tone="slate">
-                      {v.exerciseEdit.heading}
-                    </Text>
                   </div>
+                  {/* The same as the workout editor: Back on its own row, then what's being edited. */}
+                  <Text variant="eyebrow" as="h1" tone="slate" style={{ margin: '18px 0 0' }}>
+                    {v.exerciseEdit.heading}
+                  </Text>
                   <Card style={{ marginTop: '18px' }}>
                     <TextField
                       label="Name"
@@ -3537,7 +3538,7 @@ export function PlannerView({ v }: { v: any }) {
                               >
                                 {(e?.stars ?? []).map((s, i) => (
                                   <Fragment key={i}>
-                                    <span className="fc-keep" style={css(s)}>★</span>
+                                    <span className="fc-star" data-on={i < (e?.rpe ?? 0) ? '' : undefined} style={css(s)}>★</span>
                                   </Fragment>
                                 ))}
                               </span>
@@ -3937,16 +3938,16 @@ export function PlannerView({ v }: { v: any }) {
             {v.needsType ? (
               <>
                 <div style={{ maxWidth: '560px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <BackLink label={v.backLabel} onClick={v.backToDay} />
-                    <div>
-                      <Text variant="eyebrow" as="div" tone="slate">
-                        NEW WORKOUT
-                      </Text>
-                      <Text variant="heading" as="h1" style={{ margin: '3px 0 0' }}>
-                        What kind of workout?
-                      </Text>
-                    </div>
+                  </div>
+                  <div style={{ marginTop: '18px' }}>
+                    <Text variant="eyebrow" as="div" tone="slate">
+                      NEW WORKOUT
+                    </Text>
+                    <Text variant="heading" as="h1" style={{ margin: '3px 0 0' }}>
+                      What kind of workout?
+                    </Text>
                   </div>
                   <div
                     style={{
@@ -4838,6 +4839,7 @@ export function PlannerView({ v }: { v: any }) {
                             label="Add exercise from"
                             size="sm"
                             tone="quiet"
+                            compact
                             options={[
                               { value: 'lib', label: 'From Spellbook' },
                               { value: 'new', label: 'Create new' },
@@ -4932,7 +4934,7 @@ export function PlannerView({ v }: { v: any }) {
                                         flex: '1',
                                         minWidth: '0',
                                         minHeight: '44px',
-                                        padding: '0',
+                                        padding: '4px 0',
                                         border: 'none',
                                         background: 'none',
                                         textAlign: 'left',
@@ -4940,24 +4942,21 @@ export function PlannerView({ v }: { v: any }) {
                                         fontFamily: 'inherit',
                                       }}
                                     >
-                                      <span
-                                        style={{
-                                          flex: '1',
-                                          minWidth: '0',
-                                          fontSize: 'var(--text-lg)',
-                                          fontWeight: 'var(--font-weight-semibold)',
-                                          color: 'var(--color-ink)',
-                                        }}
-                                      >
-                                        {l?.name}
+                                      {/* The detail goes under the name: side by side, a narrow screen squeezed the name to a sliver. */}
+                                      <span style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: '1', minWidth: '0' }}>
+                                        <span
+                                          style={{
+                                            fontSize: 'var(--text-lg)',
+                                            fontWeight: 'var(--font-weight-semibold)',
+                                            color: 'var(--color-ink)',
+                                          }}
+                                        >
+                                          {l?.name}
+                                        </span>
+                                        <Text variant="caption" tone="muted">
+                                          {l?.detail}
+                                        </Text>
                                       </span>
-                                      <Text
-                                        variant="caption"
-                                        tone="muted"
-                                        style={{ flex: 'none', whiteSpace: 'nowrap' }}
-                                      >
-                                        {l?.detail}
-                                      </Text>
                                       {l?.open ? (
                                         <ChevronRight color="var(--color-muted)" strokeWidth={2.2} size={16} />
                                       ) : null}
@@ -4999,9 +4998,8 @@ export function PlannerView({ v }: { v: any }) {
                         {v.addNew ? (
                           <>
                             <div style={{ marginTop: '18px' }}>
-                              <Label>Exercise name</Label>
                               <TextField
-                                aria-label="Exercise name"
+                                label="Exercise name"
                                 value={v.draftName ?? ''}
                                 onChange={v.setName}
                                 placeholder="e.g. Bulgarian Split Squat"
@@ -5238,7 +5236,7 @@ export function PlannerView({ v }: { v: any }) {
                               <span style={{ display: 'flex', gap: '3px' }}>
                                 {(v.readStars ?? []).map((s, i) => (
                                   <Fragment key={i}>
-                                    <span className="fc-keep" style={css(s)}>★</span>
+                                    <span className="fc-star" data-on={i < (v.readRpe ?? 0) ? '' : undefined} style={css(s)}>★</span>
                                   </Fragment>
                                 ))}
                               </span>
@@ -5388,6 +5386,7 @@ export function PlannerView({ v }: { v: any }) {
                                 aria-label={s?.label}
                                 tabIndex={s?.tab}
                                 data-star={s?.index}
+                                data-on={s?.glyph === '★' ? '' : undefined}
                                 onKeyDown={s?.keys}
                                 onClick={s?.pick}
                                 style={css(s?.style)}

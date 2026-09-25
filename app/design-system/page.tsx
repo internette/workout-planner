@@ -69,7 +69,9 @@ export default function DesignSystemPage() {
               .map((s) => (
                 <Link key={s.slug} href={`/design-system/${s.slug}`} className={styles.tile}>
                   <Card interactive pad="sm">
-                    <div className={styles.preview}>
+                    {/* A picture of the component: its buttons and fields aren't controls here, and aren't part of
+                        the tile link's name. */}
+                    <div className={styles.preview} aria-hidden="true" {...({ inert: '' } as object)}>
                       <Preview slug={s.slug} />
                     </div>
                     <Text variant="itemTitle" tone="ink" as="h3" style={{ margin: 0 }}>

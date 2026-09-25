@@ -130,8 +130,10 @@ export default function Planner({ account = null }: { account?: Account | null }
           ? v.eName
           : st.screen === 'template'
             ? v.template?.name
-            : st.screen === 'exercise' || st.screen === 'exerciseEdit'
+            : st.screen === 'exercise'
               ? v.exercise?.name
+              : st.screen === 'exerciseEdit'
+                ? 'Editing ' + (v.exerciseEdit?.name || v.exercise?.name || 'exercise')
               : st.screen === 'diary'
                 ? 'Entry'
                 : st.screen === 'newEntry'
@@ -229,6 +231,8 @@ export default function Planner({ account = null }: { account?: Account | null }
   // Focus moves with it, so keyboard and screen-reader users land on the new screen rather than on the page behind:
   // back to the control that opened this screen when returning with Back, otherwise to the screen's heading.
   const screen = logic.state.screen;
+  // Choosing Lifting or Cycling swaps the whole editor in without changing the screen, so it counts as a new one.
+  const screenKey = screen + '|' + (screen === 'edit' ? logic.state.newType || '' : '');
   const firstScreen = useRef(true);
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -256,7 +260,7 @@ export default function Planner({ account = null }: { account?: Account | null }
       heading.focus({ preventScroll: true });
     });
     return () => cancelAnimationFrame(id);
-  }, [screen, logic]);
+  }, [screenKey, screen, logic]);
 
   // Keyboard focus never sits hidden under the phone tab bar: whatever takes focus behind it is scrolled up clear of
   // it. (Browsers scroll a focused element into the window, but not out from under something fixed on top of it.)

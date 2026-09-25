@@ -4,6 +4,8 @@
   display: inline-flex;
   gap: var(--space-1);
   box-sizing: border-box;
+  /* Never wider than where it's placed: squeezed, a segment's label breaks between words instead. */
+  max-width: 100%;
 }
 .wrap { flex-wrap: wrap; }
 .fullWidth { display: flex; width: 100%; }
@@ -22,8 +24,9 @@
   font-family: inherit;
   font-weight: var(--font-weight-semibold);
   color: var(--color-muted);
-  white-space: nowrap;
-  flex: none;
+  flex: 0 1 auto;
+  min-width: 0;
+  text-wrap: balance;
   transition: background-color var(--dur-state) var(--ease-standard), color var(--dur-state) var(--ease-standard);
 }
 .equalWidth .segment { flex: 1; min-width: 0; }
