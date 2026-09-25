@@ -2801,6 +2801,15 @@ export function PlannerView({ v }: { v: any }) {
                                 </Fragment>
                               ))}
                             </div>
+                            {v.draftEquipment ? (
+                              <EquipmentPicker
+                                id="new-exercise-equipment"
+                                open={v.draftEquipment.open}
+                                onToggle={v.draftEquipment.toggle}
+                                summary={v.draftEquipment.summary}
+                                groups={v.draftEquipment.groups}
+                              />
+                            ) : null}
                             <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
                             <div
                               style={{
@@ -3477,65 +3486,13 @@ export function PlannerView({ v }: { v: any }) {
                       ))}
                     </div>
                     {v.exerciseEdit.equipmentGroups ? (
-                      <div style={{ marginTop: '16px' }}>
-                        {/* One row with what's picked; it opens to the picker, so the editor stays short. */}
-                        <button
-                          type="button"
-                          aria-expanded={v.exerciseEdit.equipmentOpen}
-                          aria-controls="exercise-equipment"
-                          onClick={v.exerciseEdit.toggleEquipment}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px',
-                            width: '100%',
-                            minHeight: '52px',
-                            padding: '10px 14px',
-                            border: '1px solid var(--color-outline)',
-                            borderRadius: '14px',
-                            background: 'var(--color-canvas)',
-                            fontFamily: 'inherit',
-                            textAlign: 'left',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          <span style={{ flex: '1', minWidth: '0' }}>
-                            <Text variant="eyebrow" as="span" tone="slate" style={{ display: 'block' }}>
-                              EQUIPMENT
-                            </Text>
-                            <Text variant="body" as="span" tone="ink" weight="semibold" style={{ display: 'block', marginTop: '2px' }}>
-                              {v.exerciseEdit.equipmentSummary}
-                            </Text>
-                          </span>
-                          <ChevronDown
-                            color="var(--color-muted)"
-                            strokeWidth={2.2}
-                            size={18}
-                            style={{ flex: 'none', transition: 'transform .2s', transform: v.exerciseEdit.equipmentOpen ? 'rotate(180deg)' : 'none' }}
-                          />
-                        </button>
-                        {v.exerciseEdit.equipmentOpen ? (
-                          <div id="exercise-equipment" role="group" aria-label="Equipment" style={{ padding: '4px 2px 0' }}>
-                            <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
-                              Leave it empty for a bodyweight exercise.
-                            </Text>
-                            {v.exerciseEdit.equipmentGroups.map((g, gi) => (
-                              <div key={gi} role="group" aria-label={g.label}>
-                                <Text variant="eyebrow" as="div" tone="muted" style={{ margin: '10px 0 6px' }}>
-                                  {g.label.toUpperCase()}
-                                </Text>
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                                  {g.items.map((a, i) => (
-                                    <Chip key={i} tone="choice" size="md" selected={a.on} onClick={a.toggle}>
-                                      {a.name}
-                                    </Chip>
-                                  ))}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        ) : null}
-                      </div>
+                      <EquipmentPicker
+                        id="exercise-equipment"
+                        open={v.exerciseEdit.equipmentOpen}
+                        onToggle={v.exerciseEdit.toggleEquipment}
+                        summary={v.exerciseEdit.equipmentSummary}
+                        groups={v.exerciseEdit.equipmentGroups}
+                      />
                     ) : null}
                     <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
                     <div
@@ -5363,6 +5320,15 @@ export function PlannerView({ v }: { v: any }) {
                                   </Fragment>
                                 ))}
                               </div>
+                              {v.draftEquipment ? (
+                                <EquipmentPicker
+                                  id="picker-new-equipment"
+                                  open={v.draftEquipment.open}
+                                  onToggle={v.draftEquipment.toggle}
+                                  summary={v.draftEquipment.summary}
+                                  groups={v.draftEquipment.groups}
+                                />
+                              ) : null}
                             </div>
                           </>
                         ) : null}
@@ -5747,6 +5713,83 @@ export function PlannerView({ v }: { v: any }) {
 }
 
 // Back, named for where it goes ("‹ Calendar", "‹ Spellbook", "‹ Upper Push"). Every inner screen starts with one.
+/** An exercise's equipment, as one row showing what's picked ("Barbell, Bench", or "Bodyweight") that opens to the
+ * picker's groups of chips. Used by the exercise editor and both "New exercise" forms. */
+function EquipmentPicker({
+  id,
+  open,
+  onToggle,
+  summary,
+  groups,
+}: {
+  id: string;
+  open: boolean;
+  onToggle: () => void;
+  summary: string;
+  groups: { label: string; items: { name: string; on: boolean; toggle: () => void }[] }[];
+}) {
+  return (
+    <div style={{ marginTop: '16px' }}>
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={onToggle}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          width: '100%',
+          minHeight: '52px',
+          padding: '10px 14px',
+          border: '1px solid var(--color-outline)',
+          borderRadius: '14px',
+          background: 'var(--color-canvas)',
+          fontFamily: 'inherit',
+          textAlign: 'left',
+          cursor: 'pointer',
+        }}
+      >
+        <span style={{ flex: '1', minWidth: '0' }}>
+          <Text variant="eyebrow" as="span" tone="slate" style={{ display: 'block' }}>
+            EQUIPMENT
+          </Text>
+          <Text variant="body" as="span" tone="ink" weight="semibold" style={{ display: 'block', marginTop: '2px' }}>
+            {summary}
+          </Text>
+        </span>
+        <ChevronDown
+          color="var(--color-muted)"
+          strokeWidth={2.2}
+          size={18}
+          style={{ flex: 'none', transition: 'transform .2s', transform: open ? 'rotate(180deg)' : 'none' }}
+        />
+      </button>
+      {open ? (
+        <div id={id} role="group" aria-label="Equipment" style={{ padding: '4px 2px 0' }}>
+          <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+            Leave it empty for a bodyweight exercise.
+          </Text>
+          {groups.map((g) => (
+            <div key={g.label} role="group" aria-label={g.label}>
+              <Text variant="eyebrow" as="div" tone="muted" style={{ margin: '10px 0 6px' }}>
+                {g.label.toUpperCase()}
+              </Text>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {g.items.map((a) => (
+                  <Chip key={a.name} tone="choice" size="md" selected={a.on} onClick={a.toggle}>
+                    {a.name}
+                  </Chip>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 /** "You'll need": the equipment a workout's exercises use, under its chips. Nothing when it isn't known. */
 function NeedsLine({ text }: { text?: string | null }) {
   if (!text) return null;

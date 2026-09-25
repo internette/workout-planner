@@ -1,4 +1,4 @@
-import { DOW3, DOWFULL, EDIT_OVERLAYS, ICON_COLORS, ICON_COLOR_NAMES, ICON_NAMES, MON3, MONTHS, TARGET_AREAS } from '../constants';
+import { DOW3, DOWFULL, EDIT_OVERLAYS, EQUIPMENT, EQUIPMENT_GROUPS, ICON_COLORS, ICON_COLOR_NAMES, ICON_NAMES, MON3, MONTHS, TARGET_AREAS } from '../constants';
 import { countsOk, needsLine, rollMinutes, digitsOnly, noticePatch, exLine, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, setsRepsOk, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
 import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
@@ -416,6 +416,26 @@ export function editVals(ctx: Ctx) {
           }),
       };
     }),
+    // A new exercise's equipment: one row that opens to the picker, as in the exercise editor. Only once the database
+    // has equipment at all.
+    draftEquipment: !logic.model.builtins.some((e) => e.equipment !== undefined)
+      ? null
+      : {
+          open: !!st.dEquipOpen,
+          toggle: () => logic.s({ dEquipOpen: !st.dEquipOpen }),
+          summary: (st.dEquip || []).length ? st.dEquip.join(', ') : 'Bodyweight',
+          groups: EQUIPMENT_GROUPS.map((g) => ({
+            label: g.label,
+            items: g.items.map((name) => {
+              const on = (st.dEquip || []).includes(name);
+              return {
+                name,
+                on,
+                toggle: () => logic.s({ dEquip: EQUIPMENT.filter((x) => (x === name ? !on : (st.dEquip || []).includes(x))) }),
+              };
+            }),
+          })),
+        },
     iconGrid: EXERCISE_ICON_NAMES.map((name) => ({
       svg: iconSvg(name),
       pick: () => logic.s({ dIcon: name }),
@@ -445,6 +465,7 @@ export function editVals(ctx: Ctx) {
         rest: withSec(st.dRest) || '60 sec',
         i: st.dIcon || 'h',
         areas: st.dAreas || [],
+        ...(logic.model.builtins.some((e) => e.equipment !== undefined) ? { equipment: st.dEquip || [] } : {}),
       };
       logic.s({
         extra: Object.assign({}, st.extra, { [listKey]: added.concat([item]) }),
@@ -456,6 +477,8 @@ export function editVals(ctx: Ctx) {
         dRest: '',
         dIcon: 'h',
         dAreas: [],
+        dEquip: [],
+        dEquipOpen: false,
       });
     },
     iconsOpen: !!st.iconsOpen,
@@ -578,7 +601,15 @@ export function editVals(ctx: Ctx) {
       if (nameClash || needsName || needsExercise) return logic.s({ leaveOpen: false, pendingNav: null });
       if (saving) return;
       const cleared = EDIT_OVERLAYS;
-      const bare = (e) => ({ name: e.name, sets: e.sets, weight: e.weight, rest: e.rest, i: e.i, areas: e.areas || [] });
+      const bare = (e) => ({
+        name: e.name,
+        sets: e.sets,
+        weight: e.weight,
+        rest: e.rest,
+        i: e.i,
+        areas: e.areas || [],
+        ...(e.equipment !== undefined ? { equipment: e.equipment } : {}),
+      });
       if (!creating) {
         const owned = EXV[baseKey] || [];
         const byName = (n) => owned.find((e) => e.name === n);
