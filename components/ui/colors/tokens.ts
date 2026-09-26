@@ -13,6 +13,11 @@ export const colorGroups = {
     outline: { hex: '#8A859A', use: 'Empty controls you can still use: unticked boxes, unrated stars (3:1 or more on canvas and white)' },
     divider: { hex: '#DAD7E0', use: 'Rest-day dashes' },
   },
+  // Roles rather than colours: what a colour is for, so a theme can change it without touching the screens.
+  Roles: {
+    surface: { hex: '#FFFFFF', use: 'Cards, dialogs, inputs and trays: anything raised off the page, and the rims around what sits on them' },
+    onAccent: { hex: '#FFFFFF', use: 'Text and icons on pink, danger, ink and the gem gradient' },
+  },
   Surfaces: {
     white: { hex: '#FFFFFF', use: 'Cards and dialogs' },
     canvas: { hex: '#FBF1F3', use: 'Page background, input fills' },
@@ -84,12 +89,25 @@ export const gradients = {
   },
 } as const;
 
+/** See-through colours, written as CSS variables like the others, e.g. `var(--color-line)`. */
+export const translucents = {
+  line: { value: rgba(colors.ink, 0.07), use: 'Lines between rows and around cards' },
+  lineFaint: { value: rgba(colors.ink, 0.055), use: 'Lines between the rows of a dense list' },
+  lineStrong: { value: rgba(colors.ink, 0.09), use: 'Lines under a popover’s header' },
+  surfaceRest: { value: rgba('#FFFFFF', 0.5), use: 'A quiet row on the page: rest days, a day gone by' },
+  surfaceBar: { value: rgba('#FFFFFF', 0.94), use: 'The phone tab bar, over the page as it scrolls' },
+  onAccentSoft: { value: rgba('#FFFFFF', 0.85), use: 'Secondary text and icons on pink' },
+  onAccentMuted: { value: rgba('#FFFFFF', 0.8), use: 'Small labels on pink' },
+  onAccentFaint: { value: rgba('#FFFFFF', 0.6), use: 'Marks on pink, such as a rest-day dash' },
+} as const;
+
 export const overlays = {
   scrim: { value: rgba(colors.ink, 0.35), use: 'The dimmed page behind a dialog' },
 } as const;
 
 /** Every gradient and overlay as a CSS custom property name and value. */
 export const compositeVariables: Record<string, string> = {
+  ...Object.fromEntries(Object.entries(translucents).map(([k, v]) => [cssVarName(k), v.value])),
   ...Object.fromEntries(Object.entries(gradients).map(([k, v]) => [`--gradient-${k}`, v.value])),
   ...Object.fromEntries(Object.entries(overlays).map(([k, v]) => [`--${k}`, v.value])),
 };

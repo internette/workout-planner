@@ -14,7 +14,7 @@
 .tray-md { padding: 5px; border-radius: var(--radius-md); }
 
 /* brand: a white tray with the selected option in pink. quiet: a canvas tray for use inside cards. */
-.tone-brand { background: var(--color-white); box-shadow: var(--elevation-raised); }
+.tone-brand { background: var(--color-surface); box-shadow: var(--elevation-raised); }
 .tone-quiet { background: var(--color-canvas); }
 
 .segment {
@@ -45,9 +45,9 @@
 .segment-sm { padding: 9px 16px; border-radius: var(--radius-sm); font-size: var(--text-md); }
 .segment-md { padding: 12px 20px; border-radius: var(--radius-sm); font-size: var(--text-base); }
 
-.tone-brand .selected { background: var(--color-pink); color: var(--color-white); }
+.tone-brand .selected { background: var(--color-pink); color: var(--color-on-accent); }
 .tone-quiet .selected {
-  background: var(--color-white);
+  background: var(--color-surface);
   color: var(--color-pink-deep);
   box-shadow: var(--elevation-hairline);
 }

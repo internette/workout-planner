@@ -31,10 +31,10 @@
   margin-top: 1px;
   border-radius: var(--radius-full);
   border: 2px solid var(--color-subtle);
-  background: var(--color-white);
+  background: var(--color-surface);
   transition: border-color var(--dur-state) var(--ease-standard), background var(--dur-state) var(--ease-standard), box-shadow var(--dur-state) var(--ease-standard);
 }
-.checked .dot { border-color: var(--color-pink); background: var(--color-pink); box-shadow: inset 0 0 0 2.5px var(--color-white); }
+.checked .dot { border-color: var(--color-pink); background: var(--color-pink); box-shadow: inset 0 0 0 2.5px var(--color-surface); }
 
 .text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .title, .description { margin: 0; text-wrap: pretty; }

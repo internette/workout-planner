@@ -503,7 +503,7 @@ export function editVals(ctx: Ctx) {
       style:
         'width:34px;height:34px;border:none;border-radius:11px;cursor:pointer;background:' +
         c +
-        (c === wColor ? ';box-shadow:0 0 0 2px var(--color-white),0 0 0 4px ' + c : ''),
+        (c === wColor ? ';box-shadow:0 0 0 2px var(--color-surface),0 0 0 4px ' + c : ''),
     })),
     eName: selName,
     eNotes: notesVal,
@@ -1024,7 +1024,7 @@ export function editVals(ctx: Ctx) {
           (doneSet[e.name]
             ? 'none;background:var(--color-pink)'
             : '1.5px solid var(--color-outline);background:none'),
-        doneStroke: doneSet[e.name] ? 'var(--color-white)' : 'var(--color-outline)',
+        doneStroke: doneSet[e.name] ? 'var(--color-on-accent)' : 'var(--color-outline)',
         isDone: !!doneSet[e.name],
         // Ticking off belongs to a session on the calendar, not to a workout being built or a saved one.
         showTick: !creating && !tplMode && mi * 100 + selDay <= ctx.TK,

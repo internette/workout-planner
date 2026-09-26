@@ -20,7 +20,7 @@
 
 /* info: white, for a fact about the thing on screen (a date, a duration, a tag) */
 .info {
-  background: var(--color-white);
+  background: var(--color-surface);
   color: var(--color-slate);
   font-weight: var(--font-weight-medium);
   box-shadow: var(--elevation-hairline);
@@ -30,7 +30,7 @@
 /* accent: solid pink, for something that is switched on */
 .accent {
   background: var(--color-pink);
-  color: var(--color-white);
+  color: var(--color-on-accent);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -40,7 +40,7 @@
   color: var(--color-slate);
   font-weight: var(--font-weight-semibold);
 }
-.choice.selected { background: var(--color-pink); color: var(--color-white); }
+.choice.selected { background: var(--color-pink); color: var(--color-on-accent); }
 .choice:not(.selected):hover { filter: brightness(0.97); }
 
 .clickable { cursor: pointer; position: relative; }

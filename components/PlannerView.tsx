@@ -309,7 +309,7 @@ export function PlannerView({ v }: { v: any }) {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               paddingBottom: '12px',
-                              borderBottom: '1px solid rgba(35,42,69,.09)',
+                              borderBottom: '1px solid var(--color-line-strong)',
                             }}
                           >
                             <IconButton label="Previous year" size="md" onClick={v.prevYear}>
@@ -347,7 +347,7 @@ export function PlannerView({ v }: { v: any }) {
                               justifyContent: 'center',
                               marginTop: '10px',
                               paddingTop: '10px',
-                              borderTop: '1px solid rgba(35,42,69,.09)',
+                              borderTop: '1px solid var(--color-line-strong)',
                             }}
                           >
                             <Button type="secondary" ghost size="sm" onClick={v.goToday}>
@@ -560,7 +560,7 @@ export function PlannerView({ v }: { v: any }) {
                         <span style={css(v.questIconWrap)}>
                           {v.questDone ? (
                             <>
-                              <Check color="var(--color-white)" strokeWidth={2.6} size={19} />
+                              <Check color="var(--color-on-accent)" strokeWidth={2.6} size={19} />
                             </>
                           ) : null}
                           {v.questOpen ? (
@@ -689,7 +689,7 @@ export function PlannerView({ v }: { v: any }) {
                                           gap: '26px',
                                           marginTop: '20px',
                                           paddingTop: '18px',
-                                          borderTop: '1px solid rgba(35,42,69,.07)',
+                                          borderTop: '1px solid var(--color-line)',
                                         }}
                                       >
                                         {(c?.rideStats ?? []).map((r, i) => (
@@ -718,7 +718,7 @@ export function PlannerView({ v }: { v: any }) {
                                                 alignItems: 'center',
                                                 gap: '11px',
                                                 padding: '9px 0',
-                                                borderBottom: '1px solid rgba(35,42,69,.055)',
+                                                borderBottom: '1px solid var(--color-line-faint)',
                                               }}
                                             >
                                               {x?.isH ? (
@@ -860,7 +860,7 @@ export function PlannerView({ v }: { v: any }) {
                       </p>
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', marginTop: '24px' }}>
                         <Button type="primary" size="lg" glow onClick={v.goNewWorkout}>
-                          <Plus color="var(--color-white)" size={16} />
+                          <Plus color="var(--color-on-accent)" size={16} />
                           Plan your first workout
                         </Button>
                         <Button type="neutral" ghost size="md" onClick={v.goArsenal}>
@@ -886,7 +886,7 @@ export function PlannerView({ v }: { v: any }) {
                             height: '78px',
                             margin: '0 auto',
                             borderRadius: 'var(--radius-full)',
-                            background: 'var(--color-white)',
+                            background: 'var(--color-surface)',
                             boxShadow: 'var(--elevation-raised)',
                             display: 'flex',
                             alignItems: 'center',
@@ -922,7 +922,7 @@ export function PlannerView({ v }: { v: any }) {
                           onClick={v.goNewWorkout}
                           style={{ marginTop: '24px' }}
                         >
-                          <Plus color="var(--color-white)" size={16} />
+                          <Plus color="var(--color-on-accent)" size={16} />
                           Add workout
                         </Button>
                         <span
@@ -972,7 +972,7 @@ export function PlannerView({ v }: { v: any }) {
                                         gap: '12px',
                                         padding: '15px 20px',
                                         borderRadius: 'var(--radius-lg)',
-                                        background: 'rgba(255,255,255,.5)',
+                                        background: 'var(--color-surface-rest)',
                                       }}
                                     >
                                       <span
@@ -1104,7 +1104,7 @@ export function PlannerView({ v }: { v: any }) {
                                   justifyContent: 'center',
                                 }}
                               >
-                                <Check color="var(--color-white)" strokeWidth={2.6} size={26} />
+                                <Check color="var(--color-on-accent)" strokeWidth={2.6} size={26} />
                               </div>
                               <Text variant="subheading" as="h3" style={{ margin: '16px 0 0' }}>
                                 Week sealed
@@ -1170,7 +1170,7 @@ export function PlannerView({ v }: { v: any }) {
                                   height: '66px',
                                   margin: '0 auto',
                                   borderRadius: 'var(--radius-full)',
-                                  background: 'var(--color-white)',
+                                  background: 'var(--color-surface)',
                                   boxShadow: 'var(--elevation-raised)',
                                   display: 'flex',
                                   alignItems: 'center',
@@ -1196,7 +1196,7 @@ export function PlannerView({ v }: { v: any }) {
                                 onClick={v.goNewWorkout}
                                 style={{ marginTop: '22px' }}
                               >
-                                <Plus color="var(--color-white)" size={16} />
+                                <Plus color="var(--color-on-accent)" size={16} />
                                 Add workout
                               </Button>
                             </div>
@@ -1271,7 +1271,7 @@ export function PlannerView({ v }: { v: any }) {
                                   width: '28px',
                                   height: '28px',
                                   borderRadius: 'var(--radius-full)',
-                                  background: 'var(--color-white)',
+                                  background: 'var(--color-surface)',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
@@ -1538,7 +1538,7 @@ export function PlannerView({ v }: { v: any }) {
                         width: '66px',
                         height: '66px',
                         borderRadius: 'var(--radius-full)',
-                        background: 'var(--color-white)',
+                        background: 'var(--color-surface)',
                         boxShadow: 'var(--elevation-raised)',
                         display: 'flex',
                         alignItems: 'center',
@@ -1672,7 +1672,7 @@ export function PlannerView({ v }: { v: any }) {
                           position: 'absolute',
                           inset: '3px',
                           borderRadius: 'var(--radius-full)',
-                          background: 'var(--color-white)',
+                          background: 'var(--color-surface)',
                         }}
                       ></span>
                       <div
@@ -1724,7 +1724,7 @@ export function PlannerView({ v }: { v: any }) {
                           width: '28px',
                           height: '28px',
                           borderRadius: 'var(--radius-full)',
-                          background: 'var(--color-white)',
+                          background: 'var(--color-surface)',
                           boxShadow: 'var(--elevation-raised)',
                           display: 'flex',
                           alignItems: 'center',
@@ -1887,7 +1887,7 @@ export function PlannerView({ v }: { v: any }) {
                         gap: '8px',
                         marginTop: '18px',
                         paddingTop: '16px',
-                        borderTop: '1px solid rgba(35,42,69,.07)',
+                        borderTop: '1px solid var(--color-line)',
                       }}
                     >
                       {(v.weekSessions ?? []).map((w, i) => (
@@ -2297,7 +2297,7 @@ export function PlannerView({ v }: { v: any }) {
                             <span style={css(q?.mark)}>
                               {q?.done ? (
                                 <>
-                                  <Check color="var(--color-white)" strokeWidth={3} size={10} />
+                                  <Check color="var(--color-on-accent)" strokeWidth={3} size={10} />
                                 </>
                               ) : null}
                             </span>
@@ -2424,7 +2424,7 @@ export function PlannerView({ v }: { v: any }) {
                       data-arsenal-new
                       style={{ marginLeft: 'auto' }}
                     >
-                      <Plus color="var(--color-white)" strokeWidth={2.2} size={16} />
+                      <Plus color="var(--color-on-accent)" strokeWidth={2.2} size={16} />
                       {v.arsenalNewLabel}
                     </Button>
                   </div>
@@ -2436,7 +2436,7 @@ export function PlannerView({ v }: { v: any }) {
                       width: '100%',
                       marginTop: '12px',
                       padding: '12px 16px',
-                      background: 'var(--color-white)',
+                      background: 'var(--color-surface)',
                       borderRadius: '15px',
                       boxShadow: 'var(--elevation-hairline)',
                     }}
@@ -2513,7 +2513,7 @@ export function PlannerView({ v }: { v: any }) {
                           rowGap: '4px',
                           width: '100%',
                           padding: '12px 16px',
-                          background: 'var(--color-white)',
+                          background: 'var(--color-surface)',
                           border: 'none',
                           borderRadius: '15px',
                           boxShadow: 'var(--elevation-hairline)',
@@ -2640,7 +2640,7 @@ export function PlannerView({ v }: { v: any }) {
                             rowGap: '4px',
                             width: '100%',
                             padding: '12px 16px',
-                            background: 'var(--color-white)',
+                            background: 'var(--color-surface)',
                             border: 'none',
                             borderRadius: '15px',
                             boxShadow: 'var(--elevation-hairline)',
@@ -2783,7 +2783,7 @@ export function PlannerView({ v }: { v: any }) {
                                 gap: '10px',
                                 marginTop: '20px',
                                 paddingTop: '18px',
-                                borderTop: '1px solid rgba(35,42,69,.07)',
+                                borderTop: '1px solid var(--color-line)',
                               }}
                             >
                               {v.draftHint ? (
@@ -3052,7 +3052,7 @@ export function PlannerView({ v }: { v: any }) {
                           Copy
                         </Button>
                         <Button type="primary" size="sm" onClick={v.exercise.add} style={{ whiteSpace: 'nowrap' }}>
-                          <Plus color="var(--color-white)" size={16} />
+                          <Plus color="var(--color-on-accent)" size={16} />
                           Add
                         </Button>
                       </span>
@@ -3063,7 +3063,7 @@ export function PlannerView({ v }: { v: any }) {
                           Edit
                         </Button>
                         <Button type="primary" size="sm" onClick={v.exercise.add} style={{ whiteSpace: 'nowrap' }}>
-                          <Plus color="var(--color-white)" size={16} />
+                          <Plus color="var(--color-on-accent)" size={16} />
                           Add
                         </Button>
                       </span>
@@ -3137,7 +3137,7 @@ export function PlannerView({ v }: { v: any }) {
                     </>
                   )}
                   {v.exercise.canDelete ? (
-                    <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid rgba(35,42,69,.07)' }}>
+                    <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }}>
                       <Button type="danger" ghost size="md" onClick={v.exercise.remove}>
                         Delete exercise
                       </Button>
@@ -3218,7 +3218,7 @@ export function PlannerView({ v }: { v: any }) {
                     </Card>
                   ) : null}
                   <Button type="primary" size="lg" fullWidth onClick={v.template.schedule} style={{ marginTop: '18px' }}>
-                    <Calendar color="var(--color-white)" size={17} />
+                    <Calendar color="var(--color-on-accent)" size={17} />
                     Add to calendar
                   </Button>
                   {v.scheduleCalendar?.done ? (
@@ -3319,7 +3319,7 @@ export function PlannerView({ v }: { v: any }) {
                       {v.template.builtinNote}
                     </Text>
                   ) : (
-                    <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid rgba(35,42,69,.07)' }}>
+                    <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }}>
                       <Button type="danger" ghost size="md" onClick={v.template.remove}>
                         Delete workout
                       </Button>
@@ -3421,7 +3421,7 @@ export function PlannerView({ v }: { v: any }) {
                       gap: '10px',
                       marginTop: '22px',
                       paddingTop: '20px',
-                      borderTop: '1px solid rgba(35,42,69,.07)',
+                      borderTop: '1px solid var(--color-line)',
                     }}
                   >
                     {v.exerciseEdit.saveHint ? (
@@ -3482,7 +3482,7 @@ export function PlannerView({ v }: { v: any }) {
                                 minHeight: '60px',
                                 padding: '12px 18px',
                                 border: 'none',
-                                borderTop: i ? '1px solid rgba(35,42,69,.07)' : 'none',
+                                borderTop: i ? '1px solid var(--color-line)' : 'none',
                                 background: 'none',
                                 fontFamily: 'inherit',
                                 textAlign: 'left',
@@ -3828,7 +3828,7 @@ export function PlannerView({ v }: { v: any }) {
                       <>
                         <Chip
                           tone="accent"
-                          icon={<Repeat color="var(--color-white)" size={15} />}
+                          icon={<Repeat color="var(--color-on-accent)" size={15} />}
                           trailing={
                             <IconButton
                               label="End this series"
@@ -3837,7 +3837,7 @@ export function PlannerView({ v }: { v: any }) {
                               onClick={v.endSeries}
                               title="End this series"
                             >
-                              <Close color="rgba(255,255,255,0.85)" strokeWidth={2.2} size={13} />
+                              <Close color="var(--color-on-accent-soft)" strokeWidth={2.2} size={13} />
                             </IconButton>
                           }
                         >
@@ -4032,7 +4032,7 @@ export function PlannerView({ v }: { v: any }) {
                         gap: '10px',
                         marginTop: '22px',
                         paddingTop: '20px',
-                        borderTop: '1px solid rgba(35,42,69,.07)',
+                        borderTop: '1px solid var(--color-line)',
                       }}
                     >
                       <Button type="primary" size="lg" onClick={v.goDiary}>
@@ -4406,7 +4406,7 @@ export function PlannerView({ v }: { v: any }) {
                     ) : null}
                     {v.repeatOn ? (
                       <>
-                        <Chip tone="accent" icon={<Repeat color="var(--color-white)" size={15} />}>
+                        <Chip tone="accent" icon={<Repeat color="var(--color-on-accent)" size={15} />}>
                           Weekly
                         </Chip>
                       </>
@@ -4427,7 +4427,7 @@ export function PlannerView({ v }: { v: any }) {
                         {v.scheduleNote}
                       </Text>
                       {v.showLogDone ? (
-                        <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid rgba(35,42,69,.07)' }}>
+                        <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid var(--color-line)' }}>
                           <Checkbox switch checked={!!v.logDoneOn} onChange={v.setLogDone}>
                             Log it as done
                           </Checkbox>
@@ -4438,7 +4438,7 @@ export function PlannerView({ v }: { v: any }) {
                           style={{
                             marginTop: '14px',
                             paddingTop: '14px',
-                            borderTop: '1px solid rgba(35,42,69,.07)',
+                            borderTop: '1px solid var(--color-line)',
                           }}
                         >
                           <Checkbox switch checked={!!v.repeatOn} onChange={v.setRepeat}>
@@ -5059,7 +5059,7 @@ export function PlannerView({ v }: { v: any }) {
                                       label={'Add ' + l?.name + ' to workout'}
                                       size="lg"
                                       onClick={l?.add}
-                                      style={{ background: 'var(--color-white)' }}
+                                      style={{ background: 'var(--color-surface)' }}
                                     >
                                       <Plus color="var(--color-pink-deep)" strokeWidth={2.4} size={18} />
                                     </IconButton>
@@ -5187,7 +5187,7 @@ export function PlannerView({ v }: { v: any }) {
                             gap: '10px',
                             marginTop: '20px',
                             paddingTop: '18px',
-                            borderTop: '1px solid rgba(35,42,69,.07)',
+                            borderTop: '1px solid var(--color-line)',
                           }}
                         >
                           {v.addNew && v.draftHint ? (
@@ -5235,7 +5235,7 @@ export function PlannerView({ v }: { v: any }) {
                       gap: '10px',
                       marginTop: '24px',
                       paddingTop: '20px',
-                      borderTop: '1px solid rgba(35,42,69,.07)',
+                      borderTop: '1px solid var(--color-line)',
                     }}
                   >
                     {v.saveHint ? (
@@ -5341,7 +5341,7 @@ export function PlannerView({ v }: { v: any }) {
                           </p>
                         </Card>
                         {/* Laid out like the other pages' own Delete (a saved workout's, an exercise's). */}
-                        <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid rgba(35,42,69,.07)' }}>
+                        <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }}>
                           <Button type="danger" ghost size="md" onClick={v.deleteEntry}>
                             Delete entry
                           </Button>
