@@ -1,5 +1,7 @@
 import { DOW3, DOWFULL, MON3, MONTHS } from '../constants';
-import { mod12, monthPatch } from '../helpers';
+import { mod12, monthPatch, noticePatch } from '../helpers';
+import * as db from '@/lib/plannerData';
+import { shortDate, type PlanDraft } from '@/lib/planDraft';
 import type { Ctx } from '../types';
 
 // Calendar screen: month picker, day strip, week list and month grid.
@@ -76,6 +78,18 @@ export function calendarVals(ctx: Ctx) {
     // Back to today, from any month, year or day.
     awayFromToday: !(mi === TODAY_M && selDay === TODAY_D),
     goToday: () => logic.s({ ...monthPatch(TODAY_M), day: TODAY_D, monthOpen: false, pickYOff: null }),
+    // A plan from Claude, added once the person has looked it over. The calendar then opens on its first day.
+    addPlanDraft: (draft: PlanDraft) => {
+      const w = draft.plan.workouts;
+      const first = w[0].date;
+      const [fy, fm, fd] = first.split('-').map(Number);
+      logic.saveOnce('plan-draft', () => db.addPlanDraft(draft, logic.model!), {
+        ...monthPatch((fy - Y) * 12 + fm - 1),
+        day: fd,
+        ...noticePatch(`Your new arc is on the calendar: ${w.length} workout${w.length === 1 ? '' : 's'}, starting ${shortDate(first)}.`, 'day'),
+      });
+    },
+    addingPlan: logic.busy('plan-draft'),
     monthOpen: st.monthOpen,
     caretStyle:
       'border:none;background:none;cursor:pointer;padding:4px;display:flex;align-items:center;transition:transform .2s;transform:rotate(' +

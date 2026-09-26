@@ -9,6 +9,7 @@
 - **Progress tracking:** tick exercises off, mark rides complete, and enter what you actually rode against the plan.
 - **Chronicle:** a diary entry per session with mood, effort (1–5) and notes.
 - **Spellbook** (formerly the Spellbook): two views, switched with a toggle. **Workouts** lists every saved workout with its exercises and target areas; **Exercises** is your exercise library, grouped by workout, plus exercises not yet assigned to one. Open either to read it without any date, and use Edit to change it. A saved workout's page has **Add to calendar**: pick a day this year, and optionally repeat it weekly for 12 more weeks; the page then says where it went, with a View day link. Editing a workout lists its exercises; each has an Edit button that opens the exercise editor and returns to the workout editor afterwards, with your unsaved workout changes kept. Saving a workout that has upcoming sessions asks how to save it. **Update** edits the workout, with an "Also update upcoming sessions" checkbox: ticked, upcoming sessions follow the edit, unticked they stay on the old version. **Save as new** leaves the original and all its sessions alone and saves your changes as a copy of the workout. Saving an exercise always asks. **Update** changes the exercise (in its workout, with the same checkbox for the workout's upcoming sessions); **Save as a new exercise** leaves the original and its workout exactly as they are and adds a separate exercise to the Spellbook's Unassigned group (a taken name becomes "… (copy)"). Exercises are identified by id, never by name, so two with the same name stay two exercises. Either way, past and completed sessions never change.
+- **Summon a plan with Claude:** a button on the Calendar opens Claude with a request started. Claude reads the person's Spellbook and calendar through Moonshot's connector, asks what it needs, and sends a plan back. It opens in Moonshot as a draft to look over: **Add N workouts** puts it on the calendar, **Ask Claude for changes** sends it back, **Let it fade** discards it. Nothing is added without that step. The first time, the dialog walks through connecting Moonshot to Claude (see "Claude connector" below).
 - **Progress and Profile:** streaks, weekly counts, mood split, personal records, and XP with a 20-step rank ladder (10 XP per exercise, 50 XP per finished workout). Reaching a new rank plays a short transformation sequence the first time you see it, wherever you are in the app (usually right as you tick the exercise that earns it); with reduced motion it shows the finished card. The highest rank already celebrated is kept per account in the browser, so a first visit on a new device records your rank quietly, and a rank that drops and is earned back doesn't replay.
 
 ## Addresses
@@ -59,6 +60,8 @@ Later migrations:
 - [20260929000000_exercise_equipment.sql](supabase/migrations/20260929000000_exercise_equipment.sql) adds `equipment` to built-in exercises, your own exercises and the exercises in workouts: what each needs, from a fixed list (dumbbells, cable machine, leg press, bench, ...). Empty is bodyweight. It fills in the built-in exercises, and copies of them (by name) that people already have. Until it runs, the app shows no equipment.
 - [20260930000000_warmups.sql](supabase/migrations/20260930000000_warmups.sql) adds `is_warmup` to workouts and built-in workouts, nine bodyweight warm-up exercises to the built-in catalog, and five built-in warm-ups. A warm-up is listed first on its day, tagged WARM-UP, and has its own Spellbook filter. Until it runs, the app has no Warm-up switch.
 
+- [20261001000000_plan_drafts.sql](supabase/migrations/20261001000000_plan_drafts.sql) adds `plan_drafts`: plans Claude sends through the connector, waiting to be added or discarded. Each person sees only their own. Until it runs, the Calendar shows no waiting plans and the connector can't save one.
+
 Run the migrations once, in order, in the Supabase SQL editor. They are safe to run again.
 
 ### Sign-in
@@ -93,6 +96,20 @@ Until steps 1 to 5 are done, the landing page's provider buttons say "Sign-in is
 How it fits together: the buttons are links to `/auth/login?connection=…`, which the Auth0 SDK's middleware turns into a redirect to Auth0 and back to `/auth/callback`. The browser gets the ID token it needs for Supabase from `GET /api/token`, which reads the session cookie on the server, renews the token when it is close to expiring, and returns 401 when signed out. Signing out is `/auth/logout`, from the Account card at the foot of Profile, which shows the provider and email and asks first. The same card holds the account deletion described above.
 
 Two things to know. Google and Apple sign-ins for the same person are **separate Auth0 users** unless you link them, so they would see separate data; Auth0 documents an Action that links accounts by verified email. And the Google and Apple marks in `components/auth/marks.tsx` are drawn approximations: replace them with each provider's official assets before going live. The landing page mentions terms and a privacy policy that do not exist yet.
+
+### Claude connector ("Summon a plan")
+
+Moonshot is a remote MCP server at `/api/mcp` (Streamable HTTP, answering JSON). Claude signs people in to it with Moonshot's own Auth0 tenant (OAuth), then calls two tools: `get_training_context` (their exercises, the built-in ones, their workouts and the next 8 weeks of sessions) and `save_plan` (checks the plan and saves it to `plan_drafts`). The connector checks each Auth0 access token itself (signature, issuer, audience, expiry) and reads and writes with the Supabase **service role key**, always filtered to that person. Adding a draft to the calendar happens in the app, with the person's own sign-in, like any other workout.
+
+To turn it on (after Sign-in is set up):
+
+1. **Migration.** Run `20261001000000_plan_drafts.sql`.
+2. **Service role key.** Set `SUPABASE_SERVICE_ROLE_KEY` (Supabase → Project Settings → API) where the app is deployed. It bypasses row-level security: server only, never in a `NEXT_PUBLIC_` variable, never committed. Without it the connector answers that it isn't set up.
+3. **An Auth0 API for the connector.** Applications → APIs → Create API, with the identifier set to the connector's address exactly: `https://<your app>/api/mcp` (the same as `APP_BASE_URL` + `/api/mcp`, or set `MCP_RESOURCE_URL` to match). Tokens for this audience are the only ones the connector accepts.
+4. **Let Claude register itself with Auth0.** Claude connects as its own OAuth client. Either enable Dynamic Client Registration in the tenant's advanced settings (and make the Google and Apple connections available to third-party apps), or create an application for Claude and enter its client id and secret in Claude's advanced connector settings. Claude must ask for the API above as the audience; check Auth0's current guidance for MCP servers (its resource-parameter support, or a tenant default audience) when setting this up, since that part isn't something this repository can test.
+5. **Connect it in Claude.** Settings → Connectors → Add custom connector, with the address `https://<your app>/api/mcp`. The dialog in the app walks people through this and copies the address. Custom connectors depend on the Claude plan.
+
+The app finds out a plan has arrived by checking `plan_drafts` every few seconds while its "waiting" dialog is open, and whenever the tab comes back into view.
 
 ## Scripts
 
@@ -156,6 +173,8 @@ Ticks update the screen immediately. Other saves (creating or editing a workout,
 
 ## Limitations
 
+- **Claude only, and no link to switch the connector on.** The dialog opens a new Claude chat with the request typed in, but a link can't pick the connector: the message names Moonshot, and Claude uses it once it's connected. Whether someone has connected it is remembered in their browser, not checked with Claude. Moonshot plans only lifts and rides, so Claude is told to put runs or classes in notes.
+- **Adding a plan isn't all-or-nothing.** If adding stops partway (a dropped connection), the workouts added so far stay, and the draft is still waiting.
 - **Sign-in is off until you turn it on.** Until the steps under Sign-in are done, the tables allow anonymous access with the publishable key, so anyone with that key can read and change your data. Do not share or deploy the app before then.
 - **Current year only.** Entries from other years don't appear on the calendar.
 - **Free-text exercise fields** such as "4 × 8", "135 lb" and "90 sec" are stored as numbers. Text that doesn't fit those shapes, like "3 × 45s", loses its detail on save.
