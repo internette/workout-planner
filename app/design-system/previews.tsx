@@ -35,6 +35,21 @@ export function Preview({ slug }: { slug: string }) {
           ))}
         </>
       );
+    case 'themes':
+      return (
+        <>
+          {(['pink', 'teal', 'periwinkle', 'slate', 'coral'] as const).map((a, i) => (
+            <span
+              key={a}
+              data-theme={i % 2 ? 'dark' : 'light'}
+              data-accent={a === 'pink' ? undefined : a}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 'var(--radius-sm)', background: 'var(--color-canvas)', boxShadow: 'inset 0 0 0 1px var(--color-line)' }}
+            >
+              <span style={{ width: 16, height: 16, borderRadius: 'var(--radius-full)', background: 'var(--color-accent)' }} />
+            </span>
+          ))}
+        </>
+      );
     case 'typography':
       return (
         <>
