@@ -9,6 +9,7 @@ import { Bike, Calendar, Check, Dumbbell, Sparkle } from '@/components/ui/icons'
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { ProgressBar } from '@/components/ui/progress-bar';
 import { SegmentedControl } from '@/components/ui/segmented-control';
+import { Stat } from '@/components/ui/stat';
 import { TextField } from '@/components/ui/text-field';
 import { Text } from '@/components/ui/typography';
 
@@ -145,6 +146,13 @@ export function Preview({ slug }: { slug: string }) {
         <div style={{ width: 190, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <ProgressBar value={75} track="tint" />
           <ProgressBar value={40} />
+        </div>
+      );
+    case 'stat':
+      return (
+        <div style={{ display: 'flex', gap: 22 }}>
+          <Stat size="lg" label="SETS × REPS" value="4 × 8" />
+          <Stat size="lg" label="WEIGHT" value="95 lb" />
         </div>
       );
     case 'checkbox':

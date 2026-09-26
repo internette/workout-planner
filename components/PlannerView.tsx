@@ -9,6 +9,7 @@ import { Dialog } from '@/components/ui/dialog';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { Popover } from '@/components/ui/popover';
 import { ProgressBar } from '@/components/ui/progress-bar';
+import { Stat } from '@/components/ui/stat';
 import { DeleteAccount } from './planner/DeleteAccount';
 import { Text } from '@/components/ui/typography';
 import { Chip } from '@/components/ui/chip';
@@ -706,24 +707,7 @@ export function PlannerView({ v }: { v: any }) {
                                       >
                                         {(c?.rideStats ?? []).map((r, i) => (
                                           <Fragment key={i}>
-                                            <div>
-                                              <Text variant="micro" as="div" tone="subtle">
-                                                {r?.label}
-                                              </Text>
-                                              <Text
-                                                variant="cardTitle"
-                                                as="div"
-                                                tone="ink"
-                                                style={{ marginTop: '4px' }}
-                                              >
-                                                {r?.value}
-                                              </Text>
-                                              {r?.note ? (
-                                                <Text variant="caption" as="div" tone="muted" style={{ marginTop: '2px' }}>
-                                                  {r.note}
-                                                </Text>
-                                              ) : null}
-                                            </div>
+                                            <Stat label={r?.label} value={r?.value} note={r?.note} />
                                           </Fragment>
                                         ))}
                                       </div>
@@ -1854,24 +1838,7 @@ export function PlannerView({ v }: { v: any }) {
                     {(v.profileStats ?? []).map((s, i) => (
                       <Fragment key={i}>
                         <Card pad="sm">
-                          <Text variant="micro" as="div" tone="muted">
-                            {s?.label}
-                          </Text>
-                          <div
-                            style={{ display: 'flex', alignItems: 'baseline', gap: '5px', marginTop: '6px' }}
-                          >
-                            <Text variant="heading" tone="ink">
-                              {s?.value}
-                            </Text>
-                            <Text variant="small" tone="muted" weight="medium">
-                              {s?.unit}
-                            </Text>
-                          </div>
-                          {s?.span ? (
-                            <Text variant="caption" as="div" tone="muted" style={{ marginTop: '4px' }}>
-                              {s.span}
-                            </Text>
-                          ) : null}
+                          <Stat size="xl" labelTone="muted" label={s?.label} value={s?.value} unit={s?.unit ?? ''} note={s?.span} />
                         </Card>
                       </Fragment>
                     ))}
@@ -3143,30 +3110,9 @@ export function PlannerView({ v }: { v: any }) {
                   </div>
                   <Card style={{ marginTop: '18px' }}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '26px' }}>
-                      <div>
-                        <Text variant="micro" tone="subtle" as="div">
-                          SETS × REPS
-                        </Text>
-                        <Text variant="subheading" tone="ink" as="div" style={{ marginTop: '4px' }}>
-                          {v.exercise.sets}
-                        </Text>
-                      </div>
-                      <div>
-                        <Text variant="micro" tone="subtle" as="div">
-                          WEIGHT
-                        </Text>
-                        <Text variant="subheading" tone="ink" as="div" style={{ marginTop: '4px' }}>
-                          {v.exercise.weight}
-                        </Text>
-                      </div>
-                      <div>
-                        <Text variant="micro" tone="subtle" as="div">
-                          REST
-                        </Text>
-                        <Text variant="subheading" tone="ink" as="div" style={{ marginTop: '4px' }}>
-                          {v.exercise.rest}
-                        </Text>
-                      </div>
+                      <Stat size="lg" label="SETS × REPS" value={v.exercise.sets} />
+                      <Stat size="lg" label="WEIGHT" value={v.exercise.weight} />
+                      <Stat size="lg" label="REST" value={v.exercise.rest} />
                     </div>
                     {(v.exercise.areas ?? []).length ? (
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '18px' }}>
@@ -3368,14 +3314,7 @@ export function PlannerView({ v }: { v: any }) {
                     <Card style={{ marginTop: '18px' }}>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '26px' }}>
                         {(v.template.rideStats ?? []).map((r, i) => (
-                          <div key={i}>
-                            <Text variant="micro" tone="subtle" as="div">
-                              {r?.label}
-                            </Text>
-                            <Text variant="subheading" tone="ink" as="div" style={{ marginTop: '4px' }}>
-                              {r?.value}
-                            </Text>
-                          </div>
+                          <Stat key={i} size="lg" label={r?.label} value={r?.value} />
                         ))}
                       </div>
                     </Card>
@@ -4034,19 +3973,7 @@ export function PlannerView({ v }: { v: any }) {
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '26px' }}>
                           {(v.rideStats ?? []).map((r, i) => (
                             <Fragment key={i}>
-                              <div>
-                                <Text variant="micro" as="div" tone="subtle">
-                                  {r?.label}
-                                </Text>
-                                <Text variant="cardTitle" as="div" tone="ink" style={{ marginTop: '4px' }}>
-                                  {r?.value}
-                                </Text>
-                                {r?.note ? (
-                                  <Text variant="caption" as="div" tone="muted" style={{ marginTop: '2px' }}>
-                                    {r.note}
-                                  </Text>
-                                ) : null}
-                              </div>
+                              <Stat label={r?.label} value={r?.value} note={r?.note} />
                             </Fragment>
                           ))}
                         </div>
@@ -4635,38 +4562,10 @@ export function PlannerView({ v }: { v: any }) {
                           </Text>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '22px', marginTop: '12px' }}>
-                          <div>
-                            <Text variant="micro" as="div" tone="subtle">
-                              DISTANCE
-                            </Text>
-                            <Text variant="itemTitle" as="div" tone="ink" style={{ marginTop: '4px' }}>
-                              {v.planDistText}
-                            </Text>
-                          </div>
-                          <div>
-                            <Text variant="micro" as="div" tone="subtle">
-                              DURATION
-                            </Text>
-                            <Text variant="itemTitle" as="div" tone="ink" style={{ marginTop: '4px' }}>
-                              {v.planDurText}
-                            </Text>
-                          </div>
-                          <div>
-                            <Text variant="micro" as="div" tone="subtle">
-                              ELEVATION
-                            </Text>
-                            <Text variant="itemTitle" as="div" tone="ink" style={{ marginTop: '4px' }}>
-                              {v.planElevText}
-                            </Text>
-                          </div>
-                          <div>
-                            <Text variant="micro" as="div" tone="subtle">
-                              TARGET EFFORT
-                            </Text>
-                            <Text variant="itemTitle" as="div" tone="ink" style={{ marginTop: '4px' }}>
-                              {v.rideZone}
-                            </Text>
-                          </div>
+                          <Stat size="sm" label="DISTANCE" value={v.planDistText} />
+                          <Stat size="sm" label="DURATION" value={v.planDurText} />
+                          <Stat size="sm" label="ELEVATION" value={v.planElevText} />
+                          <Stat size="sm" label="TARGET EFFORT" value={v.rideZone} />
                         </div>
                       </div>
                     </>
@@ -5482,14 +5381,7 @@ export function PlannerView({ v }: { v: any }) {
                             style={{ flex: '1 1 200px', display: 'flex', alignItems: 'center', gap: '14px' }}
                           >
                             <span className="fc-keep" style={css(v.readMoodFace)}>{v.readMoodSvg}</span>
-                            <div style={{ minWidth: '0' }}>
-                              <Text variant="micro" as="div" tone="subtle">
-                                MOOD
-                              </Text>
-                              <Text variant="cardTitle" as="div" tone="ink" style={{ marginTop: '3px' }}>
-                                {v.readMood}
-                              </Text>
-                            </div>
+                            <Stat label="MOOD" value={v.readMood} style={{ minWidth: '0' }} />
                           </Card>
                           <Card pad="sm" style={{ flex: '1 1 200px' }}>
                             <Text variant="micro" as="div" tone="subtle">

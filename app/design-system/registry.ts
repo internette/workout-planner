@@ -184,6 +184,16 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'stat',
+    title: 'Stat',
+    category: 'components',
+    description: 'A labelled figure, with an optional unit and note.',
+    anchors: [
+      { id: 'sizes', title: 'Sizes' },
+      { id: 'units-and-notes', title: 'Units and notes' },
+    ],
+  },
+  {
     slug: 'checkbox',
     title: 'Checkbox',
     category: 'components',
@@ -250,7 +260,6 @@ export const sections: Section[] = [
 export const planned: { title: string; why: string }[] = [
   { title: 'Badge', why: 'Status pills and the WARM-UP tag, which Chip does not cover.' },
   { title: 'Empty state', why: 'Six near-identical gradient panels with sparkles.' },
-  { title: 'Stat tile', why: 'An icon, a number and a label, repeated on three screens.' },
   { title: 'Rating', why: 'The mood faces and effort stars are radio groups built by hand in the entry form.' },
   { title: 'Reorderable list', why: 'Drag-to-reorder, with its handle and arrow keys, lives only in the workout editor.' },
 ];
