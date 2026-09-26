@@ -272,6 +272,17 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'reorderable-list',
+    title: 'Reorderable list',
+    category: 'components',
+    description: 'Rows put in a new order by dragging a grip, or with the arrow keys.',
+    anchors: [
+      { id: 'example', title: 'Example' },
+      { id: 'using-it', title: 'Using it' },
+      { id: 'behaviour', title: 'Behaviour' },
+    ],
+  },
+  {
     slug: 'dialog',
     title: 'Dialog',
     category: 'components',
@@ -313,7 +324,6 @@ export const sections: Section[] = [
 
 // Ideas for what to build next. These are proposals, not commitments.
 export const planned: { title: string; why: string }[] = [
-  { title: 'Reorderable list', why: 'Drag-to-reorder, with its handle and arrow keys, lives only in the workout editor.' },
 ];
 
 export const bySlug = (slug: string) => sections.find((s) => s.slug === slug);

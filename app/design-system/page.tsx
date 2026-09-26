@@ -52,7 +52,7 @@ export default function DesignSystemPage() {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 16 }}>
         <Chip>{counts('foundations')} foundations</Chip>
         <Chip>{counts('components')} components</Chip>
-        <Chip>{planned.length} planned</Chip>
+        {planned.length ? <Chip>{planned.length} planned</Chip> : null}
       </div>
 
       {(Object.keys(categories) as Category[]).map((category) => (
@@ -165,26 +165,29 @@ export default function DesignSystemPage() {
         </div>
       </section>
 
-      <section className={styles.section}>
-        <Text variant="heading" tone="ink" as="h2" style={{ margin: 0 }}>
-          Planned
-        </Text>
-        <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 16px' }}>
-          Candidates for what to build next: patterns the planner still builds by hand.
-        </Text>
-        <div className={styles.grid}>
-          {planned.map((p) => (
-            <Card key={p.title} pad="sm">
-              <Text variant="itemTitle" tone="ink" as="h3" style={{ margin: 0 }}>
-                {p.title}
-              </Text>
-              <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
-                {p.why}
-              </Text>
-            </Card>
-          ))}
-        </div>
-      </section>
+      {/* Hidden while nothing is planned. */}
+      {planned.length ? (
+        <section className={styles.section}>
+          <Text variant="heading" tone="ink" as="h2" style={{ margin: 0 }}>
+            Planned
+          </Text>
+          <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 16px' }}>
+            Candidates for what to build next: patterns the planner still builds by hand.
+          </Text>
+          <div className={styles.grid}>
+            {planned.map((p) => (
+              <Card key={p.title} pad="sm">
+                <Text variant="itemTitle" tone="ink" as="h3" style={{ margin: 0 }}>
+                  {p.title}
+                </Text>
+                <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+                  {p.why}
+                </Text>
+              </Card>
+            ))}
+          </div>
+        </section>
+      ) : null}
     </main>
   );
 }

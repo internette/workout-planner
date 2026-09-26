@@ -1,0 +1,22 @@
+/* Rows that can be put in a new order, by a grip handle. */
+
+.list { display: flex; flex-direction: column; }
+
+/* A 28px-wide grip, 44px tall to tap (wider still with the .hit target), pulled into the row's padding so the row's
+   content doesn't shift over much. touch-action: none lets a finger drag it instead of scrolling the page. */
+.handle {
+  flex: none;
+  width: 28px;
+  height: 44px;
+  margin: 0 -7px 0 -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  /* Off the radius scale: to settle with the off-scale radii. */
+  border-radius: 10px;
+  background: none;
+  padding: 0;
+  cursor: grab;
+  touch-action: none;
+}
