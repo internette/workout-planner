@@ -15,6 +15,15 @@ export const focus = {
   offset: { value: '2px', use: 'The gap between a control and its ring' },
 } as const satisfies Record<string, Token>;
 
+/** The dark theme's hover washes: light over dark surfaces, and dark plum over pink. */
+export const darkInteraction: Record<string, string> = {
+  '--hover-neutral': 'rgba(255, 255, 255, 0.06)',
+  '--hover-icon': 'rgba(255, 255, 255, 0.08)',
+  '--hover-danger': 'rgba(224, 103, 122, 0.14)',
+  '--hover-danger-ghost': 'rgba(224, 103, 122, 0.12)',
+  '--hover-inverse': 'rgba(40, 29, 47, 0.14)',
+};
+
 export const interactionVariables: Record<string, string> = {
   ...toVariables('hover', hovers),
   ...toVariables('focus', focus),

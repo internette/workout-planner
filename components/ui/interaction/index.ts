@@ -1,1 +1,1 @@
-export { hovers, focus, interactionVariables } from './tokens';
+export { hovers, focus, interactionVariables, darkInteraction } from './tokens';

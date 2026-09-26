@@ -13,6 +13,7 @@ import { IconTile, IconTileButton } from '@/components/ui/icon-tile';
 import { ProgressBar } from '@/components/ui/progress-bar';
 import { Stat } from '@/components/ui/stat';
 import { DeleteAccount } from './planner/DeleteAccount';
+import { AppearanceSetting } from './planner/AppearanceSetting';
 import { Text } from '@/components/ui/typography';
 import { Chip } from '@/components/ui/chip';
 import { Label, TextArea, TextField } from '@/components/ui/text-field';
@@ -2075,6 +2076,12 @@ export function PlannerView({ v }: { v: any }) {
                       </div>
                     </Card>
                   </div>
+                  <Card style={{ marginTop: '14px' }}>
+                    <Text variant="eyebrow" as="h2" tone="slate" style={{ margin: 0 }}>
+                      SETTINGS
+                    </Text>
+                    <AppearanceSetting />
+                  </Card>
                   {v.canSignOut ? (
                     <Card style={{ marginTop: '14px' }}>
                       <Text variant="eyebrow" as="div" tone="slate">
