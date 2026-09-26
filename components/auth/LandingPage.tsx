@@ -73,9 +73,9 @@ function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.R
           <Text variant="body" tone="muted" as="span" style={{ lineHeight: 'inherit' }}>
             {signingUp ? 'Already sworn in?' : 'First time here?'}
           </Text>
-          <button type="button" className={styles.toggleLink} onClick={() => setMode(signingUp ? 'signin' : 'signup')}>
+          <Button type="primary" link size="sm" className={styles.toggleLink} onClick={() => setMode(signingUp ? 'signin' : 'signup')}>
             {signingUp ? 'Step back through' : 'Begin your ritual'}
-          </button>
+          </Button>
         </div>
       </Card>
     </div>

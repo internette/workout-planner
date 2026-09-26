@@ -752,22 +752,14 @@ export function PlannerView({ v }: { v: any }) {
                                   ) : null}
                                   {c?.hasMore ? (
                                     <>
-                                      <button
+                                      <Button
+                                        type="neutral"
+                                        link
+                                        size="sm"
                                         aria-expanded={!!c?.moreOpen}
                                         onClick={c?.toggleMore}
-                                        style={{
-                                          margin: '10px 0 0 -12px',
-                                          minHeight: '44px',
-                                          border: 'none',
-                                          borderRadius: 'var(--radius-sm)',
-                                          background: 'none',
-                                          padding: '0 12px',
-                                          color: 'var(--color-muted)',
-                                          fontSize: 'var(--text-base)',
-                                          fontWeight: 'var(--font-weight-medium)',
-                                          cursor: 'pointer',
-                                        }}
-                                        className="hv1"
+                                        // On a line of its own, so it keeps the row height of the buttons below it.
+                                        style={{ marginTop: '10px', minHeight: '44px' }}
                                       >
                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                                           {t(c?.moreLabel)}
@@ -777,7 +769,7 @@ export function PlannerView({ v }: { v: any }) {
                                             style={css(c?.moreCaret)}
                                           />
                                         </span>
-                                      </button>
+                                      </Button>
                                     </>
                                   ) : null}
                                   {c?.ctaTwoButtons ? (
@@ -2475,7 +2467,7 @@ export function PlannerView({ v }: { v: any }) {
                                     minHeight: '44px',
                                     padding: '0 2px',
                                     border: 'none',
-                                    borderBottom: '1px solid color-mix(in srgb, var(--color-ink) 8%, transparent)',
+                                    borderBottom: '1px solid var(--color-line)',
                                     background: 'none',
                                     fontFamily: 'inherit',
                                     textAlign: 'left',

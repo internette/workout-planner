@@ -69,9 +69,18 @@
 .dashed:hover:not(:disabled):not([aria-disabled='true']),
 .dashed:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-accent-tint); }
 
-/* Icon buttons and the extra-small button are drawn smaller than 44 px; their tap area isn't. */
-.icon, .xs { position: relative; }
-.icon::after, .xs::after {
+/* ---- Link: just the text, underlined on hover and keyboard focus. After the sizes, so it drops their padding and
+   height but keeps their text size. */
+.link { min-height: 0; padding: 0; border-radius: var(--radius-xs); text-decoration: none; text-underline-offset: 3px; }
+.link:hover:not(:disabled):not([aria-disabled='true']),
+.link:focus-visible:not(:disabled):not([aria-disabled='true']) { text-decoration: underline; }
+.link-primary, .link-secondary { color: var(--color-accent-deep); }
+.link-neutral { color: var(--color-muted); font-weight: var(--font-weight-medium); }
+.link-danger { color: var(--color-danger); }
+
+/* Icon buttons, the extra-small button and links are drawn smaller than 44 px; their tap area isn't. */
+.icon, .xs, .link { position: relative; }
+.icon::after, .xs::after, .link::after {
   content: '';
   position: absolute;
   left: 50%;
