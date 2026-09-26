@@ -91,7 +91,7 @@ export function progressVals(ctx: Ctx) {
         label: r.name,
         req: ix === 0 ? 'Start' : XP_STEPS[ix - 1] + ' XP',
         row:
-          'display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:14px;' +
+          'display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius-md);' +
           (cur
             ? r.pill
             : reached
@@ -228,7 +228,7 @@ export function progressVals(ctx: Ctx) {
           color,
         row:
           'display:flex;align-items:center;gap:12px;padding:10px 0' +
-          (ix === arr.length - 1 ? '' : ';border-bottom:1px solid var(--color-line-faint)'),
+          (ix === arr.length - 1 ? '' : ';border-bottom:1px solid var(--color-line)'),
       })),
     // Each stat says what it covers. Totals and streaks are all time, up to today; the average says which weeks.
     profileStats: [
@@ -305,7 +305,7 @@ export function progressVals(ctx: Ctx) {
         delta,
         rowStyle:
           'display:flex;align-items:center;gap:12px;padding:11px 0;' +
-          (ix === arr.length - 1 ? '' : 'border-bottom:1px solid var(--color-line-faint)'),
+          (ix === arr.length - 1 ? '' : 'border-bottom:1px solid var(--color-line)'),
         deltaStyle:
           'flex:none;width:44px;text-align:right;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:var(--color-accent-deep)',
       })),
@@ -361,7 +361,7 @@ export function progressVals(ctx: Ctx) {
           open: () => logic.nav({ screen: 'day', seg: 'Day', monthOpen: false, ...monthPatch(relM(d)), day: dm, entryId: null }),
           aria: DOWFULL[d.getDay()] + ': ' + q.title + (isDone ? ', cleared' : ''),
           row:
-            'display:flex;align-items:center;gap:11px;width:100%;min-height:44px;padding:10px 0;border:none;background:none;text-align:left;font-family:inherit;cursor:pointer;border-bottom:1px solid var(--color-line-faint)',
+            'display:flex;align-items:center;gap:11px;width:100%;min-height:44px;padding:10px 0;border:none;background:none;text-align:left;font-family:inherit;cursor:pointer;border-bottom:1px solid var(--color-line)',
           mark:
             'width:18px;height:18px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;' +
             (isDone ? 'background:var(--color-accent)' : 'background:transparent'),

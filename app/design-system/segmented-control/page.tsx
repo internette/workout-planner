@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { DocPage, h2, note } from '../docs';
 
-const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 18, padding: '18px 20px', background: 'var(--color-white)', borderRadius: 18 };
+const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 18, padding: '18px 20px', background: 'var(--color-white)', borderRadius: 'var(--radius-lg)' };
 
 const views = [
   { value: 'Day', label: 'Day' },

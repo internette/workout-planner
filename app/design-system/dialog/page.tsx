@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/buttons';
 import { Dialog } from '@/components/ui/dialog';
 import { DocPage, h2, note } from '../docs';
 
-const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, padding: '18px 20px', background: 'var(--color-canvas)', borderRadius: 18, boxShadow: 'inset 0 0 0 1px rgba(35,42,69,.07)' };
+const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, padding: '18px 20px', background: 'var(--color-canvas)', borderRadius: 'var(--radius-lg)', boxShadow: 'inset 0 0 0 1px var(--color-line)' };
 
 type Which = null | 'confirm' | 'question' | 'info';
 

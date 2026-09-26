@@ -112,9 +112,7 @@ export const gradients = {
 
 /** See-through colours, written as CSS variables like the others, e.g. `var(--color-line)`. */
 export const translucents = {
-  line: { value: rgba(colors.ink, 0.07), use: 'Lines between rows and around cards' },
-  lineFaint: { value: rgba(colors.ink, 0.055), use: 'Lines between the rows of a dense list' },
-  lineStrong: { value: rgba(colors.ink, 0.09), use: 'Lines under a popover’s header' },
+  line: { value: rgba(colors.ink, 0.07), use: 'Every divider line: between rows, around cards, under a popover’s header. One strength everywhere.' },
   surfaceRest: { value: rgba('#FFFFFF', 0.5), use: 'A quiet row on the page: rest days, a day gone by' },
   surfaceBar: { value: rgba('#FFFFFF', 0.94), use: 'The phone tab bar, over the page as it scrolls' },
   onAccentSoft: { value: rgba('#FFFFFF', 0.85), use: 'Secondary text and icons on pink' },

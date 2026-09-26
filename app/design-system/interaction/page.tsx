@@ -6,7 +6,7 @@ export const metadata = { title: 'Interaction — Design system' };
 const table: React.CSSProperties = { width: '100%', borderCollapse: 'collapse' };
 // The table's card. On a narrow screen the table scrolls sideways inside it instead of widening the page.
 const tableScroll: React.CSSProperties = { overflowX: 'auto', background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)' };
-const cell: React.CSSProperties = { padding: '12px 16px', textAlign: 'left', borderBottom: '1px solid rgba(35,42,69,.07)', fontSize: 'var(--text-base)', verticalAlign: 'middle' };
+const cell: React.CSSProperties = { padding: '12px 16px', textAlign: 'left', borderBottom: '1px solid var(--color-line)', fontSize: 'var(--text-base)', verticalAlign: 'middle' };
 const muted: React.CSSProperties = { ...cell, color: 'var(--color-muted)' };
 const demoBtn: React.CSSProperties = {
   border: 'none',
@@ -19,7 +19,7 @@ const demoBtn: React.CSSProperties = {
   cursor: 'pointer',
   boxShadow: 'inset 0 0 0 1px var(--color-divider)',
 };
-const panel: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 32, padding: '28px 24px', background: 'var(--color-canvas)', borderRadius: 18 };
+const panel: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 32, padding: '28px 24px', background: 'var(--color-canvas)', borderRadius: 'var(--radius-lg)' };
 const list: React.CSSProperties = { ...note, margin: '8px 0 0', paddingLeft: 20 };
 
 // The hover classes in app/planner.css, for controls styled inline (they beat inline styles).
@@ -105,8 +105,8 @@ export default function InteractionPage() {
       </p>
       <div style={panel}>
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44 }}>
-          <span aria-hidden style={{ position: 'absolute', inset: 0, border: '1.5px dashed var(--color-pink)', borderRadius: 8 }} />
-          <span style={{ width: 24, height: 24, borderRadius: 7, background: 'var(--color-white)', boxShadow: 'inset 0 0 0 1px var(--color-divider)' }} />
+          <span aria-hidden style={{ position: 'absolute', inset: 0, border: '1.5px dashed var(--color-pink)', borderRadius: 'var(--radius-xs)' }} />
+          <span style={{ width: 24, height: 24, borderRadius: 'var(--radius-xs)', background: 'var(--color-white)', boxShadow: 'inset 0 0 0 1px var(--color-divider)' }} />
         </div>
         <p style={{ ...note, margin: 0, maxWidth: 420 }}>
           A 24px control with <code>className=&quot;hit&quot;</code>: the dashed square is the 44px it answers to.

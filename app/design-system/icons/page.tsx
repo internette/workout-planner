@@ -13,8 +13,8 @@ const card: React.CSSProperties = {
   gap: 10,
   padding: '18px 8px',
   background: 'var(--color-white)',
-  borderRadius: 16,
-  boxShadow: '0 4px 14px rgba(35,42,69,.07)',
+  borderRadius: 'var(--radius-md)',
+  boxShadow: '0 4px 14px var(--color-line)',
   color: 'var(--color-ink)',
 };
 const label: React.CSSProperties = { fontSize: 'var(--text-sm)', color: 'var(--color-muted)', textAlign: 'center' };

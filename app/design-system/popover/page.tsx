@@ -7,7 +7,7 @@ import { Text } from '@/components/ui/typography';
 import { Calendar } from '@/components/ui/icons';
 import { DocPage, h2, note } from '../docs';
 
-const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: 24, padding: '18px 20px', background: 'var(--color-canvas)', borderRadius: 18, boxShadow: 'inset 0 0 0 1px rgba(35,42,69,.07)' };
+const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: 24, padding: '18px 20px', background: 'var(--color-canvas)', borderRadius: 'var(--radius-lg)', boxShadow: 'inset 0 0 0 1px var(--color-line)' };
 
 const Panel = ({ children }: { children: string }) => (
   <Text variant="body" tone="ink" as="div">

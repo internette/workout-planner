@@ -150,7 +150,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
           </Text>
           <div className={styles.steps}>
             {STEPS.map(({ icon: Icon, title, body }) => (
-              <Card key={title} pad="lg" className={styles.step} style={{ borderRadius: 22, padding: 24 }}>
+              <Card key={title} pad="lg" className={styles.step} style={{ padding: 24 }}>
                 <span className={styles.stepIcon}>
                   <Icon size={21} color="var(--color-accent)" />
                 </span>

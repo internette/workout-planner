@@ -19,7 +19,7 @@ const row: React.CSSProperties = {
   gap: 20,
   alignItems: 'baseline',
   padding: '14px 0',
-  borderBottom: '1px solid rgba(35,42,69,.07)',
+  borderBottom: '1px solid var(--color-line)',
 };
 const note: React.CSSProperties = { margin: '0 0 8px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
 const meta: React.CSSProperties = {
@@ -90,7 +90,7 @@ export default function TypographyPage() {
             gap: 20,
             background: 'var(--color-white)',
             padding: 16,
-            borderRadius: 14,
+            borderRadius: 'var(--radius-md)',
           }}
         >
           {Object.keys(textTones).map((tone) => (
@@ -98,7 +98,7 @@ export default function TypographyPage() {
               key={tone}
               style={
                 tone === 'inverse'
-                  ? { background: 'var(--color-pink)', padding: '2px 10px', borderRadius: 8 }
+                  ? { background: 'var(--color-pink)', padding: '2px 10px', borderRadius: 'var(--radius-xs)' }
                   : undefined
               }
             >

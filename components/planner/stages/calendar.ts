@@ -219,7 +219,7 @@ export function calendarStage(ctx: Ctx): Ctx {
         });
       },
       wrap:
-        'height:50px;border:none;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;' +
+        'height:50px;border:none;border-radius:var(--radius-md);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;' +
         (sel
           ? 'background:var(--color-accent)'
           : missed

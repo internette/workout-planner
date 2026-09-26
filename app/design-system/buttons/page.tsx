@@ -11,7 +11,7 @@ const row: React.CSSProperties = {
   gap: 14,
   padding: '18px 20px',
   background: 'var(--color-white)',
-  borderRadius: 18,
+  borderRadius: 'var(--radius-lg)',
 };
 const label: React.CSSProperties = { width: 90, fontSize: 'var(--text-sm)', color: 'var(--color-muted)' };
 const stack: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 10 };
@@ -147,7 +147,7 @@ export default function ButtonsPage() {
         <div style={row}>
           <span style={label}>inverse</span>
           <span
-            style={{ display: 'inline-flex', padding: 10, borderRadius: 14, background: 'var(--color-pink)' }}
+            style={{ display: 'inline-flex', padding: 10, borderRadius: 'var(--radius-md)', background: 'var(--color-pink)' }}
           >
             <IconButton label="Remove" size="xs" tone="inverse">
               <Close size={13} color="var(--color-white)" />

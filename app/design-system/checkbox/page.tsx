@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DocPage, h2, note } from '../docs';
 
-const panel: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 18, padding: 22, background: 'var(--color-white)', borderRadius: 18, boxShadow: 'var(--elevation-raised)', maxWidth: 460 };
+const panel: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 18, padding: 22, background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)', maxWidth: 460 };
 
 export default function CheckboxPage() {
   const [tick, setTick] = useState(true);

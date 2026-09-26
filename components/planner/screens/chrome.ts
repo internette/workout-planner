@@ -32,8 +32,8 @@ export function chromeVals(ctx: Ctx) {
     sidebarStyle: narrow
       ? 'display:none'
       : tablet
-        ? 'flex:1 1 100%;width:100%;position:relative;background:var(--color-surface);border-radius:18px;padding:8px;box-shadow:var(--elevation-raised)'
-        : 'flex:0 1 208px;min-width:180px;position:relative;background:var(--color-surface);border-radius:22px;padding:18px 14px;box-shadow:var(--elevation-raised)',
+        ? 'flex:1 1 100%;width:100%;position:relative;background:var(--color-surface);border-radius:var(--radius-lg);padding:8px;box-shadow:var(--elevation-raised)'
+        : 'flex:0 1 208px;min-width:180px;position:relative;background:var(--color-surface);border-radius:var(--radius-lg);padding:18px 14px;box-shadow:var(--elevation-raised)',
     navListStyle: tablet
       ? 'display:flex;flex-direction:row;gap:4px'
       : 'display:flex;flex-direction:column;gap:4px',
@@ -62,7 +62,7 @@ export function chromeVals(ctx: Ctx) {
     isProfile: st.screen === 'profile',
     goProfile: () => logic.nav({ screen: 'profile', monthOpen: false }),
     navProfile:
-      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
+      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:var(--radius-md);font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (st.screen === 'profile'
         ? 'background:var(--color-accent-tint);color:var(--color-accent-deep);font-weight:var(--font-weight-semibold)'
         : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
@@ -74,13 +74,13 @@ export function chromeVals(ctx: Ctx) {
     goDiaryList: () => logic.nav({ screen: 'diaryList', monthOpen: false }),
     isNewEntry: st.screen === 'newEntry',
     navCal:
-      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
+      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:var(--radius-md);font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (calActive
         ? 'background:var(--color-accent-tint);color:var(--color-accent-deep);font-weight:var(--font-weight-semibold)'
         : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
       navExtra,
     navDiary:
-      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
+      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:var(--radius-md);font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (inChronicle
         ? 'background:var(--color-accent-tint);color:var(--color-accent-deep);font-weight:var(--font-weight-semibold)'
         : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
@@ -88,7 +88,7 @@ export function chromeVals(ctx: Ctx) {
     navCalInk: calActive ? 'var(--color-accent)' : 'var(--color-subtle)',
     navDiaryInk: inChronicle ? 'var(--color-accent)' : 'var(--color-subtle)',
     navSummary:
-      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
+      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:var(--radius-md);font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (st.screen === 'summary'
         ? 'background:var(--color-accent-tint);color:var(--color-accent-deep);font-weight:var(--font-weight-semibold)'
         : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
@@ -262,7 +262,7 @@ export function chromeVals(ctx: Ctx) {
     })(),
     goArsenal: () => logic.nav({ screen: 'arsenal', monthOpen: false, arsenalPick: null }),
     navArsenal:
-      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
+      'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:var(--radius-md);font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (arsenalActive
         ? 'background:var(--color-accent-tint);color:var(--color-accent-deep);font-weight:var(--font-weight-semibold)'
         : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +

@@ -28,14 +28,14 @@ export default function ColorsPage() {
               <div
                 key={name}
                 style={{
-                  background: 'var(--color-white)', borderRadius: 16, overflow: 'hidden',
-                  boxShadow: '0 4px 14px rgba(35,42,69,.07)',
+                  background: 'var(--color-white)', borderRadius: 'var(--radius-md)', overflow: 'hidden',
+                  boxShadow: '0 4px 14px var(--color-line)',
                 }}
               >
                 <div
                   style={{
                     height: 64, background: `var(${cssVarName(name)})`,
-                    borderBottom: '1px solid rgba(35,42,69,.07)',
+                    borderBottom: '1px solid var(--color-line)',
                   }}
                 />
                 <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -60,8 +60,8 @@ export default function ColorsPage() {
             ...Object.entries(gradients).map(([name, { value, use }]) => ({ name, variable: `--gradient-${name}`, value, use, swatch: `var(--gradient-${name})` })),
             ...Object.entries(overlays).map(([name, { value, use }]) => ({ name, variable: `--${name}`, value, use, swatch: `linear-gradient(0deg, var(--${name}), var(--${name})), var(--color-canvas)` })),
           ].map(({ name, variable, value, use, swatch }) => (
-            <div key={name} style={{ background: 'var(--color-white)', borderRadius: 16, overflow: 'hidden', boxShadow: 'var(--elevation-raised)' }}>
-              <div style={{ height: 64, background: swatch, borderBottom: '1px solid rgba(35,42,69,.07)' }} />
+            <div key={name} style={{ background: 'var(--color-white)', borderRadius: 'var(--radius-md)', overflow: 'hidden', boxShadow: 'var(--elevation-raised)' }}>
+              <div style={{ height: 64, background: swatch, borderBottom: '1px solid var(--color-line)' }} />
               <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <strong style={{ fontSize: 'var(--text-base)' }}>{name}</strong>
                 <code style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)' }}>var({variable})</code>

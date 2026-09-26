@@ -81,7 +81,7 @@ export default function TextFieldPage() {
         <code>variant=&quot;bare&quot;</code> is just the input, for a container you style yourself, such as a search
         box. <code>size=&quot;sm&quot;</code> is the compact date-style text.
       </p>
-      <Card pad="none" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderRadius: 15 }}>
+      <Card pad="none" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderRadius: 'var(--radius-md)' }}>
         <Search color="var(--color-subtle)" size={17} />
         <TextField variant="bare" aria-label="Search" placeholder="Search exercises" value={query} onChange={(e) => setQuery(e.target.value)} />
       </Card>

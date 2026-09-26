@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { DocPage, h2, note } from '../docs';
 
-const panel: React.CSSProperties = { padding: 20, background: 'var(--color-white)', borderRadius: 18, boxShadow: '0 4px 14px rgba(35,42,69,.07)', maxWidth: 440 };
+const panel: React.CSSProperties = { padding: 20, background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: '0 4px 14px var(--color-line)', maxWidth: 440 };
 
 export default function OptionCardPage() {
   const [save, setSave] = useState('update');

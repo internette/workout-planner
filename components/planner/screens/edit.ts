@@ -1008,7 +1008,7 @@ export function editVals(ctx: Ctx) {
         // Ticked off: its name is struck through and muted.
         nameDone: !!doneSet[e.name],
         doneBtn:
-          'margin-left:auto;display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;border-radius:11px;cursor:pointer;border:' +
+          'margin-left:auto;display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;border-radius:var(--radius-sm);cursor:pointer;border:' +
           (doneSet[e.name]
             ? 'none;background:var(--color-accent)'
             : '1.5px solid var(--color-outline);background:none'),

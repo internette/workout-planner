@@ -106,7 +106,7 @@ export function Preview({ slug }: { slug: string }) {
       return (
         <>
           {(['hairline', 'raised', 'overlay'] as const).map((name) => (
-            <span key={name} style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--color-white)', boxShadow: `var(--elevation-${name})` }} />
+            <span key={name} style={{ width: 44, height: 44, borderRadius: 'var(--radius-sm)', background: 'var(--color-white)', boxShadow: `var(--elevation-${name})` }} />
           ))}
         </>
       );
