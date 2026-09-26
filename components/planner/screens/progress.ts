@@ -128,10 +128,7 @@ export function progressVals(ctx: Ctx) {
     rankGem:
       'width:10px;height:14px;flex:none;clip-path:polygon(50% 0,100% 35%,50% 100%,0 35%);background:' +
       RANKS[derivedRank].gem,
-    rankBar:
-      'width:' +
-      rankPct +
-      '%;height:100%;border-radius:5px;transition:width var(--dur-bar) var(--ease-standard);background:var(--gradient-gem)',
+    rankBarPct: rankPct,
     rankProgress:
       xpTotal === 0
         ? 'Clear your first exercise to start toward ' + nextRankName + '.'
@@ -213,10 +210,7 @@ export function progressVals(ctx: Ctx) {
       ' · ' +
       (selWeek.planned ? selWeek.done + ' of ' + plural(selWeek.planned, 'session') + ' done' : 'nothing planned'),
     questsClearedLabel: questsClearedCount + ' of ' + questDayCount,
-    questsClearedBar:
-      'width:' +
-      (questDayCount ? Math.round((questsClearedCount / questDayCount) * 100) : 0) +
-      '%;height:100%;border-radius:5px;background:var(--gradient-gem)',
+    questsClearedPct: questDayCount ? Math.round((questsClearedCount / questDayCount) * 100) : 0,
     questStats: Object.keys(questCounts)
       .sort((a, b) => questCounts[b] - questCounts[a])
       .slice(0, 5)
@@ -302,7 +296,8 @@ export function progressVals(ctx: Ctx) {
         name,
         pct: pct + '%',
         swatch: 'width:10px;height:10px;flex:none;border-radius:var(--radius-full);background:' + color,
-        bar: 'display:block;width:' + pct + '%;height:100%;border-radius:5px;background:' + color,
+        barPct: pct,
+        color,
       })) : []),
     records: Object.keys(bestByEx)
       .sort((a, b) => bestByEx[b] - bestByEx[a])

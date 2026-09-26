@@ -8,6 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog } from '@/components/ui/dialog';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { Popover } from '@/components/ui/popover';
+import { ProgressBar } from '@/components/ui/progress-bar';
 import { DeleteAccount } from './planner/DeleteAccount';
 import { Text } from '@/components/ui/typography';
 import { Chip } from '@/components/ui/chip';
@@ -676,17 +677,7 @@ export function PlannerView({ v }: { v: any }) {
                                           marginTop: '20px',
                                         }}
                                       >
-                                        <div
-                                          style={{
-                                            flex: '1',
-                                            height: '8px',
-                                            borderRadius: '5px',
-                                            background: 'var(--color-pink-tint)',
-                                            overflow: 'hidden',
-                                          }}
-                                        >
-                                          <div style={css(c?.progBar)}></div>
-                                        </div>
+                                        <ProgressBar value={c?.progPct ?? 0} track="tint" style={{ flex: '1' }} />
                                         <span
                                           style={{
                                             fontFamily: 'var(--font-heading)',
@@ -1835,18 +1826,7 @@ export function PlannerView({ v }: { v: any }) {
                           </>
                         }
                       >
-                        <div
-                          style={{
-                            flex: '1 1 180px',
-                            maxWidth: '260px',
-                            height: '8px',
-                            borderRadius: '5px',
-                            background: 'var(--color-mist)',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <div style={css(v.rankBar)}></div>
-                        </div>
+                        <ProgressBar value={v.rankBarPct ?? 0} track="mist" style={{ flex: '1 1 180px', maxWidth: '260px' }} />
                         <span
                           style={{
                             fontSize: 'var(--text-sm)',
@@ -2023,17 +2003,7 @@ export function PlannerView({ v }: { v: any }) {
                       </Text>
                     ) : null}
                     {v.questsHas ? (
-                      <div
-                        style={{
-                          height: '8px',
-                          borderRadius: '5px',
-                          background: 'var(--color-mist)',
-                          marginTop: '12px',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <div style={css(v.questsClearedBar)}></div>
-                      </div>
+                      <ProgressBar value={v.questsClearedPct ?? 0} track="mist" style={{ marginTop: '12px' }} />
                     ) : null}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '16px' }}>
                       {(v.questStats ?? []).map((q, i) => (
@@ -2091,17 +2061,7 @@ export function PlannerView({ v }: { v: any }) {
                               <Text variant="label" tone="ink" style={{ flex: 'none', width: '66px' }}>
                                 {m?.name}
                               </Text>
-                              <span
-                                style={{
-                                  flex: '1',
-                                  height: '8px',
-                                  borderRadius: '5px',
-                                  background: 'var(--color-mist)',
-                                  overflow: 'hidden',
-                                }}
-                              >
-                                <span style={css(m?.bar)}></span>
-                              </span>
+                              <ProgressBar value={m?.barPct ?? 0} track="mist" fill={m?.color} style={{ flex: '1' }} />
                               <span
                                 style={{
                                   fontFamily: 'var(--font-heading)',
@@ -4121,17 +4081,7 @@ export function PlannerView({ v }: { v: any }) {
                             {v.progLabel}
                           </Text>
                         </div>
-                        <div
-                          style={{
-                            height: '8px',
-                            borderRadius: '5px',
-                            background: 'var(--color-pink-tint)',
-                            marginTop: '12px',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <div style={css(v.progBar)}></div>
-                        </div>
+                        <ProgressBar value={v.progPct ?? 0} track="tint" style={{ marginTop: '12px' }} />
                         <p style={css(v.progNoteStyle)}>
                           {v.allDone ? (
                             <>
@@ -4809,17 +4759,7 @@ export function PlannerView({ v }: { v: any }) {
                             {v.ridePctLabel}
                           </span>
                         </div>
-                        <div
-                          style={{
-                            height: '8px',
-                            borderRadius: '5px',
-                            background: 'var(--color-mist)',
-                            marginTop: '12px',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <div style={css(v.rideBar)}></div>
-                        </div>
+                        <ProgressBar value={v.rideBarPct ?? 0} track="mist" style={{ marginTop: '12px' }} />
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '18px' }}>
                           <TextField
                             label="Distance"
@@ -4916,17 +4856,7 @@ export function PlannerView({ v }: { v: any }) {
                             {v.progLabel}
                           </Text>
                         </div>
-                        <div
-                          style={{
-                            height: '8px',
-                            borderRadius: '5px',
-                            background: 'var(--color-pink-tint)',
-                            marginTop: '12px',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <div style={css(v.progBar)}></div>
-                        </div>
+                        <ProgressBar value={v.progPct ?? 0} track="tint" style={{ marginTop: '12px' }} />
                         <p style={css(v.progNoteStyle)}>
                           {v.allDone ? (
                             <>

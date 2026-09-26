@@ -310,10 +310,7 @@ export function editVals(ctx: Ctx) {
     plannedDistPh: rDist || '0',
     plannedElevPh: rElev || '0',
     ridePctLabel: ridePct != null ? ridePct + '% of plan' : rideDone ? 'Completed' : 'Not started',
-    rideBar:
-      'width:' +
-      (ridePct == null ? 0 : Math.min(100, ridePct)) +
-      '%;height:100%;border-radius:5px;transition:width var(--dur-bar) var(--ease-standard);background:var(--gradient-gem)',
+    rideBarPct: ridePct == null ? 0 : Math.min(100, ridePct),
     rideNote:
       ridePct == null
         ? 'Enter what you rode — a partial ride still counts.'

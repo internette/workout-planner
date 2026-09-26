@@ -277,10 +277,7 @@ export function workoutVals(ctx: Ctx) {
       isLift: !ride,
       isRide: !!ride,
       progLabel: doneN + '/' + list.length,
-      progBar:
-        'width:' +
-        (list.length ? Math.round((doneN / list.length) * 100) : 0) +
-        '%;height:100%;border-radius:5px;transition:width var(--dur-bar) var(--ease-standard);background:var(--gradient-gem)',
+      progPct: list.length ? Math.round((doneN / list.length) * 100) : 0,
       rideStats: !ride ? [] : rideStatsFor(av, rideIsDone),
       preview: expanded ? rows : rows.slice(0, 3),
       hasMore: rows.length > 3,
@@ -511,10 +508,7 @@ export function workoutVals(ctx: Ctx) {
       (selList.length && doneCount === selList.length
         ? 'var(--font-weight-semibold);color:var(--color-pink-deep)'
         : 'var(--font-weight-regular);color:var(--color-muted)'),
-    progBar:
-      'width:' +
-      (selList.length ? Math.round((doneCount / selList.length) * 100) : 0) +
-      '%;height:100%;border-radius:5px;transition:width var(--dur-bar) var(--ease-standard);background:var(--gradient-gem)',
+    progPct: selList.length ? Math.round((doneCount / selList.length) * 100) : 0,
     progNote:
       selList.length === 0
         ? ''
