@@ -274,10 +274,10 @@ export function PlannerView({ v }: { v: any }) {
             {v.notice ? (
               <Card
                 pad="sm"
-                style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', background: 'var(--color-mist)', boxShadow: 'none' }}
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', background: 'var(--color-accent-tint)', boxShadow: 'none' }}
               >
-                <Check color="var(--color-slate-deep)" strokeWidth={2.4} size={16} />
-                <Text variant="body" weight="medium" style={{ flex: '1', minWidth: '0', color: 'var(--color-slate-deep)' }}>
+                <Check color="var(--color-accent-deep)" strokeWidth={2.4} size={16} />
+                <Text variant="body" weight="medium" style={{ flex: '1', minWidth: '0', color: 'var(--color-accent-deep)' }}>
                   {v.notice}
                 </Text>
                 <IconButton label="Dismiss" size="sm" onClick={v.dismissNotice}>
