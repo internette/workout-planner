@@ -1,0 +1,52 @@
+/* Effort stars and mood faces, to pick a rating or show one. */
+
+/* To pick: each star a 44px target, however big it draws. */
+.stars { display: flex; gap: var(--space-1); }
+.star {
+  border: none;
+  /* Off the radius scale, like the icon tiles: to settle with the off-scale radii. */
+  border-radius: 14px;
+  background: none;
+  padding: 0;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* To show: small stars in a row. */
+.shown { display: flex; align-items: center; gap: 3px; }
+
+/* Four across at every width, like a row of buttons, never wrapping one onto its own line. */
+.moods { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-1); max-width: 360px; }
+.mood {
+  border: none;
+  background: none;
+  padding: 6px 2px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+}
+/* Sized to the screen (48–60px), so all four fit in one row on the narrowest phones. 50%, not --radius-full: the face
+   is a fractional size on phones, and 50% keeps its edge the same. */
+.face {
+  width: clamp(48px, 15vw, 60px);
+  height: clamp(48px, 15vw, 60px);
+  border-radius: 50%;
+  background: var(--mood);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+.picked .face { box-shadow: 0 0 0 2px var(--color-canvas), 0 0 0 4px var(--mood); }
+/* The ones not picked step back; their names stay at full strength, so the choice is plain at a glance. */
+.passed .face { opacity: 0.4; }
+.name { font-size: var(--text-md); font-weight: var(--font-weight-medium); color: var(--color-muted); }
+.picked .name { font-weight: var(--font-weight-bold); color: var(--color-ink); }

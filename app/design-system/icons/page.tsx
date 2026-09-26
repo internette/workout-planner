@@ -122,7 +122,7 @@ export default function IconsPage() {
       <p style={{ margin: '8px 0 16px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
         <code>RatingStar</code> takes <code>on</code> and <code>size</code>, not a colour: on, it fills with the pink →
         periwinkle → teal gradient; off, it&apos;s a pale pink. Round joins on a stroke of the same paint soften its
-        points. The entry form draws five at 36px, each inside a 44px button, as a radio group. In forced colours the
+        points. For a row of them, to pick or show a rating, use <code>StarRating</code> (see Rating). In forced colours the
         gradient can&apos;t show, so a star inside <code>data-star</code> or <code>.fc-star</code> fills with the system
         text colour when it has <code>data-on</code>, and greyed text colour when it doesn&apos;t.
       </p>

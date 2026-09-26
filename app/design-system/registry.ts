@@ -260,6 +260,18 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'rating',
+    title: 'Rating',
+    category: 'components',
+    description: 'How a workout felt: a mood and an effort.',
+    anchors: [
+      { id: 'mood', title: 'Mood' },
+      { id: 'effort', title: 'Effort' },
+      { id: 'showing-a-rating', title: 'Showing a rating' },
+      { id: 'behaviour', title: 'Behaviour' },
+    ],
+  },
+  {
     slug: 'dialog',
     title: 'Dialog',
     category: 'components',
@@ -301,7 +313,6 @@ export const sections: Section[] = [
 
 // Ideas for what to build next. These are proposals, not commitments.
 export const planned: { title: string; why: string }[] = [
-  { title: 'Rating', why: 'The mood faces and effort stars are radio groups built by hand in the entry form.' },
   { title: 'Reorderable list', why: 'Drag-to-reorder, with its handle and arrow keys, lives only in the workout editor.' },
 ];
 

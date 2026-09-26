@@ -1,6 +1,7 @@
 import { DOW3, MON3 } from '../constants';
 import { isoOf, mod12, monthPatch, noticePatch, plural } from '../helpers';
 import { moodSvg } from '../icons';
+import { MOOD_COLORS } from '@/components/ui/icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
 
@@ -26,8 +27,6 @@ export function diaryVals(ctx: Ctx) {
     dScope,
     diaryDays,
     seedAt,
-    moods,
-    stars,
     RPE_WORDS,
     relM,
   } = ctx;
@@ -271,14 +270,7 @@ export function diaryVals(ctx: Ctx) {
       const dt = new Date(Y, en.m, en.d);
       // An entry from another year says which.
       const yr = dt.getFullYear() !== Y ? ' ' + dt.getFullYear() : '';
-      const bg =
-        en.mood === 'Happy'
-          ? 'var(--color-pink)'
-          : en.mood === 'Neutral'
-            ? 'var(--color-slate)'
-            : en.mood === 'Sad'
-              ? 'var(--color-periwinkle)'
-              : 'var(--color-danger)';
+      const bg = MOOD_COLORS[en.mood] || 'var(--color-danger)';
       return {
         date: DOW3[dt.getDay()] + ', ' + MON3[mod12(en.m)].toUpperCase() + ' ' + en.d + yr,
         name: en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout',
@@ -332,7 +324,7 @@ export function diaryVals(ctx: Ctx) {
         isNeutral: en.mood === 'Neutral',
         isSad: en.mood === 'Sad',
         isMad: en.mood === 'Mad',
-        stars: [1, 2, 3, 4, 5].map((i) => i <= en.rpe),
+        rpe: en.rpe,
       };
     }),
     diaryReading: reading,
@@ -352,16 +344,9 @@ export function diaryVals(ctx: Ctx) {
       }),
     readMood: st.mood,
     readNote: (ENTRIES[entryKey] || {}).note || 'No notes for this one.',
-    readStars: [1, 2, 3, 4, 5].map((n) => n <= st.rpe),
     readMoodFace:
       'width:44px;height:44px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
-      (st.mood === 'Happy'
-        ? 'var(--color-pink)'
-        : st.mood === 'Neutral'
-          ? 'var(--color-slate)'
-          : st.mood === 'Sad'
-            ? 'var(--color-periwinkle)'
-            : 'var(--color-danger)'),
+      (MOOD_COLORS[st.mood] || 'var(--color-danger)'),
     readMoodSvg: moodSvg(st.mood),
     // Entry saved: to the calendar, on the day of the workout just written about (not back one screen).
     backToCalendar: () => logic.s({ screen: 'day', seg: 'Day', monthOpen: false, hist: [] }),
@@ -377,8 +362,11 @@ export function diaryVals(ctx: Ctx) {
     diaryBack: leaveEntry,
     entryDirty,
     leaveEntry,
-    moods,
-    stars,
+    mood: st.mood,
+    pickMood: (mood) => logic.s({ mood }),
+    rpe: st.rpe || 0,
+    pickRpe: (rpe) => logic.s({ rpe }),
+    rpeWords: RPE_WORDS,
     rpeLabel: st.rpe ? RPE_WORDS[Math.max(1, Math.min(5, st.rpe)) - 1] : '',
   };
 }

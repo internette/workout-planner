@@ -2,6 +2,16 @@ import { Svg, type IconProps } from './Svg';
 
 export type Mood = 'Happy' | 'Neutral' | 'Sad' | 'Mad';
 
+/** The moods in the order they're offered, and the disc each face sits on. These are identity colours: Happy stays
+ * pink in every theme. */
+export const MOODS: Mood[] = ['Happy', 'Neutral', 'Sad', 'Mad'];
+export const MOOD_COLORS: Record<Mood, string> = {
+  Happy: 'var(--color-pink)',
+  Neutral: 'var(--color-slate)',
+  Sad: 'var(--color-periwinkle)',
+  Mad: 'var(--color-danger)',
+};
+
 // A minimal face drawn in `color` (the page background colour by default) to sit on a coloured disc.
 export function MoodFace({
   mood,
