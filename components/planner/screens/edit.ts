@@ -969,7 +969,7 @@ export function editVals(ctx: Ctx) {
       const setAreas = setField('areas');
       const exAreas = e.areas || [];
       const n = selList.length;
-      // Moves this exercise to another place in the list (dragged, or with the arrow keys on its handle).
+      // Moves this exercise to another place in the list (dragged by its handle, or moved with the arrow keys on it).
       const moveTo = (to) => {
         to = Math.max(0, Math.min(n - 1, to));
         if (to === ix) return;
@@ -983,15 +983,8 @@ export function editVals(ctx: Ctx) {
       };
       return {
         name: e.name,
-        canMove: n > 1,
         moveTo,
         moveAria: 'Move ' + e.name + ', ' + (ix + 1) + ' of ' + n,
-        moveKeys: (ev) => {
-          const to = { ArrowUp: ix - 1, ArrowDown: ix + 1, Home: 0, End: n - 1 }[ev.key];
-          if (to === undefined) return;
-          ev.preventDefault();
-          moveTo(to);
-        },
         sets: setsParts.sets,
         reps: setsParts.reps,
         weight: numericOnly(e.weight),
