@@ -46,6 +46,19 @@ export const textStyles = {
     tracking: 'snug',
     use: 'List row and item titles',
   },
+  bigNumber: {
+    family: 'heading',
+    size: '6xl',
+    weight: 'bold',
+    leading: 'none',
+    use: 'The one big number on a screen, like the streak count',
+  },
+  figure: {
+    family: 'heading',
+    size: 'md',
+    weight: 'bold',
+    use: 'A small number beside a bar or a label: 1 of 4, 72%',
+  },
   body: { family: 'body', size: 'base', weight: 'regular', leading: 'relaxed', use: 'Paragraphs' },
   label: { family: 'body', size: 'base', weight: 'medium', use: 'Names and values in rows' },
   caption: { family: 'body', size: 'md', weight: 'regular', use: 'Secondary text under a title' },
@@ -72,6 +85,7 @@ export type TextVariant = keyof typeof textStyles;
 export const textTones = {
   ink: 'var(--color-ink)',
   slate: 'var(--color-slate)',
+  slateDeep: 'var(--color-slate-deep)',
   muted: 'var(--color-muted)',
   subtle: 'var(--color-subtle)',
   accent: 'var(--color-accent-deep)',

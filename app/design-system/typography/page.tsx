@@ -32,7 +32,7 @@ export default function TypographyPage() {
   return (
     <DocPage title="Typography">
       <p style={{ margin: '8px 0 0', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
-        Two families, twelve sizes, four weights, and twelve named text styles built from them. Each token is
+        Two families, twelve sizes, four weights, and sixteen named text styles built from them. Each token is
         a CSS variable, for example <code>var(--text-md)</code> or <code>var(--font-weight-bold)</code>.
       </p>
 
@@ -70,7 +70,11 @@ export default function TypographyPage() {
               >
                 {name === 'body'
                   ? 'No quest today. Rest is how the power comes back, or add a workout if you’re feeling it.'
-                  : 'Upper Body Push'}
+                  : name === 'bigNumber'
+                    ? '12'
+                    : name === 'figure'
+                      ? '3 of 4'
+                      : 'Upper Body Push'}
               </Text>
               <div style={meta}>{s.use}</div>
             </div>

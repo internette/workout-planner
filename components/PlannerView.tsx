@@ -587,8 +587,8 @@ export function PlannerView({ v }: { v: any }) {
                           <Text
                             variant="caption"
                             as="div"
+                            tone="slateDeep"
                             style={{
-                              color: 'var(--color-slate-deep)',
                               lineHeight: 'var(--leading-snug)',
                               marginTop: '3px',
                               textWrap: 'pretty',
@@ -669,17 +669,9 @@ export function PlannerView({ v }: { v: any }) {
                                         }}
                                       >
                                         <ProgressBar value={c?.progPct ?? 0} track="tint" style={{ flex: '1' }} />
-                                        <span
-                                          style={{
-                                            fontFamily: 'var(--font-heading)',
-                                            fontSize: 'var(--text-md)',
-                                            fontWeight: 'var(--font-weight-bold)',
-                                            color: 'var(--color-ink)',
-                                            flex: 'none',
-                                          }}
-                                        >
+                                        <Text variant="figure" tone="ink" style={{ flex: 'none' }}>
                                           {c?.progLabel}
-                                        </span>
+                                        </Text>
                                       </div>
                                     </>
                                   ) : null}
@@ -1666,18 +1658,9 @@ export function PlannerView({ v }: { v: any }) {
                               Each exercise you complete earns 10 XP, and finishing a whole workout earns 50
                               XP on top. Ranks unlock at fixed XP totals.
                             </Text>
-                            <span
-                              style={{
-                                display: 'block',
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: 'var(--text-md)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                color: 'var(--color-accent-deep)',
-                                marginTop: '12px',
-                              }}
-                            >
+                            <Text variant="figure" tone="accent" style={{ display: 'block', marginTop: '12px' }}>
                               {v.xpLine}
-                            </span>
+                            </Text>
                           </>
                         }
                       >
@@ -1851,17 +1834,9 @@ export function PlannerView({ v }: { v: any }) {
                             <Text variant="label" tone="ink" style={{ flex: '1', minWidth: '0' }}>
                               {q?.name}
                             </Text>
-                            <span
-                              style={{
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: 'var(--text-md)',
-                                fontWeight: 'var(--font-weight-bold)',
-                                color: 'var(--color-slate)',
-                                flex: 'none',
-                              }}
-                            >
+                            <Text variant="figure" tone="slate" style={{ flex: 'none' }}>
                               {q?.count}
-                            </span>
+                            </Text>
                           </div>
                         </Fragment>
                       ))}
@@ -1900,19 +1875,9 @@ export function PlannerView({ v }: { v: any }) {
                                 {m?.name}
                               </Text>
                               <ProgressBar value={m?.barPct ?? 0} track="mist" fill={m?.color} style={{ flex: '1' }} />
-                              <span
-                                style={{
-                                  fontFamily: 'var(--font-heading)',
-                                  fontSize: 'var(--text-md)',
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  color: 'var(--color-slate)',
-                                  flex: 'none',
-                                  width: '30px',
-                                  textAlign: 'right',
-                                }}
-                              >
+                              <Text variant="figure" tone="slate" style={{ flex: 'none', width: '30px', textAlign: 'right' }}>
                                 {m?.pct}
-                              </span>
+                              </Text>
                             </div>
                           </Fragment>
                         ))}
@@ -2026,44 +1991,31 @@ export function PlannerView({ v }: { v: any }) {
                       <Gem size={30} />
                       <div style={{ minWidth: '0' }}>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '7px' }}>
-                          <span
-                            style={{
-                              fontFamily: 'var(--font-heading)',
-                              fontSize: 'var(--text-6xl)',
-                              fontWeight: 'var(--font-weight-bold)',
-                              lineHeight: 'var(--leading-none)',
-                              color: 'var(--color-ink)',
-                            }}
-                          >
+                          <Text variant="bigNumber" tone="ink">
                             {v.streakCount}
-                          </span>
-                          <span
-                            style={{
-                              fontSize: 'var(--text-base)',
-                              fontWeight: 'var(--font-weight-semibold)',
-                              color: 'var(--color-accent-deep)',
-                            }}
-                          >
+                          </Text>
+                          <Text variant="label" weight="semibold" tone="accent">
                             {t(v.streakUnit)}
                             {' streak'}
-                          </span>
+                          </Text>
                         </div>
                         <Text
                           variant="caption"
                           as="p"
                           weight="medium"
-                          style={{ margin: '6px 0 0', color: 'var(--color-slate-deep)' }}
+                          tone="slateDeep"
+                          style={{ margin: '6px 0 0' }}
                         >
                           {v.streakNote}
                         </Text>
                       </div>
                     </div>
                     <div style={{ flex: '1 1 180px', minWidth: '0' }}>
-                      <Text variant="micro" as="div" style={{ color: 'var(--color-slate-deep)' }}>
+                      <Text variant="micro" as="div" tone="slateDeep">
                         {v.ticksLabel}
                       </Text>
                       {v.ticksEmpty ? (
-                        <Text variant="caption" as="p" weight="medium" style={{ margin: '9px 0 0', color: 'var(--color-slate-deep)' }}>
+                        <Text variant="caption" as="p" weight="medium" tone="slateDeep" style={{ margin: '9px 0 0' }}>
                           Clear a day and it lights up here.
                         </Text>
                       ) : null}
@@ -5188,16 +5140,9 @@ export function PlannerView({ v }: { v: any }) {
                         <div
                           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
                         >
-                          <p
-                            style={{
-                              margin: '0',
-                              fontSize: 'var(--text-base)',
-                              fontWeight: 'var(--font-weight-semibold)',
-                              color: 'var(--color-slate)',
-                            }}
-                          >
+                          <Text variant="label" weight="semibold" tone="slate" as="p" style={{ margin: '0' }}>
                             How hard did it feel?
-                          </p>
+                          </Text>
                         </div>
                         {/* The effort word right after the stars, as a saved entry shows it: "★★★★☆ Hard". */}
                         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', marginTop: '8px' }}>
@@ -5221,16 +5166,9 @@ export function PlannerView({ v }: { v: any }) {
                             </span>
                           ) : null}
                         </div>
-                        <p
-                          style={{
-                            margin: '28px 0 10px',
-                            fontSize: 'var(--text-base)',
-                            fontWeight: 'var(--font-weight-semibold)',
-                            color: 'var(--color-slate)',
-                          }}
-                        >
+                        <Text variant="label" weight="semibold" tone="slate" as="p" style={{ margin: '28px 0 10px' }}>
                           Notes (optional)
-                        </p>
+                        </Text>
                         <TextArea
                           aria-label="Notes"
                           rows={5}
