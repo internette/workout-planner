@@ -10,6 +10,7 @@ import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { Popover } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
 import { EmptyState } from '@/components/ui/empty-state';
+import { IconChoiceGroup } from '@/components/ui/icon-choice-group';
 import { IconTile, IconTileButton } from '@/components/ui/icon-tile';
 import { ProgressBar } from '@/components/ui/progress-bar';
 import { Stat } from '@/components/ui/stat';
@@ -2656,21 +2657,7 @@ export function PlannerView({ v }: { v: any }) {
                               />
                             ) : null}
                             <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
-                            <div
-                              style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(5,minmax(0,1fr))',
-                                gap: '8px',
-                              }}
-                            >
-                              {(v.iconGrid ?? []).map((g, i) => (
-                                <Fragment key={i}>
-                                  <button onClick={g?.pick} aria-label={g?.label} aria-pressed={!!g?.on} style={css(g?.style)}>
-                                    {g?.svg}
-                                  </button>
-                                </Fragment>
-                              ))}
-                            </div>
+                            <IconChoiceGroup label="Icon" columns={5} {...v.iconGrid} />
                             <div
                               style={{
                                 display: 'flex',
@@ -3299,15 +3286,7 @@ export function PlannerView({ v }: { v: any }) {
                       />
                     ) : null}
                     <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
-                    <div
-                      style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: '8px' }}
-                    >
-                      {(v.exerciseEdit.icons ?? []).map((g, i) => (
-                        <button key={i} onClick={g?.pick} aria-label={g?.label} aria-pressed={!!g?.on} style={css(g?.style)}>
-                          {g?.svg}
-                        </button>
-                      ))}
-                    </div>
+                    <IconChoiceGroup label="Icon" columns={4} {...v.exerciseEdit.icons} />
                   </Card>
                   <div
                     style={{
@@ -4153,21 +4132,7 @@ export function PlannerView({ v }: { v: any }) {
                           <Text variant="eyebrow" as="div" tone="slate" style={{ padding: '0 2px 10px' }}>
                             ICON
                           </Text>
-                          <div
-                            style={{
-                              display: 'grid',
-                              gridTemplateColumns: 'repeat(5,minmax(0,1fr))',
-                              gap: '8px',
-                            }}
-                          >
-                            {(v.workoutIconGrid ?? []).map((w, i) => (
-                              <Fragment key={i}>
-                                <button onClick={w?.pick} aria-label={w?.label} aria-pressed={!!w?.on} style={css(w?.style)}>
-                                  {w?.svg}
-                                </button>
-                              </Fragment>
-                            ))}
-                          </div>
+                          <IconChoiceGroup label="Workout icon" columns={5} {...v.workoutIconGrid} />
                           <Text
                             variant="eyebrow"
                             as="div"
@@ -4176,13 +4141,7 @@ export function PlannerView({ v }: { v: any }) {
                           >
                             COLOR
                           </Text>
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                            {(v.iconColors ?? []).map((c, i) => (
-                              <Fragment key={i}>
-                                <button onClick={c?.pick} aria-label={c?.label} aria-pressed={!!c?.on} style={css(c?.style)}></button>
-                              </Fragment>
-                            ))}
-                          </div>
+                          <IconChoiceGroup label="Icon colour" kind="swatch" {...v.iconColors} />
                         </>
                       }
                     >
@@ -4641,27 +4600,22 @@ export function PlannerView({ v }: { v: any }) {
                                       >
                                         ICON
                                       </Text>
-                                      <div
-                                        style={{
-                                          display: 'grid',
-                                          gridTemplateColumns: 'repeat(3,minmax(0,1fr))',
-                                          gap: '7px',
-                                        }}
-                                      >
-                                        <button onClick={ex?.pickH} aria-label="Dumbbell icon" aria-pressed={!!ex?.isH} style={css(ex?.optH)}>
-                                          <Dumbbell color="var(--color-accent)" size={20} />
-                                        </button>
-                                        <button onClick={ex?.pickV} aria-label="Upright dumbbell icon" aria-pressed={!!ex?.isV} style={css(ex?.optV)}>
-                                          <Dumbbell
-                                            color="var(--color-accent)"
-                                            size={20}
-                                            style={{ transform: 'rotate(90deg)' }}
-                                          />
-                                        </button>
-                                        <button onClick={ex?.pickD} aria-label="Small dumbbell icon" aria-pressed={!!ex?.isD} style={css(ex?.optD)}>
-                                          <DumbbellSmall color="var(--color-accent)" size={20} />
-                                        </button>
-                                      </div>
+                                      <IconChoiceGroup
+                                        label="Icon"
+                                        columns={3}
+                                        style={{ gap: '7px' }}
+                                        value={ex?.iconValue}
+                                        onChange={ex?.pickIcon}
+                                        options={[
+                                          { value: 'h', label: 'Dumbbell icon', icon: <Dumbbell color="var(--color-accent)" size={20} /> },
+                                          {
+                                            value: 'v',
+                                            label: 'Upright dumbbell icon',
+                                            icon: <Dumbbell color="var(--color-accent)" size={20} style={{ transform: 'rotate(90deg)' }} />,
+                                          },
+                                          { value: 'd', label: 'Small dumbbell icon', icon: <DumbbellSmall color="var(--color-accent)" size={20} /> },
+                                        ]}
+                                      />
                                     </>
                                   }
                                 >
@@ -4997,24 +4951,12 @@ export function PlannerView({ v }: { v: any }) {
                                 error={v.draftNameError || undefined}
                               />
                               <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
-                              <div
-                                style={{
-                                  maxHeight: '236px',
-                                  overflowY: 'auto',
-                                  padding: '2px',
-                                  display: 'grid',
-                                  gridTemplateColumns: 'repeat(5,minmax(0,1fr))',
-                                  gap: '8px',
-                                }}
-                              >
-                                {(v.iconGrid ?? []).map((g, i) => (
-                                  <Fragment key={i}>
-                                    <button onClick={g?.pick} aria-label={g?.label} aria-pressed={!!g?.on} style={css(g?.style)}>
-                                      {g?.svg}
-                                    </button>
-                                  </Fragment>
-                                ))}
-                              </div>
+                              <IconChoiceGroup
+                                label="Icon"
+                                columns={5}
+                                style={{ maxHeight: '236px', overflowY: 'auto', padding: '2px' }}
+                                {...v.iconGrid}
+                              />
                               <div
                                 style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '14px' }}
                               >

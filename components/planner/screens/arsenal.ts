@@ -1,10 +1,8 @@
 import { colors } from '@/components/ui/colors';
-import { DOWFULL, EDIT_OVERLAYS, EQUIPMENT, EQUIPMENT_GROUPS, ICON_NAMES, MONTHS, TARGET_AREAS } from '../constants';
-import { iconSvg } from '../icons';
-import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
+import { DOWFULL, EDIT_OVERLAYS, EQUIPMENT, EQUIPMENT_GROUPS, MONTHS, TARGET_AREAS } from '../constants';
+import { iconOptions, iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import { countsOk, digitsOnly, exerciseDraftDirty, exLine, isoOf, joinSetsReps, monthPatch, needsLine, noticePatch, numericOnly, plural, restDigits, splitSetsReps, withLb, withSec } from '../helpers';
-import { optStyle } from '../styles';
 import type { Ctx } from '../types';
 
 // Spellbook (the 'arsenal' screen): the exercise library, its search and the add-exercise form.
@@ -356,13 +354,11 @@ export function arsenalVals(ctx: Ctx) {
               };
             }),
           })),
-    icons: EXERCISE_ICON_NAMES.map((name) => ({
-      svg: iconSvg(name),
-      pick: () => logic.s({ exDraft: { ...exDraft, i: name } }),
-      label: ICON_NAMES[name] + ' icon',
-      on: exDraft.i === name,
-      style: optStyle(exDraft.i === name),
-    })),
+    icons: {
+      value: exDraft.i,
+      onChange: (name) => logic.s({ exDraft: { ...exDraft, i: name } }),
+      options: iconOptions(),
+    },
     // A rename can't take a name another exercise in the same place already has: another of the person's own (or a
     // built-in), or another exercise in the same workout.
     nameError: renameClash

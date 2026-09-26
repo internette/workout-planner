@@ -247,6 +247,18 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'icon-choice-group',
+    title: 'Icon choice group',
+    category: 'components',
+    description: 'Pick one icon or colour from a set of pictures.',
+    anchors: [
+      { id: 'icons', title: 'Icons' },
+      { id: 'colours', title: 'Colours' },
+      { id: 'in-a-popover', title: 'In a popover' },
+      { id: 'behaviour', title: 'Behaviour' },
+    ],
+  },
+  {
     slug: 'dialog',
     title: 'Dialog',
     category: 'components',

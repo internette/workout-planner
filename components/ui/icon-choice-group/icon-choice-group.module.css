@@ -1,0 +1,36 @@
+/* Pick one icon or colour from a set of pictures. The chosen one gets a pink ring (a colour takes a ring in its own
+   colour, set off by a white gap). */
+
+.grid { display: grid; gap: var(--space-2); }
+.row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+.tile {
+  min-height: 48px;
+  border: none;
+  /* Between radius sm and md, like the tiles it matches: to settle with the off-scale radii. */
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: var(--color-canvas);
+  transition: background var(--dur-state) var(--ease-standard);
+}
+.tile:hover { background: var(--color-mist); }
+.tile.selected { background: var(--color-accent-tint); box-shadow: 0 0 0 2px var(--color-accent); }
+
+.swatch {
+  width: 34px;
+  height: 34px;
+  border: none;
+  /* Between radius xs and sm, in proportion to its 34px: to settle with the off-scale radii. */
+  border-radius: 11px;
+  cursor: pointer;
+  background: var(--swatch);
+}
+.swatch.selected { box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--swatch); }
+
+/* In forced colours a swatch keeps its colour, since the colour is the choice; planner.css outlines the chosen one. */
+@media (forced-colors: active) {
+  .swatch { forced-color-adjust: none; }
+}
