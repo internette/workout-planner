@@ -1,0 +1,18 @@
+/* A workout's or exercise's icon on a pale pink tile: a white rim and a soft pink glow lift it off the card. */
+
+.tile {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  background: var(--color-pink-tint);
+  border: 2px solid var(--color-white);
+  box-shadow: 0 2px 6px rgba(213, 49, 129, 0.28), 0 0 0 1px rgba(35, 42, 69, 0.05);
+}
+/* sm beside a row's or card's title, md beside a page's title. */
+.sm { width: 40px; height: 40px; border-radius: 13px; }
+.md { width: 46px; height: 46px; border-radius: 15px; }
+
+/* As a button, it opens an icon picker. */
+.button { padding: 0; font: inherit; cursor: pointer; }
