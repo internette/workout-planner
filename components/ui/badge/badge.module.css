@@ -12,9 +12,9 @@
 }
 
 /* accent: solid pink, for done where done is the point (Progress's week) */
-.accent { background: var(--color-pink); color: var(--color-on-accent); }
+.accent { background: var(--color-accent); color: var(--color-on-accent); }
 /* soft: pale pink, for done among other rows on white */
-.soft { background: var(--color-pink-tint); color: var(--color-pink-deep); }
+.soft { background: var(--color-accent-tint); color: var(--color-accent-deep); }
 /* neutral: grey, for anything not done: in progress, partly done, missed */
 .neutral { background: var(--color-mist); color: var(--color-slate-deep); }
 /* quiet: white, for planned on a tinted surface */

@@ -47,7 +47,7 @@
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   background: var(--color-ink);
-  color: var(--color-on-accent);
+  color: var(--color-on-strong);
   box-shadow: var(--elevation-overlay);
   font-size: var(--text-base);
   line-height: var(--leading-snug);

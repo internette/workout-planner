@@ -16,7 +16,18 @@ export const colorGroups = {
   // Roles rather than colours: what a colour is for, so a theme can change it without touching the screens.
   Roles: {
     surface: { hex: '#FFFFFF', use: 'Cards, dialogs, inputs and trays: anything raised off the page, and the rims around what sits on them' },
-    onAccent: { hex: '#FFFFFF', use: 'Text and icons on pink, danger, ink and the gem gradient' },
+    onAccent: { hex: '#FFFFFF', use: 'Text and icons on the accent and the gem gradient' },
+    onStrong: { hex: '#FFFFFF', use: 'Text and icons on ink and danger fills, in any colour theme' },
+  },
+  // The theme's colour: pink here, and teal, periwinkle, slate or coral in the other colour themes (Profile →
+  // Settings → Colour). Buttons, selection, ticks, accent text and tints use these; pink itself (below) stays pink
+  // where pink is meant, such as the Happy mood and the rank tiers.
+  Accent: {
+    accent: { hex: '#D53181', use: 'Actions, selection, marks, bars and ticks' },
+    accentHover: { hex: '#C42773', use: 'Primary action, hovered' },
+    accentDeep: { hex: '#AF2367', use: 'Accent text on white and on the accent tint' },
+    accentTint: { hex: '#FCE8F2', use: 'Selected and active backgrounds' },
+    accentMuted: { hex: '#E8BFD3', use: 'Disabled primary action' },
   },
   Surfaces: {
     white: { hex: '#FFFFFF', use: 'Cards and dialogs' },
@@ -71,7 +82,7 @@ export const cssVarName = (name: string) => '--color-' + name.replace(/[A-Z]/g, 
 export const themed = (color: string | null | undefined): string | undefined => {
   if (!color) return undefined;
   const hit = (Object.entries(colors) as [string, string][]).find(
-    ([name, hex]) => hex.toUpperCase() === color.toUpperCase() && name !== 'surface' && name !== 'onAccent' && name !== 'white',
+    ([name, hex]) => hex.toUpperCase() === color.toUpperCase() && !['surface', 'onAccent', 'onStrong', 'white'].includes(name) && !name.startsWith('accent'),
   );
   return hit ? `var(${cssVarName(hit[0])})` : color;
 };
@@ -90,11 +101,11 @@ const rgba = (hex: string, alpha: number) => {
 /** Composites built from the three accents. Written as CSS variables like the colours, e.g. `var(--gradient-gem)`. */
 export const gradients = {
   gem: {
-    value: 'linear-gradient(135deg, var(--color-pink) 0%, var(--color-periwinkle) 50%, var(--color-teal) 100%)',
+    value: 'linear-gradient(135deg, var(--color-accent) 0%, var(--color-periwinkle) 50%, var(--color-teal) 100%)',
     use: 'The crystal: progress fills, the avatar and the top ranks',
   },
   'gem-tint': {
-    value: 'linear-gradient(135deg, color-mix(in srgb, var(--color-pink) 16%, transparent) 0%, color-mix(in srgb, var(--color-periwinkle) 16%, transparent) 50%, color-mix(in srgb, var(--color-teal) 16%, transparent) 100%)',
+    value: 'linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 16%, transparent) 0%, color-mix(in srgb, var(--color-periwinkle) 16%, transparent) 50%, color-mix(in srgb, var(--color-teal) 16%, transparent) 100%)',
     use: 'A ceremonial panel: the quest and streak banners. Use it once per screen',
   },
 } as const;

@@ -11,7 +11,7 @@
   transition: background var(--dur-state) var(--ease-standard), box-shadow var(--dur-state) var(--ease-standard);
 }
 .card:hover { background: var(--color-mist); }
-.card.checked { background: var(--color-pink-tint); box-shadow: inset 0 0 0 2px var(--color-pink); }
+.card.checked { background: var(--color-accent-tint); box-shadow: inset 0 0 0 2px var(--color-accent); }
 .card:has(.input:focus-visible) { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
 .card.disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -34,7 +34,7 @@
   background: var(--color-surface);
   transition: border-color var(--dur-state) var(--ease-standard), background var(--dur-state) var(--ease-standard), box-shadow var(--dur-state) var(--ease-standard);
 }
-.checked .dot { border-color: var(--color-pink); background: var(--color-pink); box-shadow: inset 0 0 0 2.5px var(--color-surface); }
+.checked .dot { border-color: var(--color-accent); background: var(--color-accent); box-shadow: inset 0 0 0 2.5px var(--color-surface); }
 
 .text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .title, .description { margin: 0; text-wrap: pretty; }

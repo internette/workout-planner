@@ -5,13 +5,13 @@ import { Svg, type IconProps } from './Svg';
 // isn't. The round joins on a stroke of the same colour give it its soft points. Each instance gets its own gradient id.
 export function RatingStar({ on, size, style, className }: { on: boolean } & Pick<IconProps, 'size' | 'style' | 'className'>) {
   const id = 'star' + useId().replace(/:/g, '');
-  const paint = on ? `url(#${id})` : 'color-mix(in srgb, var(--color-pink) 24%, var(--color-surface))';
+  const paint = on ? `url(#${id})` : 'color-mix(in srgb, var(--color-accent) 24%, var(--color-surface))';
   return (
     <Svg size={size} style={style} className={className}>
       {on ? (
         <defs>
           <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="var(--color-pink)" />
+            <stop offset="0%" stopColor="var(--color-accent)" />
             <stop offset="55%" stopColor="var(--color-periwinkle)" />
             <stop offset="100%" stopColor="var(--color-teal)" />
           </linearGradient>

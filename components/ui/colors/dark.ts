@@ -16,6 +16,13 @@ export const darkColors: Record<ColorName, string> = {
   // Roles
   surface: '#281D2F',
   onAccent: '#281D2F',
+  onStrong: '#281D2F',
+  // Accent (Plum dusk's is pink)
+  accent: '#F06FA6',
+  accentHover: '#F48AB6',
+  accentDeep: '#F58BB8',
+  accentTint: '#45223A',
+  accentMuted: '#6B3552',
   // Surfaces (white stays white: it's only used where white is meant)
   white: '#FFFFFF',
   canvas: '#1B1320',

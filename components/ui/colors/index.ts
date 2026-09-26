@@ -12,3 +12,4 @@ export {
 } from './tokens';
 export { ColorVariables } from './ColorVariables';
 export { darkColors, darkTranslucents, darkOverlays } from './dark';
+export { ACCENTS, accentThemeCss, type Accent } from './themes';

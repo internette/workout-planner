@@ -171,14 +171,14 @@ export function progressVals(ctx: Ctx) {
           bar:
             'display:block;height:7px;border-radius:4px;background:' +
             (dayComplete[k]
-              ? 'linear-gradient(135deg,var(--color-pink),var(--color-periwinkle))'
+              ? 'linear-gradient(135deg,var(--color-accent),var(--color-periwinkle))'
               : pending
-                ? 'repeating-linear-gradient(135deg,color-mix(in srgb, var(--color-pink) 45%, transparent) 0 3px,color-mix(in srgb, var(--color-pink) 16%, transparent) 3px 6px)'
+                ? 'repeating-linear-gradient(135deg,color-mix(in srgb, var(--color-accent) 45%, transparent) 0 3px,color-mix(in srgb, var(--color-accent) 16%, transparent) 3px 6px)'
                 : 'color-mix(in srgb, var(--color-ink) 13%, transparent)'),
           cap:
             'display:block;margin-top:6px;font-size:var(--text-2xs);font-weight:var(--font-weight-semibold);letter-spacing:var(--tracking-loose);text-align:center;color:' +
             (pending
-              ? 'var(--color-pink-deep)'
+              ? 'var(--color-accent-deep)'
               : dayComplete[k]
                 ? 'var(--color-ink)'
                 : 'var(--color-slate-deep)'),
@@ -260,7 +260,7 @@ export function progressVals(ctx: Ctx) {
         aria: (ix >= thisWeekIx - 1 ? weekName(ix) + ', ' + weekRange(weekBuckets[ix]) : weekName(ix)) + ': ' + plural(n, 'session') + ' done',
         value:
           'font-family:var(--font-heading);font-size:var(--text-xs);font-weight:var(--font-weight-bold);color:' +
-          (ix === barSel ? 'var(--color-pink-deep)' : 'var(--color-muted)'),
+          (ix === barSel ? 'var(--color-accent-deep)' : 'var(--color-muted)'),
         bar:
           'width:100%;border-radius:6px 6px 3px 3px;transition:background .2s;height:' +
           Math.max(
@@ -271,12 +271,12 @@ export function progressVals(ctx: Ctx) {
           ) +
           'px;background:' +
           (ix === barSel
-            ? 'linear-gradient(180deg,var(--color-pink) 0%,var(--color-periwinkle) 100%)'
-            : 'color-mix(in srgb, var(--color-pink) 30%, transparent)'),
+            ? 'linear-gradient(180deg,var(--color-accent) 0%,var(--color-periwinkle) 100%)'
+            : 'color-mix(in srgb, var(--color-accent) 30%, transparent)'),
         label:
           'font-size:var(--text-2xs);font-weight:' +
           (ix === barSel
-            ? 'var(--font-weight-bold);color:var(--color-pink-deep)'
+            ? 'var(--font-weight-bold);color:var(--color-accent-deep)'
             : 'var(--font-weight-medium);color:var(--color-muted)'),
       })),
     // No entries yet: no bars at 0%, the card says what will show up instead.
@@ -307,7 +307,7 @@ export function progressVals(ctx: Ctx) {
           'display:flex;align-items:center;gap:12px;padding:11px 0;' +
           (ix === arr.length - 1 ? '' : 'border-bottom:1px solid var(--color-line-faint)'),
         deltaStyle:
-          'flex:none;width:44px;text-align:right;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:var(--color-pink-deep)',
+          'flex:none;width:44px;text-align:right;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:var(--color-accent-deep)',
       })),
     wkDone: weekAll.filter(isDoneEntry).length,
     wkTotal: weekAll.length,
@@ -315,7 +315,7 @@ export function progressVals(ctx: Ctx) {
     wkBar:
       'width:' +
       (weekAll.length ? Math.round((weekAll.filter(isDoneEntry).length / weekAll.length) * 100) : 0) +
-      '%;height:100%;border-radius:4px;background:var(--color-pink)',
+      '%;height:100%;border-radius:4px;background:var(--color-accent)',
     // The cards open what they sum up: the next session, this week and this month on the calendar, the Chronicle.
     openNext: () =>
       nextUp &&
@@ -364,11 +364,11 @@ export function progressVals(ctx: Ctx) {
             'display:flex;align-items:center;gap:11px;width:100%;min-height:44px;padding:10px 0;border:none;background:none;text-align:left;font-family:inherit;cursor:pointer;border-bottom:1px solid var(--color-line-faint)',
           mark:
             'width:18px;height:18px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;' +
-            (isDone ? 'background:var(--color-pink)' : 'background:transparent'),
+            (isDone ? 'background:var(--color-accent)' : 'background:transparent'),
           title:
             'flex:1;min-width:0;font-size:var(--text-base);' +
             (isDone
-              ? 'font-weight:var(--font-weight-medium);color:var(--color-pink-deep)'
+              ? 'font-weight:var(--font-weight-medium);color:var(--color-accent-deep)'
               : 'font-weight:var(--font-weight-medium);color:var(--color-ink)'),
         });
       }
