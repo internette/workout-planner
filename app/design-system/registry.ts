@@ -254,6 +254,7 @@ export const sections: Section[] = [
     anchors: [
       { id: 'icons', title: 'Icons' },
       { id: 'colours', title: 'Colours' },
+      { id: 'round-swatches', title: 'Round swatches' },
       { id: 'in-a-popover', title: 'In a popover' },
       { id: 'behaviour', title: 'Behaviour' },
     ],

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { colors, themed } from '@/components/ui/colors';
+import { ACCENTS } from '@/components/ui/colors/themes';
 import { Dumbbell, EXERCISE_ICON_NAMES, ExerciseIcon, type ExerciseIconName } from '@/components/ui/icons';
 import { IconChoiceGroup } from '@/components/ui/icon-choice-group';
 import { IconTile } from '@/components/ui/icon-tile';
@@ -25,11 +26,19 @@ const icons = (color?: string) =>
     icon: <ExerciseIcon name={name} color={themed(color) || 'var(--color-accent)'} />,
   }));
 const swatches = SWATCHES.map((s) => ({ ...s, color: themed(s.value) }));
+// The theme colours, as fixed colours: this setting picks the theme, so its swatches don't follow it.
+const ACCENT_SWATCHES = ACCENTS.map((a) => ({
+  value: a.name,
+  label: a.label,
+  color: a.swatch,
+  checkColor: a.name === 'slate' || a.name === 'pink' ? '#FFFFFF' : '#232A45',
+}));
 
 export default function IconChoiceGroupPage() {
   const [icon, setIcon] = useState<string>('h');
   const [workoutIcon, setWorkoutIcon] = useState<string>('h');
   const [colour, setColour] = useState<string>(colors.teal);
+  const [accent, setAccent] = useState<string>('pink');
 
   return (
     <DocPage title="Icon choice group">
@@ -52,7 +61,7 @@ export default function IconChoiceGroupPage() {
 
       <h2 id="colours" style={h2}>Colours</h2>
       <p style={note}>
-        <code>kind=&quot;swatch&quot;</code>: a wrapping row of 34px squares, each filled with its option&apos;s{' '}
+        <code>kind=&quot;swatch&quot;</code>: a wrapping row of 34px squares (the default <code>shape</code>), each filled with its option&apos;s{' '}
         <code>color</code>. The chosen one takes a ring in its own colour, set off by a white gap. Pass the palette&apos;s
         CSS variables (<code>themed(hex)</code>), so the swatches follow the theme. In a workout&apos;s icon picker the
         colour recolours the icons above it.
@@ -74,6 +83,30 @@ export default function IconChoiceGroupPage() {
           COLOR
         </Text>
         <IconChoiceGroup label="Icon colour" kind="swatch" options={swatches} value={colour} onChange={setColour} />
+      </Card>
+
+      <h2 id="round-swatches" style={h2}>Round swatches</h2>
+      <p style={note}>
+        <code>shape=&quot;round&quot;</code>, for a colour that is itself the setting rather than a tint for something
+        else: the app&apos;s colour, on Profile. The chosen one shows a tick; give each option a{' '}
+        <code>checkColor</code> that reads on its colour (white by default). A hairline keeps a pale colour off the card.
+        Each swatch has a 44px touch target, so a row of them can sit 6px apart.
+      </p>
+      <Card style={{ maxWidth: 420 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
+          <Text variant="label" as="div" tone="ink" id="ds-colour-label" style={{ flex: '1 1 120px' }}>
+            Colour
+          </Text>
+          <IconChoiceGroup
+            labelledBy="ds-colour-label"
+            kind="swatch"
+            shape="round"
+            style={{ flexWrap: 'nowrap', gap: 6 }}
+            options={ACCENT_SWATCHES}
+            value={accent}
+            onChange={setAccent}
+          />
+        </div>
       </Card>
 
       <h2 id="in-a-popover" style={h2}>In a popover</h2>
