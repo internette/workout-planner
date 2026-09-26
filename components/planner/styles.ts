@@ -1,8 +1,5 @@
 // Inline-style builders shared by the screens. Each takes whether the control is active.
 
-export const optStyle = on => 'min-height:48px;border:none;border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:'
-  + (on ? 'var(--color-accent-tint)' : 'var(--color-canvas)') + (on ? ';box-shadow:0 0 0 2px var(--color-accent)' : '');
-
 export const mTab = (on) => 'text-decoration:none;flex:1;min-width:0;min-height:56px;border:none;background:none;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;border-radius:14px;'
   + (on ? 'background:var(--color-accent-tint)' : '');
 

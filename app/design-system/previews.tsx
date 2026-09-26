@@ -8,6 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Chip } from '@/components/ui/chip';
 import { colors } from '@/components/ui/colors';
 import { Bike, Calendar, Check, Dumbbell, ExerciseIcon, Gem, Sparkle } from '@/components/ui/icons';
+import { IconChoiceGroup } from '@/components/ui/icon-choice-group';
 import { IconTile } from '@/components/ui/icon-tile';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { ProgressBar } from '@/components/ui/progress-bar';
@@ -188,6 +189,22 @@ export function Preview({ slug }: { slug: string }) {
           <Checkbox checked onChange={noop}>
             Repeat weekly
           </Checkbox>
+        </div>
+      );
+    case 'icon-choice-group':
+      return (
+        <div style={{ width: 200, padding: 10, background: 'var(--color-surface)', borderRadius: 'var(--radius-md)' }}>
+          <IconChoiceGroup
+            label="Example"
+            columns={4}
+            value="h"
+            onChange={noop}
+            options={(['h', 'v', 'd', 'bike'] as const).map((name) => ({
+              value: name,
+              label: name,
+              icon: <ExerciseIcon name={name} color="var(--color-accent)" />,
+            }))}
+          />
         </div>
       );
     case 'option-card':

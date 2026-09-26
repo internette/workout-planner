@@ -1,8 +1,6 @@
-import { DOW3, DOWFULL, EDIT_OVERLAYS, EQUIPMENT, EQUIPMENT_GROUPS, ICON_COLORS, ICON_COLOR_NAMES, ICON_NAMES, MON3, MONTHS, TARGET_AREAS } from '../constants';
+import { DOW3, DOWFULL, EDIT_OVERLAYS, EQUIPMENT, EQUIPMENT_GROUPS, ICON_COLORS, ICON_COLOR_NAMES, MON3, MONTHS, TARGET_AREAS } from '../constants';
 import { countsOk, needsLine, rollMinutes, digitsOnly, noticePatch, exLine, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, setsRepsOk, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
-import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
-import { iconSvg } from '../icons';
-import { optStyle } from '../styles';
+import { iconOptions, iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import { colors, themed } from '@/components/ui/colors';
 import type { Ctx } from '../types';
@@ -442,13 +440,11 @@ export function editVals(ctx: Ctx) {
             }),
           })),
         },
-    iconGrid: EXERCISE_ICON_NAMES.map((name) => ({
-      svg: iconSvg(name),
-      pick: () => logic.s({ dIcon: name }),
-      label: ICON_NAMES[name] + ' icon',
-      on: (st.dIcon || 'h') === name,
-      style: optStyle((st.dIcon || 'h') === name),
-    })),
+    iconGrid: {
+      value: st.dIcon || 'h',
+      onChange: (name) => logic.s({ dIcon: name }),
+      options: iconOptions(),
+    },
     draftNameError,
     commitDisabled: !(st.dName || '').trim() || !(st.dAreas || []).length || !!clash || !countsOk(st.dSets, st.dReps),
     // Why the button is off, when it is (a name clash says so on the field itself).
@@ -490,22 +486,16 @@ export function editVals(ctx: Ctx) {
     iconsOpen: !!st.iconsOpen,
     toggleIcons: () => logic.s({ iconsOpen: !st.iconsOpen }),
     workoutIcoSvg: iconSvg(wIcon, wColorSet),
-    workoutIconGrid: EXERCISE_ICON_NAMES.map((name) => ({
-      svg: iconSvg(name, wColorSet),
-      pick: () => logic.s({ icons: Object.assign({}, st.icons, { [listKey]: name }) }),
-      label: ICON_NAMES[name] + ' icon',
-      on: wIcon === name,
-      style: optStyle(wIcon === name),
-    })),
-    iconColors: ICON_COLORS.map((c, i) => ({
-      label: ICON_COLOR_NAMES[i],
-      on: c === wColor,
-      pick: () => logic.s({ iconColors: Object.assign({}, st.iconColors, { [listKey]: c }) }),
-      style:
-        'width:34px;height:34px;border:none;border-radius:11px;cursor:pointer;background:' +
-        themed(c) +
-        (c === wColor ? ';box-shadow:0 0 0 2px var(--color-surface),0 0 0 4px ' + themed(c) : ''),
-    })),
+    workoutIconGrid: {
+      value: wIcon,
+      onChange: (name) => logic.s({ icons: Object.assign({}, st.icons, { [listKey]: name }) }),
+      options: iconOptions(wColorSet),
+    },
+    iconColors: {
+      value: wColor,
+      onChange: (c) => logic.s({ iconColors: Object.assign({}, st.iconColors, { [listKey]: c }) }),
+      options: ICON_COLORS.map((c, i) => ({ value: c, label: ICON_COLOR_NAMES[i], color: themed(c) })),
+    },
     eName: selName,
     eNotes: notesVal,
     setNotes: (e) => logic.s({ notes: Object.assign({}, st.notes, { [listKey]: e.target.value }) }),
@@ -955,8 +945,12 @@ export function editVals(ctx: Ctx) {
         : 'Only saved to your Spellbook. You can add it to the calendar any time.',
     exercises: selList.map((e, ix) => {
       const cur = iconPick(e.name) || e.i;
-      const set = (v) => () =>
-        logic.s({ exIcons: Object.assign({}, st.exIcons, { [listKey + '|' + e.name]: v }), exOpen: null });
+      // A click picks and closes the picker; the arrow keys move the pick and leave it open.
+      const pickIcon = (v, via) =>
+        logic.s({
+          exIcons: Object.assign({}, st.exIcons, { [listKey + '|' + e.name]: v }),
+          ...(via === 'arrow' ? {} : { exOpen: null }),
+        });
       const setField = (k) => (ev) =>
         logic.s({
           fields: Object.assign({}, st.fields, {
@@ -1069,12 +1063,8 @@ export function editVals(ctx: Ctx) {
         open: st.exOpen === e.name,
         toggle: () => logic.s({ exOpen: st.exOpen === e.name ? null : e.name }),
         close: () => logic.state.exOpen === e.name && logic.s({ exOpen: null }),
-        pickH: set('h'),
-        pickV: set('v'),
-        pickD: set('d'),
-        optH: optStyle(cur === 'h'),
-        optV: optStyle(cur === 'v'),
-        optD: optStyle(cur === 'd'),
+        iconValue: cur,
+        pickIcon,
       };
     }),
   };
