@@ -195,13 +195,8 @@ export function progressVals(ctx: Ctx) {
         warmup: !!x.av.warmup,
         // The same words as the calendar's legend: done, partly done, missed, in progress (today), planned.
         statusLabel: statusOf(x),
-        status:
-          'flex:none;padding:5px 11px;border-radius:var(--radius-full);font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
-          (x.done
-            ? 'background:var(--color-pink);color:var(--color-white)'
-            : statusOf(x) === 'Planned'
-              ? 'background:var(--color-white);color:var(--color-muted)'
-              : 'background:var(--color-mist);color:var(--color-slate-deep)'),
+        // Done stands out in pink; planned is white on the tinted row; anything else grey.
+        statusTone: x.done ? 'accent' : statusOf(x) === 'Planned' ? 'quiet' : 'neutral',
         open: () =>
           logic.nav({ screen: 'detail', creating: false, ...monthPatch(relM(x.date)), day: x.date.getDate(), entryId: x.av.id }),
       })),

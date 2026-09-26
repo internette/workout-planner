@@ -8,6 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog } from '@/components/ui/dialog';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { Popover } from '@/components/ui/popover';
+import { Badge } from '@/components/ui/badge';
 import { IconTile, IconTileButton } from '@/components/ui/icon-tile';
 import { ProgressBar } from '@/components/ui/progress-bar';
 import { Stat } from '@/components/ui/stat';
@@ -1923,7 +1924,7 @@ export function PlannerView({ v }: { v: any }) {
                               {w?.name}
                               {w?.warmup ? <WarmupTag inline /> : null}
                             </span>
-                            <span style={css(w?.status)}>{w?.statusLabel}</span>
+                            <Badge tone={w?.statusTone}>{w?.statusLabel}</Badge>
                           </button>
                         </Fragment>
                       ))}
@@ -3502,7 +3503,7 @@ export function PlannerView({ v }: { v: any }) {
                                   {u.meta}
                                 </Text>
                               </span>
-                              <span style={css(u.statusStyle)}>{u.status}</span>
+                              <Badge tone={u.statusTone}>{u.status}</Badge>
                             </button>
                           ))}
                         </Card>

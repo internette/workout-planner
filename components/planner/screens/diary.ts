@@ -104,9 +104,7 @@ export function diaryVals(ctx: Ctx) {
       meta: x.av.ride ? (ctx.distOf(x.av) ? ctx.distOf(x.av) + ' mi · ' : '') + ctx.timeOf(x.av) : ctx.timeOf(x.av),
       // Whether it was done, so writing about a missed one is a choice, not a surprise.
       status: x.done ? 'Done' : ctx.sessionStatus(x.m, x.d, x.av),
-      statusStyle:
-        'flex:none;padding:4px 10px;border-radius:var(--radius-full);font-size:var(--text-sm);font-weight:var(--font-weight-semibold);' +
-        (x.done ? 'background:var(--color-pink-tint);color:var(--color-pink-deep)' : 'background:var(--color-mist);color:var(--color-slate-deep)'),
+      statusTone: x.done ? 'soft' : 'neutral',
       pick: () =>
         logic.nav({
           screen: 'diary',
