@@ -62,7 +62,7 @@
 .danger.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-danger-ghost); }
 
 .dashed {
-  border: 1px dashed rgba(213, 49, 129, 0.5);
+  border: 1px dashed color-mix(in srgb, var(--color-pink) 50%, transparent);
   background: var(--color-accent-wash);
   color: var(--color-pink-deep);
 }

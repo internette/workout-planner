@@ -3,6 +3,7 @@ export {
   colors,
   vars,
   cssVarName,
+  themed,
   gradients,
   overlays,
   translucents,

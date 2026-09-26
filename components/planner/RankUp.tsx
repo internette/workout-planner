@@ -3,7 +3,7 @@
 import { useId, useLayoutEffect, useRef, type CSSProperties, type SyntheticEvent } from 'react';
 import { Button } from '@/components/ui/buttons';
 import { Sparkle } from '@/components/ui/icons';
-import { colors } from '@/components/ui/colors';
+import { colors, vars } from '@/components/ui/colors';
 import styles from './rank-up.module.css';
 
 export interface RankUpProps {
@@ -20,7 +20,7 @@ export interface RankUpProps {
 }
 
 const SPARKS = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
-const SPARK_COLORS = [colors.pink, colors.periwinkle, colors.teal, colors.white];
+const SPARK_COLORS = [vars.pink, vars.periwinkle, vars.teal, colors.white];
 // Small sparkles that keep twinkling around the gem once it has formed.
 const TWINKLES: { left: string; top: string; size: number; delay: string }[] = [
   { left: 'calc(50% - 110px)', top: 'calc(42% - 70px)', size: 14, delay: '1.9s' },

@@ -173,8 +173,8 @@ export function progressVals(ctx: Ctx) {
             (dayComplete[k]
               ? 'linear-gradient(135deg,var(--color-pink),var(--color-periwinkle))'
               : pending
-                ? 'repeating-linear-gradient(135deg,rgba(213,49,129,.45) 0 3px,rgba(213,49,129,.16) 3px 6px)'
-                : 'rgba(35,42,69,.13)'),
+                ? 'repeating-linear-gradient(135deg,color-mix(in srgb, var(--color-pink) 45%, transparent) 0 3px,color-mix(in srgb, var(--color-pink) 16%, transparent) 3px 6px)'
+                : 'color-mix(in srgb, var(--color-ink) 13%, transparent)'),
           cap:
             'display:block;margin-top:6px;font-size:var(--text-2xs);font-weight:var(--font-weight-semibold);letter-spacing:var(--tracking-loose);text-align:center;color:' +
             (pending
@@ -272,7 +272,7 @@ export function progressVals(ctx: Ctx) {
           'px;background:' +
           (ix === barSel
             ? 'linear-gradient(180deg,var(--color-pink) 0%,var(--color-periwinkle) 100%)'
-            : 'rgba(213,49,129,.3)'),
+            : 'color-mix(in srgb, var(--color-pink) 30%, transparent)'),
         label:
           'font-size:var(--text-2xs);font-weight:' +
           (ix === barSel

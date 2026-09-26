@@ -55,6 +55,7 @@ export const darkTranslucents: Record<string, string> = {
   onAccentSoft: 'rgba(40, 29, 47, 0.85)',
   onAccentMuted: 'rgba(40, 29, 47, 0.8)',
   onAccentFaint: 'rgba(40, 29, 47, 0.7)',
+  shadow: 'rgba(0, 0, 0, 0.5)',
   accentWash: 'rgba(69, 34, 58, 0.6)',
 };
 

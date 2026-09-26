@@ -2,12 +2,10 @@ import { Svg, type IconProps } from './Svg';
 
 const SPARKLE = 'M12 1c0 6.5 2 9.5 10 11-8 1.5-10 4.5-10 11-1-6.5-3-9.5-11-11 8-1.5 10-4.5 11-11z';
 
-// "var(--color-periwinkle)" + 0.5 -> "rgba(124,143,201,0.5)"
-function withAlpha(hex: string, alpha: number) {
-  const h = hex.replace('#', '');
-  const full = h.length === 3 ? h.replace(/./g, (c) => c + c) : h;
-  const n = parseInt(full, 16);
-  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${alpha})`;
+// "var(--color-periwinkle)" + 0.5 -> the periwinkle at half strength. Works for a hex or a CSS variable, so the glow
+// follows the theme.
+function withAlpha(color: string, alpha: number) {
+  return `color-mix(in srgb, ${color} ${Math.round(alpha * 100)}%, transparent)`;
 }
 
 export interface SparkleProps extends IconProps {

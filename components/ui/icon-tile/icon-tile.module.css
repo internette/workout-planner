@@ -8,7 +8,7 @@
   box-sizing: border-box;
   background: var(--color-pink-tint);
   border: 2px solid var(--color-surface);
-  box-shadow: 0 2px 6px rgba(213, 49, 129, 0.28), 0 0 0 1px rgba(35, 42, 69, 0.05);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--color-pink) 28%, transparent), 0 0 0 1px color-mix(in srgb, var(--color-ink) 5%, transparent);
 }
 /* sm beside a row's or card's title, md beside a page's title. */
 .sm { width: 40px; height: 40px; border-radius: 13px; }

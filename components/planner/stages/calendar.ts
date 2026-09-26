@@ -227,7 +227,7 @@ export function calendarStage(ctx: Ctx): Ctx {
             : a
               ? 'background:var(--color-surface);box-shadow:var(--elevation-hairline)'
               : 'background:none') +
-        (today && !sel ? ';box-shadow:inset 0 0 0 1.5px rgba(213,49,129,.45)' : ''),
+        (today && !sel ? ';box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--color-pink) 45%, transparent)' : ''),
       aria: d
         ? DOWFULL[new Date(Y, mi, d).getDay()] +
           ', ' +

@@ -48,7 +48,7 @@ import {
   User,
   RatingStar,
 } from '@/components/ui/icons';
-import { colors } from '@/components/ui/colors';
+import { vars } from '@/components/ui/colors';
 
 export function PlannerView({ v }: { v: any }) {
   return (
@@ -382,7 +382,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-9px)' }}>
                             <Sparkle
                               size={11}
-                              color={colors.pink}
+                              color={vars.pink}
                               glow={0.45}
                               glowBlur={3}
                               style={{ animation: 'twinkle 3.4s ease-in-out 0s infinite' }}
@@ -391,7 +391,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(3px)' }}>
                             <Sparkle
                               size={8}
-                              color={colors.periwinkle}
+                              color={vars.periwinkle}
                               glow={0.45}
                               glowBlur={3}
                               style={{ animation: 'twinkle 4.6s ease-in-out .4s infinite' }}
@@ -400,7 +400,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-4px)' }}>
                             <Sparkle
                               size={9}
-                              color={colors.teal}
+                              color={vars.teal}
                               glow={0.45}
                               glowBlur={3}
                               style={{ animation: 'twinkle 5.4s ease-in-out .15s infinite' }}
@@ -409,7 +409,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(7px)' }}>
                             <Sparkle
                               size={6}
-                              color={colors.pink}
+                              color={vars.pink}
                               glow={0.4}
                               glowBlur={3}
                               style={{ animation: 'twinkle 6s ease-in-out .9s infinite' }}
@@ -418,7 +418,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-7px)' }}>
                             <Sparkle
                               size={7}
-                              color={colors.periwinkle}
+                              color={vars.periwinkle}
                               glow={0.42}
                               glowBlur={3}
                               style={{ animation: 'twinkle 4.2s ease-in-out 1.1s infinite' }}
@@ -427,7 +427,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(1px)' }}>
                             <Sparkle
                               size={5}
-                              color={colors.teal}
+                              color={vars.teal}
                               glow={0.4}
                               glowBlur={3}
                               style={{ animation: 'twinkle 5.2s ease-in-out 1.3s infinite' }}
@@ -436,7 +436,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-2px)' }}>
                             <Sparkle
                               size={6}
-                              color={colors.pink}
+                              color={vars.pink}
                               glow={0.38}
                               glowBlur={3}
                               style={{ animation: 'twinkle 6.6s ease-in-out 1.7s infinite' }}
@@ -445,7 +445,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(5px)' }}>
                             <Sparkle
                               size={4}
-                              color={colors.periwinkle}
+                              color={vars.periwinkle}
                               glow={0.36}
                               glowBlur={3}
                               style={{ animation: 'twinkle 4.8s ease-in-out 2s infinite' }}
@@ -454,7 +454,7 @@ export function PlannerView({ v }: { v: any }) {
                           <span style={{ display: 'flex', flex: 'none', transform: 'translateY(-5px)' }}>
                             <Sparkle
                               size={3}
-                              color={colors.teal}
+                              color={vars.teal}
                               glow={0.34}
                               glowBlur={3}
                               style={{ animation: 'twinkle 5.8s ease-in-out 2.4s infinite' }}
@@ -556,7 +556,7 @@ export function PlannerView({ v }: { v: any }) {
                             animation: 'twinkle 4.6s ease-in-out infinite',
                           }}
                         >
-                          <Sparkle size={10} color={colors.teal} glow={0.55} />
+                          <Sparkle size={10} color={vars.teal} glow={0.55} />
                         </span>
                         <span style={css(v.questIconWrap)}>
                           {v.questDone ? (
@@ -566,7 +566,7 @@ export function PlannerView({ v }: { v: any }) {
                           ) : null}
                           {v.questOpen ? (
                             <>
-                              <Sparkle size={19} color={colors.pink} />
+                              <Sparkle size={19} color={vars.pink} />
                             </>
                           ) : null}
                         </span>
@@ -896,7 +896,7 @@ export function PlannerView({ v }: { v: any }) {
                         >
                           <Moon color="var(--color-periwinkle)" size={40} />
                           <span style={{ position: 'absolute', top: '21px', right: '20px', display: 'flex' }}>
-                            <Sparkle size={9.5} outline color={colors.gold} strokeWidth={2.2} />
+                            <Sparkle size={9.5} outline color={vars.gold} strokeWidth={2.2} />
                           </span>
                         </div>
                         <Text variant="title" as="h2" style={{ margin: '22px 0 0' }}>
@@ -934,7 +934,7 @@ export function PlannerView({ v }: { v: any }) {
                             animation: 'twinkle 4s ease-in-out infinite',
                           }}
                         >
-                          <Sparkle size={13} color={colors.periwinkle} glow={0.5} />
+                          <Sparkle size={13} color={vars.periwinkle} glow={0.5} />
                         </span>
                       </div>
                     </>
@@ -1070,7 +1070,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 3.4s ease-in-out infinite',
                                 }}
                               >
-                                <Sparkle size={12} color={colors.periwinkle} glow={0.5} />
+                                <Sparkle size={12} color={vars.periwinkle} glow={0.5} />
                               </span>
                               <span
                                 style={{
@@ -1080,7 +1080,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 4.6s ease-in-out infinite',
                                 }}
                               >
-                                <Sparkle size={10} color={colors.teal} glow={0.55} />
+                                <Sparkle size={10} color={vars.teal} glow={0.55} />
                               </span>
                               <span
                                 style={{
@@ -1090,7 +1090,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 6s ease-in-out infinite',
                                 }}
                               >
-                                <Sparkle size={9} color={colors.coral} glow={0.55} />
+                                <Sparkle size={9} color={vars.coral} glow={0.55} />
                               </span>
                               <div
                                 style={{
@@ -1143,7 +1143,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 3.4s ease-in-out infinite',
                                 }}
                               >
-                                <Sparkle size={13} color={colors.periwinkle} glow={0.5} />
+                                <Sparkle size={13} color={vars.periwinkle} glow={0.5} />
                               </span>
                               <span
                                 style={{
@@ -1153,7 +1153,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 4.6s ease-in-out infinite',
                                 }}
                               >
-                                <Sparkle size={10} color={colors.teal} glow={0.55} />
+                                <Sparkle size={10} color={vars.teal} glow={0.55} />
                               </span>
                               <span
                                 style={{
@@ -1163,7 +1163,7 @@ export function PlannerView({ v }: { v: any }) {
                                   animation: 'twinkle 6s ease-in-out infinite',
                                 }}
                               >
-                                <Sparkle size={10} color={colors.coral} glow={0.55} />
+                                <Sparkle size={10} color={vars.coral} glow={0.55} />
                               </span>
                               <div
                                 style={{
@@ -1498,7 +1498,7 @@ export function PlannerView({ v }: { v: any }) {
                       animation: 'twinkle 3.4s ease-in-out infinite',
                     }}
                   >
-                    <Sparkle size={13} color={colors.periwinkle} glow={0.5} />
+                    <Sparkle size={13} color={vars.periwinkle} glow={0.5} />
                   </span>
                   <span
                     style={{
@@ -1508,7 +1508,7 @@ export function PlannerView({ v }: { v: any }) {
                       animation: 'twinkle 4.6s ease-in-out infinite',
                     }}
                   >
-                    <Sparkle size={11} color={colors.teal} glow={0.55} />
+                    <Sparkle size={11} color={vars.teal} glow={0.55} />
                   </span>
                   <span
                     style={{
@@ -1518,7 +1518,7 @@ export function PlannerView({ v }: { v: any }) {
                       animation: 'twinkle 6s ease-in-out infinite',
                     }}
                   >
-                    <Sparkle size={10} color={colors.coral} glow={0.55} />
+                    <Sparkle size={10} color={vars.coral} glow={0.55} />
                   </span>
                   <div
                     style={{
@@ -1714,7 +1714,7 @@ export function PlannerView({ v }: { v: any }) {
                         ) : null}
                       </div>
                       <span style={{ position: 'absolute', top: '0', right: '-3px' }}>
-                        <Sparkle size={16} color={colors.goldLight} glow={0.6} />
+                        <Sparkle size={16} color={vars.goldLight} glow={0.6} />
                       </span>
                       <span
                         aria-hidden="true"
@@ -2584,7 +2584,7 @@ export function PlannerView({ v }: { v: any }) {
                                     minHeight: '44px',
                                     padding: '0 2px',
                                     border: 'none',
-                                    borderBottom: '1px solid rgba(35,42,69,.08)',
+                                    borderBottom: '1px solid color-mix(in srgb, var(--color-ink) 8%, transparent)',
                                     background: 'none',
                                     fontFamily: 'inherit',
                                     textAlign: 'left',
@@ -3578,7 +3578,7 @@ export function PlannerView({ v }: { v: any }) {
                             gap: '9px',
                             width: '100%',
                             padding: '4px 2px',
-                            borderBottom: '1.5px dashed rgba(35,42,69,.22)',
+                            borderBottom: '1.5px dashed color-mix(in srgb, var(--color-ink) 22%, transparent)',
                           }}
                         >
                           <Calendar color="var(--color-subtle)" size={16} />
@@ -3964,7 +3964,7 @@ export function PlannerView({ v }: { v: any }) {
                               <span
                                 style={{ display: 'flex', animation: 'twinkle 2.6s ease-in-out infinite' }}
                               >
-                                <Sparkle size={14} color={colors.pink} glow={0.55} />
+                                <Sparkle size={14} color={vars.pink} glow={0.55} />
                               </span>
                             </>
                           ) : null}
@@ -4706,7 +4706,7 @@ export function PlannerView({ v }: { v: any }) {
                               <span
                                 style={{ display: 'flex', animation: 'twinkle 2.6s ease-in-out infinite' }}
                               >
-                                <Sparkle size={14} color={colors.pink} glow={0.55} />
+                                <Sparkle size={14} color={vars.pink} glow={0.55} />
                               </span>
                             </>
                           ) : null}
@@ -5369,7 +5369,7 @@ export function PlannerView({ v }: { v: any }) {
                           {'How did that feel? '}
                           <Sparkle
                             size={17}
-                            color={colors.periwinkle}
+                            color={vars.periwinkle}
                             glow={0.5}
                             style={{ display: 'inline-block', verticalAlign: 'middle' }}
                           />
@@ -5694,7 +5694,7 @@ function DragHandle({
       zIndex: '2',
       transition: 'none',
       cursor: 'grabbing',
-      filter: 'drop-shadow(0 10px 18px rgba(35,42,69,.14))',
+      filter: 'drop-shadow(0 10px 18px var(--color-shadow))',
     });
     document.body.style.cursor = 'grabbing';
     const place = () => {
