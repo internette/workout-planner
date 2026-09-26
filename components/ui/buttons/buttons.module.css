@@ -30,7 +30,7 @@
 .fullWidth { display: flex; width: 100%; }
 
 /* ---- Button types. Each has a filled look and, with .ghost, a text-only look. */
-.primary { background: var(--color-pink); color: var(--color-white); }
+.primary { background: var(--color-pink); color: var(--color-on-accent); }
 /* Keyboard focus looks the same as hover: a button's focus styles are its hover styles. The ring is the global one. */
 .primary:hover:not(:disabled):not([aria-disabled='true']),
 .primary:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-pink-hover); }
@@ -54,7 +54,7 @@
 .neutral.ghost:hover:not(:disabled):not([aria-disabled='true']),
 .neutral.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-neutral); filter: none; }
 
-.danger { background: var(--color-danger); color: var(--color-white); }
+.danger { background: var(--color-danger); color: var(--color-on-accent); }
 .danger:hover:not(:disabled):not([aria-disabled='true']),
 .danger:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-danger-hover); }
 .danger.ghost { background: none; color: var(--color-danger); }

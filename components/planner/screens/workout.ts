@@ -451,7 +451,7 @@ export function workoutVals(ctx: Ctx) {
       'width:40px;height:40px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;' +
       (dayCleared
         ? 'background:var(--gradient-gem)'
-        : 'background:var(--color-white);box-shadow:var(--elevation-hairline)'),
+        : 'background:var(--color-surface);box-shadow:var(--elevation-hairline)'),
     // Cleared: the quest's title is struck through and muted.
     questCleared: dayCleared,
     isDone: doneSel,
@@ -476,7 +476,7 @@ export function workoutVals(ctx: Ctx) {
     rideDoneMark:
       'width:24px;height:24px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;' +
       (rideDone ? 'background:var(--color-pink)' : 'border:1.5px solid var(--color-outline)'),
-    rideDoneStroke: rideDone ? 'var(--color-white)' : 'var(--color-outline)',
+    rideDoneStroke: rideDone ? 'var(--color-on-accent)' : 'var(--color-outline)',
     dayIcoSvg: iconSvg(
       (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (selRide ? 'bike' : 'h'),
       (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || colors.pink,

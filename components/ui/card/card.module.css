@@ -1,7 +1,7 @@
 /* A white surface that sits above the page. Raised cards sit on the canvas; overlay cards float over it. */
 
 .card {
-  background: var(--color-white);
+  background: var(--color-surface);
   color: inherit;
   box-sizing: border-box;
 }

@@ -5,6 +5,7 @@ export {
   cssVarName,
   gradients,
   overlays,
+  translucents,
   compositeVariables,
   type ColorName,
 } from './tokens';

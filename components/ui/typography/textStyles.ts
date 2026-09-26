@@ -76,7 +76,7 @@ export const textTones = {
   subtle: 'var(--color-subtle)',
   accent: 'var(--color-pink-deep)',
   danger: 'var(--color-danger)',
-  inverse: 'var(--color-white)',
+  inverse: 'var(--color-on-accent)',
 } as const;
 
 export type TextTone = keyof typeof textTones;

@@ -72,9 +72,9 @@
 }
 .provider { text-decoration: none; }
 .provider[aria-disabled='true'] { cursor: progress; }
-.google { background: var(--color-white); color: var(--color-ink); box-shadow: inset 0 0 0 1.5px var(--color-divider); }
+.google { background: var(--color-surface); color: var(--color-ink); box-shadow: inset 0 0 0 1.5px var(--color-divider); }
 .google:hover:not([aria-disabled='true']) { background: var(--color-canvas); }
-.apple { background: var(--color-ink); color: var(--color-white); }
+.apple { background: var(--color-ink); color: var(--color-on-accent); }
 .apple:hover:not([aria-disabled='true']) { background: var(--color-slate-deep); }
 .provider[aria-busy='true'] { opacity: 0.75; }
 
@@ -108,7 +108,7 @@
 .ranksLeft { flex: 1 1 320px; min-width: 0; }
 .ranksBody { max-width: 440px; margin: 12px 0 0; text-wrap: pretty; }
 .ranksRight { flex: 1 1 260px; display: flex; flex-direction: column; gap: 8px; }
-.rank { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-radius: 15px; background: var(--color-white); box-shadow: var(--elevation-hairline); }
+.rank { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-radius: 15px; background: var(--color-surface); box-shadow: var(--elevation-hairline); }
 .gem { width: 10px; height: 14px; flex: none; clip-path: polygon(50% 0, 100% 35%, 50% 100%, 0 35%); }
 .rankName { flex: 1; min-width: 0; }
 .more { padding: 0 16px; }

@@ -77,7 +77,7 @@
   padding: 18px;
   border: none;
   border-radius: var(--radius-lg);
-  background: var(--color-white);
+  background: var(--color-surface);
   box-shadow: var(--elevation-raised);
   font-family: inherit;
   font-size: var(--text-lg);

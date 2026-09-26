@@ -9,7 +9,7 @@
   padding: var(--space-3) var(--space-5) calc(var(--space-7) + env(safe-area-inset-bottom));
   border: none;
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  background: var(--color-white);
+  background: var(--color-surface);
   color: var(--color-ink);
   font-family: var(--font-body);
   animation: rise var(--dur-bar) var(--ease-soft);
@@ -47,7 +47,7 @@
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   background: var(--color-ink);
-  color: var(--color-white);
+  color: var(--color-on-accent);
   box-shadow: var(--elevation-overlay);
   font-size: var(--text-base);
   line-height: var(--leading-snug);
