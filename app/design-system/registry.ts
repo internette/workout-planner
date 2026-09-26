@@ -40,6 +40,16 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'themes',
+    title: 'Themes',
+    category: 'foundations',
+    description: 'The five colours, each in light and dark, side by side.',
+    anchors: [
+      { id: 'light', title: 'Light' },
+      { id: 'dark', title: 'Dark' },
+    ],
+  },
+  {
     slug: 'typography',
     title: 'Typography',
     category: 'foundations',

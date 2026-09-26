@@ -89,8 +89,8 @@ export const accentThemeCss = (Object.keys(LIGHT) as Exclude<Accent, 'pink'>[])
     const l = LIGHT[name];
     const d = DARK[name];
     return (
-      block(`html[data-accent="${name}"]`, { ...accentVars(l), accentWash: alpha(l.tint, 0.5) }) +
-      block(`html[data-accent="${name}"][data-theme="dark"]`, {
+      block(`[data-accent="${name}"]`, { ...accentVars(l), accentWash: alpha(l.tint, 0.5) }) +
+      block(`[data-accent="${name}"][data-theme="dark"]`, {
         ...accentVars(d),
         surface: d.surface,
         onStrong: d.surface,
@@ -109,4 +109,4 @@ export const accentThemeCss = (Object.keys(LIGHT) as Exclude<Accent, 'pink'>[])
       })
     );
   })
-  .join('') + `html[data-accent="teal"]{--gradient-gem-tint:${TEAL_GEM_TINT}}`;
+  .join('') + `[data-accent="teal"]{--gradient-gem-tint:${TEAL_GEM_TINT}}`;
