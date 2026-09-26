@@ -24,20 +24,7 @@
 .providers { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
 .legal { margin: 16px 0 0; text-wrap: pretty; }
 .toggle { display: flex; align-items: center; gap: 8px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--color-mist); }
-.toggleLink {
-  position: relative;
-  white-space: nowrap;
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-family: var(--font-body);
-  font-size: var(--text-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-accent-deep);
-}
-/* 44px to tap, without making the line taller. */
-.toggleLink::after { content: ''; position: absolute; left: -6px; right: -6px; top: 50%; height: 44px; transform: translateY(-50%); }
+.toggleLink { white-space: nowrap; }
 .error {
   display: flex;
   gap: 10px;

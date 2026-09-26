@@ -1,5 +1,5 @@
 import { Button, IconButton } from '@/components/ui/buttons';
-import { ChevronLeft, ChevronRight, Close, Pencil, Plus } from '@/components/ui/icons';
+import { ChevronDown, ChevronLeft, ChevronRight, Close, Pencil, Plus } from '@/components/ui/icons';
 import { DocPage, h2, note } from '../docs';
 
 export const metadata = { title: 'Buttons — Design system' };
@@ -22,7 +22,7 @@ export default function ButtonsPage() {
   return (
     <DocPage title="Buttons">
       <p style={{ ...note, marginTop: 8 }}>
-        <code>Button</code> for actions with a text label, <code>IconButton</code> for icon-only controls.
+        <code>Button</code> for actions with a text label, <code>IconButton</code> for icon-only controls, and <code>Button link</code> for an action written as text.
         Both come from <code>@/components/ui/buttons</code>. Hover over any of them to see the hover state. The native HTML <code>type</code> (submit, reset) is passed as <code>htmlType</code>, since <code>type</code> here is the design type.
       </p>
 
@@ -107,6 +107,30 @@ export default function ButtonsPage() {
         <Button type="dashed" size="lg" fullWidth>
           <Plus size={17} />
           Add exercise
+        </Button>
+      </div>
+
+      <h2 id="link" style={h2}>Link</h2>
+      <p style={note}>
+        <code>link</code> draws just the text, with no padding and no fill, underlined on hover and keyboard focus. Use
+        it for an action inside a sentence, or a quiet one that shouldn&apos;t look like a button, like &ldquo;+ 2
+        more&rdquo; under a list. The tap area is still 44px. The colour comes from <code>type</code>: primary (and
+        secondary) take the deep accent, neutral the muted grey in a lighter weight, danger red. <code>size</code> sets
+        the text size.
+      </p>
+      <div style={{ ...row, flexDirection: 'column', alignItems: 'flex-start', gap: 18 }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 'var(--text-base)', color: 'var(--color-muted)' }}>
+          First time here?
+          <Button type="primary" link size="sm">
+            Begin your ritual
+          </Button>
+        </span>
+        <Button type="neutral" link size="sm">
+          + 2 more
+          <ChevronDown size={15} strokeWidth={2.2} />
+        </Button>
+        <Button type="danger" link size="sm">
+          Remove from this week
         </Button>
       </div>
 
