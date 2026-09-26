@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/buttons';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -165,6 +166,13 @@ export function Preview({ slug }: { slug: string }) {
           <IconTile size="sm">
             <Bike size={20} color="var(--color-pink)" />
           </IconTile>
+        </>
+      );
+    case 'badge':
+      return (
+        <>
+          <Badge tone="soft">Done</Badge>
+          <Badge tone="neutral">Partly done</Badge>
         </>
       );
     case 'checkbox':
