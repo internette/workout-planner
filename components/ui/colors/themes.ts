@@ -78,10 +78,9 @@ const block = (selector: string, values: Record<string, string>) =>
   selector + '{' + Object.entries(values).map(([k, v]) => `${cssVarName(k)}:${v}`).join(';') + '}';
 
 // The soft gem gradient (quest and streak panels, empty states) runs accent → periwinkle → teal. In the teal theme
-// that starts and ends on teal and reads as flat, so there it runs teal → slate instead (the palette's slate, in light
-// and dark alike).
+// that starts and ends on teal and reads as flat, so there it runs teal → periwinkle → pink instead.
 const TEAL_GEM_TINT =
-  'linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 22%, transparent) 0%, color-mix(in srgb, #5C6684 22%, transparent) 100%)';
+  'linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 16%, transparent) 0%, color-mix(in srgb, var(--color-periwinkle) 16%, transparent) 50%, color-mix(in srgb, var(--color-pink) 16%, transparent) 100%)';
 
 /** Every colour theme as CSS, for ColorVariables. Each light block overrides the accent and page tint; each dark
  * block overrides Plum dusk's surfaces and text too. */
