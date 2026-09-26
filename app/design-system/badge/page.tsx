@@ -6,7 +6,7 @@ import { DocPage, h2, note } from '../docs';
 export const metadata = { title: 'Badge — Design system' };
 
 const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 };
-const listRow: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 14 };
+const listRow: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 'var(--radius-md)' };
 
 export default function BadgePage() {
   return (
@@ -50,7 +50,7 @@ export default function BadgePage() {
             ['Leg Day', 'neutral', 'Partly done'],
             ['Evening Ride', 'soft', 'Done'],
           ].map(([name, tone, label], i) => (
-            <div key={name} style={{ ...listRow, borderRadius: 0, padding: '14px 18px', borderTop: i ? '1px solid rgba(35,42,69,.07)' : 'none' }}>
+            <div key={name} style={{ ...listRow, borderRadius: 0, padding: '14px 18px', borderTop: i ? '1px solid var(--color-line)' : 'none' }}>
               <Text variant="itemTitle" tone="ink" style={{ flex: 1 }}>
                 {name}
               </Text>

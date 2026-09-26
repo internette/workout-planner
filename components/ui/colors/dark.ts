@@ -55,8 +55,6 @@ export const darkColors: Record<ColorName, string> = {
 /** The see-through colours for the dark theme: light lines on dark, and dark plum dimmed on pink. */
 export const darkTranslucents: Record<string, string> = {
   line: 'rgba(255, 255, 255, 0.08)',
-  lineFaint: 'rgba(255, 255, 255, 0.06)',
-  lineStrong: 'rgba(255, 255, 255, 0.11)',
   surfaceRest: 'rgba(255, 255, 255, 0.04)',
   surfaceBar: 'rgba(40, 29, 47, 0.94)',
   onAccentSoft: 'rgba(40, 29, 47, 0.85)',

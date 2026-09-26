@@ -13,8 +13,7 @@
   align-items: center;
   justify-content: center;
   border: none;
-  /* Off the radius scale: to settle with the off-scale radii. */
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: none;
   padding: 0;
   cursor: grab;

@@ -6,7 +6,7 @@ import { DocPage, h2, note } from '../docs';
 
 export const metadata = { title: 'Empty state — Design system' };
 
-const frame: React.CSSProperties = { background: 'var(--color-canvas)', borderRadius: 18, padding: '36px 16px 0', boxShadow: 'inset 0 0 0 1px var(--color-line)' };
+const frame: React.CSSProperties = { background: 'var(--color-canvas)', borderRadius: 'var(--radius-lg)', padding: '36px 16px 0', boxShadow: 'inset 0 0 0 1px var(--color-line)' };
 
 export default function EmptyStatePage() {
   return (

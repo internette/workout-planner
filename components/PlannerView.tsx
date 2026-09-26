@@ -256,7 +256,7 @@ export function PlannerView({ v }: { v: any }) {
                   gap: '12px',
                   marginBottom: '14px',
                   padding: '12px 16px',
-                  borderRadius: '14px',
+                  borderRadius: 'var(--radius-md)',
                   background: 'var(--color-danger-tint)',
                   color: 'var(--color-danger)',
                   fontSize: 'var(--text-base)',
@@ -312,7 +312,7 @@ export function PlannerView({ v }: { v: any }) {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               paddingBottom: '12px',
-                              borderBottom: '1px solid var(--color-line-strong)',
+                              borderBottom: '1px solid var(--color-line)',
                             }}
                           >
                             <IconButton label="Previous year" size="md" onClick={v.prevYear}>
@@ -350,7 +350,7 @@ export function PlannerView({ v }: { v: any }) {
                               justifyContent: 'center',
                               marginTop: '10px',
                               paddingTop: '10px',
-                              borderTop: '1px solid var(--color-line-strong)',
+                              borderTop: '1px solid var(--color-line)',
                             }}
                           >
                             <Button type="secondary" ghost size="sm" onClick={v.goToday}>
@@ -721,7 +721,7 @@ export function PlannerView({ v }: { v: any }) {
                                                 alignItems: 'center',
                                                 gap: '11px',
                                                 padding: '9px 0',
-                                                borderBottom: '1px solid var(--color-line-faint)',
+                                                borderBottom: '1px solid var(--color-line)',
                                               }}
                                             >
                                               {x?.isH ? (
@@ -994,7 +994,7 @@ export function PlannerView({ v }: { v: any }) {
                                 position: 'relative',
                                 marginTop: '16px',
                                 padding: '26px 24px',
-                                borderRadius: '22px',
+                                borderRadius: 'var(--radius-lg)',
                                 background:
                                   'var(--gradient-gem-tint)',
                                 textAlign: 'center',
@@ -1126,7 +1126,7 @@ export function PlannerView({ v }: { v: any }) {
                                 width: '40px',
                                 height: '40px',
                                 flex: 'none',
-                                borderRadius: '13px',
+                                borderRadius: 'var(--radius-sm)',
                                 background: 'var(--color-accent-tint)',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -1793,7 +1793,7 @@ export function PlannerView({ v }: { v: any }) {
                               gap: '12px',
                               padding: '12px 14px',
                               border: 'none',
-                              borderRadius: '14px',
+                              borderRadius: 'var(--radius-md)',
                               background: 'var(--color-canvas)',
                               textAlign: 'left',
                               cursor: 'pointer',
@@ -2025,7 +2025,7 @@ export function PlannerView({ v }: { v: any }) {
                       gap: '18px 26px',
                       marginTop: '22px',
                       padding: '22px 24px',
-                      borderRadius: '22px',
+                      borderRadius: 'var(--radius-lg)',
                       background:
                         'var(--gradient-gem-tint)',
                     }}
@@ -2335,7 +2335,7 @@ export function PlannerView({ v }: { v: any }) {
                       marginTop: '12px',
                       padding: '12px 16px',
                       background: 'var(--color-surface)',
-                      borderRadius: '15px',
+                      borderRadius: 'var(--radius-md)',
                       boxShadow: 'var(--elevation-hairline)',
                     }}
                   >
@@ -2413,7 +2413,7 @@ export function PlannerView({ v }: { v: any }) {
                           padding: '12px 16px',
                           background: 'var(--color-surface)',
                           border: 'none',
-                          borderRadius: '15px',
+                          borderRadius: 'var(--radius-md)',
                           boxShadow: 'var(--elevation-hairline)',
                           cursor: 'pointer',
                           textAlign: 'left',
@@ -2540,7 +2540,7 @@ export function PlannerView({ v }: { v: any }) {
                             padding: '12px 16px',
                             background: 'var(--color-surface)',
                             border: 'none',
-                            borderRadius: '15px',
+                            borderRadius: 'var(--radius-md)',
                             boxShadow: 'var(--elevation-hairline)',
                             cursor: 'pointer',
                             textAlign: 'left',
@@ -2750,7 +2750,7 @@ export function PlannerView({ v }: { v: any }) {
                                             width: '34px',
                                             height: '34px',
                                             flex: 'none',
-                                            borderRadius: '11px',
+                                            borderRadius: 'var(--radius-sm)',
                                             background: 'var(--color-accent-tint)',
                                             display: 'flex',
                                             alignItems: 'center',
@@ -2873,7 +2873,7 @@ export function PlannerView({ v }: { v: any }) {
                                         width: '40px',
                                         height: '40px',
                                         flex: 'none',
-                                        borderRadius: '13px',
+                                        borderRadius: 'var(--radius-sm)',
                                         background: 'var(--color-accent-tint)',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -3168,7 +3168,7 @@ export function PlannerView({ v }: { v: any }) {
                               width: '34px',
                               height: '34px',
                               flex: 'none',
-                              borderRadius: '11px',
+                              borderRadius: 'var(--radius-sm)',
                               background: 'var(--color-accent-tint)',
                               display: 'flex',
                               alignItems: 'center',
@@ -3840,7 +3840,7 @@ export function PlannerView({ v }: { v: any }) {
                                   width: '34px',
                                   height: '34px',
                                   flex: 'none',
-                                  borderRadius: '11px',
+                                  borderRadius: 'var(--radius-sm)',
                                   background: 'var(--color-accent-tint)',
                                   display: 'flex',
                                   alignItems: 'center',
@@ -3943,7 +3943,7 @@ export function PlannerView({ v }: { v: any }) {
                           width: '46px',
                           height: '46px',
                           flex: 'none',
-                          borderRadius: '15px',
+                          borderRadius: 'var(--radius-md)',
                           background: 'var(--color-accent-tint)',
                           display: 'flex',
                           alignItems: 'center',
@@ -3987,7 +3987,7 @@ export function PlannerView({ v }: { v: any }) {
                           width: '46px',
                           height: '46px',
                           flex: 'none',
-                          borderRadius: '15px',
+                          borderRadius: 'var(--radius-md)',
                           background: 'var(--color-periwinkle-tint)',
                           display: 'flex',
                           alignItems: 'center',
@@ -4054,7 +4054,7 @@ export function PlannerView({ v }: { v: any }) {
                                       width: '34px',
                                       height: '34px',
                                       flex: 'none',
-                                      borderRadius: '11px',
+                                      borderRadius: 'var(--radius-sm)',
                                       background: 'var(--color-accent-tint)',
                                       display: 'flex',
                                       alignItems: 'center',
@@ -4780,7 +4780,7 @@ export function PlannerView({ v }: { v: any }) {
                                 padding: '0 13px',
                                 background: 'var(--color-canvas)',
                                 border: '1px solid var(--color-outline)',
-                                borderRadius: '14px',
+                                borderRadius: 'var(--radius-md)',
                               }}
                             >
                               <Search color="var(--color-subtle)" size={16} />
@@ -4838,7 +4838,7 @@ export function PlannerView({ v }: { v: any }) {
                                       alignItems: 'center',
                                       gap: '8px',
                                       padding: '6px 6px 6px 16px',
-                                      borderRadius: '14px',
+                                      borderRadius: 'var(--radius-md)',
                                       background: 'var(--color-canvas)',
                                     }}
                                   >
@@ -5346,7 +5346,7 @@ function EquipmentPicker({
           minHeight: '52px',
           padding: '10px 14px',
           border: '1px solid var(--color-outline)',
-          borderRadius: '14px',
+          borderRadius: 'var(--radius-md)',
           background: 'var(--color-canvas)',
           fontFamily: 'inherit',
           textAlign: 'left',

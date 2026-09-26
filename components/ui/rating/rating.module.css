@@ -4,8 +4,7 @@
 .stars { display: flex; gap: var(--space-1); }
 .star {
   border: none;
-  /* Off the radius scale, like the icon tiles: to settle with the off-scale radii. */
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   background: none;
   padding: 0;
   min-width: 44px;

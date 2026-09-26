@@ -3,7 +3,7 @@
 .track {
   display: block;
   height: 8px;
-  border-radius: 5px;
+  border-radius: var(--radius-full);
   overflow: hidden;
 }
 .mist { background: var(--color-mist); }
@@ -12,7 +12,7 @@
 .fill {
   display: block;
   height: 100%;
-  border-radius: 5px;
+  border-radius: var(--radius-full);
   transition: width var(--dur-bar) var(--ease-standard);
 }
 .gem { background: var(--gradient-gem); }

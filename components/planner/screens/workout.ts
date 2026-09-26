@@ -448,7 +448,7 @@ export function workoutVals(ctx: Ctx) {
     questOpen: !dayCleared,
     questEyebrow: dayCleared ? 'QUEST CLEARED' : mi === TODAY_M && selDay === TODAY_D ? "TODAY'S QUEST" : 'QUEST',
     questIconWrap:
-      'width:40px;height:40px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;' +
+      'width:40px;height:40px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;' +
       (dayCleared
         ? 'background:var(--gradient-gem)'
         : 'background:var(--color-surface);box-shadow:var(--elevation-hairline)'),

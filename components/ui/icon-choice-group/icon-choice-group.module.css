@@ -7,8 +7,7 @@
 .tile {
   min-height: 48px;
   border: none;
-  /* Between radius sm and md, like the tiles it matches: to settle with the off-scale radii. */
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,8 +22,7 @@
   width: 34px;
   height: 34px;
   border: none;
-  /* Between radius xs and sm, in proportion to its 34px: to settle with the off-scale radii. */
-  border-radius: 11px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   background: var(--swatch);
 }
