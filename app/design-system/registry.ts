@@ -194,6 +194,16 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'icon-tile',
+    title: 'Icon tile',
+    category: 'components',
+    description: 'A workout’s or exercise’s icon on its pale pink tile.',
+    anchors: [
+      { id: 'sizes', title: 'Sizes' },
+      { id: 'as-a-button', title: 'As a button' },
+    ],
+  },
+  {
     slug: 'checkbox',
     title: 'Checkbox',
     category: 'components',

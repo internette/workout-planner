@@ -8,6 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog } from '@/components/ui/dialog';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { Popover } from '@/components/ui/popover';
+import { IconTile, IconTileButton } from '@/components/ui/icon-tile';
 import { ProgressBar } from '@/components/ui/progress-bar';
 import { Stat } from '@/components/ui/stat';
 import { DeleteAccount } from './planner/DeleteAccount';
@@ -621,22 +622,7 @@ export function PlannerView({ v }: { v: any }) {
                                   <div
                                     style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '14px' }}
                                   >
-                                    <div
-                                      style={{
-                                        width: '40px',
-                                        height: '40px',
-                                        flex: 'none',
-                                        borderRadius: '13px',
-                                        background: 'var(--color-pink-tint)',
-                                        border: '2px solid var(--color-white)',
-                                        boxShadow: '0 2px 6px rgba(213,49,129,.28),0 0 0 1px rgba(35,42,69,.05)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                      }}
-                                    >
-                                      {c?.icoSvg}
-                                    </div>
+                                    <IconTile size="sm">{c?.icoSvg}</IconTile>
                                     <div style={{ minWidth: '0' }}>
                                       {c?.warmup ? <WarmupTag /> : null}
                                       <Text variant="heading" as="h2" style={{ margin: '0' }}>
@@ -3083,22 +3069,7 @@ export function PlannerView({ v }: { v: any }) {
                     )}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
-                    <span
-                      style={{
-                        width: '46px',
-                        height: '46px',
-                        flex: 'none',
-                        borderRadius: '15px',
-                        background: 'var(--color-pink-tint)',
-                        border: '2px solid var(--color-white)',
-                        boxShadow: '0 2px 6px rgba(213,49,129,.28),0 0 0 1px rgba(35,42,69,.05)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      {v.exercise.svg}
-                    </span>
+                    <IconTile as="span">{v.exercise.svg}</IconTile>
                     <div style={{ minWidth: 0 }}>
                       <Text variant="eyebrow" as="div" tone="slate">
                         {v.exercise.builtin ? 'BUILT-IN EXERCISE' : 'EXERCISE'}
@@ -3218,22 +3189,7 @@ export function PlannerView({ v }: { v: any }) {
                     )}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
-                    <span
-                      style={{
-                        width: '46px',
-                        height: '46px',
-                        flex: 'none',
-                        borderRadius: '15px',
-                        background: 'var(--color-pink-tint)',
-                        border: '2px solid var(--color-white)',
-                        boxShadow: '0 2px 6px rgba(213,49,129,.28),0 0 0 1px rgba(35,42,69,.05)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      {v.template.svg}
-                    </span>
+                    <IconTile as="span">{v.template.svg}</IconTile>
                     <div style={{ minWidth: 0 }}>
                       <Text variant="eyebrow" as="div" tone="slate">
                         {v.template.eyebrow}
@@ -3848,22 +3804,7 @@ export function PlannerView({ v }: { v: any }) {
                     </Button>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
-                    <div
-                      style={{
-                        width: '46px',
-                        height: '46px',
-                        flex: 'none',
-                        borderRadius: '15px',
-                        background: 'var(--color-pink-tint)',
-                        border: '2px solid var(--color-white)',
-                        boxShadow: '0 2px 6px rgba(213,49,129,.28),0 0 0 1px rgba(35,42,69,.05)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      {v.dayIcoSvg}
-                    </div>
+                    <IconTile>{v.dayIcoSvg}</IconTile>
                     <div style={{ minWidth: '0' }}>
                       <Text variant="eyebrow" as="div" tone="slate">
                         {v.eDate}
@@ -4347,14 +4288,9 @@ export function PlannerView({ v }: { v: any }) {
                         </>
                       }
                     >
-                      <button
-                        onClick={v.toggleIcons}
-                        aria-label="Choose workout icon"
-                        aria-expanded={v.iconsOpen}
-                        style={css(v.iconBadge)}
-                      >
+                      <IconTileButton onClick={v.toggleIcons} aria-label="Choose workout icon" aria-expanded={v.iconsOpen}>
                         {v.workoutIcoSvg}
-                      </button>
+                      </IconTileButton>
                     </Popover>
                     <div style={{ flex: '1 1 220px', minWidth: '0' }}>
                       <Text variant="eyebrow" as="h1" tone="slate" style={{ margin: 0 }}>
@@ -4831,26 +4767,7 @@ export function PlannerView({ v }: { v: any }) {
                                     </>
                                   }
                                 >
-                                  <button
-                                    onClick={ex?.toggle}
-                                    className="hit"
-                                    aria-label={ex?.iconAria}
-                                    aria-expanded={ex?.open}
-                                    style={{
-                                      width: '40px',
-                                      height: '40px',
-                                      flex: 'none',
-                                      borderRadius: '13px',
-                                      background: 'var(--color-pink-tint)',
-                                      border: '2px solid var(--color-white)',
-                                      boxShadow:
-                                        '0 2px 6px rgba(213,49,129,.28),0 0 0 1px rgba(35,42,69,.05)',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      cursor: 'pointer',
-                                    }}
-                                  >
+                                  <IconTileButton size="sm" onClick={ex?.toggle} className="hit" aria-label={ex?.iconAria ?? ''} aria-expanded={ex?.open}>
                                     {t(ex?.icoSvg)}
                                     {ex?.hideLegacy ? (
                                       <>
@@ -4875,7 +4792,7 @@ export function PlannerView({ v }: { v: any }) {
                                         ) : null}
                                       </>
                                     ) : null}
-                                  </button>
+                                  </IconTileButton>
                                 </Popover>
                                 <button
                                   type="button"

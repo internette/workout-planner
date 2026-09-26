@@ -5,7 +5,8 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Chip } from '@/components/ui/chip';
 import { colors } from '@/components/ui/colors';
-import { Bike, Calendar, Check, Dumbbell, Sparkle } from '@/components/ui/icons';
+import { Bike, Calendar, Check, Dumbbell, ExerciseIcon, Sparkle } from '@/components/ui/icons';
+import { IconTile } from '@/components/ui/icon-tile';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { ProgressBar } from '@/components/ui/progress-bar';
 import { SegmentedControl } from '@/components/ui/segmented-control';
@@ -154,6 +155,17 @@ export function Preview({ slug }: { slug: string }) {
           <Stat size="lg" label="SETS × REPS" value="4 × 8" />
           <Stat size="lg" label="WEIGHT" value="95 lb" />
         </div>
+      );
+    case 'icon-tile':
+      return (
+        <>
+          <IconTile>
+            <ExerciseIcon name="h" size={22} color="var(--color-pink)" />
+          </IconTile>
+          <IconTile size="sm">
+            <Bike size={20} color="var(--color-pink)" />
+          </IconTile>
+        </>
       );
     case 'checkbox':
       return (
