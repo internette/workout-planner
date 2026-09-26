@@ -203,7 +203,7 @@ export function PlannerView({ v }: { v: any }) {
             </Card>
           ))}
           <Button type="dashed" size="md" fullWidth onClick={v.addToDialog?.pickNew}>
-            <Plus color="var(--color-pink-deep)" size={16} />
+            <Plus color="var(--color-accent-deep)" size={16} />
             New workout
           </Button>
         </div>
@@ -724,13 +724,13 @@ export function PlannerView({ v }: { v: any }) {
                                             >
                                               {x?.isH ? (
                                                 <>
-                                                  <Dumbbell color="var(--color-pink)" size={20} />
+                                                  <Dumbbell color="var(--color-accent)" size={20} />
                                                 </>
                                               ) : null}
                                               {x?.isV ? (
                                                 <>
                                                   <Dumbbell
-                                                    color="var(--color-pink)"
+                                                    color="var(--color-accent)"
                                                     size={17}
                                                     style={{ transform: 'rotate(90deg)' }}
                                                   />
@@ -738,7 +738,7 @@ export function PlannerView({ v }: { v: any }) {
                                               ) : null}
                                               {x?.isD ? (
                                                 <>
-                                                  <DumbbellSmall color="var(--color-pink)" size={20} />
+                                                  <DumbbellSmall color="var(--color-accent)" size={20} />
                                                 </>
                                               ) : null}
                                               <span style={css(x?.textStyle)}>{x?.text}</span>
@@ -818,7 +818,7 @@ export function PlannerView({ v }: { v: any }) {
                         ))}
                         <aside style={{ display: 'flex', marginTop: '14px' }}>
                           <Button type="dashed" size="md" onClick={v.goNewWorkout} style={{ flex: '1' }}>
-                            <Plus color="var(--color-pink-deep)" size={17} />
+                            <Plus color="var(--color-accent-deep)" size={17} />
                             Add workout
                           </Button>
                         </aside>
@@ -1013,7 +1013,7 @@ export function PlannerView({ v }: { v: any }) {
                                           height: '36px',
                                           flex: 'none',
                                           borderRadius: 'var(--radius-sm)',
-                                          background: 'var(--color-pink-tint)',
+                                          background: 'var(--color-accent-tint)',
                                           display: 'flex',
                                           alignItems: 'center',
                                           justifyContent: 'center',
@@ -1236,7 +1236,7 @@ export function PlannerView({ v }: { v: any }) {
                                 height: '40px',
                                 flex: 'none',
                                 borderRadius: '13px',
-                                background: 'var(--color-pink-tint)',
+                                background: 'var(--color-accent-tint)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -1278,7 +1278,7 @@ export function PlannerView({ v }: { v: any }) {
                                   justifyContent: 'center',
                                 }}
                               >
-                                <Check color="var(--color-pink)" size={20} />
+                                <Check color="var(--color-accent)" size={20} />
                               </span>
                             </div>
                             <div style={{ minWidth: '0' }}>
@@ -1547,7 +1547,7 @@ export function PlannerView({ v }: { v: any }) {
                       }}
                     >
                       <Check
-                        color="var(--color-pink)"
+                        color="var(--color-accent)"
                         strokeWidth={2.4}
                         size={30}
                         style={{ strokeDasharray: '30', animation: 'draw .5s .2s ease-out both' }}
@@ -1789,7 +1789,7 @@ export function PlannerView({ v }: { v: any }) {
                                 fontFamily: 'var(--font-heading)',
                                 fontSize: 'var(--text-md)',
                                 fontWeight: 'var(--font-weight-bold)',
-                                color: 'var(--color-pink-deep)',
+                                color: 'var(--color-accent-deep)',
                                 marginTop: '12px',
                               }}
                             >
@@ -2158,7 +2158,7 @@ export function PlannerView({ v }: { v: any }) {
                             style={{
                               fontSize: 'var(--text-base)',
                               fontWeight: 'var(--font-weight-semibold)',
-                              color: 'var(--color-pink-deep)',
+                              color: 'var(--color-accent-deep)',
                             }}
                           >
                             {t(v.streakUnit)}
@@ -2221,7 +2221,7 @@ export function PlannerView({ v }: { v: any }) {
                               display: 'block',
                               height: '7px',
                               borderRadius: '4px',
-                              background: 'var(--color-pink-tint)',
+                              background: 'var(--color-accent-tint)',
                               marginTop: '14px',
                               overflow: 'hidden',
                             }}
@@ -2395,7 +2395,7 @@ export function PlannerView({ v }: { v: any }) {
                           Adding to <strong>{v.arsenalPickTitle}</strong>
                         </Text>
                         <Button type="secondary" size="sm" onClick={v.backToPickedWorkout}>
-                          <ChevronLeft color="var(--color-pink-deep)" strokeWidth={2.2} size={14} />
+                          <ChevronLeft color="var(--color-accent-deep)" strokeWidth={2.2} size={14} />
                           Back to workout
                         </Button>
                       </Card>
@@ -2874,7 +2874,7 @@ export function PlannerView({ v }: { v: any }) {
                                             height: '34px',
                                             flex: 'none',
                                             borderRadius: '11px',
-                                            background: 'var(--color-pink-tint)',
+                                            background: 'var(--color-accent-tint)',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
@@ -2910,9 +2910,9 @@ export function PlannerView({ v }: { v: any }) {
                                           label={'Add ' + m?.name + ' to workout'}
                                           size="lg"
                                           onClick={m?.add}
-                                          style={{ background: 'var(--color-pink-tint)' }}
+                                          style={{ background: 'var(--color-accent-tint)' }}
                                         >
-                                          <Plus color="var(--color-pink-deep)" strokeWidth={2.4} size={18} />
+                                          <Plus color="var(--color-accent-deep)" strokeWidth={2.4} size={18} />
                                         </IconButton>
                                       )}
                                     </Card>
@@ -2997,7 +2997,7 @@ export function PlannerView({ v }: { v: any }) {
                                         height: '40px',
                                         flex: 'none',
                                         borderRadius: '13px',
-                                        background: 'var(--color-pink-tint)',
+                                        background: 'var(--color-accent-tint)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
@@ -3055,7 +3055,7 @@ export function PlannerView({ v }: { v: any }) {
                     {v.exercise.builtin ? (
                       <span className="bar-actions" style={{ display: 'flex', gap: '8px', marginLeft: 'auto', flex: 'none' }}>
                         <Button type="secondary" size="sm" onClick={v.exercise.copy} style={{ whiteSpace: 'nowrap' }}>
-                          <Copy color="var(--color-pink-deep)" size={16} />
+                          <Copy color="var(--color-accent-deep)" size={16} />
                           Copy
                         </Button>
                         <Button type="primary" size="sm" onClick={v.exercise.add} style={{ whiteSpace: 'nowrap' }}>
@@ -3066,7 +3066,7 @@ export function PlannerView({ v }: { v: any }) {
                     ) : (
                       <span className="bar-actions" style={{ display: 'flex', gap: '8px', marginLeft: 'auto', flex: 'none' }}>
                         <Button type="secondary" size="sm" onClick={v.exercise.edit} style={{ whiteSpace: 'nowrap' }}>
-                          <Pencil color="var(--color-pink-deep)" size={16} />
+                          <Pencil color="var(--color-accent-deep)" size={16} />
                           Edit
                         </Button>
                         <Button type="primary" size="sm" onClick={v.exercise.add} style={{ whiteSpace: 'nowrap' }}>
@@ -3181,7 +3181,7 @@ export function PlannerView({ v }: { v: any }) {
                         onClick={v.template.copy}
                         style={{ marginLeft: 'auto' }}
                       >
-                        <Copy color="var(--color-pink-deep)" size={16} />
+                        <Copy color="var(--color-accent-deep)" size={16} />
                         {v.template.copyLabel}
                       </Button>
                     ) : (
@@ -3191,7 +3191,7 @@ export function PlannerView({ v }: { v: any }) {
                         onClick={v.template.edit}
                         style={{ marginLeft: 'auto' }}
                       >
-                        <Pencil color="var(--color-pink-deep)" size={16} />
+                        <Pencil color="var(--color-accent-deep)" size={16} />
                         Edit
                       </Button>
                     )}
@@ -3230,7 +3230,7 @@ export function PlannerView({ v }: { v: any }) {
                   </Button>
                   {v.scheduleCalendar?.done ? (
                     <Card pad="sm" style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }} role="status">
-                      <Check color="var(--color-pink-deep)" strokeWidth={2.6} size={16} />
+                      <Check color="var(--color-accent-deep)" strokeWidth={2.6} size={16} />
                       <Text variant="label" tone="ink" style={{ flex: '1 1 180px', minWidth: 0 }}>
                         {v.scheduleCalendar.done}
                       </Text>
@@ -3292,7 +3292,7 @@ export function PlannerView({ v }: { v: any }) {
                               height: '34px',
                               flex: 'none',
                               borderRadius: '11px',
-                              background: 'var(--color-pink-tint)',
+                              background: 'var(--color-accent-tint)',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
@@ -3807,7 +3807,7 @@ export function PlannerView({ v }: { v: any }) {
                   <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '10px' }}>
                     <BackLink label={v.backLabel} onClick={v.backToDay} />
                     <Button type="secondary" size="sm" onClick={v.goEdit} style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
-                      <Pencil color="var(--color-pink-deep)" size={16} />
+                      <Pencil color="var(--color-accent-deep)" size={16} />
                       Edit
                     </Button>
                   </div>
@@ -3987,7 +3987,7 @@ export function PlannerView({ v }: { v: any }) {
                                   height: '34px',
                                   flex: 'none',
                                   borderRadius: '11px',
-                                  background: 'var(--color-pink-tint)',
+                                  background: 'var(--color-accent-tint)',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
@@ -4090,13 +4090,13 @@ export function PlannerView({ v }: { v: any }) {
                           height: '46px',
                           flex: 'none',
                           borderRadius: '15px',
-                          background: 'var(--color-pink-tint)',
+                          background: 'var(--color-accent-tint)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                         }}
                       >
-                        <Dumbbell color="var(--color-pink)" size={22} />
+                        <Dumbbell color="var(--color-accent)" size={22} />
                       </span>
                       <span>
                         <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
@@ -4201,7 +4201,7 @@ export function PlannerView({ v }: { v: any }) {
                                       height: '34px',
                                       flex: 'none',
                                       borderRadius: '11px',
-                                      background: 'var(--color-pink-tint)',
+                                      background: 'var(--color-accent-tint)',
                                       display: 'flex',
                                       alignItems: 'center',
                                       justifyContent: 'center',
@@ -4218,7 +4218,7 @@ export function PlannerView({ v }: { v: any }) {
                                       {w?.meta}
                                     </Text>
                                   </span>
-                                  <Plus color="var(--color-pink-deep)" size={17} />
+                                  <Plus color="var(--color-accent-deep)" size={17} />
                                 </Card>
                               ))}
                             </div>
@@ -4759,17 +4759,17 @@ export function PlannerView({ v }: { v: any }) {
                                         }}
                                       >
                                         <button onClick={ex?.pickH} aria-label="Dumbbell icon" aria-pressed={!!ex?.isH} style={css(ex?.optH)}>
-                                          <Dumbbell color="var(--color-pink)" size={20} />
+                                          <Dumbbell color="var(--color-accent)" size={20} />
                                         </button>
                                         <button onClick={ex?.pickV} aria-label="Upright dumbbell icon" aria-pressed={!!ex?.isV} style={css(ex?.optV)}>
                                           <Dumbbell
-                                            color="var(--color-pink)"
+                                            color="var(--color-accent)"
                                             size={20}
                                             style={{ transform: 'rotate(90deg)' }}
                                           />
                                         </button>
                                         <button onClick={ex?.pickD} aria-label="Small dumbbell icon" aria-pressed={!!ex?.isD} style={css(ex?.optD)}>
-                                          <DumbbellSmall color="var(--color-pink)" size={20} />
+                                          <DumbbellSmall color="var(--color-accent)" size={20} />
                                         </button>
                                       </div>
                                     </>
@@ -4781,13 +4781,13 @@ export function PlannerView({ v }: { v: any }) {
                                       <>
                                         {ex?.isH ? (
                                           <>
-                                            <Dumbbell color="var(--color-pink)" size={19} />
+                                            <Dumbbell color="var(--color-accent)" size={19} />
                                           </>
                                         ) : null}
                                         {ex?.isV ? (
                                           <>
                                             <Dumbbell
-                                              color="var(--color-pink)"
+                                              color="var(--color-accent)"
                                               size={19}
                                               style={{ transform: 'rotate(90deg)' }}
                                             />
@@ -4795,7 +4795,7 @@ export function PlannerView({ v }: { v: any }) {
                                         ) : null}
                                         {ex?.isD ? (
                                           <>
-                                            <DumbbellSmall color="var(--color-pink)" size={19} />
+                                            <DumbbellSmall color="var(--color-accent)" size={19} />
                                           </>
                                         ) : null}
                                       </>
@@ -4926,7 +4926,7 @@ export function PlannerView({ v }: { v: any }) {
                         data-add-exercise
                         style={{ marginTop: '16px' }}
                       >
-                        <Plus color="var(--color-pink)" size={19} />
+                        <Plus color="var(--color-accent)" size={19} />
                         Add exercise
                       </Button>
                     </>
@@ -5068,7 +5068,7 @@ export function PlannerView({ v }: { v: any }) {
                                       onClick={l?.add}
                                       style={{ background: 'var(--color-surface)' }}
                                     >
-                                      <Plus color="var(--color-pink-deep)" strokeWidth={2.4} size={18} />
+                                      <Plus color="var(--color-accent-deep)" strokeWidth={2.4} size={18} />
                                     </IconButton>
                                   </div>
                                 </Fragment>
@@ -5091,7 +5091,7 @@ export function PlannerView({ v }: { v: any }) {
                                 style={{ marginTop: '4px' }}
                               >
                                 Browse the full Spellbook
-                                <ChevronRight color="var(--color-pink-deep)" strokeWidth={2.2} size={14} />
+                                <ChevronRight color="var(--color-accent-deep)" strokeWidth={2.2} size={14} />
                               </Button>
                             </div>
                           </>
@@ -5272,7 +5272,7 @@ export function PlannerView({ v }: { v: any }) {
                     <BackLink label={v.diaryBackLabel || v.backLabel} onClick={v.diaryBack} />
                     {v.diaryReading ? (
                       <Button type="secondary" size="sm" onClick={v.editEntry} style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
-                        <Pencil color="var(--color-pink-deep)" size={16} />
+                        <Pencil color="var(--color-accent-deep)" size={16} />
                         Edit
                       </Button>
                     ) : null}
@@ -5297,7 +5297,7 @@ export function PlannerView({ v }: { v: any }) {
                           </Text>
                           <Button type="secondary" ghost size="xs" onClick={v.goDetail} style={{ alignSelf: 'center' }}>
                             View workout
-                            <ChevronRight color="var(--color-pink-deep)" strokeWidth={2.2} size={15} />
+                            <ChevronRight color="var(--color-accent-deep)" strokeWidth={2.2} size={15} />
                           </Button>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '22px' }}>
@@ -5479,7 +5479,7 @@ export function PlannerView({ v }: { v: any }) {
                                 marginLeft: '8px',
                                 fontSize: 'var(--text-lg)',
                                 fontWeight: 'var(--font-weight-semibold)',
-                                color: 'var(--color-pink-deep)',
+                                color: 'var(--color-accent-deep)',
                               }}
                             >
                               {v.rpeLabel}

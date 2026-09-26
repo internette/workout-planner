@@ -45,10 +45,10 @@
 .segment-sm { padding: 9px 16px; border-radius: var(--radius-sm); font-size: var(--text-md); }
 .segment-md { padding: 12px 20px; border-radius: var(--radius-sm); font-size: var(--text-base); }
 
-.tone-brand .selected { background: var(--color-pink); color: var(--color-on-accent); }
+.tone-brand .selected { background: var(--color-accent); color: var(--color-on-accent); }
 .tone-quiet .selected {
   background: var(--color-surface);
-  color: var(--color-pink-deep);
+  color: var(--color-accent-deep);
   box-shadow: var(--elevation-hairline);
 }
 

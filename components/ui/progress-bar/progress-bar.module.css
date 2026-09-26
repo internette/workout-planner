@@ -7,7 +7,7 @@
   overflow: hidden;
 }
 .mist { background: var(--color-mist); }
-.tint { background: var(--color-pink-tint); }
+.tint { background: var(--color-accent-tint); }
 
 .fill {
   display: block;

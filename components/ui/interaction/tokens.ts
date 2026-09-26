@@ -11,7 +11,7 @@ export const hovers = {
 } as const satisfies Record<string, Token>;
 
 export const focus = {
-  ring: { value: '2px solid var(--color-pink)', use: 'Around whatever has keyboard focus' },
+  ring: { value: '2px solid var(--color-accent)', use: 'Around whatever has keyboard focus' },
   offset: { value: '2px', use: 'The gap between a control and its ring' },
 } as const satisfies Record<string, Token>;
 

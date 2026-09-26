@@ -51,7 +51,7 @@ export function workoutStage(ctx: Ctx): Ctx {
       selected: pickM === mi && pd === selDay,
       style:
         "height:34px;border:none;border-radius:10px;cursor:pointer;font-family:var(--font-heading);font-size:var(--text-md);font-weight:" +
-        (pickM === mi && pd === selDay ? 'var(--font-weight-bold);background:var(--color-pink);color:var(--color-on-accent)' : 'var(--font-weight-medium);background:none;color:var(--color-ink)'),
+        (pickM === mi && pd === selDay ? 'var(--font-weight-bold);background:var(--color-accent);color:var(--color-on-accent)' : 'var(--font-weight-medium);background:none;color:var(--color-ink)'),
     });
   }
   // Editing a saved workout from the Spellbook uses this same editor, with the workout standing in for a session: no
@@ -145,7 +145,10 @@ export function workoutStage(ctx: Ctx): Ctx {
   const listKey = creating ? '__draft' : idOf(srcAct);
   const notesVal = (st.notes || {})[listKey] != null ? (st.notes || {})[listKey] : (srcAct && srcAct.notes) || '';
   const wIcon = (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (isCycleView ? 'bike' : 'h');
-  const wColor = (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || colors.pink;
+  // The colour picked for this workout's icon, if any; with none, it's drawn in the theme's accent, and the picker
+  // shows pink (the first choice) as picked.
+  const wColorSet = (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || undefined;
+  const wColor = wColorSet || colors.pink;
   // In the editor, ticks are part of the draft until Save (st.editDone); elsewhere, what's saved.
   const doneNames = (st.screen === 'edit' && st.editDone) || (st.done || {})[listKey] || [];
   const doneSet = {};
@@ -176,7 +179,7 @@ export function workoutStage(ctx: Ctx): Ctx {
       (doneSet[e.name] ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
     tick:
       'flex:none;width:18px;height:18px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
-      (doneSet[e.name] ? 'var(--color-pink)' : 'transparent'),
+      (doneSet[e.name] ? 'var(--color-accent)' : 'transparent'),
   }));
   const ridePast = mi * 100 + selDay < TK;
   // A saved workout's plan is always editable; a session's only until it's done or past.
@@ -224,6 +227,7 @@ export function workoutStage(ctx: Ctx): Ctx {
     gone,
     wIcon,
     wColor,
+    wColorSet,
     selName,
     baseName,
     baseKey,

@@ -74,7 +74,7 @@ export const textTones = {
   slate: 'var(--color-slate)',
   muted: 'var(--color-muted)',
   subtle: 'var(--color-subtle)',
-  accent: 'var(--color-pink-deep)',
+  accent: 'var(--color-accent-deep)',
   danger: 'var(--color-danger)',
   inverse: 'var(--color-on-accent)',
 } as const;

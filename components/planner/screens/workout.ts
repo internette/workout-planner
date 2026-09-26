@@ -271,7 +271,7 @@ export function workoutVals(ctx: Ctx) {
             : plural(list.length, 'exercise') + ' · ' + av.time,
       icoSvg: iconSvg(
         (st.icons || {})[id] || av.icon || (ride ? 'bike' : 'h'),
-        (st.iconColors || {})[id] || av.iconColor || colors.pink,
+        (st.iconColors || {})[id] || av.iconColor || undefined,
       ),
       open: run('goDetail'),
       isLift: !ride,
@@ -475,11 +475,11 @@ export function workoutVals(ctx: Ctx) {
     rideDoneType: rideDone ? 'secondary' : 'neutral',
     rideDoneMark:
       'width:24px;height:24px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;' +
-      (rideDone ? 'background:var(--color-pink)' : 'border:1.5px solid var(--color-outline)'),
+      (rideDone ? 'background:var(--color-accent)' : 'border:1.5px solid var(--color-outline)'),
     rideDoneStroke: rideDone ? 'var(--color-on-accent)' : 'var(--color-outline)',
     dayIcoSvg: iconSvg(
       (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (selRide ? 'bike' : 'h'),
-      (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || colors.pink,
+      (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || undefined,
     ),
     rideStats: !selRide || !selAct ? [] : rideStatsFor(selAct, rideDone),
     ctaLabel: hasEntry ? 'View Chronicle entry' : 'Write about it',
@@ -506,7 +506,7 @@ export function workoutVals(ctx: Ctx) {
     progNoteStyle:
       'margin:12px 0 0;display:flex;align-items:center;gap:7px;font-size:var(--text-md);font-weight:' +
       (selList.length && doneCount === selList.length
-        ? 'var(--font-weight-semibold);color:var(--color-pink-deep)'
+        ? 'var(--font-weight-semibold);color:var(--color-accent-deep)'
         : 'var(--font-weight-regular);color:var(--color-muted)'),
     progPct: selList.length ? Math.round((doneCount / selList.length) * 100) : 0,
     progNote:

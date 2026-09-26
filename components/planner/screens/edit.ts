@@ -36,6 +36,7 @@ export function editVals(ctx: Ctx) {
     gone,
     wIcon,
     wColor,
+    wColorSet,
     doneSel,
     selName,
     selRide,
@@ -171,7 +172,7 @@ export function editVals(ctx: Ctx) {
   const choiceOf = (w, builtinOne) => ({
       name: w.name,
       warmup: !!w.warmup && !builtinOne,
-      svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || colors.pink),
+      svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || undefined),
       meta:
         (w.kind === 'ride'
           ? ['Ride', w.ride && w.ride.dist ? w.ride.dist + ' mi' : '', w.time].filter(Boolean).join(' · ')
@@ -320,7 +321,7 @@ export function editVals(ctx: Ctx) {
     rideNoteStyle:
       'margin:14px 0 0;font-size:var(--text-md);font-weight:' +
       (ridePct != null && ridePct >= 100
-        ? 'var(--font-weight-semibold);color:var(--color-pink-deep)'
+        ? 'var(--font-weight-semibold);color:var(--color-accent-deep)'
         : 'var(--font-weight-regular);color:var(--color-muted)'),
     setHours: (e) => logic.s({ rHrs: e.target.value.replace(/[^0-9]/g, '').slice(0, 2) }),
     setMins: (e) => {
@@ -488,9 +489,9 @@ export function editVals(ctx: Ctx) {
     },
     iconsOpen: !!st.iconsOpen,
     toggleIcons: () => logic.s({ iconsOpen: !st.iconsOpen }),
-    workoutIcoSvg: iconSvg(wIcon, wColor),
+    workoutIcoSvg: iconSvg(wIcon, wColorSet),
     workoutIconGrid: EXERCISE_ICON_NAMES.map((name) => ({
-      svg: iconSvg(name, wColor),
+      svg: iconSvg(name, wColorSet),
       pick: () => logic.s({ icons: Object.assign({}, st.icons, { [listKey]: name }) }),
       label: ICON_NAMES[name] + ' icon',
       on: wIcon === name,
@@ -1022,7 +1023,7 @@ export function editVals(ctx: Ctx) {
         doneBtn:
           'margin-left:auto;display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;border-radius:11px;cursor:pointer;border:' +
           (doneSet[e.name]
-            ? 'none;background:var(--color-pink)'
+            ? 'none;background:var(--color-accent)'
             : '1.5px solid var(--color-outline);background:none'),
         doneStroke: doneSet[e.name] ? 'var(--color-on-accent)' : 'var(--color-outline)',
         isDone: !!doneSet[e.name],

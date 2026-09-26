@@ -1,4 +1,4 @@
-import { DOW1, DOW3, DOWFULL, MON3, MONTHS, PINK } from '../constants';
+import { DOW1, DOW3, DOWFULL, MON3, MONTHS, ACCENT } from '../constants';
 import { mod12, monthPatch } from '../helpers';
 import { iconSvg } from '../icons';
 import React from 'react';
@@ -68,7 +68,7 @@ export function calendarStage(ctx: Ctx): Ctx {
       isToday: cellMonth === TODAY_M && num === TODAY_D ? 'date' : false,
       wrapStyle:
         'flex:1;min-width:0;padding:8px 2px 10px;border:none;border-radius:var(--radius-md);background:' +
-        (on ? PINK : 'none') +
+        (on ? ACCENT : 'none') +
         ';display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer',
       letterStyle:
         "font-family:var(--font-heading);" +
@@ -109,9 +109,9 @@ export function calendarStage(ctx: Ctx): Ctx {
         "font-family:var(--font-heading);" +
         'padding:11px 6px;border-radius:var(--radius-sm);font-size:var(--text-base);border:none;cursor:pointer;' +
         (current
-          ? 'background:' + PINK + ';color:var(--color-on-accent);font-weight:var(--font-weight-bold)'
+          ? 'background:' + ACCENT + ';color:var(--color-on-accent);font-weight:var(--font-weight-bold)'
           : now
-            ? 'box-shadow:inset 0 0 0 1.5px var(--color-pink);color:var(--color-pink-deep);font-weight:var(--font-weight-bold)'
+            ? 'box-shadow:inset 0 0 0 1.5px var(--color-accent);color:var(--color-accent-deep);font-weight:var(--font-weight-bold)'
             : 'color:var(--color-ink);font-weight:var(--font-weight-medium)'),
     };
   });
@@ -221,13 +221,13 @@ export function calendarStage(ctx: Ctx): Ctx {
       wrap:
         'height:50px;border:none;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;' +
         (sel
-          ? 'background:var(--color-pink)'
+          ? 'background:var(--color-accent)'
           : missed
             ? 'background:var(--color-surface-rest)'
             : a
               ? 'background:var(--color-surface);box-shadow:var(--elevation-hairline)'
               : 'background:none') +
-        (today && !sel ? ';box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--color-pink) 45%, transparent)' : ''),
+        (today && !sel ? ';box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--color-accent) 45%, transparent)' : ''),
       aria: d
         ? DOWFULL[new Date(Y, mi, d).getDay()] +
           ', ' +

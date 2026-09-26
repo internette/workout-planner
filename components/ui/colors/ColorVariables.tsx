@@ -1,4 +1,5 @@
 import { darkColors, darkOverlays, darkTranslucents } from './dark';
+import { accentThemeCss } from './themes';
 import { colors, compositeVariables, cssVarName } from './tokens';
 
 // Publishes every colour, gradient and overlay token as a CSS variable on :root, and the dark theme's values under
@@ -14,6 +15,6 @@ export function ColorVariables() {
     ...Object.entries(darkOverlays).map(([name, value]) => `--${name}:${value}`),
     'color-scheme:dark',
   ];
-  const css = ':root{' + light.join(';') + '}html[data-theme="dark"]{' + dark.join(';') + '}';
+  const css = ':root{' + light.join(';') + '}html[data-theme="dark"]{' + dark.join(';') + '}' + accentThemeCss;
   return <style dangerouslySetInnerHTML={{ __html: css }} />;
 }

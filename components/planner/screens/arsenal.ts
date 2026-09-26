@@ -107,7 +107,7 @@ export function arsenalVals(ctx: Ctx) {
     name: w.name,
     // Built-in warm-ups are grouped under a WARM-UP heading already.
     warmup: !!w.warmup && !w.builtin,
-    svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || colors.pink),
+    svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || undefined),
     meta:
       w.kind === 'ride'
         ? ['Ride', w.ride && w.ride.dist ? w.ride.dist + ' mi' : '', w.ride && w.ride.zone, w.time]
@@ -423,7 +423,7 @@ export function arsenalVals(ctx: Ctx) {
   const template = chosen
     ? {
         name: chosen.name,
-        svg: iconSvg(chosen.icon || (chosen.kind === 'ride' ? 'bike' : 'h'), chosen.iconColor || colors.pink),
+        svg: iconSvg(chosen.icon || (chosen.kind === 'ride' ? 'bike' : 'h'), chosen.iconColor || undefined),
         time: chosen.time,
         areas: chosen.areas,
         needs: chosen.kind === 'ride' ? null : needsLine(builtin ? chosen.list : EX[chosen.name] || []),

@@ -30,22 +30,22 @@
 .fullWidth { display: flex; width: 100%; }
 
 /* ---- Button types. Each has a filled look and, with .ghost, a text-only look. */
-.primary { background: var(--color-pink); color: var(--color-on-accent); }
+.primary { background: var(--color-accent); color: var(--color-on-accent); }
 /* Keyboard focus looks the same as hover: a button's focus styles are its hover styles. The ring is the global one. */
 .primary:hover:not(:disabled):not([aria-disabled='true']),
-.primary:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-pink-hover); }
-.primary.ghost { background: none; color: var(--color-pink); }
+.primary:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-accent-hover); }
+.primary.ghost { background: none; color: var(--color-accent); }
 .primary.ghost:hover:not(:disabled):not([aria-disabled='true']),
-.primary.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-pink-tint); }
+.primary.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-accent-tint); }
 
 .glow { box-shadow: var(--glow-primary); }
 
-.secondary { background: var(--color-pink-tint); color: var(--color-pink-deep); }
+.secondary { background: var(--color-accent-tint); color: var(--color-accent-deep); }
 .secondary:hover:not(:disabled):not([aria-disabled='true']),
 .secondary:focus-visible:not(:disabled):not([aria-disabled='true']) { filter: brightness(0.97); }
 .secondary.ghost { background: none; }
 .secondary.ghost:hover:not(:disabled):not([aria-disabled='true']),
-.secondary.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-pink-tint); filter: none; }
+.secondary.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-accent-tint); filter: none; }
 
 .neutral { background: var(--color-canvas); color: var(--color-slate); }
 .neutral:hover:not(:disabled):not([aria-disabled='true']),
@@ -54,7 +54,7 @@
 .neutral.ghost:hover:not(:disabled):not([aria-disabled='true']),
 .neutral.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-neutral); filter: none; }
 
-.danger { background: var(--color-danger); color: var(--color-on-accent); }
+.danger { background: var(--color-danger); color: var(--color-on-strong); }
 .danger:hover:not(:disabled):not([aria-disabled='true']),
 .danger:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-danger-hover); }
 .danger.ghost { background: none; color: var(--color-danger); }
@@ -62,12 +62,12 @@
 .danger.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-danger-ghost); }
 
 .dashed {
-  border: 1px dashed color-mix(in srgb, var(--color-pink) 50%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--color-accent) 50%, transparent);
   background: var(--color-accent-wash);
-  color: var(--color-pink-deep);
+  color: var(--color-accent-deep);
 }
 .dashed:hover:not(:disabled):not([aria-disabled='true']),
-.dashed:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-pink-tint); }
+.dashed:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-accent-tint); }
 
 /* Icon buttons and the extra-small button are drawn smaller than 44 px; their tap area isn't. */
 .icon, .xs { position: relative; }

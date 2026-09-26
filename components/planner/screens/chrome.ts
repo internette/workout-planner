@@ -47,13 +47,13 @@ export function chromeVals(ctx: Ctx) {
     mTabDiary: mTab(inChronicle),
     mTabSummary: mTab(st.screen === 'summary'),
     mTabArsenal: mTab(arsenalActive),
-    mArsenalColor: arsenalActive ? 'var(--color-pink-deep)' : 'var(--color-muted)',
+    mArsenalColor: arsenalActive ? 'var(--color-accent-deep)' : 'var(--color-muted)',
     mArsenalLabel: mLabel(arsenalActive),
-    mCalColor: onCal ? 'var(--color-pink-deep)' : 'var(--color-muted)',
-    mDiaryColor: inChronicle ? 'var(--color-pink-deep)' : 'var(--color-muted)',
-    mSummaryColor: st.screen === 'summary' ? 'var(--color-pink-deep)' : 'var(--color-muted)',
+    mCalColor: onCal ? 'var(--color-accent-deep)' : 'var(--color-muted)',
+    mDiaryColor: inChronicle ? 'var(--color-accent-deep)' : 'var(--color-muted)',
+    mSummaryColor: st.screen === 'summary' ? 'var(--color-accent-deep)' : 'var(--color-muted)',
     mTabProfile: mTab(st.screen === 'profile'),
-    mProfileColor: st.screen === 'profile' ? 'var(--color-pink-deep)' : 'var(--color-muted)',
+    mProfileColor: st.screen === 'profile' ? 'var(--color-accent-deep)' : 'var(--color-muted)',
     mProfileLabel: mLabel(st.screen === 'profile'),
     mCalLabel: mLabel(onCal),
     mDiaryLabel: mLabel(inChronicle),
@@ -64,10 +64,10 @@ export function chromeVals(ctx: Ctx) {
     navProfile:
       'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (st.screen === 'profile'
-        ? 'background:var(--color-pink-tint);color:var(--color-pink-deep);font-weight:var(--font-weight-semibold)'
+        ? 'background:var(--color-accent-tint);color:var(--color-accent-deep);font-weight:var(--font-weight-semibold)'
         : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
       navExtra,
-    navProfileInk: st.screen === 'profile' ? 'var(--color-pink)' : 'var(--color-subtle)',
+    navProfileInk: st.screen === 'profile' ? 'var(--color-accent)' : 'var(--color-subtle)',
     isSummary: st.screen === 'summary',
     isSaved: st.screen === 'saved',
     goSummary: () => logic.nav({ screen: 'summary', monthOpen: false }),
@@ -76,24 +76,24 @@ export function chromeVals(ctx: Ctx) {
     navCal:
       'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (calActive
-        ? 'background:var(--color-pink-tint);color:var(--color-pink-deep);font-weight:var(--font-weight-semibold)'
+        ? 'background:var(--color-accent-tint);color:var(--color-accent-deep);font-weight:var(--font-weight-semibold)'
         : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
       navExtra,
     navDiary:
       'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (inChronicle
-        ? 'background:var(--color-pink-tint);color:var(--color-pink-deep);font-weight:var(--font-weight-semibold)'
+        ? 'background:var(--color-accent-tint);color:var(--color-accent-deep);font-weight:var(--font-weight-semibold)'
         : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
       navExtra,
-    navCalInk: calActive ? 'var(--color-pink)' : 'var(--color-subtle)',
-    navDiaryInk: inChronicle ? 'var(--color-pink)' : 'var(--color-subtle)',
+    navCalInk: calActive ? 'var(--color-accent)' : 'var(--color-subtle)',
+    navDiaryInk: inChronicle ? 'var(--color-accent)' : 'var(--color-subtle)',
     navSummary:
       'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (st.screen === 'summary'
-        ? 'background:var(--color-pink-tint);color:var(--color-pink-deep);font-weight:var(--font-weight-semibold)'
+        ? 'background:var(--color-accent-tint);color:var(--color-accent-deep);font-weight:var(--font-weight-semibold)'
         : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
       navExtra,
-    navSummaryInk: st.screen === 'summary' ? 'var(--color-pink)' : 'var(--color-subtle)',
+    navSummaryInk: st.screen === 'summary' ? 'var(--color-accent)' : 'var(--color-subtle)',
     announce: st.announce || '',
     // The confirmation for this screen, if there is one.
     notice: st.notice && st.notice.screen === st.screen ? st.notice.text : '',
@@ -264,10 +264,10 @@ export function chromeVals(ctx: Ctx) {
     navArsenal:
       'display:flex;align-items:center;gap:11px;padding:11px 13px;border:none;border-radius:14px;font-size:var(--text-base);text-align:left;cursor:pointer;' +
       (arsenalActive
-        ? 'background:var(--color-pink-tint);color:var(--color-pink-deep);font-weight:var(--font-weight-semibold)'
+        ? 'background:var(--color-accent-tint);color:var(--color-accent-deep);font-weight:var(--font-weight-semibold)'
         : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
       navExtra,
-    navArsenalInk: arsenalActive ? 'var(--color-pink)' : 'var(--color-subtle)',
+    navArsenalInk: arsenalActive ? 'var(--color-accent)' : 'var(--color-subtle)',
     isCal: st.screen === 'day' || st.screen === 'rest',
     isEdit: st.screen === 'edit' && !(creating && !st.newType),
     isDiary: st.screen === 'diary',
