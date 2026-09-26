@@ -9,6 +9,7 @@ import { Dialog } from '@/components/ui/dialog';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { Popover } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
+import { EmptyState } from '@/components/ui/empty-state';
 import { IconTile, IconTileButton } from '@/components/ui/icon-tile';
 import { ProgressBar } from '@/components/ui/progress-bar';
 import { Stat } from '@/components/ui/stat';
@@ -826,118 +827,55 @@ export function PlannerView({ v }: { v: any }) {
                     </>
                   ) : null}
                   {v.firstRun ? (
-                    <div style={{ position: 'relative', marginTop: '48px', padding: '0 20px 80px', textAlign: 'center' }}>
-                      <div
-                        style={{
-                          width: '78px',
-                          height: '78px',
-                          margin: '0 auto',
-                          borderRadius: 'var(--radius-full)',
-                          background: 'var(--gradient-gem-tint)',
-                          boxShadow: 'var(--elevation-raised)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        <Gem size={40} />
-                      </div>
-                      <Text variant="title" as="h2" style={{ margin: '22px 0 0' }}>
-                        The call is coming
-                      </Text>
-                      <p
-                        style={{
-                          margin: '10px auto 0',
-                          maxWidth: '340px',
-                          fontSize: 'var(--text-lg)',
-                          fontWeight: 'var(--font-weight-medium)',
-                          lineHeight: 'var(--leading-relaxed)',
-                          color: 'var(--color-muted)',
-                          textWrap: 'pretty',
-                        }}
-                      >
-                        Put your first lift or ride on the calendar. That day gets a quest, and every exercise you
-                        clear starts your climb from First spark.
-                      </p>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', marginTop: '24px' }}>
-                        <Button type="primary" size="lg" glow onClick={v.goNewWorkout}>
-                          <Plus color="var(--color-on-accent)" size={16} />
-                          Plan your first workout
-                        </Button>
-                        <Button type="neutral" ghost size="md" onClick={v.goArsenal}>
-                          Browse the Spellbook
-                        </Button>
-                      </div>
-                    </div>
+                    <EmptyState
+                      style={{ marginTop: '48px' }}
+                      medallion="gem"
+                      icon={<Gem size={40} />}
+                      title="The call is coming"
+                      description="Put your first lift or ride on the calendar. That day gets a quest, and every exercise you clear starts your climb from First spark."
+                      actions={
+                        <>
+                          <Button type="primary" size="lg" glow onClick={v.goNewWorkout}>
+                            <Plus color="var(--color-on-accent)" size={16} />
+                            Plan your first workout
+                          </Button>
+                          <Button type="neutral" ghost size="md" onClick={v.goArsenal}>
+                            Browse the Spellbook
+                          </Button>
+                        </>
+                      }
+                    />
                   ) : null}
                   {v.isRest ? (
-                    <>
-                      <div
-                        style={{
-                          position: 'relative',
-                          marginTop: '56px',
-                          padding: '0 20px 80px',
-                          textAlign: 'center',
-                        }}
-                      >
-                        <div
-                          style={{
-                            position: 'relative',
-                            width: '78px',
-                            height: '78px',
-                            margin: '0 auto',
-                            borderRadius: 'var(--radius-full)',
-                            background: 'var(--color-surface)',
-                            boxShadow: 'var(--elevation-raised)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}
-                        >
+                    <EmptyState
+                      style={{ marginTop: '56px' }}
+                      icon={
+                        <>
                           <Moon color="var(--color-periwinkle)" size={40} />
                           <span style={{ position: 'absolute', top: '21px', right: '20px', display: 'flex' }}>
                             <Sparkle size={9.5} outline color={vars.gold} strokeWidth={2.2} />
                           </span>
-                        </div>
-                        <Text variant="title" as="h2" style={{ margin: '22px 0 0' }}>
-                          The city is quiet
-                        </Text>
-                        <p
-                          style={{
-                            margin: '10px auto 0',
-                            maxWidth: '330px',
-                            fontSize: 'var(--text-lg)',
-                            fontWeight: 'var(--font-weight-medium)',
-                            lineHeight: 'var(--leading-relaxed)',
-                            color: 'var(--color-muted)',
-                            textWrap: 'pretty',
-                          }}
-                        >
-                          No quest {v.restDayPhrase}. Rest is how the power comes back — or add a workout if
-                          you&apos;re feeling it.
-                        </p>
-                        <Button
-                          type="primary"
-                          size="lg"
-                          glow
-                          onClick={v.goNewWorkout}
-                          style={{ marginTop: '24px' }}
-                        >
+                        </>
+                      }
+                      title="The city is quiet"
+                      description={
+                        <>
+                          No quest {v.restDayPhrase}. Rest is how the power comes back — or add a workout if you&apos;re
+                          feeling it.
+                        </>
+                      }
+                      actions={
+                        <Button type="primary" size="lg" glow onClick={v.goNewWorkout}>
                           <Plus color="var(--color-on-accent)" size={16} />
                           Add workout
                         </Button>
-                        <span
-                          style={{
-                            position: 'absolute',
-                            left: '14%',
-                            bottom: '120px',
-                            animation: 'twinkle 4s ease-in-out infinite',
-                          }}
-                        >
+                      }
+                      decoration={
+                        <span style={{ position: 'absolute', left: '14%', bottom: '120px', animation: 'twinkle 4s ease-in-out infinite' }}>
                           <Sparkle size={13} color={vars.periwinkle} glow={0.5} />
                         </span>
-                      </div>
-                    </>
+                      }
+                    />
                   ) : null}
                   {v.showWeek ? (
                     <>
@@ -1122,86 +1060,38 @@ export function PlannerView({ v }: { v: any }) {
                           </>
                         ) : null}
                         {v.noRows ? (
-                          <>
-                            <div
-                              style={{
-                                position: 'relative',
-                                margin: '34px 0 0',
-                                padding: '34px 24px 30px',
-                                borderRadius: 'var(--radius-xl)',
-                                background:
-                                  'var(--gradient-gem-tint)',
-                                textAlign: 'center',
-                                overflow: 'hidden',
-                              }}
-                            >
-                              <span
-                                style={{
-                                  position: 'absolute',
-                                  left: '11%',
-                                  top: '18px',
-                                  animation: 'twinkle 3.4s ease-in-out infinite',
-                                }}
-                              >
-                                <Sparkle size={13} color={vars.periwinkle} glow={0.5} />
-                              </span>
-                              <span
-                                style={{
-                                  position: 'absolute',
-                                  right: '13%',
-                                  top: '40px',
-                                  animation: 'twinkle 4.6s ease-in-out infinite',
-                                }}
-                              >
-                                <Sparkle size={10} color={vars.teal} glow={0.55} />
-                              </span>
-                              <span
-                                style={{
-                                  position: 'absolute',
-                                  left: '22%',
-                                  bottom: '22px',
-                                  animation: 'twinkle 6s ease-in-out infinite',
-                                }}
-                              >
-                                <Sparkle size={10} color={vars.coral} glow={0.55} />
-                              </span>
-                              <div
-                                style={{
-                                  width: '66px',
-                                  height: '66px',
-                                  margin: '0 auto',
-                                  borderRadius: 'var(--radius-full)',
-                                  background: 'var(--color-surface)',
-                                  boxShadow: 'var(--elevation-raised)',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <Gem size={32} />
-                              </div>
-                              <Text variant="subheading" as="h3" style={{ margin: '20px 0 0' }}>
-                                Your wand&apos;s still charging
-                              </Text>
-                              <Text
-                                variant="body"
-                                as="p"
-                                tone="slate"
-                                style={{ margin: '10px auto 0', maxWidth: '340px', textWrap: 'pretty' }}
-                              >
-                                {v.emptyWeekNote}
-                              </Text>
+                          <EmptyState
+                            size="md"
+                            panel
+                            titleAs="h3"
+                            style={{ margin: '34px 0 0' }}
+                            icon={<Gem size={32} />}
+                            title="Your wand&apos;s still charging"
+                            description={v.emptyWeekNote}
+                            actions={
                               <Button
                                 type="primary"
                                 size="lg"
                                 onClick={v.goNewWorkout}
-                                style={{ marginTop: '22px' }}
                               >
                                 <Plus color="var(--color-on-accent)" size={16} />
                                 Add workout
                               </Button>
-                            </div>
-                          </>
+                            }
+                            decoration={
+                              <>
+                                <span style={{ position: 'absolute', left: '11%', top: '18px', animation: 'twinkle 3.4s ease-in-out infinite' }}>
+                                  <Sparkle size={13} color={vars.periwinkle} glow={0.5} />
+                                </span>
+                                <span style={{ position: 'absolute', right: '13%', top: '40px', animation: 'twinkle 4.6s ease-in-out infinite' }}>
+                                  <Sparkle size={10} color={vars.teal} glow={0.55} />
+                                </span>
+                                <span style={{ position: 'absolute', left: '22%', bottom: '22px', animation: 'twinkle 6s ease-in-out infinite' }}>
+                                  <Sparkle size={10} color={vars.coral} glow={0.55} />
+                                </span>
+                              </>
+                            }
+                          />
                         ) : null}
                       </div>
                     </>

@@ -1,12 +1,13 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/buttons';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Chip } from '@/components/ui/chip';
 import { colors } from '@/components/ui/colors';
-import { Bike, Calendar, Check, Dumbbell, ExerciseIcon, Sparkle } from '@/components/ui/icons';
+import { Bike, Calendar, Check, Dumbbell, ExerciseIcon, Gem, Sparkle } from '@/components/ui/icons';
 import { IconTile } from '@/components/ui/icon-tile';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { ProgressBar } from '@/components/ui/progress-bar';
@@ -174,6 +175,12 @@ export function Preview({ slug }: { slug: string }) {
           <Badge tone="soft">Done</Badge>
           <Badge tone="neutral">Partly done</Badge>
         </>
+      );
+    case 'empty-state':
+      return (
+        <div style={{ width: 210, transform: 'scale(.8)', transformOrigin: 'top center', marginBottom: -30 }}>
+          <EmptyState size="md" panel icon={<Gem size={32} />} title="Still charging" />
+        </div>
       );
     case 'checkbox':
       return (
