@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Button } from '@/components/ui/buttons';
 import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
@@ -133,7 +134,8 @@ export default function CardPage() {
 
       <h2 id="as-a-section" style={h2}>As a section</h2>
       <p style={note}>
-        <code>as</code> can be div (the default), section, aside, article or button.
+        <code>as</code> can be div (the default), section, aside, article, button or dialog. Pick the element that says
+        what the card is: a region of the page is a section, a card that is clicked is a button.
       </p>
       <Card as="section" pad="lg">
         <div style={title}>Upper Body Push</div>
@@ -144,6 +146,16 @@ export default function CardPage() {
           </Button>
         </div>
       </Card>
+
+      <h2 id="as-a-dialog" style={h2}>As a dialog</h2>
+      <p style={note}>
+        <code>as=&quot;dialog&quot;</code> renders a native <code>&lt;dialog&gt;</code>, with{' '}
+        <code>elevation=&quot;overlay&quot;</code> so it floats above the page. Don&apos;t build a modal from it
+        directly: use <Link href="/design-system/dialog" style={{ color: 'var(--color-accent-deep)', fontWeight: 'var(--font-weight-semibold)' }}>
+          Dialog
+        </Link>, which is this card as a dialog, and adds opening it as
+        a modal, moving focus in and back, closing on Escape or a press outside, and its title, text and buttons.
+      </p>
     </DocPage>
   );
 }
