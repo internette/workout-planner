@@ -4,7 +4,7 @@ import { EXERCISE_ICON_NAMES } from '@/components/ui/icons';
 import { iconSvg } from '../icons';
 import { optStyle } from '../styles';
 import * as db from '@/lib/plannerData';
-import { colors } from '@/components/ui/colors';
+import { colors, themed } from '@/components/ui/colors';
 import type { Ctx } from '../types';
 
 // Create / edit workout screen: ride plan, exercise list, icons, date picker, save and delete.
@@ -502,8 +502,8 @@ export function editVals(ctx: Ctx) {
       pick: () => logic.s({ iconColors: Object.assign({}, st.iconColors, { [listKey]: c }) }),
       style:
         'width:34px;height:34px;border:none;border-radius:11px;cursor:pointer;background:' +
-        c +
-        (c === wColor ? ';box-shadow:0 0 0 2px var(--color-surface),0 0 0 4px ' + c : ''),
+        themed(c) +
+        (c === wColor ? ';box-shadow:0 0 0 2px var(--color-surface),0 0 0 4px ' + themed(c) : ''),
     })),
     eName: selName,
     eNotes: notesVal,

@@ -1,10 +1,10 @@
 import type { CSSProperties } from 'react';
-import { colors } from '../colors';
+import { vars } from '../colors';
 import { Sparkle } from './Sparkle';
 
 // A trail of stars that tapers off and wanders up and down: rose, periwinkle, cyan, repeating. Each one twinkles on its
 // own slower clock, so the trail never pulses in step. The twinkle keyframes are in planner.css.
-const COLORS = [colors.pink, colors.periwinkle, colors.teal];
+const COLORS = [vars.pink, vars.periwinkle, vars.teal];
 const WANDER = [-9, 3, -4, 7, -7, 1, -2, 5, -5]; // px
 const SIZE = [11, 8, 9, 6, 7, 5, 6, 4, 3]; // px
 

@@ -66,6 +66,16 @@ export const colors = Object.fromEntries(entries.map(([name, c]) => [name, c.hex
 /** "pinkHover" -> "--color-pink-hover" */
 export const cssVarName = (name: string) => '--color-' + name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase());
 
+/** A colour from the palette as its CSS variable, so it follows the theme; any other colour as it is. For colours
+ * that arrive as hex, such as a workout's icon colour saved in the database. */
+export const themed = (color: string | null | undefined): string | undefined => {
+  if (!color) return undefined;
+  const hit = (Object.entries(colors) as [string, string][]).find(
+    ([name, hex]) => hex.toUpperCase() === color.toUpperCase() && name !== 'surface' && name !== 'onAccent' && name !== 'white',
+  );
+  return hit ? `var(${cssVarName(hit[0])})` : color;
+};
+
 /** name -> "var(--color-…)" */
 export const vars = Object.fromEntries(entries.map(([name]) => [name, `var(${cssVarName(name)})`])) as Record<
   ColorName,
@@ -84,7 +94,7 @@ export const gradients = {
     use: 'The crystal: progress fills, the avatar and the top ranks',
   },
   'gem-tint': {
-    value: `linear-gradient(135deg, ${rgba(colors.pink, 0.16)} 0%, ${rgba(colors.periwinkle, 0.16)} 50%, ${rgba(colors.teal, 0.16)} 100%)`,
+    value: 'linear-gradient(135deg, color-mix(in srgb, var(--color-pink) 16%, transparent) 0%, color-mix(in srgb, var(--color-periwinkle) 16%, transparent) 50%, color-mix(in srgb, var(--color-teal) 16%, transparent) 100%)',
     use: 'A ceremonial panel: the quest and streak banners. Use it once per screen',
   },
 } as const;
@@ -99,6 +109,7 @@ export const translucents = {
   onAccentSoft: { value: rgba('#FFFFFF', 0.85), use: 'Secondary text and icons on pink' },
   onAccentMuted: { value: rgba('#FFFFFF', 0.8), use: 'Small labels on pink' },
   onAccentFaint: { value: rgba('#FFFFFF', 0.6), use: 'Marks on pink, such as a rest-day dash' },
+  shadow: { value: rgba(colors.ink, 0.14), use: 'The shadow under something lifted off the page, such as a row being dragged' },
   accentWash: { value: 'rgba(252, 231, 239, 0.5)', use: 'A see-through pink fill: the dashed "add" button' },
 } as const;
 

@@ -62,7 +62,7 @@
   margin: 3px 0 0;
   min-height: 44px;
   padding: 5px 0;
-  border-bottom: 1.5px dashed rgba(35, 42, 69, 0.3);
+  border-bottom: 1.5px dashed color-mix(in srgb, var(--color-ink) 30%, transparent);
   font-family: var(--font-heading);
   font-size: var(--text-3xl);
   font-weight: var(--font-weight-bold);

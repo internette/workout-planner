@@ -62,7 +62,7 @@ summary:focus-visible, [tabindex]:focus-visible {
 
 /* Generated from the design's style-hover attributes; !important so they beat inline styles. */
 .hv1:hover{background:var(--hover-neutral) !important}
-.hv3:hover{color:var(--color-pink-deep) !important;background:rgba(35,42,69,.04) !important}
+.hv3:hover{color:var(--color-pink-deep) !important;background:color-mix(in srgb, var(--color-ink) 4%, transparent) !important}
 .hv6:hover{filter:brightness(.97) !important}
 .hv7:hover{background:var(--color-pink-tint) !important}
 
