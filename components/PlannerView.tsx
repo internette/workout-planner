@@ -13,6 +13,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { IconChoiceGroup } from '@/components/ui/icon-choice-group';
 import { IconTile, IconTileButton } from '@/components/ui/icon-tile';
 import { ProgressBar } from '@/components/ui/progress-bar';
+import { MoodRating, StarRating } from '@/components/ui/rating';
 import { Stat } from '@/components/ui/stat';
 import { DeleteAccount } from './planner/DeleteAccount';
 import { AppearanceSetting } from './planner/AppearanceSetting';
@@ -48,7 +49,6 @@ import {
   Sparkle,
   SpellCards,
   User,
-  RatingStar,
 } from '@/components/ui/icons';
 import { vars } from '@/components/ui/colors';
 
@@ -3541,22 +3541,7 @@ export function PlannerView({ v }: { v: any }) {
                                 {e?.warmup ? <WarmupTag inline /> : null}
                                 <ChevronRight color="var(--color-subtle)" strokeWidth={2.2} size={16} />
                               </span>
-                              <span
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '3px',
-                                  marginTop: '6px',
-                                }}
-                              >
-                                {(e?.stars ?? []).map((s, i) => (
-                                  <Fragment key={i}>
-                                    <span className="fc-star" data-on={s ? '' : undefined} style={{ display: 'inline-flex' }}>
-                                      <RatingStar on={!!s} size={18} />
-                                    </span>
-                                  </Fragment>
-                                ))}
-                              </span>
+                              <StarRating readOnly value={e?.rpe ?? 0} style={{ marginTop: '6px' }} />
                               <Text
                                 variant="caption"
                                 tone="muted"
@@ -5150,15 +5135,7 @@ export function PlannerView({ v }: { v: any }) {
                               <Text variant="cardTitle" tone="ink">
                                 {v.rpeLabel}
                               </Text>
-                              <span style={{ display: 'flex', gap: '3px' }}>
-                                {(v.readStars ?? []).map((s, i) => (
-                                  <Fragment key={i}>
-                                    <span className="fc-star" data-on={s ? '' : undefined} style={{ display: 'inline-flex' }}>
-                                      <RatingStar on={!!s} size={18} />
-                                    </span>
-                                  </Fragment>
-                                ))}
-                              </span>
+                              <StarRating readOnly value={v.rpe} />
                             </div>
                           </Card>
                         </div>
@@ -5219,56 +5196,12 @@ export function PlannerView({ v }: { v: any }) {
                           {v.longDate}
                         </p>
                       </div>
-                      <div
-                        role="radiogroup"
-                        aria-label="How did it feel?"
-                        style={{
-                          // Four across at every width, like a row of buttons, never wrapping one onto its own line.
-                          display: 'grid',
-                          gridTemplateColumns: 'repeat(4,minmax(0,1fr))',
-                          gap: '4px',
-                          maxWidth: '360px',
-                          margin: v.entryLeft ? '28px 0 0 -2px' : '34px auto 0',
-                        }}
-                      >
-                        {(v.moods ?? []).map((m, i) => (
-                          <Fragment key={i}>
-                            <button
-                              role="radio"
-                              aria-checked={!!m?.checked}
-                              tabIndex={m?.tab}
-                              data-mood={m?.index}
-                              onKeyDown={m?.keys}
-                              onClick={m?.pick}
-                              style={css(m?.wrap)}
-                            >
-                              <span className="fc-keep" style={css(m?.face)}>
-                                {m?.isHappy ? (
-                                  <>
-                                    <MoodFace mood="Happy" size={34} />
-                                  </>
-                                ) : null}
-                                {m?.isNeutral ? (
-                                  <>
-                                    <MoodFace mood="Neutral" size={34} />
-                                  </>
-                                ) : null}
-                                {m?.isSad ? (
-                                  <>
-                                    <MoodFace mood="Sad" size={34} />
-                                  </>
-                                ) : null}
-                                {m?.isMad ? (
-                                  <>
-                                    <MoodFace mood="Mad" size={34} />
-                                  </>
-                                ) : null}
-                              </span>
-                              <span style={css(m?.label)}>{m?.name}</span>
-                            </button>
-                          </Fragment>
-                        ))}
-                      </div>
+                      <MoodRating
+                        label="How did it feel?"
+                        value={v.mood}
+                        onChange={v.pickMood}
+                        style={{ margin: v.entryLeft ? '28px 0 0 -2px' : '34px auto 0' }}
+                      />
                       <div style={{ maxWidth: '560px', margin: v.entryLeft ? '40px 0 0' : '40px auto 0' }}>
                         <div
                           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
@@ -5286,25 +5219,13 @@ export function PlannerView({ v }: { v: any }) {
                         </div>
                         {/* The effort word right after the stars, as a saved entry shows it: "★★★★☆ Hard". */}
                         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', marginTop: '8px' }}>
-                          <div role="radiogroup" aria-label="How hard did it feel?" style={{ display: 'flex', gap: '4px', marginLeft: '-6px' }}>
-                            {(v.stars ?? []).map((s, i) => (
-                              <Fragment key={i}>
-                                <button
-                                  role="radio"
-                                  aria-checked={!!s?.checked}
-                                  aria-label={s?.label}
-                                  tabIndex={s?.tab}
-                                  data-star={s?.index}
-                                  data-on={s?.on ? '' : undefined}
-                                  onKeyDown={s?.keys}
-                                  onClick={s?.pick}
-                                  style={css(s?.style)}
-                                >
-                                  <RatingStar on={!!s?.on} size={36} />
-                                </button>
-                              </Fragment>
-                            ))}
-                          </div>
+                          <StarRating
+                            label="How hard did it feel?"
+                            value={v.rpe}
+                            onChange={v.pickRpe}
+                            words={v.rpeWords}
+                            style={{ marginLeft: '-6px' }}
+                          />
                           {v.rpeLabel ? (
                             <span
                               style={{

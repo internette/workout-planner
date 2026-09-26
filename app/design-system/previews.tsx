@@ -12,6 +12,7 @@ import { IconChoiceGroup } from '@/components/ui/icon-choice-group';
 import { IconTile } from '@/components/ui/icon-tile';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
 import { ProgressBar } from '@/components/ui/progress-bar';
+import { StarRating } from '@/components/ui/rating';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { Stat } from '@/components/ui/stat';
 import { TextField } from '@/components/ui/text-field';
@@ -207,6 +208,8 @@ export function Preview({ slug }: { slug: string }) {
           />
         </div>
       );
+    case 'rating':
+      return <StarRating label="Example" value={4} onChange={noop} size={28} />;
     case 'option-card':
       return (
         <div style={{ width: 210 }}>
