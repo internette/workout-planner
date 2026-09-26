@@ -7,6 +7,7 @@ import { Chip } from '@/components/ui/chip';
 import { colors } from '@/components/ui/colors';
 import { Bike, Calendar, Check, Dumbbell, Sparkle } from '@/components/ui/icons';
 import { OptionCard, OptionGroup } from '@/components/ui/option-card';
+import { ProgressBar } from '@/components/ui/progress-bar';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { TextField } from '@/components/ui/text-field';
 import { Text } from '@/components/ui/typography';
@@ -138,6 +139,13 @@ export function Preview({ slug }: { slug: string }) {
           <span style={{ width: 40, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--hover-neutral)', boxShadow: 'inset 0 0 0 1px var(--color-divider)' }} />
           <span style={{ width: 40, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--color-white)', outline: 'var(--focus-ring)', outlineOffset: 'var(--focus-offset)' }} />
         </>
+      );
+    case 'progress-bar':
+      return (
+        <div style={{ width: 190, display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <ProgressBar value={75} track="tint" />
+          <ProgressBar value={40} />
+        </div>
       );
     case 'checkbox':
       return (

@@ -172,6 +172,18 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'progress-bar',
+    title: 'Progress bar',
+    category: 'components',
+    description: 'How far along something is, filling from the left.',
+    anchors: [
+      { id: 'tracks', title: 'Tracks' },
+      { id: 'fills', title: 'Fills' },
+      { id: 'filling', title: 'Filling' },
+      { id: 'accessibility', title: 'Accessibility' },
+    ],
+  },
+  {
     slug: 'checkbox',
     title: 'Checkbox',
     category: 'components',
@@ -236,7 +248,6 @@ export const sections: Section[] = [
 
 // Ideas for what to build next. These are proposals, not commitments.
 export const planned: { title: string; why: string }[] = [
-  { title: 'Progress bar', why: 'The same gradient track appears four times.' },
   { title: 'Badge', why: 'Status pills and the WARM-UP tag, which Chip does not cover.' },
   { title: 'Empty state', why: 'Six near-identical gradient panels with sparkles.' },
   { title: 'Stat tile', why: 'An icon, a number and a label, repeated on three screens.' },

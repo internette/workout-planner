@@ -1,0 +1,24 @@
+/* A bar that fills from the left. The track is 8px tall with 5px corners; the fill rounds the same way. */
+
+.track {
+  display: block;
+  height: 8px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.mist { background: var(--color-mist); }
+.tint { background: var(--color-pink-tint); }
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: 5px;
+  transition: width var(--dur-bar) var(--ease-standard);
+}
+.gem { background: var(--gradient-gem); }
+
+/* Forced colours drop backgrounds, which is all a bar is drawn with: outline the track and fill it in Highlight. */
+@media (forced-colors: active) {
+  .track { outline: 1px solid CanvasText; outline-offset: -1px; }
+  .fill { forced-color-adjust: none; background: Highlight; }
+}
