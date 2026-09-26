@@ -145,6 +145,7 @@ export const sections: Section[] = [
       { id: 'clickable', title: 'Clickable' },
       { id: 'as-a-list', title: 'As a list' },
       { id: 'as-a-section', title: 'As a section' },
+      { id: 'as-a-dialog', title: 'As a dialog' },
     ],
   },
   {
