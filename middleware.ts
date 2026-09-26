@@ -2,9 +2,16 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getAuth0 } from '@/lib/auth0';
 
 // Public: the front door, the design-system site, the SDK's own routes (/auth/...), and the token route, which
-// answers 401 itself when signed out, so the page's code can tell.
+// answers 401 itself when signed out, so the page's code can tell. The Claude connector and its discovery document
+// too: the connector checks its own bearer token (Claude has no session cookie) and answers 401 itself.
 const isPublic = (path: string) =>
-  path === '/welcome' || path === '/api/token' || path.startsWith('/design-system') || path.startsWith('/auth/');
+  path === '/welcome' ||
+  path === '/api/token' ||
+  path === '/api/mcp' ||
+  path === '/api/oauth-protected-resource' ||
+  path.startsWith('/.well-known/') ||
+  path.startsWith('/design-system') ||
+  path.startsWith('/auth/');
 
 // On unless NEXT_PUBLIC_AUTH_REQUIRED=false (see lib/auth.ts).
 const required = () => process.env.NEXT_PUBLIC_AUTH_REQUIRED !== 'false';

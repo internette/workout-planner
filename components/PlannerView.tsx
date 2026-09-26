@@ -18,6 +18,7 @@ import { MoodRating, StarRating } from '@/components/ui/rating';
 import { Stat } from '@/components/ui/stat';
 import { DeleteAccount } from './planner/DeleteAccount';
 import { AppearanceSetting } from './planner/AppearanceSetting';
+import { SummonPlan } from './planner/SummonPlan';
 import { Text } from '@/components/ui/typography';
 import { Chip } from '@/components/ui/chip';
 import { Label, TextArea, TextField } from '@/components/ui/text-field';
@@ -486,6 +487,7 @@ export function PlannerView({ v }: { v: any }) {
                       style={v.segLayout}
                     />
                   </div>
+                  <SummonPlan onAdd={v.addPlanDraft} adding={!!v.addingPlan} />
                   <div role="tabpanel" id="calendar-view" aria-labelledby={'calendar-view-' + v.calendarView}>
                   {v.showDay ? (
                     <>

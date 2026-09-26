@@ -7,7 +7,10 @@ import { freshIdToken } from '@/lib/sessionToken';
 export const dynamic = 'force-dynamic';
 
 // Everything a person owns, children before parents in case the tables reference each other.
-const TABLES = ['diary_entries', 'plan_entries', 'workout_exercises', 'library_exercises', 'workouts'] as const;
+const TABLES = ['plan_drafts', 'diary_entries', 'plan_entries', 'workout_exercises', 'library_exercises', 'workouts'] as const;
+// Tables that only exist once a later migration has run: missing is the same as empty.
+const OPTIONAL = new Set<string>(['plan_drafts']);
+const isMissingTable = (code?: string) => code === '42P01' || code === 'PGRST205';
 
 const respond = (body: object, status: number) => NextResponse.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
 
@@ -38,7 +41,7 @@ export async function POST(request: Request) {
     });
     for (const table of TABLES) {
       const { error } = await db.from(table).delete().eq('user_id', sub);
-      if (error) throw new Error(`${table}: ${error.message}`);
+      if (error && !(OPTIONAL.has(table) && isMissingTable(error.code))) throw new Error(`${table}: ${error.message}`);
     }
   } catch (e) {
     console.error('Account deletion stopped while deleting data:', e instanceof Error ? e.message : e);
