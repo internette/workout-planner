@@ -99,6 +99,7 @@ export const translucents = {
   onAccentSoft: { value: rgba('#FFFFFF', 0.85), use: 'Secondary text and icons on pink' },
   onAccentMuted: { value: rgba('#FFFFFF', 0.8), use: 'Small labels on pink' },
   onAccentFaint: { value: rgba('#FFFFFF', 0.6), use: 'Marks on pink, such as a rest-day dash' },
+  accentWash: { value: 'rgba(252, 231, 239, 0.5)', use: 'A see-through pink fill: the dashed "add" button' },
 } as const;
 
 export const overlays = {

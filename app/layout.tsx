@@ -5,6 +5,7 @@ import { TypographyVariables } from '@/components/ui/typography';
 import { ElevationVariables } from '@/components/ui/elevation';
 import { StructureVariables } from '@/components/ui/StructureVariables';
 import { RegisterServiceWorker } from '@/components/RegisterServiceWorker';
+import { themeScript } from '@/components/planner/theme';
 
 export const metadata: Metadata = {
   title: 'Moonshot — Magical Girl Training Plan',
@@ -15,8 +16,10 @@ export const viewport: Viewport = { themeColor: '#FBF1F3' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    // The theme script sets data-theme before React loads, so the server's <html> can differ: that's expected.
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <ColorVariables />
         <TypographyVariables />
         <ElevationVariables />

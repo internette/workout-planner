@@ -10,3 +10,4 @@ export {
   type ColorName,
 } from './tokens';
 export { ColorVariables } from './ColorVariables';
+export { darkColors, darkTranslucents, darkOverlays } from './dark';
