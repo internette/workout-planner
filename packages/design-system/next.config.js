@@ -5,6 +5,10 @@
 const nextConfig = {
   reactStrictMode: true,
   basePath: '/design-system',
+  // The project's own address has nothing at its root (everything is under the basePath), so send it to the site.
+  async redirects() {
+    return [{ source: '/', destination: '/design-system', basePath: false, permanent: false }];
+  },
 };
 
 module.exports = nextConfig;

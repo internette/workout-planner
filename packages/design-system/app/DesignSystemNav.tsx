@@ -94,7 +94,6 @@ export function DesignSystemNav() {
   const links = (
     <>
       {link('/', 'Overview', pathname === '/')}
-      {link('/#brand', 'Brand', false)}
       {(Object.keys(categories) as Category[]).map((category) => (
         <div key={category} style={{ display: 'contents' }}>
           <div className={styles.group}>{categories[category].title}</div>
@@ -151,7 +150,6 @@ export function DesignSystemNav() {
       {headingChips}
       <div className={styles.mGrid}>
         {mobileLink('/', 'Overview', pathname === '/')}
-        {mobileLink('/#brand', 'Brand', false)}
       </div>
       {(Object.keys(categories) as Category[]).map((category) => (
         <div key={category}>

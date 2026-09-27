@@ -4,10 +4,10 @@ import { colorGroups } from '../src/colors/tokens';
 // sidebar both read this. A folder in the package's src that is not listed here still shows up on the
 // landing page, under "Not yet organised", so nothing gets lost.
 
-export type Category = 'foundations' | 'components';
+export type Category = 'brand' | 'foundations' | 'components';
 
 export interface Section {
-  /** The folder name in the package's src, which is also the URL segment. */
+  /** The URL segment, and the folder name in the package's src when the section has one of its own. */
   slug: string;
   title: string;
   category: Category;
@@ -17,6 +17,10 @@ export interface Section {
 }
 
 export const categories: Record<Category, { title: string; description: string }> = {
+  brand: {
+    title: 'Brand',
+    description: 'The Moonshot logo, and the app’s big moments.',
+  },
   foundations: {
     title: 'Foundations',
     description: 'The tokens everything else is built from: colour, type and icons.',
@@ -28,6 +32,18 @@ export const categories: Record<Category, { title: string; description: string }
 };
 
 export const sections: Section[] = [
+  {
+    slug: 'logo',
+    title: 'Logo',
+    category: 'brand',
+    description: 'The lockup, the mark, the favicon and the app icon, at the sizes they’re used.',
+    anchors: [
+      { id: 'lockup', title: 'Lockup' },
+      { id: 'mark', title: 'Mark' },
+      { id: 'favicon', title: 'Favicon' },
+      { id: 'app-icon', title: 'App icon' },
+    ],
+  },
   {
     slug: 'colors',
     title: 'Colors',
