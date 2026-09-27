@@ -4309,10 +4309,8 @@ export function PlannerView({ v }: { v: any }) {
                                 onReps={ex?.setReps}
                                 onWeight={ex?.setWeight}
                                 onRest={ex?.setRest}
-                                placeholders={false}
-                                style={{ marginTop: '16px' }}
                               />
-                              <AreaChoice areas={ex?.areas ?? []} labelStyle={{ margin: '14px 0 7px' }} />
+                              <AreaChoice areas={ex?.areas ?? []} />
                               </>
                               ) : null}
                             </Card>
@@ -4579,7 +4577,7 @@ export function PlannerView({ v }: { v: any }) {
                       onChange={v.setNotes}
                     />
                   </div>
-                  <FormActions style={{ marginTop: '24px' }}>
+                  <FormActions>
                     {v.saveHint ? (
                       <Text variant="caption" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
                         {v.saveHint}
