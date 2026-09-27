@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src packages --ext .ts,.tsx"
+    "lint": "eslint src packages --ext .ts,.tsx",
+    "dev:design-system": "npm run dev -w @moonshot/design-system",
+    "build:design-system": "npm run build -w @moonshot/design-system"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.30.0",

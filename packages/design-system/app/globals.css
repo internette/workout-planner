@@ -1,0 +1,4 @@
+/* In-page links (the sidebar's section anchors) scroll rather than jump. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}

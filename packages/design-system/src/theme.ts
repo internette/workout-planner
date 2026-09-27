@@ -58,6 +58,6 @@ export function setAccent(accent: Accent) {
   applyLook(savedTheme(), accent);
 }
 
-// Runs in <head> before the page draws, so the saved look never flashes the default first. The design system site
-// stays light and pink. Kept as a string: it's inlined into the root layout.
-export const themeScript = `(function(){try{if(location.pathname.indexOf('/design-system')===0)return;var P=${JSON.stringify(PAGE)};var t=localStorage.getItem('${THEME_KEY}')==='dark'?'dark':'light';var a=localStorage.getItem('${ACCENT_KEY}');if(!P[a])a='pink';var r=document.documentElement;if(t==='dark')r.dataset.theme='dark';if(a!=='pink')r.dataset.accent=a;if(t!=='light'||a!=='pink')document.addEventListener('DOMContentLoaded',function(){var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',P[a][t])})}catch(e){}})()`;
+// Runs in <head> before the page draws, so the saved look never flashes the default first. Kept as a string: it's
+// inlined into the root layout.
+export const themeScript = `(function(){try{var P=${JSON.stringify(PAGE)};var t=localStorage.getItem('${THEME_KEY}')==='dark'?'dark':'light';var a=localStorage.getItem('${ACCENT_KEY}');if(!P[a])a='pink';var r=document.documentElement;if(t==='dark')r.dataset.theme='dark';if(a!=='pink')r.dataset.accent=a;if(t!=='light'||a!=='pink')document.addEventListener('DOMContentLoaded',function(){var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',P[a][t])})}catch(e){}})()`;

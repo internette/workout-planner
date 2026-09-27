@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import '@moonshot/design-system/base.css';
 import './planner.css';
 import { ColorVariables, colors } from '@moonshot/design-system/colors';
 import { TypographyVariables } from '@moonshot/design-system/typography';
