@@ -1,21 +1,18 @@
 import fs from 'fs';
 import path from 'path';
-import Image from 'next/image';
 import Link from 'next/link';
-import { Lockup } from '../src/brand/Lockup';
 import { Card } from '../src/card';
 import { Chip } from '../src/chip';
 import { Text } from '../src/typography';
 import { Preview } from './previews';
-import { ShowcaseCard } from './ShowcaseCard';
 import { RankUpDemo } from './RankUpDemo';
-import { BASE_PATH } from './basePath';
 import { categories, planned, sections, type Category } from './registry';
 import styles from './design-system.module.css';
 
 export const metadata = { title: 'Design system' };
 
-// Folders in the package's src that the registry doesn't know about yet. Brand and rank-up are on the Brand shelf.
+// Folders in the package's src that the registry doesn't know about yet. Brand (the Logo page) and rank-up (its demo)
+// are under Brand.
 function unlistedFolders(): string[] {
   const known = new Set([...sections.map((s) => s.slug), 'brand', 'rank-up']);
   const uiDir = path.join(process.cwd(), 'src');
@@ -25,18 +22,6 @@ function unlistedFolders(): string[] {
     .map((e) => e.name)
     .sort();
 }
-
-const asset = (file: string, size: number, rounded = false) => (
-  <Image src={`${BASE_PATH}/brand/${file}`} alt="" width={size} height={size} unoptimized style={rounded ? { borderRadius: '22%', boxShadow: 'var(--elevation-raised)' } : undefined} />
-);
-
-// The four pieces of artwork in public/brand. The lockup is drawn inline (its name is live text), so it is not an image.
-const BRAND = [
-  { file: 'moonshot-lockup.svg', title: 'Lockup', use: 'The mark with the name. Headers and footers, left-aligned.', preview: <Lockup height={40} /> },
-  { file: 'moonshot-mark.svg', title: 'Mark', use: 'The mark alone, where the name is already on the page.', preview: asset('moonshot-mark.svg', 64) },
-  { file: 'moonshot-favicon.svg', title: 'Favicon', use: 'The mark enlarged to hold up at 16px in a browser tab.', preview: asset('moonshot-favicon.svg', 64) },
-  { file: 'moonshot-app-icon-1024.svg', title: 'App icon', use: 'The mark on the app tint. The home-screen icon, sized 192 and 512.', preview: asset('moonshot-app-icon-1024.svg', 72, true) },
-];
 
 export default function DesignSystemPage() {
   const unlisted = unlistedFolders();
@@ -85,29 +70,10 @@ export default function DesignSystemPage() {
                   </Card>
                 </Link>
               ))}
+            {category === 'brand' ? <RankUpDemo /> : null}
           </div>
         </section>
       ))}
-
-      <section id="brand" className={styles.section}>
-        <Text variant="heading" tone="ink" as="h2" style={{ margin: 0 }}>
-          Brand
-        </Text>
-        <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 16px' }}>
-          The Moonshot mark and name, and the app&apos;s big moments. The artwork is in the package&apos;s <code>public/brand</code>; the colours
-          and type it uses are under Foundations.
-        </Text>
-        <div className={styles.grid}>
-          {BRAND.map((asset) => (
-            <ShowcaseCard key={asset.file} stage={asset.preview} title={asset.title} use={asset.use}>
-              <a className={styles.download} href={`${BASE_PATH}/brand/${asset.file}`} download>
-                Download SVG
-              </a>
-            </ShowcaseCard>
-          ))}
-          <RankUpDemo />
-        </div>
-      </section>
 
       {unlisted.length ? (
         <section className={styles.section}>
