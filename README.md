@@ -102,7 +102,7 @@ Until steps 1 to 5 are done, the landing page's provider buttons say "Sign-in is
 
 How it fits together: the buttons are links to `/auth/login?connection=…`, which the Auth0 SDK's middleware turns into a redirect to Auth0 and back to `/auth/callback`. The browser gets the ID token it needs for Supabase from `GET /api/token`, which reads the session cookie on the server, renews the token when it is close to expiring, and returns 401 when signed out. Signing out is `/auth/logout`, from the Account card at the foot of Profile, which shows the provider and email and asks first. The same card holds the account deletion described above.
 
-Two things to know. Google and Apple sign-ins for the same person are **separate Auth0 users** unless you link them, so they would see separate data; Auth0 documents an Action that links accounts by verified email. And the Google and Apple marks in `components/auth/marks.tsx` are drawn approximations: replace them with each provider's official assets before going live. The landing page mentions terms and a privacy policy that do not exist yet.
+Two things to know. Google and Apple sign-ins for the same person are **separate Auth0 users** unless you link them, so they would see separate data; Auth0 documents an Action that links accounts by verified email. And the Google and Apple marks in `src/features/auth/marks.tsx` are drawn approximations: replace them with each provider's official assets before going live. The landing page mentions terms and a privacy policy that do not exist yet.
 
 ### Assistant connector ("Summon a plan")
 
@@ -135,27 +135,38 @@ The app finds out a plan has arrived by checking `plan_drafts` every few seconds
 ## How it works
 
 ```
-app/                  Next.js App Router: layout, global styles (planner.css), the (planner) group with a page per nav address, /welcome and /api/token
-  design-system/      The routes for the design-system site at /design-system: one line each, serving the docs in packages/design-system
-components/
-  Planner.tsx         Host component: loading and error screens, renders the view
-  PlannerLoader.tsx   Loads the planner on the client only (its layout depends on window width)
-  PlannerView.tsx     The markup for every screen, with no logic of its own
-  dcLogic.ts          Small base class that gives the logic its immediate-merge setState
-  viewHelpers.tsx     css() and t() helpers used by the view
-  auth/               The landing page and the Google and Apple sign-in buttons (the server side is in lib/auth0.ts, middleware.ts and app/api/token)
-  planner/
-    routes.ts         Which address each nav item has, and which screen an address opens
-    PlannerLogic.ts   UI state, navigation, loading and saving; renderVals() assembles the view's values
-    context.ts        Runs the stages below in order to build a shared context
-    stages/           Derived values, built up in order: base (clock, layout), entries, calendar, stats, workout
-    screens/          One builder per area of the UI: chrome, calendar, workout, edit, diary, arsenal (the Spellbook), progress
-    constants.ts      Names, quests, ranks and other fixed data
-    helpers.ts        Small pure helpers (ids, ISO dates, quest lookup)
-    icons.tsx         Exercise icons and mood faces
-    styles.ts         Inline-style builders for active/inactive controls
-    types.ts          The loose Ctx type shared by stages and screens
-    RankUpDemo.tsx    The rank-up transformation, played on demand on the design system's Brand shelf
+src/
+  app/                  Next.js App Router, routes only: layout, global styles (planner.css), the (planner) group with a
+                        page per nav address, /welcome, /api, and /design-system (one line each, serving packages/design-system)
+  middleware.ts         Guards the planner and the sign-in routes
+  features/             One folder per part of the app, named as it appears on screen
+    planner/            The shell: Planner (host: loading and error screens, history), PlannerLoader (client only),
+                        PlannerView (the markup, still one file; step 2 splits it into the features below), StatusScreen,
+                        routes.ts (which address each screen has), chrome.model.ts (nav and screen switches), styles.ts,
+                        viewHelpers.tsx (css() and t()), useViewport
+      store/            PlannerLogic (UI state, navigation, loading and saving; renderVals() assembles the view's values),
+                        dcLogic (its immediate-merge setState), context.ts and types.ts (the loose Ctx), and derive/:
+                        the shared derived values, built in order: base (clock, layout), entries, stats
+    calendar/           model.ts (the calendar's values) and derive.ts (month, week, day and the month grid)
+    session/            model.ts (the day card and the session page) and derive.ts (the selected workout)
+    editor/             model.ts: the workout editor
+    spellbook/          model.ts: the Spellbook, its filters, and the exercise and workout pages
+    chronicle/          model.ts: the Chronicle list, new entries and reading an entry
+    progress/           model.ts (Progress and Profile's stats), RankUp (the transformation) and RankUpDemo (for the design system)
+    profile/            AppearanceSetting, DeleteAccount
+    summon/             SummonPlan: "Summon a plan" with Claude or ChatGPT
+    install/            The install prompt and the service worker registration
+    auth/               The landing page and the Google and Apple sign-in buttons (the server side is in lib/auth0.ts,
+                        middleware.ts and app/api/token)
+  shared/               Used across features: constants (names, quests, ranks), helpers (ids, ISO dates, quest lookup),
+                        icons (exercise icons and mood faces)
+  lib/
+    supabase.ts         Supabase client
+    auth.ts             Browser-safe sign-in settings: the login links, the connection names, the NEXT_PUBLIC_AUTH_REQUIRED
+                        switch and the ID-token fetch Supabase uses
+    auth0.ts            The server's Auth0 client and its callback rules (server only)
+    plannerData.ts      Loads the database into the shapes the UI uses, and all writes
+    mcp/                The assistant connector's token check and tools
 packages/
   design-system/      @moonshot/design-system, an npm workspace package. The app imports it only through its package.json
                       exports (@moonshot/design-system/buttons, /colors, /theme…), and it never imports the app (ESLint enforces both)
@@ -164,15 +175,11 @@ packages/
                       and theme.ts (light or dark and the accent colour, saved in this browser). No Next.js or app code
     docs/             The design-system site: overview, sidebar and a page per section (registry.ts lists them; docs.tsx is
                       the frame and text styles they share)
-lib/
-  supabase.ts         Supabase client
-  auth.ts             Browser-safe sign-in settings: the login links, the connection names, the NEXT_PUBLIC_AUTH_REQUIRED switch and the ID-token fetch Supabase uses
-  auth0.ts            The server's Auth0 client and its callback rules (server only)
-  plannerData.ts      Loads the database into the shapes the UI uses, and all writes
+vendors.config.ts     Switches for the vendor-reliant features (see "Vendor features")
 supabase/migrations/  SQL to run in the Supabase SQL editor
 ```
 
-**Data flow.** On load, `loadModel` reads all five tables and builds one model: exercises by workout, one entry per date, diary entries, ticks and the library. On each render, `PlannerLogic.renderVals()` builds a context from that model plus the UI state (the stages in `planner/stages/`), then each screen builder in `planner/screens/` turns the context into the values and handlers its part of the view needs.
+**Data flow.** On load, `loadModel` reads all five tables and builds one model: exercises by workout, one entry per date, diary entries, ticks and the library. On each render, `PlannerLogic.renderVals()` builds a context from that model plus the UI state (the shared stages in `features/planner/store/derive/`, then each feature's `derive.ts`), then each feature's `model.ts` turns the context into the values and handlers its part of the view needs.
 
 Ticks update the screen immediately. Other saves (creating or editing a workout, diary entries, deletes, the Spellbook) are written to Supabase first. When the writes finish, the model is reloaded and the UI state cleared. Writes run in order, and a failed one shows a dismissible error banner.
 
@@ -186,5 +193,5 @@ Ticks update the screen immediately. Other saves (creating or editing a workout,
 - **Current year only.** Entries from other years don't appear on the calendar.
 - **Free-text exercise fields** such as "4 × 8", "135 lb" and "90 sec" are stored as numbers. Text that doesn't fit those shapes, like "3 × 45s", loses its detail on save.
 - **Duplicate exercise rows.** Adding an existing exercise to another workout creates a separate row rather than a link.
-- **Fixed profile.** The profile name ("Mika") and start date are constants in `components/planner/constants.ts`.
+- **Fixed profile.** The profile name ("Mika") and start date are constants in `src/shared/constants.ts`.
 - **Moods** are stored as `happy`, `neutral`, `sad` or `mad`, the only values the `diary_entries` table accepts.

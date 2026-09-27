@@ -154,7 +154,7 @@ export function DesignSystemOverview({ showcase }: { showcase?: ReactNode }) {
             </Text>
             <Text variant="caption" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
               Create a folder in the package&apos;s <code>src</code> and list it in its <code>package.json</code> exports, add
-              its page in <code>docs</code> and a one-line route at <code>app/design-system/&lt;name&gt;</code>, then list it
+              its page in <code>docs</code> and a one-line route at <code>src/app/design-system/&lt;name&gt;</code>, then list it
               in <code>registry.ts</code> so it appears here and in the sidebar.
             </Text>
           </Card>
