@@ -472,7 +472,7 @@ export function workoutVals(ctx: Ctx) {
       });
     },
     rideDoneLabel: rideDone ? 'Ride completed' : 'Mark ride complete',
-    rideDoneType: rideDone ? 'secondary' : 'neutral',
+    rideDoneType: rideDone ? ('secondary' as const) : ('neutral' as const),
     rideDoneMark:
       'width:24px;height:24px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;' +
       (rideDone ? 'background:var(--color-accent)' : 'border:1.5px solid var(--color-outline)'),

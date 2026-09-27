@@ -1,0 +1,148 @@
+import { type ReactNode } from 'react';
+import { IconButton } from '@moonshot/design-system/buttons';
+import { Card } from '@moonshot/design-system/card';
+import { IconChoiceGroup } from '@moonshot/design-system/icon-choice-group';
+import { IconTileButton } from '@moonshot/design-system/icon-tile';
+import { ChevronDown, Close, Dumbbell, DumbbellSmall } from '@moonshot/design-system/icons';
+import { Popover } from '@moonshot/design-system/popover';
+import { Text } from '@moonshot/design-system/typography';
+import { AreaChoice } from '@/components/AreaChoice';
+import { DoneTick } from '@/components/DoneTick';
+import { SetsFields } from '@/components/SetsFields';
+import { t } from '@/features/planner/viewHelpers';
+
+/** An exercise in the editor’s list: its icon, sets and target areas when opened, its tick, and removing it. `handle` is the drag handle from ReorderableList. */
+export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle: ReactNode }) {
+  return (
+    <Card pad="sm">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
+        {handle}
+        <Popover
+          open={!!exercise?.open}
+          onClose={exercise?.close}
+          width={186}
+          top={48}
+          content={
+            <>
+              <Text
+                variant="micro"
+                as="div"
+                tone="slate"
+                style={{ padding: '0 2px 9px' }}
+              >
+                ICON
+              </Text>
+              <IconChoiceGroup
+                label="Icon"
+                columns={3}
+                style={{ gap: '7px' }}
+                value={exercise?.iconValue}
+                onChange={exercise?.pickIcon}
+                options={[
+                  { value: 'h', label: 'Dumbbell icon', icon: <Dumbbell color="var(--color-accent)" size={20} /> },
+                  {
+                    value: 'v',
+                    label: 'Upright dumbbell icon',
+                    icon: <Dumbbell color="var(--color-accent)" size={20} style={{ transform: 'rotate(90deg)' }} />,
+                  },
+                  { value: 'd', label: 'Small dumbbell icon', icon: <DumbbellSmall color="var(--color-accent)" size={20} /> },
+                ]}
+              />
+            </>
+          }
+        >
+          <IconTileButton size="sm" onClick={exercise?.toggle} className="hit" aria-label={exercise?.iconAria ?? ''} aria-expanded={exercise?.open}>
+            {t(exercise?.icoSvg)}
+            {exercise?.hideLegacy ? (
+              <>
+                {exercise?.isH ? (
+                  <>
+                    <Dumbbell color="var(--color-accent)" size={19} />
+                  </>
+                ) : null}
+                {exercise?.isV ? (
+                  <>
+                    <Dumbbell
+                      color="var(--color-accent)"
+                      size={19}
+                      style={{ transform: 'rotate(90deg)' }}
+                    />
+                  </>
+                ) : null}
+                {exercise?.isD ? (
+                  <>
+                    <DumbbellSmall color="var(--color-accent)" size={19} />
+                  </>
+                ) : null}
+              </>
+            ) : null}
+          </IconTileButton>
+        </Popover>
+        <button
+          type="button"
+          onClick={exercise?.toggleExpand}
+          aria-expanded={!!exercise?.expanded}
+          className="hit"
+          style={{
+            flex: '1',
+            minWidth: '0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            border: 'none',
+            background: 'none',
+            padding: '0',
+            textAlign: 'left',
+            font: 'inherit',
+            color: 'inherit',
+            cursor: 'pointer',
+          }}
+        >
+          {/* The name fills the row, so every chevron lines up in one column beside the tick and ✕. */}
+          <span style={{ flex: '1', minWidth: '0' }}>
+            <Text
+          variant="cardTitle"
+          tone={exercise?.nameDone ? 'muted' : 'ink'}
+          style={{ display: 'block', textDecoration: exercise?.nameDone ? 'line-through' : undefined }}
+        >
+          {exercise?.name}
+        </Text>
+            {!exercise?.expanded ? (
+              <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
+                {exercise?.detail}
+              </Text>
+            ) : null}
+          </span>
+          <ChevronDown
+            color="var(--color-muted)"
+            size={16}
+            style={{ flex: 'none', transform: exercise?.expanded ? 'rotate(180deg)' : 'none' }}
+          />
+        </button>
+        {exercise?.showTick ? (
+          <DoneTick done={!!exercise?.isDone} onToggle={exercise?.toggleDone} label={exercise?.doneAria ?? ''} />
+        ) : (
+          <span style={{ marginLeft: 'auto' }} />
+        )}
+        <IconButton label={exercise?.removeAria} size="sm" onClick={exercise?.remove}>
+          <Close color="var(--color-muted)" size={19} />
+        </IconButton>
+      </div>
+      {exercise?.expanded ? (
+      <>
+      <SetsFields
+        sets={exercise?.sets ?? ''}
+        reps={exercise?.reps ?? ''}
+        weight={exercise?.weight ?? ''}
+        rest={exercise?.rest ?? ''}
+        onSets={exercise?.setSets}
+        onReps={exercise?.setReps}
+        onWeight={exercise?.setWeight}
+        onRest={exercise?.setRest}
+      />
+      <AreaChoice areas={exercise?.areas ?? []} />
+      </>
+      ) : null}
+    </Card>
+  );
+}

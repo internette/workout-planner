@@ -156,20 +156,28 @@ src/
   middleware.ts         Guards the planner and the sign-in routes
   features/             One folder per part of the app, named as it appears on screen
     planner/            The shell: Planner (host: loading and error screens, history), PlannerLoader (client only),
-                        PlannerView (the markup, still one file; step 2 splits it into the features below), PlannerStatus
+                        PlannerView (the screens, which place each feature's sections), Sidebar, TabBar,
+                        ConfirmDialog, SaveErrorBanner, NoticeBanner, PlannerStatus
                         (the loading and error screens, in the planner's words),
                         routes.ts (which address each screen has), chrome.model.ts (nav and screen switches), styles.ts,
                         viewHelpers.tsx (css() and t()), useViewport
       store/            PlannerLogic (UI state, navigation, loading and saving; renderVals() assembles the view's values),
                         dcLogic (its immediate-merge setState), context.ts and types.ts (the loose Ctx), and derive/:
                         the shared derived values, built in order: base (clock, layout), entries, stats
-    calendar/           model.ts (the calendar's values) and derive.ts (month, week, day and the month grid)
-    session/            model.ts (the day card and the session page) and derive.ts (the selected workout)
-    editor/             model.ts: the workout editor
-    spellbook/          model.ts: the Spellbook, its filters, and the exercise and workout pages
-    chronicle/          model.ts: the Chronicle list, new entries and reading an entry
-    progress/           model.ts: Progress and Profile's stats
-    profile/            AppearanceSetting, DeleteAccount
+    calendar/           model.ts (the calendar's values), derive.ts (month, week, day and the month grid), and its
+                        sections: MonthPicker, QuestCard, DayWorkoutCard, WeekRow, MonthGrid, AddToDayDialog, RestartDialog
+    session/            model.ts (the day card and the session page), derive.ts (the selected workout), SessionTimer,
+                        SessionExerciseRow, RideSessionCard, FinishDialog, LeaveWorkoutDialog
+    editor/             model.ts: the workout editor, and its sections: TypeChoiceCards, SavedChoices, EditorHeader,
+                        DatePicker, RidePlanFields, RideActualCard, EditorExerciseItem, AddExercisePanel, LeaveEditorDialog
+    spellbook/          model.ts: the Spellbook, its filters, and the exercise and workout pages. AreaFilter, EquipmentFilter,
+                        NewExerciseCard, ExerciseRow, WorkoutRow, ExerciseEditForm, ScheduleDialog, SaveScopeDialog
+    chronicle/          model.ts: the Chronicle list, new entries and reading an entry. ChronicleRow, EntryReadView,
+                        DiaryEntryForm
+    progress/           model.ts: Progress and Profile's stats. StreakBanner, ThisWeekCard, NextUpCard, WeekQuestsCard,
+                        RanksDialog
+    profile/            ProfileHeaderCard, SessionsPerWeekCard, QuestsClearedCard, MoodSplitCard, PersonalBestsCard,
+                        AccountCard, AppearanceSetting, DeleteAccount, SignOutDialog
     summon/             SummonPlan: "Summon a plan" with Claude or ChatGPT
     install/            The install prompt and the service worker registration
     auth/               The landing page and the Google and Apple sign-in buttons (the server side is in lib/auth0.ts,

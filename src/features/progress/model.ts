@@ -286,8 +286,8 @@ export function progressVals(ctx: Ctx) {
       ['Sad', 'var(--color-periwinkle)'],
       ['Mad', 'var(--color-danger)'],
     ]
-      .map(([name, color]) => [name, color, Math.round(((moodCounts[name] || 0) / moodTotal) * 100)])
-      .map(([name, color, pct]) => ({
+      .map(([name, color]) => ({ name, color, pct: Math.round(((moodCounts[name] || 0) / moodTotal) * 100) }))
+      .map(({ name, color, pct }) => ({
         name,
         pct: pct + '%',
         swatch: 'width:10px;height:10px;flex:none;border-radius:var(--radius-full);background:' + color,
