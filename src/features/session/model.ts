@@ -503,11 +503,6 @@ export function workoutVals(ctx: Ctx) {
     progLabel: doneCount + ' of ' + selList.length + ' done',
     allDone: selList.length > 0 && doneCount === selList.length,
     someDone: !(selList.length > 0 && doneCount === selList.length),
-    progNoteStyle:
-      'margin:12px 0 0;display:flex;align-items:center;gap:7px;font-size:var(--text-md);font-weight:' +
-      (selList.length && doneCount === selList.length
-        ? 'var(--font-weight-semibold);color:var(--color-accent-deep)'
-        : 'var(--font-weight-regular);color:var(--color-muted)'),
     progPct: selList.length ? Math.round((doneCount / selList.length) * 100) : 0,
     progNote:
       selList.length === 0
