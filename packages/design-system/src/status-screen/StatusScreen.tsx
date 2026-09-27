@@ -1,36 +1,37 @@
 'use client';
 
-import { Mark } from '@moonshot/design-system/brand';
-import { Button } from '@moonshot/design-system/buttons';
-import { Moon, SparkleTrail } from '@moonshot/design-system/icons';
-import { Text } from '@moonshot/design-system/typography';
+import { Mark } from '../brand';
+import { Button } from '../buttons';
+import { Moon, SparkleTrail } from '../icons';
+import { Text } from '../typography';
 import styles from './status-screen.module.css';
 
 export type StatusKind = 'loading' | 'slow' | 'error';
 
 export interface StatusScreenProps {
-  /** loading: the plan is on its way. slow: it is taking longer than usual. error: it did not arrive. */
+  /** loading: on its way, with the animated mark. slow: taking longer than usual. error: it didn't arrive. */
   kind: StatusKind;
+  /** What's happening, e.g. "Loading your plan". */
+  title: string;
+  /** A sentence under the title. */
+  note: string;
   /** The server's own words, kept behind "Show details" on the error screen. */
   detail?: string;
   /** Try again. Leave it out and the button is left out. */
   onRetry?: () => void;
   /** Sign out, offered on the error screen so a stale session cannot trap anyone. */
   onSignOut?: () => void;
+  /** Draw it inside a page rather than as the whole page: no full height, no main landmark and no live region. For
+   * showing it as an example. */
+  inline?: boolean;
 }
 
-const COPY: Record<StatusKind, { title: string; note: string }> = {
-  loading: { title: 'Loading your plan', note: 'Setting up your week, streak and chronicle.' },
-  slow: { title: 'Still loading your plan', note: 'This is taking longer than usual. It may be your connection.' },
-  error: { title: 'Couldn’t reach your plan', note: 'Your plan is safe. Check your connection, then try again.' },
-};
-
-/** What the planner shows before it has data: loading, taking longer, and the failure. One screen, three states. */
-export function StatusScreen({ kind, detail, onRetry, onSignOut }: StatusScreenProps) {
-  const { title, note } = COPY[kind];
+/** What an app shows before it has its data: loading, taking longer, and the failure. One screen, three states. */
+export function StatusScreen({ kind, title, note, detail, onRetry, onSignOut, inline = false }: StatusScreenProps) {
   const failed = kind === 'error';
+  const Root = inline ? 'div' : 'main';
   return (
-    <main className={styles.screen} role={failed ? 'alert' : 'status'}>
+    <Root className={inline ? `${styles.screen} ${styles.inline}` : styles.screen} role={inline ? undefined : failed ? 'alert' : 'status'}>
       <div className={styles.column}>
         <div className={styles.medallion}>
           {failed ? <Moon size={44} color="var(--color-slate)" /> : <Mark size={60} animate />}
@@ -44,7 +45,7 @@ export function StatusScreen({ kind, detail, onRetry, onSignOut }: StatusScreenP
         </div>
 
         <div className={styles.copy}>
-          <Text variant="title" as="h1" style={{ margin: 0 }}>
+          <Text variant="title" as={inline ? 'h3' : 'h1'} style={{ margin: 0 }}>
             {title}
           </Text>
           <Text variant="body" tone="muted" as="p" style={{ margin: 0, maxWidth: 360, textWrap: 'pretty' }}>
@@ -85,6 +86,6 @@ export function StatusScreen({ kind, detail, onRetry, onSignOut }: StatusScreenP
           </>
         ) : null}
       </div>
-    </main>
+    </Root>
   );
 }

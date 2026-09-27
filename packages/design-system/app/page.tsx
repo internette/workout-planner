@@ -11,10 +11,10 @@ import styles from './design-system.module.css';
 
 export const metadata = { title: 'Design system' };
 
-// Folders in the package's src that the registry doesn't know about yet. Brand (the Logo page) and rank-up (its demo)
-// are under Brand.
+// Folders in the package's src that the registry doesn't know about yet. Brand (the Logo page), status-screen (the
+// Loading animation page) and rank-up (its demo) are under Brand.
 function unlistedFolders(): string[] {
-  const known = new Set([...sections.map((s) => s.slug), 'brand', 'rank-up']);
+  const known = new Set([...sections.map((s) => s.slug), 'brand', 'status-screen', 'rank-up']);
   const uiDir = path.join(process.cwd(), 'src');
   return fs
     .readdirSync(uiDir, { withFileTypes: true })

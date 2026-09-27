@@ -45,6 +45,17 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'loading',
+    title: 'Loading animation',
+    category: 'brand',
+    description: 'The mark’s facets lighting up in turn, and the loading screen that shows it.',
+    anchors: [
+      { id: 'animation', title: 'The animation' },
+      { id: 'timing', title: 'How it moves' },
+      { id: 'loading-screen', title: 'Loading screen' },
+    ],
+  },
+  {
     slug: 'colors',
     title: 'Colors',
     category: 'foundations',
