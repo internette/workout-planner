@@ -21,6 +21,9 @@ const CLAUDE_NEW = 'https://claude.ai/new';
 const CLAUDE_CONNECTORS = 'https://claude.ai/settings/connectors';
 const ASK = 'Use Moonshot to plan my training. I want to ';
 const EXAMPLE = 'get stronger in 6 weeks: 3 lifts a week, 45 minutes each, dumbbells only, no Sundays.';
+// The Auth0 application everyone's Claude signs in through (a single-page app, so it has no secret and the id is safe
+// to show). Set, it goes in Claude's advanced connector settings; unset, Claude registers its own client with Auth0.
+const CLIENT_ID = process.env.NEXT_PUBLIC_CLAUDE_OAUTH_CLIENT_ID || '';
 
 type Step = 'closed' | 'connect' | 'ready' | 'waiting' | 'review';
 
@@ -39,7 +42,6 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
   const [step, setStep] = useState<Step>('closed');
   const [draft, setDraft] = useState<PlanDraft | null>(null);
   const [waiting, setWaiting] = useState<PlanDraft | null>(null);
-  const [copied, setCopied] = useState(false);
   const [problem, setProblem] = useState('');
   const since = useRef<string | undefined>(undefined);
   // Plans added or let go in this visit. Adding goes through the save queue, so for a moment after it the database
@@ -98,15 +100,6 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
       // Storage can be off; the steps just show again next time.
     }
     setStep('ready');
-  };
-  const copyAddress = async () => {
-    try {
-      await navigator.clipboard.writeText(`${window.location.origin}/api/mcp`);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2500);
-    } catch {
-      setCopied(false);
-    }
   };
   const discard = async (d: PlanDraft) => {
     try {
@@ -171,17 +164,15 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
             <StepItem n={1} title="Add Moonshot as a connector">
               In Claude, open Settings → Connectors, choose <b>Add custom connector</b>, name it Moonshot, and paste this
               address:
-              <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginTop: 8 }}>
-                <code style={{ padding: '6px 10px', borderRadius: 'var(--radius-xs)', background: 'var(--color-mist)', color: 'var(--color-ink)', fontSize: 'var(--text-md)', wordBreak: 'break-all' }}>
-                  {typeof window === 'undefined' ? '/api/mcp' : `${window.location.origin}/api/mcp`}
-                </code>
-                <Button type="secondary" size="xs" onClick={copyAddress}>
-                  {copied ? 'Copied' : 'Copy'}
-                </Button>
-              </span>
-              <span role="status" className="sr-only">
-                {copied ? 'Address copied' : ''}
-              </span>
+              <CopyRow value={typeof window === 'undefined' ? '/api/mcp' : `${window.location.origin}/api/mcp`} what="Address" />
+              {CLIENT_ID ? (
+                <>
+                  <span style={{ display: 'block', marginTop: 10 }}>
+                    Then open <b>Advanced settings</b> and paste this as the <b>OAuth Client ID</b>. Leave the secret empty.
+                  </span>
+                  <CopyRow value={CLIENT_ID} what="Client ID" />
+                </>
+              ) : null}
             </StepItem>
             <StepItem n={2} title="Swear it in">
               Choose <b>Connect</b>. Claude opens Moonshot’s sign-in: use the same account you use here, so Claude only
@@ -299,6 +290,33 @@ const span = (w: PlanWorkout[]) => {
   const last = w[w.length - 1].date;
   return first === last ? `on ${shortDate(first)}` : `${shortDate(first)} to ${shortDate(last)}`;
 };
+
+// A value to paste somewhere else, with its own Copy button that says when it worked.
+function CopyRow({ value, what }: { value: string; what: string }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setCopied(false);
+    }
+  };
+  return (
+    <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginTop: 8 }}>
+      <code style={{ padding: '6px 10px', borderRadius: 'var(--radius-xs)', background: 'var(--color-mist)', color: 'var(--color-ink)', fontSize: 'var(--text-md)', wordBreak: 'break-all' }}>
+        {value}
+      </code>
+      <Button type="secondary" size="xs" onClick={copy} aria-label={copied ? `${what} copied` : `Copy ${what.toLowerCase()}`}>
+        {copied ? 'Copied' : 'Copy'}
+      </Button>
+      <span role="status" className="sr-only">
+        {copied ? `${what} copied` : ''}
+      </span>
+    </span>
+  );
+}
 
 function StepItem({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
   return (
