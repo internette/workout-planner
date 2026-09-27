@@ -1007,12 +1007,6 @@ export function editVals(ctx: Ctx) {
         detail: exLine(e, true),
         // Ticked off: its name is struck through and muted.
         nameDone: !!doneSet[e.name],
-        doneBtn:
-          'margin-left:auto;display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;border-radius:var(--radius-sm);cursor:pointer;border:' +
-          (doneSet[e.name]
-            ? 'none;background:var(--color-accent)'
-            : '1.5px solid var(--color-outline);background:none'),
-        doneStroke: doneSet[e.name] ? 'var(--color-on-accent)' : 'var(--color-outline)',
         isDone: !!doneSet[e.name],
         // Ticking off belongs to a session on the calendar, not to a workout being built or a saved one.
         showTick: !creating && !tplMode && mi * 100 + selDay <= ctx.TK,

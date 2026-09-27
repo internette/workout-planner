@@ -174,6 +174,9 @@ src/
     install/            The install prompt and the service worker registration
     auth/               The landing page and the Google and Apple sign-in buttons (the server side is in lib/auth0.ts,
                         middleware.ts and app/api/token)
+  components/           Reusable pieces the planner's screens share: BackLink, WarmupTag, NeedsLine, IconSquare,
+                        SetsFields (sets, reps, weight, rest), AreaChoice, EquipmentPicker, FilterButton,
+                        SessionProgress, DoneTick, RepeatWeekly, FormActions. Typed props, no planner state
   shared/               Used across features: constants (names, quests, ranks), helpers (ids, ISO dates, quest lookup),
                         icons (exercise icons and mood faces)
   lib/
