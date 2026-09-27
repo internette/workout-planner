@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint app components lib packages middleware.ts --ext .ts,.tsx"
+    "lint": "eslint src packages --ext .ts,.tsx"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.30.0",
