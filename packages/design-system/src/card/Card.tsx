@@ -10,6 +10,8 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   elevation?: 'raised' | 'overlay';
   /** Makes the card a clickable surface that lifts on hover. Pair with as="button". */
   interactive?: boolean;
+  /** With as="button": the card can't be pressed. */
+  disabled?: boolean;
 }
 
 export const Card = forwardRef<HTMLElement, CardProps>(function Card(

@@ -1,0 +1,76 @@
+import { Card } from '@moonshot/design-system/card';
+import { Chip } from '@moonshot/design-system/chip';
+import { Label, TextField } from '@moonshot/design-system/text-field';
+import { Text } from '@moonshot/design-system/typography';
+import type { PlannerVals } from '@/features/planner/store/types';
+
+/** A ride’s plan: distance, elevation, duration and effort zone. */
+export function RidePlanFields({ v }: { v: PlannerVals }) {
+  return (
+    <>
+      <Card style={{ marginTop: '16px' }}>
+        <Text variant="eyebrow" as="div" tone="slate">
+          RIDE PLAN
+        </Text>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}>
+          <TextField
+            label="Distance"
+            labelNote="(miles)"
+            containerStyle={{ flex: '1 1 130px', minWidth: '0' }}
+            value={v.rideDistance ?? ''}
+            onChange={v.setDistance}
+            inputMode="decimal"
+            placeholder="24.5"
+          />
+          <TextField
+            label="Elevation"
+            labelNote="(feet)"
+            containerStyle={{ flex: '1 1 130px', minWidth: '0' }}
+            value={v.rideElev ?? ''}
+            onChange={v.setElev}
+            inputMode="numeric"
+            placeholder="1200"
+          />
+          <div style={{ flex: '1 1 210px', minWidth: '0' }}>
+            <Label>Duration</Label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <TextField
+                suffix="hr"
+                containerStyle={{ flex: '1', minWidth: '0' }}
+                aria-label="Duration, hours"
+                value={v.rideHours ?? ''}
+                onChange={v.setHours}
+                inputMode="numeric"
+                placeholder="1"
+              />
+              <TextField
+                suffix="min"
+                containerStyle={{ flex: '1', minWidth: '0' }}
+                aria-label="Duration, minutes"
+                value={v.rideMins ?? ''}
+                onChange={v.setMins}
+                onBlur={v.rollMins}
+                inputMode="numeric"
+                placeholder="20"
+              />
+            </div>
+          </div>
+        </div>
+        <Label style={{ margin: '18px 0 9px' }}>Target effort</Label>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          {['Recovery', 'Endurance', 'Tempo', 'Intervals'].map((zone) => (
+            <Chip
+              key={zone}
+              tone="choice"
+              size="md"
+              selected={v.rideZone === zone}
+              onClick={() => v.setRideZone(zone)}
+            >
+              {zone}
+            </Chip>
+          ))}
+        </div>
+      </Card>
+    </>
+  );
+}

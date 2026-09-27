@@ -283,10 +283,10 @@ export function chromeVals(ctx: Ctx) {
     isDetail: st.screen === 'detail',
     goRest: () =>
       logic.s({ screen: 'rest', ...monthPatch(TODAY_M), day: TODAY_D, monthOpen: false, seg: 'Day' }),
-    navCalOn: calActive ? 'page' : false,
-    navDiaryOn: inChronicle ? 'page' : false,
-    navArsenalOn: arsenalActive ? 'page' : false,
-    navSummaryOn: st.screen === 'summary' ? 'page' : false,
-    navProfileOn: st.screen === 'profile' ? 'page' : false,
+    navCalOn: calActive ? ('page' as const) : false,
+    navDiaryOn: inChronicle ? ('page' as const) : false,
+    navArsenalOn: arsenalActive ? ('page' as const) : false,
+    navSummaryOn: st.screen === 'summary' ? ('page' as const) : false,
+    navProfileOn: st.screen === 'profile' ? ('page' as const) : false,
   };
 }
