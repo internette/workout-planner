@@ -1,6 +1,6 @@
 import { AUTH_REQUIRED } from './auth';
 import { supabase } from './supabase';
-import { colors } from '@/components/ui/colors';
+import { colors } from '@moonshot/design-system/colors';
 import type { PlanDraft, PlanWorkout } from './planDraft';
 
 // ---------- shapes the planner UI works with ----------

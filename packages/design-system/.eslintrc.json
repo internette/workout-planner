@@ -1,0 +1,30 @@
+{
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          { "group": ["@/*"], "message": "The design system can't import the app. Pass what it needs in as props." },
+          { "group": ["@moonshot/design-system", "@moonshot/design-system/*"], "message": "Inside the package, import with a relative path." }
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              { "group": ["@/*"], "message": "The design system can't import the app. Pass what it needs in as props." },
+              { "group": ["@moonshot/design-system", "@moonshot/design-system/*"], "message": "Inside the package, import with a relative path." },
+              { "group": ["../docs/*", "../../docs/*", "next/*"], "message": "Components stay free of the docs site and of Next.js, so any React app can use them." }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

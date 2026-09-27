@@ -1,3 +1,20 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": [
+              "@/components/ui/*",
+              "@/components/brand/*",
+              "**/packages/design-system/*"
+            ],
+            "message": "Import the design system from @moonshot/design-system/<entry> (see packages/design-system/package.json)."
+          }
+        ]
+      }
+    ]
+  }
 }

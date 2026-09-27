@@ -1,18 +1,18 @@
 import type { Metadata, Viewport } from 'next';
 import './planner.css';
-import { ColorVariables } from '@/components/ui/colors';
-import { TypographyVariables } from '@/components/ui/typography';
-import { ElevationVariables } from '@/components/ui/elevation';
-import { StructureVariables } from '@/components/ui/StructureVariables';
+import { ColorVariables, colors } from '@moonshot/design-system/colors';
+import { TypographyVariables } from '@moonshot/design-system/typography';
+import { ElevationVariables } from '@moonshot/design-system/elevation';
+import { StructureVariables } from '@moonshot/design-system/StructureVariables';
 import { RegisterServiceWorker } from '@/components/RegisterServiceWorker';
-import { themeScript } from '@/components/planner/theme';
+import { themeScript } from '@moonshot/design-system/theme';
 
 export const metadata: Metadata = {
   title: 'Moonshot — Magical Girl Training Plan',
   description: 'Plan workouts, log how they felt, and rank up.',
 };
 
-export const viewport: Viewport = { themeColor: '#FBF1F3' };
+export const viewport: Viewport = { themeColor: colors.canvas };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

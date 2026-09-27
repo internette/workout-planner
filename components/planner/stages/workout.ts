@@ -1,7 +1,7 @@
 import { DOWFULL, MONTHS } from '../constants';
 import { exLine, idOf, monthPatch } from '../helpers';
 import type { Ctx } from '../types';
-import { colors } from '@/components/ui/colors';
+import { colors } from '@moonshot/design-system/colors';
 
 // The selected workout: ride plan and actuals, exercise list, icons and completion state.
 export function workoutStage(ctx: Ctx): Ctx {

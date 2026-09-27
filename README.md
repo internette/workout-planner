@@ -136,27 +136,13 @@ The app finds out a plan has arrived by checking `plan_drafts` every few seconds
 
 ```
 app/                  Next.js App Router: layout, global styles (planner.css), the (planner) group with a page per nav address, /welcome and /api/token
-  design-system/      The design-system site at /design-system: overview, sidebar and a page per section (registry.ts lists them; docs.tsx is the frame and text styles they share)
+  design-system/      The routes for the design-system site at /design-system: one line each, serving the docs in packages/design-system
 components/
   Planner.tsx         Host component: loading and error screens, renders the view
   PlannerLoader.tsx   Loads the planner on the client only (its layout depends on window width)
   PlannerView.tsx     The markup for every screen, with no logic of its own
   dcLogic.ts          Small base class that gives the logic its immediate-merge setState
   viewHelpers.tsx     css() and t() helpers used by the view
-  ui/icons/           Design-system icons: glyphs, Sparkle, Gem, MoodFace, ExerciseIcon (gallery at /design-system/icons)
-  ui/colors/          Design-system colour tokens, plus the crystal gradients and the dialog scrim, published as CSS variables (see /design-system/colors)
-  ui/radii, spacing, motion, interaction/   Design-system tokens for corner radii, spacing and breakpoints, durations and easings, hover washes and the focus ring. StructureVariables publishes them as CSS variables (see /design-system)
-  ui/typography/      Design-system type tokens as CSS variables (including two fluid display sizes for marketing pages), plus named text styles and the Text component
-  ui/elevation/       Design-system shadow tokens (hairline, raised, overlay) and the primary glow, as CSS variables
-  ui/buttons/         Design-system Button and IconButton (variants, sizes, hover states)
-  ui/card/            Design-system Card (raised and overlay surfaces, padding steps, clickable cards)
-  ui/segmented-control/  Design-system SegmentedControl (brand and quiet tones, tabs or options, keyboard support)
-  ui/chip/            Design-system Chip (info, accent and selectable choice pills)
-  ui/text-field/      Design-system TextField, TextArea and Label (filled, title and bare inputs; hint and error)
-  ui/checkbox/        Design-system Checkbox (a tick box with its label; native checkbox, or a switch role)
-  ui/option-card/     Design-system OptionCard and OptionGroup (one answer per card, a native radio underneath)
-  ui/dialog/          Design-system Dialog (a native <dialog>: top layer, inert page, Escape and focus handled by the browser)
-  ui/popover/         Design-system Popover (the popover attribute: top layer, dismissed on Escape or an outside press)
   auth/               The landing page and the Google and Apple sign-in buttons (the server side is in lib/auth0.ts, middleware.ts and app/api/token)
   planner/
     routes.ts         Which address each nav item has, and which screen an address opens
@@ -169,6 +155,15 @@ components/
     icons.tsx         Exercise icons and mood faces
     styles.ts         Inline-style builders for active/inactive controls
     types.ts          The loose Ctx type shared by stages and screens
+    RankUpDemo.tsx    The rank-up transformation, played on demand on the design system's Brand shelf
+packages/
+  design-system/      @moonshot/design-system, an npm workspace package. The app imports it only through its package.json
+                      exports (@moonshot/design-system/buttons, /colors, /theme…), and it never imports the app (ESLint enforces both)
+    src/              Tokens and components, one folder per section: colors, typography, elevation, radii, spacing, motion,
+                      interaction, icons, buttons, card, chip, dialog, popover, text-field… Plus brand (the mark and lockup)
+                      and theme.ts (light or dark and the accent colour, saved in this browser). No Next.js or app code
+    docs/             The design-system site: overview, sidebar and a page per section (registry.ts lists them; docs.tsx is
+                      the frame and text styles they share)
 lib/
   supabase.ts         Supabase client
   auth.ts             Browser-safe sign-in settings: the login links, the connection names, the NEXT_PUBLIC_AUTH_REQUIRED switch and the ID-token fetch Supabase uses
@@ -181,7 +176,7 @@ supabase/migrations/  SQL to run in the Supabase SQL editor
 
 Ticks update the screen immediately. Other saves (creating or editing a workout, diary entries, deletes, the Spellbook) are written to Supabase first. When the writes finish, the model is reloaded and the UI state cleared. Writes run in order, and a failed one shows a dismissible error banner.
 
-**The view is generated.** `PlannerView.tsx` was converted from the design's HTML template by a one-off script and is now ordinary source, so edit it directly. Colours and type are CSS variables such as `var(--color-pink)` and `var(--text-md)` (defined in `components/ui/colors` and `components/ui/typography`). Hover styles from the design are the `.hvN:hover` rules at the bottom of `app/planner.css`, and elements use them by class name.
+**The view is generated.** `PlannerView.tsx` was converted from the design's HTML template by a one-off script and is now ordinary source, so edit it directly. Colours and type are CSS variables such as `var(--color-pink)` and `var(--text-md)` (defined in the design system's `colors` and `typography`). Hover styles from the design are the `.hvN:hover` rules at the bottom of `app/planner.css`, and elements use them by class name.
 
 ## Limitations
 

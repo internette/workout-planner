@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import { breakpoints } from '@/components/ui/spacing';
+import { breakpoints } from '@moonshot/design-system/spacing';
 
 export type Viewport = 'narrow' | 'tablet' | 'wide';
 

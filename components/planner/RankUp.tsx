@@ -1,9 +1,9 @@
 'use client';
 
 import { useId, useLayoutEffect, useRef, type CSSProperties, type SyntheticEvent } from 'react';
-import { Button } from '@/components/ui/buttons';
-import { Sparkle } from '@/components/ui/icons';
-import { colors, vars } from '@/components/ui/colors';
+import { Button } from '@moonshot/design-system/buttons';
+import { Sparkle } from '@moonshot/design-system/icons';
+import { colors, vars } from '@moonshot/design-system/colors';
 import styles from './rank-up.module.css';
 
 export interface RankUpProps {

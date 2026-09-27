@@ -2,7 +2,7 @@ import { DOW3, DOWFULL, EDIT_OVERLAYS, EQUIPMENT, EQUIPMENT_GROUPS, ICON_COLORS,
 import { countsOk, needsLine, rollMinutes, digitsOnly, noticePatch, exLine, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, setsRepsOk, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../helpers';
 import { iconOptions, iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
-import { colors, themed } from '@/components/ui/colors';
+import { colors, themed } from '@moonshot/design-system/colors';
 import type { Ctx } from '../types';
 
 // Create / edit workout screen: ride plan, exercise list, icons, date picker, save and delete.

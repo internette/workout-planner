@@ -1,15 +1,15 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/buttons';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Dialog } from '@/components/ui/dialog';
-import { ExerciseIcon, Sparkle } from '@/components/ui/icons';
-import { IconTile } from '@/components/ui/icon-tile';
-import { OptionCard, OptionGroup } from '@/components/ui/option-card';
-import { Text } from '@/components/ui/typography';
-import { vars } from '@/components/ui/colors';
+import { Button } from '@moonshot/design-system/buttons';
+import { Badge } from '@moonshot/design-system/badge';
+import { Card } from '@moonshot/design-system/card';
+import { Dialog } from '@moonshot/design-system/dialog';
+import { ExerciseIcon, Sparkle } from '@moonshot/design-system/icons';
+import { IconTile } from '@moonshot/design-system/icon-tile';
+import { OptionCard, OptionGroup } from '@moonshot/design-system/option-card';
+import { Text } from '@moonshot/design-system/typography';
+import { vars } from '@moonshot/design-system/colors';
 import { shortDate, type PlanDraft, type PlanWorkout } from '@/lib/planDraft';
 import { discardPlanDraft, latestPlanDraft } from '@/lib/plannerData';
 import { vendorOn } from '@/lib/vendors';

@@ -1,11 +1,11 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Lockup } from '@/components/brand/Lockup';
-import { Button } from '@/components/ui/buttons';
-import { Card } from '@/components/ui/card';
-import { Book, Calendar, Check, ChevronRight, Gem, Sparkle, SparkleTrail } from '@/components/ui/icons';
-import { Text } from '@/components/ui/typography';
+import { Lockup } from '@moonshot/design-system/brand';
+import { Button } from '@moonshot/design-system/buttons';
+import { Card } from '@moonshot/design-system/card';
+import { Book, Calendar, Check, ChevronRight, Gem, Sparkle, SparkleTrail } from '@moonshot/design-system/icons';
+import { Text } from '@moonshot/design-system/typography';
 import { RANKS, RANK_STEPS } from '@/components/planner/constants';
 import { PROVIDER_NAME, PROVIDERS, type Provider } from '@/lib/auth';
 import { ProviderButton } from './ProviderButton';

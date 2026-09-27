@@ -3,7 +3,7 @@ import { digitsOnly, rollMinutes, exLine, formatElapsed, idOf, isoOf, monthPatch
 import { iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
-import { colors } from '@/components/ui/colors';
+import { colors } from '@moonshot/design-system/colors';
 
 // The day card and the workout detail screen (today's quest, exercise preview, completion).
 export function workoutVals(ctx: Ctx) {

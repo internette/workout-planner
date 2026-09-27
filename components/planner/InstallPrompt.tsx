@@ -1,11 +1,11 @@
 'use client';
 
 import { useId, useLayoutEffect, useRef, useState, type MouseEvent, type SyntheticEvent } from 'react';
-import { Mark } from '@/components/brand/Mark';
-import { Button } from '@/components/ui/buttons';
-import { Checkbox } from '@/components/ui/checkbox';
-import { pressedOutside } from '@/components/ui/dialog';
-import { Text } from '@/components/ui/typography';
+import { Mark } from '@moonshot/design-system/brand';
+import { Button } from '@moonshot/design-system/buttons';
+import { Checkbox } from '@moonshot/design-system/checkbox';
+import { pressedOutside } from '@moonshot/design-system/dialog';
+import { Text } from '@moonshot/design-system/typography';
 import styles from './install-prompt.module.css';
 
 export interface InstallPromptProps {

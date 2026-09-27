@@ -1,5 +1,5 @@
-import { themed } from '@/components/ui/colors';
-import { EXERCISE_ICON_NAMES, ExerciseIcon, MoodFace } from '@/components/ui/icons';
+import { themed } from '@moonshot/design-system/colors';
+import { EXERCISE_ICON_NAMES, ExerciseIcon, MoodFace } from '@moonshot/design-system/icons';
 import { ICON_NAMES } from './constants';
 
 // Elements the screen builders hand to the view: an exercise icon in a chosen colour, and a mood face. A colour from the
