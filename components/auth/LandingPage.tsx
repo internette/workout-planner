@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Book, Calendar, Check, ChevronRight, Gem, Sparkle, SparkleTrail } from '@/components/ui/icons';
 import { Text } from '@/components/ui/typography';
 import { RANKS, RANK_STEPS } from '@/components/planner/constants';
-import { PROVIDER_NAME, type Provider } from '@/lib/auth';
+import { PROVIDER_NAME, PROVIDERS, type Provider } from '@/lib/auth';
 import { ProviderButton } from './ProviderButton';
 import styles from './landing.module.css';
 
@@ -46,13 +46,20 @@ function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.R
           {signingUp ? 'Two taps, and your first quest is one planned session away.' : 'Your plan and your Chronicle are right where you left them.'}
         </Text>
 
-        <div className={styles.providers}>
-          {(['google', 'apple'] as const).map((p) => (
-            <ProviderButton key={p} provider={p} onClick={go(p)} busy={busy === p} disabled={!!busy}>
-              {busy === p ? `Opening ${PROVIDER_NAME[p]}…` : `Continue with ${PROVIDER_NAME[p]}`}
-            </ProviderButton>
-          ))}
-        </div>
+        {PROVIDERS.length ? (
+          <div className={styles.providers}>
+            {PROVIDERS.map((p) => (
+              <ProviderButton key={p} provider={p} onClick={go(p)} busy={busy === p} disabled={!!busy}>
+                {busy === p ? `Opening ${PROVIDER_NAME[p]}…` : `Continue with ${PROVIDER_NAME[p]}`}
+              </ProviderButton>
+            ))}
+          </div>
+        ) : (
+          // Every provider is switched off in vendors.config.ts, so there is no way in to offer.
+          <p className={styles.error} role="status">
+            Sign-in is closed for now. Check back soon.
+          </p>
+        )}
 
         {error ? (
           <p className={styles.error} role="alert">
