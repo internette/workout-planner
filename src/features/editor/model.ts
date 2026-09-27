@@ -1026,18 +1026,16 @@ export function editVals(ctx: Ctx) {
           const nowDone = !doneSet[e.name];
           const names = nowDone ? doneNames.concat([e.name]) : doneNames.filter((n) => n !== e.name);
           const tot = selList.length;
-          logic.s({
-            // Saved with the rest of the edit, so Cancel and "Discard" leave the ticks as they were.
-            editDone: names,
-            announce:
-              e.name +
-              (nowDone ? ' marked done' : ' unmarked') +
-              '. ' +
-              names.length +
-              ' of ' +
-              tot +
-              ' done.',
-          });
+          const announce = e.name + (nowDone ? ' marked done' : ' unmarked') + '. ' + names.length + ' of ' + tot + ' done.';
+          // In the editor, ticks are saved with the rest of the edit, so Cancel and "Discard" leave them as they were.
+          if (st.screen === 'edit') return logic.s({ editDone: names, announce });
+          // On the session page a tick counts at once. A finished session stays completed while ticks change;
+          // otherwise it's done once all are ticked.
+          logic.s({ done: Object.assign({}, st.done, { [listKey]: names }), announce });
+          if (!creating)
+            logic.save(() =>
+              db.setExercisesDone(listKey, names, (tot > 0 && names.length === tot) || !!(selAct && ctx.actualMinutes(selAct))),
+            );
         },
         remove: () =>
           logic.s({
