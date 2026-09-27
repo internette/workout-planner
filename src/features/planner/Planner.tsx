@@ -9,7 +9,7 @@ import { exerciseDraftDirty, workoutDraftDirty } from '../../shared/helpers';
 import { logoutUrl, type Account } from '@/lib/auth';
 import { useWindowEvent } from '@moonshot/design-system/useWindowEvent';
 import { PlannerView } from './PlannerView';
-import { StatusScreen } from './StatusScreen';
+import { PlannerStatus } from './PlannerStatus';
 import { InstallPrompt } from '../install/InstallPrompt';
 import { useInstallPrompt } from '../install/useInstallPrompt';
 import { RankUp } from '@moonshot/design-system/rank-up';
@@ -367,9 +367,9 @@ export default function Planner({ account = null }: { account?: Account | null }
     logic.load();
   };
 
-  if (status === 'loading') return <StatusScreen kind={slow ? 'slow' : 'loading'} onRetry={retry} />;
+  if (status === 'loading') return <PlannerStatus kind={slow ? 'slow' : 'loading'} onRetry={retry} />;
   if (status === 'error') {
-    return <StatusScreen kind="error" detail={loadError} onRetry={retry} onSignOut={account ? logic.auth.signOut : undefined} />;
+    return <PlannerStatus kind="error" detail={loadError} onRetry={retry} onSignOut={account ? logic.auth.signOut : undefined} />;
   }
   return (
     <>

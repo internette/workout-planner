@@ -18,7 +18,7 @@ import { SegmentedControl } from '../src/segmented-control';
 import { Stat } from '../src/stat';
 import { TextField } from '../src/text-field';
 import { Text } from '../src/typography';
-import { Lockup } from '../src/brand';
+import { Lockup, Mark } from '../src/brand';
 
 const noop = () => undefined;
 
@@ -27,6 +27,8 @@ export function Preview({ slug }: { slug: string }) {
   switch (slug) {
     case 'logo':
       return <Lockup height={34} />;
+    case 'loading':
+      return <Mark size={56} animate />;
     case 'colors':
       return (
         <>

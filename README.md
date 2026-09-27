@@ -156,7 +156,8 @@ src/
   middleware.ts         Guards the planner and the sign-in routes
   features/             One folder per part of the app, named as it appears on screen
     planner/            The shell: Planner (host: loading and error screens, history), PlannerLoader (client only),
-                        PlannerView (the markup, still one file; step 2 splits it into the features below), StatusScreen,
+                        PlannerView (the markup, still one file; step 2 splits it into the features below), PlannerStatus
+                        (the loading and error screens, in the planner's words),
                         routes.ts (which address each screen has), chrome.model.ts (nav and screen switches), styles.ts,
                         viewHelpers.tsx (css() and t()), useViewport
       store/            PlannerLogic (UI state, navigation, loading and saving; renderVals() assembles the view's values),
@@ -187,7 +188,8 @@ packages/
                       only through its package.json exports (@moonshot/design-system/buttons, /colors, /theme,
                       /base.css…), and it never imports the app (ESLint enforces both)
     src/              Tokens and components, one folder per section: colors, typography, elevation, radii, spacing, motion,
-                      interaction, icons, buttons, card, chip, dialog, popover, text-field, rank-up (the transformation)…
+                      interaction, icons, buttons, card, chip, dialog, popover, text-field, rank-up (the transformation),
+                      status-screen (loading, slow and error)…
                       Plus brand (the mark and lockup), theme.ts (light or dark and the accent colour, saved in this
                       browser) and base.css (base type, focus ring, hover washes, forced colours). No Next.js or app code
     app/              The design-system site, its own Next.js app served at /design-system (basePath): overview, sidebar and

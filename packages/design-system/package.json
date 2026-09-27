@@ -38,6 +38,7 @@
     "./segmented-control": "./src/segmented-control/index.ts",
     "./spacing": "./src/spacing/index.ts",
     "./stat": "./src/stat/index.ts",
+    "./status-screen": "./src/status-screen/index.ts",
     "./StructureVariables": "./src/StructureVariables.tsx",
     "./text-field": "./src/text-field/index.ts",
     "./theme": "./src/theme.ts",
