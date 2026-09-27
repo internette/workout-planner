@@ -1,9 +1,9 @@
 'use client';
 
-import { Mark } from '@/components/brand/Mark';
-import { Button } from '@/components/ui/buttons';
-import { Moon, SparkleTrail } from '@/components/ui/icons';
-import { Text } from '@/components/ui/typography';
+import { Mark } from '@moonshot/design-system/brand';
+import { Button } from '@moonshot/design-system/buttons';
+import { Moon, SparkleTrail } from '@moonshot/design-system/icons';
+import { Text } from '@moonshot/design-system/typography';
 import styles from './status-screen.module.css';
 
 export type StatusKind = 'loading' | 'slow' | 'error';

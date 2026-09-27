@@ -1,4 +1,4 @@
-import { colors } from '@/components/ui/colors';
+import { colors } from '@moonshot/design-system/colors';
 
 export const ACCENT = 'var(--color-accent)';
 export const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];

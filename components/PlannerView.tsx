@@ -3,27 +3,27 @@
 // @ts-nocheck
 import { Fragment } from 'react';
 import { css, t } from './viewHelpers';
-import { Card } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog } from '@/components/ui/dialog';
-import { OptionCard, OptionGroup } from '@/components/ui/option-card';
-import { Popover } from '@/components/ui/popover';
-import { Badge } from '@/components/ui/badge';
-import { EmptyState } from '@/components/ui/empty-state';
-import { IconChoiceGroup } from '@/components/ui/icon-choice-group';
-import { IconTile, IconTileButton } from '@/components/ui/icon-tile';
-import { ProgressBar } from '@/components/ui/progress-bar';
-import { ReorderableList } from '@/components/ui/reorderable-list';
-import { MoodRating, StarRating } from '@/components/ui/rating';
-import { Stat } from '@/components/ui/stat';
+import { Card } from '@moonshot/design-system/card';
+import { Checkbox } from '@moonshot/design-system/checkbox';
+import { Dialog } from '@moonshot/design-system/dialog';
+import { OptionCard, OptionGroup } from '@moonshot/design-system/option-card';
+import { Popover } from '@moonshot/design-system/popover';
+import { Badge } from '@moonshot/design-system/badge';
+import { EmptyState } from '@moonshot/design-system/empty-state';
+import { IconChoiceGroup } from '@moonshot/design-system/icon-choice-group';
+import { IconTile, IconTileButton } from '@moonshot/design-system/icon-tile';
+import { ProgressBar } from '@moonshot/design-system/progress-bar';
+import { ReorderableList } from '@moonshot/design-system/reorderable-list';
+import { MoodRating, StarRating } from '@moonshot/design-system/rating';
+import { Stat } from '@moonshot/design-system/stat';
 import { DeleteAccount } from './planner/DeleteAccount';
 import { AppearanceSetting } from './planner/AppearanceSetting';
 import { SUMMON_ON, SummonPlan } from './planner/SummonPlan';
-import { Text } from '@/components/ui/typography';
-import { Chip } from '@/components/ui/chip';
-import { Label, TextArea, TextField } from '@/components/ui/text-field';
-import { SegmentedControl } from '@/components/ui/segmented-control';
-import { Button, IconButton } from '@/components/ui/buttons';
+import { Text } from '@moonshot/design-system/typography';
+import { Chip } from '@moonshot/design-system/chip';
+import { Label, TextArea, TextField } from '@moonshot/design-system/text-field';
+import { SegmentedControl } from '@moonshot/design-system/segmented-control';
+import { Button, IconButton } from '@moonshot/design-system/buttons';
 import {
   BarChart,
   Bike,
@@ -50,8 +50,8 @@ import {
   Sparkle,
   SpellCards,
   User,
-} from '@/components/ui/icons';
-import { vars } from '@/components/ui/colors';
+} from '@moonshot/design-system/icons';
+import { vars } from '@moonshot/design-system/colors';
 
 export function PlannerView({ v }: { v: any }) {
   return (

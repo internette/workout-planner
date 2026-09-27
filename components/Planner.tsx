@@ -7,7 +7,7 @@ import { useViewport } from './planner/useViewport';
 import { pathForState, stateForPath } from './planner/routes';
 import { exerciseDraftDirty, workoutDraftDirty } from './planner/helpers';
 import { logoutUrl, type Account } from '@/lib/auth';
-import { useWindowEvent } from './ui/useWindowEvent';
+import { useWindowEvent } from '@moonshot/design-system/useWindowEvent';
 import { PlannerView } from './PlannerView';
 import { StatusScreen } from './planner/StatusScreen';
 import { InstallPrompt } from './planner/InstallPrompt';

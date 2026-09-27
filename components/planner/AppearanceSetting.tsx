@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ACCENTS } from '@/components/ui/colors/themes';
-import { IconChoiceGroup } from '@/components/ui/icon-choice-group';
-import { SegmentedControl } from '@/components/ui/segmented-control';
-import { Text } from '@/components/ui/typography';
-import { savedAccent, savedTheme, setAccent, setTheme, type Accent, type Theme } from './theme';
+import { ACCENTS } from '@moonshot/design-system/colors';
+import { IconChoiceGroup } from '@moonshot/design-system/icon-choice-group';
+import { SegmentedControl } from '@moonshot/design-system/segmented-control';
+import { Text } from '@moonshot/design-system/typography';
+import { savedAccent, savedTheme, setAccent, setTheme, type Accent, type Theme } from '@moonshot/design-system/theme';
 
 const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', marginTop: '14px' };
 

@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/buttons';
-import { Dialog } from '@/components/ui/dialog';
-import { TextField } from '@/components/ui/text-field';
-import { Text } from '@/components/ui/typography';
+import { Button } from '@moonshot/design-system/buttons';
+import { Dialog } from '@moonshot/design-system/dialog';
+import { TextField } from '@moonshot/design-system/text-field';
+import { Text } from '@moonshot/design-system/typography';
 import { logoutUrl } from '@/lib/auth';
 import styles from './delete-account.module.css';
 

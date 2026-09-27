@@ -1,0 +1,47 @@
+{
+  "name": "@moonshot/design-system",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Moonshot's tokens, components, brand and theme, with the docs site that shows them.",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    "./StructureVariables": "./src/StructureVariables.tsx",
+    "./badge": "./src/badge/index.ts",
+    "./brand": "./src/brand/index.ts",
+    "./buttons": "./src/buttons/index.ts",
+    "./card": "./src/card/index.ts",
+    "./checkbox": "./src/checkbox/index.ts",
+    "./chip": "./src/chip/index.ts",
+    "./colors": "./src/colors/index.ts",
+    "./dialog": "./src/dialog/index.ts",
+    "./elevation": "./src/elevation/index.ts",
+    "./empty-state": "./src/empty-state/index.ts",
+    "./icon-choice-group": "./src/icon-choice-group/index.ts",
+    "./icon-tile": "./src/icon-tile/index.ts",
+    "./icons": "./src/icons/index.ts",
+    "./interaction": "./src/interaction/index.ts",
+    "./motion": "./src/motion/index.ts",
+    "./option-card": "./src/option-card/index.ts",
+    "./popover": "./src/popover/index.ts",
+    "./progress-bar": "./src/progress-bar/index.ts",
+    "./radii": "./src/radii/index.ts",
+    "./rating": "./src/rating/index.ts",
+    "./reorderable-list": "./src/reorderable-list/index.ts",
+    "./segmented-control": "./src/segmented-control/index.ts",
+    "./spacing": "./src/spacing/index.ts",
+    "./stat": "./src/stat/index.ts",
+    "./text-field": "./src/text-field/index.ts",
+    "./theme": "./src/theme.ts",
+    "./tokenVariables": "./src/tokenVariables.ts",
+    "./typography": "./src/typography/index.ts",
+    "./useWindowEvent": "./src/useWindowEvent.ts",
+    "./docs/*": "./docs/*.tsx"
+  },
+  "peerDependencies": {
+    "next": "^14.2.35",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}

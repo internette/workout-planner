@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useWindowEvent } from '@/components/ui/useWindowEvent';
+import { useWindowEvent } from '@moonshot/design-system/useWindowEvent';
 
 // Chrome's install event. It is not in the DOM types.
 interface InstallEvent extends Event {

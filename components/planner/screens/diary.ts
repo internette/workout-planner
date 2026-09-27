@@ -1,7 +1,7 @@
 import { DOW3, MON3 } from '../constants';
 import { isoOf, mod12, monthPatch, noticePatch, plural } from '../helpers';
 import { moodSvg } from '../icons';
-import { MOOD_COLORS } from '@/components/ui/icons';
+import { MOOD_COLORS } from '@moonshot/design-system/icons';
 import * as db from '@/lib/plannerData';
 import type { Ctx } from '../types';
 

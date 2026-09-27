@@ -1,4 +1,4 @@
-import { colors } from '@/components/ui/colors';
+import { colors } from '@moonshot/design-system/colors';
 import { DOWFULL, EDIT_OVERLAYS, EQUIPMENT, EQUIPMENT_GROUPS, MONTHS, TARGET_AREAS } from '../constants';
 import { iconOptions, iconSvg } from '../icons';
 import * as db from '@/lib/plannerData';
