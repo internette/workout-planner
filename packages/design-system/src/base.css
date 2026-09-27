@@ -1,0 +1,96 @@
+/* The design system's global rules: the page's base type and colours, the focus ring, reduced motion, the tap-area
+   and screen-reader helpers, shared keyframes, the hover washes (hv1–hv7, see /design-system/interaction) and
+   forced-colour modes. Import it once, in the root layout: import '@moonshot/design-system/base.css'. */
+
+/* Base page type and colours. */
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+* { box-sizing: border-box; }
+h1, h2, h3 { font-family: var(--font-heading); }
+a { color: var(--color-accent); }
+a:hover { color: var(--color-accent-deep); }
+input, textarea, button { font-family: inherit; }
+
+/* Read by screen readers, not shown. */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* A tap area of at least 44 × 44 px around a control drawn smaller than that, without changing how it looks. */
+.hit { position: relative; }
+.hit::after { content: ''; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
+
+@keyframes pop { 0% { transform: scale(0.4); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes draw { 0% { stroke-dashoffset: 30; } 100% { stroke-dashoffset: 0; } }
+@keyframes twinkle {
+  0%, 100% { opacity: 0.35; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+/* The one focus ring. It sets nothing else: a control keeps its own shape, and its own focus colours where it has any
+   (Button's are its hover colours). */
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible,
+summary:focus-visible, [tabindex]:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Generated from the design's style-hover attributes; !important so they beat inline styles. */
+.hv1:hover{background:var(--hover-neutral) !important}
+.hv3:hover{color:var(--color-accent-deep) !important;background:color-mix(in srgb, var(--color-ink) 4%, transparent) !important}
+.hv6:hover{filter:brightness(.97) !important}
+.hv7:hover{background:var(--color-accent-tint) !important}
+
+/* Windows High Contrast and other forced-colour modes drop backgrounds and shadows, which is how selection and
+   buttons are drawn here. Give them outlines in system colours instead (outlines don't move anything), and keep the
+   real colours where colour is the meaning: filled against empty stars, and the mood faces. */
+@media (forced-colors: active) {
+  button,
+  [role='tab'],
+  [role='radio'] {
+    outline: 1px solid ButtonText;
+    outline-offset: -1px;
+  }
+  [aria-pressed='true'],
+  [aria-selected='true'],
+  [aria-checked='true'],
+  [aria-current='page'] {
+    outline: 3px solid Highlight;
+    outline-offset: -3px;
+  }
+  :focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 2px;
+  }
+  .fc-keep {
+    forced-color-adjust: none;
+  }
+  /* Rating stars in system colors: filled ones in the text color, empty ones grayed, so a rating reads the right
+     way round in any contrast theme. */
+  [data-star],
+  .fc-star {
+    forced-color-adjust: none;
+    color: GrayText !important;
+  }
+  [data-star][data-on],
+  .fc-star[data-on] {
+    color: CanvasText !important;
+  }
+  /* The stars are drawn in colour: in forced colours they take the text colour above instead. */
+  [data-star] svg polygon,
+  .fc-star svg polygon {
+    fill: currentColor !important;
+    stroke: currentColor !important;
+  }
+}

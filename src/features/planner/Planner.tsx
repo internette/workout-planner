@@ -12,7 +12,7 @@ import { PlannerView } from './PlannerView';
 import { StatusScreen } from './StatusScreen';
 import { InstallPrompt } from '../install/InstallPrompt';
 import { useInstallPrompt } from '../install/useInstallPrompt';
-import { RankUp } from '../progress/RankUp';
+import { RankUp } from '@moonshot/design-system/rank-up';
 
 // How long the plan may take before the loading screen says so.
 const SLOW_AFTER_MS = 8000;

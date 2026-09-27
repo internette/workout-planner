@@ -2,13 +2,18 @@
   "name": "@moonshot/design-system",
   "version": "0.1.0",
   "private": true,
-  "description": "Moonshot's tokens, components, brand and theme, with the docs site that shows them.",
+  "description": "Moonshot's tokens, components, brand, theme and global styles, and the design-system site that shows them (its own Next.js app, served at /design-system).",
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001"
+  },
   "sideEffects": [
     "*.css"
   ],
   "exports": {
-    "./StructureVariables": "./src/StructureVariables.tsx",
     "./badge": "./src/badge/index.ts",
+    "./base.css": "./src/base.css",
     "./brand": "./src/brand/index.ts",
     "./buttons": "./src/buttons/index.ts",
     "./card": "./src/card/index.ts",
@@ -27,19 +32,20 @@
     "./popover": "./src/popover/index.ts",
     "./progress-bar": "./src/progress-bar/index.ts",
     "./radii": "./src/radii/index.ts",
+    "./rank-up": "./src/rank-up/index.ts",
     "./rating": "./src/rating/index.ts",
     "./reorderable-list": "./src/reorderable-list/index.ts",
     "./segmented-control": "./src/segmented-control/index.ts",
     "./spacing": "./src/spacing/index.ts",
     "./stat": "./src/stat/index.ts",
+    "./StructureVariables": "./src/StructureVariables.tsx",
     "./text-field": "./src/text-field/index.ts",
     "./theme": "./src/theme.ts",
     "./tokenVariables": "./src/tokenVariables.ts",
     "./typography": "./src/typography/index.ts",
-    "./useWindowEvent": "./src/useWindowEvent.ts",
-    "./docs/*": "./docs/*.tsx"
+    "./useWindowEvent": "./src/useWindowEvent.ts"
   },
-  "peerDependencies": {
+  "dependencies": {
     "next": "^14.2.35",
     "react": "18.3.1",
     "react-dom": "18.3.1"

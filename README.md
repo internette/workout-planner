@@ -26,7 +26,8 @@ cp .env.local.example .env.local   # then fill in the values
 npm run dev
 ```
 
-Open http://localhost:3000.
+Open http://localhost:3000. The design-system site is a separate app: run `npm run dev:design-system` alongside, and
+http://localhost:3000/design-system shows it (or open http://localhost:3001/design-system directly).
 
 ### Environment
 
@@ -131,13 +132,27 @@ The app finds out a plan has arrived by checking `plan_drafts` every few seconds
 | `npm run build` | Production build |
 | `npm start` | Serve the production build |
 | `npm run typecheck` | Type-check without emitting |
+| `npm run dev:design-system` | Start the design-system site on port 3001 |
+| `npm run build:design-system` | Production build of the design-system site |
+
+### Design-system site
+
+The design system (`packages/design-system`) is also its own Next.js app, the site at `/design-system`. It's deployed as
+a second Vercel project, and the main app forwards `/design-system` to it, so it keeps Moonshot's address:
+
+1. **A Vercel project for it.** Add New → Project, import this same repository, and set **Root Directory** to
+   `packages/design-system` (Vercel recognises Next.js and the npm workspace). It needs no environment variables.
+   Deploy it and copy its production address, e.g. `https://moonshot-design-system.vercel.app`.
+2. **Point the main app at it.** In the main project, set `DESIGN_SYSTEM_URL` to that address (Production, and Preview
+   if wanted), then redeploy. Without it, `/design-system` isn't served.
 
 ## How it works
 
 ```
 src/
-  app/                  Next.js App Router, routes only: layout, global styles (planner.css), the (planner) group with a
-                        page per nav address, /welcome, /api, and /design-system (one line each, serving packages/design-system)
+  app/                  Next.js App Router, routes only: layout, the planner's own global styles (planner.css), the (planner)
+                        group with a page per nav address, /welcome and /api. /design-system is forwarded to the
+                        design-system site (next.config.js)
   middleware.ts         Guards the planner and the sign-in routes
   features/             One folder per part of the app, named as it appears on screen
     planner/            The shell: Planner (host: loading and error screens, history), PlannerLoader (client only),
@@ -152,7 +167,7 @@ src/
     editor/             model.ts: the workout editor
     spellbook/          model.ts: the Spellbook, its filters, and the exercise and workout pages
     chronicle/          model.ts: the Chronicle list, new entries and reading an entry
-    progress/           model.ts (Progress and Profile's stats), RankUp (the transformation) and RankUpDemo (for the design system)
+    progress/           model.ts: Progress and Profile's stats
     profile/            AppearanceSetting, DeleteAccount
     summon/             SummonPlan: "Summon a plan" with Claude or ChatGPT
     install/            The install prompt and the service worker registration
@@ -168,13 +183,16 @@ src/
     plannerData.ts      Loads the database into the shapes the UI uses, and all writes
     mcp/                The assistant connector's token check and tools
 packages/
-  design-system/      @moonshot/design-system, an npm workspace package. The app imports it only through its package.json
-                      exports (@moonshot/design-system/buttons, /colors, /theme…), and it never imports the app (ESLint enforces both)
+  design-system/      @moonshot/design-system, an npm workspace package and the design-system site. The app imports it
+                      only through its package.json exports (@moonshot/design-system/buttons, /colors, /theme,
+                      /base.css…), and it never imports the app (ESLint enforces both)
     src/              Tokens and components, one folder per section: colors, typography, elevation, radii, spacing, motion,
-                      interaction, icons, buttons, card, chip, dialog, popover, text-field… Plus brand (the mark and lockup)
-                      and theme.ts (light or dark and the accent colour, saved in this browser). No Next.js or app code
-    docs/             The design-system site: overview, sidebar and a page per section (registry.ts lists them; docs.tsx is
-                      the frame and text styles they share)
+                      interaction, icons, buttons, card, chip, dialog, popover, text-field, rank-up (the transformation)…
+                      Plus brand (the mark and lockup), theme.ts (light or dark and the accent colour, saved in this
+                      browser) and base.css (base type, focus ring, hover washes, forced colours). No Next.js or app code
+    app/              The design-system site, its own Next.js app served at /design-system (basePath): overview, sidebar and
+                      a page per section (registry.ts lists them; docs.tsx is the frame and text styles they share)
+    public/brand/     The brand artwork: lockup, mark, favicon and app icon
 vendors.config.ts     Switches for the vendor-reliant features (see "Vendor features")
 supabase/migrations/  SQL to run in the Supabase SQL editor
 ```
@@ -183,7 +201,7 @@ supabase/migrations/  SQL to run in the Supabase SQL editor
 
 Ticks update the screen immediately. Other saves (creating or editing a workout, diary entries, deletes, the Spellbook) are written to Supabase first. When the writes finish, the model is reloaded and the UI state cleared. Writes run in order, and a failed one shows a dismissible error banner.
 
-**The view is generated.** `PlannerView.tsx` was converted from the design's HTML template by a one-off script and is now ordinary source, so edit it directly. Colours and type are CSS variables such as `var(--color-pink)` and `var(--text-md)` (defined in the design system's `colors` and `typography`). Hover styles from the design are the `.hvN:hover` rules at the bottom of `app/planner.css`, and elements use them by class name.
+**The view is generated.** `PlannerView.tsx` was converted from the design's HTML template by a one-off script and is now ordinary source, so edit it directly. Colours and type are CSS variables such as `var(--color-pink)` and `var(--text-md)` (defined in the design system's `colors` and `typography`). Hover styles from the design are the `.hvN:hover` rules in the design system's `base.css`, and elements use them by class name.
 
 ## Limitations
 
