@@ -1021,14 +1021,14 @@ export async function updateWorkoutTemplate(
   return { workoutId: edit.workoutId, created: false, exerciseIds: {} };
 }
 
-// ---------- plans from Claude ("Summon a plan") ----------
-// Claude saves a plan through the connector (app/api/mcp) as a draft in plan_drafts. The app reads the newest draft,
+// ---------- plans from an assistant ("Summon a plan") ----------
+// Claude or ChatGPT saves a plan through the connector (app/api/mcp) as a draft in plan_drafts. The app reads the newest draft,
 // and on the person's say-so turns it into workouts and sessions with their own sign-in, like any other workout.
 
 /** The newest plan still waiting for a decision, or null. `since` (an ISO time) only counts drafts saved after it.
  * Null too when the plan_drafts migration hasn't run. */
 export async function latestPlanDraft(since?: string): Promise<PlanDraft | null> {
-  let q = supabase.from('plan_drafts').select('id, title, summary, plan, created_at').eq('status', 'draft');
+  let q = supabase.from('plan_drafts').select('id, source, title, summary, plan, created_at').eq('status', 'draft');
   if (since) q = q.gt('created_at', since);
   const { data, error } = await q.order('created_at', { ascending: false }).limit(1);
   if (error) {

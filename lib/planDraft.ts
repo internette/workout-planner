@@ -33,6 +33,8 @@ export interface PlanBody {
 /** A saved draft, as the app reads it. */
 export interface PlanDraft {
   id: string;
+  /** Which assistant sent it: 'claude', 'chatgpt', or 'assistant' when the connector couldn't tell. */
+  source: string;
   title: string;
   summary: string | null;
   plan: PlanBody;

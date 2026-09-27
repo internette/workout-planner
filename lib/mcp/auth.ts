@@ -28,8 +28,17 @@ async function signingKey(kid: string, fresh = false): Promise<JsonWebKey | null
 
 const decode = (part: string) => JSON.parse(Buffer.from(part, 'base64url').toString('utf8'));
 
-/** The Auth0 user id ("google-oauth2|1234") the token was issued to, or null if the token isn't good for this connector. */
-export async function verifyAccessToken(token: string): Promise<string | null> {
+/** Which assistant a token's Auth0 application belongs to: each signs in through its own (see the README). */
+export type Assistant = 'claude' | 'chatgpt' | 'assistant';
+export function assistantFor(clientId: string | undefined): Assistant {
+  if (clientId && clientId === process.env.NEXT_PUBLIC_CHATGPT_OAUTH_CLIENT_ID) return 'chatgpt';
+  if (clientId && clientId === process.env.NEXT_PUBLIC_CLAUDE_OAUTH_CLIENT_ID) return 'claude';
+  return 'assistant';
+}
+
+/** Who the token was issued to (their Auth0 user id, "google-oauth2|1234") and through which assistant, or null if the
+ * token isn't good for this connector. */
+export async function verifyAccessToken(token: string): Promise<{ sub: string; assistant: Assistant } | null> {
   try {
     const [h, p, s] = token.split('.');
     if (!h || !p || !s) return null;
@@ -40,14 +49,15 @@ export async function verifyAccessToken(token: string): Promise<string | null> {
     const good = verify('RSA-SHA256', Buffer.from(`${h}.${p}`), createPublicKey({ key: jwk, format: 'jwk' }), Buffer.from(s, 'base64url'));
     if (!good) return null;
 
-    const claims = decode(p) as { iss?: string; aud?: string | string[]; exp?: number; nbf?: number; sub?: string };
+    const claims = decode(p) as { iss?: string; aud?: string | string[]; exp?: number; nbf?: number; sub?: string; azp?: string; client_id?: string };
     const now = Date.now() / 1000;
     const audiences = Array.isArray(claims.aud) ? claims.aud : [claims.aud];
     if (claims.iss !== auth0Issuer()) return null;
     if (!audiences.includes(mcpResource())) return null;
     if (typeof claims.exp !== 'number' || claims.exp < now - 30) return null;
     if (typeof claims.nbf === 'number' && claims.nbf > now + 30) return null;
-    return typeof claims.sub === 'string' && claims.sub ? claims.sub : null;
+    if (typeof claims.sub !== 'string' || !claims.sub) return null;
+    return { sub: claims.sub, assistant: assistantFor(claims.azp ?? claims.client_id) };
   } catch (e) {
     console.error('Connector token check failed:', e instanceof Error ? e.message : e);
     return null;
