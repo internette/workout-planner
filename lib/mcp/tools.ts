@@ -1,9 +1,9 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { checkPlan, PLAN_LIMITS, RIDE_ZONES, shortDate } from '../planDraft';
 
-// The tools Moonshot's connector gives Claude. Every query here is filtered to the one person the connector verified
-// (lib/mcp/auth.ts): the service role key skips row-level security, so the filter is what keeps each person's data
-// their own. Server only.
+// The tools Moonshot's connector gives Claude and ChatGPT. Every query here is filtered to the one person the connector
+// verified (lib/mcp/auth.ts): the service role key skips row-level security, so the filter is what keeps each person's
+// data their own. Server only.
 
 const TARGET_AREAS = ['Core', 'Arms', 'Back', 'Legs', 'Chest', 'Shoulders'];
 
@@ -15,7 +15,7 @@ export function serviceDb(): SupabaseClient | null {
   return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
 }
 
-/** What Claude is told about Moonshot when it connects. */
+/** What the assistant is told about Moonshot when it connects. */
 export const INSTRUCTIONS = `Moonshot is a workout planner with a magical-girl theme: workouts live in the person's Spellbook, sessions sit on a calendar, and their journal is the Chronicle.
 To plan training for someone: call get_training_context first, ask about anything you still need (goal, days they can train, time per session, equipment, experience, injuries), then call save_plan.
 Moonshot has two kinds of workout: "lift" (strength or bodyweight exercises with sets and reps) and "ride" (a bike ride with minutes, distance and an effort zone). It has no runs, swims or classes; write those as notes, or ask the person how they'd like them handled.
@@ -129,7 +129,7 @@ async function trainingContext(db: SupabaseClient, sub: string): Promise<ToolRes
   return reply(JSON.stringify(context, null, 1), { structuredContent: context });
 }
 
-async function savePlan(db: SupabaseClient, sub: string, args: any): Promise<ToolResult> {
+async function savePlan(db: SupabaseClient, sub: string, args: any, source: string): Promise<ToolResult> {
   const title = typeof args?.title === 'string' ? args.title.trim().slice(0, PLAN_LIMITS.title) : '';
   if (!title) return reply('title is missing. Give the plan a short name and send it again.', { isError: true });
   const checked = checkPlan(args, isoToday());
@@ -144,7 +144,7 @@ async function savePlan(db: SupabaseClient, sub: string, args: any): Promise<Too
     .eq('user_id', sub).eq('status', 'draft');
   if (supersede) throw new Error(supersede.message);
   const { data, error } = await db
-    .from('plan_drafts').insert({ user_id: sub, source: 'claude', status: 'draft', title, summary, plan: checked.plan })
+    .from('plan_drafts').insert({ user_id: sub, source, status: 'draft', title, summary, plan: checked.plan })
     .select('id').single();
   if (error) throw new Error(error.message);
 
@@ -157,13 +157,14 @@ async function savePlan(db: SupabaseClient, sub: string, args: any): Promise<Too
   );
 }
 
-/** Runs one tool for the verified person. Unknown tools and failures come back as a tool error Claude can read. */
-export async function callTool(name: string, args: unknown, sub: string): Promise<ToolResult> {
+/** Runs one tool for the verified person. `source` is the assistant that asked, kept with a saved plan. Unknown tools
+ * and failures come back as a tool error the assistant can read. */
+export async function callTool(name: string, args: unknown, sub: string, source: string): Promise<ToolResult> {
   const db = serviceDb();
   if (!db) return reply("Moonshot's connector isn't fully set up yet (its database key is missing).", { isError: true });
   try {
     if (name === 'get_training_context') return await trainingContext(db, sub);
-    if (name === 'save_plan') return await savePlan(db, sub, args);
+    if (name === 'save_plan') return await savePlan(db, sub, args, source);
     return reply(`There's no tool called ${name}.`, { isError: true });
   } catch (e) {
     console.error(`Connector tool ${name} failed:`, e instanceof Error ? e.message : e);
