@@ -1,5 +1,7 @@
 // Sign-in settings that are safe to use in the browser. The server's Auth0 client is in lib/auth0.ts.
 
+import { vendorOn } from './vendors';
+
 export type Provider = 'google' | 'apple';
 
 /**
@@ -10,6 +12,12 @@ export const AUTH_REQUIRED = process.env.NEXT_PUBLIC_AUTH_REQUIRED !== 'false';
 
 /** The Auth0 connection names for each provider. Auth0 calls Google's "google-oauth2". */
 export const CONNECTION: Record<Provider, string> = { google: 'google-oauth2', apple: 'apple' };
+
+/** The providers people can sign in with: those switched on in vendors.config.ts. */
+export const PROVIDERS: Provider[] = (['google', 'apple'] as const).filter(vendorOn);
+
+/** Whether an Auth0 connection name ("google-oauth2") is one people may sign in with here. */
+export const connectionOn = (connection: string | null) => PROVIDERS.some((p) => CONNECTION[p] === connection);
 
 /** Where a provider button goes. The server route sends the person to Auth0 and back to the planner. */
 export const loginUrl = (provider: Provider) =>

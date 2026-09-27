@@ -37,6 +37,13 @@ Open http://localhost:3000.
 | `NEXT_PUBLIC_SUPABASE_URL` | Your project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | The publishable (anon) key |
 
+### Vendor features
+
+Some features rely on another company's service: signing in with **Google** or **Apple**, and summoning a plan with **Claude** or **ChatGPT**. Each has an on/off switch in `vendors.config.ts` (`true` to offer it, `false` to turn it off); change it and redeploy.
+
+- A sign-in provider that's off has no button on the front door, and `/auth/login` refuses it (and refuses a login with no provider named, which would otherwise show Auth0's page with every one). With both off, the front door says sign-in is closed. People already signed in stay signed in until their session ends.
+- An assistant that's off is left out of "Summon a plan", and the connector refuses its sign-ins, even with a token it already holds. With both off, the button is gone and `/api/mcp` answers 503. ChatGPT also needs `NEXT_PUBLIC_CHATGPT_OAUTH_CLIENT_ID`.
+
 ### Database
 
 The app expects these tables: `workouts`, `workout_exercises`, `plan_entries` and `diary_entries` (created with the original project), plus the additions in [supabase/migrations/20260919000000_planner_persistence.sql](supabase/migrations/20260919000000_planner_persistence.sql):

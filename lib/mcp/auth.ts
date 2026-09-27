@@ -1,4 +1,5 @@
 import { createPublicKey, verify, type JsonWebKey } from 'crypto';
+import { vendorOn } from '../vendors';
 
 // Who is calling the connector. Claude signs the person in with Moonshot's Auth0 tenant (OAuth), then sends the Auth0
 // access token it got on every request. This checks that token: signed by the tenant, for this connector, and not
@@ -12,6 +13,9 @@ export const mcpResource = () =>
 export const auth0Issuer = () => `https://${(process.env.AUTH0_DOMAIN || '').replace(/^https?:\/\//, '').replace(/\/$/, '')}/`;
 
 export const MCP_CONFIGURED = () => !!process.env.AUTH0_DOMAIN && !!process.env.APP_BASE_URL && !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+/** Whether any assistant is switched on in vendors.config.ts. With none, the connector is off. */
+export const MCP_ON = () => vendorOn('claude') || vendorOn('chatgpt');
 
 // The tenant's signing keys, kept for ten minutes. A token signed with a key we don't have yet fetches them again.
 let keys: { at: number; jwks: (JsonWebKey & { kid?: string })[] } | null = null;
@@ -57,7 +61,10 @@ export async function verifyAccessToken(token: string): Promise<{ sub: string; a
     if (typeof claims.exp !== 'number' || claims.exp < now - 30) return null;
     if (typeof claims.nbf === 'number' && claims.nbf > now + 30) return null;
     if (typeof claims.sub !== 'string' || !claims.sub) return null;
-    return { sub: claims.sub, assistant: assistantFor(claims.azp ?? claims.client_id) };
+    // An assistant switched off in vendors.config.ts can't use the connector, even with a token it already holds.
+    const assistant = assistantFor(claims.azp ?? claims.client_id);
+    if (assistant !== 'assistant' && !vendorOn(assistant)) return null;
+    return { sub: claims.sub, assistant };
   } catch (e) {
     console.error('Connector token check failed:', e instanceof Error ? e.message : e);
     return null;

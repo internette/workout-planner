@@ -12,6 +12,7 @@ import { Text } from '@/components/ui/typography';
 import { vars } from '@/components/ui/colors';
 import { shortDate, type PlanDraft, type PlanWorkout } from '@/lib/planDraft';
 import { discardPlanDraft, latestPlanDraft } from '@/lib/plannerData';
+import { vendorOn } from '@/lib/vendors';
 
 // "Summon a plan": the person asks Claude or ChatGPT for a training plan, the assistant sends it back through Moonshot's
 // connector (app/api/mcp) as a draft, and it opens here to look over before anything goes on the calendar.
@@ -55,10 +56,13 @@ const ASSISTANTS: Record<Who, {
     settings: { label: 'Open ChatGPT', url: 'https://chatgpt.com/' },
   },
 };
-const AVAILABLE: Who[] = ASSISTANTS.chatgpt.clientId ? ['claude', 'chatgpt'] : ['claude'];
+// Those switched on in vendors.config.ts; ChatGPT also needs its Client ID.
+const AVAILABLE: Who[] = (['claude', 'chatgpt'] as const).filter((w) => vendorOn(w) && (w === 'claude' || !!ASSISTANTS[w].clientId));
 
 /** What to call whoever sent a plan: the connector records 'claude', 'chatgpt', or 'assistant' when it can't tell. */
 const senderName = (source: string) => (source === 'claude' || source === 'chatgpt' ? ASSISTANTS[source].name : 'Your assistant');
+/** Whether "Summon a plan" has any assistant to offer. When not, the planner leaves it out entirely. */
+export const SUMMON_ON = AVAILABLE.length > 0;
 const sourceWho = (source: string): Who | null => (source === 'claude' || source === 'chatgpt') && AVAILABLE.includes(source) ? source : null;
 
 const store = {
@@ -82,7 +86,7 @@ const openChat = (who: Who, message: string) => window.open(ASSISTANTS[who].chat
 
 export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => void; adding: boolean }) {
   const [step, setStep] = useState<Step>('closed');
-  const [who, setWho] = useState<Who>('claude');
+  const [who, setWho] = useState<Who>(AVAILABLE[0] ?? 'claude');
   const [draft, setDraft] = useState<PlanDraft | null>(null);
   const [waiting, setWaiting] = useState<PlanDraft | null>(null);
   const [problem, setProblem] = useState('');
@@ -134,7 +138,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
       return;
     }
     const last = store.get(LAST_KEY);
-    setWho(last === 'chatgpt' || last === 'claude' ? last : 'claude');
+    setWho(AVAILABLE.find((w) => w === last) ?? AVAILABLE[0]);
     setStep('pick');
   };
   const close = () => {
@@ -191,7 +195,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
       ) : (
         <Button type="secondary" size="md" fullWidth onClick={start} style={{ marginTop: 14 }}>
           <Sparkle size={15} color="var(--color-accent-deep)" />
-          {AVAILABLE.length > 1 ? 'Summon a plan' : 'Summon a plan with Claude'}
+          {AVAILABLE.length > 1 ? 'Summon a plan' : `Summon a plan with ${a.name}`}
         </Button>
       )}
 

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { connectionOn } from '@/lib/auth';
 import { getAuth0 } from '@/lib/auth0';
 
 // Public: the front door, the design-system site, the SDK's own routes (/auth/...), and the token route, which
@@ -19,6 +20,12 @@ const required = () => process.env.NEXT_PUBLIC_AUTH_REQUIRED !== 'false';
 export async function middleware(request: NextRequest) {
   const { pathname, origin } = request.nextUrl;
   const toFrontDoor = () => NextResponse.redirect(new URL('/welcome', origin));
+
+  // Sign-in goes only through a provider that's switched on in vendors.config.ts. Without a connection Auth0 would show its
+  // own page with every provider, so that's refused too.
+  if (pathname === '/auth/login' && !connectionOn(request.nextUrl.searchParams.get('connection'))) {
+    return NextResponse.redirect(new URL('/welcome?error=failed', origin));
+  }
 
   const auth0 = getAuth0();
   if (!auth0) {

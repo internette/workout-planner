@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { MCP_CONFIGURED, verifyAccessToken, type Assistant } from '@/lib/mcp/auth';
+import { MCP_CONFIGURED, MCP_ON, verifyAccessToken, type Assistant } from '@/lib/mcp/auth';
 import { callTool, INSTRUCTIONS, TOOLS } from '@/lib/mcp/tools';
 
 // Moonshot's connector for Claude and ChatGPT: a Model Context Protocol server over Streamable HTTP. It's stateless, and each
@@ -45,6 +45,7 @@ async function handle(msg: Rpc, who: { sub: string; assistant: Assistant }) {
 }
 
 export async function POST(request: Request) {
+  if (!MCP_ON()) return NextResponse.json(failure(null, -32002, "Moonshot's connector is turned off."), { status: 503 });
   if (!MCP_CONFIGURED()) return NextResponse.json(failure(null, -32002, "Moonshot's connector isn't set up on this server."), { status: 503 });
   const token = request.headers.get('authorization')?.match(/^Bearer\s+(.+)$/i)?.[1];
   const who = token ? await verifyAccessToken(token) : null;
