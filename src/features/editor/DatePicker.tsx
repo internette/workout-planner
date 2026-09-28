@@ -1,10 +1,10 @@
 import { Fragment } from 'react';
-import { IconButton } from '@moonshot/design-system/buttons';
 import { Chip } from '@moonshot/design-system/chip';
-import { Calendar, ChevronLeft, ChevronRight } from '@moonshot/design-system/icons';
+import { Calendar } from '@moonshot/design-system/icons';
 import { Popover } from '@moonshot/design-system/popover';
 import { Text } from '@moonshot/design-system/typography';
 import { css, t } from '@/features/planner/viewHelpers';
+import { StepButton } from '@/components/StepButton';
 import type { PlannerVals } from '@/features/planner/store/types';
 
 /** The editor’s date chip, which opens a month to pick the day from. */
@@ -19,15 +19,11 @@ export function DatePicker({ v }: { v: PlannerVals }) {
       content={
         <>
           <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <IconButton label="Previous month" size="md" onClick={v.pickPrevMonth}>
-              <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={15} />
-            </IconButton>
+            <StepButton dir="prev" unit="month" onClick={v.pickPrevMonth} />
             <Text variant="itemTitle" style={{ flex: '1', textAlign: 'center' }}>
               {v.pickMonthName}
             </Text>
-            <IconButton label="Next month" size="md" onClick={v.pickNextMonth}>
-              <ChevronRight color="var(--color-slate)" strokeWidth={2.2} size={15} />
-            </IconButton>
+            <StepButton dir="next" unit="month" onClick={v.pickNextMonth} />
           </span>
           <span
             style={{

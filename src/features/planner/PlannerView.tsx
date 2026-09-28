@@ -5,23 +5,15 @@ import { Fragment } from 'react';
 import { css, t } from './viewHelpers';
 import { Card } from '@moonshot/design-system/card';
 import { Checkbox } from '@moonshot/design-system/checkbox';
-import { Dialog } from '@moonshot/design-system/dialog';
-import { OptionCard, OptionGroup } from '@moonshot/design-system/option-card';
-import { Popover } from '@moonshot/design-system/popover';
 import { Badge } from '@moonshot/design-system/badge';
 import { EmptyState } from '@moonshot/design-system/empty-state';
-import { IconChoiceGroup } from '@moonshot/design-system/icon-choice-group';
-import { IconTile, IconTileButton } from '@moonshot/design-system/icon-tile';
-import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { ReorderableList } from '@moonshot/design-system/reorderable-list';
-import { MoodRating, StarRating } from '@moonshot/design-system/rating';
 import { Stat } from '@moonshot/design-system/stat';
-import { DeleteAccount } from '../profile/DeleteAccount';
 import { AppearanceSetting } from '../profile/AppearanceSetting';
 import { SUMMON_ON, SummonPlan } from '../summon/SummonPlan';
 import { Text } from '@moonshot/design-system/typography';
 import { Chip } from '@moonshot/design-system/chip';
-import { Label, TextArea, TextField } from '@moonshot/design-system/text-field';
+import { TextArea, TextField } from '@moonshot/design-system/text-field';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { Button, IconButton } from '@moonshot/design-system/buttons';
 import {
@@ -52,17 +44,19 @@ import {
   User,
 } from '@moonshot/design-system/icons';
 import { vars } from '@moonshot/design-system/colors';
-import { AreaChoice } from '@/components/AreaChoice';
+import { BackBar } from '@/components/BackBar';
 import { BackLink } from '@/components/BackLink';
-import { DoneTick } from '@/components/DoneTick';
-import { EquipmentPicker } from '@/components/EquipmentPicker';
-import { FilterButton } from '@/components/FilterButton';
+import { DeleteSection } from '@/components/DeleteSection';
 import { FormActions } from '@/components/FormActions';
 import { IconSquare } from '@/components/IconSquare';
+import { LinkRow } from '@/components/LinkRow';
+import { RideStats } from '@/components/RideStats';
 import { NeedsLine } from '@/components/NeedsLine';
+import { PageTitle } from '@/components/PageTitle';
 import { RepeatWeekly } from '@/components/RepeatWeekly';
+import { SearchBar } from '@/components/SearchBar';
 import { SessionProgress } from '@/components/SessionProgress';
-import { SetsFields } from '@/components/SetsFields';
+import { StepButton } from '@/components/StepButton';
 import { WarmupTag } from '@/components/WarmupTag';
 
 import { AddToDayDialog } from '@/features/calendar/AddToDayDialog';
@@ -96,8 +90,8 @@ import { ProfileHeaderCard } from '@/features/profile/ProfileHeaderCard';
 import { QuestsClearedCard } from '@/features/profile/QuestsClearedCard';
 import { SessionsPerWeekCard } from '@/features/profile/SessionsPerWeekCard';
 import { SignOutDialog } from '@/features/profile/SignOutDialog';
+import { CountCard } from '@/features/progress/CountCard';
 import { NextUpCard } from '@/features/progress/NextUpCard';
-import { progCard } from '@/features/progress/progCard';
 import { RanksDialog } from '@/features/progress/RanksDialog';
 import { StreakBanner } from '@/features/progress/StreakBanner';
 import { ThisWeekCard } from '@/features/progress/ThisWeekCard';
@@ -213,9 +207,7 @@ export function PlannerView({ v }: { v: any }) {
                         </Text>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '20px' }}>
-                        <IconButton label="Previous week" size="md" onClick={v.prevWeek}>
-                          <ChevronLeft color="var(--color-muted)" size={17} />
-                        </IconButton>
+                        <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
                         <div style={{ flex: '1', display: 'flex' }}>
                           {(v.days ?? []).map((d, i) => (
                             <Fragment key={i}>
@@ -234,9 +226,7 @@ export function PlannerView({ v }: { v: any }) {
                             </Fragment>
                           ))}
                         </div>
-                        <IconButton label="Next week" size="md" onClick={v.nextWeek}>
-                          <ChevronRight color="var(--color-muted)" size={17} />
-                        </IconButton>
+                        <StepButton dir="next" unit="week" onClick={v.nextWeek} />
                       </div>
                     </>
                   ) : null}
@@ -320,15 +310,11 @@ export function PlannerView({ v }: { v: any }) {
                     <>
                       <div style={{ marginTop: '20px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <IconButton label="Previous week" size="md" onClick={v.prevWeek}>
-                            <ChevronLeft color="var(--color-muted)" size={17} />
-                          </IconButton>
+                          <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
                           <Text variant="itemTitle" as="h1" style={{ flex: 'none', whiteSpace: 'nowrap', margin: 0 }}>
                             {v.weekLabel}
                           </Text>
-                          <IconButton label="Next week" size="md" onClick={v.nextWeek}>
-                            <ChevronRight color="var(--color-muted)" size={17} />
-                          </IconButton>
+                          <StepButton dir="next" unit="week" onClick={v.nextWeek} />
                         </div>
                         <div
                           style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '26px' }}
@@ -626,40 +612,11 @@ export function PlannerView({ v }: { v: any }) {
                               <Text variant="eyebrow" as="div" tone="muted">
                                 {v.todayLabel}
                               </Text>
-                              {(v.todayCards ?? []).map((c, i) => (
-                                <Fragment key={i}>
-                                  <Card
-                                    as="button"
-                                    interactive
-                                    onClick={c?.open}
-                                    style={{
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      gap: '14px',
-                                      width: '100%',
-                                      marginTop: i ? '8px' : '12px',
-                                    }}
-                                  >
-                                    <span style={{ minWidth: '0' }}>
-                                      {c?.warmup ? <WarmupTag /> : null}
-                                      <Text variant="itemTitle" as="span" style={{ display: 'block' }}>
-                                        {c?.name}
-                                      </Text>
-                                      <Text
-                                        variant="caption"
-                                        as="span"
-                                        tone="muted"
-                                        style={{ display: 'block', marginTop: '3px' }}
-                                      >
-                                        {c?.meta}
-                                      </Text>
-                                    </span>
-                                    <span style={{ marginLeft: 'auto', display: 'flex' }}>
-                                      <ChevronRight color="var(--color-muted)" size={20} />
-                                    </span>
-                                  </Card>
-                                </Fragment>
-                              ))}
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: '12px' }}>
+                                {(v.todayCards ?? []).map((c, i) => (
+                                  <LinkRow key={i} title={c?.name} detail={c?.meta} warmup={!!c?.warmup} onClick={c?.open} />
+                                ))}
+                              </div>
                             </div>
                           </>
                         ) : null}
@@ -766,74 +723,10 @@ export function PlannerView({ v }: { v: any }) {
                       textAlign: 'left',
                     }}
                   >
-                    <Card
-                      as="button"
-                      pad="sm"
-                      interactive
-                      onClick={v.readSavedEntry}
-                      style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
-                    >
-                      <span style={{ flex: '1', minWidth: '0' }}>
-                        <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
-                          Read this entry
-                        </Text>
-                        <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
-                          Change it any time
-                        </Text>
-                      </span>
-                      <ChevronRight color="var(--color-muted)" size={20} />
-                    </Card>
-                    <Card
-                      as="button"
-                      pad="sm"
-                      interactive
-                      onClick={v.goDiaryList}
-                      style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
-                    >
-                      <span style={{ flex: '1', minWidth: '0' }}>
-                        <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
-                          Read your Chronicle
-                        </Text>
-                        <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
-                          {v.savedCount}
-                        </Text>
-                      </span>
-                      <ChevronRight color="var(--color-muted)" size={20} />
-                    </Card>
-                    <Card
-                      as="button"
-                      pad="sm"
-                      interactive
-                      onClick={v.goNextUp}
-                      style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
-                    >
-                      <span style={{ flex: '1', minWidth: '0' }}>
-                        <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
-                          {v.savedNextTitle}
-                        </Text>
-                        <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
-                          {v.savedNextMeta}
-                        </Text>
-                      </span>
-                      <ChevronRight color="var(--color-muted)" size={20} />
-                    </Card>
-                    <Card
-                      as="button"
-                      pad="sm"
-                      interactive
-                      onClick={v.goSummary}
-                      style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
-                    >
-                      <span style={{ flex: '1', minWidth: '0' }}>
-                        <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
-                          See your progress
-                        </Text>
-                        <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
-                          Streak, week and month totals
-                        </Text>
-                      </span>
-                      <ChevronRight color="var(--color-muted)" size={20} />
-                    </Card>
+                    <LinkRow title="Read this entry" detail="Change it any time" onClick={v.readSavedEntry} />
+                    <LinkRow title="Read your Chronicle" detail={v.savedCount} onClick={v.goDiaryList} />
+                    <LinkRow title={v.savedNextTitle} detail={v.savedNextMeta} onClick={v.goNextUp} />
+                    <LinkRow title="See your progress" detail="Streak, week and month totals" onClick={v.goSummary} />
                   </div>
                   <Button type="neutral" ghost size="md" onClick={v.backToCalendar} style={{ marginTop: '20px' }}>
                     Back to calendar
@@ -898,28 +791,8 @@ export function PlannerView({ v }: { v: any }) {
                   </div>
                   <WeekQuestsCard v={v} />
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '14px' }}>
-                    <Card as="button" interactive pad="sm" onClick={v.openChronicle} style={progCard('1 1 170px')}>
-                      <Text variant="eyebrow" as="span" tone="muted" style={{ display: 'block' }}>
-                        CHRONICLE
-                      </Text>
-                      <span style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
-                        <Text variant="subheading">{v.loggedCount}</Text>
-                        <Text variant="caption" tone="muted" weight="medium">
-                          {v.loggedUnit}
-                        </Text>
-                      </span>
-                    </Card>
-                    <Card as="button" interactive pad="sm" onClick={v.openMonth} style={progCard('1 1 170px')}>
-                      <Text variant="eyebrow" as="span" tone="muted" style={{ display: 'block' }}>
-                        {v.monthLabel}
-                      </Text>
-                      <span style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
-                        <Text variant="subheading">{v.monthDone}</Text>
-                        <Text variant="caption" tone="muted" weight="medium">
-                          {v.monthDoneUnit}
-                        </Text>
-                      </span>
-                    </Card>
+                    <CountCard label="CHRONICLE" count={v.loggedCount} unit={v.loggedUnit} onClick={v.openChronicle} />
+                    <CountCard label={v.monthLabel} count={v.monthDone} unit={v.monthDoneUnit} onClick={v.openMonth} />
                   </div>
                 </div>
               </>
@@ -1008,38 +881,14 @@ export function PlannerView({ v }: { v: any }) {
                       {v.arsenalNewLabel}
                     </Button>
                   </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      width: '100%',
-                      marginTop: '12px',
-                      padding: '12px 16px',
-                      background: 'var(--color-surface)',
-                      borderRadius: 'var(--radius-md)',
-                      boxShadow: 'var(--elevation-hairline)',
-                    }}
-                  >
-                    <Search color="var(--color-subtle)" size={17} />
-                    <TextField
-                      variant="bare"
+                  <div style={{ marginTop: '12px' }}>
+                    <SearchBar
                       value={v.arsenalQuery ?? ''}
                       onChange={v.setArsenalQuery}
                       placeholder={v.arsenalSearchPlaceholder}
+                      label="Search the Spellbook"
+                      onClear={v.clearArsenalQuery}
                     />
-                    {v.hasQuery ? (
-                      <>
-                        <IconButton
-                          label="Clear search"
-                          size="xs"
-                          onClick={v.clearArsenalQuery}
-                          title="Clear search"
-                        >
-                          <Close color="var(--color-muted)" strokeWidth={2.2} size={14} />
-                        </IconButton>
-                      </>
-                    ) : null}
                   </div>
                   {/* The two filters side by side, where there's room for both. */}
                   <div
@@ -1164,43 +1013,24 @@ export function PlannerView({ v }: { v: any }) {
             {v.isExercise && v.exercise ? (
               <>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '10px' }}>
-                    <BackLink label={v.backLabel} onClick={v.goBack} />
+                  <BackBar label={v.backLabel} onBack={v.goBack}>
                     {v.exercise.builtin ? (
-                      <span className="bar-actions" style={{ display: 'flex', gap: '8px', marginLeft: 'auto', flex: 'none' }}>
-                        <Button type="secondary" size="sm" onClick={v.exercise.copy} style={{ whiteSpace: 'nowrap' }}>
-                          <Copy color="var(--color-accent-deep)" size={16} />
-                          Copy
-                        </Button>
-                        <Button type="primary" size="sm" onClick={v.exercise.add} style={{ whiteSpace: 'nowrap' }}>
-                          <Plus color="var(--color-on-accent)" size={16} />
-                          Add
-                        </Button>
-                      </span>
+                      <Button type="secondary" size="sm" onClick={v.exercise.copy} style={{ whiteSpace: 'nowrap' }}>
+                        <Copy color="var(--color-accent-deep)" size={16} />
+                        Copy
+                      </Button>
                     ) : (
-                      <span className="bar-actions" style={{ display: 'flex', gap: '8px', marginLeft: 'auto', flex: 'none' }}>
-                        <Button type="secondary" size="sm" onClick={v.exercise.edit} style={{ whiteSpace: 'nowrap' }}>
-                          <Pencil color="var(--color-accent-deep)" size={16} />
-                          Edit
-                        </Button>
-                        <Button type="primary" size="sm" onClick={v.exercise.add} style={{ whiteSpace: 'nowrap' }}>
-                          <Plus color="var(--color-on-accent)" size={16} />
-                          Add
-                        </Button>
-                      </span>
+                      <Button type="secondary" size="sm" onClick={v.exercise.edit} style={{ whiteSpace: 'nowrap' }}>
+                        <Pencil color="var(--color-accent-deep)" size={16} />
+                        Edit
+                      </Button>
                     )}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
-                    <IconTile as="span">{v.exercise.svg}</IconTile>
-                    <div style={{ minWidth: 0 }}>
-                      <Text variant="eyebrow" as="div" tone="slate">
-                        {v.exercise.builtin ? 'BUILT-IN EXERCISE' : 'EXERCISE'}
-                      </Text>
-                      <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
-                        {v.exercise.name}
-                      </Text>
-                    </div>
-                  </div>
+                    <Button type="primary" size="sm" onClick={v.exercise.add} style={{ whiteSpace: 'nowrap' }}>
+                      <Plus color="var(--color-on-accent)" size={16} />
+                      Add
+                    </Button>
+                  </BackBar>
+                  <PageTitle icon={v.exercise.svg} eyebrow={v.exercise.builtin ? 'BUILT-IN EXERCISE' : 'EXERCISE'} title={v.exercise.name} />
                   <Card style={{ marginTop: '18px' }}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '26px' }}>
                       <Stat size="lg" label="SETS × REPS" value={v.exercise.sets} />
@@ -1258,11 +1088,7 @@ export function PlannerView({ v }: { v: any }) {
                     </>
                   )}
                   {v.exercise.canDelete ? (
-                    <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }}>
-                      <Button type="danger" ghost size="md" onClick={v.exercise.remove}>
-                        Delete exercise
-                      </Button>
-                    </div>
+                    <DeleteSection label="Delete exercise" onClick={v.exercise.remove} />
                   ) : null}
                 </div>
               </>
@@ -1286,14 +1112,13 @@ export function PlannerView({ v }: { v: any }) {
             {v.isTemplate && v.template ? (
               <>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '10px' }}>
-                    <BackLink label={v.backLabel} onClick={v.goBack} />
+                  <BackBar label={v.backLabel} onBack={v.goBack}>
                     {v.template.builtin ? (
                       <Button
                         type="secondary"
                         size="sm"
                         onClick={v.template.copy}
-                        style={{ marginLeft: 'auto' }}
+                        style={{ whiteSpace: 'nowrap' }}
                       >
                         <Copy color="var(--color-accent-deep)" size={16} />
                         {v.template.copyLabel}
@@ -1303,24 +1128,14 @@ export function PlannerView({ v }: { v: any }) {
                         type="secondary"
                         size="sm"
                         onClick={v.template.edit}
-                        style={{ marginLeft: 'auto' }}
+                        style={{ whiteSpace: 'nowrap' }}
                       >
                         <Pencil color="var(--color-accent-deep)" size={16} />
                         Edit
                       </Button>
                     )}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
-                    <IconTile as="span">{v.template.svg}</IconTile>
-                    <div style={{ minWidth: 0 }}>
-                      <Text variant="eyebrow" as="div" tone="slate">
-                        {v.template.eyebrow}
-                      </Text>
-                      <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
-                        {v.template.name}
-                      </Text>
-                    </div>
-                  </div>
+                  </BackBar>
+                  <PageTitle icon={v.template.svg} eyebrow={v.template.eyebrow} title={v.template.name} />
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '18px' }}>
                     <Chip icon={<Clock color="var(--color-muted)" size={15} />}>{v.template.time}</Chip>
                     {(v.template.areas ?? []).map((a, i) => (
@@ -1356,11 +1171,7 @@ export function PlannerView({ v }: { v: any }) {
                   <ScheduleDialog v={v} />
                   {v.template.isRide ? (
                     <Card style={{ marginTop: '18px' }}>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '26px' }}>
-                        {(v.template.rideStats ?? []).map((r, i) => (
-                          <Stat key={i} size="lg" label={r?.label} value={r?.value} />
-                        ))}
-                      </div>
+                      <RideStats size="lg" stats={v.template.rideStats ?? []} />
                     </Card>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '18px' }}>
@@ -1393,11 +1204,7 @@ export function PlannerView({ v }: { v: any }) {
                       {v.template.builtinNote}
                     </Text>
                   ) : (
-                    <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }}>
-                      <Button type="danger" ghost size="md" onClick={v.template.remove}>
-                        Delete workout
-                      </Button>
-                    </div>
+                    <DeleteSection label="Delete workout" onClick={v.template.remove} />
                   )}
                 </div>
               </>
@@ -1405,9 +1212,7 @@ export function PlannerView({ v }: { v: any }) {
             {v.isExerciseEdit && v.exerciseEdit ? (
               <>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px' }}>
-                    <BackLink label={v.backLabel} onClick={v.exerciseEdit.cancel} />
-                  </div>
+                  <BackBar label={v.backLabel} onBack={v.exerciseEdit.cancel} />
                   {/* The same as the workout editor: Back on its own row, then what's being edited. */}
                   <Text variant="eyebrow" as="h1" tone="slate" style={{ margin: '18px 0 0' }}>
                     {v.exerciseEdit.heading}
@@ -1419,9 +1224,7 @@ export function PlannerView({ v }: { v: any }) {
             {v.isNewEntry ? (
               <>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '10px' }}>
-                    <BackLink label={v.backLabel} onClick={v.goBack} />
-                  </div>
+                  <BackBar label={v.backLabel} onBack={v.goBack} />
                   <Text variant="title" as="h1" style={{ margin: '24px 0 0' }}>
                     Which session are you writing about?
                   </Text>
@@ -1602,25 +1405,13 @@ export function PlannerView({ v }: { v: any }) {
                 <div>
                   <LeaveWorkoutDialog v={v} />
                   <FinishDialog v={v} />
-                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '10px' }}>
-                    <BackLink label={v.backLabel} onClick={v.backToDay} />
-                    <Button type="secondary" size="sm" onClick={v.goEdit} style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+                  <BackBar label={v.backLabel} onBack={v.backToDay}>
+                    <Button type="secondary" size="sm" onClick={v.goEdit} style={{ whiteSpace: 'nowrap' }}>
                       <Pencil color="var(--color-accent-deep)" size={16} />
                       Edit
                     </Button>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
-                    <IconTile>{v.dayIcoSvg}</IconTile>
-                    <div style={{ minWidth: '0' }}>
-                      <Text variant="eyebrow" as="div" tone="slate">
-                        {v.eDate}
-                        {v.eWarmup ? <WarmupTag inline /> : null}
-                      </Text>
-                      <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
-                        {v.eName}
-                      </Text>
-                    </div>
-                  </div>
+                  </BackBar>
+                  <PageTitle icon={v.dayIcoSvg} eyebrow={<>{v.eDate}{v.eWarmup ? <WarmupTag inline /> : null}</>} title={v.eName} />
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '20px' }}>
                     <Chip
                       icon={<Clock color="var(--color-muted)" size={15} />}
@@ -1705,9 +1496,7 @@ export function PlannerView({ v }: { v: any }) {
             {v.needsType ? (
               <>
                 <div style={{ maxWidth: '560px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px' }}>
-                    <BackLink label={v.backLabel} onClick={v.backToDay} />
-                  </div>
+                  <BackBar label={v.backLabel} onBack={v.backToDay} />
                   <div style={{ marginTop: '18px' }}>
                     <Text variant="eyebrow" as="div" tone="slate">
                       NEW WORKOUT
@@ -1725,9 +1514,7 @@ export function PlannerView({ v }: { v: any }) {
               <>
                 <div style={{ position: 'relative' }}>
                   <LeaveEditorDialog v={v} />
-                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px' }}>
-                    <BackLink label={v.backLabel} onClick={v.tryLeave} />
-                  </div>
+                  <BackBar label={v.backLabel} onBack={v.tryLeave} />
                   <EditorHeader v={v} />
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '20px' }}>
                     {v.showDate ? (
@@ -1919,15 +1706,14 @@ export function PlannerView({ v }: { v: any }) {
             {v.isDiary ? (
               <>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '10px' }}>
-                    <BackLink label={v.diaryBackLabel || v.backLabel} onClick={v.diaryBack} />
+                  <BackBar label={v.diaryBackLabel || v.backLabel} onBack={v.diaryBack}>
                     {v.diaryReading ? (
-                      <Button type="secondary" size="sm" onClick={v.editEntry} style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+                      <Button type="secondary" size="sm" onClick={v.editEntry} style={{ whiteSpace: 'nowrap' }}>
                         <Pencil color="var(--color-accent-deep)" size={16} />
                         Edit
                       </Button>
                     ) : null}
-                  </div>
+                  </BackBar>
                   {v.diaryReading ? <EntryReadView v={v} /> : null}
                   {v.diaryEditing ? <DiaryEntryForm v={v} /> : null}
                 </div>

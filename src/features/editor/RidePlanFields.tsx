@@ -2,6 +2,7 @@ import { Card } from '@moonshot/design-system/card';
 import { Chip } from '@moonshot/design-system/chip';
 import { Label, TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
+import { DurationFields } from '@/components/DurationFields';
 import type { PlannerVals } from '@/features/planner/store/types';
 
 /** A ride’s plan: distance, elevation, duration and effort zone. */
@@ -33,27 +34,14 @@ export function RidePlanFields({ v }: { v: PlannerVals }) {
           />
           <div style={{ flex: '1 1 210px', minWidth: '0' }}>
             <Label>Duration</Label>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <TextField
-                suffix="hr"
-                containerStyle={{ flex: '1', minWidth: '0' }}
-                aria-label="Duration, hours"
-                value={v.rideHours ?? ''}
-                onChange={v.setHours}
-                inputMode="numeric"
-                placeholder="1"
-              />
-              <TextField
-                suffix="min"
-                containerStyle={{ flex: '1', minWidth: '0' }}
-                aria-label="Duration, minutes"
-                value={v.rideMins ?? ''}
-                onChange={v.setMins}
-                onBlur={v.rollMins}
-                inputMode="numeric"
-                placeholder="20"
-              />
-            </div>
+            <DurationFields
+              hours={v.rideHours ?? ''}
+              minutes={v.rideMins ?? ''}
+              onHours={v.setHours}
+              onMinutes={v.setMins}
+              onMinutesBlur={v.rollMins}
+              placeholders={['1', '20']}
+            />
           </div>
         </div>
         <Label style={{ margin: '18px 0 9px' }}>Target effort</Label>

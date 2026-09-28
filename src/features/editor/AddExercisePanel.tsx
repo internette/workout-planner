@@ -1,15 +1,12 @@
 import { Fragment } from 'react';
 import { Button, IconButton } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
-import { IconChoiceGroup } from '@moonshot/design-system/icon-choice-group';
 import { ChevronRight, Close, Plus, Search } from '@moonshot/design-system/icons';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
-import { Label, TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
-import { AreaChoice } from '@/components/AreaChoice';
-import { EquipmentPicker } from '@/components/EquipmentPicker';
 import { FormActions } from '@/components/FormActions';
-import { SetsFields } from '@/components/SetsFields';
+import { ExerciseFields } from '@/components/ExerciseFields';
+import { SearchBar } from '@/components/SearchBar';
 import type { PlannerVals } from '@/features/planner/store/types';
 
 /** Adding an exercise to the workout: one from the Spellbook, or a new one. */
@@ -35,34 +32,15 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
         </div>
         {v.addLib ? (
           <>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                marginTop: '16px',
-                padding: '0 13px',
-                background: 'var(--color-canvas)',
-                border: '1px solid var(--color-outline)',
-                borderRadius: 'var(--radius-md)',
-              }}
-            >
-              <Search color="var(--color-subtle)" size={16} />
-              <TextField
-                variant="bare"
-                aria-label="Search exercises"
+            <div style={{ marginTop: '16px' }}>
+              <SearchBar
+                inset
                 value={v.pickQuery ?? ''}
                 onChange={v.setPickQuery}
                 placeholder="Search exercises"
+                onClear={v.clearPickQuery}
+                status={v.libraryAnnounce}
               />
-              <span className="sr-only" role="status">
-                {v.libraryAnnounce}
-              </span>
-              {v.pickQuery ? (
-                <IconButton label="Clear search" size="xs" onClick={v.clearPickQuery}>
-                  <Close color="var(--color-muted)" strokeWidth={2.2} size={14} />
-                </IconButton>
-              ) : null}
             </div>
             {v.libraryFilterNote || v.libraryCanNarrow ? (
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px 8px', marginTop: '8px' }}>
@@ -182,21 +160,10 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
         {v.addNew ? (
           <>
             <div style={{ marginTop: '18px' }}>
-              <TextField
-                label="Exercise name"
-                value={v.draftName ?? ''}
-                onChange={v.setName}
-                placeholder="e.g. Bulgarian Split Squat"
-                error={v.draftNameError || undefined}
-              />
-              <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
-              <IconChoiceGroup
-                label="Icon"
-                columns={5}
-                style={{ maxHeight: '236px', overflowY: 'auto', padding: '2px' }}
-                {...v.iconGrid}
-              />
-              <SetsFields
+              <ExerciseFields
+                name={v.draftName ?? ''}
+                onName={v.setName}
+                nameError={v.draftNameError}
                 sets={v.draftSets ?? ''}
                 reps={v.draftReps ?? ''}
                 weight={v.draftWeight ?? ''}
@@ -205,17 +172,10 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
                 onReps={v.setReps}
                 onWeight={v.setWeight}
                 onRest={v.setRest}
+                areas={v.draftAreas ?? []}
+                equipment={v.draftEquipment ? { id: 'picker-new-equipment', open: v.draftEquipment.open, onToggle: v.draftEquipment.toggle, summary: v.draftEquipment.summary, groups: v.draftEquipment.groups } : null}
+                icon={v.iconGrid}
               />
-              <AreaChoice areas={v.draftAreas ?? []} />
-              {v.draftEquipment ? (
-                <EquipmentPicker
-                  id="picker-new-equipment"
-                  open={v.draftEquipment.open}
-                  onToggle={v.draftEquipment.toggle}
-                  summary={v.draftEquipment.summary}
-                  groups={v.draftEquipment.groups}
-                />
-              ) : null}
             </div>
           </>
         ) : null}

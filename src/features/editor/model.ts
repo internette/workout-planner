@@ -2,7 +2,7 @@ import { DOW3, DOWFULL, EDIT_OVERLAYS, EQUIPMENT, EQUIPMENT_GROUPS, ICON_COLORS,
 import { countsOk, needsLine, rollMinutes, digitsOnly, noticePatch, exLine, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, setsRepsOk, splitSetsReps, withLb, withSec, workoutDraftDirty } from '../../shared/helpers';
 import { iconOptions, iconSvg } from '../../shared/icons';
 import * as db from '@/lib/plannerData';
-import { colors, themed } from '@moonshot/design-system/colors';
+import { themed } from '@moonshot/design-system/colors';
 import type { Ctx } from '../planner/store/types';
 
 // Create / edit workout screen: ride plan, exercise list, icons, date picker, save and delete.
@@ -1003,7 +1003,6 @@ export function editVals(ctx: Ctx) {
           };
         }),
         icoSvg: iconSvg(cur),
-        hideLegacy: false,
         detail: exLine(e, true),
         // Ticked off: its name is struck through and muted.
         nameDone: !!doneSet[e.name],
@@ -1042,14 +1041,11 @@ export function editVals(ctx: Ctx) {
             removed: Object.assign({}, st.removed, { [listKey]: gone.concat([e.name]) }),
             exOpen: null,
           }),
-        isH: cur === 'h',
-        isV: cur === 'v',
-        isD: cur === 'd',
         open: st.exOpen === e.name,
         toggle: () => logic.s({ exOpen: st.exOpen === e.name ? null : e.name }),
         close: () => logic.state.exOpen === e.name && logic.s({ exOpen: null }),
-        iconValue: cur,
-        pickIcon,
+        // The same icons as the exercise forms offer.
+        icons: { value: cur, onChange: pickIcon, options: iconOptions() },
       };
     }),
   };

@@ -4,8 +4,8 @@ import { Card } from '@moonshot/design-system/card';
 import { IconTile } from '@moonshot/design-system/icon-tile';
 import { ChevronDown, ChevronRight, Dumbbell, DumbbellSmall } from '@moonshot/design-system/icons';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
-import { Stat } from '@moonshot/design-system/stat';
 import { Text } from '@moonshot/design-system/typography';
+import { RideStats } from '@/components/RideStats';
 import { WarmupTag } from '@/components/WarmupTag';
 import { css, t } from '@/features/planner/viewHelpers';
 
@@ -67,22 +67,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
         ) : null}
         {card?.isRide ? (
           <>
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '26px',
-                marginTop: '20px',
-                paddingTop: '18px',
-                borderTop: '1px solid var(--color-line)',
-              }}
-            >
-              {(card?.rideStats ?? []).map((r, i) => (
-                <Fragment key={i}>
-                  <Stat label={r?.label} value={r?.value} note={r?.note} />
-                </Fragment>
-              ))}
-            </div>
+            <RideStats stats={card?.rideStats ?? []} style={{ marginTop: '20px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }} />
           </>
         ) : null}
         {card?.isLift ? (

@@ -1,9 +1,8 @@
 import { Card } from '@moonshot/design-system/card';
 import { Checkbox } from '@moonshot/design-system/checkbox';
-import { Plus } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
 import { IconSquare } from '@/components/IconSquare';
-import { WarmupTag } from '@/components/WarmupTag';
+import { LinkRow } from '@/components/LinkRow';
 import type { PlannerVals } from '@/features/planner/store/types';
 
 /** Picking a workout already in the Spellbook instead of making a new one. */
@@ -34,26 +33,7 @@ export function SavedChoices({ v }: { v: PlannerVals }) {
             ) : null}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {(g?.items ?? []).map((w, i) => (
-                <Card
-                  key={i}
-                  as="button"
-                  pad="sm"
-                  interactive
-                  onClick={w?.pick}
-                  style={{ display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left', width: '100%' }}
-                >
-                  <IconSquare>{w?.svg}</IconSquare>
-                  <span style={{ flex: '1', minWidth: '0' }}>
-                    {w?.warmup ? <WarmupTag /> : null}
-                    <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
-                      {w?.name}
-                    </Text>
-                    <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
-                      {w?.meta}
-                    </Text>
-                  </span>
-                  <Plus color="var(--color-accent-deep)" size={17} />
-                </Card>
+                <LinkRow key={i} leading={<IconSquare>{w?.svg}</IconSquare>} title={w?.name} detail={w?.meta} warmup={!!w?.warmup} action="add" onClick={w?.pick} />
               ))}
             </div>
           </div>

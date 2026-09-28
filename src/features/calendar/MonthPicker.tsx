@@ -1,10 +1,11 @@
 import { Fragment } from 'react';
-import { Button, IconButton } from '@moonshot/design-system/buttons';
+import { Button } from '@moonshot/design-system/buttons';
 import { vars } from '@moonshot/design-system/colors';
-import { ChevronDown, ChevronLeft, ChevronRight, Sparkle } from '@moonshot/design-system/icons';
+import { ChevronDown, Sparkle } from '@moonshot/design-system/icons';
 import { Popover } from '@moonshot/design-system/popover';
 import { Text } from '@moonshot/design-system/typography';
 import { css } from '@/features/planner/viewHelpers';
+import { StepButton } from '@/components/StepButton';
 import type { PlannerVals } from '@/features/planner/store/types';
 
 /** The month name that opens a month-and-year picker, with Today. */
@@ -27,13 +28,9 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
               borderBottom: '1px solid var(--color-line)',
             }}
           >
-            <IconButton label="Previous year" size="md" onClick={v.prevYear}>
-              <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={17} />
-            </IconButton>
+            <StepButton dir="prev" unit="year" onClick={v.prevYear} />
             <Text variant="subheading">{v.yearLabel}</Text>
-            <IconButton label="Next year" size="md" onClick={v.nextYear}>
-              <ChevronRight color="var(--color-slate)" strokeWidth={2.2} size={17} />
-            </IconButton>
+            <StepButton dir="next" unit="year" onClick={v.nextYear} />
           </div>
           <div
             style={{
