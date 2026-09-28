@@ -7,6 +7,7 @@ import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import { css, t } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
+import { RankGem } from '@/frontend/components/RankGem';
 
 /** Profile: the avatar and name, the rank and the XP to the next one. */
 export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
@@ -91,14 +92,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
             justifyContent: 'center',
           }}
         >
-          <span
-            style={{
-              width: '10px',
-              height: '14px',
-              clipPath: 'polygon(50% 0,100% 35%,50% 100%,0 35%)',
-              background: v.avatarGem,
-            }}
-          ></span>
+          <RankGem fill={v.avatarGem} />
         </span>
       </div>
       <div style={{ minWidth: '0', flex: '1 1 200px' }}>
@@ -118,7 +112,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
           style={css(v.rankPillBtn)}
           className="hv6 hit"
         >
-          <span style={css(v.rankGem)}></span>
+          <RankGem fill={v.rankGemColor} />
           {t(v.rankName)}
           <ChevronRight strokeWidth={2.4} size={12} style={{ opacity: '.7' }} />
         </button>

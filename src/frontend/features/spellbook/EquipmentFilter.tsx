@@ -1,10 +1,10 @@
 import { Button } from '@moonshot/design-system/buttons';
 import { Checkbox } from '@moonshot/design-system/checkbox';
-import { ChevronDown } from '@moonshot/design-system/icons';
 import { Popover } from '@moonshot/design-system/popover';
 import { Text } from '@moonshot/design-system/typography';
 import { FilterButton } from '@/frontend/components/FilterButton';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
+import { DisclosureChevron } from '@/frontend/components/DisclosureChevron';
 
 /** The Spellbook’s equipment filter: its button and the equipment to tick, by group. */
 export function EquipmentFilter({ v }: { v: PlannerVals }) {
@@ -56,12 +56,7 @@ export function EquipmentFilter({ v }: { v: PlannerVals }) {
                 >
                   {g.picked}
                 </Text>
-                <ChevronDown
-                  color="var(--color-muted)"
-                  strokeWidth={2.2}
-                  size={16}
-                  style={{ flex: 'none', transition: 'transform .2s', transform: g.open ? 'rotate(180deg)' : 'none' }}
-                />
+                <DisclosureChevron open={!!g.open} />
               </button>
               {g.open ? (
                 <div

@@ -2,7 +2,7 @@ import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { IconSquare } from '@/frontend/components/IconSquare';
 import { WarmupTag } from '@/frontend/components/WarmupTag';
-import { css } from '@/frontend/features/planner/viewHelpers';
+import { StatusDot } from '@/frontend/components/StatusDot';
 
 /** A day in the Week view: its session, or a rest day. */
 export function WeekRow({ row }: { row: any }) {
@@ -25,15 +25,7 @@ export function WeekRow({ row }: { row: any }) {
               background: 'var(--color-surface-rest)',
             }}
           >
-            <span
-              style={{
-                width: '14px',
-                height: '2px',
-                flex: 'none',
-                borderRadius: '1px',
-                background: 'var(--color-divider)',
-              }}
-            ></span>
+            <StatusDot status="rest" size="md" />
             <Text variant="label" tone="muted">
               Rest day
             </Text>
@@ -70,7 +62,9 @@ export function WeekRow({ row }: { row: any }) {
                 {row?.meta}
               </Text>
             </div>
-            <span style={css(row?.stateDot)}></span>
+            <span style={{ marginLeft: 'auto' }}>
+              <StatusDot status={row?.dot} size="md" />
+            </span>
           </Card>
         </>
       ) : null}

@@ -4,6 +4,7 @@ import { Text } from '@moonshot/design-system/typography';
 import { IconSquare } from '@/frontend/components/IconSquare';
 import { LinkRow } from '@/frontend/components/LinkRow';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
+import { GroupLabel } from '@/frontend/components/GroupLabel';
 
 /** Picking a workout already in the Spellbook instead of making a new one. */
 export function SavedChoices({ v }: { v: PlannerVals }) {
@@ -27,9 +28,7 @@ export function SavedChoices({ v }: { v: PlannerVals }) {
         {(v.savedChoiceGroups ?? []).map((g, gi) => (
           <div key={gi}>
             {g?.label ? (
-              <Text variant="eyebrow" tone="muted" as="h3" style={{ margin: '0 2px 8px' }}>
-                {g?.label}
-              </Text>
+              <GroupLabel label={g?.label} as="h3" />
             ) : null}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {(g?.items ?? []).map((w, i) => (

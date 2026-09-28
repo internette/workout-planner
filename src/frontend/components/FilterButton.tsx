@@ -1,5 +1,5 @@
-import { ChevronDown } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
+import { DisclosureChevron } from './DisclosureChevron';
 
 export interface FilterButtonProps {
   /** What it filters by, e.g. "Target areas". Shown small, above. */
@@ -58,12 +58,7 @@ export function FilterButton({ label, value, active, open, onClick, 'aria-label'
       >
         {value}
       </span>
-      <ChevronDown
-        color="var(--color-muted)"
-        strokeWidth={2.2}
-        size={16}
-        style={{ flex: 'none', transition: 'transform .2s', transform: open ? 'rotate(180deg)' : 'none' }}
-      />
+      <DisclosureChevron open={open} />
     </button>
   );
 }

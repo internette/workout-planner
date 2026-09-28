@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import { Dialog } from '@moonshot/design-system/dialog';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
+import { RankGem } from '@/frontend/components/RankGem';
 
 /** The rank ladder, opened from the rank badge. */
 export function RanksDialog({ v }: { v: PlannerVals }) {
@@ -18,7 +19,7 @@ export function RanksDialog({ v }: { v: PlannerVals }) {
         {(v.rankLadder ?? []).map((r, i) => (
           <Fragment key={i}>
             <div style={css(r?.row)}>
-              <span style={css(r?.gem)}></span>
+              <RankGem fill={r?.gemFill} faded={!!r?.gemFaded} />
               <span style={css(r?.name)}>{r?.label}</span>
               <span style={css(r?.xp)}>{r?.req}</span>
             </div>

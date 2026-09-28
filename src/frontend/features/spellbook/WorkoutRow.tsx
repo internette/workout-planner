@@ -3,6 +3,7 @@ import { Chip } from '@moonshot/design-system/chip';
 import { Text } from '@moonshot/design-system/typography';
 import { IconSquare } from '@/frontend/components/IconSquare';
 import { WarmupTag } from '@/frontend/components/WarmupTag';
+import { ChipRow } from '@/frontend/components/ChipRow';
 
 /** A saved workout in the Spellbook’s list, with its exercises and target areas. */
 export function WorkoutRow({ workout }: { workout: any }) {
@@ -43,13 +44,11 @@ export function WorkoutRow({ workout }: { workout: any }) {
           </Text>
         ) : null}
         {(workout?.areas ?? []).length ? (
-          <span
-            style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}
-          >
+          <ChipRow as="span" style={{ marginTop: '8px' }}>
             {(workout?.areas ?? []).map((a, k) => (
               <Chip key={k}>{a}</Chip>
             ))}
-          </span>
+          </ChipRow>
         ) : null}
       </span>
     </Card>

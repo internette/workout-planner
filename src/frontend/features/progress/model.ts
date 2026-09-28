@@ -97,14 +97,8 @@ export function progressVals(ctx: Ctx) {
             : reached
               ? 'background:var(--color-canvas);color:var(--color-slate)'
               : 'background:none;color:var(--color-muted)'),
-        gem:
-          'width:11px;height:15px;flex:none;clip-path:polygon(50% 0,100% 35%,50% 100%,0 35%);background:' +
-          (ix === RANKS.length - 1
-            ? 'var(--gradient-gem)'
-            : cur && r.gem === 'var(--color-white)'
-              ? 'var(--color-white)'
-              : r.gem) +
-          (cur || reached ? '' : ';opacity:.45'),
+        gemFill: ix === RANKS.length - 1 ? 'var(--gradient-gem)' : r.gem,
+        gemFaded: !(cur || reached),
         name:
           'flex:1;min-width:0;font-size:var(--text-base);font-weight:' +
           (cur ? 'var(--font-weight-bold)' : 'var(--font-weight-medium)'),
@@ -125,9 +119,7 @@ export function progressVals(ctx: Ctx) {
     rankPillBtn:
       'display:inline-flex;align-items:center;gap:8px;margin-top:9px;min-height:36px;padding:8px 15px 8px 14px;border:none;border-radius:var(--radius-full);font-family:inherit;font-size:var(--text-md);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-loose);cursor:pointer;' +
       RANKS[derivedRank].pill,
-    rankGem:
-      'width:10px;height:14px;flex:none;clip-path:polygon(50% 0,100% 35%,50% 100%,0 35%);background:' +
-      RANKS[derivedRank].gem,
+    rankGemColor: RANKS[derivedRank].gem,
     rankBarPct: rankPct,
     rankProgress:
       xpTotal === 0
@@ -219,9 +211,7 @@ export function progressVals(ctx: Ctx) {
       .map(([name, color, count], ix, arr) => ({
         name,
         count,
-        swatch:
-          'width:10px;height:14px;flex:none;clip-path:polygon(50% 0,100% 35%,50% 100%,0 35%);background:' +
-          color,
+        color,
         row:
           'display:flex;align-items:center;gap:12px;padding:10px 0' +
           (ix === arr.length - 1 ? '' : ';border-bottom:1px solid var(--color-line)'),

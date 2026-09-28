@@ -7,6 +7,7 @@ import { Text } from '@moonshot/design-system/typography';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import { DeleteSection } from '@/frontend/components/DeleteSection';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
+import { NotesCard } from '@/frontend/components/NotesCard';
 
 /** Reading a Chronicle entry. */
 export function EntryReadView({ v }: { v: PlannerVals }) {
@@ -55,23 +56,9 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
             </div>
           </Card>
         </div>
-        <Card style={{ marginTop: '12px' }}>
-          <Text variant="micro" as="div" tone="subtle">
-            NOTES
-          </Text>
-          <p
-            style={{
-              margin: '10px 0 0',
-              fontSize: 'var(--text-lg)',
-              fontWeight: 'var(--font-weight-regular)',
-              lineHeight: 'var(--leading-relaxed)',
-              color: 'var(--color-ink)',
-              textWrap: 'pretty',
-            }}
-          >
-            {v.readNote}
-          </p>
-        </Card>
+        <NotesCard lead style={{ marginTop: '12px' }}>
+          {v.readNote}
+        </NotesCard>
         <DeleteSection label="Delete entry" onClick={v.deleteEntry} />
       </div>
     </>
