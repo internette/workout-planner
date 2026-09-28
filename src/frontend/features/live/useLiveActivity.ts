@@ -41,7 +41,7 @@ function liveNotice(a: LiveActivity, now: number): Shown {
   const title = a.name + ' · ' + (paused ? 'Paused at ' + Math.floor(sec / 60) + ' min' : minutes(sec));
   const body =
     a.kind === 'ride'
-      ? [a.ride?.dist ? a.ride.dist + ' mi planned' : a.ride?.planned, a.ride?.climb ? a.ride.climb + ' ft climb' : '']
+      ? [a.ride?.zone, a.ride?.dist ? a.ride.dist + ' mi planned' : a.ride?.planned, a.ride?.climb ? a.ride.climb + ' ft climb' : '']
           .filter(Boolean)
           .join(' · ')
       : a.done + ' of ' + a.total + ' done' + (a.now ? '\nNow: ' + a.now.name + (a.now.line ? ' · ' + a.now.line : '') : '');
@@ -57,7 +57,7 @@ function liveNotice(a: LiveActivity, now: number): Shown {
 function doneNotice(d: LiveDone): Shown {
   return {
     title: 'Quest cleared · ' + d.name,
-    body: ['Took ' + d.took, d.exercises ? (d.ride ? d.exercises : d.exercises + ' exercises') : '', d.streak ? d.streak + ' streak' : '']
+    body: ['Took ' + d.took, d.exercises ? (d.ride ? d.exercises : d.exercises + ' exercises') : '', d.streak > 0 ? d.streak + '-day streak' : '']
       .filter(Boolean)
       .join(' · '),
     actions: [{ action: 'write', title: 'Write in the Chronicle' }],
@@ -304,7 +304,7 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
     // The artwork: drawn by the worker when what's on it changes, in the colours this browser uses.
     const accent = savedAccent();
     const theme = savedTheme();
-    const artKey = JSON.stringify([a.name, a.kind, a.done, a.total, a.now, a.ride, a.rest && a.rest.next, !!a.rest, paused, accent, theme]);
+    const artKey = JSON.stringify([a.name, a.kind, a.done, a.total, a.now, a.ride, a.rest && a.rest.next, a.rest && a.rest.endsAt, paused, accent, theme]);
     if (art.current.key !== artKey) {
       art.current.key = artKey;
       artWanted.current = (key, blob) => {
