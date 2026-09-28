@@ -86,7 +86,7 @@ export class PlannerLogic extends DCLogic {
         const result = await write();
         if (typeof patch === 'function') this.pendingPatch = { ...this.pendingPatch, ...patch(result) };
       })
-      .catch(e => this.setState({ saveError: e instanceof Error ? e.message : String(e) }))
+      .catch((e) => this.fail(e))
       .then(() => {
         if (--this.pending > 0) return;
         const p = this.pendingPatch;
@@ -125,6 +125,11 @@ export class PlannerLogic extends DCLogic {
     return el.getAttribute('aria-label') || (el.textContent || '').trim().slice(0, 80) || null;
   }
 
+  /** Shows what went wrong with a save in the error banner. */
+  fail(e: unknown) {
+    this.setState({ saveError: e instanceof Error ? e.message : String(e) });
+  }
+
   s(p){ this.setState(p); }
   nav(p){
     this.openers = this.openers.concat([this.focusedName()]);
@@ -132,6 +137,14 @@ export class PlannerLogic extends DCLogic {
     const snap = { screen:st.screen, month:st.month, yOff:st.yOff, day:st.day, seg:st.seg,
       diaryFrom:st.diaryFrom, diaryEdit:st.diaryEdit, creating:st.creating };
     this.setState(Object.assign({ hist: (st.hist || []).concat([snap]), notice: null }, p));
+  }
+  /** Opens a session's page: the session `entryId` on month `m` (counted from this January), day `d`. */
+  openSession(m: number, d: number, entryId: string, extra: any = {}) {
+    this.nav({ screen: 'detail', creating: false, ...monthPatch(m), day: d, entryId, ...extra });
+  }
+  /** Opens the calendar on month `m`, day `d`, in the Day, Week or Month view. */
+  openDay(m: number, d: number, seg: 'Day' | 'Week' | 'Month' = 'Day') {
+    this.nav({ screen: 'day', seg, monthOpen: false, ...monthPatch(m), day: d, entryId: null });
   }
   back(){
     const st = this.state;

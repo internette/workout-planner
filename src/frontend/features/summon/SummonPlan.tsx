@@ -13,6 +13,7 @@ import { vars } from '@moonshot/design-system/colors';
 import { shortDate, type PlanDraft, type PlanWorkout } from '@/shared/planDraft';
 import { discardPlanDraft, latestPlanDraft } from '@/frontend/data/plannerData';
 import { vendorOn } from '@/shared/vendors';
+import { plural } from '@/frontend/shared/helpers';
 
 // "Summon a plan": the person asks Claude or ChatGPT for a training plan, the assistant sends it back through Moonshot's
 // connector (backend/api/mcp.ts, at /api/mcp) as a draft, and it opens here to look over before anything goes on the calendar.
@@ -427,7 +428,7 @@ function ChatGptSteps() {
   );
 }
 
-const countLabel = (n: number) => `${n} workout${n === 1 ? '' : 's'}`;
+const countLabel = (n: number) => plural(n, 'workout');
 // "Mon, Sep 28 to Wed, Oct 7", or "on Tue, Sep 29" when it's all one day.
 const span = (w: PlanWorkout[]) => {
   const first = w[0].date;
@@ -491,11 +492,11 @@ function Example() {
   );
 }
 
-// The plan by week (Monday to Sunday), each workout with its day and what it holds.
+// The plan by week (Sunday to Saturday, as everywhere else in the app), each workout with its day and what it holds.
 function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
   const weekOf = (iso: string) => {
     const d = new Date(iso + 'T12:00:00');
-    d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+    d.setDate(d.getDate() - d.getDay());
     return d.toISOString().slice(0, 10);
   };
   const weeks: { start: string; list: PlanWorkout[] }[] = [];
@@ -541,5 +542,5 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
 const meta = (w: PlanWorkout) => {
   if (w.kind === 'ride') return [w.minutes ? `${w.minutes} min` : '', w.ride?.miles ? `${w.ride.miles} mi` : '', w.ride?.zone ?? ''].filter(Boolean).join(' · ');
   const n = w.exercises?.length ?? 0;
-  return [`${n} exercise${n === 1 ? '' : 's'}`, w.minutes ? `~${w.minutes} min` : ''].filter(Boolean).join(' · ');
+  return [plural(n, 'exercise'), w.minutes ? `~${w.minutes} min` : ''].filter(Boolean).join(' · ');
 };

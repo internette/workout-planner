@@ -2,7 +2,7 @@ import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Check } from '@moonshot/design-system/icons';
 import { css, t } from '@/frontend/features/planner/viewHelpers';
-import { RideStats } from '@/frontend/components/RideStats';
+import { StatRow } from '@/frontend/components/StatRow';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** A ride session: its stats and marking it done. */
@@ -10,7 +10,7 @@ export function RideSessionCard({ v }: { v: PlannerVals }) {
   return (
     <>
       <Card style={{ marginTop: '18px' }}>
-        <RideStats stats={v.rideStats ?? []} />
+        <StatRow stats={v.rideStats ?? []} />
         {!v.isFuture ? (
           <Button
             type={v.rideDoneType}

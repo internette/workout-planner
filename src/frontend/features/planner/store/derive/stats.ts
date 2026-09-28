@@ -1,5 +1,5 @@
-import { DOW3, MON3, RANK_STEPS } from '@/frontend/shared/constants';
-import { idOf, mod12, questSeed } from '@/frontend/shared/helpers';
+import { MON3, RANK_STEPS } from '@/frontend/shared/constants';
+import { idOf, numericOnly, questSeed, shortDay } from '@/frontend/shared/helpers';
 import type { Ctx } from '../types';
 
 // Streaks, weekly buckets, XP and rank, records and quest counts, derived from every entry.
@@ -23,14 +23,7 @@ export function statsStage(ctx: Ctx): Ctx {
       d: upcoming.d,
       id: upcoming.av.id,
       meta2: upcoming.m * 100 + upcoming.d === TK ? 'Today · ' + upcoming.av.time :
-        DOW3[nd.getDay()].charAt(0) +
-        DOW3[nd.getDay()].slice(1, 3).toLowerCase() +
-        ', ' +
-        MON3[mod12(upcoming.m)] +
-        ' ' +
-        upcoming.d +
-        ' · ' +
-        upcoming.av.time,
+        shortDay(nd) + ' · ' + upcoming.av.time,
     };
   }
   // Every session up to and including today, whatever its month or year. The all-time stats (totals, streaks,
@@ -130,7 +123,7 @@ export function statsStage(ctx: Ctx): Ctx {
     const ticked = (st.done || {})[idOf(x.av)] || [];
     (EXV[x.av.exKey] || []).forEach((e) => {
       if (!ticked.includes(e.name)) return;
-      const w = parseFloat(String(e.weight).replace(/[^0-9.]/g, ''));
+      const w = parseFloat(numericOnly(String(e.weight)));
       if (!isNaN(w) && w > (bestByEx[e.name] || 0)) bestByEx[e.name] = w;
     });
   });

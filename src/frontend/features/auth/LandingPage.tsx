@@ -5,6 +5,7 @@ import { Lockup } from '@moonshot/design-system/brand';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Book, Calendar, Check, ChevronRight, Gem, SparkleTrail } from '@moonshot/design-system/icons';
+import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import { RANKS, RANK_STEPS } from '@/frontend/shared/constants';
 import { PROVIDER_NAME, PROVIDERS, type Provider } from '@/shared/auth';
@@ -201,9 +202,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                   </Text>
                 </div>
               </div>
-              <div className={styles.track} aria-hidden="true">
-                <div className={styles.fill} />
-              </div>
+              <ProgressBar value={100} style={{ marginTop: 18 }} />
               <div className={styles.progressRow}>
                 <Text variant="caption" tone="accent" weight="semibold">
                   5 of 5 done

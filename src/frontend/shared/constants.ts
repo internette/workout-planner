@@ -73,6 +73,11 @@ export const EDIT_OVERLAYS = { renames:null, fields:null, removed:null, icons:nu
   aDist:null, aElev:null, aHrs:null, aMins:null, editKey:null, editId:null, pendingNav:null, notes:null, editDone:null,
   logDone:null, exOrder:null, warmups:null };
 
+// Leaves the new-workout form: nothing of it carried into the next one.
+export const NEW_WORKOUT_CLEARED = { creating:false, newType:null, newName:'', newFrom:null, schedule:null };
+// Leaves the exercise form without saving.
+export const EX_DRAFT_CLEARED = { exDraft:null, exDraftOrig:null, exEditNav:false, exCopy:false };
+
 // Where Back goes from a screen with nothing before it: its section's own page (the calendar otherwise).
 export const HOME_OF: Record<string, string> = {
   template: 'arsenal',

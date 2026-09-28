@@ -1,4 +1,4 @@
-import { EQUIPMENT, MONTHS, QUESTS } from './constants';
+import { DOW3, DOWFULL, EDIT_OVERLAYS, EQUIPMENT, MON3, MONTHS, QUESTS } from './constants';
 
 // Months are counted from January of the current year and carry on past it: 12 is next January, -1 last December.
 // new Date(year, m, d) already reads them that way. mod12 turns one back into a place in MONTHS, and monthPatch into
@@ -6,9 +6,42 @@ import { EQUIPMENT, MONTHS, QUESTS } from './constants';
 export const mod12 = m => ((m % 12) + 12) % 12;
 export const monthPatch = m => ({ month: MONTHS[mod12(m)], yOff: Math.floor(m / 12) });
 
+// Dates as the app writes them. Each takes a Date; the caller adds a year when it isn't this one.
+// "Mon"
+export const dayShort = (date: Date) => DOW3[date.getDay()].charAt(0) + DOW3[date.getDay()].slice(1).toLowerCase();
+// "Sep 28"
+export const monDay = (date: Date) => MON3[date.getMonth()] + ' ' + date.getDate();
+// "Mon, Sep 28"
+export const shortDay = (date: Date) => dayShort(date) + ', ' + monDay(date);
+// "Monday, September 28"
+export const longDay = (date: Date) => DOWFULL[date.getDay()] + ', ' + MONTHS[date.getMonth()] + ' ' + date.getDate();
+
+// The editor opened on a new, blank workout; `extra` says where it was started from and anything it starts with.
+export const newWorkoutPatch = (extra = {}) => ({
+  ...EDIT_OVERLAYS, screen: 'edit', editing: false, creating: true, addOpen: false, newName: '', newType: null, ...extra,
+});
+// The editor opened on a saved workout.
+export const editTemplatePatch = (id: string, extra = {}) => ({
+  ...EDIT_OVERLAYS, screen: 'edit', editing: true, creating: false, editTemplate: id, editId: null, addOpen: false, leaveOpen: false,
+  ...extra,
+});
+
 export const questFor = seed => QUESTS[Math.abs(Math.round(seed)) % QUESTS.length];
 export const questSeed = (day, month) => questFor(day * 3 + month);
 export const idOf = av => (av && av.id) || 'unknown';
+// Durations. Hours and minutes as typed (either may be blank) to minutes, and minutes back to the two boxes, each
+// left blank when it's zero.
+export const toMinutes = (hrs, mins) => Number(hrs || 0) * 60 + Number(mins || 0);
+export const splitMinutes = (minutes: number) => ({
+  hrs: Math.floor(minutes / 60) ? String(Math.floor(minutes / 60)) : '',
+  mins: minutes % 60 ? String(minutes % 60) : '',
+});
+// "45 min", "1 h", "1 h 30 min".
+export const minText = (minutes: number) => {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return h && m ? `${h} h ${m} min` : h ? `${h} h` : `${m} min`;
+};
 // Seconds to a stopwatch readout: "12:34", or "1:02:34" past an hour.
 export const formatElapsed = totalSec => {
   const sec = Math.max(0, Math.floor(totalSec));
@@ -66,8 +99,7 @@ export const joinSetsReps = (sets, reps) => {
 export const digitsOnly = text => (text || '').replace(/[^0-9]/g, '');
 
 // Rest is a plain number of seconds everywhere else ("90 sec" in the database, in lists, in the export), but the
-// box itself only needs the number. These convert at the edges, the same way sets/reps do.
-export const restDigits = text => digitsOnly(text);
+// box itself only needs the number (digitsOnly). This puts the unit back, the same way sets/reps do.
 export const withSec = digits => (digits ? digits + ' sec' : '');
 
 // A number that may have a decimal point (weight, in pounds), nothing else.

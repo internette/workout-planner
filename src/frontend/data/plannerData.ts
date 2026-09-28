@@ -1,7 +1,8 @@
 import { AUTH_REQUIRED } from '@/shared/auth';
 import { supabase } from './supabase';
 import { colors } from '@moonshot/design-system/colors';
-import type { PlanDraft, PlanWorkout } from '@/shared/planDraft';
+import { DEFAULT_ZONE, type PlanDraft, type PlanWorkout } from '@/shared/planDraft';
+import { splitMinutes, minText } from '@/frontend/shared/helpers';
 
 // ---------- shapes the planner UI works with ----------
 
@@ -128,11 +129,6 @@ const parseRest = (text: string) => {
   return m ? Number(m[0]) : null;
 };
 
-const rideTime = (minutes: number) => {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return h && m ? `${h} h ${m} min` : h ? `${h} h` : `${m} min`;
-};
 
 const toExercise = (r: any): Exercise => ({
   id: r.id,
@@ -253,7 +249,7 @@ export async function loadModel(today: Date): Promise<Model> {
       name: w.name,
       exKey: keyOf(w),
       s: completed ? 'c' : p.scheduled_date === todayIso ? 't' : 'p',
-      time: isRide ? rideTime(minutes) : `~${minutes} min`,
+      time: isRide ? minText(minutes) : `~${minutes} min`,
       icon: w.icon,
       iconColor: iconColorOf(w.icon_color),
       areas: isRide ? [] : areasOf(EXV[keyOf(w)] || []),
@@ -265,10 +261,9 @@ export async function loadModel(today: Date): Promise<Model> {
       ride: isRide
         ? {
             dist: w.ride_distance_miles != null ? String(w.ride_distance_miles) : '',
-            hrs: Math.floor(minutes / 60) ? String(Math.floor(minutes / 60)) : '',
-            mins: minutes % 60 ? String(minutes % 60) : '',
+            ...splitMinutes(minutes),
             elev: w.ride_elevation_ft != null ? String(w.ride_elevation_ft) : '',
-            zone: w.ride_zone || 'Endurance',
+            zone: w.ride_zone || DEFAULT_ZONE,
           }
         : undefined,
       actual: hasActual
@@ -319,7 +314,7 @@ export async function loadModel(today: Date): Promise<Model> {
         id: w.id,
         name: w.name,
         kind: isRide ? 'ride' : 'lift',
-        time: isRide ? rideTime(minutes) : `~${minutes} min`,
+        time: isRide ? minText(minutes) : `~${minutes} min`,
         minutes,
         areas: isRide ? [] : areasOf(EXV[keyOf(w)] || []),
         icon: w.icon,
@@ -331,7 +326,7 @@ export async function loadModel(today: Date): Promise<Model> {
           ? {
               dist: w.ride_distance_miles != null ? String(w.ride_distance_miles) : '',
               elev: w.ride_elevation_ft != null ? String(w.ride_elevation_ft) : '',
-              zone: w.ride_zone || 'Endurance',
+              zone: w.ride_zone || DEFAULT_ZONE,
             }
           : undefined,
       } as WorkoutSummary;
@@ -1071,7 +1066,7 @@ export async function addPlanDraft(draft: PlanDraft, model: Model) {
       isRide,
       durationMinutes: w.minutes ?? estimateMinutes(exercises.length, !!w.warmup),
       ride: isRide
-        ? { dist: w.ride?.miles != null ? String(w.ride.miles) : '', elev: w.ride?.elevation_ft != null ? String(w.ride.elevation_ft) : '', zone: w.ride?.zone ?? 'Endurance' }
+        ? { dist: w.ride?.miles != null ? String(w.ride.miles) : '', elev: w.ride?.elevation_ft != null ? String(w.ride.elevation_ft) : '', zone: w.ride?.zone ?? DEFAULT_ZONE }
         : null,
       icon: null,
       iconColor: null,

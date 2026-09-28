@@ -1,5 +1,5 @@
-import { HOME_OF, MON3 } from '@/frontend/shared/constants';
-import { exerciseDraftDirty, idOf, isoOf, mod12, monthPatch, noticePatch, workoutDraftDirty } from '@/frontend/shared/helpers';
+import { EX_DRAFT_CLEARED, HOME_OF } from '@/frontend/shared/constants';
+import { exerciseDraftDirty, idOf, isoOf, monDay, monthPatch, noticePatch, workoutDraftDirty } from '@/frontend/shared/helpers';
 import { mLabel, mTab } from './styles';
 import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from './store/types';
@@ -19,6 +19,7 @@ export function chromeVals(ctx: Ctx) {
     srcAct,
     mi,
     selDay,
+    selDate,
     creating,
     TODAY_M,
     TODAY_D,
@@ -120,7 +121,7 @@ export function chromeVals(ctx: Ctx) {
               : entryVals.entryLeaveBody,
             label: 'Discard changes',
             then: () => {
-              logic.s({ exDraft: null, exDraftOrig: null, exEditNav: false, exCopy: false, diaryEdit: false, entryNote: null });
+              logic.s({ ...EX_DRAFT_CLEARED, diaryEdit: false, entryNote: null });
               go();
             },
           },
@@ -179,7 +180,7 @@ export function chromeVals(ctx: Ctx) {
         const timers = Object.assign({}, st.workoutTimer);
         delete timers[id];
         // Back to the day it was on, past the session's own pages (and their history entries), which are gone now.
-        const gone = noticePatch('“' + nameOf(srcAct.name) + '” removed from ' + MON3[mod12(mi)] + ' ' + selDay + '.', 'day');
+        const gone = noticePatch('“' + nameOf(srcAct.name) + '” removed from ' + monDay(selDate) + '.', 'day');
         logic.s({ workoutTimer: timers, creating: false });
         if ((st.hist || []).some((h) => h.screen === 'day')) logic.backTo('day', { screen: 'day', entryId: null, ...gone });
         else logic.s({ screen: 'day', seg: 'Day', entryId: null, hist: [], ...gone });
@@ -199,7 +200,7 @@ export function chromeVals(ctx: Ctx) {
         } else logic.save(() => db.deleteDiary(c.day), noticePatch('Entry deleted.', st.screen));
       }
       if (c.kind === 'series')
-        logic.save(() => db.endSeries(c.sid, isoOf(new Date(Y, mi, selDay)), isoOf(new Date(Y, TODAY_M, TODAY_D))), {
+        logic.save(() => db.endSeries(c.sid, isoOf(new Date(Y, mi, selDay)), ctx.isoToday), {
           ...noticePatch('Weekly series ended. Its repeats still ahead are off the calendar.', 'detail'),
         });
       // Deleting from the Spellbook goes back to the list it was opened from, which then no longer shows it.
@@ -215,7 +216,7 @@ export function chromeVals(ctx: Ctx) {
       }
       // Browser Back from the exercise editor with changes: confirmed, so go back without them.
       if (c.kind === 'leaveExercise') {
-        logic.s({ exDraft: null, exDraftOrig: null, exEditNav: false, exCopy: false });
+        logic.s(EX_DRAFT_CLEARED);
         logic.back();
       }
       if (c.kind === 'deleteExercise') {

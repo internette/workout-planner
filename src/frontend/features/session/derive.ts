@@ -1,5 +1,4 @@
-import { DOWFULL, MONTHS } from '@/frontend/shared/constants';
-import { idOf, monthPatch } from '@/frontend/shared/helpers';
+import { idOf, longDay, monthPatch, splitMinutes, toMinutes } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
 import { colors } from '@moonshot/design-system/colors';
 
@@ -30,7 +29,7 @@ export function workoutStage(ctx: Ctx): Ctx {
     pickerCells.push({
       label: String(pd),
       day: pd,
-      aria: DOWFULL[date.getDay()] + ', ' + MONTHS[date.getMonth()] + ' ' + pd + (date.getFullYear() !== Y ? ', ' + date.getFullYear() : ''),
+      aria: longDay(date) + (date.getFullYear() !== Y ? ', ' + date.getFullYear() : ''),
       today: pickM === TODAY_M && pd === TODAY_D ? 'date' : undefined,
       tab: pd === pickFocus ? 0 : -1,
       keys: (e) => {
@@ -81,8 +80,7 @@ export function workoutStage(ctx: Ctx): Ctx {
               dist: tplWorkout.ride.dist,
               elev: tplWorkout.ride.elev,
               zone: tplWorkout.ride.zone,
-              hrs: Math.floor(tplWorkout.minutes / 60) ? String(Math.floor(tplWorkout.minutes / 60)) : '',
-              mins: tplWorkout.minutes % 60 ? String(tplWorkout.minutes % 60) : '',
+              ...splitMinutes(tplWorkout.minutes),
             }
           : undefined,
       }
@@ -103,7 +101,7 @@ export function workoutStage(ctx: Ctx): Ctx {
   const rElev = st.rElev != null ? st.rElev : savedRide ? savedRide.elev || '' : '';
   const rHrs = st.rHrs != null ? st.rHrs : savedRide ? savedRide.hrs || '' : '';
   const rMins = st.rMins != null ? st.rMins : savedRide ? savedRide.mins || '' : '';
-  const plannedMin = Number(rHrs || 0) * 60 + Number(rMins || 0);
+  const plannedMin = toMinutes(rHrs, rMins);
   const planDist = Number(rDist || 0);
   const actual: any = (srcAct && srcAct.actual) || {};
   const aDist = st.aDist != null ? st.aDist : actual.dist || '';

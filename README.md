@@ -185,7 +185,7 @@ src/
                           sign-in and sign-out links). The server side is backend/auth0 and middleware.ts
     components/           Reusable pieces the planner's screens share: BackLink, WarmupTag, NeedsLine, IconSquare,
                           SetsFields (sets, reps, weight, rest), AreaChoice, EquipmentPicker, FilterButton,
-                          SessionProgress, DoneTick, RepeatWeekly, FormActions. Typed props, no planner state
+                          SessionProgress, DoneTick, RepeatWeekly, FormActions, StatRow. Typed props, no planner state
     shared/               Used across the frontend's features: constants (names, quests, ranks), helpers (ids, ISO dates, quest lookup),
                           icons (exercise icons and mood faces)
     data/
