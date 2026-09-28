@@ -190,7 +190,10 @@ src/
                           icons (exercise icons and mood faces)
     data/
       plannerData.ts    Loads the database into the shapes the UI uses, and all writes. Talks to Supabase directly,
-                        as the signed-in person, so row-level security keeps each person's data their own
+                        as the signed-in person, so row-level security keeps each person's data their own. The code
+                        is in planner/, by area; this file is what the rest of the app imports
+      planner/          types, convert (columns <-> screen strings), db (shared queries), read (loadModel),
+                        sessions, workouts, workoutTemplate (saving an edit), exercises, drafts (Summon)
       supabase.ts       The Supabase client, which sends the person's ID token
       session.ts        That ID token, fetched from /api/token and kept until a minute before it expires
   backend/              Everything that runs only on the server. Its files are marked server-only, so importing one into
