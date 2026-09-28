@@ -11,7 +11,7 @@ export function PersonalBestsCard({ v }: { v: PlannerVals }) {
     <Card>
       <SectionHeader title="PERSONAL BESTS" note={v.allTimeLabel} />
       {v.recordsEmpty ? (
-        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '8px 0 0' }}>
+        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
           Tick off an exercise with a weight, or finish a ride, and your bests show up here.
         </Text>
       ) : null}

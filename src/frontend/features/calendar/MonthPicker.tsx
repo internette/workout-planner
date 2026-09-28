@@ -37,7 +37,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
               display: 'grid',
               gridTemplateColumns: 'repeat(3,minmax(0,1fr))',
               gap: '4px',
-              marginTop: '8px',
+              marginTop: '10px',
             }}
           >
             {(v.months ?? []).map((m, i) => (
@@ -57,8 +57,8 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             style={{
               display: 'flex',
               justifyContent: 'center',
-              marginTop: '8px',
-              paddingTop: '8px',
+              marginTop: '10px',
+              paddingTop: '10px',
               borderTop: '1px solid var(--color-line)',
             }}
           >
@@ -86,7 +86,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             alignItems: 'center',
             gap: '4px',
             flex: 'none',
-            marginLeft: '8px',
+            marginLeft: '9px',
             pointerEvents: 'none',
           }}
         >

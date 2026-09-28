@@ -6,7 +6,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 /** The editor’s top: the workout’s icon and colour picker, and its name. */
 export function EditorHeader({ v }: { v: PlannerVals }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 12px', marginTop: '16px' }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 12px', marginTop: '18px' }}>
       <IconPicker
         open={!!v.iconsOpen}
         onToggle={v.toggleIcons}

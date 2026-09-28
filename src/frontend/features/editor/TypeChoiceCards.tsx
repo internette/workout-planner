@@ -16,7 +16,7 @@ function TypeChoiceCard({ icon, tint, title, note, onClick }: { icon: ReactNode;
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
-        gap: '16px',
+        gap: '14px',
       }}
     >
       <span
@@ -43,7 +43,7 @@ function TypeChoiceCard({ icon, tint, title, note, onClick }: { icon: ReactNode;
           style={{
             display: 'block',
             lineHeight: 'var(--leading-snug)',
-            marginTop: '4px',
+            marginTop: '5px',
             textWrap: 'pretty',
           }}
         >
@@ -62,7 +62,7 @@ export function TypeChoiceCards({ v }: { v: PlannerVals }) {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))',
         gap: '12px',
-        marginTop: '24px',
+        marginTop: '22px',
       }}
     >
       <TypeChoiceCard

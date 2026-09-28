@@ -10,7 +10,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 /** Profile: sessions per week as a bar chart, and the picked week’s sessions. */
 export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
   return (
-    <Card style={{ marginTop: '16px' }}>
+    <Card style={{ marginTop: '14px' }}>
       <SectionHeader title="SESSIONS PER WEEK" note={v.chartRangeLabel} />
       <Text variant="caption" as="p" tone="muted" style={{ margin: '8px 0 0' }}>
         {v.chartCaption}
@@ -21,7 +21,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
           alignItems: 'flex-end',
           gap: '4px',
           height: '132px',
-          marginTop: '16px',
+          marginTop: '14px',
         }}
       >
         {(v.weeklyBars ?? []).map((b, i) => (
@@ -41,7 +41,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
                 flexDirection: 'column',
                 justifyContent: 'flex-end',
                 alignItems: 'center',
-                gap: '8px',
+                gap: '6px',
                 cursor: 'pointer',
               }}
               title={b?.tip}
@@ -58,7 +58,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
           display: 'flex',
           flexDirection: 'column',
           gap: '8px',
-          marginTop: '16px',
+          marginTop: '18px',
           paddingTop: '16px',
           borderTop: '1px solid var(--color-line)',
         }}
@@ -72,7 +72,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
                 flexWrap: 'wrap',
                 alignItems: 'center',
                 gap: '12px',
-                padding: '12px 16px',
+                padding: '12px 14px',
                 border: 'none',
                 borderRadius: 'var(--radius-md)',
                 background: 'var(--color-canvas)',

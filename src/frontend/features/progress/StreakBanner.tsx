@@ -12,9 +12,9 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
         display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
-        gap: '16px 24px',
-        marginTop: '24px',
-        padding: '24px 24px',
+        gap: '18px 26px',
+        marginTop: '22px',
+        padding: '22px 24px',
         borderRadius: 'var(--radius-lg)',
         background:
           'var(--gradient-gem-tint)',
@@ -23,7 +23,7 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: '0 1 auto', minWidth: '0' }}>
         <Gem size={30} />
         <div style={{ minWidth: '0' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '7px' }}>
             <Text variant="bigNumber" tone="ink">
               {v.streakCount}
             </Text>
@@ -37,7 +37,7 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
             as="p"
             weight="medium"
             tone="slateDeep"
-            style={{ margin: '8px 0 0' }}
+            style={{ margin: '6px 0 0' }}
           >
             {v.streakNote}
           </Text>
@@ -48,11 +48,11 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
           {v.ticksLabel}
         </Text>
         {v.ticksEmpty ? (
-          <Text variant="caption" as="p" weight="medium" tone="slateDeep" style={{ margin: '8px 0 0' }}>
+          <Text variant="caption" as="p" weight="medium" tone="slateDeep" style={{ margin: '9px 0 0' }}>
             Clear a day and it lights up here.
           </Text>
         ) : null}
-        <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+        <div style={{ display: 'flex', gap: '6px', marginTop: '9px' }}>
           {(v.streakTicks ?? []).map((t, i) => (
             <Fragment key={i}>
               <span style={{ flex: '1', minWidth: '0' }}>

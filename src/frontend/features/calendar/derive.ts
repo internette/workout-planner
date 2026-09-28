@@ -60,7 +60,7 @@ export function calendarStage(ctx: Ctx): Ctx {
         (!dot ? 'rest day' : workoutsWord(list) + (done ? 'completed' : part ? 'partly done, ' + partText(list) : miss ? 'missed' : 'planned')),
       isToday: cellMonth === TODAY_M && num === TODAY_D ? 'date' : false,
       wrapStyle:
-        'flex:1;min-width:0;padding:8px 2px 8px;border:none;border-radius:var(--radius-md);background:' +
+        'flex:1;min-width:0;padding:8px 2px 10px;border:none;border-radius:var(--radius-md);background:' +
         (on ? ACCENT : 'none') +
         ';display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer',
       letterStyle:
@@ -90,7 +90,7 @@ export function calendarStage(ctx: Ctx): Ctx {
       pick: () => logic.s({ month: name, yOff: pickYOff, pickYOff: null, monthOpen: false, day: now ? TODAY_D : 1 }),
       style:
         "font-family:var(--font-heading);" +
-        'padding:12px 8px;border-radius:var(--radius-sm);font-size:var(--text-base);border:none;cursor:pointer;' +
+        'padding:11px 6px;border-radius:var(--radius-sm);font-size:var(--text-base);border:none;cursor:pointer;' +
         (current
           ? 'background:' + ACCENT + ';color:var(--color-on-accent);font-weight:var(--font-weight-bold)'
           : now

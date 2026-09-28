@@ -14,7 +14,7 @@ export interface PageTitleProps {
 /** An inner page's heading, with its icon: the exercise, saved workout and session pages. */
 export function PageTitle({ icon, eyebrow, title }: PageTitleProps) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '16px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
       <IconTile as="span">{icon}</IconTile>
       <div style={{ minWidth: 0 }}>
         <Text variant="eyebrow" as="div" tone="slate">

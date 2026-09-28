@@ -308,7 +308,7 @@ export function editVals(ctx: Ctx) {
           ? 'Full route ridden. Plan met.'
           : ridePct + '% of the planned distance. The rest stays on the plan.',
     rideNoteStyle:
-      'margin:16px 0 0;font-size:var(--text-md);font-weight:' +
+      'margin:14px 0 0;font-size:var(--text-md);font-weight:' +
       (ridePct != null && ridePct >= 100
         ? 'var(--font-weight-semibold);color:var(--color-accent-deep)'
         : 'var(--font-weight-regular);color:var(--color-muted)'),

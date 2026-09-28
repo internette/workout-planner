@@ -26,7 +26,7 @@ export function SessionProgress({ label, pct, allDone, note }: SessionProgressPr
           margin: '12px 0 0',
           display: 'flex',
           alignItems: 'center',
-          gap: '8px',
+          gap: '7px',
           fontSize: 'var(--text-md)',
           fontWeight: allDone ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)',
           color: allDone ? 'var(--color-accent-deep)' : 'var(--color-muted)',

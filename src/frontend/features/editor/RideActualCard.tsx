@@ -10,7 +10,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 export function RideActualCard({ v }: { v: PlannerVals }) {
   return (
     <>
-      <Card style={{ marginTop: '16px' }}>
+      <Card style={{ marginTop: '14px' }}>
         <div
           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
         >
@@ -30,7 +30,7 @@ export function RideActualCard({ v }: { v: PlannerVals }) {
           </span>
         </div>
         <ProgressBar value={v.rideBarPct ?? 0} track="mist" style={{ marginTop: '12px' }} />
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '18px' }}>
           <TextField
             label="Distance"
             labelNote="(miles)"
@@ -68,7 +68,7 @@ export function RideActualCard({ v }: { v: PlannerVals }) {
                 fontSize: 'var(--text-xs)',
                 fontWeight: 'var(--font-weight-regular)',
                 color: 'var(--color-subtle)',
-                marginTop: '8px',
+                marginTop: '6px',
               }}
             >
               {v.plannedDur}

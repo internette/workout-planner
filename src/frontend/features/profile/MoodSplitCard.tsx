@@ -12,12 +12,12 @@ export function MoodSplitCard({ v }: { v: PlannerVals }) {
     <Card>
       <SectionHeader title="HOW IT FEELS" note={v.allTimeLabel} />
       {v.moodEmpty ? (
-        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '8px 0 0' }}>
+        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
           Write about a session in the Chronicle and your moods gather here.
         </Text>
       ) : null}
       <div
-        style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}
+        style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '18px' }}
       >
         {(v.moodSplit ?? []).map((m, i) => (
           <Fragment key={i}>

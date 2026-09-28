@@ -9,7 +9,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 export function ExerciseEditForm({ v }: { v: PlannerVals }) {
   return (
     <>
-      <Card style={{ marginTop: '16px' }}>
+      <Card style={{ marginTop: '18px' }}>
         <ExerciseFields
           name={v.exerciseEdit.name}
           onName={v.exerciseEdit.setName}

@@ -13,7 +13,7 @@ import { NotesCard } from '@/frontend/components/NotesCard';
 export function EntryReadView({ v }: { v: PlannerVals }) {
   return (
     <>
-      <div style={{ marginTop: '32px' }}>
+      <div style={{ marginTop: '30px' }}>
         <Text variant="eyebrow" as="div" tone="subtle">
           {v.longDate}
         </Text>
@@ -22,7 +22,7 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
             display: 'flex',
             flexWrap: 'wrap',
             alignItems: 'baseline',
-            gap: '8px',
+            gap: '10px',
             marginTop: '8px',
           }}
         >
@@ -34,10 +34,10 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
             <ChevronRight color="var(--color-accent-deep)" strokeWidth={2.2} size={15} />
           </Button>
         </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '24px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '22px' }}>
           <Card
             pad="sm"
-            style={{ flex: '1 1 200px', display: 'flex', alignItems: 'center', gap: '16px' }}
+            style={{ flex: '1 1 200px', display: 'flex', alignItems: 'center', gap: '14px' }}
           >
             <span className="fc-keep" style={css(v.readMoodFace)}>{v.readMoodSvg}</span>
             <Stat label="MOOD" value={v.readMood} style={{ minWidth: '0' }} />
@@ -47,7 +47,7 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
               EFFORT
             </Text>
             <div
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}
+              style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '5px' }}
             >
               <Text variant="cardTitle" tone="ink">
                 {v.rpeLabel}

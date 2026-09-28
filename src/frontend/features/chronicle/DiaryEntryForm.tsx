@@ -12,9 +12,9 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
   return (
     <>
       {/* Centred on a phone; beside the sidebar it sits in the page's column, like a saved entry. */}
-      <div style={{ marginTop: '32px', textAlign: v.entryLeft ? 'left' : 'center' }}>
+      <div style={{ marginTop: '34px', textAlign: v.entryLeft ? 'left' : 'center' }}>
         {v.writeEyebrow ? (
-          <Text variant="eyebrow" as="div" tone="slate" style={{ marginBottom: '8px' }}>
+          <Text variant="eyebrow" as="div" tone="slate" style={{ marginBottom: '6px' }}>
             {v.writeEyebrow}
           </Text>
         ) : null}
@@ -29,7 +29,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
         </Text>
         <p
           style={{
-            margin: '8px 0 0',
+            margin: '9px 0 0',
             fontSize: 'var(--text-lg)',
             fontWeight: 'var(--font-weight-medium)',
             color: 'var(--color-muted)',
@@ -61,7 +61,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
             value={v.rpe}
             onChange={v.pickRpe}
             words={v.rpeWords}
-            style={{ marginLeft: '-8px' }}
+            style={{ marginLeft: '-6px' }}
           />
           {v.rpeLabel ? (
             <span
@@ -76,7 +76,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
             </span>
           ) : null}
         </div>
-        <Text variant="label" weight="semibold" tone="slate" as="p" style={{ margin: '28px 0 8px' }}>
+        <Text variant="label" weight="semibold" tone="slate" as="p" style={{ margin: '28px 0 10px' }}>
           Notes (optional)
         </Text>
         <TextArea
@@ -87,14 +87,14 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
           placeholder="Energy, soreness, what worked, what didn't…"
         />
         {v.showMarkDone ? (
-          <div style={{ marginTop: '16px' }}>
+          <div style={{ marginTop: '18px' }}>
             <Checkbox switch checked={!!v.markDoneOn} onChange={v.setMarkDone}>
               {v.markDoneLabel}
             </Checkbox>
           </div>
         ) : null}
         {v.saveEntryHint ? (
-          <Text id="save-entry-hint" variant="caption" tone="muted" as="p" style={{ margin: '16px 0 0', textAlign: 'center' }}>
+          <Text id="save-entry-hint" variant="caption" tone="muted" as="p" style={{ margin: '18px 0 0', textAlign: 'center' }}>
             {v.saveEntryHint}
           </Text>
         ) : null}

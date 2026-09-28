@@ -4,7 +4,7 @@ import { Text } from '@moonshot/design-system/typography';
 export function NeedsLine({ text }: { text?: string | null }) {
   if (!text) return null;
   return (
-    <p style={{ margin: '16px 0 0', lineHeight: 'var(--leading-snug)' }}>
+    <p style={{ margin: '14px 0 0', lineHeight: 'var(--leading-snug)' }}>
       <Text variant="eyebrow" as="span" tone="slate" style={{ display: 'block' }}>
         YOU&apos;LL NEED
       </Text>

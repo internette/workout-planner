@@ -22,7 +22,7 @@ export function ChronicleRow({ entry }: { entry: any }) {
           flexWrap: 'wrap',
           alignItems: 'flex-start',
           gap: '16px',
-          padding: '16px 64px 16px 20px',
+          padding: '18px 62px 18px 20px',
         }}
       >
         <span className="fc-keep" style={css(entry?.faceWrap)}>
@@ -36,7 +36,7 @@ export function ChronicleRow({ entry }: { entry: any }) {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
+              gap: '7px',
               marginTop: '4px',
             }}
           >
@@ -44,14 +44,14 @@ export function ChronicleRow({ entry }: { entry: any }) {
             {entry?.warmup ? <WarmupTag inline /> : null}
             <ChevronRight color="var(--color-subtle)" strokeWidth={2.2} size={16} />
           </span>
-          <StarRating readOnly value={entry?.rpe ?? 0} style={{ marginTop: '8px' }} />
+          <StarRating readOnly value={entry?.rpe ?? 0} style={{ marginTop: '6px' }} />
           <Text
             variant="caption"
             tone="muted"
             style={{
               display: 'block',
               lineHeight: 'var(--leading-snug)',
-              marginTop: '8px',
+              marginTop: '7px',
               textWrap: 'pretty',
             }}
           >

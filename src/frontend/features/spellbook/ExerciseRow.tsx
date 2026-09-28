@@ -12,7 +12,7 @@ export function ExerciseRow({ exercise }: { exercise: any }) {
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
+        gap: '10px',
         width: '100%',
       }}
     >
@@ -24,11 +24,11 @@ export function ExerciseRow({ exercise }: { exercise: any }) {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '16px',
+          gap: '14px',
           flex: '1 1 200px',
           minWidth: '0',
-          margin: '-8px',
-          padding: '8px',
+          margin: '-6px',
+          padding: '6px',
           border: 'none',
           borderRadius: 'var(--radius-sm)',
           background: 'none',

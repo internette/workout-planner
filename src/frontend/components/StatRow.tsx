@@ -12,7 +12,7 @@ export interface StatItem {
  * sets, weight and rest. `lg` on a saved workout's or exercise's own page. */
 export function StatRow({ stats, size, style }: { stats: StatItem[]; size?: 'lg'; style?: CSSProperties }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', ...style }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '26px', ...style }}>
       {stats.map((r) => (
         <Stat key={r.label} size={size} label={r.label} value={r.value} note={r.note} />
       ))}

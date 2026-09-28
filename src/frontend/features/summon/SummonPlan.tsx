@@ -179,7 +179,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
   return (
     <>
       {waiting && step === 'closed' ? (
-        <Card pad="sm" style={{ marginTop: 16, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 16px', background: 'var(--gradient-gem-tint)' }}>
+        <Card pad="sm" style={{ marginTop: 14, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 14px', background: 'var(--gradient-gem-tint)' }}>
           <Sparkle size={16} color={vars.pink} glow={0.5} />
           <div style={{ flex: '1 1 180px', minWidth: 0 }}>
             <Text variant="itemTitle" as="div" tone="ink">
@@ -194,7 +194,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
           </Button>
         </Card>
       ) : (
-        <Button type="secondary" size="md" fullWidth onClick={start} style={{ marginTop: 16 }}>
+        <Button type="secondary" size="md" fullWidth onClick={start} style={{ marginTop: 14 }}>
           <Sparkle size={15} color="var(--color-accent-deep)" />
           {AVAILABLE.length > 1 ? 'Summon a plan' : `Summon a plan with ${a.name}`}
         </Button>
@@ -224,7 +224,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
             </>
           }
         >
-          <div style={{ marginTop: 16 }}>
+          <div style={{ marginTop: 18 }}>
             <OptionGroup label="Assistant">
               {AVAILABLE.map((w) => (
                 <OptionCard
@@ -240,7 +240,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
             </OptionGroup>
           </div>
           {isConnected(who) ? (
-            <Button type="neutral" link size="sm" onClick={() => setStep('connect')} style={{ marginTop: 16 }}>
+            <Button type="neutral" link size="sm" onClick={() => setStep('connect')} style={{ marginTop: 14 }}>
               Set up {a.name} again
             </Button>
           ) : null}
@@ -265,7 +265,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
             </>
           }
         >
-          <ol style={{ listStyle: 'none', margin: '16px 0 0', padding: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <ol style={{ listStyle: 'none', margin: '18px 0 0', padding: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
             {who === 'claude' ? <ClaudeSteps /> : <ChatGptSteps />}
           </ol>
           <Button type="primary" link size="sm" onClick={() => window.open(a.settings.url, '_blank', 'noopener,noreferrer')} style={{ marginTop: 16 }}>
@@ -293,7 +293,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
           }
         >
           <Example />
-          <Button type="neutral" link size="sm" onClick={() => setStep('connect')} style={{ marginTop: 16 }}>
+          <Button type="neutral" link size="sm" onClick={() => setStep('connect')} style={{ marginTop: 14 }}>
             Set up the connection again
           </Button>
         </Dialog>
@@ -317,7 +317,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
             </>
           }
         >
-          <div aria-hidden style={{ display: 'flex', justifyContent: 'center', gap: 8, margin: '20px 0 4px' }}>
+          <div aria-hidden style={{ display: 'flex', justifyContent: 'center', gap: 10, margin: '20px 0 4px' }}>
             {[vars.pink, vars.periwinkle, vars.teal].map((c, i) => (
               <span key={c} style={{ display: 'flex', animation: `twinkle 2.4s ease-in-out ${i * 0.4}s infinite` }}>
                 <Sparkle size={14} color={c} glow={0.5} />
@@ -326,7 +326,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
           </div>
           <Example />
           {who === 'chatgpt' ? (
-            <Text variant="caption" as="p" tone="muted" style={{ margin: '8px 0 0' }}>
+            <Text variant="caption" as="p" tone="muted" style={{ margin: '10px 0 0' }}>
               If ChatGPT doesn’t reach for Moonshot on its own, turn Moonshot on in the chat’s tools, under the + button.
             </Text>
           ) : null}
@@ -385,7 +385,7 @@ function ClaudeSteps() {
         <CopyRow value={mcpAddress()} what="Address" />
         {id ? (
           <>
-            <span style={{ display: 'block', marginTop: 8 }}>
+            <span style={{ display: 'block', marginTop: 10 }}>
               Then open <b>Advanced settings</b> and paste this as the <b>OAuth Client ID</b>. Leave the secret empty.
             </span>
             <CopyRow value={id} what="Client ID" />
@@ -413,7 +413,7 @@ function ChatGptSteps() {
       <StepItem n={2} title="Add Moonshot as an app">
         Back in Apps &amp; Connectors, choose <b>Create app</b>, name it Moonshot, and paste this as the MCP server URL:
         <CopyRow value={mcpAddress()} what="Address" />
-        <span style={{ display: 'block', marginTop: 8 }}>
+        <span style={{ display: 'block', marginTop: 10 }}>
           For authentication choose <b>OAuth</b>, and paste this as the <b>OAuth Client ID</b>. Leave the secret empty.
         </span>
         <CopyRow value={ASSISTANTS.chatgpt.clientId} what="Client ID" />
@@ -450,7 +450,7 @@ function CopyRow({ value, what }: { value: string; what: string }) {
   };
   return (
     <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginTop: 8 }}>
-      <code style={{ padding: '8px 8px', borderRadius: 'var(--radius-xs)', background: 'var(--color-mist)', color: 'var(--color-ink)', fontSize: 'var(--text-md)', wordBreak: 'break-all' }}>
+      <code style={{ padding: '6px 10px', borderRadius: 'var(--radius-xs)', background: 'var(--color-mist)', color: 'var(--color-ink)', fontSize: 'var(--text-md)', wordBreak: 'break-all' }}>
         {value}
       </code>
       <Button type="secondary" size="xs" onClick={copy} aria-label={copied ? `${what} copied` : `Copy ${what.toLowerCase()}`}>
@@ -507,21 +507,21 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
     else weeks.push({ start, list: [w] });
   }
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 16 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 18 }}>
       {weeks.map((wk, i) => (
-        <section key={wk.start} aria-label={`Week ${i + 1}`} style={{ padding: '12px 16px', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)' }}>
+        <section key={wk.start} aria-label={`Week ${i + 1}`} style={{ padding: '12px 14px', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)' }}>
           <Text variant="micro" as="h3" tone="subtle" style={{ margin: 0 }}>
             WEEK {i + 1} · FROM {shortDate(wk.start).toUpperCase()}
           </Text>
           {wk.list.map((w, j) => (
-            <div key={w.date + w.name + j} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0', borderTop: j ? '1px solid var(--color-line)' : 'none' }}>
+            <div key={w.date + w.name + j} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '9px 0', borderTop: j ? '1px solid var(--color-line)' : 'none' }}>
               <IconTile size="sm">
                 <ExerciseIcon name={w.kind === 'ride' ? 'bike' : 'h'} color="var(--color-accent)" />
               </IconTile>
               <div style={{ minWidth: 0 }}>
                 <Text variant="itemTitle" as="div" tone="ink">
                   {w.warmup ? (
-                    <Text variant="micro" tone="accent" style={{ marginRight: 8 }}>
+                    <Text variant="micro" tone="accent" style={{ marginRight: 6 }}>
                       WARM-UP
                     </Text>
                   ) : null}

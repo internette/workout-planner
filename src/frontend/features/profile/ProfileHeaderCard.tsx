@@ -14,7 +14,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
   return (
     <Card
       pad="lg"
-      style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}
+      style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '18px' }}
     >
       {/* The gem ring: the brand gradient, a white gap, then the photo (or the initial). The badge
           carries the gem of the current rank. */}
@@ -100,7 +100,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
           {v.profileName}
         </Text>
         {v.profileSince ? (
-          <Text variant="body" as="p" tone="muted" style={{ margin: '4px 0 0' }}>
+          <Text variant="body" as="p" tone="muted" style={{ margin: '5px 0 0' }}>
             {v.profileSince}
           </Text>
         ) : null}
@@ -122,7 +122,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
           width={280}
           top={34}
           pad="sm"
-          style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px', marginTop: '16px' }}
+          style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', marginTop: '14px' }}
           content={
             <>
               <Text variant="eyebrow" tone="slate" style={{ display: 'block' }}>
@@ -131,7 +131,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
               <Text
                 variant="body"
                 tone="ink"
-                style={{ display: 'block', marginTop: '8px', textWrap: 'pretty' }}
+                style={{ display: 'block', marginTop: '9px', textWrap: 'pretty' }}
               >
                 Each exercise you complete earns 10 XP, and finishing a whole workout earns 50
                 XP on top. Ranks unlock at fixed XP totals.
@@ -159,7 +159,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
             aria-expanded={!!v.xpInfoOpen}
             onClick={v.toggleXpInfo}
             title="How XP works"
-            style={{ margin: '-8px' }}
+            style={{ margin: '-6px' }}
           >
             <Info color="var(--color-muted)" size={16} />
           </IconButton>
