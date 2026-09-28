@@ -152,6 +152,13 @@ export function chromeVals(ctx: Ctx) {
     confirmLabel: st.confirm?.label,
     confirmCancelLabel: st.confirm?.cancelLabel || 'Keep it',
     confirmSafe: !!st.confirm?.safe,
+    confirmOption: st.confirm?.option
+      ? {
+          label: st.confirm.option.label,
+          on: st.confirm.option.on,
+          set: (on: boolean) => logic.s({ confirm: { ...st.confirm, option: { ...st.confirm.option, on } } }),
+        }
+      : null,
     confirmCancel: () => logic.s({ confirm: null }),
     confirmRun: () => {
       const c: Partial<ConfirmState> = st.confirm || {};
@@ -195,8 +202,17 @@ export function chromeVals(ctx: Ctx) {
         logic.s({ arsenalView, ...noticePatch('“' + c.name + '” deleted.', 'arsenal') });
       };
       if (c.kind === 'archiveWorkout') {
+        const keep = !!c.option && !c.option.on;
         toList('workouts');
-        logic.saveOnce('archive', () => db.archiveWorkout(c.id, isoOf(new Date())));
+        // Kept, its upcoming sessions stay on the calendar: the notice says so.
+        if (keep)
+          logic.s(
+            noticePatch(
+              '“' + c.name + '” deleted. ' + (c.ahead === 1 ? 'Its upcoming session stays' : 'Its upcoming sessions stay') + ' on your calendar.',
+              'arsenal',
+            ),
+          );
+        logic.saveOnce('archive', () => db.archiveWorkout(c.id, isoOf(new Date()), !keep));
       }
       // Browser Back from the exercise editor with changes: confirmed, so go back without them.
       if (c.kind === 'leaveExercise') {

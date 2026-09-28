@@ -410,7 +410,8 @@ export function arsenalVals(ctx: Ctx) {
           svg: iconSvg(e.i),
           detail: exLine(e, true),
         })),
-        // Takes it out of the Spellbook. Sessions still ahead come off the calendar; past ones stay in your history.
+        // Takes it out of the Spellbook. Past sessions stay in your history; sessions still ahead come off the calendar
+        // too, unless the switch in the dialog is turned off to keep them.
         remove: async () => {
           try {
             const ahead = (await db.upcomingOfWorkout(chosen.id, todayIso)).length;
@@ -423,18 +424,24 @@ export function arsenalVals(ctx: Ctx) {
                 name: chosen.name,
                 title: 'Delete “' + chosen.name + '”?',
                 body:
-                  'It comes out of your Spellbook' +
-                  (ahead === 1
-                    ? ', and its upcoming session comes off the calendar'
-                    : ahead
-                      ? ', and its ' + ahead + ' upcoming sessions come off the calendar'
-                      : '') +
-                  '.' +
+                  'It comes out of your Spellbook.' +
                   (kept === 1
-                    ? ' Its other session stays in your history.'
+                    ? ' Its past session stays in your history.'
                     : kept
-                      ? ' Its ' + kept + ' other sessions stay in your history.'
+                      ? ' Its ' + kept + ' past sessions stay in your history.'
                       : ''),
+                ...(ahead
+                  ? {
+                      option: {
+                        label:
+                          ahead === 1
+                            ? 'Also remove its upcoming session from the calendar'
+                            : 'Also remove its ' + ahead + ' upcoming sessions from the calendar',
+                        on: true,
+                      },
+                      ahead,
+                    }
+                  : {}),
                 label: 'Delete workout',
               },
             });
