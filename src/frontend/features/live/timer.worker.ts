@@ -65,6 +65,18 @@ function roundRect(g: OffscreenCanvasRenderingContext2D, x: number, y: number, w
 
 const FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
 
+// The brand's mark along the bottom: a chip in the accent.
+function brand(g: OffscreenCanvasRenderingContext2D, c: LiveLook) {
+  g.font = '800 24px ' + FONT;
+  const text = 'MOONSHOT';
+  const w = g.measureText(text).width + 36;
+  roundRect(g, PAD, SIZE - PAD - 44, w, 44, 22);
+  g.fillStyle = c.second;
+  g.fill();
+  g.fillStyle = c.onSecond;
+  g.fillText(text, PAD + 18, SIZE - PAD - 13);
+}
+
 // The lock-screen card, square, as the player's artwork: what's being done and how far along it is. The time itself
 // isn't drawn: the player's own bar shows it, and keeps counting without a redraw.
 async function draw(a: LiveActivity, c: LiveLook, paused: boolean): Promise<Blob | null> {
@@ -77,6 +89,33 @@ async function draw(a: LiveActivity, c: LiveLook, paused: boolean): Promise<Blob
   g.fillRect(0, 0, SIZE, SIZE);
 
   let y = PAD + 26;
+  // Resting: what's up next, big, as the design's rest card has it. The player's bar is the countdown.
+  if (a.rest) {
+    g.textBaseline = 'alphabetic';
+    g.fillStyle = c.accent;
+    g.font = '700 26px ' + FONT;
+    g.fillText('REST', PAD, y);
+    if (a.rest.next) {
+      y += 72;
+      g.fillStyle = c.muted;
+      g.font = '700 24px ' + FONT;
+      g.fillText('UP NEXT', PAD, y);
+      g.fillStyle = c.ink;
+      g.font = '800 58px ' + FONT;
+      wrap(g, a.rest.next.name, inner, 2).forEach((line) => {
+        y += 66;
+        g.fillText(line, PAD, y);
+      });
+      if (a.rest.next.line) {
+        y += 50;
+        g.fillStyle = c.muted;
+        g.font = '500 32px ' + FONT;
+        g.fillText(a.rest.next.line, PAD, y);
+      }
+    }
+    brand(g, c);
+    return canvas.convertToBlob({ type: 'image/png' });
+  }
   g.textBaseline = 'alphabetic';
   g.fillStyle = paused ? c.muted : c.accent;
   g.font = '700 26px ' + FONT;
@@ -134,16 +173,7 @@ async function draw(a: LiveActivity, c: LiveLook, paused: boolean): Promise<Blob
     if (a.ride.climb) stat('CLIMB', a.ride.climb + ' ft', PAD + inner / 2);
   }
 
-  // The brand's mark along the bottom: a chip in the accent.
-  g.font = '800 24px ' + FONT;
-  const brand = 'MOONSHOT';
-  const bw = g.measureText(brand).width + 36;
-  roundRect(g, PAD, SIZE - PAD - 44, bw, 44, 22);
-  g.fillStyle = c.second;
-  g.fill();
-  g.fillStyle = c.onSecond;
-  g.fillText(brand, PAD + 18, SIZE - PAD - 13);
-
+  brand(g, c);
   return canvas.convertToBlob({ type: 'image/png' });
 }
 

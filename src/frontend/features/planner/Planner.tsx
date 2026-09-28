@@ -42,15 +42,19 @@ export default function Planner({ account = null }: { account?: Account | null }
   // Workout timers are kept in this browser, per account, so a reload (or the phone dropping the page) picks up where
   // the clock was. A running one is stored by when it started, so it has kept counting in the meantime.
   const timersKey = 'moonshot.timers.' + (account?.email || 'local');
+  const setsKey = 'moonshot.sets.' + (account?.email || 'local');
 
   useEffect(() => {
     try {
       const saved = JSON.parse(window.localStorage.getItem(timersKey) || 'null');
       if (saved && typeof saved === 'object') logic.setState({ workoutTimer: saved });
+      // Sets done and a rest counting down are kept the same way, beside it.
+      const sets = JSON.parse(window.localStorage.getItem(setsKey) || 'null');
+      if (sets && typeof sets === 'object') logic.setState({ setsDone: sets.setsDone || {}, rest: sets.rest || null });
     } catch {
       // Unreadable or unavailable storage: start without saved timers.
     }
-  }, [logic, timersKey]);
+  }, [logic, timersKey, setsKey]);
 
   // The logic object owns the state; it asks this component to re-render whenever that changes.
   useEffect(() => {
@@ -333,6 +337,15 @@ export default function Planner({ account = null }: { account?: Account | null }
       // Storage can be unavailable (private windows, blocked site data); the timer then lasts until a reload.
     }
   }, [timers, timersKey]);
+  const { setsDone, rest } = logic.state;
+  useEffect(() => {
+    try {
+      if ((setsDone && Object.keys(setsDone).length) || rest) window.localStorage.setItem(setsKey, JSON.stringify({ setsDone, rest }));
+      else window.localStorage.removeItem(setsKey);
+    } catch {
+      // Storage unavailable: sets done last until a reload, like the timer.
+    }
+  }, [setsDone, rest, setsKey]);
 
 
   // The rank-up transformation plays the first time a new rank is reached. The highest rank already celebrated is
@@ -340,9 +353,10 @@ export default function Planner({ account = null }: { account?: Account | null }
   // recorded quietly rather than celebrated, and a rank that drops and is earned back doesn't play again.
   const view = status === 'ready' ? logic.renderVals() : null;
   viewRef.current = view;
-  // A running workout stopwatch needs the screen to tick even though nothing else in state is changing; the session in
+  // A running workout stopwatch (or a rest counting down) needs the screen to tick even though nothing else in state is changing; the session in
   // progress also shows outside the page, as a notification and on the lock screen.
-  const anyTimerRunning = Object.values(logic.state.workoutTimer || {}).some((t) => t && t.runningSince);
+  const anyTimerRunning =
+    Object.values(logic.state.workoutTimer || {}).some((t) => t && t.runningSince) || !!logic.state.rest;
   useLiveActivity(logic, view, anyTimerRunning);
   const rank: number | null = view ? view.rankIndex : null;
   const [rankUp, setRankUp] = useState<number | null>(null);
