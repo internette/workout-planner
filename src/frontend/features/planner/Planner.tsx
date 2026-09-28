@@ -13,6 +13,7 @@ import { PlannerView } from './PlannerView';
 import { PlannerStatus } from './PlannerStatus';
 import { InstallPrompt } from '../install/InstallPrompt';
 import { useInstallPrompt } from '../install/useInstallPrompt';
+import { useLiveActivity } from '../live/useLiveActivity';
 import { RankUp } from '@moonshot/design-system/rank-up';
 
 // How long the plan may take before the loading screen says so.
@@ -333,19 +334,16 @@ export default function Planner({ account = null }: { account?: Account | null }
     }
   }, [timers, timersKey]);
 
-  // A running workout stopwatch needs the screen to tick even though nothing else in state is changing.
-  const anyTimerRunning = Object.values(logic.state.workoutTimer || {}).some((t: any) => t && t.runningSince);
-  useEffect(() => {
-    if (!anyTimerRunning) return;
-    const id = setInterval(() => logic.forceUpdate(), 1000);
-    return () => clearInterval(id);
-  }, [anyTimerRunning, logic]);
 
   // The rank-up transformation plays the first time a new rank is reached. The highest rank already celebrated is
   // kept per account in this browser. With nothing kept yet (a first visit, another device) the current rank is
   // recorded quietly rather than celebrated, and a rank that drops and is earned back doesn't play again.
   const view = status === 'ready' ? logic.renderVals() : null;
   viewRef.current = view;
+  // A running workout stopwatch needs the screen to tick even though nothing else in state is changing; the session in
+  // progress also shows outside the page, as a notification and on the lock screen.
+  const anyTimerRunning = Object.values(logic.state.workoutTimer || {}).some((t) => t && t.runningSince);
+  useLiveActivity(logic, view, anyTimerRunning);
   const rank: number | null = view ? view.rankIndex : null;
   const [rankUp, setRankUp] = useState<number | null>(null);
   useEffect(() => {

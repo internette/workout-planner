@@ -5,6 +5,7 @@ import { Fragment } from 'react';
 import { Card } from '@moonshot/design-system/card';
 import { Stat } from '@moonshot/design-system/stat';
 import { AppearanceSetting } from '@/frontend/features/profile/AppearanceSetting';
+import { LiveSetting } from '@/frontend/features/profile/LiveSetting';
 import { Text } from '@moonshot/design-system/typography';
 import { AccountCard } from '@/frontend/features/profile/AccountCard';
 import { MoodSplitCard } from '@/frontend/features/profile/MoodSplitCard';
@@ -45,6 +46,7 @@ export function ProfileScreen({ v }: { v: PlannerVals }) {
             SETTINGS
           </Text>
           <AppearanceSetting />
+          <LiveSetting />
         </Card>
         {v.canSignOut ? <AccountCard v={v} /> : null}
       </div>
