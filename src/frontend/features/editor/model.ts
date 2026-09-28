@@ -1,4 +1,4 @@
-import { DOWFULL, EDIT_OVERLAYS, ICON_COLOR_NAMES, ICON_COLORS, MONTHS, NEW_WORKOUT_CLEARED } from '@/frontend/shared/constants';
+import { DOWFULL, EDIT_OVERLAYS, ICON_COLOR_NAMES, ICON_COLORS, LIFT_MINUTES, MONTHS, NEW_WORKOUT_CLEARED, RIDE_MINUTES } from '@/frontend/shared/constants';
 import { digitsOnly, exLine, idOf, isoOf, joinSetsReps, longDay, minText, mod12, monDay, monthPatch, needsLine, noticePatch, numericOnly, plural, rollMinutes, setsRepsOk, shortDay, splitSetsReps, toMinutes, withLb, withSec, workoutDraftDirty } from '@/frontend/shared/helpers';
 import { iconOptions, iconSvg } from '@/frontend/shared/icons';
 import * as db from '@/frontend/data/plannerData';
@@ -111,7 +111,7 @@ export function editVals(ctx: Ctx) {
   // A lift's length follows its exercises: about ten minutes each, at least twenty. An edit moves it by the
   // exercises added or taken out, so a length set by hand keeps its difference.
   const exDelta = creating ? 0 : selList.length - (EXV[baseKey] || []).length;
-  const baseMin = parseInt(digitsOnly(String((selAct && selAct.time) || '')), 10) || 50;
+  const baseMin = parseInt(digitsOnly(String((selAct && selAct.time) || '')), 10) || LIFT_MINUTES;
   // More or fewer sets of an exercise move it too: each set about 40 seconds of work plus its rest.
   const setsOf = (e) => parseInt(String(e.sets || ''), 10) || 0;
   const restOf = (e) => parseInt(String(e.rest || ''), 10) || 60;
@@ -760,7 +760,7 @@ export function editVals(ctx: Ctx) {
           db.createWorkout({
             name: nm,
             isRide,
-            durationMinutes: isRide ? plannedMin || 45 : estMin,
+            durationMinutes: isRide ? plannedMin || RIDE_MINUTES : estMin,
             ride: isRide
               ? { dist: st.rDist || '', elev: st.rElev || '', zone: st.rZone || DEFAULT_ZONE }
               : null,

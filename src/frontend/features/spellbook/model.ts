@@ -771,11 +771,11 @@ export function arsenalVals(ctx: Ctx) {
     commitArsenal: () => {
       if (!draftReady(st, draftClash(st, logic.model.library.concat(logic.model.builtins)))) return;
       const item = draftItem(st, logic.model);
-      logic.saveOnce('exercise', () => db.addLibraryExercise(item), {
-        ...noticePatch('“' + item.name + '” added to your Spellbook, under “Your own exercises”.', 'arsenal'),
+      logic.saveOnce('exercise', () => db.createLibraryExercise(item), (r) => ({
+        ...noticePatch('“' + r.name + '” added to your Spellbook, under “Your own exercises”.', 'arsenal'),
         arsenalAdd: false,
         ...DRAFT_CLEARED,
-      });
+      }));
     },
     arsenalQuery: st.arsenalQ || '',
     noMatches: filtering && moveGroups.length === 0,

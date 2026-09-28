@@ -3,6 +3,9 @@ import { colors } from '@moonshot/design-system/colors';
 export const ACCENT = 'var(--color-accent)';
 export const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 export const MON3 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+// How long a workout is when nothing says otherwise.
+export const LIFT_MINUTES = 50;
+export const RIDE_MINUTES = 45;
 export const DOW1 = ['S','M','T','W','T','F','S'];
 export const DOW3 = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 export const DOWFULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
