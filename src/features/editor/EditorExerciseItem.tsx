@@ -1,14 +1,12 @@
 import { type ReactNode } from 'react';
 import { IconButton } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
-import { IconChoiceGroup } from '@moonshot/design-system/icon-choice-group';
-import { IconTileButton } from '@moonshot/design-system/icon-tile';
-import { ChevronDown, Close, Dumbbell, DumbbellSmall } from '@moonshot/design-system/icons';
-import { Popover } from '@moonshot/design-system/popover';
+import { ChevronDown, Close } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
 import { AreaChoice } from '@/components/AreaChoice';
 import { DoneTick } from '@/components/DoneTick';
 import { SetsFields } from '@/components/SetsFields';
+import { IconPicker } from '@/components/IconPicker';
 import { t } from '@/features/planner/viewHelpers';
 
 /** An exercise in the editor’s list: its icon, sets and target areas when opened, its tick, and removing it. `handle` is the drag handle from ReorderableList. */
@@ -17,67 +15,15 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
     <Card pad="sm">
       <div style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
         {handle}
-        <Popover
+        <IconPicker
+          size="sm"
           open={!!exercise?.open}
+          onToggle={exercise?.toggle}
           onClose={exercise?.close}
-          width={186}
-          top={48}
-          content={
-            <>
-              <Text
-                variant="micro"
-                as="div"
-                tone="slate"
-                style={{ padding: '0 2px 9px' }}
-              >
-                ICON
-              </Text>
-              <IconChoiceGroup
-                label="Icon"
-                columns={3}
-                style={{ gap: '7px' }}
-                value={exercise?.iconValue}
-                onChange={exercise?.pickIcon}
-                options={[
-                  { value: 'h', label: 'Dumbbell icon', icon: <Dumbbell color="var(--color-accent)" size={20} /> },
-                  {
-                    value: 'v',
-                    label: 'Upright dumbbell icon',
-                    icon: <Dumbbell color="var(--color-accent)" size={20} style={{ transform: 'rotate(90deg)' }} />,
-                  },
-                  { value: 'd', label: 'Small dumbbell icon', icon: <DumbbellSmall color="var(--color-accent)" size={20} /> },
-                ]}
-              />
-            </>
-          }
-        >
-          <IconTileButton size="sm" onClick={exercise?.toggle} className="hit" aria-label={exercise?.iconAria ?? ''} aria-expanded={exercise?.open}>
-            {t(exercise?.icoSvg)}
-            {exercise?.hideLegacy ? (
-              <>
-                {exercise?.isH ? (
-                  <>
-                    <Dumbbell color="var(--color-accent)" size={19} />
-                  </>
-                ) : null}
-                {exercise?.isV ? (
-                  <>
-                    <Dumbbell
-                      color="var(--color-accent)"
-                      size={19}
-                      style={{ transform: 'rotate(90deg)' }}
-                    />
-                  </>
-                ) : null}
-                {exercise?.isD ? (
-                  <>
-                    <DumbbellSmall color="var(--color-accent)" size={19} />
-                  </>
-                ) : null}
-              </>
-            ) : null}
-          </IconTileButton>
-        </Popover>
+          current={t(exercise?.icoSvg)}
+          label={exercise?.iconAria ?? ''}
+          icons={exercise?.icons}
+        />
         <button
           type="button"
           onClick={exercise?.toggleExpand}

@@ -2,21 +2,17 @@ import { Chip } from '@moonshot/design-system/chip';
 import { ChevronDown } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
 
-/** An exercise's equipment, as one row showing what's picked ("Barbell, Bench", or "Bodyweight") that opens to the
- * picker's groups of chips. Used by the exercise editor and both "New exercise" forms. */
-export function EquipmentPicker({
-  id,
-  open,
-  onToggle,
-  summary,
-  groups,
-}: {
+export interface EquipmentPickerProps {
   id: string;
   open: boolean;
   onToggle: () => void;
   summary: string;
   groups: { label: string; items: { name: string; on: boolean; toggle: () => void }[] }[];
-}) {
+}
+
+/** An exercise's equipment, as one row showing what's picked ("Barbell, Bench", or "Bodyweight") that opens to the
+ * picker's groups of chips. Used by the exercise editor and both "New exercise" forms. */
+export function EquipmentPicker({ id, open, onToggle, summary, groups }: EquipmentPickerProps) {
   return (
     <div style={{ marginTop: '16px' }}>
       <button

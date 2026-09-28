@@ -5,6 +5,7 @@ import { StarRating } from '@moonshot/design-system/rating';
 import { Stat } from '@moonshot/design-system/stat';
 import { Text } from '@moonshot/design-system/typography';
 import { css } from '@/features/planner/viewHelpers';
+import { DeleteSection } from '@/components/DeleteSection';
 import type { PlannerVals } from '@/features/planner/store/types';
 
 /** Reading a Chronicle entry. */
@@ -71,12 +72,7 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
             {v.readNote}
           </p>
         </Card>
-        {/* Laid out like the other pages' own Delete (a saved workout's, an exercise's). */}
-        <div style={{ marginTop: '28px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }}>
-          <Button type="danger" ghost size="md" onClick={v.deleteEntry}>
-            Delete entry
-          </Button>
-        </div>
+        <DeleteSection label="Delete entry" onClick={v.deleteEntry} />
       </div>
     </>
   );

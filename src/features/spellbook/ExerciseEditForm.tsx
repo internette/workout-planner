@@ -1,12 +1,8 @@
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
-import { IconChoiceGroup } from '@moonshot/design-system/icon-choice-group';
-import { Label, TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
-import { AreaChoice } from '@/components/AreaChoice';
-import { EquipmentPicker } from '@/components/EquipmentPicker';
 import { FormActions } from '@/components/FormActions';
-import { SetsFields } from '@/components/SetsFields';
+import { ExerciseFields } from '@/components/ExerciseFields';
 import type { PlannerVals } from '@/features/planner/store/types';
 
 /** Editing an exercise: its fields and saving. */
@@ -14,14 +10,10 @@ export function ExerciseEditForm({ v }: { v: PlannerVals }) {
   return (
     <>
       <Card style={{ marginTop: '18px' }}>
-        <TextField
-          label="Name"
-          value={v.exerciseEdit.name}
-          onChange={v.exerciseEdit.setName}
-          placeholder="e.g. Bulgarian Split Squat"
-          error={v.exerciseEdit.nameError || undefined}
-        />
-        <SetsFields
+        <ExerciseFields
+          name={v.exerciseEdit.name}
+          onName={v.exerciseEdit.setName}
+          nameError={v.exerciseEdit.nameError}
           sets={v.exerciseEdit.sets}
           reps={v.exerciseEdit.reps}
           weight={v.exerciseEdit.weight}
@@ -30,19 +22,10 @@ export function ExerciseEditForm({ v }: { v: PlannerVals }) {
           onReps={v.exerciseEdit.setReps}
           onWeight={v.exerciseEdit.setWeight}
           onRest={v.exerciseEdit.setRest}
+          areas={v.exerciseEdit.areas ?? []}
+          equipment={v.exerciseEdit.equipmentGroups ? { id: 'exercise-equipment', open: v.exerciseEdit.equipmentOpen, onToggle: v.exerciseEdit.toggleEquipment, summary: v.exerciseEdit.equipmentSummary, groups: v.exerciseEdit.equipmentGroups } : null}
+          icon={v.exerciseEdit.icons}
         />
-        <AreaChoice areas={v.exerciseEdit.areas ?? []} />
-        {v.exerciseEdit.equipmentGroups ? (
-          <EquipmentPicker
-            id="exercise-equipment"
-            open={v.exerciseEdit.equipmentOpen}
-            onToggle={v.exerciseEdit.toggleEquipment}
-            summary={v.exerciseEdit.equipmentSummary}
-            groups={v.exerciseEdit.equipmentGroups}
-          />
-        ) : null}
-        <Label style={{ margin: '16px 0 8px' }}>Icon</Label>
-        <IconChoiceGroup label="Icon" columns={4} {...v.exerciseEdit.icons} />
       </Card>
       <FormActions>
         {v.exerciseEdit.saveHint ? (

@@ -3,25 +3,14 @@ import { Card } from '@moonshot/design-system/card';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import { css } from '@/features/planner/viewHelpers';
+import { SectionHeader } from '@/components/SectionHeader';
 import type { PlannerVals } from '@/features/planner/store/types';
 
 /** Profile: quests cleared, all time. */
 export function QuestsClearedCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: '14px' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
-        <Text variant="eyebrow" tone="slate">
-          QUESTS CLEARED
-        </Text>
-        <Text variant="small" tone="muted" weight="medium">
-          {v.allTimeLabel}
-        </Text>
-        {v.questsHas ? (
-          <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
-            {v.questsClearedLabel}
-          </Text>
-        ) : null}
-      </div>
+      <SectionHeader title="QUESTS CLEARED" note={v.allTimeLabel} value={v.questsHas ? v.questsClearedLabel : undefined} />
       {v.questsNone ? (
         <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
           Every day with a session gets a quest. The ones you clear gather here.

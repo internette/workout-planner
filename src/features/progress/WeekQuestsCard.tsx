@@ -3,22 +3,14 @@ import { Card } from '@moonshot/design-system/card';
 import { Check } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
 import { css } from '@/features/planner/viewHelpers';
+import { SectionHeader } from '@/components/SectionHeader';
 import type { PlannerVals } from '@/features/planner/store/types';
 
 /** Progress: this week’s quests, each opening its session. */
 export function WeekQuestsCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: '14px' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
-        <Text variant="eyebrow" tone="slate">
-          THIS WEEK&apos;S QUESTS
-        </Text>
-        {v.wkHas ? (
-          <Text variant="small" tone="muted" weight="medium" style={{ marginLeft: 'auto' }}>
-            {v.questsDoneLabel}
-          </Text>
-        ) : null}
-      </div>
+      <SectionHeader title="THIS WEEK'S QUESTS" note={v.wkHas ? v.questsDoneLabel : undefined} />
       {v.wkEmpty ? (
         <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
           No quests this week yet. Plan a session and its day gets one.

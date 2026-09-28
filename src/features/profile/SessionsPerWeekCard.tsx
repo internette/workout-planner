@@ -4,20 +4,14 @@ import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { WarmupTag } from '@/components/WarmupTag';
 import { css } from '@/features/planner/viewHelpers';
+import { SectionHeader } from '@/components/SectionHeader';
 import type { PlannerVals } from '@/features/planner/store/types';
 
 /** Profile: sessions per week as a bar chart, and the picked week’s sessions. */
 export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: '14px' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
-        <Text variant="eyebrow" tone="slate">
-          SESSIONS PER WEEK
-        </Text>
-        <Text variant="small" tone="muted" weight="medium" style={{ marginLeft: 'auto' }}>
-          {v.chartRangeLabel}
-        </Text>
-      </div>
+      <SectionHeader title="SESSIONS PER WEEK" note={v.chartRangeLabel} />
       <Text variant="caption" as="p" tone="muted" style={{ margin: '8px 0 0' }}>
         {v.chartCaption}
       </Text>
