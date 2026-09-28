@@ -19,6 +19,7 @@ import { LeaveWorkoutDialog } from '@/frontend/features/session/LeaveWorkoutDial
 import { RideSessionCard } from '@/frontend/features/session/RideSessionCard';
 import { SessionExerciseRow } from '@/frontend/features/session/SessionExerciseRow';
 import { SessionTimer } from '@/frontend/features/session/SessionTimer';
+import { RestCard } from '@/frontend/features/session/RestCard';
 import { ChipRow } from '@/frontend/components/ChipRow';
 
 export function SessionScreen({ v }: { v: PlannerVals }) {
@@ -86,6 +87,7 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
           </Card>
         ) : null}
         {v.showTimer ? <SessionTimer v={v} /> : null}
+        {v.restShown ? <RestCard v={v} /> : null}
         {v.dayIsRide ? <RideSessionCard v={v} /> : null}
         {v.dayIsLift ? (
           <>

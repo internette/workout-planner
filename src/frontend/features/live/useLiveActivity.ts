@@ -17,13 +17,25 @@ import type { WorkerIn, WorkerOut } from './timer.worker';
 // - The Media Session puts it on the lock screen as the "now playing" player, with its own clock and buttons. That
 //   needs audio playing, so it plays silence, which stops other music: it's off unless turned on.
 
-type Action = 'open' | 'tick' | 'finish' | 'pause' | 'resume' | 'write';
+// 'tick' is what the first version's notifications called 'set'; one still showing may send it.
+type Action = 'open' | 'set' | 'tick' | 'more' | 'skip' | 'finish' | 'pause' | 'resume' | 'write';
 type Shown = { title: string; body: string; actions: { action: Action; title: string }[] };
 
 const minutes = (sec: number) => (sec < 60 ? 'just started' : Math.floor(sec / 60) + ' min');
+const clockTime = (at: number) => new Date(at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 
 // What the notification says about a session in progress.
 function liveNotice(a: LiveActivity, now: number): Shown {
+  // Resting: when it's over (a notification can't count down), and what's next.
+  if (a.rest)
+    return {
+      title: 'Rest · until ' + clockTime(a.rest.endsAt),
+      body: a.rest.next ? 'Up next: ' + a.rest.next.name + (a.rest.next.line ? ' · ' + a.rest.next.line : '') : '',
+      actions: [
+        { action: 'more', title: '+30 sec' },
+        { action: 'skip', title: 'Skip rest' },
+      ],
+    };
   const sec = clockSeconds(a.clock, now);
   const paused = !a.clock.runningSince;
   const title = a.name + ' · ' + (paused ? 'Paused at ' + Math.floor(sec / 60) + ' min' : minutes(sec));
@@ -36,7 +48,7 @@ function liveNotice(a: LiveActivity, now: number): Shown {
   const finish = { action: 'finish' as const, title: a.kind === 'ride' ? 'Finish ride' : 'Finish' };
   const actions =
     a.kind === 'lift' && a.now && !paused
-      ? [{ action: 'tick' as const, title: 'Tick off ' + a.now.name }, finish]
+      ? [{ action: 'set' as const, title: a.now.of > 1 ? 'Done: set ' + a.now.set + ' of ' + a.now.of : 'Tick off ' + a.now.name }, finish]
       : [paused ? { action: 'resume' as const, title: 'Resume' } : { action: 'pause' as const, title: 'Pause' }, finish];
   return { title, body, actions };
 }
@@ -98,13 +110,27 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
   const act = (action: Action, id: string) => {
     const v = viewRef.current;
     if (!v || !id) return;
-    if (action === 'tick') v.liveTick(id);
+    if (action === 'set' || action === 'tick') v.liveSet(id);
+    else if (action === 'more') v.liveMoreRest();
+    else if (action === 'skip') v.liveSkipRest();
     else if (action === 'pause') v.livePause(id);
     else if (action === 'resume') v.liveResume(id);
     else if (action === 'finish') v.liveFinish(id);
     else if (action === 'write') v.liveWrite(id);
     else v.openLive(id);
   };
+
+  // A rest that has run out goes (and the phone buzzes, where it can), whether or not anything shows outside the page.
+  useEffect(() => {
+    const v = viewRef.current;
+    if (!v || !v.restEndsAt || Date.now() < v.restEndsAt) return;
+    v.restOver();
+    try {
+      navigator.vibrate?.([200, 100, 200]);
+    } catch {
+      // Not every browser lets a page vibrate.
+    }
+  });
 
   // The worker: a tick a second while a clock runs, and the artwork on request.
   const worker = useRef<Worker | null>(null);
@@ -166,6 +192,8 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
   const shownId = useRef<string | null>(null);
   const dismissed = useRef('');
   const ended = useRef<{ id: string; until: number } | null>(null);
+  // When the rest in the last notification sent was to end (0 when it wasn't resting).
+  const restWas = useRef(0);
   useEffect(() => {
     if (!settings.notify || !canNotify() || Notification.permission !== 'granted') return;
     const now = Date.now();
@@ -195,12 +223,15 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
     dismissed.current = '';
     const first = shownId.current !== activity.id;
     shownKey.current = key;
+    // A rest that ran out (rather than being skipped) sounds, so a phone in a pocket says it's time.
+    const restRanOut = !activity.rest && restWas.current > 0 && now >= restWas.current - 1000;
+    restWas.current = activity.rest ? activity.rest.endsAt : 0;
     shownId.current = activity.id;
     post({
       type: 'live-show',
       ...shown,
-      // Only a session's first one makes a sound; updates are quiet.
-      silent: !first,
+      // Only a session's first one makes a sound, and the end of a rest; other updates are quiet.
+      silent: !first && !restRanOut,
       // When it started, so the notification's own time says so.
       timestamp: now - clockSeconds(activity.clock, now) * 1000,
       data: { id: activity.id, url: '/calendar/sessions/' + activity.id, content },
@@ -273,7 +304,7 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
     // The artwork: drawn by the worker when what's on it changes, in the colours this browser uses.
     const accent = savedAccent();
     const theme = savedTheme();
-    const artKey = JSON.stringify([a.name, a.kind, a.done, a.total, a.now, a.ride, paused, accent, theme]);
+    const artKey = JSON.stringify([a.name, a.kind, a.done, a.total, a.now, a.ride, a.rest && a.rest.next, !!a.rest, paused, accent, theme]);
     if (art.current.key !== artKey) {
       art.current.key = artKey;
       artWanted.current = (key, blob) => {
@@ -285,14 +316,17 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
       };
       send({ type: 'art', key: artKey, activity: a, look: liveLook(accent, theme), paused });
     }
-    const title = a.name;
-    const artist =
-      a.kind === 'ride'
+    const title = a.rest ? 'Rest · ' + a.name : a.name;
+    const artist = a.rest
+      ? a.rest.next
+        ? 'Up next: ' + a.rest.next.name + (a.rest.next.line ? ' · ' + a.rest.next.line : '')
+        : 'Rest'
+      : a.kind === 'ride'
         ? a.ride?.dist
           ? a.ride.dist + ' mi planned'
           : 'Ride'
-        : a.done + ' of ' + a.total + ' done' + (a.now ? ' · Now: ' + a.now.name : '');
-    const key = JSON.stringify([title, artist, art.current.url, paused]);
+        : a.done + ' of ' + a.total + ' done' + (a.now ? ' · Now: ' + a.now.name + (a.now.of > 1 ? ', set ' + a.now.set + ' of ' + a.now.of : '') : '');
+    const key = JSON.stringify([title, artist, art.current.url, paused, !!a.rest]);
     if (key !== metaKey.current) {
       metaKey.current = key;
       ms.metadata = new MediaMetadata({
@@ -312,19 +346,23 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
         audio.current?.pause();
         act('pause', a.id);
       });
-      // "Next": tick off the next exercise.
-      ms.setActionHandler('nexttrack', a.kind === 'lift' && a.now ? () => act('tick', a.id) : null);
+      // "Next": the next set done, or, resting, on to it now.
+      ms.setActionHandler(
+        'nexttrack',
+        a.rest ? () => act('skip', a.id) : a.kind === 'lift' && a.now ? () => act('set', a.id) : null,
+      );
     }
     // The player's bar is the clock: it runs by itself while playing, so it's only set when the clock changes. Its
     // length is the plan, stretched in ten-minute steps once a session runs past it.
-    const sec = clockSeconds(a.clock, now);
-    const plan = Math.max(a.plannedSec, 60);
-    const duration = sec < plan ? plan : plan + Math.ceil((sec - plan + 1) / 600) * 600;
-    const pos = JSON.stringify([a.clock.elapsed, a.clock.runningSince, duration]);
+    // Resting, the bar is the rest instead.
+    const sec = a.rest ? a.rest.total - Math.max(0, (a.rest.endsAt - now) / 1000) : clockSeconds(a.clock, now);
+    const plan = a.rest ? a.rest.total : Math.max(a.plannedSec, 60);
+    const duration = a.rest || sec < plan ? plan : plan + Math.ceil((sec - plan + 1) / 600) * 600;
+    const pos = JSON.stringify(a.rest ? [a.rest.endsAt, a.rest.total] : [a.clock.elapsed, a.clock.runningSince, duration]);
     if (pos !== posKey.current && ms.setPositionState) {
       posKey.current = pos;
       try {
-        ms.setPositionState({ duration, position: Math.min(sec, duration), playbackRate: 1 });
+        ms.setPositionState({ duration, position: Math.max(0, Math.min(sec, duration)), playbackRate: 1 });
       } catch {
         // Some browsers refuse a position state; the player then just shows the title.
       }

@@ -137,6 +137,11 @@ export function workoutVals(ctx: Ctx) {
   const hasProgress = !!selAct && (selRide ? rideDone : doneCount > 0);
   const doRestart = () => {
     startTimer();
+    // Its sets start again too, with no rest going.
+    logic.s({
+      setsDone: Object.assign({}, st.setsDone, { [listKey]: {} }),
+      ...(st.rest && st.rest.id === listKey ? { rest: null } : {}),
+    });
     // Starting over also undoes Finish: what it recorded belonged to the go being thrown away.
     if (selAct && actualMinutes(selAct) > 0) logic.save(() => db.reopenSession(idOf(selAct)));
     if (selAct && hasProgress) {
@@ -189,7 +194,7 @@ export function workoutVals(ctx: Ctx) {
     delete timers[timerKey];
     logic.s(
       Object.assign(
-        { finish: null, workoutTimer: timers, ...noticePatch(
+        { finish: null, workoutTimer: timers, ...(st.rest && st.rest.id === id ? { rest: null } : {}), ...noticePatch(
           fin.correcting ? 'Time changed to ' + minText(finMinutes) + '.' : 'Transformation complete. ' + minText(finMinutes) + ' recorded.',
           'detail',
         ) },
@@ -261,7 +266,9 @@ export function workoutVals(ctx: Ctx) {
       warmup: !!av.warmup,
       meta: complete
         ? 'Completed · ' + (ride && distOf(av) ? distOf(av) + ' mi · ' : '') + ctx.doneTimeOf(av)
-        : timer
+        : st.rest && st.rest.id === id && st.rest.endsAt > Date.now()
+          ? 'Resting · ' + formatElapsed(Math.ceil((st.rest.endsAt - Date.now()) / 1000))
+          : timer
           ? (timer.runningSince ? 'In progress · ' : 'Paused · ') + formatElapsed(timerSec)
           : ride
           ? ride.dist

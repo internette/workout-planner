@@ -4,6 +4,7 @@ import { iconOptions, iconSvg } from '@/frontend/shared/icons';
 import * as db from '@/frontend/data/plannerData';
 import { themed } from '@moonshot/design-system/colors';
 import type { Ctx } from '../planner/store/types';
+import { setsFor, setsIn } from '../session/sets';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import { areaToggles, plainExercise, DRAFT_CLEARED, draftClash, draftHint, draftItem, draftOpened, draftReady, equipmentKnown, equipmentToggles } from '@/frontend/shared/exerciseDraft';
 import type { BuiltinWorkout, WorkoutSummary } from '@/frontend/data/plannerData';
@@ -60,6 +61,7 @@ export function editVals(ctx: Ctx) {
     pickM,
     tplMode,
   } = ctx;
+  const sets = setsFor(ctx);
   // Another year than this one says which, next to the date.
   const yearNote = Math.floor(mi / 12) ? ', ' + selDate.getFullYear() : '';
   // Where each nav item actually goes, so a guarded nav click can land there after "Discard" or "Save changes" —
@@ -921,6 +923,19 @@ export function editVals(ctx: Ctx) {
         isDone: !!doneSet[e.name],
         // Ticking off belongs to a session on the calendar, not to a workout being built or a saved one.
         showTick: !creating && !tplMode && mi * 100 + selDay <= ctx.TK,
+        // Sets, one at a time, on today's session: "Done set" counts one and starts the rest; the last ticks it off.
+        ...(() => {
+          const of = setsIn(e);
+          const count = doneSet[e.name] ? of : Math.min(sets.setsDoneOf(listKey, e.name), of - 1);
+          return {
+            showSets:
+              st.screen === 'detail' && !creating && !tplMode && !isCycleView && mi * 100 + selDay === ctx.TK && !doneSet[e.name],
+            setPips: Array.from({ length: of }, (_, i) => i < count),
+            setsLabel: of > 1 ? 'Set ' + (count + 1) + ' of ' + of : 'One set',
+            doneSetAria: 'Done: ' + e.name + (of > 1 ? ', set ' + (count + 1) + ' of ' + of : ''),
+            doneSet: () => sets.completeSet(listKey, e.name),
+          };
+        })(),
         // One line per exercise until it's opened to edit. Added ones too: they come with their sets, reps and
         // rest already filled in, and opening each one made the page grow with every add.
         expanded: !!(st.exExpanded || {})[listKey + '|' + e.name],
@@ -942,7 +957,14 @@ export function editVals(ctx: Ctx) {
           if (st.screen === 'edit') return logic.s({ editDone: names, announce });
           // On the session page a tick counts at once. A finished session stays completed while ticks change;
           // otherwise it's done once all are ticked.
-          logic.s({ done: Object.assign({}, st.done, { [listKey]: names }), announce });
+          // Unticked, its sets start again from the first.
+          logic.s({
+            done: Object.assign({}, st.done, { [listKey]: names }),
+            announce,
+            ...(nowDone
+              ? {}
+              : { setsDone: Object.assign({}, st.setsDone, { [listKey]: Object.assign({}, (st.setsDone || {})[listKey], { [e.name]: 0 }) }) }),
+          });
           if (!creating)
             logic.save(() =>
               db.setExercisesDone(listKey, names, (tot > 0 && names.length === tot) || !!(selAct && ctx.actualMinutes(selAct))),

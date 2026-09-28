@@ -93,6 +93,14 @@ export interface TemplateConfirm {
   apply: (choice: 'update' | 'new', upcoming: boolean, copyName?: string) => void;
 }
 
+/** A rest counting down between sets: for which session, after which exercise, and when it ends. */
+export interface RestState {
+  id: string;
+  after: string;
+  endsAt: number;
+  total: number;
+}
+
 export interface PlannerState {
   // Where the planner is
   screen: Screen;
@@ -168,6 +176,10 @@ export interface PlannerState {
   done: Record<string, string[]>;
   rideDone: Record<string, boolean>;
   workoutTimer?: Record<string, { elapsed: number; runningSince: number | null }>;
+  /** Sets done so far, per session and exercise (by name). Kept in this browser, like the clock. */
+  setsDone?: Record<string, Record<string, number>>;
+  /** The rest between sets, counting down. */
+  rest?: RestState | null;
   finish?: FinishState | null;
   pausePrompt?: { proceed: () => void } | null;
   restartPrompt?: boolean;

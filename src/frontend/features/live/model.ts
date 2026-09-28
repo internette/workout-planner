@@ -1,7 +1,7 @@
-import { exLine, idOf, minText, monthPatch, plural, toMinutes } from '@/frontend/shared/helpers';
+import { minText, monthPatch, plural, toMinutes } from '@/frontend/shared/helpers';
+import { setsFor } from '../session/sets';
 import type { Ctx } from '../planner/store/types';
 import type { Entry } from '@/frontend/data/plannerData';
-import * as db from '@/frontend/data/plannerData';
 
 /** A session's clock, as kept in state: seconds banked, plus when it was last started if it's going. */
 export type LiveClock = { elapsed: number; runningSince: number | null };
@@ -18,7 +18,9 @@ export type LiveActivity = {
   /** Lifting: how many are ticked, of how many, and the first one still to do. */
   done: number;
   total: number;
-  now: { name: string; line: string } | null;
+  now: { name: string; line: string; set: number; of: number } | null;
+  /** Resting between sets: until when, out of how long, and what's up next. */
+  rest: { endsAt: number; total: number; next: { name: string; line: string } | null } | null;
   /** Riding: the plan. */
   ride: { planned: string; dist: string; climb: string; zone: string } | null;
   /** How long it's planned to take, in seconds (0 if unknown): the length of the lock-screen player's bar. */
@@ -41,7 +43,8 @@ export const clockSeconds = (c: LiveClock, at = Date.now()) =>
 
 // The session outside the page: which one is going, and what the lock screen and notification can do with it.
 export function liveVals(ctx: Ctx) {
-  const { logic, st, instList, nameOf, isDoneEntry, actualMinutes, distOf, TODAY_M, TODAY_D, streak } = ctx;
+  const { logic, st, nameOf, isDoneEntry, actualMinutes, distOf, TODAY_M, TODAY_D, streak } = ctx;
+  const sets = setsFor(ctx);
   const timers = st.workoutTimer || {};
   const found = (id: string) => logic.model.entries.find((x) => x.av.id === id) || null;
   // The one whose clock is going; else one paused today (an old paused clock isn't a workout in progress).
@@ -55,21 +58,14 @@ export function liveVals(ctx: Ctx) {
     null;
   const x = liveId ? found(liveId) : null;
   const av: Entry | null = x ? x.av : null;
-  const exercises = (a: Entry) => {
-    const id = idOf(a);
-    const order = (st.exOrder || {})[id] || [];
-    const rank = (n: string) => (order.indexOf(n) === -1 ? order.length : order.indexOf(n));
-    return instList(a.exKey, id)
-      .map((e, ix) => ({ e: Object.assign({}, e, (st.fields || {})[id + '|' + e.name] || {}), ix }))
-      .sort((p, q) => rank(p.e.name) - rank(q.e.name) || p.ix - q.ix)
-      .map(({ e }) => e);
-  };
+  const exercises = sets.exercisesOf;
   const ticked = (id: string): string[] => (st.done || {})[id] || [];
   let liveActivity: LiveActivity | null = null;
   if (av) {
     const list = av.ride ? [] : exercises(av);
     const dn = ticked(av.id);
-    const next = list.find((e) => dn.indexOf(e.name) === -1) || null;
+    const next = sets.nextSet(av.id);
+    const r = sets.restNow && sets.restNow.id === av.id ? sets.restNow : null;
     liveActivity = {
       id: av.id,
       kind: av.ride ? 'ride' : 'lift',
@@ -77,7 +73,10 @@ export function liveVals(ctx: Ctx) {
       clock: { elapsed: timers[av.id].elapsed, runningSince: timers[av.id].runningSince },
       done: list.filter((e) => dn.indexOf(e.name) !== -1).length,
       total: list.length,
-      now: next ? { name: next.name, line: exLine(next) } : null,
+      now: next ? { name: next.e.name, line: next.line, set: next.set, of: next.of } : null,
+      rest: r
+        ? { endsAt: r.endsAt, total: r.total, next: sets.restNext ? { name: sets.restNext.e.name, line: sets.restNext.line } : null }
+        : null,
       ride: av.ride
         ? { planned: av.time, dist: av.ride.dist || '', climb: av.ride.elev || '', zone: av.ride.zone || '' }
         : null,
@@ -113,22 +112,13 @@ export function liveVals(ctx: Ctx) {
         ride: !!a.ride,
       };
     },
-    // Ticks off the next exercise, the same as ticking it on the session's page.
-    liveTick: (id: string) => {
-      const at = found(id);
-      if (!at || at.av.ride) return;
-      const list = exercises(at.av);
-      const dn = ticked(id);
-      const next = list.find((e) => dn.indexOf(e.name) === -1);
-      if (!next) return;
-      const names = dn.concat([next.name]);
-      const complete = names.length === list.length || actualMinutes(at.av) > 0;
-      logic.s({
-        done: Object.assign({}, st.done, { [id]: names }),
-        announce: next.name + ' marked done. ' + names.length + ' of ' + list.length + ' done.',
-      });
-      logic.save(() => db.setExercisesDone(id, names, complete));
+    // The next set done, as "Done set" on the session's page does (the last of an exercise's sets ticks it off).
+    liveSet: (id: string) => {
+      const n = sets.nextSet(id);
+      if (n) sets.completeSet(id, n.e.name);
     },
+    liveMoreRest: () => sets.addRest(30),
+    liveSkipRest: sets.skipRest,
     livePause: (id: string) => {
       const c = timers[id];
       if (c && c.runningSince) setClock(id, { elapsed: clockSeconds(c), runningSince: null });

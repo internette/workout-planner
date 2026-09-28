@@ -15,6 +15,7 @@ import { diaryVals } from '@/frontend/features/chronicle/model';
 import { arsenalVals } from '@/frontend/features/spellbook/model';
 import { progressVals } from '@/frontend/features/progress/model';
 import { liveVals } from '@/frontend/features/live/model';
+import { restVals } from '@/frontend/features/session/sets';
 
 export const CALENDAR_KEY = 'moonshot.calendar';
 
@@ -57,7 +58,9 @@ export class PlannerLogic extends DCLogic<PlannerState> {
           // Storage can be off (private windows, blocked site data): start on today, as before.
         }
       }
-      this.setState({ done: model.done, rideDone: model.rideDone, workoutTimer, ...opened, ...patch });
+      // Sets done only for sessions still on the clock: a finished one's are done with.
+      const setsDone = Object.fromEntries(Object.entries(this.state.setsDone || {}).filter(([k]) => workoutTimer[k]));
+      this.setState({ done: model.done, rideDone: model.rideDone, workoutTimer, setsDone, ...opened, ...patch });
     } catch (e) {
       this.status = 'error';
       this.loadError = e instanceof Error ? e.message : String(e);
@@ -191,6 +194,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
       ...arsenalVals(ctx),
       ...progressVals(ctx),
       ...liveVals(ctx),
+      ...restVals(ctx),
     };
   }
 }
