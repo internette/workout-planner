@@ -12,7 +12,7 @@ export interface BackBarProps {
 /** The top of an inner page: Back, named for where it goes, and the page's own actions at the right. */
 export function BackBar({ label, onBack, children }: BackBarProps) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '10px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', minHeight: '44px', gap: '8px' }}>
       <BackLink label={label} onClick={onBack} />
       {children ? (
         <span className="bar-actions" style={{ display: 'flex', gap: 'var(--space-2)', marginLeft: 'auto', flex: 'none' }}>

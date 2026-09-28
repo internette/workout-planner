@@ -8,7 +8,7 @@ export function SessionExerciseRow({ exercise }: { exercise: any }) {
   return (
     <Card
       pad="sm"
-      style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '13px' }}
+      style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}
     >
       <IconSquare>{exercise?.icoSvg}</IconSquare>
       <span style={{ minWidth: '0' }}>

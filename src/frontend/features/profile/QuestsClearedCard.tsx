@@ -10,10 +10,10 @@ import { RankGem } from '@/frontend/components/RankGem';
 /** Profile: quests cleared, all time. */
 export function QuestsClearedCard({ v }: { v: PlannerVals }) {
   return (
-    <Card style={{ marginTop: '14px' }}>
+    <Card style={{ marginTop: '16px' }}>
       <SectionHeader title="QUESTS CLEARED" note={v.allTimeLabel} value={v.questsHas ? v.questsClearedLabel : undefined} />
       {v.questsNone ? (
-        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
+        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '8px 0 0' }}>
           Every day with a session gets a quest. The ones you clear gather here.
         </Text>
       ) : null}

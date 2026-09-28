@@ -23,7 +23,7 @@ export function ScheduleDialog({ v }: { v: PlannerVals }) {
         </>
       }
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
         <TextField
           label="Day"
           type="date"

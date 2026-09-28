@@ -24,10 +24,10 @@ export function EquipmentPicker({ id, open, onToggle, summary, groups }: Equipme
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
+          gap: '8px',
           width: '100%',
           minHeight: '52px',
-          padding: '10px 14px',
+          padding: '8px 16px',
           border: '1px solid var(--color-outline)',
           borderRadius: 'var(--radius-md)',
           background: 'var(--color-canvas)',
@@ -53,7 +53,7 @@ export function EquipmentPicker({ id, open, onToggle, summary, groups }: Equipme
           </Text>
           {groups.map((g) => (
             <div key={g.label} role="group" aria-label={g.label}>
-              <Text variant="eyebrow" as="div" tone="muted" style={{ margin: '10px 0 6px' }}>
+              <Text variant="eyebrow" as="div" tone="muted" style={{ margin: '8px 0 8px' }}>
                 {g.label.toUpperCase()}
               </Text>
               <ChipRow>

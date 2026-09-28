@@ -13,9 +13,9 @@ export function QuestCard({ v }: { v: PlannerVals }) {
         display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
-        gap: '14px',
-        marginTop: '22px',
-        padding: '18px 20px',
+        gap: '16px',
+        marginTop: '24px',
+        padding: '16px 20px',
         borderRadius: 'var(--radius-lg)',
         background:
           'var(--gradient-gem-tint)',

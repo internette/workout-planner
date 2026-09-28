@@ -8,7 +8,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 /** Profile: who is signed in, and signing out. */
 export function AccountCard({ v }: { v: PlannerVals }) {
   return (
-    <Card style={{ marginTop: '14px' }}>
+    <Card style={{ marginTop: '16px' }}>
       <Text variant="eyebrow" as="div" tone="slate">
         ACCOUNT
       </Text>

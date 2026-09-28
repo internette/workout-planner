@@ -6,24 +6,24 @@
 .band { width: 100%; padding: 0 28px; }
 .inner { max-width: 1040px; margin: 0 auto; }
 
-.header { width: 100%; padding: 18px 28px; }
+.header { width: 100%; padding: 16px 28px; }
 .headerRow { max-width: 1040px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
 
-.hero { padding-top: 34px; padding-bottom: 56px; }
+.hero { padding-top: 32px; padding-bottom: 56px; }
 .heroText { max-width: 660px; margin: 0 auto; text-align: center; }
 .eyebrowRow { display: inline-flex; align-items: center; }
-.trail { margin-left: 9px; }
+.trail { margin-left: 8px; }
 .notice { margin: var(--space-3) 0 0; font-size: var(--text-base); line-height: var(--leading-snug); color: var(--color-slate); }
-.subhead { max-width: 520px; margin: 18px auto 0; text-wrap: pretty; }
-.authWrap { margin-top: 34px; }
+.subhead { max-width: 520px; margin: 16px auto 0; text-wrap: pretty; }
+.authWrap { margin-top: 32px; }
 
 /* ---- the auth card ---- */
 .authCard { width: 100%; max-width: 404px; margin: 0 auto; box-sizing: border-box; }
 .authTitle { margin-top: 8px; }
 .authNote { margin-top: 8px; text-wrap: pretty; }
-.providers { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.providers { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
 .legal { margin: 16px 0 0; text-wrap: pretty; }
-.toggle { display: flex; align-items: center; gap: 8px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--color-mist); }
+.toggle { display: flex; align-items: center; gap: 8px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--color-mist); }
 .toggleLink { white-space: nowrap; }
 
 /* ---- provider buttons ---- */
@@ -31,7 +31,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   min-height: 52px;
   padding: 0 20px;
@@ -54,11 +54,11 @@
 
 /* ---- sections ---- */
 .sectionGap { padding-bottom: 56px; }
-.steps { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
+.steps { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; }
 .step { flex: 1 1 260px; min-width: 0; }
 .stepIcon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); background: var(--color-accent-tint); }
 .stepTitle { margin: 16px 0 0; }
-.stepBody { margin: 7px 0 0; text-wrap: pretty; }
+.stepBody { margin: 8px 0 0; text-wrap: pretty; }
 
 .quest {
   display: flex;
@@ -70,17 +70,17 @@
   background: var(--gradient-gem-tint);
 }
 .col { flex: 1 1 300px; min-width: 0; }
-.headline { margin: 10px 0 0; line-height: 1.1; text-wrap: balance; }
+.headline { margin: 8px 0 0; line-height: 1.1; text-wrap: balance; }
 .questBody { max-width: 420px; margin: 12px 0 0; text-wrap: pretty; }
-.cleared { display: flex; align-items: center; gap: 11px; }
-.progressRow { display: flex; align-items: baseline; gap: 8px; margin-top: 10px; }
+.cleared { display: flex; align-items: center; gap: 12px; }
+.progressRow { display: flex; align-items: baseline; gap: 8px; margin-top: 8px; }
 .progressRow :last-child { margin-left: auto; }
 
 .ranks { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 20px; }
 .ranksLeft { flex: 1 1 320px; min-width: 0; }
 .ranksBody { max-width: 440px; margin: 12px 0 0; text-wrap: pretty; }
 .ranksRight { flex: 1 1 260px; display: flex; flex-direction: column; gap: 8px; }
-.rank { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-radius: var(--radius-md); background: var(--color-surface); box-shadow: var(--elevation-hairline); }
+.rank { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: var(--radius-md); background: var(--color-surface); box-shadow: var(--elevation-hairline); }
 .rankName { flex: 1; min-width: 0; }
 .more { padding: 0 16px; }
 
@@ -89,4 +89,4 @@
 .closingCta { margin-top: 24px; }
 
 .footer { width: 100%; padding: 0 28px 40px; }
-.footerRow { max-width: 1040px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-top: 22px; border-top: 1px solid var(--color-mist); }
+.footerRow { max-width: 1040px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-top: 24px; border-top: 1px solid var(--color-mist); }

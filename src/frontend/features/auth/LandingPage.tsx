@@ -139,7 +139,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                 </Text>
                 <SparkleTrail className={styles.trail} />
               </span>
-              <Text variant="hero" as="h1" style={{ margin: '14px 0 0', letterSpacing: '-0.03em', lineHeight: 1.04, textWrap: 'balance' }}>
+              <Text variant="hero" as="h1" style={{ margin: '16px 0 0', letterSpacing: '-0.03em', lineHeight: 1.04, textWrap: 'balance' }}>
                 Answer the call.
                 <br />
                 Then do the sets.
@@ -189,7 +189,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                 Every day with a session on your plan gets a quest, and it resolves in its own words once that day is clear. On a rest day it says so and leaves you alone.
               </Text>
             </div>
-            <Card pad="md" className={styles.col} style={{ padding: 22 }}>
+            <Card pad="md" className={styles.col} style={{ padding: 24 }}>
               <div className={styles.cleared}>
                 <Gem size={22} />
                 <div style={{ minWidth: 0 }}>
@@ -204,7 +204,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                   </Text>
                 </div>
               </div>
-              <ProgressBar value={100} style={{ marginTop: 18 }} />
+              <ProgressBar value={100} style={{ marginTop: 16 }} />
               <div className={styles.progressRow}>
                 <Text variant="caption" tone="accent" weight="semibold">
                   5 of 5 done

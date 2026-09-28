@@ -11,7 +11,7 @@ export function MonthGrid({ v }: { v: PlannerVals }) {
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(7,minmax(0,1fr))',
-          marginTop: '26px',
+          marginTop: '24px',
         }}
       >
         {(v.dowLabels ?? []).map((l, i) => (
@@ -23,7 +23,7 @@ export function MonthGrid({ v }: { v: PlannerVals }) {
                 fontSize: 'var(--text-md)',
                 fontWeight: 'var(--font-weight-semibold)',
                 color: 'var(--color-muted)',
-                paddingBottom: '10px',
+                paddingBottom: '8px',
               }}
             >
               {l}

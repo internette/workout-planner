@@ -46,7 +46,7 @@ export function RidePlanFields({ v }: { v: PlannerVals }) {
             />
           </div>
         </div>
-        <Label style={{ margin: '18px 0 9px' }}>Target effort</Label>
+        <Label style={{ margin: '16px 0 8px' }}>Target effort</Label>
         <ChipRow>
           {RIDE_ZONES.map((zone) => (
             <Chip

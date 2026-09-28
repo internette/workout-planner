@@ -9,14 +9,14 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 /** Progress: this week’s quests, each opening its session. */
 export function WeekQuestsCard({ v }: { v: PlannerVals }) {
   return (
-    <Card style={{ marginTop: '14px' }}>
+    <Card style={{ marginTop: '16px' }}>
       <SectionHeader title="THIS WEEK'S QUESTS" note={v.wkHas ? v.questsDoneLabel : undefined} />
       {v.wkEmpty ? (
-        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
+        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '8px 0 0' }}>
           No quests this week yet. Plan a session and its day gets one.
         </Text>
       ) : null}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '14px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '16px' }}>
         {(v.weekQuests ?? []).map((q, i) => (
           <Fragment key={i}>
             <button type="button" onClick={q?.open} aria-label={q?.aria} style={css(q?.row)}>

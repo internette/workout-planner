@@ -9,7 +9,7 @@ export function WeekRow({ row }: { row: any }) {
   return (
     <div>
       {row?.showLabel ? (
-        <Text variant="eyebrow" as="div" tone={row?.labelTone} style={{ margin: '14px 0 9px' }}>
+        <Text variant="eyebrow" as="div" tone={row?.labelTone} style={{ margin: '16px 0 8px' }}>
           {row?.label}
         </Text>
       ) : null}
@@ -20,7 +20,7 @@ export function WeekRow({ row }: { row: any }) {
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
-              padding: '15px 20px',
+              padding: '16px 20px',
               borderRadius: 'var(--radius-lg)',
               background: 'var(--color-surface-rest)',
             }}
@@ -44,7 +44,7 @@ export function WeekRow({ row }: { row: any }) {
               width: '100%',
               display: 'flex',
               alignItems: 'center',
-              gap: '13px',
+              gap: '12px',
             }}
           >
             <IconSquare size={36} decorative>{row?.icoSvg}</IconSquare>

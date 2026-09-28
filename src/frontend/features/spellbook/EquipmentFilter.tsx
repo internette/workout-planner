@@ -63,7 +63,7 @@ export function EquipmentFilter({ v }: { v: PlannerVals }) {
                   id={'equip-filter-' + gi}
                   role="group"
                   aria-label={g.label}
-                  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(130px,1fr))', gap: '10px 12px', padding: '12px 0 8px' }}
+                  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(130px,1fr))', gap: '8px 12px', padding: '12px 0 8px' }}
                 >
                   {g.items.map((o) => (
                     <Checkbox key={o.name} checked={o.on} onChange={o.set}>

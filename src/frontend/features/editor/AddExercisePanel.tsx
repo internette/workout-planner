@@ -13,7 +13,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 export function AddExercisePanel({ v }: { v: PlannerVals }) {
   return (
     <>
-      <Card elevation="overlay" id="add-exercise" data-add-exercise-panel style={{ marginTop: '14px' }}>
+      <Card elevation="overlay" id="add-exercise" data-add-exercise-panel style={{ marginTop: '16px' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
           <Text variant="cardTitle">Add exercise</Text>
           <SegmentedControl
@@ -68,8 +68,8 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '7px',
-                marginTop: '18px',
+                gap: '8px',
+                marginTop: '16px',
               }}
             >
               {(v.library ?? []).map((l, i) => (
@@ -79,7 +79,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '8px',
-                      padding: '6px 6px 6px 16px',
+                      padding: '8px 8px 8px 16px',
                       borderRadius: 'var(--radius-md)',
                       background: 'var(--color-canvas)',
                     }}
@@ -92,7 +92,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '10px',
+                        gap: '8px',
                         flex: '1',
                         minWidth: '0',
                         minHeight: '44px',
@@ -159,7 +159,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
         ) : null}
         {v.addNew ? (
           <>
-            <div style={{ marginTop: '18px' }}>
+            <div style={{ marginTop: '16px' }}>
               <ExerciseFields
                 name={v.draftName ?? ''}
                 onName={v.setName}

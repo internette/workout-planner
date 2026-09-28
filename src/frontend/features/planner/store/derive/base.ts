@@ -22,7 +22,7 @@ export function baseStage(ctx: Ctx): Ctx {
   const ACT = SEED[TODAY_M] || {};
   const narrow = logic.viewport === 'narrow';
   const tablet = logic.viewport === 'tablet';
-  const navExtra = (tablet ? ';flex:none;padding:11px 16px' : '') + ';text-decoration:none';
+  const navExtra = (tablet ? ';flex:none;padding:12px 16px' : '') + ';text-decoration:none';
   // Creating a workout from the Spellbook is the Spellbook's flow, so the Calendar tab is not lit for it.
   const fromArsenal = st.screen === 'edit' && ((!!st.creating && st.newFrom === 'arsenal') || !!st.editTemplate);
   // Writing in the Chronicle is the Chronicle's flow: its list, "New entry", and an entry opened from the list. An

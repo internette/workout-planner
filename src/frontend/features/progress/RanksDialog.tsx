@@ -15,7 +15,7 @@ export function RanksDialog({ v }: { v: PlannerVals }) {
       size="md"
       description="Earned with experience — 10 XP per exercise completed, 50 XP per workout finished."
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '18px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
         {(v.rankLadder ?? []).map((r, i) => (
           <Fragment key={i}>
             <div style={css(r?.row)}>

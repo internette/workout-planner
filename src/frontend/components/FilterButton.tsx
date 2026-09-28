@@ -27,7 +27,7 @@ export function FilterButton({ label, value, active, open, onClick, 'aria-label'
         display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
-        columnGap: '10px',
+        columnGap: '8px',
         rowGap: '4px',
         width: '100%',
         padding: '12px 16px',

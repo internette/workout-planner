@@ -7,7 +7,7 @@ import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { Text } from '@moonshot/design-system/typography';
 import { savedAccent, savedTheme, setAccent, setTheme, type Accent, type Theme } from '@moonshot/design-system/theme';
 
-const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', marginTop: '14px' };
+const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', marginTop: '16px' };
 
 /** Profile → Settings: the colour and light or dark. Saved in this browser and applied at once. */
 export function AppearanceSetting() {
@@ -36,7 +36,7 @@ export function AppearanceSetting() {
           labelledBy="colour-label"
           kind="swatch"
           shape="round"
-          style={{ flexWrap: 'nowrap', gap: '6px' }}
+          style={{ flexWrap: 'nowrap', gap: '8px' }}
           options={ACCENTS.map((a) => ({
             value: a.name,
             label: a.label,

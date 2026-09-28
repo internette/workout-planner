@@ -15,7 +15,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
   return (
     <Card pad="lg">
         <div
-          style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '14px' }}
+          style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}
         >
           <IconTile size="sm">{card?.icoSvg}</IconTile>
           <div style={{ minWidth: '0' }}>
@@ -26,9 +26,9 @@ export function DayWorkoutCard({ card }: { card: any }) {
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '7px',
-                  margin: '-6px -10px',
-                  padding: '6px 10px',
+                  gap: '8px',
+                  margin: '-8px -8px',
+                  padding: '8px 8px',
                   minHeight: '36px',
                   border: 'none',
                   borderRadius: 'var(--radius-sm)',
@@ -68,7 +68,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
         ) : null}
         {card?.isRide ? (
           <>
-            <StatRow stats={card?.rideStats ?? []} style={{ marginTop: '20px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }} />
+            <StatRow stats={card?.rideStats ?? []} style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--color-line)' }} />
           </>
         ) : null}
         {card?.isLift ? (
@@ -87,8 +87,8 @@ export function DayWorkoutCard({ card }: { card: any }) {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '11px',
-                      padding: '9px 0',
+                      gap: '12px',
+                      padding: '8px 0',
                       borderBottom: '1px solid var(--color-line)',
                     }}
                   >
@@ -127,9 +127,9 @@ export function DayWorkoutCard({ card }: { card: any }) {
               aria-expanded={!!card?.moreOpen}
               onClick={card?.toggleMore}
               // On a line of its own, so it keeps the row height of the buttons below it.
-              style={{ marginTop: '10px', minHeight: '44px' }}
+              style={{ marginTop: '8px', minHeight: '44px' }}
             >
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                 {t(card?.moreLabel)}
                 <DisclosureChevron open={!!card?.moreOpen} />
               </span>
@@ -138,7 +138,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
         ) : null}
         {card?.ctaTwoButtons ? (
           <>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '20px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '20px' }}>
               <Button
                 type="secondary"
                 size="lg"

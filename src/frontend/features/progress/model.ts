@@ -91,7 +91,7 @@ export function progressVals(ctx: Ctx) {
         label: r.name,
         req: ix === 0 ? 'Start' : XP_STEPS[ix - 1] + ' XP',
         row:
-          'display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius-md);' +
+          'display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius-md);' +
           (cur
             ? r.pill
             : reached
@@ -117,7 +117,7 @@ export function progressVals(ctx: Ctx) {
       return isNaN(created.getTime()) ? '' : 'Training since ' + MONTHS[created.getMonth()] + ' ' + created.getFullYear();
     })(),
     rankPillBtn:
-      'display:inline-flex;align-items:center;gap:8px;margin-top:9px;min-height:36px;padding:8px 15px 8px 14px;border:none;border-radius:var(--radius-full);font-family:inherit;font-size:var(--text-md);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-loose);cursor:pointer;' +
+      'display:inline-flex;align-items:center;gap:8px;margin-top:8px;min-height:36px;padding:8px 16px 8px 16px;border:none;border-radius:var(--radius-full);font-family:inherit;font-size:var(--text-md);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-loose);cursor:pointer;' +
       RANKS[derivedRank].pill,
     rankGemColor: RANKS[derivedRank].gem,
     rankBarPct: rankPct,
@@ -164,7 +164,7 @@ export function progressVals(ctx: Ctx) {
                 ? 'repeating-linear-gradient(135deg,color-mix(in srgb, var(--color-accent) 45%, transparent) 0 3px,color-mix(in srgb, var(--color-accent) 16%, transparent) 3px 6px)'
                 : 'color-mix(in srgb, var(--color-ink) 13%, transparent)'),
           cap:
-            'display:block;margin-top:6px;font-size:var(--text-2xs);font-weight:var(--font-weight-semibold);letter-spacing:var(--tracking-loose);text-align:center;color:' +
+            'display:block;margin-top:8px;font-size:var(--text-2xs);font-weight:var(--font-weight-semibold);letter-spacing:var(--tracking-loose);text-align:center;color:' +
             (pending
               ? 'var(--color-accent-deep)'
               : dayComplete[k]
@@ -213,7 +213,7 @@ export function progressVals(ctx: Ctx) {
         count,
         color,
         row:
-          'display:flex;align-items:center;gap:12px;padding:10px 0' +
+          'display:flex;align-items:center;gap:12px;padding:8px 0' +
           (ix === arr.length - 1 ? '' : ';border-bottom:1px solid var(--color-line)'),
       })),
     // Each stat says what it covers. Totals and streaks are all time, up to today; the average says which weeks.
@@ -285,7 +285,7 @@ export function progressVals(ctx: Ctx) {
         value,
         delta,
         rowStyle:
-          'display:flex;align-items:center;gap:12px;padding:11px 0;' +
+          'display:flex;align-items:center;gap:12px;padding:12px 0;' +
           (ix === arr.length - 1 ? '' : 'border-bottom:1px solid var(--color-line)'),
         deltaStyle:
           'flex:none;width:44px;text-align:right;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:var(--color-accent-deep)',
@@ -342,7 +342,7 @@ export function progressVals(ctx: Ctx) {
           open: () => logic.openDay(relM(d), dm),
           aria: DOWFULL[d.getDay()] + ': ' + q.title + (isDone ? ', cleared' : ''),
           row:
-            'display:flex;align-items:center;gap:11px;width:100%;min-height:44px;padding:10px 0;border:none;background:none;text-align:left;font-family:inherit;cursor:pointer;border-bottom:1px solid var(--color-line)',
+            'display:flex;align-items:center;gap:12px;width:100%;min-height:44px;padding:8px 0;border:none;background:none;text-align:left;font-family:inherit;cursor:pointer;border-bottom:1px solid var(--color-line)',
           mark:
             'width:18px;height:18px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;' +
             (isDone ? 'background:var(--color-accent)' : 'background:transparent'),

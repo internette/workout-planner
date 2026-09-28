@@ -22,7 +22,7 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
             style={{
               display: 'block',
               fontFamily: 'var(--font-heading)',
-              margin: '9px 0 0',
+              margin: '8px 0 0',
               fontSize: 'var(--text-lg)',
               fontWeight: 'var(--font-weight-semibold)',
               color: 'var(--color-ink)',
@@ -48,7 +48,7 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
             as="p"
             tone="muted"
             weight="medium"
-            style={{ margin: '9px 0 0' }}
+            style={{ margin: '8px 0 0' }}
           >
             No call yet. Plan a session and it shows up here.
           </Text>

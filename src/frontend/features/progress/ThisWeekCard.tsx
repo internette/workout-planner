@@ -13,13 +13,13 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
         THIS WEEK
       </Text>
       {v.wkEmpty ? (
-        <Text variant="caption" as="span" tone="muted" weight="medium" style={{ display: 'block', margin: '6px 0 0' }}>
+        <Text variant="caption" as="span" tone="muted" weight="medium" style={{ display: 'block', margin: '8px 0 0' }}>
           Nothing planned this week yet.
         </Text>
       ) : null}
       {v.wkHas ? (
         <>
-          <span style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
+          <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginTop: '8px' }}>
             <Text variant="subheading">{v.wkDone}</Text>
             <Text variant="caption" tone="muted" weight="medium">
               {'of '}
@@ -33,7 +33,7 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
               height: '7px',
               borderRadius: '4px',
               background: 'var(--color-accent-tint)',
-              marginTop: '14px',
+              marginTop: '16px',
               overflow: 'hidden',
             }}
           >

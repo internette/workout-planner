@@ -14,7 +14,7 @@ import { DisclosureChevron } from '@/frontend/components/DisclosureChevron';
 export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle: ReactNode }) {
   return (
     <Card pad="sm">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         {handle}
         <IconPicker
           size="sm"
