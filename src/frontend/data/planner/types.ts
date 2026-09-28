@@ -1,5 +1,7 @@
 // The shapes the planner's screens work with, as the data layer hands them over.
 
+import type { Mood } from '@moonshot/design-system/icons';
+
 export interface Exercise {
   id?: string;
   name: string;
@@ -45,7 +47,7 @@ export interface Entry {
 export interface DiaryEntry {
   m: number;
   d: number;
-  mood: string;
+  mood: Mood;
   rpe: number;
   note: string;
   workout: string;

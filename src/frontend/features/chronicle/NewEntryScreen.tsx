@@ -1,5 +1,6 @@
 // Starting a Chronicle entry: picking the session to write about.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Card } from '@moonshot/design-system/card';
 import { Badge } from '@moonshot/design-system/badge';
 import { Text } from '@moonshot/design-system/typography';
@@ -8,7 +9,7 @@ import { GroupLabel } from '@/frontend/components/GroupLabel';
 import { PageHeader } from '@/frontend/components/PageHeader';
 import { WarmupTag } from '@/frontend/components/WarmupTag';
 
-export function NewEntryScreen({ v }: { v: any }) {
+export function NewEntryScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div>

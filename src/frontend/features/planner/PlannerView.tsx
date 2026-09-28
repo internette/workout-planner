@@ -1,5 +1,6 @@
 // The planner's frame: the dialogs, the sidebar and tab bar, the banners, and whichever screen is open. Each screen is
 // its own component in its feature's folder; all of them read the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { css } from './viewHelpers';
 import { AddToDayDialog } from '@/frontend/features/calendar/AddToDayDialog';
 import { ConfirmDialog } from '@/frontend/features/planner/ConfirmDialog';
@@ -27,7 +28,7 @@ import { TypePickerScreen } from '@/frontend/features/editor/TypePickerScreen';
 import { EditorScreen } from '@/frontend/features/editor/EditorScreen';
 import { EntryScreen } from '@/frontend/features/chronicle/EntryScreen';
 
-export function PlannerView({ v }: { v: any }) {
+export function PlannerView({ v }: { v: PlannerVals }) {
   return (
     <>
       <span className="sr-only" role="status" aria-live="polite">

@@ -5,12 +5,12 @@ export interface LogicHost {
   forceUpdate(): void;
 }
 
-export class DCLogic {
-  state: any = {};
+export class DCLogic<S extends object = Record<string, any>> {
+  state = {} as S;
   /** Set by the host component while it is mounted. */
   __host?: LogicHost;
 
-  setState(update: any) {
+  setState(update: Partial<S> | ((state: S) => Partial<S>)) {
     const patch = typeof update === 'function' ? update(this.state) : update;
     this.state = { ...this.state, ...patch };
     this.__host?.forceUpdate();

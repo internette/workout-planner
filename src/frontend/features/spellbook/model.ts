@@ -4,6 +4,7 @@ import * as db from '@/frontend/data/plannerData';
 import { countsOk, digitsOnly, editTemplatePatch, exerciseDraftDirty, exLine, isoOf, joinSetsReps, longDay, monthPatch, needsLine, newWorkoutPatch, noticePatch, numericOnly, plural, splitSetsReps, withLb, withSec } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
 import { areaToggles, plainExercise, DRAFT_CLEARED, draftClash, draftItem, draftOpened, draftReady, equipmentToggles } from '@/frontend/shared/exerciseDraft';
+import type { BuiltinWorkout, Exercise, WorkoutSummary } from '@/frontend/data/plannerData';
 
 // Spellbook (the 'arsenal' screen): the exercise library, its search and the add-exercise form.
 // The equipment ticked in the Spellbook's filter, kept in this browser so it's there next time. Storage can be off
@@ -101,10 +102,10 @@ export function arsenalVals(ctx: Ctx) {
   const builtinHits = builtinWorkouts.filter(matches);
   // The person's own workout a built-in one has become (added to the calendar, or copied): the one with its name.
   const mineOf = (w) => workouts.find((x) => x.name.trim().toLowerCase() === w.name.trim().toLowerCase()) || null;
-  const workoutCard = (w) => ({
+  const workoutCard = (w: WorkoutSummary | BuiltinWorkout) => ({
     name: w.name,
     // Built-in warm-ups are grouped under a WARM-UP heading already.
-    warmup: !!w.warmup && !w.builtin,
+    warmup: !!w.warmup && !('builtin' in w && w.builtin),
     svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || undefined),
     meta:
       w.kind === 'ride'
@@ -122,7 +123,7 @@ export function arsenalVals(ctx: Ctx) {
   });
   // The person's own workouts, then the built-in ones by group, as the Exercises tab lists exercises. With no built-in
   // workouts (their migration not run yet) it's one list with no heading, as before.
-  const workoutGroups = [];
+  const workoutGroups: { label: string; count: string; items: ReturnType<typeof workoutCard>[] }[] = [];
   if (hits.length)
     workoutGroups.push({
       label: builtinWorkouts.length ? 'YOUR WORKOUTS' : '',
@@ -384,7 +385,8 @@ export function arsenalVals(ctx: Ctx) {
   const chosen = onTemplateScreen
     ? workouts.find((w) => w.id === st.templateId) || builtinWorkouts.find((w) => w.id === st.templateId)
     : null;
-  const builtin = !!(chosen && chosen.builtin);
+  const chosenBuiltin = chosen && (chosen as BuiltinWorkout).builtin ? (chosen as BuiltinWorkout) : null;
+  const builtin = !!chosenBuiltin;
   const mine = builtin ? mineOf(chosen) : null;
   const template = chosen
     ? {
@@ -392,7 +394,7 @@ export function arsenalVals(ctx: Ctx) {
         svg: iconSvg(chosen.icon || (chosen.kind === 'ride' ? 'bike' : 'h'), chosen.iconColor || undefined),
         time: chosen.time,
         areas: chosen.areas,
-        needs: chosen.kind === 'ride' ? null : needsLine(builtin ? chosen.list : EX[chosen.name] || []),
+        needs: chosen.kind === 'ride' ? null : needsLine(chosenBuiltin ? chosenBuiltin.list : EX[chosen.name] || []),
         isRide: chosen.kind === 'ride',
         rideStats: chosen.ride
           ? [
@@ -403,7 +405,7 @@ export function arsenalVals(ctx: Ctx) {
             ]
           : [],
         // A built-in workout lists its own exercises: one of the person's might share its name.
-        exercises: (builtin ? chosen.list : EX[chosen.name] || []).map((e) => ({
+        exercises: (chosenBuiltin ? chosenBuiltin.list : EX[chosen.name] || []).map((e) => ({
           name: e.name,
           svg: iconSvg(e.i),
           detail: exLine(e, true),
@@ -460,7 +462,7 @@ export function arsenalVals(ctx: Ctx) {
             ? logic.nav({ screen: 'template', templateId: mine.id })
             : logic.saveOnce(
                 'copy',
-                () => db.ownCopyOfBuiltin(chosen),
+                () => db.ownCopyOfBuiltin(chosenBuiltin),
                 (r) => ({
                   screen: 'template',
                   templateId: r && r.workoutId,
@@ -538,7 +540,7 @@ export function arsenalVals(ctx: Ctx) {
       logic.saveOnce(
         'schedule',
         () =>
-          (builtin ? db.ownCopyOfBuiltin(chosen).then((c) => c.workoutId) : Promise.resolve(chosen.id)).then((id) =>
+          (chosenBuiltin ? db.ownCopyOfBuiltin(chosenBuiltin).then((c) => c.workoutId) : Promise.resolve(chosen.id)).then((id) =>
             db.scheduleWorkout(
               id,
               dates,
@@ -631,7 +633,7 @@ export function arsenalVals(ctx: Ctx) {
   };
 
   // ---- the Exercises tab: the person's own groups, then the built-in catalog, narrowed by search and area filter
-  const exerciseRow = (e) => ({
+  const exerciseRow = (e: Exercise) => ({
     name: e.name,
     svg: iconSvg(e.i),
     detail: exLine(e),
@@ -640,7 +642,7 @@ export function arsenalVals(ctx: Ctx) {
     inWorkout: !!pick && pick.names.includes(e.name),
     add: () => addToWorkout(e),
   });
-  const moveGroups = [];
+  const moveGroups: { label: string; count: string; items: ReturnType<typeof exerciseRow>[] }[] = [];
   const pushGroup = (label, list) => {
     const hit = list
       .filter((e) => inAreas(e.areas) && canDo(e) && (!q || e.name.toLowerCase().includes(q)))

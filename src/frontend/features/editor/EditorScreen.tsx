@@ -1,5 +1,6 @@
 // The workout editor: building a new workout, or changing a session or a saved one.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Fragment } from 'react';
 import { t } from '@/frontend/features/planner/viewHelpers';
 import { Card } from '@moonshot/design-system/card';
@@ -24,7 +25,7 @@ import { RideActualCard } from '@/frontend/features/editor/RideActualCard';
 import { RidePlanFields } from '@/frontend/features/editor/RidePlanFields';
 import { ChipRow } from '@/frontend/components/ChipRow';
 
-export function EditorScreen({ v }: { v: any }) {
+export function EditorScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div style={{ position: 'relative' }}>

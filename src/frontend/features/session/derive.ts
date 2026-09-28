@@ -1,9 +1,10 @@
 import { idOf, longDay, monthPatch, splitMinutes, toMinutes } from '@/frontend/shared/helpers';
-import type { Ctx } from '../planner/store/types';
+import type { StatsCtx } from '../planner/store/types';
 import { colors } from '@moonshot/design-system/colors';
+import type { Entry, Exercise } from '@/frontend/data/plannerData';
 
 // The selected workout: ride plan and actuals, exercise list, icons and completion state.
-export function workoutStage(ctx: Ctx): Ctx {
+export function workoutStage(ctx: StatsCtx) {
   const { logic, Y, mi, selDay, st, creating, actFor, EX, EXV, TK, DIARY, TODAY_M, TODAY_D } = ctx;
   // The editor's date picker browses months on its own (st.pickM); only tapping a day moves the workout there.
   const pickM = st.pickM != null ? st.pickM : mi;
@@ -18,7 +19,18 @@ export function workoutStage(ctx: Ctx): Ctx {
     logic.s({ pickM: m, pickFocus: to.getDate() });
     requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-pick-day="' + to.getDate() + '"]')?.focus());
   };
-  const pickerCells = [];
+  const pickerCells: {
+    blank?: boolean;
+    label: string;
+    style: string;
+    day?: number;
+    aria?: string;
+    today?: 'date';
+    tab?: number;
+    keys?: (e: { key: string; preventDefault(): void }) => void;
+    pick?: () => void;
+    selected?: boolean;
+  }[] = [];
   for (let i = 0; i < pickRows * 7; i++) {
     const pd = i - pickLead + 1;
     if (pd < 1 || pd > pickDim) {
@@ -30,7 +42,7 @@ export function workoutStage(ctx: Ctx): Ctx {
       label: String(pd),
       day: pd,
       aria: longDay(date) + (date.getFullYear() !== Y ? ', ' + date.getFullYear() : ''),
-      today: pickM === TODAY_M && pd === TODAY_D ? 'date' : undefined,
+      today: pickM === TODAY_M && pd === TODAY_D ? ('date' as const) : undefined,
       tab: pd === pickFocus ? 0 : -1,
       keys: (e) => {
         const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key];
@@ -60,7 +72,7 @@ export function workoutStage(ctx: Ctx): Ctx {
       ? logic.model.workouts.find((w) => w.id === st.editTemplate) || null
       : null;
   const tplMode = !!tplWorkout;
-  const tplEntry = tplWorkout
+  const tplEntry: Entry | null = tplWorkout
     ? {
         id: 'tpl:' + tplWorkout.id,
         workoutId: tplWorkout.id,
@@ -103,7 +115,7 @@ export function workoutStage(ctx: Ctx): Ctx {
   const rMins = st.rMins != null ? st.rMins : savedRide ? savedRide.mins || '' : '';
   const plannedMin = toMinutes(rHrs, rMins);
   const planDist = Number(rDist || 0);
-  const actual: any = (srcAct && srcAct.actual) || {};
+  const actual: Partial<Entry['actual']> = (srcAct && srcAct.actual) || {};
   const aDist = st.aDist != null ? st.aDist : actual.dist || '';
   const aElev = st.aElev != null ? st.aElev : actual.elev || '';
   const aHrs = st.aHrs != null ? st.aHrs : actual.hrs || '';
@@ -129,7 +141,7 @@ export function workoutStage(ctx: Ctx): Ctx {
       .forEach((e) => {
         have[e.name] = 1;
       });
-    const all = [];
+    const all: Exercise[] = [];
     const add = (e) => {
       if (!have[e.name] && !all.some((x) => x.name === e.name)) all.push(e);
     };

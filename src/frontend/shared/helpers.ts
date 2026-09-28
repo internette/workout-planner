@@ -1,10 +1,11 @@
 import { DOW3, DOWFULL, EDIT_OVERLAYS, EQUIPMENT, MON3, MONTHS, QUESTS } from './constants';
+import type { PlannerState, Screen } from '@/frontend/features/planner/store/state';
 
 // Months are counted from January of the current year and carry on past it: 12 is next January, -1 last December.
 // new Date(year, m, d) already reads them that way. mod12 turns one back into a place in MONTHS, and monthPatch into
 // the state that shows it (a month name, plus how many years away from this one).
-export const mod12 = m => ((m % 12) + 12) % 12;
-export const monthPatch = m => ({ month: MONTHS[mod12(m)], yOff: Math.floor(m / 12) });
+export const mod12 = (m: number) => ((m % 12) + 12) % 12;
+export const monthPatch = (m: number) => ({ month: MONTHS[mod12(m)], yOff: Math.floor(m / 12) });
 
 // An ISO date ("2026-09-28") as a month counted from January of `year` (as above) and a day of that month.
 export const isoMonthDay = (iso: string, year: number) => {
@@ -28,21 +29,21 @@ export const shortDay = (date: Date) => dayShort(date) + ', ' + monDay(date);
 export const longDay = (date: Date) => DOWFULL[date.getDay()] + ', ' + MONTHS[date.getMonth()] + ' ' + date.getDate();
 
 // The editor opened on a new, blank workout; `extra` says where it was started from and anything it starts with.
-export const newWorkoutPatch = (extra = {}) => ({
+export const newWorkoutPatch = (extra: Partial<PlannerState> = {}): Partial<PlannerState> => ({
   ...EDIT_OVERLAYS, screen: 'edit', editing: false, creating: true, addOpen: false, newName: '', newType: null, ...extra,
 });
 // The editor opened on a saved workout.
-export const editTemplatePatch = (id: string, extra = {}) => ({
+export const editTemplatePatch = (id: string, extra: Partial<PlannerState> = {}): Partial<PlannerState> => ({
   ...EDIT_OVERLAYS, screen: 'edit', editing: true, creating: false, editTemplate: id, editId: null, addOpen: false, leaveOpen: false,
   ...extra,
 });
 
-export const questFor = seed => QUESTS[Math.abs(Math.round(seed)) % QUESTS.length];
-export const questSeed = (day, month) => questFor(day * 3 + month);
-export const idOf = av => (av && av.id) || 'unknown';
+export const questFor = (seed: number) => QUESTS[Math.abs(Math.round(seed)) % QUESTS.length];
+export const questSeed = (day: number, month: number) => questFor(day * 3 + month);
+export const idOf = (av: { id?: string } | null | undefined): string => (av && av.id) || 'unknown';
 // Durations. Hours and minutes as typed (either may be blank) to minutes, and minutes back to the two boxes, each
 // left blank when it's zero.
-export const toMinutes = (hrs, mins) => Number(hrs || 0) * 60 + Number(mins || 0);
+export const toMinutes = (hrs: string | number | null | undefined, mins: string | number | null | undefined) => Number(hrs || 0) * 60 + Number(mins || 0);
 export const splitMinutes = (minutes: number) => ({
   hrs: Math.floor(minutes / 60) ? String(Math.floor(minutes / 60)) : '',
   mins: minutes % 60 ? String(minutes % 60) : '',
@@ -54,7 +55,7 @@ export const minText = (minutes: number) => {
   return h && m ? `${h} h ${m} min` : h ? `${h} h` : `${m} min`;
 };
 // Seconds to a stopwatch readout: "12:34", or "1:02:34" past an hour.
-export const formatElapsed = totalSec => {
+export const formatElapsed = (totalSec: number) => {
   const sec = Math.max(0, Math.floor(totalSec));
   const h = Math.floor(sec / 3600);
   const m = Math.floor((sec % 3600) / 60);
@@ -64,7 +65,7 @@ export const formatElapsed = totalSec => {
 };
 // An exercise in one line: "4 × 8 · 95 lb", "3 × 12 · bodyweight", or just "3 sets" when there's no weight to
 // show — never a dangling "· —". With rest: "… · 90 sec rest".
-export const exLine = (e, withRest = false) =>
+export const exLine = (e: { sets?: string; weight?: string; rest?: string }, withRest = false): string =>
   [
     e.sets && e.sets !== '—' ? e.sets : '',
     e.weight && e.weight !== '—' ? (e.weight === 'body' ? 'bodyweight' : e.weight) : '',
@@ -74,16 +75,16 @@ export const exLine = (e, withRest = false) =>
     // Each part stays on one line ("4 × 8", "95 lb"); a line only breaks between parts.
     .map((part) => part.replace(/ /g, '\u00a0'))
     .join(' · ');
-export const isoOf = dt => dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
+export const isoOf = (dt: Date) => dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
 
 // "1 entry" vs "3 entries" (or exercise/exercises, session/sessions, ...) without repeating the count === 1 check
 // at every call site. Pass the plural form only when it isn't just the singular plus "s".
-export const plural = (n, singular, pluralForm = '') => n + ' ' + (n === 1 ? singular : pluralForm || singular + 's');
+export const plural = (n: number, singular: string, pluralForm = '') => n + ' ' + (n === 1 ? singular : pluralForm || singular + 's');
 
 // An exercise's sets and reps are two separate inputs on screen, but one field everywhere else: the database column,
 // the "4 × 8" shown in lists, and data/planner/convert.ts's own parser all expect one string. These two convert at the
 // edges, so the rest of the app never has to know the box was split in two.
-export const splitSetsReps = text => {
+export const splitSetsReps = (text: string | null | undefined) => {
   const t = (text || '').trim();
   if (!t || t === '—') return { sets: '', reps: '' };
   const both = t.match(/^(\d+)\s*[×xX*]\s*(\d+)/);
@@ -95,28 +96,28 @@ export const splitSetsReps = text => {
   return { sets: setsOnly ? setsOnly[1] : '', reps: '' };
 };
 // An exercise needs at least one set of at least one rep.
-export const countsOk = (sets, reps) => Number(sets) >= 1 && Number(reps) >= 1;
-export const setsRepsOk = text => {
+export const countsOk = (sets: string | number | null | undefined, reps: string | number | null | undefined) => Number(sets) >= 1 && Number(reps) >= 1;
+export const setsRepsOk = (text: string | null | undefined) => {
   const p = splitSetsReps(text);
   return countsOk(p.sets, p.reps);
 };
-export const joinSetsReps = (sets, reps) => {
+export const joinSetsReps = (sets: string | null | undefined, reps: string | null | undefined) => {
   const s = (sets || '').trim();
   const r = (reps || '').trim();
   return s && r ? s + ' × ' + r : s || (r ? '× ' + r : '');
 };
 
 // Digits only, for a field that should never hold anything else (sets, reps, and the number inside "90 sec").
-export const digitsOnly = text => (text || '').replace(/[^0-9]/g, '');
+export const digitsOnly = (text: string | null | undefined) => (text || '').replace(/[^0-9]/g, '');
 
 // Rest is a plain number of seconds everywhere else ("90 sec" in the database, in lists, in the export), but the
 // box itself only needs the number (digitsOnly). This puts the unit back, the same way sets/reps do.
-export const withSec = digits => (digits ? digits + ' sec' : '');
+export const withSec = (digits: string | null | undefined) => (digits ? digits + ' sec' : '');
 
 // A number that may have a decimal point (weight, in pounds), nothing else.
-export const numericOnly = text => (text || '').replace(/[^0-9.]/g, '');
+export const numericOnly = (text: string | null | undefined) => (text || '').replace(/[^0-9.]/g, '');
 // Weight is always pounds now; the box holds the bare number and this puts the unit back for storage/display.
-export const withLb = digits => (digits ? digits + ' lb' : '');
+export const withLb = (digits: string | null | undefined) => (digits ? digits + ' lb' : '');
 
 // Whether the exercise editor holds a change to the exercise it opened with.
 export const exerciseDraftDirty = st =>
@@ -137,25 +138,25 @@ export const workoutDraftDirty = st => !!(
 
 // A confirmation shown at the top of one screen (and read out), e.g. after a save or a delete. It belongs to that
 // screen: moving to another clears it.
-export const noticePatch = (text, screen) => ({ notice: { text, screen }, announce: text });
+export const noticePatch = (text: string, screen: Screen) => ({ notice: { text, screen }, announce: text });
 
 // Hours and minutes typed into a duration: 90 minutes is 1 h 30, not cut to 59. Returns the two boxes' new text, or
 // null when there's nothing to roll over.
-export const rollMinutes = (hrs, mins) => {
+export const rollMinutes = (hrs: string | null | undefined, mins: string | null | undefined) => {
   const m = Number(mins || 0);
   if (m < 60) return null;
   return { hrs: String(Number(hrs || 0) + Math.floor(m / 60)), mins: String(m % 60) };
 };
 
 // Everything a list of exercises needs, once each, in the order the equipment list gives it.
-export const equipmentOf = (list) => {
+export const equipmentOf = (list: { equipment?: string[] }[] | null | undefined) => {
   const need = new Set((list || []).flatMap((e) => e.equipment || []));
   return EQUIPMENT.filter((x) => need.has(x));
 };
 
 // "You'll need" for a workout or session: what its exercises need, or that it's bodyweight only. Null until the
 // database has equipment at all (no exercise knows its equipment yet), so nothing is shown rather than "bodyweight".
-export const needsLine = (list) => {
+export const needsLine = (list: { equipment?: string[] }[] | null | undefined) => {
   if (!(list || []).some((e) => e.equipment !== undefined)) return null;
   const need = equipmentOf(list);
   return need.length ? need.join(' · ') : 'Nothing: it’s all bodyweight.';

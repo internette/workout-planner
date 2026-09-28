@@ -1,5 +1,6 @@
 // A session on the calendar: its exercises or ride, the timer, and finishing it.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Fragment } from 'react';
 import { t } from '@/frontend/features/planner/viewHelpers';
 import { Card } from '@moonshot/design-system/card';
@@ -20,7 +21,7 @@ import { SessionExerciseRow } from '@/frontend/features/session/SessionExerciseR
 import { SessionTimer } from '@/frontend/features/session/SessionTimer';
 import { ChipRow } from '@/frontend/components/ChipRow';
 
-export function SessionScreen({ v }: { v: any }) {
+export function SessionScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div>

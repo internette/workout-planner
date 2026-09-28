@@ -1,12 +1,13 @@
 // One Chronicle entry: writing it, or reading it back.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Button } from '@moonshot/design-system/buttons';
 import { Pencil } from '@moonshot/design-system/icons';
 import { BackBar } from '@/frontend/components/BackBar';
 import { DiaryEntryForm } from '@/frontend/features/chronicle/DiaryEntryForm';
 import { EntryReadView } from '@/frontend/features/chronicle/EntryReadView';
 
-export function EntryScreen({ v }: { v: any }) {
+export function EntryScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div>

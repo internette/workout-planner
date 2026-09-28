@@ -1,5 +1,6 @@
 // The Chronicle: every entry, filtered by when.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Fragment } from 'react';
 import { Text } from '@moonshot/design-system/typography';
 import { TextField } from '@moonshot/design-system/text-field';
@@ -9,7 +10,7 @@ import { Calendar } from '@moonshot/design-system/icons';
 import { PageHeader } from '@/frontend/components/PageHeader';
 import { ChronicleRow } from '@/frontend/features/chronicle/ChronicleRow';
 
-export function ChronicleScreen({ v }: { v: any }) {
+export function ChronicleScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div>

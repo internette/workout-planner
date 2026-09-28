@@ -1,5 +1,6 @@
 // The Spellbook: saved and built-in workouts and exercises, searched and filtered.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Fragment } from 'react';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
@@ -15,7 +16,7 @@ import { ExerciseRow } from '@/frontend/features/spellbook/ExerciseRow';
 import { NewExerciseCard } from '@/frontend/features/spellbook/NewExerciseCard';
 import { WorkoutRow } from '@/frontend/features/spellbook/WorkoutRow';
 
-export function SpellbookScreen({ v }: { v: any }) {
+export function SpellbookScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div>

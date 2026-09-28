@@ -1,10 +1,11 @@
 // A Spellbook address for a workout or exercise that isn’t there (deleted, or someone else’s).
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Text } from '@moonshot/design-system/typography';
 import { Button } from '@moonshot/design-system/buttons';
 import { BackLink } from '@/frontend/components/BackLink';
 
-export function NotInSpellbook({ v }: { v: any }) {
+export function NotInSpellbook({ v }: { v: PlannerVals }) {
   return (
     <div>
       <BackLink label="Spellbook" onClick={v.goArsenal} />

@@ -4,6 +4,7 @@ import { mLabel, mTab, navItem } from './styles';
 import { NAV_IDS, type NavId } from './navIds';
 import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from './store/types';
+import type { ConfirmState, Screen } from './store/state';
 
 // Shell: sidebar, tab bar, screen flags, navigation shortcuts, confirm dialog and error banner.
 export function chromeVals(ctx: Ctx) {
@@ -146,14 +147,14 @@ export function chromeVals(ctx: Ctx) {
     closeXp: () => logic.s({ xpInfo: false }),
     closeDate: () => logic.s({ dateOpen: false }),
     confirmOpen: !!st.confirm,
-    confirmTitle: (st.confirm || {}).title,
-    confirmBody: (st.confirm || {}).body,
-    confirmLabel: (st.confirm || {}).label,
-    confirmCancelLabel: (st.confirm || {}).cancelLabel || 'Keep it',
-    confirmSafe: !!(st.confirm || {}).safe,
+    confirmTitle: st.confirm?.title,
+    confirmBody: st.confirm?.body,
+    confirmLabel: st.confirm?.label,
+    confirmCancelLabel: st.confirm?.cancelLabel || 'Keep it',
+    confirmSafe: !!st.confirm?.safe,
     confirmCancel: () => logic.s({ confirm: null }),
     confirmRun: () => {
-      const c = st.confirm || {};
+      const c: Partial<ConfirmState> = st.confirm || {};
       logic.s({ confirm: null });
       // A confirm can carry its own action (leaving a Chronicle entry being edited, say).
       if (typeof c.then === 'function') return c.then();
@@ -225,8 +226,8 @@ export function chromeVals(ctx: Ctx) {
       const ex =
         st.exerciseId &&
         (logic.model.library.concat(logic.model.builtins).find((x) => x.id === st.exerciseId) ||
-          (Object.values(logic.model.EXV) as any[][]).flat().find((x) => x.id === st.exerciseId));
-      const names = {
+          Object.values(logic.model.EXV).flat().find((x) => x.id === st.exerciseId));
+      const names: Partial<Record<Screen, string>> = {
         day: 'Calendar',
         rest: 'Calendar',
         detail: srcAct ? nameOf(srcAct.name) : 'Session',

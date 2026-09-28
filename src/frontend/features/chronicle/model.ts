@@ -102,7 +102,7 @@ export function diaryVals(ctx: Ctx) {
       meta: x.av.ride ? (ctx.distOf(x.av) ? ctx.distOf(x.av) + ' mi · ' : '') + ctx.timeOf(x.av) : ctx.timeOf(x.av),
       // Whether it was done, so writing about a missed one is a choice, not a surprise.
       status: x.done ? 'Done' : ctx.sessionStatus(x.m, x.d, x.av),
-      statusTone: x.done ? 'soft' : 'neutral',
+      statusTone: (x.done ? 'soft' : 'neutral') as 'soft' | 'neutral',
       pick: () =>
         logic.nav({
           screen: 'diary',
@@ -136,7 +136,7 @@ export function diaryVals(ctx: Ctx) {
           : 'Mark this workout done',
     canSaveEntry: !!st.mood && !!st.rpe,
     saveEntryHint: entryHint,
-    entryNote: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
+    entryNote: st.entryNote == null ? ENTRIES[entryKey]?.note || '' : st.entryNote,
     setEntryNote: (e) => logic.s({ entryNote: e.target.value }),
     // Stays focusable while it waits for a mood and effort; pressing it then says what's missing.
     saveEntry: () =>
@@ -149,7 +149,7 @@ export function diaryVals(ctx: Ctx) {
                 .saveDiary(entryKey, {
                   mood: st.mood,
                   rpe: st.rpe,
-                  note: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
+                  note: st.entryNote == null ? ENTRIES[entryKey]?.note || '' : st.entryNote,
                 })
                 .then(markSessionDone),
             {
@@ -213,7 +213,7 @@ export function diaryVals(ctx: Ctx) {
     // Grouped by when: this week, last week, then earlier ones, each group one card of rows.
     unloggedGroups: (() => {
       const lastWkStart = new Date(todayWkStart.getFullYear(), todayWkStart.getMonth(), todayWkStart.getDate() - 7);
-      const groups = [];
+      const groups: { label: string; items: ReturnType<typeof unloggedItem>[] }[] = [];
       unloggedDays.forEach((x) => {
         const d = new Date(Y, x.m, x.d);
         const label = d >= todayWkStart ? 'THIS WEEK' : d >= lastWkStart ? 'LAST WEEK' : 'EARLIER';
@@ -323,7 +323,7 @@ export function diaryVals(ctx: Ctx) {
         },
       }),
     readMood: st.mood,
-    readNote: (ENTRIES[entryKey] || {}).note || 'No notes for this one.',
+    readNote: ENTRIES[entryKey]?.note || 'No notes for this one.',
     readMoodFace:
       'width:44px;height:44px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
       (MOOD_COLORS[st.mood] || 'var(--color-danger)'),

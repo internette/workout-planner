@@ -1,11 +1,12 @@
 // A new workout’s first question: lifting or cycling.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Text } from '@moonshot/design-system/typography';
 import { BackBar } from '@/frontend/components/BackBar';
 import { SavedChoices } from '@/frontend/features/editor/SavedChoices';
 import { TypeChoiceCards } from '@/frontend/features/editor/TypeChoiceCards';
 
-export function TypePickerScreen({ v }: { v: any }) {
+export function TypePickerScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div style={{ maxWidth: '560px' }}>

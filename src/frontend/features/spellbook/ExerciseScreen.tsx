@@ -1,5 +1,6 @@
 // One exercise in the Spellbook: its sets, areas, equipment and the workouts that use it.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { Chip } from '@moonshot/design-system/chip';
@@ -11,7 +12,7 @@ import { StatRow } from '@/frontend/components/StatRow';
 import { PageTitle } from '@/frontend/components/PageTitle';
 import { ChipRow } from '@/frontend/components/ChipRow';
 
-export function ExerciseScreen({ v }: { v: any }) {
+export function ExerciseScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div>

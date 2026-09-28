@@ -1,5 +1,6 @@
 // The profile: who you are, your stats, and settings.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Fragment } from 'react';
 import { Card } from '@moonshot/design-system/card';
 import { Stat } from '@moonshot/design-system/stat';
@@ -12,7 +13,7 @@ import { ProfileHeaderCard } from '@/frontend/features/profile/ProfileHeaderCard
 import { QuestsClearedCard } from '@/frontend/features/profile/QuestsClearedCard';
 import { SessionsPerWeekCard } from '@/frontend/features/profile/SessionsPerWeekCard';
 
-export function ProfileScreen({ v }: { v: any }) {
+export function ProfileScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div>

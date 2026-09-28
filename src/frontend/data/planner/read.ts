@@ -5,6 +5,7 @@ import { isoMonthDay, isoOf, isoWeekday, splitMinutes } from '@/frontend/shared/
 import type { Exercise, Entry, WorkoutSummary, BuiltinWorkout, Model } from './types';
 import { toExercise, areasOf, numStr, workoutView, estimateMinutes } from './convert';
 import { ok, okOr } from './db';
+import type { Mood } from '@moonshot/design-system/icons';
 
 export async function loadModel(today: Date): Promise<Model> {
   const [workouts, exercises, plan, diary, library, builtins, builtinWorkoutRows] = await Promise.all([
@@ -111,7 +112,7 @@ export async function loadModel(today: Date): Promise<Model> {
     DIARY[av.id] = {
       m: hit.m,
       d: hit.d,
-      mood: r.mood.charAt(0).toUpperCase() + r.mood.slice(1),
+      mood: (r.mood.charAt(0).toUpperCase() + r.mood.slice(1)) as Mood,
       rpe: r.rpe ?? 3,
       // Entries saved before empty notes were allowed hold this placeholder as their note.
       note: r.notes === 'No notes for this one.' ? '' : r.notes || '',

@@ -1,5 +1,6 @@
 // One saved workout: its exercises or ride plan, notes, and putting it on the calendar.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { Chip } from '@moonshot/design-system/chip';
@@ -16,7 +17,7 @@ import { PageTitle } from '@/frontend/components/PageTitle';
 import { ScheduleDialog } from '@/frontend/features/spellbook/ScheduleDialog';
 import { ChipRow } from '@/frontend/components/ChipRow';
 
-export function TemplateScreen({ v }: { v: any }) {
+export function TemplateScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div>

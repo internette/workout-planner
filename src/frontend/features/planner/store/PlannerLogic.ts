@@ -6,6 +6,7 @@ import { monthPatch } from '@/frontend/shared/helpers';
 import type { Viewport } from '../useViewport';
 import type { Account } from '@/shared/auth';
 import { buildContext } from './context';
+import type { HistoryEntry, PlannerState, Screen } from './state';
 import { chromeVals } from '../chrome.model';
 import { calendarVals } from '@/frontend/features/calendar/model';
 import { workoutVals } from '@/frontend/features/session/model';
@@ -16,7 +17,7 @@ import { progressVals } from '@/frontend/features/progress/model';
 
 export const CALENDAR_KEY = 'moonshot.calendar';
 
-export class PlannerLogic extends DCLogic {
+export class PlannerLogic extends DCLogic<PlannerState> {
   /** Which layout the window calls for. The host component keeps it current. */
   viewport: Viewport = 'wide';
   /** Who is signed in (null when nobody is, or sign-in is off), and how to sign out. The host component keeps it current. */
@@ -24,7 +25,7 @@ export class PlannerLogic extends DCLogic {
   model: Model | null = null;
   status: 'loading' | 'error' | 'ready' = 'loading';
   loadError = '';
-  state: any = { screen:'day', day: new Date().getDate(), seg:'Day', monthOpen:false, month: MONTHS[new Date().getMonth()], yOff: 0,
+  state: PlannerState = { screen:'day', day: new Date().getDate(), seg:'Day', monthOpen:false, month: MONTHS[new Date().getMonth()], yOff: 0,
     repeat:false, mood:null, rpe:null, done: {}, rideDone: {} };
 
   // Fetches everything from Supabase and resets the ticks to what the database says.
@@ -130,11 +131,13 @@ export class PlannerLogic extends DCLogic {
     this.setState({ saveError: e instanceof Error ? e.message : String(e) });
   }
 
-  s(p){ this.setState(p); }
-  nav(p){
+  s(p: Partial<PlannerState>) {
+    this.setState(p);
+  }
+  nav(p: Partial<PlannerState>) {
     this.openers = this.openers.concat([this.focusedName()]);
     const st = this.state;
-    const snap = { screen:st.screen, month:st.month, yOff:st.yOff, day:st.day, seg:st.seg,
+    const snap: HistoryEntry = { screen:st.screen, month:st.month, yOff:st.yOff, day:st.day, seg:st.seg,
       diaryFrom:st.diaryFrom, diaryEdit:st.diaryEdit, creating:st.creating };
     this.setState(Object.assign({ hist: (st.hist || []).concat([snap]), notice: null }, p));
   }
@@ -168,7 +171,7 @@ export class PlannerLogic extends DCLogic {
   }
   // Like back(), but all the way to the most recent visit to `screen`, skipping whatever was opened on the way
   // (the Spellbook, then an exercise's details, then back to the workout that was being built).
-  backTo(screen, patch = {}){
+  backTo(screen: Screen, patch: Partial<PlannerState> = {}) {
     const h = this.state.hist || [];
     const i = h.map((x) => x.screen).lastIndexOf(screen);
     if (i < 0) return this.back();

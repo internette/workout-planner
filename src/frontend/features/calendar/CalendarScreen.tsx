@@ -1,5 +1,6 @@
 // The calendar: the Day, Week and Month views and the month picker.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Fragment } from 'react';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import { Card } from '@moonshot/design-system/card';
@@ -22,7 +23,7 @@ import { QuestCard } from '@/frontend/features/calendar/QuestCard';
 import { RestartDialog } from '@/frontend/features/calendar/RestartDialog';
 import { WeekRow } from '@/frontend/features/calendar/WeekRow';
 
-export function CalendarScreen({ v }: { v: any }) {
+export function CalendarScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div style={{ position: 'relative' }}>
