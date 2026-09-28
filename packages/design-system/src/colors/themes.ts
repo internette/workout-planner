@@ -10,7 +10,7 @@ import { darkColors } from './dark';
 
 export type Accent = 'pink' | 'teal' | 'periwinkle' | 'slate' | 'coral';
 export const ACCENTS: { name: Accent; label: string; swatch: string }[] = [
-  { name: 'pink', label: 'Pink', swatch: '#D53181' },
+  { name: 'pink', label: 'Pink', swatch: '#D63479' },
   { name: 'teal', label: 'Teal', swatch: '#5EC4D6' },
   { name: 'periwinkle', label: 'Periwinkle', swatch: '#7C8FC9' },
   { name: 'slate', label: 'Slate', swatch: '#5C6684' },

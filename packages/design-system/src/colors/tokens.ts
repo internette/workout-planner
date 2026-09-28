@@ -23,11 +23,11 @@ export const colorGroups = {
   // Settings → Colour). Buttons, selection, ticks, accent text and tints use these; pink itself (below) stays pink
   // where pink is meant, such as the Happy mood and the rank tiers.
   Accent: {
-    accent: { hex: '#D53181', use: 'Actions, selection, marks, bars and ticks' },
-    accentHover: { hex: '#C42773', use: 'Primary action, hovered' },
-    accentDeep: { hex: '#AF2367', use: 'Accent text on white and on the accent tint' },
-    accentTint: { hex: '#FCE8F2', use: 'Selected and active backgrounds' },
-    accentMuted: { hex: '#E8BFD3', use: 'Disabled primary action' },
+    accent: { hex: '#D63479', use: 'Actions, selection, marks, bars and ticks' },
+    accentHover: { hex: '#C7286C', use: 'Primary action, hovered' },
+    accentDeep: { hex: '#B22461', use: 'Accent text on white and on the accent tint' },
+    accentTint: { hex: '#FCE8F1', use: 'Selected and active backgrounds' },
+    accentMuted: { hex: '#E8BFD1', use: 'Disabled primary action' },
   },
   Surfaces: {
     white: { hex: '#FFFFFF', use: 'Cards and dialogs' },
@@ -38,11 +38,11 @@ export const colorGroups = {
   },
   Pink: {
     // One pink, in steps of lightness on the same hue and saturation: pink, then hover one step darker, then deep.
-    pink: { hex: '#D53181', use: 'The primary pink: actions, selection, marks, bars, ticks and gems. White text on it is 4.5:1' },
-    pinkHover: { hex: '#C42773', use: 'Primary action, hovered (one step darker than pink)' },
-    pinkDeep: { hex: '#AF2367', use: 'Pink text on light backgrounds (two steps darker; 5.5:1 on pink tint, 6.4:1 on white)' },
-    pinkTint: { hex: '#FCE8F2', use: 'Selected and active backgrounds' },
-    pinkMuted: { hex: '#E8BFD3', use: 'Disabled primary action' },
+    pink: { hex: '#D63479', use: 'The primary pink: actions, selection, marks, bars, ticks and gems. White text on it is 4.5:1' },
+    pinkHover: { hex: '#C7286C', use: 'Primary action, hovered (one step darker than pink)' },
+    pinkDeep: { hex: '#B22461', use: 'Pink text on light backgrounds (two steps darker; 5.4:1 on pink tint, 6.3:1 on white)' },
+    pinkTint: { hex: '#FCE8F1', use: 'Selected and active backgrounds' },
+    pinkMuted: { hex: '#E8BFD1', use: 'Disabled primary action' },
   },
   Periwinkle: {
     periwinkle: { hex: '#7C8FC9', use: 'Secondary accent, planned sessions' },
