@@ -12,18 +12,40 @@ export interface InstallPromptProps {
   open: boolean;
   /** Show the note that a "no" was final. */
   notice: boolean;
+  /** 'reinstall': the app was installed on this phone and has been removed, so this asks to add it back. */
+  kind?: 'install' | 'reinstall';
   onInstall: (dontAsk: boolean) => void;
   onNotNow: (dontAsk: boolean) => void;
 }
 
-/** "Install Moonshot": a sheet from the bottom with Install, Not now and a "Don't ask me again" switch. */
-export function InstallPrompt({ open, notice, onInstall, onNotNow }: InstallPromptProps) {
+// What it says, first time and after the app was removed.
+const WORDS = {
+  install: {
+    title: 'Install Moonshot',
+    body: 'Open it like an app: full screen, no browser bar, one tap away.',
+    action: 'Install',
+    notice: 'We won’t ask again. You can still install Moonshot from your browser’s menu.',
+  },
+  reinstall: {
+    title: 'Add Moonshot back?',
+    body: 'It looks like Moonshot was removed from this phone. Add it back to open it like an app again, one tap away.',
+    action: 'Add it back',
+    notice: 'We won’t ask again. You can add Moonshot back from your browser’s menu.',
+  },
+};
+
+/**
+ * "Install Moonshot", or "Add Moonshot back?" once it has been removed: a sheet from the bottom with the action,
+ * Not now and a "Don't ask me again" switch.
+ */
+export function InstallPrompt({ open, notice, kind = 'install', onInstall, onNotNow }: InstallPromptProps) {
+  const words = WORDS[kind];
   return (
     <>
-      {open ? <Sheet onInstall={onInstall} onNotNow={onNotNow} /> : null}
+      {open ? <Sheet words={words} onInstall={onInstall} onNotNow={onNotNow} /> : null}
       {notice ? (
         <div className={styles.notice} role="status">
-          We won’t ask again. You can still install Moonshot from your browser’s menu.
+          {words.notice}
         </div>
       ) : null}
     </>
@@ -31,7 +53,7 @@ export function InstallPrompt({ open, notice, onInstall, onNotNow }: InstallProm
 }
 
 // Mounted only while open, so showModal() runs once per opening.
-function Sheet({ onInstall, onNotNow }: Pick<InstallPromptProps, 'onInstall' | 'onNotNow'>) {
+function Sheet({ words, onInstall, onNotNow }: Pick<InstallPromptProps, 'onInstall' | 'onNotNow'> & { words: (typeof WORDS)['install'] }) {
   const titleId = useId();
   const ref = useRef<HTMLDialogElement>(null);
   const [dontAsk, setDontAsk] = useState(false);
@@ -64,15 +86,15 @@ function Sheet({ onInstall, onNotNow }: Pick<InstallPromptProps, 'onInstall' | '
           <Mark size={36} />
         </span>
         <Text variant="heading" as="h2" id={titleId} style={{ margin: 0 }}>
-          Install Moonshot
+          {words.title}
         </Text>
       </div>
       <Text variant="body" tone="muted" as="p" style={{ margin: 0, textWrap: 'pretty' }}>
-        Open it like an app: full screen, no browser bar, one tap away.
+        {words.body}
       </Text>
       <div className={styles.actions}>
         <Button type="primary" size="lg" fullWidth onClick={() => onInstall(dontAsk)}>
-          Install
+          {words.action}
         </Button>
         <Button type="neutral" ghost size="md" fullWidth onClick={() => onNotNow(dontAsk)}>
           Not now
