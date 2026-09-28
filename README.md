@@ -157,7 +157,7 @@ src/
   frontend/             Everything that runs in the browser. It can't import backend/ (ESLint enforces it)
     features/             One folder per part of the app, named as it appears on screen
       planner/            The shell: Planner (host: loading and error screens, history), PlannerLoader (client only),
-                          PlannerView (the screens, which place each feature's sections), Sidebar, TabBar,
+                          PlannerView (the frame: dialogs, sidebar, tab bar, banners and the open screen), Sidebar, TabBar,
                           ConfirmDialog, SaveErrorBanner, NoticeBanner, PlannerStatus
                           (the loading and error screens, in the planner's words),
                           routes.ts (which address each screen has), chrome.model.ts (nav and screen switches), styles.ts,
@@ -165,19 +165,20 @@ src/
         store/            PlannerLogic (UI state, navigation, loading and saving; renderVals() assembles the view's values),
                           dcLogic (its immediate-merge setState), context.ts and types.ts (the loose Ctx), and derive/:
                           the shared derived values, built in order: base (clock, layout), entries, stats
-      calendar/           model.ts (the calendar's values), derive.ts (month, week, day and the month grid), and its
-                          sections: MonthPicker, QuestCard, DayWorkoutCard, WeekRow, MonthGrid, AddToDayDialog, RestartDialog
-      session/            model.ts (the day card and the session page), derive.ts (the selected workout), SessionTimer,
+      calendar/           model.ts (the calendar's values), derive.ts (month, week, day and the month grid), CalendarScreen,
+                          and its sections: MonthPicker, QuestCard, DayWorkoutCard, WeekRow, MonthGrid, AddToDayDialog, RestartDialog
+      session/            model.ts (the day card and the session page), derive.ts (the selected workout), SessionScreen, SessionTimer,
                           SessionExerciseRow, RideSessionCard, FinishDialog, LeaveWorkoutDialog
-      editor/             model.ts: the workout editor, and its sections: TypeChoiceCards, SavedChoices, EditorHeader,
+      editor/             model.ts: the workout editor, EditorScreen and TypePickerScreen, and its sections: TypeChoiceCards, SavedChoices, EditorHeader,
                           DatePicker, RidePlanFields, RideActualCard, EditorExerciseItem, AddExercisePanel, LeaveEditorDialog
-      spellbook/          model.ts: the Spellbook, its filters, and the exercise and workout pages. AreaFilter, EquipmentFilter,
+      spellbook/          model.ts: the Spellbook, its filters, and the exercise and workout pages. SpellbookScreen,
+                          ExerciseScreen, TemplateScreen, ExerciseEditScreen, NotInSpellbook, AreaFilter, EquipmentFilter,
                           NewExerciseCard, ExerciseRow, WorkoutRow, ExerciseEditForm, ScheduleDialog, SaveScopeDialog
-      chronicle/          model.ts: the Chronicle list, new entries and reading an entry. ChronicleRow, EntryReadView,
-                          DiaryEntryForm
-      progress/           model.ts: Progress and Profile's stats. StreakBanner, ThisWeekCard, NextUpCard, WeekQuestsCard,
+      chronicle/          model.ts: the Chronicle list, new entries and reading an entry. ChronicleScreen, NewEntryScreen,
+                          EntryScreen, SavedScreen, ChronicleRow, EntryReadView, DiaryEntryForm
+      progress/           model.ts: Progress and Profile's stats. ProgressScreen, StreakBanner, ThisWeekCard, NextUpCard, WeekQuestsCard,
                           RanksDialog
-      profile/            ProfileHeaderCard, SessionsPerWeekCard, QuestsClearedCard, MoodSplitCard, PersonalBestsCard,
+      profile/            ProfileScreen, ProfileHeaderCard, SessionsPerWeekCard, QuestsClearedCard, MoodSplitCard, PersonalBestsCard,
                           AccountCard, AppearanceSetting, DeleteAccount, SignOutDialog
       summon/             SummonPlan: "Summon a plan" with Claude or ChatGPT
       install/            The install prompt and the service worker registration
@@ -226,7 +227,7 @@ supabase/migrations/  SQL to run in the Supabase SQL editor
 
 Ticks update the screen immediately. Other saves (creating or editing a workout, diary entries, deletes, the Spellbook) are written to Supabase first. When the writes finish, the model is reloaded and the UI state cleared. Writes run in order, and a failed one shows a dismissible error banner.
 
-**The view is generated.** `PlannerView.tsx` was converted from the design's HTML template by a one-off script and is now ordinary source, so edit it directly. Colours and type are CSS variables such as `var(--color-pink)` and `var(--text-md)` (defined in the design system's `colors` and `typography`). Hover styles from the design are the `.hvN:hover` rules in the design system's `base.css`, and elements use them by class name.
+**The screens started as the design's HTML.** They were converted from the design's template by a one-off script, then split into one `…Screen.tsx` per screen in its feature's folder; all of it is ordinary source now, so edit it directly. Colours and type are CSS variables such as `var(--color-pink)` and `var(--text-md)` (defined in the design system's `colors` and `typography`). Hover styles from the design are the `.hvN:hover` rules in the design system's `base.css`, and elements use them by class name.
 
 ## Limitations
 
