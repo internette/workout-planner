@@ -2,7 +2,7 @@ import { vars } from '@moonshot/design-system/colors';
 import { Card } from '@moonshot/design-system/card';
 import { Sparkle } from '@moonshot/design-system/icons';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
-import { Text } from '@moonshot/design-system/typography';
+import { SectionHeader } from './SectionHeader';
 
 export interface SessionProgressProps {
   /** e.g. "2 of 5 done". */
@@ -19,14 +19,7 @@ export interface SessionProgressProps {
 export function SessionProgress({ label, pct, allDone, note }: SessionProgressProps) {
   return (
     <Card style={{ marginTop: '16px' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}>
-        <Text variant="eyebrow" tone="slate">
-          PROGRESS
-        </Text>
-        <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
-          {label}
-        </Text>
-      </div>
+      <SectionHeader title="PROGRESS" value={label} />
       <ProgressBar value={pct} track="tint" style={{ marginTop: '12px' }} />
       <p
         style={{

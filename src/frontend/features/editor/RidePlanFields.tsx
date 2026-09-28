@@ -4,6 +4,7 @@ import { Label, TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
 import { DurationFields } from '@/frontend/components/DurationFields';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
+import { RIDE_ZONES } from '@/shared/planDraft';
 
 /** A ride’s plan: distance, elevation, duration and effort zone. */
 export function RidePlanFields({ v }: { v: PlannerVals }) {
@@ -46,7 +47,7 @@ export function RidePlanFields({ v }: { v: PlannerVals }) {
         </div>
         <Label style={{ margin: '18px 0 9px' }}>Target effort</Label>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-          {['Recovery', 'Endurance', 'Tempo', 'Intervals'].map((zone) => (
+          {RIDE_ZONES.map((zone) => (
             <Chip
               key={zone}
               tone="choice"

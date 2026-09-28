@@ -1,5 +1,5 @@
-import { DOW3, DOWFULL, MON3, MONTHS } from '@/frontend/shared/constants';
-import { mod12, monthPatch, noticePatch } from '@/frontend/shared/helpers';
+import { DOW1, DOW3, DOWFULL, MON3, MONTHS } from '@/frontend/shared/constants';
+import { mod12, monDay, monthPatch, noticePatch, plural, shortDay } from '@/frontend/shared/helpers';
 import * as db from '@/frontend/data/plannerData';
 import { shortDate, type PlanDraft } from '@/shared/planDraft';
 import type { Ctx } from '../planner/store/types';
@@ -55,7 +55,7 @@ export function calendarVals(ctx: Ctx) {
     // The Month view's tile counts the month on screen (the values above are always this month, for Progress).
     shownMonthDone: shownMonth.length ? String(shownMonth.filter(isDoneEntry).length) : '—',
     shownMonthDoneUnit: shownMonth.length ? 'of ' + shownMonth.length + ' done' : 'nothing planned yet',
-    dowLabels: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+    dowLabels: DOW1,
     showDay: st.seg === 'Day',
     showWeek: st.seg === 'Week',
     showMonth: st.seg === 'Month',
@@ -67,7 +67,7 @@ export function calendarVals(ctx: Ctx) {
     restDayPhrase:
       mi === TODAY_M && selDay === TODAY_D
         ? 'today'
-        : 'on ' + DOW3[selDate.getDay()].charAt(0) + DOW3[selDate.getDay()].slice(1, 3).toLowerCase() + ', ' + MON3[mod12(mi)] + ' ' + selDay + (shownYOff ? ', ' + shownYear : ''),
+        : 'on ' + shortDay(selDate) + (shownYOff ? ', ' + shownYear : ''),
     monthName: monthTitle,
     yearLabel: String(Y + pickYOff),
     monthYear: MONTHS[mod12(mi)] + ' ' + shownYear,
@@ -84,7 +84,7 @@ export function calendarVals(ctx: Ctx) {
       logic.saveOnce('plan-draft', () => db.addPlanDraft(draft, logic.model!), {
         ...monthPatch((fy - Y) * 12 + fm - 1),
         day: fd,
-        ...noticePatch(`Your new arc is on the calendar: ${w.length} workout${w.length === 1 ? '' : 's'}, starting ${shortDate(first)}.`, 'day'),
+        ...noticePatch(`Your new arc is on the calendar: ${plural(w.length, 'workout')}, starting ${shortDate(first)}.`, 'day'),
       });
     },
     addingPlan: logic.busy('plan-draft'),
@@ -126,7 +126,7 @@ export function calendarVals(ctx: Ctx) {
     months,
     days,
     dayName: DOWFULL[selDate.getDay()],
-    shortDate: MON3[mod12(mi)] + ' ' + selDay,
+    shortDate: monDay(selDate),
     weekLabel,
     hasRows: weekRows.some((r) => r.hasRow),
     noRows: !weekRows.some((r) => r.hasRow),
@@ -144,7 +144,7 @@ export function calendarVals(ctx: Ctx) {
       warmup: !!a.warmup,
       meta: metaFor(a),
       open: () =>
-        logic.nav({ screen: 'detail', creating: false, ...monthPatch(TODAY_M), day: TODAY_D, entryId: a.id }),
+        logic.openSession(TODAY_M, TODAY_D, a.id),
     })),
   };
 }

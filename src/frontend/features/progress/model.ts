@@ -1,7 +1,8 @@
 import { DOW3, DOWFULL, MON3, MONTHS, RANKS } from '@/frontend/shared/constants';
 import { displayName } from '@/shared/auth';
-import { monthPatch, plural, questSeed } from '@/frontend/shared/helpers';
+import { plural, questSeed } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
+import { MOOD_COLORS, MOODS } from '@moonshot/design-system/icons';
 
 // Progress and profile: streaks, weekly chart, records, XP and the rank ladder.
 export function progressVals(ctx: Ctx) {
@@ -193,7 +194,7 @@ export function progressVals(ctx: Ctx) {
         // Done stands out in pink; planned is white on the tinted row; anything else grey.
         statusTone: x.done ? 'accent' : statusOf(x) === 'Planned' ? 'quiet' : 'neutral',
         open: () =>
-          logic.nav({ screen: 'detail', creating: false, ...monthPatch(relM(x.date)), day: x.date.getDate(), entryId: x.av.id }),
+          logic.openSession(relM(x.date), x.date.getDate(), x.av.id),
       })),
     chartCaption:
       (barSel >= thisWeekIx - 1 ? weekName(barSel) + ' · ' + weekRange(selWeek) : weekName(barSel)) +
@@ -275,13 +276,8 @@ export function progressVals(ctx: Ctx) {
             : 'var(--font-weight-medium);color:var(--color-muted)'),
       })),
     // No entries yet: no bars at 0%, the card says what will show up instead.
-    moodSplit: (Object.keys(moodCounts).length ? [
-      ['Happy', 'var(--color-pink)'],
-      ['Neutral', 'var(--color-slate)'],
-      ['Sad', 'var(--color-periwinkle)'],
-      ['Mad', 'var(--color-danger)'],
-    ]
-      .map(([name, color]) => ({ name, color, pct: Math.round(((moodCounts[name] || 0) / moodTotal) * 100) }))
+    moodSplit: (Object.keys(moodCounts).length ? MOODS
+      .map((name) => ({ name, color: MOOD_COLORS[name], pct: Math.round(((moodCounts[name] || 0) / moodTotal) * 100) }))
       .map(({ name, color, pct }) => ({
         name,
         pct: pct + '%',
@@ -314,11 +310,11 @@ export function progressVals(ctx: Ctx) {
     // The cards open what they sum up: the next session, this week and this month on the calendar, the Chronicle.
     openNext: () =>
       nextUp &&
-      logic.nav({ screen: 'detail', creating: false, seg: 'Day', monthOpen: false, ...monthPatch(nextUp.m), day: nextUp.d, entryId: nextUp.id }),
+      logic.openSession(nextUp.m, nextUp.d, nextUp.id, { seg: 'Day', monthOpen: false }),
     openWeek: () =>
-      logic.nav({ screen: 'day', seg: 'Week', monthOpen: false, ...monthPatch(TODAY_M), day: TODAY_D, entryId: null }),
+      logic.openDay(TODAY_M, TODAY_D, 'Week'),
     openMonth: () =>
-      logic.nav({ screen: 'day', seg: 'Month', monthOpen: false, ...monthPatch(TODAY_M), day: TODAY_D, entryId: null }),
+      logic.openDay(TODAY_M, TODAY_D, 'Month'),
     openChronicle: () => logic.nav({ screen: 'diaryList' }),
     hasNext: !!nextUp,
     noNext: !nextUp,
@@ -353,7 +349,7 @@ export function progressVals(ctx: Ctx) {
           name: q.title,
           doneLine: isDone ? q.done : '',
           done: isDone,
-          open: () => logic.nav({ screen: 'day', seg: 'Day', monthOpen: false, ...monthPatch(relM(d)), day: dm, entryId: null }),
+          open: () => logic.openDay(relM(d), dm),
           aria: DOWFULL[d.getDay()] + ': ' + q.title + (isDone ? ', cleared' : ''),
           row:
             'display:flex;align-items:center;gap:11px;width:100%;min-height:44px;padding:10px 0;border:none;background:none;text-align:left;font-family:inherit;cursor:pointer;border-bottom:1px solid var(--color-line)',
@@ -392,7 +388,7 @@ export function progressVals(ctx: Ctx) {
             ? 'Every session this week is done.'
             : left === 0
               ? 'Nothing left this week.' + missedNote
-              : left + (left === 1 ? ' session' : ' sessions') + ' left this week.' + missedNote)
+              : plural(left, 'session') + ' left this week.' + missedNote)
       );
     })(),
   };

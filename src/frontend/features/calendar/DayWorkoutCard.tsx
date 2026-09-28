@@ -5,7 +5,7 @@ import { IconTile } from '@moonshot/design-system/icon-tile';
 import { ChevronDown, ChevronRight, Dumbbell, DumbbellSmall } from '@moonshot/design-system/icons';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
-import { RideStats } from '@/frontend/components/RideStats';
+import { StatRow } from '@/frontend/components/StatRow';
 import { WarmupTag } from '@/frontend/components/WarmupTag';
 import { css, t } from '@/frontend/features/planner/viewHelpers';
 
@@ -67,7 +67,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
         ) : null}
         {card?.isRide ? (
           <>
-            <RideStats stats={card?.rideStats ?? []} style={{ marginTop: '20px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }} />
+            <StatRow stats={card?.rideStats ?? []} style={{ marginTop: '20px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }} />
           </>
         ) : null}
         {card?.isLift ? (

@@ -1,9 +1,11 @@
-import { DOW3, DOWFULL, EDIT_OVERLAYS, EQUIPMENT, EQUIPMENT_GROUPS, ICON_COLORS, ICON_COLOR_NAMES, MON3, MONTHS, TARGET_AREAS } from '@/frontend/shared/constants';
-import { countsOk, needsLine, rollMinutes, digitsOnly, noticePatch, exLine, idOf, isoOf, joinSetsReps, mod12, monthPatch, numericOnly, plural, restDigits, setsRepsOk, splitSetsReps, withLb, withSec, workoutDraftDirty } from '@/frontend/shared/helpers';
+import { DOWFULL, EDIT_OVERLAYS, ICON_COLOR_NAMES, ICON_COLORS, MONTHS, NEW_WORKOUT_CLEARED } from '@/frontend/shared/constants';
+import { digitsOnly, exLine, idOf, isoOf, joinSetsReps, longDay, minText, mod12, monDay, monthPatch, needsLine, noticePatch, numericOnly, plural, rollMinutes, setsRepsOk, shortDay, splitSetsReps, toMinutes, withLb, withSec, workoutDraftDirty } from '@/frontend/shared/helpers';
 import { iconOptions, iconSvg } from '@/frontend/shared/icons';
 import * as db from '@/frontend/data/plannerData';
 import { themed } from '@moonshot/design-system/colors';
 import type { Ctx } from '../planner/store/types';
+import { DEFAULT_ZONE } from '@/shared/planDraft';
+import { areaToggles, plainExercise, DRAFT_CLEARED, draftClash, draftHint, draftItem, draftOpened, draftReady, equipmentKnown, equipmentToggles } from '@/frontend/shared/exerciseDraft';
 
 // Create / edit workout screen: ride plan, exercise list, icons, date picker, save and delete.
 export function editVals(ctx: Ctx) {
@@ -82,7 +84,7 @@ export function editVals(ctx: Ctx) {
       ? logic.model.workouts.find((w) => sameName(w.name, typedName) && (creating || w.id !== (selAct && selAct.workoutId))) ||
         null
       : null;
-  const todayIso = isoOf(new Date(Y, TODAY_M, TODAY_D));
+  const todayIso = ctx.isoToday;
   // Repeating: this weekday for the 12 weeks after the day, leaving out days already gone by (they'd only show as
   // missed) and days that already have this workout.
   // A day that has gone by: whatever is put on it is most likely already done, so it's logged as done unless
@@ -109,7 +111,7 @@ export function editVals(ctx: Ctx) {
   // A lift's length follows its exercises: about ten minutes each, at least twenty. An edit moves it by the
   // exercises added or taken out, so a length set by hand keeps its difference.
   const exDelta = creating ? 0 : selList.length - (EXV[baseKey] || []).length;
-  const baseMin = parseInt(String((selAct && selAct.time) || '').replace(/[^0-9]/g, ''), 10) || 50;
+  const baseMin = parseInt(digitsOnly(String((selAct && selAct.time) || '')), 10) || 50;
   // More or fewer sets of an exercise move it too: each set about 40 seconds of work plus its rest.
   const setsOf = (e) => parseInt(String(e.sets || ''), 10) || 0;
   const restOf = (e) => parseInt(String(e.rest || ''), 10) || 60;
@@ -136,12 +138,7 @@ export function editVals(ctx: Ctx) {
   // A new exercise's name must be new where it's going: among the person's exercises and the built-ins in the Spellbook
   // (saving one there would otherwise overwrite the old one), or among this workout's exercises in the editor (a
   // workout keeps track of its exercises by name).
-  const dName = (st.dName || '').trim();
-  const clash = !dName
-    ? null
-    : st.screen === 'arsenal'
-      ? logic.model.library.concat(logic.model.builtins).find((e) => e.name.trim().toLowerCase() === dName.toLowerCase())
-      : selList.find((e) => e.name.trim().toLowerCase() === dName.toLowerCase());
+  const clash = draftClash(st, st.screen === 'arsenal' ? logic.model.library.concat(logic.model.builtins) : selList);
   const draftNameError = !clash
     ? ''
     : st.screen === 'arsenal'
@@ -190,13 +187,13 @@ export function editVals(ctx: Ctx) {
             ),
           (r) =>
             Object.assign(
-              { screen: 'day', seg: 'Day', creating: false, newType: null, newName: '', newFrom: null, schedule: null },
+              { screen: 'day', seg: 'Day', ...NEW_WORKOUT_CLEARED },
               EDIT_OVERLAYS,
               {
                 hist: (st.hist || []).slice(0, -1),
                 ...noticePatch(
                   '“' + w.name + '” ' + (builtinOne ? 'saved to your workouts and ' : '') +
-                    (logDoneOn ? 'logged as done on ' : 'added to ') + MON3[mod12(mi)] + ' ' + selDay + '.',
+                    (logDoneOn ? 'logged as done on ' : 'added to ') + monDay(selDate) + '.',
                   'day',
                 ),
               },
@@ -244,7 +241,7 @@ export function editVals(ctx: Ctx) {
         (r) =>
           Object.assign(
             { screen: 'day' },
-            { creating: false, newType: null, newName: '', newFrom: null, schedule: null },
+            NEW_WORKOUT_CLEARED,
             EDIT_OVERLAYS,
             { extra: Object.assign({}, st.extra, { __draft: [] }) },
             r && r.entryId ? { entryId: r.entryId } : {},
@@ -255,7 +252,7 @@ export function editVals(ctx: Ctx) {
     hasSavedChoices:
       creating && st.newFrom === 'calendar' && logic.model.workouts.length + (logic.model.builtinWorkouts || []).length > 0,
     savedChoicesNote:
-      'Tap one to put it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mod12(mi)] + ' ' + selDay + yearNote +
+      'Tap one to put it on ' + DOWFULL[selDate.getDay()] + ', ' + monDay(selDate) + yearNote +
       (logDoneOn ? ', logged as done.' : '.'),
     showLogDone: pastDay && creating && st.schedule !== false,
     logDoneOn,
@@ -270,25 +267,25 @@ export function editVals(ctx: Ctx) {
     planDistText: rDist ? rDist + ' mi' : '—',
     planElevText: rElev ? rElev + ' ft' : '—',
     planDurText: plannedMin
-      ? (Math.floor(plannedMin / 60) ? Math.floor(plannedMin / 60) + ' h ' : '') + (plannedMin % 60) + ' min'
+      ? minText(plannedMin)
       : '—',
     isLift: !isCycleView,
     rideDistance: rDist,
     rideElev: rElev,
-    rideZone: st.rZone || (savedRide && savedRide.zone) || 'Endurance',
+    rideZone: st.rZone || (savedRide && savedRide.zone) || DEFAULT_ZONE,
     rideHours: rHrs,
     rideMins: rMins,
-    setDistance: (e) => logic.s({ rDist: e.target.value.replace(/[^0-9.]/g, '') }),
-    setElev: (e) => logic.s({ rElev: e.target.value.replace(/[^0-9]/g, '') }),
+    setDistance: (e) => logic.s({ rDist: numericOnly(e.target.value) }),
+    setElev: (e) => logic.s({ rElev: digitsOnly(e.target.value) }),
     actDistance: aDist,
     actElev: aElev,
     actHours: aHrs,
     actMins: aMins,
-    setActDistance: (e) => logic.s({ aDist: e.target.value.replace(/[^0-9.]/g, '') }),
-    setActElev: (e) => logic.s({ aElev: e.target.value.replace(/[^0-9]/g, '') }),
-    setActHours: (e) => logic.s({ aHrs: e.target.value.replace(/[^0-9]/g, '').slice(0, 2) }),
+    setActDistance: (e) => logic.s({ aDist: numericOnly(e.target.value) }),
+    setActElev: (e) => logic.s({ aElev: digitsOnly(e.target.value) }),
+    setActHours: (e) => logic.s({ aHrs: digitsOnly(e.target.value).slice(0, 2) }),
     setActMins: (e) => {
-      const v = e.target.value.replace(/[^0-9]/g, '').slice(0, 2);
+      const v = digitsOnly(e.target.value).slice(0, 2);
       logic.s({ aMins: v });
     },
     rollActMins: () => {
@@ -298,10 +295,7 @@ export function editVals(ctx: Ctx) {
     plannedDist: rDist ? 'Planned ' + rDist + ' mi' : 'No planned distance',
     plannedElev: rElev ? 'Planned ' + rElev + ' ft' : 'No planned elevation',
     plannedDur: plannedMin
-      ? 'Planned ' +
-        (Math.floor(plannedMin / 60) ? Math.floor(plannedMin / 60) + ' h ' : '') +
-        (plannedMin % 60) +
-        ' min'
+      ? 'Planned ' + minText(plannedMin)
       : 'No planned duration',
     plannedDistPh: rDist || '0',
     plannedElevPh: rElev || '0',
@@ -318,9 +312,9 @@ export function editVals(ctx: Ctx) {
       (ridePct != null && ridePct >= 100
         ? 'var(--font-weight-semibold);color:var(--color-accent-deep)'
         : 'var(--font-weight-regular);color:var(--color-muted)'),
-    setHours: (e) => logic.s({ rHrs: e.target.value.replace(/[^0-9]/g, '').slice(0, 2) }),
+    setHours: (e) => logic.s({ rHrs: digitsOnly(e.target.value).slice(0, 2) }),
     setMins: (e) => {
-      const v = e.target.value.replace(/[^0-9]/g, '').slice(0, 2);
+      const v = digitsOnly(e.target.value).slice(0, 2);
       logic.s({ rMins: v });
     },
     rollMins: () => {
@@ -339,11 +333,7 @@ export function editVals(ctx: Ctx) {
     addMode: st.addMode === 'new' ? 'new' : 'lib',
     // "Create new" starts with real values (3 × 10, 60 sec rest), as in the Spellbook; weight starts empty.
     setAddMode: (mode) =>
-      logic.s(
-        mode === 'new'
-          ? { addMode: mode, dSets: st.dSets || '3', dReps: st.dReps || '10', dRest: st.dRest || '60' }
-          : { addMode: mode },
-      ),
+      logic.s(mode === 'new' ? { addMode: mode, ...draftOpened(st) } : { addMode: mode }),
     // "Browse the full Spellbook": opens the real Spellbook, remembering this workout so "Add to workout" there puts
     // the exercise here and comes back. The names already in it let the Spellbook mark those "In workout".
     // It arrives narrowed to this workout's target areas, like the short list here; the person's own filter comes
@@ -405,37 +395,17 @@ export function editVals(ctx: Ctx) {
     setSets: (e) => logic.s({ dSets: digitsOnly(e.target.value) }),
     setReps: (e) => logic.s({ dReps: digitsOnly(e.target.value) }),
     setWeight: (e) => logic.s({ dWeight: numericOnly(e.target.value) }),
-    setRest: (e) => logic.s({ dRest: restDigits(e.target.value) }),
-    draftAreas: TARGET_AREAS.map((name) => {
-      const on = (st.dAreas || []).includes(name);
-      return {
-        name,
-        on,
-        toggle: () =>
-          logic.s({
-            dAreas: on ? (st.dAreas || []).filter((a) => a !== name) : (st.dAreas || []).concat([name]),
-          }),
-      };
-    }),
+    setRest: (e) => logic.s({ dRest: digitsOnly(e.target.value) }),
+    draftAreas: areaToggles(st.dAreas || [], (dAreas) => logic.s({ dAreas })),
     // A new exercise's equipment: one row that opens to the picker, as in the exercise editor. Only once the database
     // has equipment at all.
-    draftEquipment: !logic.model.builtins.some((e) => e.equipment !== undefined)
+    draftEquipment: !equipmentKnown(logic.model)
       ? null
       : {
           open: !!st.dEquipOpen,
           toggle: () => logic.s({ dEquipOpen: !st.dEquipOpen }),
           summary: (st.dEquip || []).length ? st.dEquip.join(', ') : 'Bodyweight',
-          groups: EQUIPMENT_GROUPS.map((g) => ({
-            label: g.label,
-            items: g.items.map((name) => {
-              const on = (st.dEquip || []).includes(name);
-              return {
-                name,
-                on,
-                toggle: () => logic.s({ dEquip: EQUIPMENT.filter((x) => (x === name ? !on : (st.dEquip || []).includes(x))) }),
-              };
-            }),
-          })),
+          groups: equipmentToggles(st.dEquip || [], (dEquip) => logic.s({ dEquip })),
         },
     iconGrid: {
       value: st.dIcon || 'h',
@@ -443,41 +413,15 @@ export function editVals(ctx: Ctx) {
       options: iconOptions(),
     },
     draftNameError,
-    commitDisabled: !(st.dName || '').trim() || !(st.dAreas || []).length || !!clash || !countsOk(st.dSets, st.dReps),
+    commitDisabled: !draftReady(st, clash),
     // Why the button is off, when it is (a name clash says so on the field itself).
-    draftHint: clash
-      ? ''
-      : !(st.dName || '').trim()
-        ? 'Name it to save it.'
-        : !countsOk(st.dSets, st.dReps)
-          ? 'Sets and reps need to be at least 1.'
-          : !(st.dAreas || []).length
-            ? 'Pick at least one target area.'
-            : '',
+    draftHint: clash ? '' : draftHint(st),
     commitNew: () => {
-      const nm = (st.dName || '').trim();
-      if (!nm || !(st.dAreas || []).length || clash || !countsOk(st.dSets, st.dReps)) return;
-      const item = {
-        name: nm,
-        sets: joinSetsReps(st.dSets, st.dReps) || '3 × 10',
-        weight: withLb(st.dWeight) || '—',
-        rest: withSec(st.dRest) || '60 sec',
-        i: st.dIcon || 'h',
-        areas: st.dAreas || [],
-        ...(logic.model.builtins.some((e) => e.equipment !== undefined) ? { equipment: st.dEquip || [] } : {}),
-      };
+      if (!draftReady(st, clash)) return;
       logic.s({
-        extra: Object.assign({}, st.extra, { [listKey]: added.concat([item]) }),
+        extra: Object.assign({}, st.extra, { [listKey]: added.concat([draftItem(st, logic.model)]) }),
         addOpen: false,
-        dName: '',
-        dSets: '',
-        dReps: '',
-        dWeight: '',
-        dRest: '',
-        dIcon: 'h',
-        dAreas: [],
-        dEquip: [],
-        dEquipOpen: false,
+        ...DRAFT_CLEARED,
       });
     },
     iconsOpen: !!st.iconsOpen,
@@ -496,7 +440,7 @@ export function editVals(ctx: Ctx) {
     eName: selName,
     eNotes: notesVal,
     setNotes: (e) => logic.s({ notes: Object.assign({}, st.notes, { [listKey]: e.target.value }) }),
-    areaPills: selRide ? [selRide.zone || 'Endurance'] : picked,
+    areaPills: selRide ? [selRide.zone || DEFAULT_ZONE] : picked,
     needs: selRide ? null : needsLine(selList),
     inSeries: !!(selAct && selAct.series),
     canRepeat: !tplMode && !(selAct && selAct.series),
@@ -551,9 +495,7 @@ export function editVals(ctx: Ctx) {
             '"' +
             selName +
             '" on ' +
-            MON3[mod12(mi)] +
-            ' ' +
-            selDay +
+            monDay(selDate) +
             (DIARY[idOf(srcAct)]
               ? ' will be removed from your plan, along with your chronicle entry for it.'
               : ' will be removed from your plan.') +
@@ -591,15 +533,6 @@ export function editVals(ctx: Ctx) {
       if (nameClash || needsName || needsExercise) return logic.s({ leaveOpen: false, pendingNav: null });
       if (saving) return;
       const cleared = EDIT_OVERLAYS;
-      const bare = (e) => ({
-        name: e.name,
-        sets: e.sets,
-        weight: e.weight,
-        rest: e.rest,
-        i: e.i,
-        areas: e.areas || [],
-        ...(e.equipment !== undefined ? { equipment: e.equipment } : {}),
-      });
       if (!creating) {
         const owned = EXV[baseKey] || [];
         const byName = (n) => owned.find((e) => e.name === n);
@@ -655,12 +588,12 @@ export function editVals(ctx: Ctx) {
           iconColor: (st.iconColors || {})[listKey],
           notes: notes != null && notes !== (selAct.notes || '') ? notes : undefined,
           ride: rideEdited
-            ? { dist: rDist, elev: rElev, zone: st.rZone || selRide.zone || 'Endurance', minutes: plannedMin }
+            ? { dist: rDist, elev: rElev, zone: st.rZone || selRide.zone || DEFAULT_ZONE, minutes: plannedMin }
             : null,
           moveTo: moved ? isoOf(new Date(Y, mi, selDay)) : undefined,
           actual:
             selRide && actualEdited
-              ? { dist: aDist, elev: aElev, minutes: Number(aHrs || 0) * 60 + Number(aMins || 0) }
+              ? { dist: aDist, elev: aElev, minutes: toMinutes(aHrs, aMins) }
               : null,
           exercises: {
             update,
@@ -668,7 +601,7 @@ export function editVals(ctx: Ctx) {
               .map((n) => byName(n))
               .filter((e) => e && e.id)
               .map((e) => e.id),
-            add: added.map(bare),
+            add: added.map(plainExercise),
             order: reordered ? selList.map((e) => e.name) : undefined,
           },
           repeatDates: st.repeat && !selAct.series ? weeklyAfter(baseName) : [],
@@ -762,7 +695,7 @@ export function editVals(ctx: Ctx) {
                 },
               }),
             )
-            .catch((e) => logic.s({ saveError: e instanceof Error ? e.message : String(e) }));
+            .catch((e) => logic.fail(e));
         }
         if (!changesWorkout) return logic.saveOnce('workout', () => db.updateWorkout(edit).then(saveTicks), after);
         // The workout is shared with the Spellbook, and maybe with other sessions: ask whether the change is for this
@@ -815,7 +748,7 @@ export function editVals(ctx: Ctx) {
               },
             });
           })
-          .catch((e) => logic.s({ saveError: e instanceof Error ? e.message : String(e) }));
+          .catch((e) => logic.fail(e));
       }
       const nm = (st.newName || '').trim();
       const isRide = st.newType === 'cycle';
@@ -829,12 +762,12 @@ export function editVals(ctx: Ctx) {
             isRide,
             durationMinutes: isRide ? plannedMin || 45 : estMin,
             ride: isRide
-              ? { dist: st.rDist || '', elev: st.rElev || '', zone: st.rZone || 'Endurance' }
+              ? { dist: st.rDist || '', elev: st.rElev || '', zone: st.rZone || DEFAULT_ZONE }
               : null,
             icon: (st.icons || {}).__draft || null,
             iconColor: (st.iconColors || {}).__draft || null,
             notes: notesVal,
-            exercises: selList.map((e) => bare(iconPick(e.name) ? { ...e, i: iconPick(e.name) } : e)),
+            exercises: selList.map((e) => plainExercise(iconPick(e.name) ? { ...e, i: iconPick(e.name) } : e)),
             dates: scheduled ? [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weeklyAfter(nm) : []) : [],
             repeat: scheduled && !!st.repeat && weeklyAfter(nm).length > 0,
             done: scheduled && logDoneOn,
@@ -855,7 +788,7 @@ export function editVals(ctx: Ctx) {
                   // its page takes that entry's place, so Back returns to where "New workout" was pressed.
                   scheduled ? { hist: (st.hist || []).slice(0, -1) } : {},
                 ),
-            { creating: false, newType: null, newName: '', newFrom: null, schedule: null },
+            NEW_WORKOUT_CLEARED,
             cleared,
             r && r.entryId ? { entryId: r.entryId } : {},
             // And it says so.
@@ -866,9 +799,7 @@ export function editVals(ctx: Ctx) {
                     '“' +
                       r.name +
                       '” saved and added to ' +
-                      MON3[mod12(mi)] +
-                      ' ' +
-                      selDay +
+                      monDay(selDate) +
                       (st.repeat ? ', and every ' + DOWFULL[selDate.getDay()] + ' for 12 weeks after (13 sessions).' : '.'),
                     'day',
                   )
@@ -893,17 +824,10 @@ export function editVals(ctx: Ctx) {
       logic.s(cleared);
       logic.back();
     },
-    eDate:
-      DOW3[selDate.getDay()].charAt(0) +
-      DOW3[selDate.getDay()].slice(1, 3).toLowerCase() +
-      ', ' +
-      MON3[mod12(mi)] +
-      ' ' +
-      selDay +
-      yearNote,
+    eDate: shortDay(selDate) + yearNote,
     // A warm-up says so on its page, beside the date.
     eWarmup: !creating && !!(srcAct && srcAct.warmup),
-    eDateAria: DOWFULL[selDate.getDay()] + ', ' + MONTHS[mod12(mi)] + ' ' + selDay + yearNote,
+    eDateAria: longDay(selDate) + yearNote,
     // Once finished, how long it actually took; before that, the plan.
     eTime:
       selAct && ctx.actualMinutes(selAct)
@@ -936,7 +860,7 @@ export function editVals(ctx: Ctx) {
     setSchedule: (on) => logic.s({ schedule: !!on, repeat: on ? st.repeat : false }),
     scheduleNote:
       st.schedule !== false
-        ? 'Puts it on ' + DOWFULL[selDate.getDay()] + ', ' + MON3[mod12(mi)] + ' ' + selDay + yearNote + ', and keeps it in your Spellbook.'
+        ? 'Puts it on ' + DOWFULL[selDate.getDay()] + ', ' + monDay(selDate) + yearNote + ', and keeps it in your Spellbook.'
         : 'Only saved to your Spellbook. You can add it to the calendar any time.',
     exercises: selList.map((e, ix) => {
       const cur = iconPick(e.name) || e.i;
@@ -983,20 +907,12 @@ export function editVals(ctx: Ctx) {
         sets: setsParts.sets,
         reps: setsParts.reps,
         weight: numericOnly(e.weight),
-        rest: restDigits(e.rest),
+        rest: digitsOnly(e.rest),
         setSets: (ev) => setSets({ target: { value: joinSetsReps(digitsOnly(ev.target.value), setsParts.reps) } }),
         setReps: (ev) => setSets({ target: { value: joinSetsReps(setsParts.sets, digitsOnly(ev.target.value)) } }),
         setWeight: (ev) => setWeight({ target: { value: withLb(numericOnly(ev.target.value)) } }),
-        setRest: (ev) => setRest({ target: { value: withSec(restDigits(ev.target.value)) } }),
-        areas: TARGET_AREAS.map((name) => {
-          const on = exAreas.includes(name);
-          return {
-            name,
-            on,
-            toggle: () =>
-              setAreas({ target: { value: on ? exAreas.filter((a) => a !== name) : exAreas.concat([name]) } }),
-          };
-        }),
+        setRest: (ev) => setRest({ target: { value: withSec(digitsOnly(ev.target.value)) } }),
+        areas: areaToggles(exAreas, (value) => setAreas({ target: { value } })),
         icoSvg: iconSvg(cur),
         detail: exLine(e, true),
         // Ticked off: its name is struck through and muted.

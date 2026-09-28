@@ -1,5 +1,5 @@
 import { DOW3, MON3 } from '@/frontend/shared/constants';
-import { isoOf, mod12, monthPatch, noticePatch, plural } from '@/frontend/shared/helpers';
+import { isoOf, mod12, monDay, monthPatch, noticePatch, plural, shortDay } from '@/frontend/shared/helpers';
 import { moodSvg } from '@/frontend/shared/icons';
 import { MOOD_COLORS } from '@moonshot/design-system/icons';
 import * as db from '@/frontend/data/plannerData';
@@ -13,8 +13,7 @@ export function diaryVals(ctx: Ctx) {
     ENTRIES,
     entryKey,
     selName,
-    mi,
-    selDay,
+    selDate,
     TK,
     isDoneEntry,
     unloggedDays,
@@ -179,9 +178,7 @@ export function diaryVals(ctx: Ctx) {
       ' on ' +
       selName +
       ', ' +
-      MON3[mod12(mi)] +
-      ' ' +
-      selDay +
+      monDay(selDate) +
       '.',
     // The entry just written, to read (or change) it. It takes this screen's place, so Back goes where this would.
     readSavedEntry: () => logic.s({ screen: 'diary', diaryEdit: false }),
@@ -190,22 +187,14 @@ export function diaryVals(ctx: Ctx) {
     savedNextMeta: nextEntry
       ? (nextEntry.m * 100 + nextEntry.d === TK
           ? 'Today'
-          : DOW3[nextDate.getDay()].charAt(0) + DOW3[nextDate.getDay()].slice(1, 3).toLowerCase() + ', ' +
-            MON3[mod12(nextEntry.m)] + ' ' + nextEntry.d) +
+          : shortDay(nextDate)) +
         ' · ' +
         nextEntry.av.time
       : 'Nothing scheduled ahead',
     // Opens that session. With nothing ahead, starts a new workout for tomorrow (today, on the year's last day).
     goNextUp: () => {
       if (nextEntry)
-        return logic.nav({
-          screen: 'detail',
-          creating: false,
-          seg: 'Day',
-          ...monthPatch(nextEntry.m),
-          day: nextEntry.d,
-          entryId: nextEntry.av.id,
-        });
+        return logic.openSession(nextEntry.m, nextEntry.d, nextEntry.av.id, { seg: 'Day' });
       const tomorrow = new Date(Y, TODAY_M, ctx.TODAY_D + 1);
       logic.s({ ...monthPatch(relM(tomorrow)), day: tomorrow.getDate(), seg: 'Day' });
       logic.renderVals().goNewWorkout();
@@ -272,15 +261,13 @@ export function diaryVals(ctx: Ctx) {
         name: en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout',
         warmup: !!(logic.model.entries.find((x) => x.av.id === id) || { av: null }).av?.warmup,
         deleteLabel:
-          'Delete entry for ' + (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') + ', ' + MON3[mod12(en.m)] + ' ' + en.d + yr,
+          'Delete entry for ' + (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') + ', ' + monDay(dt) + yr,
         note: en.note,
         href: '#',
         aria:
           DOW3[dt.getDay()] +
           ', ' +
-          MON3[mod12(en.m)] +
-          ' ' +
-          en.d +
+          monDay(dt) +
           yr +
           ': ' +
           (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') +
@@ -308,7 +295,7 @@ export function diaryVals(ctx: Ctx) {
               kind: 'entry',
               day: id,
               title: 'Delete this entry?',
-              body: 'Your reflection for ' + MON3[mod12(en.m)] + ' ' + en.d + ' will be gone for good.',
+              body: 'Your reflection for ' + monDay(dt) + ' will be gone for good.',
               label: 'Delete entry',
             },
           });
@@ -316,10 +303,7 @@ export function diaryVals(ctx: Ctx) {
         faceWrap:
           'width:48px;height:48px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
           bg,
-        isHappy: en.mood === 'Happy',
-        isNeutral: en.mood === 'Neutral',
-        isSad: en.mood === 'Sad',
-        isMad: en.mood === 'Mad',
+        mood: en.mood,
         rpe: en.rpe,
       };
     }),
@@ -334,7 +318,7 @@ export function diaryVals(ctx: Ctx) {
           day: entryKey,
           after: 'diaryList',
           title: 'Delete this entry?',
-          body: 'Your reflection for ' + MON3[mod12(mi)] + ' ' + selDay + ' will be gone for good.',
+          body: 'Your reflection for ' + monDay(selDate) + ' will be gone for good.',
           label: 'Delete entry',
         },
       }),

@@ -39,7 +39,7 @@ import { DeleteSection } from '@/frontend/components/DeleteSection';
 import { FormActions } from '@/frontend/components/FormActions';
 import { IconSquare } from '@/frontend/components/IconSquare';
 import { LinkRow } from '@/frontend/components/LinkRow';
-import { RideStats } from '@/frontend/components/RideStats';
+import { StatRow } from '@/frontend/components/StatRow';
 import { NeedsLine } from '@/frontend/components/NeedsLine';
 import { PageTitle } from '@/frontend/components/PageTitle';
 import { RepeatWeekly } from '@/frontend/components/RepeatWeekly';
@@ -102,21 +102,7 @@ import { WorkoutRow } from '@/frontend/features/spellbook/WorkoutRow';
 export function PlannerView({ v }: { v: any }) {
   return (
     <>
-      <span
-        role="status"
-        aria-live="polite"
-        style={{
-          position: 'absolute',
-          width: '1px',
-          height: '1px',
-          margin: '-1px',
-          padding: '0',
-          overflow: 'hidden',
-          clip: 'rect(0 0 0 0)',
-          whiteSpace: 'nowrap',
-          border: '0',
-        }}
-      >
+      <span className="sr-only" role="status" aria-live="polite">
         {v.announce}
       </span>
       <RanksDialog v={v} />
@@ -448,20 +434,9 @@ export function PlannerView({ v }: { v: any }) {
                           }}
                         >
                           <Card pad="sm" style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
-                            <div
-                              style={{
-                                width: '40px',
-                                height: '40px',
-                                flex: 'none',
-                                borderRadius: 'var(--radius-sm)',
-                                background: 'var(--color-accent-tint)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }}
-                            >
+                            <IconSquare size={40} decorative>
                               <Gem size={20} />
-                            </div>
+                            </IconSquare>
                             <div style={{ minWidth: '0' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <Text variant="subheading">{v.streakCount}</Text>
@@ -800,9 +775,6 @@ export function PlannerView({ v }: { v: any }) {
                   >
                     {v.arsenalIntro}
                   </Text>
-                  <span className="sr-only" role="status">
-                    {v.arsenalResults}
-                  </span>
                   {v.arsenalPicking ? (
                     // Stays in view down the long list, so it's always clear the Spellbook is picking for a workout.
                     // The page-coloured band behind it keeps the list from showing through above the card.
@@ -872,6 +844,7 @@ export function PlannerView({ v }: { v: any }) {
                       placeholder={v.arsenalSearchPlaceholder}
                       label="Search the Spellbook"
                       onClear={v.clearArsenalQuery}
+                      status={v.arsenalResults}
                     />
                   </div>
                   {/* The two filters side by side, where there's room for both. */}
@@ -1016,11 +989,14 @@ export function PlannerView({ v }: { v: any }) {
                   </BackBar>
                   <PageTitle icon={v.exercise.svg} eyebrow={v.exercise.builtin ? 'BUILT-IN EXERCISE' : 'EXERCISE'} title={v.exercise.name} />
                   <Card style={{ marginTop: '18px' }}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '26px' }}>
-                      <Stat size="lg" label="SETS × REPS" value={v.exercise.sets} />
-                      <Stat size="lg" label="WEIGHT" value={v.exercise.weight} />
-                      <Stat size="lg" label="REST" value={v.exercise.rest} />
-                    </div>
+                    <StatRow
+                      size="lg"
+                      stats={[
+                        { label: 'SETS × REPS', value: v.exercise.sets },
+                        { label: 'WEIGHT', value: v.exercise.weight },
+                        { label: 'REST', value: v.exercise.rest },
+                      ]}
+                    />
                     {(v.exercise.areas ?? []).length ? (
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '18px' }}>
                         {(v.exercise.areas ?? []).map((a, i) => (
@@ -1155,7 +1131,7 @@ export function PlannerView({ v }: { v: any }) {
                   <ScheduleDialog v={v} />
                   {v.template.isRide ? (
                     <Card style={{ marginTop: '18px' }}>
-                      <RideStats size="lg" stats={v.template.rideStats ?? []} />
+                      <StatRow size="lg" stats={v.template.rideStats ?? []} />
                     </Card>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '18px' }}>

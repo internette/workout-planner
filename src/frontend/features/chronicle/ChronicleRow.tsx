@@ -26,26 +26,7 @@ export function ChronicleRow({ entry }: { entry: any }) {
         }}
       >
         <span className="fc-keep" style={css(entry?.faceWrap)}>
-          {entry?.isHappy ? (
-            <>
-              <MoodFace mood="Happy" size={24} />
-            </>
-          ) : null}
-          {entry?.isNeutral ? (
-            <>
-              <MoodFace mood="Neutral" size={24} />
-            </>
-          ) : null}
-          {entry?.isSad ? (
-            <>
-              <MoodFace mood="Sad" size={24} />
-            </>
-          ) : null}
-          {entry?.isMad ? (
-            <>
-              <MoodFace mood="Mad" size={24} />
-            </>
-          ) : null}
+          {entry?.mood ? <MoodFace mood={entry.mood} size={24} /> : null}
         </span>
         <span style={{ flex: '1 1 220px', minWidth: '0' }}>
           <Text variant="eyebrow" tone="muted" style={{ display: 'block' }}>

@@ -1,5 +1,5 @@
-import { DOW1, DOW3, DOWFULL, MON3, MONTHS, ACCENT } from '@/frontend/shared/constants';
-import { mod12, monthPatch } from '@/frontend/shared/helpers';
+import { DOW1, DOW3, MON3, MONTHS, ACCENT } from '@/frontend/shared/constants';
+import { longDay, mod12, monthPatch } from '@/frontend/shared/helpers';
 import { iconSvg } from '@/frontend/shared/icons';
 import type { Ctx } from '../planner/store/types';
 
@@ -57,11 +57,7 @@ export function calendarStage(ctx: Ctx): Ctx {
         ? 'font-size:var(--text-2xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);color:' + (on ? 'var(--color-on-accent-muted)' : 'var(--color-subtle)')
         : 'display:none',
       aria:
-        DOWFULL[new Date(Y, cellMonth, num).getDay()] +
-        ', ' +
-        MONTHS[mod12(cellMonth)] +
-        ' ' +
-        num +
+        longDay(new Date(Y, cellMonth, num)) +
         ' — ' +
         (!dot ? 'rest day' : workoutsWord(list) + (done ? 'completed' : part ? 'partly done, ' + partText(list) : miss ? 'missed' : 'planned')),
       isToday: cellMonth === TODAY_M && num === TODAY_D ? 'date' : false,
@@ -159,7 +155,7 @@ export function calendarStage(ctx: Ctx): Ctx {
       // The icon and colour chosen for the workout, as on the Day view's cards.
       icoSvg: iconSvg(a.icon || (a.ride ? 'bike' : 'h'), a.iconColor || undefined),
       open: () =>
-        logic.nav({ screen: 'detail', creating: false, ...monthPatch(relM(d)), day: d.getDate(), entryId: a.id }),
+        logic.openSession(relM(d), d.getDate(), a.id),
       aria:
         label.replace(' · ', ', ') +
         ': ' +
@@ -228,11 +224,7 @@ export function calendarStage(ctx: Ctx): Ctx {
               : 'background:none') +
         (today && !sel ? ';box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--color-accent) 45%, transparent)' : ''),
       aria: d
-        ? DOWFULL[new Date(Y, mi, d).getDay()] +
-          ', ' +
-          MONTHS[mod12(mi)] +
-          ' ' +
-          d +
+        ? longDay(new Date(Y, mi, d)) +
           ' — ' +
           (a ? workoutsWord(list) : '') +
           (a === 'c' ? 'completed' : part ? 'partly done, ' + partText(list) : missed ? 'missed' : a ? 'planned' : 'rest day') +

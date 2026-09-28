@@ -3,6 +3,8 @@
 
 export const RIDE_ZONES = ['Recovery', 'Endurance', 'Tempo', 'Intervals'] as const;
 export type RideZone = (typeof RIDE_ZONES)[number];
+/** A ride's effort when none was given. */
+export const DEFAULT_ZONE: RideZone = 'Endurance';
 
 export interface PlanExercise {
   name: string;
@@ -105,7 +107,7 @@ export function checkPlan(raw: unknown, today: string): { plan: PlanBody } | { p
       out.ride = {
         ...(isNum(r.miles, 0, 500) ? { miles: r.miles } : {}),
         ...(isNum(r.elevation_ft, 0, 50000) ? { elevation_ft: r.elevation_ft } : {}),
-        zone: RIDE_ZONES.includes(r.zone) ? r.zone : 'Endurance',
+        zone: RIDE_ZONES.includes(r.zone) ? r.zone : DEFAULT_ZONE,
       };
     }
     workouts.push(out);

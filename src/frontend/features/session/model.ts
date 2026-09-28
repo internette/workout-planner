@@ -1,8 +1,9 @@
-import { DOW3, DOWFULL, EDIT_OVERLAYS, MON3 } from '@/frontend/shared/constants';
-import { digitsOnly, rollMinutes, exLine, formatElapsed, idOf, isoOf, monthPatch, noticePatch, numericOnly, plural, questSeed } from '@/frontend/shared/helpers';
+import { DOWFULL } from '@/frontend/shared/constants';
+import { dayShort, digitsOnly, exLine, formatElapsed, idOf, longDay, monDay, monthPatch, newWorkoutPatch, noticePatch, numericOnly, plural, questSeed, rollMinutes, toMinutes } from '@/frontend/shared/helpers';
 import { iconSvg } from '@/frontend/shared/icons';
 import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from '../planner/store/types';
+import { DEFAULT_ZONE } from '@/shared/planDraft';
 
 // The day card and the workout detail screen (today's quest, exercise preview, completion).
 export function workoutVals(ctx: Ctx) {
@@ -51,7 +52,7 @@ export function workoutVals(ctx: Ctx) {
     const x = logic.model.entries.find((e) => e.av.id === id);
     if (!x) return 'its day';
     const dt = new Date(Y, x.m, x.d);
-    return DOW3[dt.getDay()].charAt(0) + DOW3[dt.getDay()].slice(1, 3).toLowerCase() + ' ' + x.d;
+    return dayShort(dt) + ' ' + x.d;
   };
   const doToday = (av, sure = false) => {
     if (!av) return;
@@ -76,7 +77,7 @@ export function workoutVals(ctx: Ctx) {
         db.updateWorkout({
           entryId: id,
           workoutId: av.workoutId,
-          moveTo: isoOf(new Date(Y, TODAY_M, TODAY_D)),
+          moveTo: ctx.isoToday,
           exercises: { update: [], removeIds: [], add: [] },
           repeatDates: [],
         }),
@@ -153,7 +154,7 @@ export function workoutVals(ctx: Ctx) {
   // lifting session's time — pre-filled from the timer (or the plan), so it's usually one tap. A ride is marked
   // complete here too; a lifting session is complete once every exercise is ticked, as before.
   const finished = !!selAct && actualMinutes(selAct) > 0;
-  const plannedRideMin = selRide ? Number(selRide.hrs || 0) * 60 + Number(selRide.mins || 0) : 0;
+  const plannedRideMin = selRide ? toMinutes(selRide.hrs, selRide.mins) : 0;
   const openFinish = () => {
     if (!selAct) return;
     // The timer's reading, unless the session already has a recorded time and the timer only ran a few seconds (a
@@ -178,7 +179,7 @@ export function workoutVals(ctx: Ctx) {
     });
   };
   const fin = st.finish || null;
-  const finMinutes = fin ? Number(fin.hrs || 0) * 60 + Number(fin.mins || 0) : 0;
+  const finMinutes = fin ? toMinutes(fin.hrs, fin.mins) : 0;
   const patchFinish = (patch) => logic.s({ finish: Object.assign({}, fin, patch) });
   const saveFinish = () => {
     if (!fin || !selAct || finMinutes <= 0) return;
@@ -211,14 +212,14 @@ export function workoutVals(ctx: Ctx) {
       {
         label: 'DURATION',
         value: timeOf(av) || '—',
-        note: took && took !== Number(r.hrs || 0) * 60 + Number(r.mins || 0) ? 'Planned ' + av.time : '',
+        note: took && took !== toMinutes(r.hrs, r.mins) ? 'Planned ' + av.time : '',
       },
       {
         label: 'ELEVATION',
         value: (a && a.elev) || r.elev ? ((a && a.elev) || r.elev) + ' ft' : '—',
         note: a ? vsPlan(a.elev, r.elev, ' ft') : '',
       },
-      { label: 'EFFORT', value: r.zone || 'Endurance', note: '' },
+      { label: 'EFFORT', value: r.zone || DEFAULT_ZONE, note: '' },
     ];
   };
   // Day view shows a card for every workout on the day. A card's buttons pick its session first, then do what
@@ -319,7 +320,7 @@ export function workoutVals(ctx: Ctx) {
     // Not on a day gone by: a timer started now would time today, not that day.
     showTimer: !isFutureDay && (!!timerState || (!doneSel && !finished && !isPastDay)),
     isFuture: isFutureDay && !!selAct && !doneSel,
-    futureNote: 'Planned for ' + DOWFULL[selDate.getDay()] + ', ' + MON3[selDate.getMonth()] + ' ' + selDay + '.',
+    futureNote: 'Planned for ' + DOWFULL[selDate.getDay()] + ', ' + monDay(selDate) + '.',
     doItToday: () => doToday(selAct),
     canFinish: !!timerState && !!selAct,
     openFinish,
@@ -410,33 +411,12 @@ export function workoutVals(ctx: Ctx) {
     // From a day of the calendar the new workout goes on that day, and can be switched to saved-only.
     goNewWorkout: () =>
       logic.nav(
-        Object.assign({}, EDIT_OVERLAYS, {
-          screen: 'edit',
-          editing: false,
-          creating: true,
-          addOpen: false,
-          newName: '',
-          newType: null,
-          newFrom: 'calendar',
-          schedule: true,
-          arsenalPick: null,
-        }),
+        newWorkoutPatch({ newFrom: 'calendar', schedule: true, arsenalPick: null }),
       ),
     // From the Spellbook it is only saved. It goes on the calendar when the person chooses to.
     goNewWorkoutFromArsenal: () =>
       logic.nav(
-        Object.assign({}, EDIT_OVERLAYS, {
-          screen: 'edit',
-          editing: false,
-          creating: true,
-          addOpen: false,
-          newName: '',
-          newType: null,
-          newFrom: 'arsenal',
-          schedule: false,
-          repeat: false,
-          arsenalPick: null,
-        }),
+        newWorkoutPatch({ newFrom: 'arsenal', schedule: false, arsenalPick: null }),
       ),
     goDiary,
     showQuest: st.seg === 'Day' && !!actFor(selDay),
@@ -495,7 +475,7 @@ export function workoutVals(ctx: Ctx) {
       logic.s({ restartPrompt: false });
       doRestart();
     },
-    longDate: DOWFULL[selDate.getDay()] + ', ' + st.month + ' ' + selDay + (st.yOff ? ', ' + selDate.getFullYear() : ''),
+    longDate: longDay(selDate) + (st.yOff ? ', ' + selDate.getFullYear() : ''),
     // Nothing to tick off before the session's day, so no progress card then either.
     hasProgress: st.screen === 'edit' && !isCycleView && selList.length > 0 && !ctx.creating && !ctx.tplMode && !isFutureDay,
     progLabel: doneCount + ' of ' + selList.length + ' done',
