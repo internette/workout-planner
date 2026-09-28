@@ -14,7 +14,8 @@
 
 .header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
 .title { margin: 0; }
-.close { position: absolute; top: 14px; right: 14px; }
+/* Scoped to the panel so it outranks the button's own `position: relative`, whichever stylesheet the build loads last. */
+.panel .close { position: absolute; top: 14px; right: 14px; }
 /* Keep a long title clear of the X in the corner. */
 .withClose { padding-right: 34px; }
 .description { margin: 10px 0 0; text-wrap: pretty; }
