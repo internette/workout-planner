@@ -5,7 +5,7 @@ import { ColorVariables, colors } from '@moonshot/design-system/colors';
 import { TypographyVariables } from '@moonshot/design-system/typography';
 import { ElevationVariables } from '@moonshot/design-system/elevation';
 import { StructureVariables } from '@moonshot/design-system/StructureVariables';
-import { RegisterServiceWorker } from '@/features/install/RegisterServiceWorker';
+import { RegisterServiceWorker } from '@/frontend/features/install/RegisterServiceWorker';
 import { themeScript } from '@moonshot/design-system/theme';
 
 export const metadata: Metadata = {

@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { connectionOn } from '@/lib/auth';
-import { getAuth0 } from '@/lib/auth0';
+import { connectionOn } from '@/shared/auth';
+import { getAuth0 } from '@/backend/auth0/client';
 
 // Public: the front door, the design-system site (another app, forwarded by next.config.js), the SDK's own routes
 // (/auth/...), and the token route, which answers 401 itself when signed out, so the page's code can tell. The assistant
@@ -15,7 +15,7 @@ const isPublic = (path: string) =>
   path.startsWith('/design-system') ||
   path.startsWith('/auth/');
 
-// On unless NEXT_PUBLIC_AUTH_REQUIRED=false (see lib/auth.ts).
+// On unless NEXT_PUBLIC_AUTH_REQUIRED=false (see shared/auth.ts).
 const required = () => process.env.NEXT_PUBLIC_AUTH_REQUIRED !== 'false';
 
 export async function middleware(request: NextRequest) {
