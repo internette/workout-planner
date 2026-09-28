@@ -250,63 +250,67 @@ export function diaryVals(ctx: Ctx) {
               : 'The chronicle is still blank.',
     // Read out when the Chronicle's filter changes how many entries are listed.
     diaryResults: plural(diaryDays.length, 'entry', 'entries') + ' shown.',
-    diaryList: diaryDays.map((id) => {
-      const en = ENTRIES[id];
-      const dt = new Date(Y, en.m, en.d);
-      // An entry from another year says which.
-      const yr = dt.getFullYear() !== Y ? ' ' + dt.getFullYear() : '';
-      const bg = MOOD_COLORS[en.mood] || 'var(--color-danger)';
-      return {
-        date: DOW3[dt.getDay()] + ', ' + MON3[mod12(en.m)].toUpperCase() + ' ' + en.d + yr,
-        name: en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout',
-        warmup: !!(logic.model.entries.find((x) => x.av.id === id) || { av: null }).av?.warmup,
-        deleteLabel:
-          'Delete entry for ' + (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') + ', ' + monDay(dt) + yr,
-        note: en.note,
-        href: '#',
-        aria:
-          DOW3[dt.getDay()] +
-          ', ' +
-          monDay(dt) +
-          yr +
-          ': ' +
-          (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') +
-          ', ' +
-          en.mood +
-          ', effort ' +
-          en.rpe +
-          ' of 5',
-        open: () =>
-          logic.nav({
-            screen: 'diary',
-            ...monthPatch(en.m),
-            day: en.d,
-            entryId: id,
-            mood: en.mood,
-            rpe: en.rpe,
-            entryNote: null,
-            diaryFrom: 'list',
-            diaryEdit: false,
-          }),
-        remove: (ev) => {
-          if (ev && ev.stopPropagation) ev.stopPropagation();
-          logic.s({
-            confirm: {
-              kind: 'entry',
-              day: id,
-              title: 'Delete this entry?',
-              body: 'Your reflection for ' + monDay(dt) + ' will be gone for good.',
-              label: 'Delete entry',
-            },
-          });
-        },
-        faceWrap:
-          'width:48px;height:48px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
-          bg,
-        mood: en.mood,
-        rpe: en.rpe,
-      };
-    }),
+    diaryList: (() => {
+      // Which diary entries belong to a session with a warm-up, looked up once rather than per entry.
+      const warmupIds = new Set(logic.model.entries.filter((x) => x.av.warmup).map((x) => x.av.id));
+      return diaryDays.map((id) => {
+        const en = ENTRIES[id];
+        const dt = new Date(Y, en.m, en.d);
+        // An entry from another year says which.
+        const yr = dt.getFullYear() !== Y ? ' ' + dt.getFullYear() : '';
+        const bg = MOOD_COLORS[en.mood] || 'var(--color-danger)';
+        return {
+          date: DOW3[dt.getDay()] + ', ' + MON3[mod12(en.m)].toUpperCase() + ' ' + en.d + yr,
+          name: en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout',
+          warmup: warmupIds.has(id),
+          deleteLabel:
+            'Delete entry for ' + (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') + ', ' + monDay(dt) + yr,
+          note: en.note,
+          href: '#',
+          aria:
+            DOW3[dt.getDay()] +
+            ', ' +
+            monDay(dt) +
+            yr +
+            ': ' +
+            (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') +
+            ', ' +
+            en.mood +
+            ', effort ' +
+            en.rpe +
+            ' of 5',
+          open: () =>
+            logic.nav({
+              screen: 'diary',
+              ...monthPatch(en.m),
+              day: en.d,
+              entryId: id,
+              mood: en.mood,
+              rpe: en.rpe,
+              entryNote: null,
+              diaryFrom: 'list',
+              diaryEdit: false,
+            }),
+          remove: (ev) => {
+            if (ev && ev.stopPropagation) ev.stopPropagation();
+            logic.s({
+              confirm: {
+                kind: 'entry',
+                day: id,
+                title: 'Delete this entry?',
+                body: 'Your reflection for ' + monDay(dt) + ' will be gone for good.',
+                label: 'Delete entry',
+              },
+            });
+          },
+          faceWrap:
+            'width:48px;height:48px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
+            bg,
+          mood: en.mood,
+          rpe: en.rpe,
+        };
+      });
+    })(),
     diaryReading: reading,
     diaryEditing: !reading,
     // The "Entry saved." notice is about the entry as it was; changing it starts without it.

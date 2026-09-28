@@ -11,11 +11,21 @@ export function entriesStage(ctx: BaseCtx) {
     (EXV[exKey] || [])
       .concat((st.extra || {})[key] || [])
       .filter((e) => ((st.removed || {})[key] || []).indexOf(e.name) === -1);
-  const countAt = (av: Entry) => instList(av.exKey, idOf(av)).length;
-  const doneCountAt = (av: Entry) => {
-    const dn = (st.done || {})[idOf(av)] || [];
-    return instList(av.exKey, idOf(av)).filter((e) => dn.indexOf(e.name) !== -1).length;
+  // How many exercises a session has, and how many are ticked. Asked for every session in history several times a
+  // render (done states, XP, the calendar's markers), so each session's answer is kept for the rest of this render.
+  const counts = new WeakMap<Entry, { all: number; done: number }>();
+  const countsOf = (av: Entry) => {
+    let c = counts.get(av);
+    if (!c) {
+      const list = instList(av.exKey, idOf(av));
+      const dn = (st.done || {})[idOf(av)] || [];
+      c = { all: list.length, done: list.filter((e) => dn.indexOf(e.name) !== -1).length };
+      counts.set(av, c);
+    }
+    return c;
   };
+  const countAt = (av: Entry) => countsOf(av).all;
+  const doneCountAt = (av: Entry) => countsOf(av).done;
   // A session's status, in the same words everywhere it's listed (Progress, the Chronicle's picker): done, partly
   // done or missed once its day has gone by, in progress today once started, otherwise planned.
   const sessionStatus = (m, d, av) => {
@@ -36,9 +46,16 @@ export function entriesStage(ctx: BaseCtx) {
     av && av.actual ? toMinutes(av.actual.hrs, av.actual.mins) : 0;
   // Done, everywhere: a ride marked complete; a lift with every exercise ticked, or finished with Finish (which records
   // its time) even with some left unticked.
-  const isDoneEntry = (av: Entry) =>
-    !!av &&
-    (av.ride ? rideDoneAt(av) : (countAt(av) > 0 && doneCountAt(av) === countAt(av)) || actualMinutes(av) > 0);
+  const doneMemo = new WeakMap<Entry, boolean>();
+  const isDoneEntry = (av: Entry) => {
+    if (!av) return false;
+    let done = doneMemo.get(av);
+    if (done === undefined) {
+      done = av.ride ? rideDoneAt(av) : (countAt(av) > 0 && doneCountAt(av) === countAt(av)) || actualMinutes(av) > 0;
+      doneMemo.set(av, done);
+    }
+    return done;
+  };
   // A finished session's time, else the planned one ("~50 min").
   const timeOf = (av: Entry) => (actualMinutes(av) ? minText(actualMinutes(av)) : av.time);
   // A ride's distance: what was ridden once it's done and recorded, else the plan.
