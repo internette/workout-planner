@@ -1,8 +1,8 @@
-import { AUTH_REQUIRED } from '@/shared/auth';
 import { supabase } from './supabase';
 import { colors } from '@moonshot/design-system/colors';
 import { DEFAULT_ZONE, type PlanDraft, type PlanWorkout } from '@/shared/planDraft';
-import { splitMinutes, minText } from '@/frontend/shared/helpers';
+import { LIFT_MINUTES, RIDE_MINUTES } from '@/frontend/shared/constants';
+import { isoMonthDay, isoOf, isoWeekday, minText, splitMinutes } from '@/frontend/shared/helpers';
 
 // ---------- shapes the planner UI works with ----------
 
@@ -165,13 +165,57 @@ const iconColorOf = (hex: string | null) => (hex && OLD_PINKS.includes(hex.toUpp
 
 const areasOf = (list: Exercise[]) => Array.from(new Set(list.flatMap((e) => e.areas || [])));
 
-const pad = (n: number) => String(n).padStart(2, '0');
-const isoDate = (y: number, m: number, d: number) => `${y}-${pad(m + 1)}-${pad(d)}`;
-
 async function ok<T>(q: PromiseLike<{ data: T; error: any }>): Promise<T> {
   const { data, error } = await q;
   if (error) throw new Error(error.message);
   return data;
+}
+
+// The same, for a table a migration adds: until it has run the table isn't there, and `fallback` stands in for it.
+// Any other error still throws.
+async function okOr<T>(q: PromiseLike<{ data: T; error: any }>, fallback: T): Promise<T> {
+  const { data, error } = await q;
+  if (error && (error.code === '42P01' || error.code === 'PGRST205')) return fallback;
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+const workoutById = async (id: string): Promise<any | undefined> =>
+  (await ok<any[]>(supabase.from('workouts').select('*').eq('id', id)))[0];
+
+// Numbers as the screens hold them (a string, blank for none) and as the database does (a number, or null).
+const numStr = (v: number | null | undefined) => (v != null ? String(v) : '');
+const numOrNull = (v: string | undefined) => (v ? Number(v) : null);
+
+// A ride's plan as workout columns.
+const rideCols = (ride: { dist: string; elev: string; zone: string }) => ({
+  ride_distance_miles: numOrNull(ride.dist),
+  ride_elevation_ft: numOrNull(ride.elev),
+  ride_zone: ride.zone,
+});
+
+// A session marked complete or not.
+const completionCols = (completed: boolean) => ({
+  status: completed ? 'completed' : 'planned',
+  completed_at: completed ? new Date().toISOString() : null,
+});
+
+// A workout's fields as both the calendar's sessions and the Spellbook's list show them.
+function workoutView(w: any, exercises: Exercise[]) {
+  const isRide = w.kind === 'ride';
+  const minutes: number = w.duration_minutes ?? (isRide ? RIDE_MINUTES : LIFT_MINUTES);
+  return {
+    name: w.name as string,
+    isRide,
+    minutes,
+    time: isRide ? minText(minutes) : `~${minutes} min`,
+    icon: w.icon,
+    iconColor: iconColorOf(w.icon_color),
+    areas: isRide ? [] : areasOf(exercises),
+    notes: (w.notes || '') as string,
+    warmup: !!w.is_warmup,
+    ride: isRide ? { dist: numStr(w.ride_distance_miles), elev: numStr(w.ride_elevation_ft), zone: w.ride_zone || DEFAULT_ZONE } : undefined,
+  };
 }
 
 // ---------- read ----------
@@ -185,11 +229,7 @@ export async function loadModel(today: Date): Promise<Model> {
     ok(supabase.from('library_exercises').select('*').order('created_at')),
     ok(supabase.from('builtin_exercises').select('*').order('sort_order')),
     // Until the built-in workouts migration has run there is no such table: the Spellbook just has none to show.
-    supabase
-      .from('builtin_workouts')
-      .select('*')
-      .order('sort_order')
-      .then((r: { data: any[] | null; error: any }) => (r.error ? [] : r.data || [])),
+    okOr<any[]>(supabase.from('builtin_workouts').select('*').order('sort_order'), []),
   ]);
 
   const byId: Record<string, any> = {};
@@ -208,7 +248,7 @@ export async function loadModel(today: Date): Promise<Model> {
   const EX: Record<string, Exercise[]> = {};
   workouts.filter((w: any) => !w.archived).forEach((w: any) => (EX[w.name] = EXV[w.name]));
 
-  const todayIso = isoDate(today.getFullYear(), today.getMonth(), today.getDate());
+  const todayIso = isoOf(today);
   const SEED: Model['SEED'] = {};
   const entries: Model['entries'] = [];
   const done: Model['done'] = {};
@@ -217,16 +257,12 @@ export async function loadModel(today: Date): Promise<Model> {
 
   // A repeating workout's series is on one weekday: the one most of its sessions fall on. A session of it on another
   // day (put there on its own) isn't part of the series.
-  const dowOf = (iso: string) => {
-    const [y, mo, d] = String(iso).split('-').map(Number);
-    return new Date(y, mo - 1, d).getDay();
-  };
   const seriesDay: Record<string, number> = {};
   const dayCounts: Record<string, number[]> = {};
   plan.forEach((p: any) => {
     const w = byId[p.workout_id];
     if (!w || !w.repeat_enabled) return;
-    (dayCounts[w.id] = dayCounts[w.id] || [0, 0, 0, 0, 0, 0, 0])[dowOf(p.scheduled_date)]++;
+    (dayCounts[w.id] = dayCounts[w.id] || [0, 0, 0, 0, 0, 0, 0])[isoWeekday(p.scheduled_date)]++;
   });
   Object.keys(dayCounts).forEach((id) => {
     const c = dayCounts[id];
@@ -236,40 +272,32 @@ export async function loadModel(today: Date): Promise<Model> {
   plan.forEach((p: any) => {
     const w = byId[p.workout_id];
     if (!w) return;
-    const [yy, mm, dd] = String(p.scheduled_date).split('-').map(Number);
-    const m = (yy - today.getFullYear()) * 12 + mm - 1;
+    const { m, d: dd } = isoMonthDay(p.scheduled_date, today.getFullYear());
     const completed = p.status === 'completed';
-    const isRide = w.kind === 'ride';
-    const minutes = w.duration_minutes ?? (isRide ? 45 : 50);
+    const view = workoutView(w, EXV[keyOf(w)] || []);
+    const { isRide } = view;
     const hasActual =
       p.actual_distance_miles != null || p.actual_elevation_ft != null || p.actual_minutes != null;
     const av: Entry = {
       id: p.id,
       workoutId: w.id,
-      name: w.name,
+      name: view.name,
       exKey: keyOf(w),
       s: completed ? 'c' : p.scheduled_date === todayIso ? 't' : 'p',
-      time: isRide ? minText(minutes) : `~${minutes} min`,
-      icon: w.icon,
-      iconColor: iconColorOf(w.icon_color),
-      areas: isRide ? [] : areasOf(EXV[keyOf(w)] || []),
+      time: view.time,
+      icon: view.icon,
+      iconColor: view.iconColor,
+      areas: view.areas,
       repeat: !!w.repeat_enabled,
-      notes: w.notes || '',
-      warmup: !!w.is_warmup,
-      series: w.repeat_enabled && seriesDay[w.id] === dowOf(p.scheduled_date) ? w.id : undefined,
+      notes: view.notes,
+      warmup: view.warmup,
+      series: w.repeat_enabled && seriesDay[w.id] === isoWeekday(p.scheduled_date) ? w.id : undefined,
       seriesDay: w.repeat_enabled ? seriesDay[w.id] : undefined,
-      ride: isRide
-        ? {
-            dist: w.ride_distance_miles != null ? String(w.ride_distance_miles) : '',
-            ...splitMinutes(minutes),
-            elev: w.ride_elevation_ft != null ? String(w.ride_elevation_ft) : '',
-            zone: w.ride_zone || DEFAULT_ZONE,
-          }
-        : undefined,
+      ride: view.ride && { ...view.ride, ...splitMinutes(view.minutes) },
       actual: hasActual
         ? {
-            dist: p.actual_distance_miles != null ? String(p.actual_distance_miles) : '',
-            elev: p.actual_elevation_ft != null ? String(p.actual_elevation_ft) : '',
+            dist: numStr(p.actual_distance_miles),
+            elev: numStr(p.actual_elevation_ft),
             hrs: p.actual_minutes ? String(Math.floor(p.actual_minutes / 60)) : '',
             mins: p.actual_minutes ? String(p.actual_minutes % 60) : '',
           }
@@ -308,27 +336,12 @@ export async function loadModel(today: Date): Promise<Model> {
   const saved: WorkoutSummary[] = workouts
     .filter((w: any) => !w.archived)
     .map((w: any) => {
-      const isRide = w.kind === 'ride';
-      const minutes = w.duration_minutes ?? (isRide ? 45 : 50);
+      const { isRide, ...view } = workoutView(w, EXV[keyOf(w)] || []);
       return {
         id: w.id,
-        name: w.name,
+        ...view,
         kind: isRide ? 'ride' : 'lift',
-        time: isRide ? minText(minutes) : `~${minutes} min`,
-        minutes,
-        areas: isRide ? [] : areasOf(EXV[keyOf(w)] || []),
-        icon: w.icon,
-        iconColor: iconColorOf(w.icon_color),
         exercises: (EX[w.name] || []).map((e) => e.name),
-        notes: w.notes || '',
-        warmup: !!w.is_warmup,
-        ride: isRide
-          ? {
-              dist: w.ride_distance_miles != null ? String(w.ride_distance_miles) : '',
-              elev: w.ride_elevation_ft != null ? String(w.ride_elevation_ft) : '',
-              zone: w.ride_zone || DEFAULT_ZONE,
-            }
-          : undefined,
       } as WorkoutSummary;
     })
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -384,28 +397,11 @@ export function estimateMinutes(count: number, warmup: boolean) {
 // ---------- write ----------
 
 export async function setExercisesDone(entryId: string, names: string[], completed: boolean) {
-  await ok(
-    supabase
-      .from('plan_entries')
-      .update({
-        done_exercises: names,
-        status: completed ? 'completed' : 'planned',
-        completed_at: completed ? new Date().toISOString() : null,
-      })
-      .eq('id', entryId),
-  );
+  await ok(supabase.from('plan_entries').update({ done_exercises: names, ...completionCols(completed) }).eq('id', entryId));
 }
 
 export async function setRideDone(entryId: string, completed: boolean) {
-  await ok(
-    supabase
-      .from('plan_entries')
-      .update({
-        status: completed ? 'completed' : 'planned',
-        completed_at: completed ? new Date().toISOString() : null,
-      })
-      .eq('id', entryId),
-  );
+  await ok(supabase.from('plan_entries').update(completionCols(completed)).eq('id', entryId));
 }
 
 // Finishing a session: what it actually took. A ride is also marked complete here; a lifting session is complete
@@ -417,13 +413,9 @@ export async function finishSession(
   // Finished is completed, for a lift as for a ride, so nothing later treats it as still to come.
   const patch: Record<string, unknown> = {
     actual_minutes: f.minutes || null,
-    status: 'completed',
-    completed_at: new Date().toISOString(),
+    ...completionCols(true),
+    ...(f.ride ? { actual_distance_miles: numOrNull(f.dist), actual_elevation_ft: numOrNull(f.elev) } : {}),
   };
-  if (f.ride) {
-    patch.actual_distance_miles = f.dist ? Number(f.dist) : null;
-    patch.actual_elevation_ft = f.elev ? Number(f.elev) : null;
-  }
   await ok(supabase.from('plan_entries').update(patch).eq('id', entryId));
 }
 
@@ -433,8 +425,7 @@ export async function reopenSession(entryId: string) {
     supabase
       .from('plan_entries')
       .update({
-        status: 'planned',
-        completed_at: null,
+        ...completionCols(false),
         actual_minutes: null,
         actual_distance_miles: null,
         actual_elevation_ft: null,
@@ -467,6 +458,8 @@ export async function deletePlanEntries(entryIds: string[]) {
 // A session is finished once it's completed or has a recorded time (sessions finished before Finish marked
 // lifts completed have only the time).
 const isFinished = (r: any) => r.status === 'completed' || r.actual_minutes != null;
+// Still ahead: from today on, and not finished. What "upcoming" means wherever sessions are counted.
+const isAhead = (r: any, todayIso: string) => r.scheduled_date >= todayIso && !isFinished(r);
 
 // Of these sessions, the ones that can come off the calendar without losing anything: not finished, nothing
 // ticked off, and nothing written about them in the Chronicle.
@@ -488,13 +481,9 @@ export async function endSeries(workoutId: string, afterIso: string, todayIso: s
     supabase.from('plan_entries').select(SESSION_COLS).eq('workout_id', workoutId).gt('scheduled_date', afterIso),
   );
   // Only the series' own weekday: a session of the same workout put on another day stays.
-  const dow = (iso: string) => {
-    const [y, mo, d] = iso.split('-').map(Number);
-    return new Date(y, mo - 1, d).getDay();
-  };
-  const day = dow(afterIso);
+  const day = isoWeekday(afterIso);
   await deletePlanEntries(
-    await untouchedIds(later.filter((r) => r.scheduled_date >= todayIso && dow(String(r.scheduled_date)) === day)),
+    await untouchedIds(later.filter((r) => isAhead(r, todayIso) && isoWeekday(r.scheduled_date) === day)),
   );
   await ok(supabase.from('workouts').update({ repeat_enabled: false }).eq('id', workoutId));
 }
@@ -503,7 +492,7 @@ export async function endSeries(workoutId: string, afterIso: string, todayIso: s
 // name (ignoring case) if there is one, otherwise a new copy of it.
 export async function ownCopyOfBuiltin(w: BuiltinWorkout): Promise<{ workoutId: string; created: boolean }> {
   const mine: any[] = await ok(supabase.from('workouts').select('id, name').eq('archived', false));
-  const have = mine.find((r) => String(r.name).trim().toLowerCase() === w.name.trim().toLowerCase());
+  const have = mine.find((r) => nameKey(r.name) === nameKey(w.name));
   if (have) return { workoutId: have.id, created: false };
   const { workoutId } = await createWorkout({
     name: w.name,
@@ -549,9 +538,7 @@ export async function createWorkout(w: NewWorkout) {
         duration_minutes: w.durationMinutes,
         icon: w.icon,
         icon_color: w.iconColor,
-        ride_distance_miles: w.ride && w.ride.dist ? Number(w.ride.dist) : null,
-        ride_elevation_ft: w.ride && w.ride.elev ? Number(w.ride.elev) : null,
-        ride_zone: w.ride ? w.ride.zone : null,
+        ...(w.ride ? rideCols(w.ride) : { ride_distance_miles: null, ride_elevation_ft: null, ride_zone: null }),
         repeat_enabled: w.repeat,
         notes: w.notes || null,
         // Only when set, so a workout can still be saved before the warm-ups migration has run.
@@ -561,14 +548,7 @@ export async function createWorkout(w: NewWorkout) {
   );
   const workoutId: string = row.id;
 
-  if (w.exercises.length) {
-    let order = 0;
-    await ok(
-      supabase
-        .from('workout_exercises')
-        .insert(w.exercises.map((e) => ({ workout_id: workoutId, order_index: order++, ...exerciseRow(e) }))),
-    );
-  }
+  await insertExercises(workoutId, w.exercises, 0);
 
   // A workout saved on its own has no dates, and nothing to schedule. Otherwise the session on the first date comes
   // back, so the screen can open on it even when that day has other workouts too.
@@ -598,13 +578,7 @@ export async function scheduleWorkout(
       .insert(
         dates.map((d, i) =>
           i === 0 && done
-            ? {
-                workout_id: workoutId,
-                scheduled_date: d,
-                status: 'completed',
-                completed_at: new Date().toISOString(),
-                done_exercises: done.exercises,
-              }
+            ? { workout_id: workoutId, scheduled_date: d, ...completionCols(true), done_exercises: done.exercises }
             : { workout_id: workoutId, scheduled_date: d, status: 'planned' },
         ),
       )
@@ -613,15 +587,27 @@ export async function scheduleWorkout(
   return { entryId: rows.find((r) => r.scheduled_date === dates[0])?.id ?? null };
 }
 
-// A name no current workout uses (ignoring case): the name itself, else "<name> 2", "<name> 3", ...
-async function numberedWorkoutName(wanted: string): Promise<string> {
-  const rows: any[] = await ok(supabase.from('workouts').select('name').eq('archived', false));
-  const taken = new Set(rows.map((r) => String(r.name).trim().toLowerCase()));
-  if (!taken.has(wanted.trim().toLowerCase())) return wanted;
-  let n = 2;
-  while (taken.has((wanted + ' ' + n).trim().toLowerCase())) n++;
-  return wanted + ' ' + n;
+// Names are compared ignoring case and the spaces around them, everywhere: "Leg day" is taken when "Leg Day" is.
+const nameKey = (name: string) => String(name).trim().toLowerCase();
+
+// A name that isn't in `taken` (a set of nameKeys): the name itself, else numbered ("<name> 2", "<name> 3", ...)
+// or marked as a copy ("<name> (copy)", "<name> (copy 2)", ...).
+function freeName(wanted: string, taken: Set<string>, style: 'number' | 'copy'): string {
+  if (!taken.has(nameKey(wanted))) return wanted;
+  const nth = (n: number) => (style === 'number' ? `${wanted} ${n}` : n === 1 ? `${wanted} (copy)` : `${wanted} (copy ${n})`);
+  let n = style === 'number' ? 2 : 1;
+  while (taken.has(nameKey(nth(n)))) n++;
+  return nth(n);
 }
+
+// The names of the workouts in the Spellbook, as nameKeys.
+async function takenWorkoutNames(): Promise<Set<string>> {
+  const rows: any[] = await ok(supabase.from('workouts').select('name').eq('archived', false));
+  return new Set(rows.map((r) => nameKey(r.name)));
+}
+
+// A name no current workout uses: the name itself, else "<name> 2", "<name> 3", ...
+const numberedWorkoutName = async (wanted: string) => freeName(wanted, await takenWorkoutNames(), 'number');
 
 export interface WorkoutEdit {
   entryId: string;
@@ -661,28 +647,40 @@ async function renameDoneExercise(workoutId: string, from: string, to: string) {
   }
 }
 
+// Adds exercises to a workout, numbered in order from `startAt`.
+async function insertExercises(workoutId: string, list: Exercise[], startAt: number) {
+  if (!list.length) return;
+  await ok(
+    supabase
+      .from('workout_exercises')
+      .insert(list.map((x, i) => ({ workout_id: workoutId, order_index: startAt + i, ...exerciseRow(x) }))),
+  );
+}
+
+// Changes one exercise row (in a workout, or saved on its own): what it was, with `patch` over it. Returns the names
+// before and after, or null when the row is gone.
+async function patchExercise(table: 'workout_exercises' | 'library_exercises', id: string, patch: Partial<Exercise>) {
+  const [cur]: any[] = await ok(supabase.from(table).select('*').eq('id', id));
+  if (!cur) return null;
+  const merged = { ...toExercise(cur), ...patch };
+  await ok(supabase.from(table).update(exerciseRow(merged)).eq('id', id));
+  return { from: cur.name as string, to: merged.name };
+}
+
 export async function updateWorkout(e: WorkoutEdit) {
   const patch: Record<string, unknown> = {};
   if (e.name != null && e.name.trim()) patch.name = e.name.trim();
   if (e.icon !== undefined) patch.icon = e.icon;
   if (e.iconColor !== undefined) patch.icon_color = e.iconColor;
   if (e.notes !== undefined) patch.notes = e.notes;
-  if (e.ride) {
-    patch.ride_distance_miles = e.ride.dist ? Number(e.ride.dist) : null;
-    patch.ride_elevation_ft = e.ride.elev ? Number(e.ride.elev) : null;
-    patch.ride_zone = e.ride.zone;
-    patch.duration_minutes = e.ride.minutes;
-  }
+  if (e.ride) Object.assign(patch, rideCols(e.ride), { duration_minutes: e.ride.minutes });
   if (e.durationMinutes != null && !e.ride) patch.duration_minutes = e.durationMinutes;
   if (e.warmup !== undefined) patch.is_warmup = e.warmup;
   if (Object.keys(patch).length) await ok(supabase.from('workouts').update(patch).eq('id', e.workoutId));
 
   for (const u of e.exercises.update) {
-    const cur: any[] = await ok(supabase.from('workout_exercises').select('*').eq('id', u.id));
-    if (!cur.length) continue;
-    const merged = { ...toExercise(cur[0]), ...u.patch };
-    await ok(supabase.from('workout_exercises').update(exerciseRow(merged)).eq('id', u.id));
-    if (merged.name !== cur[0].name) await renameDoneExercise(e.workoutId, cur[0].name, merged.name);
+    const names = await patchExercise('workout_exercises', u.id, u.patch);
+    if (names && names.to !== names.from) await renameDoneExercise(e.workoutId, names.from, names.to);
   }
   if (e.exercises.removeIds.length) {
     await ok(supabase.from('workout_exercises').delete().in('id', e.exercises.removeIds));
@@ -691,14 +689,7 @@ export async function updateWorkout(e: WorkoutEdit) {
     const have: any[] = await ok(
       supabase.from('workout_exercises').select('order_index').eq('workout_id', e.workoutId),
     );
-    let order = have.reduce((max, r) => Math.max(max, r.order_index ?? 0), -1) + 1;
-    await ok(
-      supabase
-        .from('workout_exercises')
-        .insert(
-          e.exercises.add.map((x) => ({ workout_id: e.workoutId, order_index: order++, ...exerciseRow(x) })),
-        ),
-    );
+    await insertExercises(e.workoutId, e.exercises.add, have.reduce((max, r) => Math.max(max, r.order_index ?? 0), -1) + 1);
   }
   if (e.exercises.order?.length) {
     // Numbered by the order given; any exercise it doesn't name keeps its place after those.
@@ -719,8 +710,8 @@ export async function updateWorkout(e: WorkoutEdit) {
   const entryPatch: Record<string, unknown> = {};
   if (e.moveTo) entryPatch.scheduled_date = e.moveTo;
   if (e.actual) {
-    entryPatch.actual_distance_miles = e.actual.dist ? Number(e.actual.dist) : null;
-    entryPatch.actual_elevation_ft = e.actual.elev ? Number(e.actual.elev) : null;
+    entryPatch.actual_distance_miles = numOrNull(e.actual.dist);
+    entryPatch.actual_elevation_ft = numOrNull(e.actual.elev);
     entryPatch.actual_minutes = e.actual.minutes || null;
   }
   if (Object.keys(entryPatch).length)
@@ -728,25 +719,16 @@ export async function updateWorkout(e: WorkoutEdit) {
 
   // A weekly series belongs to a saved workout: a session saved on its own repeats the saved workout it came from.
   if (e.repeatDates.length) {
-    const [w]: any[] = await ok(supabase.from('workouts').select('*').eq('id', e.workoutId));
-    const seriesId = ((await savedWorkoutOf(w)) || w).id;
-    await ok(supabase.from('workouts').update({ repeat_enabled: true }).eq('id', seriesId));
-    await ok(
-      supabase
-        .from('plan_entries')
-        .insert(e.repeatDates.map((d) => ({ workout_id: seriesId, scheduled_date: d, status: 'planned' }))),
-    );
+    const w = await workoutById(e.workoutId);
+    await scheduleWorkout(((await savedWorkoutOf(w)) || w).id, e.repeatDates, true);
   }
 }
 
-// Takes a saved workout out of the Spellbook. Its sessions still ahead (from today on, not completed) come off the
-// calendar; past and completed ones stay, pointing at it, so history keeps its exercises. Archiving rather than
-// deleting is what the edit snapshots already do, and it frees the name.
 // The sessions still ahead (from today on, not completed) of a saved workout, including those an edit left on an
 // archived copy of it ("keep the upcoming sessions as they were", or "only this session"). Those copies carry the
 // workout's name; the saved workout itself is the one not archived.
 export async function upcomingOfWorkout(workoutId: string, todayIso: string): Promise<string[]> {
-  const [w]: any[] = await ok(supabase.from('workouts').select('*').eq('id', workoutId));
+  const w = await workoutById(workoutId);
   // Its archived copies: linked by id once the source_workout_id migration has run (a rename doesn't break that),
   // by name before then.
   const copies: any[] = !w
@@ -762,6 +744,9 @@ export async function upcomingOfWorkout(workoutId: string, todayIso: string): Pr
   return untouchedIds(rows);
 }
 
+// Takes a saved workout out of the Spellbook. Its sessions still ahead (from today on, not completed) come off the
+// calendar; past and completed ones stay, pointing at it, so history keeps its exercises. Archiving rather than
+// deleting is what the edit snapshots already do, and it frees the name.
 export async function archiveWorkout(workoutId: string, todayIso: string) {
   await deletePlanEntries(await upcomingOfWorkout(workoutId, todayIso));
   await ok(supabase.from('workouts').update({ archived: true, repeat_enabled: false }).eq('id', workoutId));
@@ -772,36 +757,22 @@ export async function deleteLibraryExercise(id: string) {
   await ok(supabase.from('library_exercises').delete().eq('id', id));
 }
 
-export async function addLibraryExercise(e: Exercise) {
-  // With per-user rows a name only has to be unique among one person's exercises.
-  const onConflict = AUTH_REQUIRED ? 'user_id,name' : 'name';
-  await ok(supabase.from('library_exercises').upsert(exerciseRow(e), { onConflict }));
-}
-
-// "Save as a new exercise", or a copy of a built-in: always a new row, never an overwrite. A name already in the
-// Arsenal (the person's own or a built-in) becomes "<name> (copy)", "(copy 2)", ... Returns the new row's id and
-// the name it ended up with, so the screen can open it.
+// A new exercise saved on its own ("New exercise", "Save as a new exercise", or a copy of a built-in): always a new
+// row, never an overwrite. A name already in the Spellbook (the person's own or a built-in, ignoring case) becomes
+// "<name> (copy)", "(copy 2)", ... Returns the new row's id and the name it ended up with, so the screen can open it.
 export async function createLibraryExercise(e: Exercise): Promise<{ id: string; name: string }> {
   const [own, builtin]: any[][] = await Promise.all([
     ok(supabase.from('library_exercises').select('name')),
     ok(supabase.from('builtin_exercises').select('name')),
   ]);
-  const taken = new Set([...own, ...builtin].map((r) => r.name));
-  let name = e.name;
-  if (taken.has(name)) {
-    name = e.name + ' (copy)';
-    for (let n = 2; taken.has(name); n++) name = e.name + ' (copy ' + n + ')';
-  }
+  const name = freeName(e.name, new Set([...own, ...builtin].map((r) => nameKey(r.name))), 'copy');
   const [row]: any[] = await ok(supabase.from('library_exercises').insert(exerciseRow({ ...e, name })).select('id'));
   return { id: row.id, name };
 }
 
 // Edits an exercise saved on its own in the Spellbook.
 export async function updateLibraryExercise(id: string, patch: Partial<Exercise>) {
-  const cur: any[] = await ok(supabase.from('library_exercises').select('*').eq('id', id));
-  if (!cur.length) return;
-  const merged = { ...toExercise(cur[0]), ...patch };
-  await ok(supabase.from('library_exercises').update(exerciseRow(merged)).eq('id', id));
+  await patchExercise('library_exercises', id, patch);
 }
 
 // How many sessions of this workout are still ahead: from today on, and not already completed.
@@ -813,7 +784,7 @@ export async function countUpcoming(workoutId: string, todayIso: string): Promis
       .eq('workout_id', workoutId)
       .gte('scheduled_date', todayIso),
   );
-  return rows.filter((r) => !isFinished(r)).length;
+  return rows.filter((r) => isAhead(r, todayIso)).length;
 }
 
 // The saved workout a workout row stands for: itself, or for an archived copy (a session saved "only this session",
@@ -834,15 +805,14 @@ async function savedWorkoutOf(w: any): Promise<any | null> {
 // those are still ahead (from today on, not completed). A session already saved on its own counts the sessions of
 // the saved workout it came from.
 export async function sessionScope(workoutId: string, entryId: string, todayIso: string) {
-  const [w]: any[] = await ok(supabase.from('workouts').select('*').eq('id', workoutId));
-  const saved = await savedWorkoutOf(w);
+  const saved = await savedWorkoutOf(await workoutById(workoutId));
   const rows: any[] = await ok(
     supabase.from('plan_entries').select(SESSION_COLS).eq('workout_id', saved ? saved.id : workoutId),
   );
   const others = rows.filter((r) => r.id !== entryId);
   return {
     others: others.length,
-    upcoming: others.filter((r) => r.scheduled_date >= todayIso && !isFinished(r)).length,
+    upcoming: others.filter((r) => isAhead(r, todayIso)).length,
   };
 }
 
@@ -851,15 +821,6 @@ export interface TemplateEditResult {
   created: boolean;
 }
 
-// A name for the copy that no current workout uses: the edited name, else "<name> (copy)", "(copy 2)", ...
-async function freeWorkoutName(wanted: string): Promise<string> {
-  const rows: any[] = await ok(supabase.from('workouts').select('name').eq('archived', false));
-  const taken = new Set(rows.map((r) => r.name));
-  if (!taken.has(wanted)) return wanted;
-  let name = wanted + ' (copy)';
-  for (let n = 2; taken.has(name); n++) name = wanted + ' (copy ' + n + ')';
-  return name;
-}
 
 // Applies an edit to a saved workout without rewriting history.
 // - mode 'update': the workout is edited in place. Past and completed sessions keep the old version: it is
@@ -874,7 +835,7 @@ export async function updateWorkoutTemplate(
   edit: WorkoutEdit,
   opts: { mode: 'update' | 'new' | 'session'; updateUpcoming: boolean; todayIso: string },
 ): Promise<TemplateEditResult> {
-  const [old]: any[] = await ok(supabase.from('workouts').select('*').eq('id', edit.workoutId));
+  const old = await workoutById(edit.workoutId);
   const oldExercises: any[] = await ok(
     supabase.from('workout_exercises').select('*').eq('workout_id', edit.workoutId).order('order_index'),
   );
@@ -884,30 +845,31 @@ export async function updateWorkoutTemplate(
   const hasSource = 'source_workout_id' in old;
   const lineage = hasSource ? { source_workout_id: old.source_workout_id || old.id } : {};
   const ownLineage = hasSource ? { source_workout_id: null } : {};
-  const copyExercises = async (toId: string) => {
-    const ids: Record<string, string> = {};
+  // A copy of the workout (with `cols` over its own), and of its exercises. Returns the copy's id and, for each
+  // exercise, the id of its copy.
+  const forkWorkout = async (cols: Record<string, unknown>) => {
+    const [row]: any[] = await ok(supabase.from('workouts').insert({ ...rest, ...cols }).select('id'));
+    const exerciseIds: Record<string, string> = {};
     for (const { id, created_at: _c, workout_id: _w, ...r } of oldExercises) {
-      const [row]: any[] = await ok(
-        supabase.from('workout_exercises').insert({ ...r, workout_id: toId }).select('id'),
-      );
-      ids[id] = row.id;
+      const [ex]: any[] = await ok(supabase.from('workout_exercises').insert({ ...r, workout_id: row.id }).select('id'));
+      exerciseIds[id] = ex.id;
     }
-    return ids;
+    return { id: row.id as string, exerciseIds };
   };
 
-  const mapped = (edit: WorkoutEdit, exerciseIds: Record<string, string>, workoutId: string): WorkoutEdit => {
-    const map = (id: string) => exerciseIds[id] || id;
-    return {
-      ...edit,
-      workoutId,
-      exercises: {
-        update: edit.exercises.update.map((u) => ({ ...u, id: map(u.id) })),
-        removeIds: edit.exercises.removeIds.map(map),
-        add: edit.exercises.add,
-        order: edit.exercises.order,
-      },
-    };
-  };
+  // The edit, pointed at another workout: its exercise ids swapped by `idOf` (an id it gives nothing for is dropped),
+  // with `over` on top.
+  const remapEdit = (idOf: (id: string) => string | undefined, over: Partial<WorkoutEdit>): WorkoutEdit => ({
+    ...edit,
+    ...over,
+    exercises: {
+      update: edit.exercises.update.map((u) => ({ ...u, id: idOf(u.id) as string })).filter((u) => !!u.id),
+      removeIds: edit.exercises.removeIds.map(idOf).filter((id): id is string => !!id),
+      add: edit.exercises.add,
+      order: edit.exercises.order,
+    },
+  });
+  const copiedIds = (ids: Record<string, string>) => (id: string) => ids[id] || id;
 
   // A session already saved on its own (its own archived copy of the workout).
   if (old.archived && edit.entryId) {
@@ -929,20 +891,7 @@ export async function updateWorkoutTemplate(
       const nameOf = (id: string) => (oldExercises.find((x) => x.id === id) || {}).name;
       const inSaved = (id: string) => (savedExercises.find((x) => x.name === nameOf(id)) || {}).id;
       await updateWorkoutTemplate(
-        {
-          ...edit,
-          entryId: '',
-          workoutId: saved.id,
-          moveTo: undefined,
-          actual: null,
-          repeatDates: [],
-          exercises: {
-            update: edit.exercises.update.map((u) => ({ ...u, id: inSaved(u.id) })).filter((u) => !!u.id),
-            removeIds: edit.exercises.removeIds.map(inSaved).filter((id): id is string => !!id),
-            add: edit.exercises.add,
-            order: edit.exercises.order,
-          },
-        },
+        remapEdit(inSaved, { entryId: '', workoutId: saved.id, moveTo: undefined, actual: null, repeatDates: [] }),
         { mode: 'update', updateUpcoming: opts.updateUpcoming, todayIso: opts.todayIso },
       );
       return { workoutId: edit.workoutId, created: false };
@@ -950,50 +899,28 @@ export async function updateWorkoutTemplate(
   }
 
   if (opts.mode === 'session') {
-    const [fork]: any[] = await ok(
-      supabase.from('workouts').insert({ ...rest, ...lineage, archived: true, repeat_enabled: false }).select('id'),
-    );
-    const exerciseIds = await copyExercises(fork.id);
+    const fork = await forkWorkout({ ...lineage, archived: true, repeat_enabled: false });
     await ok(supabase.from('plan_entries').update({ workout_id: fork.id }).eq('id', edit.entryId));
-    await updateWorkout(mapped(edit, exerciseIds, fork.id));
+    await updateWorkout(remapEdit(copiedIds(fork.exerciseIds), { workoutId: fork.id }));
     return { workoutId: fork.id, created: false };
   }
 
   if (opts.mode === 'new') {
-    const name = await freeWorkoutName((edit.name || '').trim() || old.name);
-    const [copy]: any[] = await ok(
-      supabase.from('workouts').insert({ ...rest, ...ownLineage, name, archived: false, repeat_enabled: false }).select('id'),
-    );
-    const exerciseIds = await copyExercises(copy.id);
-    const map = (id: string) => exerciseIds[id] || id;
-    await updateWorkout({
-      ...edit,
-      workoutId: copy.id,
-      name,
-      exercises: {
-        update: edit.exercises.update.map((u) => ({ ...u, id: map(u.id) })),
-        removeIds: edit.exercises.removeIds.map(map),
-        add: edit.exercises.add,
-        order: edit.exercises.order,
-      },
-    });
+    // A name for the copy that no current workout uses: the edited name, else "<name> (copy)", "(copy 2)", ...
+    const name = freeName((edit.name || '').trim() || old.name, await takenWorkoutNames(), 'copy');
+    const copy = await forkWorkout({ ...ownLineage, name, archived: false, repeat_enabled: false });
+    await updateWorkout(remapEdit(copiedIds(copy.exerciseIds), { workoutId: copy.id, name }));
     return { workoutId: copy.id, created: true };
   }
 
   const entries: any[] = await ok(
     supabase.from('plan_entries').select(SESSION_COLS).eq('workout_id', edit.workoutId),
   );
-  const isUpcoming = (e: any) => e.id === edit.entryId || (e.scheduled_date >= opts.todayIso && !isFinished(e));
+  const isUpcoming = (e: any) => e.id === edit.entryId || isAhead(e, opts.todayIso);
   const past = entries.filter((e) => !isUpcoming(e) || !opts.updateUpcoming);
   if (past.length) {
     const keepsUpcoming = past.some(isUpcoming);
-    const [snapshot]: any[] = await ok(
-      supabase
-        .from('workouts')
-        .insert({ ...rest, ...lineage, archived: true, repeat_enabled: keepsUpcoming ? old.repeat_enabled : false })
-        .select('id'),
-    );
-    await copyExercises(snapshot.id);
+    const snapshot = await forkWorkout({ ...lineage, archived: true, repeat_enabled: keepsUpcoming ? old.repeat_enabled : false });
     await ok(
       supabase
         .from('plan_entries')
@@ -1017,16 +944,16 @@ export async function updateWorkoutTemplate(
 export async function latestPlanDraft(since?: string): Promise<PlanDraft | null> {
   let q = supabase.from('plan_drafts').select('id, source, title, summary, plan, created_at').eq('status', 'draft');
   if (since) q = q.gt('created_at', since);
-  const { data, error } = await q.order('created_at', { ascending: false }).limit(1);
-  if (error) {
-    if (error.code === '42P01' || error.code === 'PGRST205') return null;
-    throw new Error(error.message);
-  }
-  return (data?.[0] as PlanDraft | undefined) ?? null;
+  const rows = await okOr<any[] | null>(q.order('created_at', { ascending: false }).limit(1), []);
+  return (rows?.[0] as PlanDraft | undefined) ?? null;
 }
 
+// A draft is decided once: added to the calendar, or let go.
+const decidePlanDraft = async (id: string, status: 'added' | 'discarded') =>
+  ok(supabase.from('plan_drafts').update({ status, decided_at: new Date().toISOString() }).eq('id', id));
+
 export async function discardPlanDraft(id: string) {
-  await ok(supabase.from('plan_drafts').update({ status: 'discarded', decided_at: new Date().toISOString() }).eq('id', id));
+  await decidePlanDraft(id, 'discarded');
 }
 
 /**
@@ -1066,7 +993,7 @@ export async function addPlanDraft(draft: PlanDraft, model: Model) {
       isRide,
       durationMinutes: w.minutes ?? estimateMinutes(exercises.length, !!w.warmup),
       ride: isRide
-        ? { dist: w.ride?.miles != null ? String(w.ride.miles) : '', elev: w.ride?.elevation_ft != null ? String(w.ride.elevation_ft) : '', zone: w.ride?.zone ?? DEFAULT_ZONE }
+        ? { dist: numStr(w.ride?.miles), elev: numStr(w.ride?.elevation_ft), zone: w.ride?.zone ?? DEFAULT_ZONE }
         : null,
       icon: null,
       iconColor: null,
@@ -1077,5 +1004,5 @@ export async function addPlanDraft(draft: PlanDraft, model: Model) {
       warmup: model.warmupReady && !!w.warmup,
     });
   }
-  await ok(supabase.from('plan_drafts').update({ status: 'added', decided_at: new Date().toISOString() }).eq('id', draft.id));
+  await decidePlanDraft(draft.id, 'added');
 }

@@ -1,5 +1,5 @@
 import { DOW1, DOW3, DOWFULL, MON3, MONTHS } from '@/frontend/shared/constants';
-import { mod12, monDay, monthPatch, noticePatch, plural, shortDay } from '@/frontend/shared/helpers';
+import { isoMonthDay, mod12, monDay, monthPatch, noticePatch, plural, shortDay } from '@/frontend/shared/helpers';
 import * as db from '@/frontend/data/plannerData';
 import { shortDate, type PlanDraft } from '@/shared/planDraft';
 import type { Ctx } from '../planner/store/types';
@@ -80,10 +80,10 @@ export function calendarVals(ctx: Ctx) {
     addPlanDraft: (draft: PlanDraft) => {
       const w = draft.plan.workouts;
       const first = w[0].date;
-      const [fy, fm, fd] = first.split('-').map(Number);
+      const at = isoMonthDay(first, Y);
       logic.saveOnce('plan-draft', () => db.addPlanDraft(draft, logic.model!), {
-        ...monthPatch((fy - Y) * 12 + fm - 1),
-        day: fd,
+        ...monthPatch(at.m),
+        day: at.d,
         ...noticePatch(`Your new arc is on the calendar: ${plural(w.length, 'workout')}, starting ${shortDate(first)}.`, 'day'),
       });
     },

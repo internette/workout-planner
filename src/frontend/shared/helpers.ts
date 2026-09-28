@@ -6,6 +6,17 @@ import { DOW3, DOWFULL, EDIT_OVERLAYS, EQUIPMENT, MON3, MONTHS, QUESTS } from '.
 export const mod12 = m => ((m % 12) + 12) % 12;
 export const monthPatch = m => ({ month: MONTHS[mod12(m)], yOff: Math.floor(m / 12) });
 
+// An ISO date ("2026-09-28") as a month counted from January of `year` (as above) and a day of that month.
+export const isoMonthDay = (iso: string, year: number) => {
+  const [y, mo, d] = String(iso).split('-').map(Number);
+  return { m: (y - year) * 12 + mo - 1, d };
+};
+// The weekday (0 = Sunday) of an ISO date, in local time.
+export const isoWeekday = (iso: string) => {
+  const [y, mo, d] = String(iso).split('-').map(Number);
+  return new Date(y, mo - 1, d).getDay();
+};
+
 // Dates as the app writes them. Each takes a Date; the caller adds a year when it isn't this one.
 // "Mon"
 export const dayShort = (date: Date) => DOW3[date.getDay()].charAt(0) + DOW3[date.getDay()].slice(1).toLowerCase();
