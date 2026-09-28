@@ -7,7 +7,7 @@ import { RankUp } from '../src/rank-up';
 import { Text } from '../src/typography';
 import { ShowcaseCard } from './ShowcaseCard';
 
-// A few of the planner's ranks, to play the transformation with. The full ladder is the app's (its shared/constants.ts);
+// A few of the planner's ranks, to play the transformation with. The full ladder is the app's (its src/frontend/shared/constants.ts);
 // the last one shows the top rank's gradient gem.
 const SAMPLES = [
   { name: 'Novice guardian', step: 'Rank 2 of 20', next: 'Moonlit', gem: 'var(--color-pink)' },

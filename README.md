@@ -151,49 +151,58 @@ a second Vercel project, and the main app forwards `/design-system` to it, so it
 ```
 src/
   app/                  Next.js App Router, routes only: layout, the planner's own global styles (planner.css), the (planner)
-                        group with a page per nav address, /welcome and /api. /design-system is forwarded to the
-                        design-system site (next.config.js)
-  middleware.ts         Guards the planner and the sign-in routes
-  features/             One folder per part of the app, named as it appears on screen
-    planner/            The shell: Planner (host: loading and error screens, history), PlannerLoader (client only),
-                        PlannerView (the screens, which place each feature's sections), Sidebar, TabBar,
-                        ConfirmDialog, SaveErrorBanner, NoticeBanner, PlannerStatus
-                        (the loading and error screens, in the planner's words),
-                        routes.ts (which address each screen has), chrome.model.ts (nav and screen switches), styles.ts,
-                        viewHelpers.tsx (css() and t()), useViewport
-      store/            PlannerLogic (UI state, navigation, loading and saving; renderVals() assembles the view's values),
-                        dcLogic (its immediate-merge setState), context.ts and types.ts (the loose Ctx), and derive/:
-                        the shared derived values, built in order: base (clock, layout), entries, stats
-    calendar/           model.ts (the calendar's values), derive.ts (month, week, day and the month grid), and its
-                        sections: MonthPicker, QuestCard, DayWorkoutCard, WeekRow, MonthGrid, AddToDayDialog, RestartDialog
-    session/            model.ts (the day card and the session page), derive.ts (the selected workout), SessionTimer,
-                        SessionExerciseRow, RideSessionCard, FinishDialog, LeaveWorkoutDialog
-    editor/             model.ts: the workout editor, and its sections: TypeChoiceCards, SavedChoices, EditorHeader,
-                        DatePicker, RidePlanFields, RideActualCard, EditorExerciseItem, AddExercisePanel, LeaveEditorDialog
-    spellbook/          model.ts: the Spellbook, its filters, and the exercise and workout pages. AreaFilter, EquipmentFilter,
-                        NewExerciseCard, ExerciseRow, WorkoutRow, ExerciseEditForm, ScheduleDialog, SaveScopeDialog
-    chronicle/          model.ts: the Chronicle list, new entries and reading an entry. ChronicleRow, EntryReadView,
-                        DiaryEntryForm
-    progress/           model.ts: Progress and Profile's stats. StreakBanner, ThisWeekCard, NextUpCard, WeekQuestsCard,
-                        RanksDialog
-    profile/            ProfileHeaderCard, SessionsPerWeekCard, QuestsClearedCard, MoodSplitCard, PersonalBestsCard,
-                        AccountCard, AppearanceSetting, DeleteAccount, SignOutDialog
-    summon/             SummonPlan: "Summon a plan" with Claude or ChatGPT
-    install/            The install prompt and the service worker registration
-    auth/               The landing page and the Google and Apple sign-in buttons (the server side is in lib/auth0.ts,
-                        middleware.ts and app/api/token)
-  components/           Reusable pieces the planner's screens share: BackLink, WarmupTag, NeedsLine, IconSquare,
-                        SetsFields (sets, reps, weight, rest), AreaChoice, EquipmentPicker, FilterButton,
-                        SessionProgress, DoneTick, RepeatWeekly, FormActions. Typed props, no planner state
-  shared/               Used across features: constants (names, quests, ranks), helpers (ids, ISO dates, quest lookup),
-                        icons (exercise icons and mood faces)
-  lib/
-    supabase.ts         Supabase client
-    auth.ts             Browser-safe sign-in settings: the login links, the connection names, the NEXT_PUBLIC_AUTH_REQUIRED
-                        switch and the ID-token fetch Supabase uses
-    auth0.ts            The server's Auth0 client and its callback rules (server only)
-    plannerData.ts      Loads the database into the shapes the UI uses, and all writes
-    mcp/                The assistant connector's token check and tools
+                        group with a page per nav address, /welcome, and /api (one line each, re-exporting a handler from
+                        backend/api). /design-system is forwarded to the design-system site (next.config.js)
+  middleware.ts         Guards the planner and the sign-in routes (runs on the server, before every page)
+  frontend/             Everything that runs in the browser. It can't import backend/ (ESLint enforces it)
+    features/             One folder per part of the app, named as it appears on screen
+      planner/            The shell: Planner (host: loading and error screens, history), PlannerLoader (client only),
+                          PlannerView (the screens, which place each feature's sections), Sidebar, TabBar,
+                          ConfirmDialog, SaveErrorBanner, NoticeBanner, PlannerStatus
+                          (the loading and error screens, in the planner's words),
+                          routes.ts (which address each screen has), chrome.model.ts (nav and screen switches), styles.ts,
+                          viewHelpers.tsx (css() and t()), useViewport
+        store/            PlannerLogic (UI state, navigation, loading and saving; renderVals() assembles the view's values),
+                          dcLogic (its immediate-merge setState), context.ts and types.ts (the loose Ctx), and derive/:
+                          the shared derived values, built in order: base (clock, layout), entries, stats
+      calendar/           model.ts (the calendar's values), derive.ts (month, week, day and the month grid), and its
+                          sections: MonthPicker, QuestCard, DayWorkoutCard, WeekRow, MonthGrid, AddToDayDialog, RestartDialog
+      session/            model.ts (the day card and the session page), derive.ts (the selected workout), SessionTimer,
+                          SessionExerciseRow, RideSessionCard, FinishDialog, LeaveWorkoutDialog
+      editor/             model.ts: the workout editor, and its sections: TypeChoiceCards, SavedChoices, EditorHeader,
+                          DatePicker, RidePlanFields, RideActualCard, EditorExerciseItem, AddExercisePanel, LeaveEditorDialog
+      spellbook/          model.ts: the Spellbook, its filters, and the exercise and workout pages. AreaFilter, EquipmentFilter,
+                          NewExerciseCard, ExerciseRow, WorkoutRow, ExerciseEditForm, ScheduleDialog, SaveScopeDialog
+      chronicle/          model.ts: the Chronicle list, new entries and reading an entry. ChronicleRow, EntryReadView,
+                          DiaryEntryForm
+      progress/           model.ts: Progress and Profile's stats. StreakBanner, ThisWeekCard, NextUpCard, WeekQuestsCard,
+                          RanksDialog
+      profile/            ProfileHeaderCard, SessionsPerWeekCard, QuestsClearedCard, MoodSplitCard, PersonalBestsCard,
+                          AccountCard, AppearanceSetting, DeleteAccount, SignOutDialog
+      summon/             SummonPlan: "Summon a plan" with Claude or ChatGPT
+      install/            The install prompt and the service worker registration
+      auth/               The landing page and the Google and Apple sign-in buttons and links.ts (the
+                          sign-in and sign-out links). The server side is backend/auth0 and middleware.ts
+    components/           Reusable pieces the planner's screens share: BackLink, WarmupTag, NeedsLine, IconSquare,
+                          SetsFields (sets, reps, weight, rest), AreaChoice, EquipmentPicker, FilterButton,
+                          SessionProgress, DoneTick, RepeatWeekly, FormActions. Typed props, no planner state
+    shared/               Used across the frontend's features: constants (names, quests, ranks), helpers (ids, ISO dates, quest lookup),
+                          icons (exercise icons and mood faces)
+    data/
+      plannerData.ts    Loads the database into the shapes the UI uses, and all writes. Talks to Supabase directly,
+                        as the signed-in person, so row-level security keeps each person's data their own
+      supabase.ts       The Supabase client, which sends the person's ID token
+      session.ts        That ID token, fetched from /api/token and kept until a minute before it expires
+  backend/              Everything that runs only on the server. Its files are marked server-only, so importing one into
+                        browser code fails the build, and it can't import frontend/
+    api/                The API routes' handlers: token (the ID token for Supabase), accountDelete, mcp (the assistant
+                        connector) and oauthProtectedResource (its discovery document)
+    auth0/              client.ts (the server's Auth0 client and its callback rules), management.ts (deleting a sign-in),
+                        sessionToken.ts (a fresh ID token from the session)
+    mcp/                The assistant connector's token check (auth.ts) and tools (tools.ts)
+  shared/               Used by both sides, and imports neither: auth.ts (the providers, connection names, the
+                        NEXT_PUBLIC_AUTH_REQUIRED switch, Account), planDraft.ts (a summoned plan's shape and checks),
+                        vendors.ts (the vendor switches)
 packages/
   design-system/      @moonshot/design-system, an npm workspace package and the design-system site. The app imports it
                       only through its package.json exports (@moonshot/design-system/buttons, /colors, /theme,
@@ -210,7 +219,7 @@ vendors.config.ts     Switches for the vendor-reliant features (see "Vendor feat
 supabase/migrations/  SQL to run in the Supabase SQL editor
 ```
 
-**Data flow.** On load, `loadModel` reads all five tables and builds one model: exercises by workout, one entry per date, diary entries, ticks and the library. On each render, `PlannerLogic.renderVals()` builds a context from that model plus the UI state (the shared stages in `features/planner/store/derive/`, then each feature's `derive.ts`), then each feature's `model.ts` turns the context into the values and handlers its part of the view needs.
+**Data flow.** On load, `loadModel` reads all five tables and builds one model: exercises by workout, one entry per date, diary entries, ticks and the library. On each render, `PlannerLogic.renderVals()` builds a context from that model plus the UI state (the shared stages in `frontend/features/planner/store/derive/`, then each feature's `derive.ts`), then each feature's `model.ts` turns the context into the values and handlers its part of the view needs.
 
 Ticks update the screen immediately. Other saves (creating or editing a workout, diary entries, deletes, the Spellbook) are written to Supabase first. When the writes finish, the model is reloaded and the UI state cleared. Writes run in order, and a failed one shows a dismissible error banner.
 
@@ -224,5 +233,5 @@ Ticks update the screen immediately. Other saves (creating or editing a workout,
 - **Current year only.** Entries from other years don't appear on the calendar.
 - **Free-text exercise fields** such as "4 × 8", "135 lb" and "90 sec" are stored as numbers. Text that doesn't fit those shapes, like "3 × 45s", loses its detail on save.
 - **Duplicate exercise rows.** Adding an existing exercise to another workout creates a separate row rather than a link.
-- **Fixed profile.** The profile name ("Mika") and start date are constants in `src/shared/constants.ts`.
+- **Fixed profile.** The profile name ("Mika") and start date are constants in `src/frontend/shared/constants.ts`.
 - **Moods** are stored as `happy`, `neutral`, `sad` or `mad`, the only values the `diary_entries` table accepts.

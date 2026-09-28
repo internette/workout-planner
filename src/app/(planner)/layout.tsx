@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
-import PlannerLoader from '@/features/planner/PlannerLoader';
-import { AUTH_REQUIRED, providerName, type Account } from '@/lib/auth';
-import { getAuth0 } from '@/lib/auth0';
+import PlannerLoader from '@/frontend/features/planner/PlannerLoader';
+import { AUTH_REQUIRED, providerName, type Account } from '@/shared/auth';
+import { getAuth0 } from '@/backend/auth0/client';
 
 export const dynamic = 'force-dynamic';
 

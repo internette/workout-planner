@@ -14,5 +14,80 @@
         ]
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/frontend/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "**/packages/design-system/*"
+                ],
+                "message": "Import the design system from @moonshot/design-system/<entry> (see packages/design-system/package.json)."
+              },
+              {
+                "group": [
+                  "@/backend/*",
+                  "**/backend/*"
+                ],
+                "message": "The frontend runs in the browser and can't use backend code. Call its API route instead."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/backend/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/frontend/*",
+                  "**/frontend/*",
+                  "@moonshot/design-system",
+                  "@moonshot/design-system/*"
+                ],
+                "message": "Backend code runs on the server: no frontend code or UI. Put what both need in src/shared."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/shared/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/frontend/*",
+                  "@/backend/*",
+                  "**/frontend/*",
+                  "**/backend/*"
+                ],
+                "message": "Shared code is used by both sides, so it can't depend on either."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

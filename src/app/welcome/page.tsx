@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { LandingPage } from '@/features/auth/LandingPage';
-import { AUTH0_CONFIGURED, getAuth0 } from '@/lib/auth0';
+import { LandingPage } from '@/frontend/features/auth/LandingPage';
+import { AUTH0_CONFIGURED, getAuth0 } from '@/backend/auth0/client';
 
 export const metadata = { title: 'Moonshot — Sign in' };
 export const dynamic = 'force-dynamic';

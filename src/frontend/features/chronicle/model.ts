@@ -1,0 +1,372 @@
+import { DOW3, MON3 } from '@/frontend/shared/constants';
+import { isoOf, mod12, monthPatch, noticePatch, plural } from '@/frontend/shared/helpers';
+import { moodSvg } from '@/frontend/shared/icons';
+import { MOOD_COLORS } from '@moonshot/design-system/icons';
+import * as db from '@/frontend/data/plannerData';
+import type { Ctx } from '../planner/store/types';
+
+// Diary: writing and reading an entry, the "saved" screen and the chronicle list with its filters.
+export function diaryVals(ctx: Ctx) {
+  const {
+    logic,
+    st,
+    ENTRIES,
+    entryKey,
+    selName,
+    mi,
+    selDay,
+    TK,
+    isDoneEntry,
+    unloggedDays,
+    Y,
+    TODAY_M,
+    nameOf,
+    isoToday,
+    todayWkStart,
+    iso30,
+    dScope,
+    diaryDays,
+    seedAt,
+    RPE_WORDS,
+    relM,
+  } = ctx;
+  // Whether the session on screen already has an entry: then the diary screen reads it, and edits it on request.
+  const hasEntry = !!ENTRIES[entryKey];
+  const reading = hasEntry && !st.diaryEdit;
+  // The session this entry is about, and whether it's done: an entry for one that isn't can mark it done too.
+  const entrySession = logic.model.entries.find((x) => x.av.id === entryKey) || null;
+  const offerMarkDone = !!entrySession && !isDoneEntry(entrySession.av) && entrySession.m * 100 + entrySession.d <= TK;
+  const markDone = offerMarkDone && !!st.entryMarkDone;
+  const markSessionDone = () => {
+    if (!markDone || !entrySession) return Promise.resolve();
+    const av = entrySession.av;
+    return av.ride
+      ? db.setRideDone(av.id, true)
+      : db.setExercisesDone(av.id, (ctx.EXV[av.exKey] || []).map((e) => e.name), true);
+  };
+  // Writing or changing an entry, with changes not yet saved: leaving asks first.
+  const saved = ENTRIES[entryKey];
+  const writing = st.screen === 'diary' && !reading;
+  const entryDirty =
+    writing &&
+    (saved
+      ? st.mood !== saved.mood || st.rpe !== saved.rpe || (st.entryNote != null && st.entryNote !== (saved.note || ''))
+      : !!st.mood || !!st.rpe || !!(st.entryNote || '').trim());
+  // What leaving an unsaved entry would lose, however it's left (Back, a tab, the browser).
+  const leaveBody = saved
+    ? 'You’ve changed this entry. Leaving now throws those changes away.'
+    : 'This entry isn’t saved yet. Leaving now throws it away.';
+  // Back from changing an entry returns to reading it, as it was; from a new one, to wherever it was started.
+  const stopWriting = () =>
+    saved ? logic.s({ diaryEdit: false, mood: saved.mood, rpe: saved.rpe, entryNote: null }) : logic.back();
+  const leaveEntry = () =>
+    entryDirty
+      ? logic.s({
+          confirm: {
+            kind: 'leaveEntry',
+            title: 'Discard your changes?',
+            body: leaveBody,
+            label: 'Discard changes',
+            then: stopWriting,
+          },
+        })
+      : writing
+        ? stopWriting()
+        : logic.back();
+  // "Up next" after logging: the first session from today on that isn't done yet, other than the one just logged.
+  const nextEntry = logic.model.entries.find(
+    (x) => x.m * 100 + x.d >= TK && x.av.id !== entryKey && x.av.s !== 'c' && !isDoneEntry(x.av),
+  );
+  const nextDate = nextEntry ? new Date(Y, nextEntry.m, nextEntry.d) : null;
+  const scopeHandlers = {
+    all: () => logic.s({ diaryScope: 'all', rFrom: '', rTo: '' }),
+    today: () => logic.s({ diaryScope: 'today', rFrom: isoToday, rTo: isoToday }),
+    week: () =>
+      logic.s({
+        diaryScope: 'week',
+        rFrom: isoOf(todayWkStart),
+        rTo: isoOf(new Date(Y, TODAY_M, todayWkStart.getDate() + 6)),
+      }),
+    month: () => logic.s({ diaryScope: 'month', rFrom: iso30, rTo: isoToday }),
+    range: () => logic.s({ diaryScope: 'range', rFrom: st.rFrom || iso30, rTo: st.rTo || isoToday }),
+  };
+  const entryHint = !st.mood && !st.rpe ? 'Pick a mood and how hard it felt.' : !st.mood ? 'Pick a mood.' : !st.rpe ? 'Pick how hard it felt.' : '';
+  const unloggedItem = (x) => ({
+      // The day in two short lines: weekday, then the date (with its month when it isn't this month's).
+      dayTop: DOW3[new Date(Y, x.m, x.d).getDay()],
+      dayBottom:
+        x.m === TODAY_M
+          ? String(x.d)
+          : MON3[mod12(x.m)].toUpperCase() + ' ' + x.d + (Math.floor(x.m / 12) ? ' ' + (Y + Math.floor(x.m / 12)) : ''),
+      name: nameOf(x.av.name),
+      warmup: !!x.av.warmup,
+      meta: x.av.ride ? (ctx.distOf(x.av) ? ctx.distOf(x.av) + ' mi · ' : '') + ctx.timeOf(x.av) : ctx.timeOf(x.av),
+      // Whether it was done, so writing about a missed one is a choice, not a surprise.
+      status: x.done ? 'Done' : ctx.sessionStatus(x.m, x.d, x.av),
+      statusTone: x.done ? 'soft' : 'neutral',
+      pick: () =>
+        logic.nav({
+          screen: 'diary',
+          ...monthPatch(x.m),
+          day: x.d,
+          entryId: x.av.id,
+          // Nothing picked yet: the entry says how it felt only once the person has said so.
+          mood: null,
+          rpe: null,
+          entryNote: null,
+          diaryFrom: 'list',
+          diaryEdit: true,
+          // Writing about a session not marked done: most likely it was done, so offer to mark it (on to start). Not
+          // for one partly done: some exercises were skipped, and that's kept unless asked.
+          entryMarkDone: !x.done && !(!x.av.ride && ctx.doneCountAt(x.av) > 0),
+        }),
+  });
+  return {
+    entryLeaveBody: leaveBody,
+    saveEntryLabel: hasEntry ? 'Save changes' : 'Save entry',
+    showMarkDone: offerMarkDone && !reading,
+    markDoneOn: markDone,
+    setMarkDone: (on) => logic.s({ entryMarkDone: !!on }),
+    // A lift with some exercises already ticked says so: marking it done ticks the rest.
+    markDoneLabel:
+      entrySession && entrySession.av.ride
+        ? 'Mark this ride done'
+        : entrySession && ctx.doneCountAt(entrySession.av) > 0
+          ? 'Mark all ' + plural((ctx.EXV[entrySession.av.exKey] || []).length, 'exercise') + ' done (' +
+            ctx.doneCountAt(entrySession.av) + ' ticked so far)'
+          : 'Mark this workout done',
+    canSaveEntry: !!st.mood && !!st.rpe,
+    saveEntryHint: entryHint,
+    entryNote: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
+    setEntryNote: (e) => logic.s({ entryNote: e.target.value }),
+    // Stays focusable while it waits for a mood and effort; pressing it then says what's missing.
+    saveEntry: () =>
+      !st.mood || !st.rpe
+        ? logic.s({ announce: entryHint })
+        : ((fromPicker) => logic.saveOnce(
+            'entry',
+            () =>
+              db
+                .saveDiary(entryKey, {
+                  mood: st.mood,
+                  rpe: st.rpe,
+                  note: st.entryNote == null ? (ENTRIES[entryKey] || {}).note || '' : st.entryNote,
+                })
+                .then(markSessionDone),
+            {
+              // Changing an entry, or writing one from the Chronicle, returns to reading it; a new one from a workout
+              // gets the "Entry saved" screen.
+              screen: hasEntry || st.diaryFrom === 'list' ? 'diary' : 'saved',
+              diaryEdit: false,
+              entryNote: null,
+              entryMarkDone: null,
+              // A new one written from the Chronicle's picker takes the picker's place: Back goes to the Chronicle.
+              ...(fromPicker ? { hist: logic.histWithoutLast() } : {}),
+              ...(hasEntry || st.diaryFrom === 'list'
+                ? noticePatch(
+                    (hasEntry ? 'Changes saved.' : 'Entry saved.') +
+                      (markDone ? (entrySession && entrySession.av.ride ? ' Ride' : ' Workout') + ' marked done.' : ''),
+                    'diary',
+                  )
+                : {}),
+            },
+          ))(!hasEntry && ((st.hist || [])[(st.hist || []).length - 1] || {}).screen === 'newEntry'),
+    // "Neutral · Steady effort on Upper Push, Sep 25.": the effort in the same words the entry shows it.
+    savedLine:
+      st.mood +
+      ' · ' +
+      (st.rpe ? RPE_WORDS[Math.max(1, Math.min(5, st.rpe)) - 1] + ' effort' : 'effort') +
+      ' on ' +
+      selName +
+      ', ' +
+      MON3[mod12(mi)] +
+      ' ' +
+      selDay +
+      '.',
+    // The entry just written, to read (or change) it. It takes this screen's place, so Back goes where this would.
+    readSavedEntry: () => logic.s({ screen: 'diary', diaryEdit: false }),
+    savedCount: plural(Object.keys(ENTRIES).length, 'entry', 'entries') + ' so far',
+    savedNextTitle: nextEntry ? 'Get ready for ' + nameOf(nextEntry.av.name) : 'Plan your next workout',
+    savedNextMeta: nextEntry
+      ? (nextEntry.m * 100 + nextEntry.d === TK
+          ? 'Today'
+          : DOW3[nextDate.getDay()].charAt(0) + DOW3[nextDate.getDay()].slice(1, 3).toLowerCase() + ', ' +
+            MON3[mod12(nextEntry.m)] + ' ' + nextEntry.d) +
+        ' · ' +
+        nextEntry.av.time
+      : 'Nothing scheduled ahead',
+    // Opens that session. With nothing ahead, starts a new workout for tomorrow (today, on the year's last day).
+    goNextUp: () => {
+      if (nextEntry)
+        return logic.nav({
+          screen: 'detail',
+          creating: false,
+          seg: 'Day',
+          ...monthPatch(nextEntry.m),
+          day: nextEntry.d,
+          entryId: nextEntry.av.id,
+        });
+      const tomorrow = new Date(Y, TODAY_M, ctx.TODAY_D + 1);
+      logic.s({ ...monthPatch(relM(tomorrow)), day: tomorrow.getDate(), seg: 'Day' });
+      logic.renderVals().goNewWorkout();
+    },
+    loggedCount: Object.keys(ENTRIES).length,
+    loggedUnit: Object.keys(ENTRIES).length === 1 ? 'entry' : 'entries',
+    // With a filter on, how many of them are showing.
+    diaryCount:
+      (dScope !== 'all' ? diaryDays.length + ' of ' : '') + plural(Object.keys(ENTRIES).length, 'entry', 'entries'),
+    openNewEntry: () => logic.nav({ screen: 'newEntry' }),
+    closeNewEntry: () => logic.back(),
+    noUnlogged: unloggedDays.length === 0,
+    // Nothing to list: either nothing was planned yet, or every recent session already has an entry.
+    noUnloggedNote: logic.model.entries.some((x) => x.m * 100 + x.d <= TK)
+      ? 'Every session from the last 60 days already has an entry.'
+      : 'No sessions to write about yet. Plan one, and once its day comes it shows up here.',
+    // Grouped by when: this week, last week, then earlier ones, each group one card of rows.
+    unloggedGroups: (() => {
+      const lastWkStart = new Date(todayWkStart.getFullYear(), todayWkStart.getMonth(), todayWkStart.getDate() - 7);
+      const groups = [];
+      unloggedDays.forEach((x) => {
+        const d = new Date(Y, x.m, x.d);
+        const label = d >= todayWkStart ? 'THIS WEEK' : d >= lastWkStart ? 'LAST WEEK' : 'EARLIER';
+        let g = groups.find((y) => y.label === label);
+        if (!g) groups.push((g = { label, items: [] }));
+        g.items.push(unloggedItem(x));
+      });
+      return groups;
+    })(),
+    showRange: dScope === 'range',
+    rangeFrom: st.rFrom || '',
+    rangeTo: st.rTo || '',
+    setRangeFrom: (e) => {
+      const v = e.target.value;
+      logic.s({ rFrom: v, diaryScope: 'range', rTo: st.rTo && v && st.rTo < v ? v : st.rTo });
+    },
+    setRangeTo: (e) => {
+      const v = e.target.value;
+      logic.s({ rTo: st.rFrom && v && v < st.rFrom ? st.rFrom : v, diaryScope: 'range' });
+    },
+    rangeMin: st.rFrom || '',
+    clearRange: () => logic.s({ rFrom: '', rTo: '' }),
+    diaryScope: dScope,
+    setDiaryScope: (scope) => scopeHandlers[scope](),
+    rangeShown: dScope === 'range',
+    diaryEmpty: diaryDays.length === 0,
+    diaryEmptyNote:
+      dScope === 'today'
+        ? 'Nothing written down today yet.'
+        : dScope === 'week'
+          ? 'Nothing written this week yet.'
+          : dScope === 'month'
+            ? 'Nothing written in the last 30 days.'
+            : dScope === 'range'
+              ? 'Nothing written down in that stretch.'
+              : 'The chronicle is still blank.',
+    // Read out when the Chronicle's filter changes how many entries are listed.
+    diaryResults: plural(diaryDays.length, 'entry', 'entries') + ' shown.',
+    diaryList: diaryDays.map((id) => {
+      const en = ENTRIES[id];
+      const d = en.d;
+      const dt = new Date(Y, en.m, en.d);
+      // An entry from another year says which.
+      const yr = dt.getFullYear() !== Y ? ' ' + dt.getFullYear() : '';
+      const bg = MOOD_COLORS[en.mood] || 'var(--color-danger)';
+      return {
+        date: DOW3[dt.getDay()] + ', ' + MON3[mod12(en.m)].toUpperCase() + ' ' + en.d + yr,
+        name: en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout',
+        warmup: !!(logic.model.entries.find((x) => x.av.id === id) || { av: null }).av?.warmup,
+        deleteLabel:
+          'Delete entry for ' + (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') + ', ' + MON3[mod12(en.m)] + ' ' + en.d + yr,
+        note: en.note,
+        href: '#',
+        aria:
+          DOW3[dt.getDay()] +
+          ', ' +
+          MON3[mod12(en.m)] +
+          ' ' +
+          en.d +
+          yr +
+          ': ' +
+          (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') +
+          ', ' +
+          en.mood +
+          ', effort ' +
+          en.rpe +
+          ' of 5',
+        open: () =>
+          logic.nav({
+            screen: 'diary',
+            ...monthPatch(en.m),
+            day: en.d,
+            entryId: id,
+            mood: en.mood,
+            rpe: en.rpe,
+            entryNote: null,
+            diaryFrom: 'list',
+            diaryEdit: false,
+          }),
+        remove: (ev) => {
+          if (ev && ev.stopPropagation) ev.stopPropagation();
+          logic.s({
+            confirm: {
+              kind: 'entry',
+              day: id,
+              title: 'Delete this entry?',
+              body: 'Your reflection for ' + MON3[mod12(en.m)] + ' ' + en.d + ' will be gone for good.',
+              label: 'Delete entry',
+            },
+          });
+        },
+        faceWrap:
+          'width:48px;height:48px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
+          bg,
+        isHappy: en.mood === 'Happy',
+        isNeutral: en.mood === 'Neutral',
+        isSad: en.mood === 'Sad',
+        isMad: en.mood === 'Mad',
+        rpe: en.rpe,
+      };
+    }),
+    diaryReading: reading,
+    diaryEditing: !reading,
+    // The "Entry saved." notice is about the entry as it was; changing it starts without it.
+    editEntry: () => logic.s({ diaryEdit: true, notice: null }),
+    deleteEntry: () =>
+      logic.s({
+        confirm: {
+          kind: 'entry',
+          day: entryKey,
+          after: 'diaryList',
+          title: 'Delete this entry?',
+          body: 'Your reflection for ' + MON3[mod12(mi)] + ' ' + selDay + ' will be gone for good.',
+          label: 'Delete entry',
+        },
+      }),
+    readMood: st.mood,
+    readNote: (ENTRIES[entryKey] || {}).note || 'No notes for this one.',
+    readMoodFace:
+      'width:44px;height:44px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
+      (MOOD_COLORS[st.mood] || 'var(--color-danger)'),
+    readMoodSvg: moodSvg(st.mood),
+    // Entry saved: to the calendar, on the day of the workout just written about (not back one screen).
+    backToCalendar: () => logic.s({ screen: 'day', seg: 'Day', monthOpen: false, hist: [] }),
+    // Changing a saved entry, Back returns to reading it; otherwise it goes where the screen was opened from.
+    diaryBackLabel: writing && saved ? nameOf(selName) : '',
+    // Changing an entry looks like writing one, so it says which it is.
+    writeEyebrow: writing && saved ? 'CHANGING YOUR ENTRY' : '',
+    // Beside the sidebar (not on a phone) the entry form sits in the page's column, where a saved entry is read.
+    entryLeft: logic.viewport !== 'narrow',
+    // The session it's about, for the tab's title ("Leg Day entry").
+    diaryTitle: selName ? nameOf(selName) : '',
+    diaryEyebrow: st.diaryFrom === 'list' || reading ? 'CHRONICLE ENTRY' : 'COMPLETED',
+    diaryBack: leaveEntry,
+    entryDirty,
+    leaveEntry,
+    mood: st.mood,
+    pickMood: (mood) => logic.s({ mood }),
+    rpe: st.rpe || 0,
+    pickRpe: (rpe) => logic.s({ rpe }),
+    rpeWords: RPE_WORDS,
+    rpeLabel: st.rpe ? RPE_WORDS[Math.max(1, Math.min(5, st.rpe)) - 1] : '',
+  };
+}
