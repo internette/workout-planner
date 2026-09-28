@@ -14,6 +14,7 @@ import { editVals } from '@/frontend/features/editor/model';
 import { diaryVals } from '@/frontend/features/chronicle/model';
 import { arsenalVals } from '@/frontend/features/spellbook/model';
 import { progressVals } from '@/frontend/features/progress/model';
+import { liveVals } from '@/frontend/features/live/model';
 
 export const CALENDAR_KEY = 'moonshot.calendar';
 
@@ -189,6 +190,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
       ...diaryVals(ctx),
       ...arsenalVals(ctx),
       ...progressVals(ctx),
+      ...liveVals(ctx),
     };
   }
 }
