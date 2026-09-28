@@ -39,8 +39,9 @@ export function statsStage(ctx: CalendarCtx) {
   // Sessions still to write about: the last 60 days up to today, newest first, so the start of a month can still
   // reach the end of the one before.
   const since = new Date(Y, TODAY_M, TODAY_D - 60);
+  const sinceK = relM(since) * 100 + since.getDate();
   const unloggedDays = pastDays
-    .filter((x) => !ENTRIES[idOf(x.av)] && new Date(Y, x.m, x.d) >= since)
+    .filter((x) => !ENTRIES[idOf(x.av)] && x.m * 100 + x.d >= sinceK)
     .sort((a, b) => b.m * 100 + b.d - (a.m * 100 + a.d));
   const totalSessions = pastDays.length;
   const completedSessions = pastDays.filter((x) => x.done).length;
@@ -56,26 +57,30 @@ export function statsStage(ctx: CalendarCtx) {
   const todayLogged = !!plannedByDay[todayKey] && !!dayComplete[todayKey];
   // Streaks run back as far as the first session.
   const first = pastDays.length ? new Date(Y, pastDays[0].m, pastDays[0].d) : todayDate;
-  const span = Math.max(0, Math.round((todayDate.getTime() - first.getTime()) / 86400000));
+  // Only days with something planned count toward a streak, so walk those, oldest first, rather than every day since.
+  const firstK = relM(first) * 100 + first.getDate();
+  const streakDays = Object.keys(plannedByDay)
+    .map((k) => {
+      const [m, d] = k.split('|').map(Number);
+      return { k, at: m * 100 + d };
+    })
+    .filter((x) => x.at >= firstK)
+    .sort((a, b) => a.at - b.at);
   let streak = 0;
-  for (let back = 1; back <= span; back++) {
-    const dt = new Date(Y, TODAY_M, TODAY_D - back);
-    const k = relM(dt) + '|' + dt.getDate();
-    if (!plannedByDay[k]) continue;
+  for (let i = streakDays.length - 1; i >= 0; i--) {
+    const { k, at } = streakDays[i];
+    if (at === TK) continue;
     if (dayComplete[k]) streak++;
     else break;
   }
   let longest = 0,
     run = 0;
-  for (let back = span; back >= 0; back--) {
-    const dt = new Date(Y, TODAY_M, TODAY_D - back);
-    const k = relM(dt) + '|' + dt.getDate();
-    if (!plannedByDay[k]) continue;
+  streakDays.forEach(({ k }) => {
     if (dayComplete[k]) {
       run++;
       longest = Math.max(longest, run);
     } else run = 0;
-  }
+  });
   // "This week" is one thing everywhere: the Sunday-to-Saturday week today is in. The chart shows the last few of
   // those real weeks, this one last.
   const WEEKS = 6;
