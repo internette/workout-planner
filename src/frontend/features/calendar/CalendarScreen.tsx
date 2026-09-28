@@ -36,14 +36,17 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             gap: '12px',
           }}
         >
-          <span style={{ display: 'flex', alignItems: 'center', gap: '4px', minWidth: 0 }}>
-          <MonthPicker v={v} />
+          {/* Takes the room left on the row, so Today stays on it beside a long month name on a narrow phone. */}
+          <span style={{ display: 'flex', alignItems: 'center', flex: '1 1 0', minWidth: 0 }}>
+            <MonthPicker v={v} />
+          </span>
+          {/* On the right: at the end of the first row on a phone (the view switch wraps below), beside the view
+              switch on a wider screen. */}
           {v.awayFromToday ? (
-            <Button type="secondary" ghost size="xs" onClick={v.goToday}>
+            <Button type="secondary" ghost size="xs" onClick={v.goToday} style={{ marginLeft: 'auto' }}>
               Today
             </Button>
           ) : null}
-          </span>
           <SegmentedControl
             label="Calendar view"
             semantics="tabs"
