@@ -20,7 +20,8 @@ export function serviceDb(): SupabaseClient | null {
 export const INSTRUCTIONS = `Moonshot is a workout planner with a magical-girl theme: workouts live in the person's Spellbook, sessions sit on a calendar, and their journal is the Chronicle.
 To plan training for someone: call get_training_context first, ask about anything you still need (goal, days they can train, time per session, equipment, experience, injuries), then call save_plan.
 Moonshot has two kinds of workout: "lift" (strength or bodyweight exercises with sets and reps) and "ride" (a bike ride with minutes, distance and an effort zone). It has no runs, swims or classes; write those as notes, or ask the person how they'd like them handled.
-save_plan saves a draft; nothing goes on their calendar until they review it in Moonshot and add it.`;
+save_plan saves a draft; nothing goes on their calendar until they review it in Moonshot and add it.
+Use what they already have: where a workout in their Spellbook fits, use its exact name (Moonshot then schedules that saved workout as it is, rather than making a copy), and name exercises as their own or the built-in ones are named. A session already on their calendar for that workout and date isn't added twice.`;
 
 export const TOOLS = [
   {
@@ -34,7 +35,7 @@ export const TOOLS = [
   {
     name: 'save_plan',
     title: 'Save a plan to Moonshot',
-    description: `Saves a training plan to Moonshot as a draft for the person to review. It replaces any draft they haven't decided on yet, so after changes, send the whole plan again. Nothing is added to their calendar until they accept it in Moonshot. Up to ${PLAN_LIMITS.workouts} workouts, dated from today up to a year ahead. Prefer exercise names from get_training_context so Moonshot can match their icons and target areas; new names are fine too.`,
+    description: `Saves a training plan to Moonshot as a draft for the person to review. It replaces any draft they haven't decided on yet, so after changes, send the whole plan again. Nothing is added to their calendar until they accept it in Moonshot. Up to ${PLAN_LIMITS.workouts} workouts, dated from today up to a year ahead. Prefer exercise names from get_training_context so Moonshot can match their icons and target areas; new names are fine too. A workout named like one in their Spellbook (same kind) schedules that saved workout as it is, exercises and all, instead of making a new one.`,
     inputSchema: {
       type: 'object',
       additionalProperties: false,

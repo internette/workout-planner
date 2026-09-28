@@ -7,5 +7,5 @@ export { setExercisesDone, setRideDone, finishSession, reopenSession, saveDiary,
 export { ownCopyOfBuiltin, createWorkout, updateWorkout, archiveWorkout } from './planner/workouts';
 export { updateWorkoutTemplate } from './planner/workoutTemplate';
 export { deleteLibraryExercise, createLibraryExercise, updateLibraryExercise } from './planner/exercises';
-export { latestPlanDraft, discardPlanDraft, addPlanDraft } from './planner/drafts';
+export { latestPlanDraft, discardPlanDraft, addPlanDraft, planAddSummary } from './planner/drafts';
 export { estimateMinutes } from './planner/convert';

@@ -81,10 +81,20 @@ export function calendarVals(ctx: Ctx) {
       const w = draft.plan.workouts;
       const first = w[0].date;
       const at = isoMonthDay(first, Y);
+      // What it reuses (saved workouts of the same name) and leaves alone (sessions already there) is said.
+      const sum = db.planAddSummary(draft, logic.model!);
+      const quoted = sum.reused.map((n) => '“' + n + '”');
+      const reused = quoted.length
+        ? ' It uses your saved ' + (quoted.length > 1 ? quoted.slice(0, -1).join(', ') + ' and ' + quoted[quoted.length - 1] : quoted[0]) + '.'
+        : '';
+      const skipped = sum.skipped ? ' ' + plural(sum.skipped, 'session') + (sum.skipped === 1 ? ' was' : ' were') + ' already there.' : '';
+      const text = sum.added
+        ? `Your new arc is on the calendar: ${plural(sum.added, 'workout')}, starting ${shortDate(first)}.` + reused + skipped
+        : 'Everything in this arc is already on your calendar.';
       logic.saveOnce('plan-draft', () => db.addPlanDraft(draft, logic.model!), {
         ...monthPatch(at.m),
         day: at.d,
-        ...noticePatch(`Your new arc is on the calendar: ${plural(w.length, 'workout')}, starting ${shortDate(first)}.`, 'day'),
+        ...noticePatch(text, 'day'),
       });
     },
     addingPlan: logic.busy('plan-draft'),

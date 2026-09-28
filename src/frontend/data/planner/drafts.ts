@@ -9,6 +9,7 @@ import type { Exercise, Model } from './types';
 import { numStr, estimateMinutes } from './convert';
 import { ok, okOr } from './db';
 import { createWorkout } from './workouts';
+import { scheduleWorkout } from './sessions';
 
 /** The newest plan still waiting for a decision, or null. `since` (an ISO time) only counts drafts saved after it.
  * Null too when the plan_drafts migration hasn't run. */
@@ -27,15 +28,16 @@ export async function discardPlanDraft(id: string) {
   await decidePlanDraft(id, 'discarded');
 }
 
-/**
- * Adds a draft to the calendar. The same workout on several dates (same name and the same content) becomes one
- * workout with a session on each date; anything that differs becomes its own workout, and createWorkout numbers a name
- * that's taken. Exercises Moonshot already knows keep their icon, target areas and equipment.
- */
-export async function addPlanDraft(draft: PlanDraft, model: Model) {
-  const known = new Map<string, Exercise>();
-  for (const e of [...model.builtins, ...Object.values(model.EX).flat(), ...model.library]) known.set(e.name.trim().toLowerCase(), e);
+// Names compared loosely: case, spaces and punctuation aside ("Lat Pull-Down" is "Lat Pulldown").
+const same = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '');
 
+/**
+ * What adding a draft would use that's already there: each group of sessions (the same workout on several dates) with
+ * the saved workout of that name and kind in the Spellbook, if there is one, and the dates it's already on the
+ * calendar, which are left alone rather than added twice.
+ */
+export function planMatches(draft: PlanDraft, model: Model) {
+  const saved = new Map(model.workouts.map((w) => [same(w.name) + '|' + w.kind, w]));
   const groups = new Map<string, { w: PlanWorkout; dates: string[] }>();
   for (const w of draft.plan.workouts) {
     const { date, ...content } = w;
@@ -44,10 +46,48 @@ export async function addPlanDraft(draft: PlanDraft, model: Model) {
     if (g) g.dates.push(date);
     else groups.set(key, { w, dates: [date] });
   }
+  return [...groups.values()].map(({ w, dates }) => {
+    const existing = saved.get(same(w.name) + '|' + w.kind) || null;
+    // A session of that workout (by name: an edited workout's earlier sessions keep its name) already on a date.
+    const taken = new Set(
+      model.entries.filter((x) => same(x.av.name) === same(existing ? existing.name : w.name)).map((x) => x.iso),
+    );
+    return { w, existing, dates: dates.filter((d) => !taken.has(d)).sort(), skipped: dates.filter((d) => taken.has(d)).length };
+  });
+}
 
-  for (const { w, dates } of groups.values()) {
+/** Says what adding a draft does: how many sessions go on, which saved workouts it reuses, and what's already there. */
+export function planAddSummary(draft: PlanDraft, model: Model) {
+  const m = planMatches(draft, model);
+  return {
+    added: m.reduce((n, g) => n + g.dates.length, 0),
+    skipped: m.reduce((n, g) => n + g.skipped, 0),
+    reused: [...new Set(m.filter((g) => g.existing).map((g) => g.existing!.name))],
+    created: m.filter((g) => !g.existing && g.dates.length).length,
+  };
+}
+
+/**
+ * Adds a draft to the calendar, using what's already there. A workout with the name of one in the Spellbook schedules
+ * that saved workout (as it is) rather than making a copy; a date it's already on is left alone, so adding a plan
+ * twice doesn't double it. Otherwise the same workout on several dates (same name and content) becomes one new workout
+ * with a session on each date, and createWorkout numbers a name that's taken. Exercises match the person's own and
+ * the built-in ones by name, loosely, and keep their name, icon, target areas and equipment.
+ */
+export async function addPlanDraft(draft: PlanDraft, model: Model) {
+  const known = new Map<string, Exercise>();
+  // Later ones win: the person's own exercises over built-in ones with the same name.
+  for (const e of [...model.builtins, ...Object.values(model.EX).flat(), ...model.library]) known.set(same(e.name), e);
+
+  for (const { w, existing, dates } of planMatches(draft, model)) {
+    if (!dates.length) continue;
+    // Already in the Spellbook: that saved workout, as it is, goes on the dates.
+    if (existing) {
+      await scheduleWorkout(existing.id, dates, false);
+      continue;
+    }
     const exercises: Exercise[] = (w.exercises ?? []).map((e) => {
-      const hit = known.get(e.name.trim().toLowerCase());
+      const hit = known.get(same(e.name));
       return {
         name: hit?.name ?? e.name,
         sets: `${e.sets} × ${e.reps}`,
@@ -69,7 +109,7 @@ export async function addPlanDraft(draft: PlanDraft, model: Model) {
       icon: null,
       iconColor: null,
       exercises,
-      dates: dates.sort(),
+      dates,
       repeat: false,
       notes: w.notes ?? '',
       warmup: model.warmupReady && !!w.warmup,
