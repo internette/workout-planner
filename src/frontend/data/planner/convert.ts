@@ -62,9 +62,9 @@ export function exerciseRow(e: Exercise) {
   };
 }
 
-// Workout icon colours are saved as hex. The primary pink has changed over time (#E1699C, then #D63479), so a workout
-// saved with an earlier one shows today's, and still matches the pink in the colour picker.
-export const OLD_PINKS = ['#E1699C', '#D63479'];
+// Workout icon colours are saved as hex. The primary pink has changed over time (#E1699C, and for a while #D53181), so
+// a workout saved with an earlier one shows today's, and still matches the pink in the colour picker.
+export const OLD_PINKS = ['#E1699C', '#D53181'];
 
 export const iconColorOf = (hex: string | null) => (hex && OLD_PINKS.includes(hex.toUpperCase()) ? colors.pink : hex);
 

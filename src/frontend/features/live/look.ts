@@ -14,7 +14,7 @@ export type LiveLook = {
 };
 
 const LIGHT: Record<Accent, { a: string; on: string; deep: string; tint: string; mist: string }> = {
-  pink: { a: '#D53181', on: '#FFFFFF', deep: '#AF2367', tint: '#FCE8F2', mist: '#F4EFF1' },
+  pink: { a: '#D63479', on: '#FFFFFF', deep: '#B22461', tint: '#FCE8F1', mist: '#F4EFF1' },
   teal: { a: '#5EC4D6', on: '#232A45', deep: '#276B76', tint: '#E4F4F7', mist: '#EAF2F4' },
   periwinkle: { a: '#7C8FC9', on: '#161B2E', deep: '#4C5E96', tint: '#E9EEF9', mist: '#EDEFF7' },
   slate: { a: '#5C6684', on: '#FFFFFF', deep: '#4A5268', tint: '#EDEFF6', mist: '#EEEFF3' },
