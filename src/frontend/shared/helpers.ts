@@ -81,7 +81,7 @@ export const isoOf = dt => dt.getFullYear() + '-' + String(dt.getMonth() + 1).pa
 export const plural = (n, singular, pluralForm = '') => n + ' ' + (n === 1 ? singular : pluralForm || singular + 's');
 
 // An exercise's sets and reps are two separate inputs on screen, but one field everywhere else: the database column,
-// the "4 × 8" shown in lists, and data/plannerData.ts's own parser all expect one string. These two convert at the
+// the "4 × 8" shown in lists, and data/planner/convert.ts's own parser all expect one string. These two convert at the
 // edges, so the rest of the app never has to know the box was split in two.
 export const splitSetsReps = text => {
   const t = (text || '').trim();
