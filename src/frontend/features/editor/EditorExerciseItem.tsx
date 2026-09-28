@@ -1,13 +1,14 @@
 import { type ReactNode } from 'react';
 import { IconButton } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
-import { ChevronDown, Close } from '@moonshot/design-system/icons';
+import { Close } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
 import { AreaChoice } from '@/frontend/components/AreaChoice';
 import { DoneTick } from '@/frontend/components/DoneTick';
 import { SetsFields } from '@/frontend/components/SetsFields';
 import { IconPicker } from '@/frontend/components/IconPicker';
 import { t } from '@/frontend/features/planner/viewHelpers';
+import { DisclosureChevron } from '@/frontend/components/DisclosureChevron';
 
 /** An exercise in the editor’s list: its icon, sets and target areas when opened, its tick, and removing it. `handle` is the drag handle from ReorderableList. */
 export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle: ReactNode }) {
@@ -59,11 +60,7 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
               </Text>
             ) : null}
           </span>
-          <ChevronDown
-            color="var(--color-muted)"
-            size={16}
-            style={{ flex: 'none', transform: exercise?.expanded ? 'rotate(180deg)' : 'none' }}
-          />
+          <DisclosureChevron open={!!exercise?.expanded} />
         </button>
         {exercise?.showTick ? (
           <DoneTick done={!!exercise?.isDone} onToggle={exercise?.toggleDone} label={exercise?.doneAria ?? ''} />

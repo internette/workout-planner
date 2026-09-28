@@ -9,8 +9,10 @@ import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import { RANKS, RANK_STEPS } from '@/frontend/shared/constants';
 import { PROVIDER_NAME, PROVIDERS, type Provider } from '@/shared/auth';
+import { Callout } from '@/frontend/components/Callout';
 import { ProviderButton } from './ProviderButton';
 import styles from './landing.module.css';
+import { RankGem } from '@/frontend/components/RankGem';
 
 // ---- the auth card: two modes that differ only in wording, since both are the same OAuth call
 function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.RefObject<HTMLDivElement>; configured: boolean; returned?: string; deleted?: boolean }) {
@@ -57,15 +59,15 @@ function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.R
           </div>
         ) : (
           // Every provider is switched off in vendors.config.ts, so there is no way in to offer.
-          <p className={styles.error} role="status">
+          <Callout tone="danger" style={{ marginTop: 'var(--space-3)' }}>
             Sign-in is closed for now. Check back soon.
-          </p>
+          </Callout>
         )}
 
         {error ? (
-          <p className={styles.error} role="alert">
+          <Callout tone="danger" role="alert" style={{ marginTop: 'var(--space-3)' }}>
             {error}
-          </p>
+          </Callout>
         ) : null}
         {deleted ? (
           <p className={styles.notice} role="status">
@@ -231,7 +233,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
             <div className={styles.ranksRight}>
               {LADDER.map((r) => (
                 <div key={r.name} className={styles.rank}>
-                  <span className={styles.gem} style={{ background: r.gem }} aria-hidden="true" />
+                  <RankGem fill={r.gem} />
                   <Text variant="label" className={styles.rankName}>
                     {r.name}
                   </Text>

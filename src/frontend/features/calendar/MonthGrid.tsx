@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
+import { StatusDot } from '@/frontend/components/StatusDot';
 
 /** The Month view’s grid of days, moved around with the arrow keys. */
 export function MonthGrid({ v }: { v: PlannerVals }) {
@@ -57,7 +58,7 @@ export function MonthGrid({ v }: { v: PlannerVals }) {
                 style={css(c?.wrap)}
               >
                 <span style={css(c?.num)}>{c?.label}</span>
-                <span style={css(c?.dot)}></span>
+                <StatusDot status={c?.dot} onAccent={!!c?.selected} />
               </button>
             ),
           )}

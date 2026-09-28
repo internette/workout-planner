@@ -2,12 +2,13 @@ import { Fragment } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { IconTile } from '@moonshot/design-system/icon-tile';
-import { ChevronDown, ChevronRight, Dumbbell, DumbbellSmall } from '@moonshot/design-system/icons';
+import { ChevronRight, Dumbbell, DumbbellSmall } from '@moonshot/design-system/icons';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import { StatRow } from '@/frontend/components/StatRow';
 import { WarmupTag } from '@/frontend/components/WarmupTag';
 import { css, t } from '@/frontend/features/planner/viewHelpers';
+import { DisclosureChevron } from '@/frontend/components/DisclosureChevron';
 
 /** A session on the Day view: its exercises or ride, progress, and what to do next. */
 export function DayWorkoutCard({ card }: { card: any }) {
@@ -130,11 +131,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
             >
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                 {t(card?.moreLabel)}
-                <ChevronDown
-                  color="var(--color-muted)"
-                  strokeWidth={2.2}
-                  style={css(card?.moreCaret)}
-                />
+                <DisclosureChevron open={!!card?.moreOpen} />
               </span>
             </Button>
           </>

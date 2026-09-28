@@ -5,3 +5,11 @@ export const mTab = (on) => 'text-decoration:none;flex:1;min-width:0;min-height:
 
 // The size comes from the .mlabel class in planner.css (12 px, 11 px on the narrowest phones).
 export const mLabel = on => 'white-space:nowrap;font-weight:'+(on?'var(--font-weight-bold)':'var(--font-weight-medium)')+';color:'+(on?'var(--color-accent-deep)':'var(--color-muted)');
+
+// A place in the sidebar. `extra` is what the layout adds (a tablet's row of them).
+export const navItem = (on, extra = '') =>
+  'display:flex;align-items:center;gap:12px;padding:12px;border:none;border-radius:var(--radius-md);font-size:var(--text-base);text-align:left;cursor:pointer;' +
+  (on
+    ? 'background:var(--color-accent-tint);color:var(--color-accent-deep);font-weight:var(--font-weight-semibold)'
+    : 'background:none;color:var(--color-muted);font-weight:var(--font-weight-medium)') +
+  extra;

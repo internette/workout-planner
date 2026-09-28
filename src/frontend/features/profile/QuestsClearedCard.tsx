@@ -5,6 +5,7 @@ import { Text } from '@moonshot/design-system/typography';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import { SectionHeader } from '@/frontend/components/SectionHeader';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
+import { RankGem } from '@/frontend/components/RankGem';
 
 /** Profile: quests cleared, all time. */
 export function QuestsClearedCard({ v }: { v: PlannerVals }) {
@@ -23,7 +24,7 @@ export function QuestsClearedCard({ v }: { v: PlannerVals }) {
         {(v.questStats ?? []).map((q, i) => (
           <Fragment key={i}>
             <div style={css(q?.row)}>
-              <span style={css(q?.swatch)}></span>
+              <RankGem fill={q?.color} />
               <Text variant="label" tone="ink" style={{ flex: '1', minWidth: '0' }}>
                 {q?.name}
               </Text>

@@ -25,19 +25,6 @@
 .legal { margin: 16px 0 0; text-wrap: pretty; }
 .toggle { display: flex; align-items: center; gap: 8px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--color-mist); }
 .toggleLink { white-space: nowrap; }
-.error {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  margin: 14px 0 0;
-  padding: 12px 14px;
-  border-radius: var(--radius-md);
-  background: var(--color-danger-tint);
-  color: var(--color-danger);
-  font-size: var(--text-md);
-  line-height: var(--leading-snug);
-  font-weight: var(--font-weight-medium);
-}
 
 /* ---- provider buttons ---- */
 .provider {
@@ -94,7 +81,6 @@
 .ranksBody { max-width: 440px; margin: 12px 0 0; text-wrap: pretty; }
 .ranksRight { flex: 1 1 260px; display: flex; flex-direction: column; gap: 8px; }
 .rank { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-radius: var(--radius-md); background: var(--color-surface); box-shadow: var(--elevation-hairline); }
-.gem { width: 10px; height: 14px; flex: none; clip-path: polygon(50% 0, 100% 35%, 50% 100%, 0 35%); }
 .rankName { flex: 1; min-width: 0; }
 .more { padding: 0 16px; }
 

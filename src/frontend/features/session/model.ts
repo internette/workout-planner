@@ -283,7 +283,6 @@ export function workoutVals(ctx: Ctx) {
       hasMore: rows.length > 3,
       moreLabel: expanded ? 'Show less' : '+ ' + (rows.length - 3) + ' more',
       moreOpen: expanded,
-      moreCaret: 'width:15px;height:15px;flex:none;transition:transform .2s' + (expanded ? ';transform:rotate(180deg)' : ''),
       toggleMore: () => logic.s({ moreIds: Object.assign({}, st.moreIds, { [id]: !expanded }) }),
       // Logged: read it. Every exercise ticked but not logged yet: log it. Started (clock or ticks): carry on, or
       // start over. Otherwise: start.

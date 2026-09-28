@@ -39,8 +39,14 @@ import { DeleteSection } from '@/frontend/components/DeleteSection';
 import { FormActions } from '@/frontend/components/FormActions';
 import { IconSquare } from '@/frontend/components/IconSquare';
 import { LinkRow } from '@/frontend/components/LinkRow';
+import { Callout } from '@/frontend/components/Callout';
 import { StatRow } from '@/frontend/components/StatRow';
+import { STATUS_NAMES, StatusDot } from '@/frontend/components/StatusDot';
 import { NeedsLine } from '@/frontend/components/NeedsLine';
+import { GroupLabel } from '@/frontend/components/GroupLabel';
+import { NotesCard } from '@/frontend/components/NotesCard';
+import { PageHeader } from '@/frontend/components/PageHeader';
+import { Twinkles } from '@/frontend/components/Twinkles';
 import { PageTitle } from '@/frontend/components/PageTitle';
 import { RepeatWeekly } from '@/frontend/components/RepeatWeekly';
 import { SearchBar } from '@/frontend/components/SearchBar';
@@ -98,6 +104,7 @@ import { NewExerciseCard } from '@/frontend/features/spellbook/NewExerciseCard';
 import { SaveScopeDialog } from '@/frontend/features/spellbook/SaveScopeDialog';
 import { ScheduleDialog } from '@/frontend/features/spellbook/ScheduleDialog';
 import { WorkoutRow } from '@/frontend/features/spellbook/WorkoutRow';
+import { ChipRow } from '@/frontend/components/ChipRow';
 
 export function PlannerView({ v }: { v: any }) {
   return (
@@ -196,7 +203,7 @@ export function PlannerView({ v }: { v: any }) {
                                 <span style={css(d?.letterStyle)}>{d?.letter}</span>
                                 <span style={css(d?.monStyle)}>{d?.mon}</span>
                                 <span style={css(d?.numStyle)}>{d?.num}</span>
-                                <span style={css(d?.dotStyle)}></span>
+                                <StatusDot status={d?.dot} onAccent={!!d?.selected} />
                               </button>
                             </Fragment>
                           ))}
@@ -314,36 +321,7 @@ export function PlannerView({ v }: { v: any }) {
                                 overflow: 'hidden',
                               }}
                             >
-                              <span
-                                style={{
-                                  position: 'absolute',
-                                  left: '13%',
-                                  top: '20px',
-                                  animation: 'twinkle 3.4s ease-in-out infinite',
-                                }}
-                              >
-                                <Sparkle size={12} color={vars.periwinkle} glow={0.5} />
-                              </span>
-                              <span
-                                style={{
-                                  position: 'absolute',
-                                  right: '15%',
-                                  top: '34px',
-                                  animation: 'twinkle 4.6s ease-in-out infinite',
-                                }}
-                              >
-                                <Sparkle size={10} color={vars.teal} glow={0.55} />
-                              </span>
-                              <span
-                                style={{
-                                  position: 'absolute',
-                                  left: '24%',
-                                  bottom: '18px',
-                                  animation: 'twinkle 6s ease-in-out infinite',
-                                }}
-                              >
-                                <Sparkle size={9} color={vars.coral} glow={0.55} />
-                              </span>
+                              <Twinkles />
                               <div
                                 style={{
                                   width: '56px',
@@ -394,15 +372,7 @@ export function PlannerView({ v }: { v: any }) {
                             }
                             decoration={
                               <>
-                                <span style={{ position: 'absolute', left: '11%', top: '18px', animation: 'twinkle 3.4s ease-in-out infinite' }}>
-                                  <Sparkle size={13} color={vars.periwinkle} glow={0.5} />
-                                </span>
-                                <span style={{ position: 'absolute', right: '13%', top: '40px', animation: 'twinkle 4.6s ease-in-out infinite' }}>
-                                  <Sparkle size={10} color={vars.teal} glow={0.55} />
-                                </span>
-                                <span style={{ position: 'absolute', left: '22%', bottom: '22px', animation: 'twinkle 6s ease-in-out infinite' }}>
-                                  <Sparkle size={10} color={vars.coral} glow={0.55} />
-                                </span>
+                                <Twinkles />
                               </>
                             }
                           />
@@ -486,84 +456,12 @@ export function PlannerView({ v }: { v: any }) {
                         </div>
                         <MonthGrid v={v} />
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', marginTop: '20px' }}>
-                          <Text
-                            variant="small"
-                            tone="muted"
-                            style={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-                          >
-                            <span
-                              style={{
-                                width: '6px',
-                                height: '6px',
-                                borderRadius: 'var(--radius-full)',
-                                background: 'none',
-                                boxShadow: 'inset 0 0 0 1.5px var(--color-teal)',
-                              }}
-                            ></span>
-                            Planned
-                          </Text>
-                          <Text
-                            variant="small"
-                            tone="muted"
-                            style={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-                          >
-                            <span
-                              style={{
-                                width: '6px',
-                                height: '6px',
-                                borderRadius: 'var(--radius-full)',
-                                background: 'var(--color-slate)',
-                              }}
-                            ></span>
-                            Completed
-                          </Text>
-                          <Text
-                            variant="small"
-                            tone="muted"
-                            style={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-                          >
-                            <span
-                              style={{
-                                width: '8px',
-                                height: '8px',
-                                borderRadius: 'var(--radius-full)',
-                                boxShadow: 'inset 0 0 0 1.5px var(--color-slate)',
-                                background: 'linear-gradient(90deg,var(--color-slate) 50%,transparent 50%)',
-                              }}
-                            ></span>
-                            Partly done
-                          </Text>
-                          <Text
-                            variant="small"
-                            tone="muted"
-                            style={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-                          >
-                            <span
-                              style={{
-                                width: '7px',
-                                height: '7px',
-                                borderRadius: 'var(--radius-full)',
-                                background: 'none',
-                                boxShadow: 'inset 0 0 0 1.5px var(--color-muted)',
-                              }}
-                            ></span>
-                            Missed
-                          </Text>
-                          <Text
-                            variant="small"
-                            tone="muted"
-                            style={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-                          >
-                            <span
-                              style={{
-                                width: '7px',
-                                height: '1.5px',
-                                borderRadius: '1px',
-                                background: 'var(--color-divider)',
-                              }}
-                            ></span>
-                            Rest
-                          </Text>
+                          {STATUS_NAMES.map(([status, name]) => (
+                            <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                              <StatusDot status={status} />
+                              {name}
+                            </Text>
+                          ))}
                         </div>
                         {v.hasToday ? (
                           <>
@@ -598,36 +496,7 @@ export function PlannerView({ v }: { v: any }) {
                     overflow: 'hidden',
                   }}
                 >
-                  <span
-                    style={{
-                      position: 'absolute',
-                      left: '12%',
-                      top: '34px',
-                      animation: 'twinkle 3.4s ease-in-out infinite',
-                    }}
-                  >
-                    <Sparkle size={13} color={vars.periwinkle} glow={0.5} />
-                  </span>
-                  <span
-                    style={{
-                      position: 'absolute',
-                      right: '14%',
-                      top: '70px',
-                      animation: 'twinkle 4.6s ease-in-out infinite',
-                    }}
-                  >
-                    <Sparkle size={11} color={vars.teal} glow={0.55} />
-                  </span>
-                  <span
-                    style={{
-                      position: 'absolute',
-                      left: '20%',
-                      bottom: '70px',
-                      animation: 'twinkle 6s ease-in-out infinite',
-                    }}
-                  >
-                    <Sparkle size={10} color={vars.coral} glow={0.55} />
-                  </span>
+                  <Twinkles />
                   <div
                     style={{
                       width: '96px',
@@ -732,17 +601,7 @@ export function PlannerView({ v }: { v: any }) {
             {v.isSummary ? (
               <>
                 <div>
-                  <Text variant="title" as="h1" style={{ margin: '0' }}>
-                    Progress
-                  </Text>
-                  <Text
-                    variant="body"
-                    as="p"
-                    tone="muted"
-                    style={{ margin: '10px 0 0', maxWidth: '460px', textWrap: 'pretty' }}
-                  >
-                    {v.summarySub}
-                  </Text>
+                  <PageHeader title="Progress" intro={v.summarySub} />
                   <StreakBanner v={v} />
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '26px' }}>
                     <ThisWeekCard v={v} />
@@ -759,22 +618,7 @@ export function PlannerView({ v }: { v: any }) {
             {v.isArsenal ? (
               <>
                 <div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
-                    <Text variant="title" as="h1" style={{ margin: '0' }}>
-                      Spellbook
-                    </Text>
-                    <Text variant="label" tone="muted">
-                      {v.arsenalCount}
-                    </Text>
-                  </div>
-                  <Text
-                    variant="body"
-                    as="p"
-                    tone="muted"
-                    style={{ margin: '10px 0 0', maxWidth: '460px', textWrap: 'pretty' }}
-                  >
-                    {v.arsenalIntro}
-                  </Text>
+                  <PageHeader title="Spellbook" count={v.arsenalCount} intro={v.arsenalIntro} />
                   {v.arsenalPicking ? (
                     // Stays in view down the long list, so it's always clear the Spellbook is picking for a workout.
                     // The page-coloured band behind it keeps the list from showing through above the card.
@@ -875,22 +719,7 @@ export function PlannerView({ v }: { v: any }) {
                         {(v.moveGroups ?? []).map((g, i) => (
                           <Fragment key={i}>
                             <div>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexWrap: 'wrap',
-                                  alignItems: 'baseline',
-                                  gap: '8px',
-                                  padding: '0 2px 10px',
-                                }}
-                              >
-                                <Text variant="eyebrow" tone="slate">
-                                  {g?.label}
-                                </Text>
-                                <Text variant="small" tone="muted" weight="medium">
-                                  {g?.count}
-                                </Text>
-                              </div>
+                              <GroupLabel label={g?.label} count={g?.count} />
                               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                 {(g?.items ?? []).map((m, i) => (
                                   <Fragment key={i}>
@@ -937,22 +766,7 @@ export function PlannerView({ v }: { v: any }) {
                         {(v.workoutGroups ?? []).map((g, gi) => (
                           <div key={gi}>
                             {g?.label ? (
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexWrap: 'wrap',
-                                  alignItems: 'baseline',
-                                  gap: '8px',
-                                  padding: '0 2px 10px',
-                                }}
-                              >
-                                <Text variant="eyebrow" tone="slate" as="h2" style={{ margin: 0 }}>
-                                  {g?.label}
-                                </Text>
-                                <Text variant="small" tone="muted" weight="medium">
-                                  {g?.count}
-                                </Text>
-                              </div>
+                              <GroupLabel label={g?.label} count={g?.count} />
                             ) : null}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                               {(g?.items ?? []).map((w, i) => (
@@ -998,22 +812,22 @@ export function PlannerView({ v }: { v: any }) {
                       ]}
                     />
                     {(v.exercise.areas ?? []).length ? (
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '18px' }}>
+                      <ChipRow style={{ marginTop: '18px' }}>
                         {(v.exercise.areas ?? []).map((a, i) => (
                           <Chip key={i}>{a}</Chip>
                         ))}
-                      </div>
+                      </ChipRow>
                     ) : null}
                     {v.exercise.equipment ? (
                       <>
                         <Text variant="eyebrow" as="h2" tone="slate" style={{ margin: '16px 0 8px' }}>
                           EQUIPMENT
                         </Text>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                        <ChipRow>
                           {v.exercise.equipment.map((a, i) => (
                             <Chip key={i}>{a}</Chip>
                           ))}
-                        </div>
+                        </ChipRow>
                       </>
                     ) : null}
                   </Card>
@@ -1028,13 +842,13 @@ export function PlannerView({ v }: { v: any }) {
                         USED IN
                       </Text>
                       {(v.exercise.usedIn ?? []).length ? (
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                        <ChipRow>
                           {(v.exercise.usedIn ?? []).map((w, i) => (
                             <Chip key={i} onClick={w?.open}>
                               {w?.name}
                             </Chip>
                           ))}
-                        </div>
+                        </ChipRow>
                       ) : (
                         <Text variant="body" as="p" tone="muted" style={{ margin: '0' }}>
                           Not part of a saved workout yet.
@@ -1096,37 +910,33 @@ export function PlannerView({ v }: { v: any }) {
                     )}
                   </BackBar>
                   <PageTitle icon={v.template.svg} eyebrow={v.template.eyebrow} title={v.template.name} />
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '18px' }}>
+                  <ChipRow style={{ marginTop: '18px' }}>
                     <Chip icon={<Clock color="var(--color-muted)" size={15} />}>{v.template.time}</Chip>
                     {(v.template.areas ?? []).map((a, i) => (
                       <Chip key={i}>{a}</Chip>
                     ))}
-                  </div>
+                  </ChipRow>
                   <NeedsLine text={v.template.needs} />
                   {v.template.notes ? (
-                    <Card pad="sm" style={{ marginTop: '14px' }}>
-                      <Text variant="micro" tone="subtle" as="div">
-                        NOTES
-                      </Text>
-                      <Text variant="body" tone="ink" as="p" style={{ margin: '6px 0 0', whiteSpace: 'pre-wrap' }}>
-                        {v.template.notes}
-                      </Text>
-                    </Card>
+                    <NotesCard style={{ marginTop: '12px' }}>{v.template.notes}</NotesCard>
                   ) : null}
                   <Button type="primary" size="lg" fullWidth onClick={v.template.schedule} style={{ marginTop: '18px' }}>
                     <Calendar color="var(--color-on-accent)" size={17} />
                     Add to calendar
                   </Button>
                   {v.scheduleCalendar?.done ? (
-                    <Card pad="sm" style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }} role="status">
-                      <Check color="var(--color-accent-deep)" strokeWidth={2.6} size={16} />
-                      <Text variant="label" tone="ink" style={{ flex: '1 1 180px', minWidth: 0 }}>
-                        {v.scheduleCalendar.done}
-                      </Text>
-                      <Button type="neutral" ghost size="sm" onClick={v.scheduleCalendar.viewDay}>
-                        View day
-                      </Button>
-                    </Card>
+                    <Callout
+                      tone="success"
+                      icon={<Check color="var(--color-accent-deep)" strokeWidth={2.4} size={16} />}
+                      action={
+                        <Button type="neutral" ghost size="sm" onClick={v.scheduleCalendar.viewDay}>
+                          View day
+                        </Button>
+                      }
+                      style={{ marginTop: '12px' }}
+                    >
+                      {v.scheduleCalendar.done}
+                    </Callout>
                   ) : null}
                   <ScheduleDialog v={v} />
                   {v.template.isRide ? (
@@ -1185,24 +995,16 @@ export function PlannerView({ v }: { v: any }) {
               <>
                 <div>
                   <BackBar label={v.backLabel} onBack={v.goBack} />
-                  <Text variant="title" as="h1" style={{ margin: '24px 0 0' }}>
-                    Which session are you writing about?
-                  </Text>
-                  <Text
-                    variant="body"
-                    as="p"
-                    tone="muted"
-                    style={{ margin: '10px 0 0', maxWidth: '460px', textWrap: 'pretty' }}
-                  >
-                    Pick a session from the last 60 days. Ones you&apos;ve already written about aren&apos;t listed.
-                  </Text>
+                  <PageHeader
+                    title="Which session are you writing about?"
+                    intro={<>Pick a session from the last 60 days. Ones you&apos;ve already written about aren&apos;t listed.</>}
+                    style={{ marginTop: 'var(--space-6)' }}
+                  />
                   <div style={{ marginTop: '26px', maxWidth: '620px' }}>
                     {/* One card per group (this week, last week, earlier), its sessions as rows. Back leaves. */}
                     {(v.unloggedGroups ?? []).map((g) => (
                       <div key={g.label} style={{ marginBottom: '16px' }}>
-                        <Text variant="eyebrow" as="h2" tone="slate" style={{ margin: '0 4px 8px' }}>
-                          {g.label}
-                        </Text>
+                        <GroupLabel label={g.label} />
                         <Card pad="none" style={{ overflow: 'hidden' }}>
                           {g.items.map((u, i) => (
                             <button
@@ -1258,25 +1060,16 @@ export function PlannerView({ v }: { v: any }) {
             {v.isDiaryList ? (
               <>
                 <div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '10px' }}>
-                    <Text variant="title" as="h1" style={{ margin: '0' }}>
-                      Chronicle
-                    </Text>
-                    <Text variant="label" tone="muted">
-                      {v.diaryCount}
-                    </Text>
-                    <Button type="primary" size="sm" onClick={v.openNewEntry} style={{ marginLeft: 'auto' }}>
-                      New entry
-                    </Button>
-                  </div>
-                  <Text
-                    variant="body"
-                    as="p"
-                    tone="muted"
-                    style={{ margin: '10px 0 0', maxWidth: '620px', textWrap: 'pretty' }}
-                  >
-                    Every session you&apos;ve written about, newest first. Open one to read or edit it.
-                  </Text>
+                  <PageHeader
+                    title="Chronicle"
+                    count={v.diaryCount}
+                    action={
+                      <Button type="primary" size="sm" onClick={v.openNewEntry}>
+                        New entry
+                      </Button>
+                    }
+                    intro={<>Every session you&apos;ve written about, newest first. Open one to read or edit it.</>}
+                  />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
                     <span className="sr-only" role="status">
                       {v.diaryResults}
@@ -1372,7 +1165,7 @@ export function PlannerView({ v }: { v: any }) {
                     </Button>
                   </BackBar>
                   <PageTitle icon={v.dayIcoSvg} eyebrow={<>{v.eDate}{v.eWarmup ? <WarmupTag inline /> : null}</>} title={v.eName} />
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '20px' }}>
+                  <ChipRow style={{ marginTop: '20px' }}>
                     <Chip
                       icon={<Clock color="var(--color-muted)" size={15} />}
                       onClick={v.editTook}
@@ -1406,7 +1199,7 @@ export function PlannerView({ v }: { v: any }) {
                         <Chip>{a}</Chip>
                       </Fragment>
                     ))}
-                  </div>
+                  </ChipRow>
                   <NeedsLine text={v.needs} />
                   {v.isFuture ? (
                     <Card style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
@@ -1476,7 +1269,7 @@ export function PlannerView({ v }: { v: any }) {
                   <LeaveEditorDialog v={v} />
                   <BackBar label={v.backLabel} onBack={v.tryLeave} />
                   <EditorHeader v={v} />
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '20px' }}>
+                  <ChipRow style={{ marginTop: '20px' }}>
                     {v.showDate ? (
                     <DatePicker v={v} />
                     ) : null}
@@ -1488,7 +1281,7 @@ export function PlannerView({ v }: { v: any }) {
                       </>
                     ) : null}
                     <Chip icon={<Clock color="var(--color-muted)" size={17} />}>{t(v.eTime)}</Chip>
-                  </div>
+                  </ChipRow>
                   {v.canUseSaved ? (
                     <Button type="secondary" size="md" onClick={v.useSaved} style={{ marginTop: '12px' }}>
                       {v.useSavedLabel}
@@ -1578,13 +1371,13 @@ export function PlannerView({ v }: { v: any }) {
                           TARGET AREAS
                         </Text>
                         {v.hasTargetAreas ? (
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '14px' }}>
+                          <ChipRow style={{ marginTop: '14px' }}>
                             {(v.targetAreaPills ?? []).map((name, i) => (
                               <Fragment key={i}>
                                 <Chip size="md">{name}</Chip>
                               </Fragment>
                             ))}
-                          </div>
+                          </ChipRow>
                         ) : (
                           <Text variant="body" tone="muted" style={{ display: 'block', marginTop: '10px' }}>
                             Give an exercise below a target area to see it here.

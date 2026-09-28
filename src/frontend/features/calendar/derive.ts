@@ -25,8 +25,6 @@ export function calendarStage(ctx: Ctx): Ctx {
     list.length > 1
       ? list.filter(isDoneEntry).length + ' of ' + list.length + ' workouts done'
       : doneCountAt(list[0]) + ' of ' + instList(list[0].exKey, list[0].id).length + ' exercises done';
-  const halfMoon = (color) =>
-    'width:8px;height:8px;border-radius:var(--radius-full);box-shadow:inset 0 0 0 1.5px ' + color + ';background:linear-gradient(90deg,' + color + ' 50%,transparent 50%)';
   const selDate = new Date(Y, mi, selDay);
   const wkStart = new Date(Y, mi, selDay - selDate.getDay());
   const cells = [];
@@ -75,17 +73,7 @@ export function calendarStage(ctx: Ctx): Ctx {
         (on ? 'var(--font-weight-bold)' : 'var(--font-weight-semibold)') +
         ';color:' +
         (on ? 'var(--color-on-accent)' : same ? 'var(--color-ink)' : 'var(--color-hairline)'),
-      dotStyle: !dot
-        ? 'width:10px;height:2px;border-radius:1px;background:' + (on ? 'var(--color-on-accent-faint)' : 'var(--color-divider)')
-        : done
-          ? 'width:6px;height:6px;border-radius:var(--radius-full);background:' + (on ? 'var(--color-on-accent)' : 'var(--color-slate)')
-          : part
-            ? halfMoon(on ? 'var(--color-on-accent)' : 'var(--color-slate)')
-            : miss
-              ? 'width:7px;height:7px;border-radius:var(--radius-full);background:none;box-shadow:inset 0 0 0 1.5px ' +
-                (on ? 'var(--color-on-accent-soft)' : 'var(--color-muted)')
-              : 'width:6px;height:6px;border-radius:var(--radius-full);background:none;box-shadow:inset 0 0 0 1.5px ' +
-                (on ? 'var(--color-on-accent)' : 'var(--color-teal)'),
+      dot: !dot ? 'rest' : done ? 'done' : part ? 'partly' : miss ? 'missed' : 'planned',
     };
   });
   const shownYOff = Math.floor(mi / 12);
@@ -164,15 +152,7 @@ export function calendarStage(ctx: Ctx): Ctx {
         metaFor(a) +
         ', ' +
         (isDoneEntry(a) ? 'completed' : part ? 'partly done' : past ? 'missed' : 'planned'),
-      stateDot:
-        'flex:none;margin-left:auto;' +
-        (isDoneEntry(a)
-          ? 'width:8px;height:8px;border-radius:var(--radius-full);background:var(--color-slate)'
-          : part
-            ? halfMoon('var(--color-slate)')
-            : past
-            ? 'width:9px;height:9px;border-radius:var(--radius-full);box-shadow:inset 0 0 0 1.5px var(--color-muted)'
-            : 'width:8px;height:8px;border-radius:var(--radius-full);box-shadow:inset 0 0 0 1.5px var(--color-teal)'),
+      dot: isDoneEntry(a) ? 'done' : part ? 'partly' : past ? 'missed' : 'planned',
       // Only the day's first row carries its label.
       showLabel: ix === 0,
       labelTone: label.indexOf('TODAY') > -1 ? 'accent' : 'muted',
@@ -185,7 +165,7 @@ export function calendarStage(ctx: Ctx): Ctx {
     const d = i - lead + 1;
     if (d < 1 || d > dim) {
       // Padding before the 1st and after the last day: shown as empty space, not as a control.
-      monthCells.push({ blank: true, label: '', wrap: 'height:50px', num: 'display:none', dot: 'display:none' });
+      monthCells.push({ blank: true, label: '', wrap: 'height:50px' });
       continue;
     }
     const list = entriesAt(mi, d);
@@ -236,17 +216,7 @@ export function calendarStage(ctx: Ctx): Ctx {
         (a ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)') +
         ';color:' +
         (sel ? 'var(--color-on-accent)' : missed ? 'var(--color-muted)' : a ? 'var(--color-ink)' : 'var(--color-muted)'),
-      dot: part
-        ? halfMoon(sel ? 'var(--color-on-accent)' : 'var(--color-slate)')
-        : a === 'c' || (sel && a && !missed)
-          ? 'width:6px;height:6px;border-radius:var(--radius-full);background:' + (sel ? 'var(--color-on-accent)' : 'var(--color-slate)')
-          : missed
-            ? 'width:7px;height:7px;border-radius:var(--radius-full);background:none;position:relative;box-shadow:inset 0 0 0 1.5px ' +
-              (sel ? 'var(--color-on-accent-soft)' : 'var(--color-muted)')
-            : a
-              ? 'width:6px;height:6px;border-radius:var(--radius-full);background:none;box-shadow:inset 0 0 0 1.5px ' +
-                (sel ? 'var(--color-on-accent)' : 'var(--color-teal)')
-              : 'width:7px;height:1.5px;border-radius:1px;background:' + (sel ? 'var(--color-on-accent-faint)' : 'var(--color-divider)'),
+      dot: part ? 'partly' : a === 'c' ? 'done' : missed ? 'missed' : a ? 'planned' : 'rest',
     });
   }
   return {
