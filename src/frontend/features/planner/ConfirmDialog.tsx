@@ -1,4 +1,5 @@
 import { Button } from '@moonshot/design-system/buttons';
+import { Checkbox } from '@moonshot/design-system/checkbox';
 import { Dialog } from '@moonshot/design-system/dialog';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
@@ -20,6 +21,14 @@ export function ConfirmDialog({ v }: { v: PlannerVals }) {
           </Button>
         </>
       }
-    />
+    >
+      {v.confirmOption ? (
+        <div style={{ marginTop: '16px' }}>
+          <Checkbox switch checked={v.confirmOption.on} onChange={v.confirmOption.set}>
+            {v.confirmOption.label}
+          </Checkbox>
+        </div>
+      ) : null}
+    </Dialog>
   );
 }

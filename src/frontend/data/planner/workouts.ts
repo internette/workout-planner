@@ -126,9 +126,10 @@ export async function updateWorkout(e: WorkoutEdit) {
 }
 
 // Takes a saved workout out of the Spellbook. Its sessions still ahead (from today on, not completed) come off the
-// calendar; past and completed ones stay, pointing at it, so history keeps its exercises. Archiving rather than
-// deleting is what the edit snapshots already do, and it frees the name.
-export async function archiveWorkout(workoutId: string, todayIso: string) {
-  await deletePlanEntries(await upcomingOfWorkout(workoutId, todayIso));
+// calendar unless they're kept (`removeUpcoming` false); past and completed ones stay, pointing at it, so history
+// keeps its exercises. Archiving rather than deleting is what the edit snapshots already do, and it frees the name.
+// Either way a weekly series ends: no more repeats are added.
+export async function archiveWorkout(workoutId: string, todayIso: string, removeUpcoming = true) {
+  if (removeUpcoming) await deletePlanEntries(await upcomingOfWorkout(workoutId, todayIso));
   await ok(supabase.from('workouts').update({ archived: true, repeat_enabled: false }).eq('id', workoutId));
 }
