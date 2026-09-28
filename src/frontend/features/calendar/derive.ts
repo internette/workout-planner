@@ -1,10 +1,12 @@
 import { DOW1, DOW3, MON3, MONTHS, ACCENT } from '@/frontend/shared/constants';
 import { longDay, mod12, monthPatch } from '@/frontend/shared/helpers';
 import { iconSvg } from '@/frontend/shared/icons';
-import type { Ctx } from '../planner/store/types';
+import type { EntriesCtx } from '../planner/store/types';
+import type { DayStatus } from '@/frontend/components/StatusDot';
+import type { Entry } from '@/frontend/data/plannerData';
 
 // The selected month, week and day, plus the week list and month grid.
-export function calendarStage(ctx: Ctx): Ctx {
+export function calendarStage(ctx: EntriesCtx) {
   const { logic, st, Y, TODAY_M, seedAt, entriesAt, TK, relM, isDoneEntry, TODAY_D, nameOf, metaFor, doneCountAt, instList, actualMinutes } = ctx;
   // The month on screen, counted from January of this year (so it can run into next year, or back into last).
   const mi = MONTHS.indexOf(st.month) + 12 * (st.yOff || 0);
@@ -19,7 +21,7 @@ export function calendarStage(ctx: Ctx): Ctx {
   const workoutsWord = (list) => (list.length > 1 ? list.length + ' workouts, ' : '');
   // A past day that isn't all done but where something was — a workout of several, an exercise, a finished session —
   // is "partly done" (a half moon), not "missed". Today keeps its planned marker until it's over.
-  const someDone = (av) => isDoneEntry(av) || (!av.ride && doneCountAt(av) > 0) || actualMinutes(av) > 0;
+  const someDone = (av: Entry) => isDoneEntry(av) || (!av.ride && doneCountAt(av) > 0) || actualMinutes(av) > 0;
   const partly = (list) => list.length > 0 && !allDone(list) && list.some(someDone);
   const partText = (list) =>
     list.length > 1
@@ -27,7 +29,7 @@ export function calendarStage(ctx: Ctx): Ctx {
       : doneCountAt(list[0]) + ' of ' + instList(list[0].exKey, list[0].id).length + ' exercises done';
   const selDate = new Date(Y, mi, selDay);
   const wkStart = new Date(Y, mi, selDay - selDate.getDay());
-  const cells = [];
+  const cells: Date[] = [];
   for (let i = 0; i < 7; i++) cells.push(new Date(wkStart.getFullYear(), wkStart.getMonth(), wkStart.getDate() + i));
   const wkEnd = cells[6];
   const stamp = (d) => MON3[d.getMonth()] + ' ' + d.getDate();
@@ -36,7 +38,8 @@ export function calendarStage(ctx: Ctx): Ctx {
       ? MON3[wkStart.getMonth()] + ' ' + wkStart.getDate() + ' – ' + wkEnd.getDate()
       : stamp(wkStart) + ' – ' + stamp(wkEnd);
   const spansMonths = cells[0].getMonth() !== cells[6].getMonth();
-  const dayDefs = cells.map((d) => {
+  // Per day: letter, date, has a session, in the month shown, its month, done, missed, its sessions, partly done.
+  const dayDefs: [string, number, boolean, boolean, number, boolean, boolean, Entry[], boolean][] = cells.map((d) => {
     const list = listForDate(d);
     const past = relM(d) * 100 + d.getDate() < TK;
     const done = allDone(list);
@@ -58,7 +61,7 @@ export function calendarStage(ctx: Ctx): Ctx {
         longDay(new Date(Y, cellMonth, num)) +
         ' — ' +
         (!dot ? 'rest day' : workoutsWord(list) + (done ? 'completed' : part ? 'partly done, ' + partText(list) : miss ? 'missed' : 'planned')),
-      isToday: cellMonth === TODAY_M && num === TODAY_D ? 'date' : false,
+      isToday: cellMonth === TODAY_M && num === TODAY_D ? ('date' as const) : false,
       wrapStyle:
         'flex:1;min-width:0;padding:8px 2px 10px;border:none;border-radius:var(--radius-md);background:' +
         (on ? ACCENT : 'none') +
@@ -73,7 +76,7 @@ export function calendarStage(ctx: Ctx): Ctx {
         (on ? 'var(--font-weight-bold)' : 'var(--font-weight-semibold)') +
         ';color:' +
         (on ? 'var(--color-on-accent)' : same ? 'var(--color-ink)' : 'var(--color-hairline)'),
-      dot: !dot ? 'rest' : done ? 'done' : part ? 'partly' : miss ? 'missed' : 'planned',
+      dot: (!dot ? 'rest' : done ? 'done' : part ? 'partly' : miss ? 'missed' : 'planned') as DayStatus,
     };
   });
   const shownYOff = Math.floor(mi / 12);
@@ -152,7 +155,7 @@ export function calendarStage(ctx: Ctx): Ctx {
         metaFor(a) +
         ', ' +
         (isDoneEntry(a) ? 'completed' : part ? 'partly done' : past ? 'missed' : 'planned'),
-      dot: isDoneEntry(a) ? 'done' : part ? 'partly' : past ? 'missed' : 'planned',
+      dot: (isDoneEntry(a) ? 'done' : part ? 'partly' : past ? 'missed' : 'planned') as DayStatus,
       // Only the day's first row carries its label.
       showLabel: ix === 0,
       labelTone: label.indexOf('TODAY') > -1 ? 'accent' : 'muted',
@@ -160,7 +163,19 @@ export function calendarStage(ctx: Ctx): Ctx {
   }
   const lead = new Date(Y, mi, 1).getDay();
   const rows = Math.ceil((lead + dim) / 7);
-  const monthCells = [];
+  const monthCells: {
+    blank?: boolean;
+    label: string;
+    wrap: string;
+    day?: number;
+    tabStop?: number;
+    selected?: boolean;
+    pick?: () => void;
+    aria?: string;
+    isToday?: 'date' | false;
+    num?: string;
+    dot?: DayStatus;
+  }[] = [];
   for (let i = 0; i < rows * 7; i++) {
     const d = i - lead + 1;
     if (d < 1 || d > dim) {
@@ -210,13 +225,13 @@ export function calendarStage(ctx: Ctx): Ctx {
           (a === 'c' ? 'completed' : part ? 'partly done, ' + partText(list) : missed ? 'missed' : a ? 'planned' : 'rest day') +
           (today ? ', today' : '')
         : '',
-      isToday: today ? 'date' : false,
+      isToday: today ? ('date' as const) : false,
       num:
         "font-family:var(--font-heading);font-size:var(--text-md);font-weight:" +
         (a ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)') +
         ';color:' +
         (sel ? 'var(--color-on-accent)' : missed ? 'var(--color-muted)' : a ? 'var(--color-ink)' : 'var(--color-muted)'),
-      dot: part ? 'partly' : a === 'c' ? 'done' : missed ? 'missed' : a ? 'planned' : 'rest',
+      dot: (part ? 'partly' : a === 'c' ? 'done' : missed ? 'missed' : a ? 'planned' : 'rest') as DayStatus,
     });
   }
   return {

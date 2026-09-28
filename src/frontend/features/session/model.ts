@@ -4,6 +4,7 @@ import { iconSvg } from '@/frontend/shared/icons';
 import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from '../planner/store/types';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
+import type { Entry } from '@/frontend/data/plannerData';
 
 // The day card and the workout detail screen (today's quest, exercise preview, completion).
 export function workoutVals(ctx: Ctx) {
@@ -110,7 +111,7 @@ export function workoutVals(ctx: Ctx) {
     const logged = DIARY[listKey];
     logic.nav(
       Object.assign(
-        { screen: 'diary', diaryFrom: 'day', diaryEdit: false, entryNote: null },
+        { screen: 'diary' as const, diaryFrom: 'day' as const, diaryEdit: false, entryNote: null },
         logged ? { mood: logged.mood, rpe: logged.rpe } : { mood: null, rpe: null },
       ),
     );
@@ -163,7 +164,7 @@ export function workoutVals(ctx: Ctx) {
     const useTimer = !!timerState && (timerElapsedSec >= 60 || !recorded);
     const fromTimer = useTimer ? Math.max(1, Math.round(timerElapsedSec / 60)) : 0;
     const mins = fromTimer || recorded || plannedRideMin;
-    const a = selAct.actual || {};
+    const a: Partial<Entry['actual']> = selAct.actual || {};
     if (timerRunning) pauseTimer();
     logic.s({
       finish: {
@@ -202,7 +203,7 @@ export function workoutVals(ctx: Ctx) {
   // A stat next to its plan, once the ride is done and what was ridden differs from it.
   const vsPlan = (actual, planned, unit) =>
     actual && planned && actual !== planned ? 'Planned ' + planned + unit : '';
-  const rideStatsFor = (av, done) => {
+  const rideStatsFor = (av: Entry, done: boolean) => {
     const r = av.ride;
     const a = done && av.actual ? av.actual : null;
     const took = a ? actualMinutes(av) : 0;

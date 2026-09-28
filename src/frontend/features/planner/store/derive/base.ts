@@ -1,7 +1,8 @@
-import type { Ctx } from '../types';
+import type { StartCtx } from '../types';
+import type { Entry } from '@/frontend/data/plannerData';
 
 // Clock, layout breakpoints and the selected screen: the values every other stage builds on.
-export function baseStage(ctx: Ctx): Ctx {
+export function baseStage(ctx: StartCtx) {
   const { logic } = ctx;
   const st = logic.state;
   const { EX, EXV, SEED, DIARY } = logic.model;
@@ -14,8 +15,8 @@ export function baseStage(ctx: Ctx): Ctx {
   const relM = (d) => (d.getFullYear() - Y) * 12 + d.getMonth();
   // A day can hold several workouts. entriesAt lists them all; seedAt is the one on screen for that day: the
   // selected session (st.entryId) when it is on that day, otherwise the day's first.
-  const entriesAt = (m, d) => (SEED[m] || {})[d] || [];
-  const seedAt = (m, d) => {
+  const entriesAt = (m: number, d: number): Entry[] => (SEED[m] || {})[d] || [];
+  const seedAt = (m: number, d: number): Entry | null => {
     const list = entriesAt(m, d);
     return list.find((e) => e.id === st.entryId) || list[0] || null;
   };

@@ -163,8 +163,9 @@ src/
                           routes.ts (which address each screen has), chrome.model.ts (nav and screen switches), styles.ts,
                           viewHelpers.tsx (css() and t()), useViewport
         store/            PlannerLogic (UI state, navigation, loading and saving; renderVals() assembles the view's values),
-                          dcLogic (its immediate-merge setState), context.ts and types.ts (the loose Ctx), and derive/:
-                          the shared derived values, built in order: base (clock, layout), entries, stats
+                          dcLogic (its immediate-merge setState), state.ts (PlannerState: every field of the UI state),
+                          context.ts and types.ts (Ctx, typed stage by stage, and PlannerVals, what the screens read),
+                          and derive/: the shared derived values, built in order: base (clock, layout), entries, stats
       calendar/           model.ts (the calendar's values), derive.ts (month, week, day and the month grid), CalendarScreen,
                           and its sections: MonthPicker, QuestCard, DayWorkoutCard, WeekRow, MonthGrid, AddToDayDialog, RestartDialog
       session/            model.ts (the day card and the session page), derive.ts (the selected workout), SessionScreen, SessionTimer,

@@ -1,12 +1,13 @@
 // After a Chronicle entry is saved: what was written, and what comes next.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Text } from '@moonshot/design-system/typography';
 import { Button } from '@moonshot/design-system/buttons';
 import { Check } from '@moonshot/design-system/icons';
 import { LinkRow } from '@/frontend/components/LinkRow';
 import { Twinkles } from '@/frontend/components/Twinkles';
 
-export function SavedScreen({ v }: { v: any }) {
+export function SavedScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div

@@ -1,10 +1,11 @@
 // Editing an exercise saved in the Spellbook.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Text } from '@moonshot/design-system/typography';
 import { BackBar } from '@/frontend/components/BackBar';
 import { ExerciseEditForm } from '@/frontend/features/spellbook/ExerciseEditForm';
 
-export function ExerciseEditScreen({ v }: { v: any }) {
+export function ExerciseEditScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div>

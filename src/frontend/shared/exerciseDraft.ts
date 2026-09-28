@@ -66,7 +66,7 @@ export const draftItem = (st, model) => ({
 });
 
 // A toggle per target area, given the ones picked; `set` gets the new list.
-export const areaToggles = (picked, set) =>
+export const areaToggles = (picked: string[], set: (list: string[]) => void) =>
   TARGET_AREAS.map((name) => {
     const on = picked.includes(name);
     return { name, on, toggle: () => set(on ? picked.filter((a) => a !== name) : picked.concat([name])) };
@@ -74,7 +74,7 @@ export const areaToggles = (picked, set) =>
 
 // The equipment list in its groups, a toggle each, given what's picked; `set` gets the new list, kept in the list's
 // order so the same picks compare equal however they were made.
-export const equipmentToggles = (picked, set) =>
+export const equipmentToggles = (picked: string[], set: (list: string[]) => void) =>
   EQUIPMENT_GROUPS.map((g) => ({
     label: g.label,
     items: g.items.map((name) => {

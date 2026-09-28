@@ -1,17 +1,18 @@
 import { idOf, isoOf, minText, plural, toMinutes } from '@/frontend/shared/helpers';
-import type { Ctx } from '../types';
+import type { BaseCtx } from '../types';
+import type { Entry, Exercise } from '@/frontend/data/plannerData';
 
 // Per-entry helpers (names, exercise counts, done state), the chronicle filter and the mood / effort widgets.
-export function entriesStage(ctx: Ctx): Ctx {
+export function entriesStage(ctx: BaseCtx) {
   const { st, EXV, DIARY, nowDate, Y, TODAY_M, TODAY_D, TK } = ctx;
-  const nameOf = (n) => ((st.renames || {})[n] != null && st.renames[n] !== '' ? st.renames[n] : n);
+  const nameOf = (n: string): string => ((st.renames || {})[n] != null && st.renames[n] !== '' ? st.renames[n] : n);
   // An entry's exercises come from the version of the workout it was scheduled with, not the current one.
-  const instList = (exKey, key) =>
+  const instList = (exKey: string, key: string): Exercise[] =>
     (EXV[exKey] || [])
       .concat((st.extra || {})[key] || [])
       .filter((e) => ((st.removed || {})[key] || []).indexOf(e.name) === -1);
-  const countAt = (av) => instList(av.exKey, idOf(av)).length;
-  const doneCountAt = (av) => {
+  const countAt = (av: Entry) => instList(av.exKey, idOf(av)).length;
+  const doneCountAt = (av: Entry) => {
     const dn = (st.done || {})[idOf(av)] || [];
     return instList(av.exKey, idOf(av)).filter((e) => dn.indexOf(e.name) !== -1).length;
   };
@@ -25,30 +26,29 @@ export function entriesStage(ctx: Ctx): Ctx {
     if (k === TK && (started || (st.workoutTimer || {})[idOf(av)])) return 'In progress';
     return 'Planned';
   };
-  const ENTRIES = {};
-  Object.assign(ENTRIES, DIARY);
+  const ENTRIES = { ...DIARY };
   const dScope = st.diaryScope || 'all';
   const isoToday = isoOf(nowDate);
   const iso30 = isoOf(new Date(Y, TODAY_M, TODAY_D - 29));
-  const rideDoneAt = (av) => !!(st.rideDone || {})[idOf(av)];
+  const rideDoneAt = (av: Entry) => !!(st.rideDone || {})[idOf(av)];
   // What a finished session actually took (recorded by Finish), next to what was planned.
-  const actualMinutes = (av) =>
+  const actualMinutes = (av: Entry) =>
     av && av.actual ? toMinutes(av.actual.hrs, av.actual.mins) : 0;
   // Done, everywhere: a ride marked complete; a lift with every exercise ticked, or finished with Finish (which records
   // its time) even with some left unticked.
-  const isDoneEntry = (av) =>
+  const isDoneEntry = (av: Entry) =>
     !!av &&
     (av.ride ? rideDoneAt(av) : (countAt(av) > 0 && doneCountAt(av) === countAt(av)) || actualMinutes(av) > 0);
   // A finished session's time, else the planned one ("~50 min").
-  const timeOf = (av) => (actualMinutes(av) ? minText(actualMinutes(av)) : av.time);
+  const timeOf = (av: Entry) => (actualMinutes(av) ? minText(actualMinutes(av)) : av.time);
   // A ride's distance: what was ridden once it's done and recorded, else the plan.
-  const distOf = (av) => (av.ride && isDoneEntry(av) && av.actual && av.actual.dist ? av.actual.dist : av.ride ? av.ride.dist : '');
+  const distOf = (av: Entry) => (av.ride && isDoneEntry(av) && av.actual && av.actual.dist ? av.actual.dist : av.ride ? av.ride.dist : '');
   // What a completed session took: its recorded time, or for a lift completed by ticking every exercise (no time
   // recorded) how many it cleared, rather than the planned estimate.
-  const doneTimeOf = (av) =>
+  const doneTimeOf = (av: Entry) =>
     actualMinutes(av) ? minText(actualMinutes(av)) : av.ride ? av.time : plural(countAt(av), 'exercise');
   // Worded as the Day view's cards word it: a finished session says "Completed".
-  const metaFor = (av) =>
+  const metaFor = (av: Entry) =>
     !av
       ? ''
       : isDoneEntry(av)

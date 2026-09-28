@@ -1,5 +1,6 @@
 // Progress: the streak, this week, quests and counts.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { PageHeader } from '@/frontend/components/PageHeader';
 import { CountCard } from '@/frontend/features/progress/CountCard';
 import { NextUpCard } from '@/frontend/features/progress/NextUpCard';
@@ -7,7 +8,7 @@ import { StreakBanner } from '@/frontend/features/progress/StreakBanner';
 import { ThisWeekCard } from '@/frontend/features/progress/ThisWeekCard';
 import { WeekQuestsCard } from '@/frontend/features/progress/WeekQuestsCard';
 
-export function ProgressScreen({ v }: { v: any }) {
+export function ProgressScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div>

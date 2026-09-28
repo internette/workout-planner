@@ -1,18 +1,22 @@
 import { MON3, RANK_STEPS } from '@/frontend/shared/constants';
 import { idOf, numericOnly, questSeed, shortDay } from '@/frontend/shared/helpers';
-import type { Ctx } from '../types';
+import type { CalendarCtx } from '../types';
+import type { Entry } from '@/frontend/data/plannerData';
 
 // Streaks, weekly buckets, XP and rank, records and quest counts, derived from every entry.
-export function statsStage(ctx: Ctx): Ctx {
+/** One session in a week of the Progress chart. */
+type WeekSession = { date: Date; av: Entry; done: boolean };
+
+export function statsStage(ctx: CalendarCtx) {
   const { logic, Y, TODAY_M, TODAY_D, listForDate, TK, relM, entriesAt, isDoneEntry, ENTRIES, st, EXV, doneCountAt, distOf } = ctx;
   const todayDate = new Date(Y, TODAY_M, TODAY_D);
   const todayWkStart = new Date(Y, TODAY_M, TODAY_D - todayDate.getDay());
-  const weekAll = [];
+  const weekAll: Entry[] = [];
   for (let i = 0; i < 7; i++) {
     const d = new Date(todayWkStart.getFullYear(), todayWkStart.getMonth(), todayWkStart.getDate() + i);
     weekAll.push(...listForDate(d));
   }
-  let nextUp = null;
+  let nextUp: { name: string; m: number; d: number; id: string; meta2: string } | null = null;
   // The next session not yet done, today's included.
   const upcoming = logic.model.entries.find((x) => x.m * 100 + x.d >= TK && !isDoneEntry(x.av));
   if (upcoming) {
@@ -75,10 +79,10 @@ export function statsStage(ctx: Ctx): Ctx {
   // "This week" is one thing everywhere: the Sunday-to-Saturday week today is in. The chart shows the last few of
   // those real weeks, this one last.
   const WEEKS = 6;
-  const weekBuckets = [];
+  const weekBuckets: { start: Date; end: Date; sessions: WeekSession[]; planned: number; done: number }[] = [];
   for (let w = WEEKS - 1; w >= 0; w--) {
     const start = new Date(Y, TODAY_M, TODAY_D - todayDate.getDay() - w * 7);
-    const sessions = [];
+    const sessions: WeekSession[] = [];
     for (let i = 0; i < 7; i++) {
       const date = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
       listForDate(date).forEach((av) => sessions.push({ date, av, done: isDoneEntry(av) }));

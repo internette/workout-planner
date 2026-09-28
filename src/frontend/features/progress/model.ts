@@ -147,7 +147,7 @@ export function progressVals(ctx: Ctx) {
       return n === 1 ? 'LAST TRAINING DAY' : 'LAST ' + (n || 7) + ' TRAINING DAYS';
     })(),
     streakTicks: (() => {
-      const out = [];
+      const out: { label: string; bar: string; cap: string }[] = [];
       for (let back = 0; back <= 90 && out.length < 7; back++) {
         const dt = new Date(Y, TODAY_M, TODAY_D - back);
         const k = relM(dt) + '|' + dt.getDate();
@@ -184,7 +184,7 @@ export function progressVals(ctx: Ctx) {
         // The same words as the calendar's legend: done, partly done, missed, in progress (today), planned.
         statusLabel: statusOf(x),
         // Done stands out in pink; planned is white on the tinted row; anything else grey.
-        statusTone: x.done ? 'accent' : statusOf(x) === 'Planned' ? 'quiet' : 'neutral',
+        statusTone: (x.done ? 'accent' : statusOf(x) === 'Planned' ? 'quiet' : 'neutral') as 'accent' | 'quiet' | 'neutral',
         open: () =>
           logic.openSession(relM(x.date), x.date.getDate(), x.av.id),
       })),
@@ -324,7 +324,17 @@ export function progressVals(ctx: Ctx) {
       return d + ' of ' + t + ' cleared';
     })(),
     weekQuests: (function () {
-      const out = [];
+      const out: {
+        day: string;
+        name: string;
+        doneLine: string;
+        done: boolean;
+        open: () => void;
+        aria: string;
+        row: string;
+        mark: string;
+        title: string;
+      }[] = [];
       for (let i = 0; i < 7; i++) {
         const d = new Date(Y, TODAY_M, TODAY_D - todayDate.getDay() + i);
         const dm = d.getDate();

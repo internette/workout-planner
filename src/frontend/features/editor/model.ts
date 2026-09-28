@@ -6,6 +6,7 @@ import { themed } from '@moonshot/design-system/colors';
 import type { Ctx } from '../planner/store/types';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import { areaToggles, plainExercise, DRAFT_CLEARED, draftClash, draftHint, draftItem, draftOpened, draftReady, equipmentKnown, equipmentToggles } from '@/frontend/shared/exerciseDraft';
+import type { BuiltinWorkout, WorkoutSummary } from '@/frontend/data/plannerData';
 
 // Create / edit workout screen: ride plan, exercise list, icons, date picker, save and delete.
 export function editVals(ctx: Ctx) {
@@ -94,7 +95,7 @@ export function editVals(ctx: Ctx) {
   // An exercise's icon picked in this editor (not yet saved), kept per workout like its other fields.
   const iconPick = (name) => (st.exIcons || {})[listKey + '|' + name];
   const weeklyAfter = (name) => {
-    const out = [];
+    const out: string[] = [];
     for (let w = 1; w <= 12; w++) {
       const d = new Date(Y, mi, selDay + w * 7);
       const iso = isoOf(d);
@@ -163,7 +164,7 @@ export function editVals(ctx: Ctx) {
   // "Or one from your Spellbook": the person's own workouts, then the built-in ones they don't have yet (theirs by that
   // name is already listed), grouped as the Spellbook groups them. Picking one puts it on this day; a built-in one is
   // saved to their workouts first, since a session needs a workout of their own.
-  const choiceOf = (w, builtinOne) => ({
+  const choiceOf = (w: WorkoutSummary | BuiltinWorkout, builtinOne: boolean) => ({
       name: w.name,
       warmup: !!w.warmup && !builtinOne,
       svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || undefined),
@@ -177,7 +178,7 @@ export function editVals(ctx: Ctx) {
         logic.saveOnce(
           'workout',
           () =>
-            (builtinOne ? db.ownCopyOfBuiltin(w).then((c) => c.workoutId) : Promise.resolve(w.id)).then((id) =>
+            (builtinOne ? db.ownCopyOfBuiltin(w as BuiltinWorkout).then((c) => c.workoutId) : Promise.resolve(w.id)).then((id) =>
               db.scheduleWorkout(
                 id,
                 [isoOf(new Date(Y, mi, selDay))],
@@ -203,7 +204,7 @@ export function editVals(ctx: Ctx) {
   });
   const ownNames = new Set(logic.model.workouts.map((w) => w.name.trim().toLowerCase()));
   const builtinChoices = (logic.model.builtinWorkouts || []).filter((w) => !ownNames.has(w.name.trim().toLowerCase()));
-  const savedChoiceGroups = [];
+  const savedChoiceGroups: { label: string; items: ReturnType<typeof choiceOf>[] }[] = [];
   if (logic.model.workouts.length)
     savedChoiceGroups.push({
       label: builtinChoices.length ? 'YOUR WORKOUTS' : '',
@@ -645,7 +646,7 @@ export function editVals(ctx: Ctx) {
           const id = selAct.workoutId;
           const tplEdit = Object.assign({}, edit, { entryId: '', moveTo: undefined, actual: null, repeatDates: [] });
           const back = Object.assign({}, cleared, {
-            screen: 'template',
+            screen: 'template' as const,
             templateId: id,
             editTemplate: null,
             editing: false,

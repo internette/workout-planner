@@ -82,7 +82,7 @@ export const NEW_WORKOUT_CLEARED = { creating:false, newType:null, newName:'', n
 export const EX_DRAFT_CLEARED = { exDraft:null, exDraftOrig:null, exEditNav:false, exCopy:false };
 
 // Where Back goes from a screen with nothing before it: its section's own page (the calendar otherwise).
-export const HOME_OF: Record<string, string> = {
+export const HOME_OF: Record<string, 'arsenal' | 'diaryList'> = {
   template: 'arsenal',
   exercise: 'arsenal',
   exerciseEdit: 'arsenal',
