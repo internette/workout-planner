@@ -3,7 +3,6 @@ import { digitsOnly, rollMinutes, exLine, formatElapsed, idOf, isoOf, monthPatch
 import { iconSvg } from '@/frontend/shared/icons';
 import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from '../planner/store/types';
-import { colors } from '@moonshot/design-system/colors';
 
 // The day card and the workout detail screen (today's quest, exercise preview, completion).
 export function workoutVals(ctx: Ctx) {
@@ -454,7 +453,6 @@ export function workoutVals(ctx: Ctx) {
         : 'background:var(--color-surface);box-shadow:var(--elevation-hairline)'),
     // Cleared: the quest's title is struck through and muted.
     questCleared: dayCleared,
-    isDone: doneSel,
     dayIsRide: !!selRide,
     dayIsLift: !selRide,
     // Marking a ride complete is finishing it: it asks what was ridden. Unmarking one asks first, since what was
@@ -502,7 +500,6 @@ export function workoutVals(ctx: Ctx) {
     hasProgress: st.screen === 'edit' && !isCycleView && selList.length > 0 && !ctx.creating && !ctx.tplMode && !isFutureDay,
     progLabel: doneCount + ' of ' + selList.length + ' done',
     allDone: selList.length > 0 && doneCount === selList.length,
-    someDone: !(selList.length > 0 && doneCount === selList.length),
     progPct: selList.length ? Math.round((doneCount / selList.length) * 100) : 0,
     progNote:
       selList.length === 0

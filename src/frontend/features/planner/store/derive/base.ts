@@ -1,4 +1,3 @@
-import { ACCENT } from '@/frontend/shared/constants';
 import type { Ctx } from '../types';
 
 // Clock, layout breakpoints and the selected screen: the values every other stage builds on.

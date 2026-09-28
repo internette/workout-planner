@@ -1,6 +1,4 @@
 import { Button } from '@moonshot/design-system/buttons';
-import { Check } from '@moonshot/design-system/icons';
-import { t } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** Says a save didn’t go through, until it’s dismissed. */

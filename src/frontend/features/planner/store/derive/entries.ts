@@ -3,7 +3,7 @@ import type { Ctx } from '../types';
 
 // Per-entry helpers (names, exercise counts, done state), the chronicle filter and the mood / effort widgets.
 export function entriesStage(ctx: Ctx): Ctx {
-  const { logic, st, EXV, DIARY, nowDate, Y, TODAY_M, TODAY_D, TK } = ctx;
+  const { st, EXV, DIARY, nowDate, Y, TODAY_M, TODAY_D, TK } = ctx;
   const nameOf = (n) => ((st.renames || {})[n] != null && st.renames[n] !== '' ? st.renames[n] : n);
   // An entry's exercises come from the version of the workout it was scheduled with, not the current one.
   const instList = (exKey, key) =>

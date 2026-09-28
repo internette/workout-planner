@@ -227,7 +227,6 @@ export function chromeVals(ctx: Ctx) {
     isTemplate: st.screen === 'template',
     isExercise: st.screen === 'exercise',
     isExerciseEdit: st.screen === 'exerciseEdit',
-    canGoBack: (st.hist || []).length > 0,
     goBack: () => logic.back(),
     // Back is named for where it goes: the screen before this one ("Calendar", "Spellbook", a workout's name), or
     // the calendar when there's nothing before it (a page opened from a link).
@@ -281,8 +280,6 @@ export function chromeVals(ctx: Ctx) {
         creating: false,
       }),
     isDetail: st.screen === 'detail',
-    goRest: () =>
-      logic.s({ screen: 'rest', ...monthPatch(TODAY_M), day: TODAY_D, monthOpen: false, seg: 'Day' }),
     navCalOn: calActive ? ('page' as const) : false,
     navDiaryOn: inChronicle ? ('page' as const) : false,
     navArsenalOn: arsenalActive ? ('page' as const) : false,

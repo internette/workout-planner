@@ -1,7 +1,6 @@
 import { Button } from '@moonshot/design-system/buttons';
 import { Checkbox } from '@moonshot/design-system/checkbox';
 import { Dialog } from '@moonshot/design-system/dialog';
-import { Repeat } from '@moonshot/design-system/icons';
 import { TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';

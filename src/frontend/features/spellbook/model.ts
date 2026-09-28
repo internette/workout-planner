@@ -1,4 +1,3 @@
-import { colors } from '@moonshot/design-system/colors';
 import { DOWFULL, EDIT_OVERLAYS, EQUIPMENT, EQUIPMENT_GROUPS, MONTHS, TARGET_AREAS } from '@/frontend/shared/constants';
 import { iconOptions, iconSvg } from '@/frontend/shared/icons';
 import * as db from '@/frontend/data/plannerData';
@@ -275,7 +274,7 @@ export function arsenalVals(ctx: Ctx) {
                 after,
               );
             } else {
-              logic.saveOnce('exercise', () => db.updateExerciseRow({ kind: 'library', id: found.ex.id }, patch), {
+              logic.saveOnce('exercise', () => db.updateLibraryExercise(found.ex.id, patch), {
                 ...after,
                 tplConfirm: null,
               });
@@ -612,7 +611,15 @@ export function arsenalVals(ctx: Ctx) {
   // there; opened any other way, it asks which workout: a saved one (opened in the editor with it added) or a new one.
   const pick = st.arsenalPick || null;
   const addToWorkout = (e) => {
-    const ex = { name: e.name, sets: e.sets, weight: e.weight, rest: e.rest, i: e.i, areas: e.areas || [] };
+    const ex = {
+      name: e.name,
+      sets: e.sets,
+      weight: e.weight,
+      rest: e.rest,
+      i: e.i,
+      areas: e.areas || [],
+      ...(e.equipment !== undefined ? { equipment: e.equipment } : {}),
+    };
     if (pick) {
       const gone = (st.removed || {})[pick.key] || [];
       // Taken out of this workout earlier in the edit: bring the original back rather than adding a second copy.
@@ -849,7 +856,6 @@ export function arsenalVals(ctx: Ctx) {
         dEquipOpen: false,
       });
     },
-    movesCount: exerciseCount,
     arsenalQuery: st.arsenalQ || '',
     noMatches: filtering && moveGroups.length === 0,
     // Read out when a search or area filter changes what's listed (the list itself changes silently).
@@ -864,7 +870,6 @@ export function arsenalVals(ctx: Ctx) {
             ? plural(moveGroups.reduce((n, g) => n + g.items.length, 0), 'exercise') + ' found.'
             : 'No exercises match.',
     noMatchNote: noMatchText('exercises'),
-    hasQuery: !!q,
     setArsenalQuery: (e) => logic.s({ arsenalQ: e.target.value }),
     clearArsenalQuery: () => logic.s({ arsenalQ: '' }),
     moveGroups,

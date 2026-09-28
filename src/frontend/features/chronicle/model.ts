@@ -85,7 +85,7 @@ export function diaryVals(ctx: Ctx) {
       logic.s({
         diaryScope: 'week',
         rFrom: isoOf(todayWkStart),
-        rTo: isoOf(new Date(Y, TODAY_M, todayWkStart.getDate() + 6)),
+        rTo: isoOf(new Date(todayWkStart.getFullYear(), todayWkStart.getMonth(), todayWkStart.getDate() + 6)),
       }),
     month: () => logic.s({ diaryScope: 'month', rFrom: iso30, rTo: isoToday }),
     range: () => logic.s({ diaryScope: 'range', rFrom: st.rFrom || iso30, rTo: st.rTo || isoToday }),
@@ -216,7 +216,6 @@ export function diaryVals(ctx: Ctx) {
     diaryCount:
       (dScope !== 'all' ? diaryDays.length + ' of ' : '') + plural(Object.keys(ENTRIES).length, 'entry', 'entries'),
     openNewEntry: () => logic.nav({ screen: 'newEntry' }),
-    closeNewEntry: () => logic.back(),
     noUnlogged: unloggedDays.length === 0,
     // Nothing to list: either nothing was planned yet, or every recent session already has an entry.
     noUnloggedNote: logic.model.entries.some((x) => x.m * 100 + x.d <= TK)
@@ -235,7 +234,6 @@ export function diaryVals(ctx: Ctx) {
       });
       return groups;
     })(),
-    showRange: dScope === 'range',
     rangeFrom: st.rFrom || '',
     rangeTo: st.rTo || '',
     setRangeFrom: (e) => {
@@ -247,7 +245,6 @@ export function diaryVals(ctx: Ctx) {
       logic.s({ rTo: st.rFrom && v && v < st.rFrom ? st.rFrom : v, diaryScope: 'range' });
     },
     rangeMin: st.rFrom || '',
-    clearRange: () => logic.s({ rFrom: '', rTo: '' }),
     diaryScope: dScope,
     setDiaryScope: (scope) => scopeHandlers[scope](),
     rangeShown: dScope === 'range',
@@ -266,7 +263,6 @@ export function diaryVals(ctx: Ctx) {
     diaryResults: plural(diaryDays.length, 'entry', 'entries') + ' shown.',
     diaryList: diaryDays.map((id) => {
       const en = ENTRIES[id];
-      const d = en.d;
       const dt = new Date(Y, en.m, en.d);
       // An entry from another year says which.
       const yr = dt.getFullYear() !== Y ? ' ' + dt.getFullYear() : '';
@@ -358,7 +354,6 @@ export function diaryVals(ctx: Ctx) {
     entryLeft: logic.viewport !== 'narrow',
     // The session it's about, for the tab's title ("Leg Day entry").
     diaryTitle: selName ? nameOf(selName) : '',
-    diaryEyebrow: st.diaryFrom === 'list' || reading ? 'CHRONICLE ENTRY' : 'COMPLETED',
     diaryBack: leaveEntry,
     entryDirty,
     leaveEntry,

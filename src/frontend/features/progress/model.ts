@@ -13,7 +13,6 @@ export function progressVals(ctx: Ctx) {
     rankCeil,
     XP_STEPS,
     rankPct,
-    monthDays,
     streak,
     todayLogged,
     plannedByDay,
@@ -135,13 +134,9 @@ export function progressVals(ctx: Ctx) {
         : rankPct === 0
           ? 'New rank: ' + RANKS[derivedRank].name + '. On to ' + nextRankName + '.'
           : rankPct + '% to ' + nextRankName,
-    rankTip:
-      xpTotal + ' XP. ' + xpToGo + ' 10 XP per exercise completed, 50 XP per workout finished.',
-    monthSummaryLabel: monthDays.filter((x) => x.done).length + ' of ' + monthDays.length + ' done',
     streakCount: streak,
     // "3 day streak", like the calendar's streak pill, whatever the number.
     streakUnit: 'day',
-    streakPillLabel: 'day streak',
     streakNote: todayLogged
       ? 'Today is cleared.'
       : streak > 0

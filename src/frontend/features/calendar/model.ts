@@ -10,7 +10,6 @@ export function calendarVals(ctx: Ctx) {
     logic,
     weekRows,
     monthCells,
-    constellation,
     narrow,
     st,
     monthDays,
@@ -42,7 +41,6 @@ export function calendarVals(ctx: Ctx) {
   return {
     weekRows,
     monthCells,
-    constellation,
     // Full width on narrow screens, where the toggle gets its own row
     segLayout: narrow ? { flex: '1 1 100%', width: '100%' } : { flex: 'none' },
     calendarView: st.seg,
@@ -91,10 +89,6 @@ export function calendarVals(ctx: Ctx) {
     },
     addingPlan: logic.busy('plan-draft'),
     monthOpen: st.monthOpen,
-    caretStyle:
-      'border:none;background:none;cursor:pointer;padding:4px;display:flex;align-items:center;transition:transform .2s;transform:rotate(' +
-      (st.monthOpen ? '180' : '0') +
-      'deg)',
     toggleMonth: () => logic.s({ monthOpen: !st.monthOpen, pickYOff: null }),
     // Keyboard movement in the month grid: arrows by day and week, Home and End to the ends of the week,
     // PageUp and PageDown by month. The selected day is the grid's only tab stop, so focus follows it.
@@ -134,7 +128,6 @@ export function calendarVals(ctx: Ctx) {
     dayName: DOWFULL[selDate.getDay()],
     shortDate: MON3[mod12(mi)] + ' ' + selDay,
     weekLabel,
-    monthName2: monthTitle,
     hasRows: weekRows.some((r) => r.hasRow),
     noRows: !weekRows.some((r) => r.hasRow),
     // Only what's true: a day with a session gets a quest.
