@@ -1,4 +1,4 @@
-import { minText, monthPatch, plural, toMinutes } from '@/frontend/shared/helpers';
+import { minText, monthPatch, toMinutes } from '@/frontend/shared/helpers';
 import { setsFor } from '../session/sets';
 import type { Ctx } from '../planner/store/types';
 import type { Entry } from '@/frontend/data/plannerData';
@@ -28,7 +28,7 @@ export type LiveActivity = {
 };
 
 /** A session just finished, for the "Quest cleared" notification. */
-export type LiveDone = { id: string; name: string; took: string; exercises: string; streak: string; ride: boolean };
+export type LiveDone = { id: string; name: string; took: string; exercises: string; streak: number; ride: boolean };
 
 // "~50 min", "1 h 15 min" as minutes.
 const minutesIn = (text: string) => {
@@ -108,7 +108,7 @@ export function liveVals(ctx: Ctx) {
             ? distOf(a) + ' mi'
             : ''
           : list.filter((e) => dn.indexOf(e.name) !== -1).length + ' of ' + list.length,
-        streak: streak > 0 ? plural(streak, 'day') : '',
+        streak,
         ride: !!a.ride,
       };
     },
