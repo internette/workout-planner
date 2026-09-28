@@ -35,7 +35,6 @@ export function editVals(ctx: Ctx) {
     wIcon,
     wColor,
     wColorSet,
-    doneSel,
     selName,
     selRide,
     selAct,
@@ -265,8 +264,6 @@ export function editVals(ctx: Ctx) {
     pickTypeLift: () => logic.s({ newType: 'lift' }),
     pickTypeCycle: () => logic.s({ newType: 'cycle' }),
     needsType: creating && !st.newType,
-    isCycle: isCycleView && !creating,
-    rideLocked: isCycleView && !creating && !ridePlanOpen,
     rideLockNote: rideDone ? 'Completed — plan locked' : ridePast ? 'Past ride — plan locked' : '',
     ridePlanEdit: isCycleView && (creating || ridePlanOpen),
     ridePlanStatic: isCycleView && !creating && !ridePlanOpen,
@@ -499,7 +496,6 @@ export function editVals(ctx: Ctx) {
     eName: selName,
     eNotes: notesVal,
     setNotes: (e) => logic.s({ notes: Object.assign({}, st.notes, { [listKey]: e.target.value }) }),
-    eCat: selRide ? selRide.zone || 'Endurance' : picked.length ? picked.join(' · ') : 'No target areas',
     areaPills: selRide ? [selRide.zone || 'Endurance'] : picked,
     needs: selRide ? null : needsLine(selList),
     inSeries: !!(selAct && selAct.series),
@@ -908,7 +904,6 @@ export function editVals(ctx: Ctx) {
     // A warm-up says so on its page, beside the date.
     eWarmup: !creating && !!(srcAct && srcAct.warmup),
     eDateAria: DOWFULL[selDate.getDay()] + ', ' + MONTHS[mod12(mi)] + ' ' + selDay + yearNote,
-    eStatus: doneSel ? 'Completed' : 'Planned',
     // Once finished, how long it actually took; before that, the plan.
     eTime:
       selAct && ctx.actualMinutes(selAct)

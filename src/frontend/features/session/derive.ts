@@ -1,11 +1,11 @@
 import { DOWFULL, MONTHS } from '@/frontend/shared/constants';
-import { exLine, idOf, monthPatch } from '@/frontend/shared/helpers';
+import { idOf, monthPatch } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
 import { colors } from '@moonshot/design-system/colors';
 
 // The selected workout: ride plan and actuals, exercise list, icons and completion state.
 export function workoutStage(ctx: Ctx): Ctx {
-  const { logic, Y, mi, dim, selDay, st, creating, actFor, EX, EXV, TK, DIARY, TODAY_M, TODAY_D } = ctx;
+  const { logic, Y, mi, selDay, st, creating, actFor, EX, EXV, TK, DIARY, TODAY_M, TODAY_D } = ctx;
   // The editor's date picker browses months on its own (st.pickM); only tapping a day moves the workout there.
   const pickM = st.pickM != null ? st.pickM : mi;
   const pickDim = new Date(Y, pickM + 1, 0).getDate();
@@ -169,18 +169,6 @@ export function workoutStage(ctx: Ctx): Ctx {
     .map(({ e }) => Object.assign({}, e, (st.fields || {})[listKey + '|' + e.name] || {}));
   // The workout's own target areas aren't picked directly any more — they're whatever its exercises target.
   const picked = Array.from(new Set(selList.flatMap((e) => e.areas || [])));
-  const all = selList.map((e) => ({
-    text: e.name + ' — ' + exLine(e),
-    isH: e.i === 'h',
-    isV: e.i === 'v',
-    isD: e.i === 'd',
-    textStyle:
-      'flex:1;min-width:0;font-size:var(--text-lg);font-weight:var(--font-weight-medium);' +
-      (doneSet[e.name] ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
-    tick:
-      'flex:none;width:18px;height:18px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
-      (doneSet[e.name] ? 'var(--color-accent)' : 'transparent'),
-  }));
   const ridePast = mi * 100 + selDay < TK;
   // A saved workout's plan is always editable; a session's only until it's done or past.
   const ridePlanOpen = !!savedRide && (tplMode || (!rideDone && !ridePast));
@@ -203,7 +191,6 @@ export function workoutStage(ctx: Ctx): Ctx {
     doneCount,
     questCleared,
     listKey,
-    all,
     hasEntry,
     doneSel,
     isCycleView,

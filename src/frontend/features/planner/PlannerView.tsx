@@ -17,31 +17,20 @@ import { TextArea, TextField } from '@moonshot/design-system/text-field';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { Button, IconButton } from '@moonshot/design-system/buttons';
 import {
-  BarChart,
-  Bike,
   Calendar,
   Check,
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Clock,
   Close,
   Copy,
-  Dumbbell,
-  DumbbellSmall,
   Gem,
-  Info,
-  MoodFace,
   Moon,
   Pencil,
   Plus,
-  Quill,
   Repeat,
   Search,
-  SignOut,
   Sparkle,
-  SpellCards,
-  User,
 } from '@moonshot/design-system/icons';
 import { vars } from '@moonshot/design-system/colors';
 import { BackBar } from '@/frontend/components/BackBar';
@@ -317,18 +306,13 @@ export function PlannerView({ v }: { v: any }) {
                           <StepButton dir="next" unit="week" onClick={v.nextWeek} />
                         </div>
                         <div
-                          style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '26px' }}
+                          style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '26px', paddingBottom: v.hasRows ? '8px' : 0 }}
                         >
                           {(v.weekRows ?? []).map((w, i) => (
                             <Fragment key={i}>
                               <WeekRow row={w} />
                             </Fragment>
                           ))}
-                          {v.hasRows ? (
-                            <>
-                              <span></span>
-                            </>
-                          ) : null}
                         </div>
                         {v.weekAllDone ? (
                           <>

@@ -5,7 +5,6 @@ import { Sparkle } from '@moonshot/design-system/icons';
 import { MoodRating, StarRating } from '@moonshot/design-system/rating';
 import { TextArea } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
-import { t } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** Writing or editing a Chronicle entry: mood, effort and notes. */

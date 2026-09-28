@@ -170,7 +170,7 @@ const iconColorOf = (hex: string | null) => (hex && OLD_PINKS.includes(hex.toUpp
 const areasOf = (list: Exercise[]) => Array.from(new Set(list.flatMap((e) => e.areas || [])));
 
 const pad = (n: number) => String(n).padStart(2, '0');
-export const isoDate = (y: number, m: number, d: number) => `${y}-${pad(m + 1)}-${pad(d)}`;
+const isoDate = (y: number, m: number, d: number) => `${y}-${pad(m + 1)}-${pad(d)}`;
 
 async function ok<T>(q: PromiseLike<{ data: T; error: any }>): Promise<T> {
   const { data, error } = await q;
@@ -801,19 +801,12 @@ export async function createLibraryExercise(e: Exercise): Promise<{ id: string; 
   return { id: row.id, name };
 }
 
-// Edits one exercise row: the copy inside a workout, or an exercise saved on its own in the Arsenal.
-export async function updateExerciseRow(
-  target: { kind: 'workout' | 'library'; id: string; workoutId?: string },
-  patch: Partial<Exercise>,
-) {
-  const table = target.kind === 'workout' ? 'workout_exercises' : 'library_exercises';
-  const cur: any[] = await ok(supabase.from(table).select('*').eq('id', target.id));
+// Edits an exercise saved on its own in the Spellbook.
+export async function updateLibraryExercise(id: string, patch: Partial<Exercise>) {
+  const cur: any[] = await ok(supabase.from('library_exercises').select('*').eq('id', id));
   if (!cur.length) return;
   const merged = { ...toExercise(cur[0]), ...patch };
-  await ok(supabase.from(table).update(exerciseRow(merged)).eq('id', target.id));
-  if (target.kind === 'workout' && target.workoutId && merged.name !== cur[0].name) {
-    await renameDoneExercise(target.workoutId, cur[0].name, merged.name);
-  }
+  await ok(supabase.from('library_exercises').update(exerciseRow(merged)).eq('id', id));
 }
 
 // How many sessions of this workout are still ahead: from today on, and not already completed.
@@ -861,7 +854,6 @@ export async function sessionScope(workoutId: string, entryId: string, todayIso:
 export interface TemplateEditResult {
   workoutId: string; // the workout the edit ended up on: the same one, or the new copy
   created: boolean;
-  exerciseIds: Record<string, string>; // exercise row id in the original workout -> its row in the copy
 }
 
 // A name for the copy that no current workout uses: the edited name, else "<name> (copy)", "(copy 2)", ...
@@ -929,7 +921,7 @@ export async function updateWorkoutTemplate(
     // "Only this session" again: its copy is already its own, so it's edited in place.
     if (opts.mode === 'session' && alone) {
       await updateWorkout(edit);
-      return { workoutId: edit.workoutId, created: false, exerciseIds: {} };
+      return { workoutId: edit.workoutId, created: false };
     }
     // "This session and the saved workout": the session's copy takes the edit, and so does the saved workout it came
     // from (its exercises matched by name), the same way an edit to the saved workout itself is saved.
@@ -958,7 +950,7 @@ export async function updateWorkoutTemplate(
         },
         { mode: 'update', updateUpcoming: opts.updateUpcoming, todayIso: opts.todayIso },
       );
-      return { workoutId: edit.workoutId, created: false, exerciseIds: {} };
+      return { workoutId: edit.workoutId, created: false };
     }
   }
 
@@ -969,7 +961,7 @@ export async function updateWorkoutTemplate(
     const exerciseIds = await copyExercises(fork.id);
     await ok(supabase.from('plan_entries').update({ workout_id: fork.id }).eq('id', edit.entryId));
     await updateWorkout(mapped(edit, exerciseIds, fork.id));
-    return { workoutId: fork.id, created: false, exerciseIds };
+    return { workoutId: fork.id, created: false };
   }
 
   if (opts.mode === 'new') {
@@ -990,7 +982,7 @@ export async function updateWorkoutTemplate(
         order: edit.exercises.order,
       },
     });
-    return { workoutId: copy.id, created: true, exerciseIds };
+    return { workoutId: copy.id, created: true };
   }
 
   const entries: any[] = await ok(
@@ -1018,7 +1010,7 @@ export async function updateWorkoutTemplate(
     );
   }
   await updateWorkout(edit);
-  return { workoutId: edit.workoutId, created: false, exerciseIds: {} };
+  return { workoutId: edit.workoutId, created: false };
 }
 
 // ---------- plans from an assistant ("Summon a plan") ----------

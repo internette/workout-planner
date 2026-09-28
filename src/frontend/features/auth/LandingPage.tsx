@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { Lockup } from '@moonshot/design-system/brand';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
-import { Book, Calendar, Check, ChevronRight, Gem, Sparkle, SparkleTrail } from '@moonshot/design-system/icons';
+import { Book, Calendar, Check, ChevronRight, Gem, SparkleTrail } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
 import { RANKS, RANK_STEPS } from '@/frontend/shared/constants';
 import { PROVIDER_NAME, PROVIDERS, type Provider } from '@/shared/auth';

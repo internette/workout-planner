@@ -1,12 +1,11 @@
 import { DOW1, DOW3, DOWFULL, MON3, MONTHS, ACCENT } from '@/frontend/shared/constants';
 import { mod12, monthPatch } from '@/frontend/shared/helpers';
 import { iconSvg } from '@/frontend/shared/icons';
-import React from 'react';
 import type { Ctx } from '../planner/store/types';
 
-// The selected month, week and day, plus the week list, month grid and its constellation.
+// The selected month, week and day, plus the week list and month grid.
 export function calendarStage(ctx: Ctx): Ctx {
-  const { logic, st, Y, TODAY_M, seedAt, entriesAt, TK, relM, isDoneEntry, TODAY_D, nameOf, metaFor, ACT, doneCountAt, instList, actualMinutes } = ctx;
+  const { logic, st, Y, TODAY_M, seedAt, entriesAt, TK, relM, isDoneEntry, TODAY_D, nameOf, metaFor, doneCountAt, instList, actualMinutes } = ctx;
   // The month on screen, counted from January of this year (so it can run into next year, or back into last).
   const mi = MONTHS.indexOf(st.month) + 12 * (st.yOff || 0);
   const dim = new Date(Y, mi + 1, 0).getDate();
@@ -258,34 +257,6 @@ export function calendarStage(ctx: Ctx): Ctx {
               : 'width:7px;height:1.5px;border-radius:1px;background:' + (sel ? 'var(--color-on-accent-faint)' : 'var(--color-divider)'),
     });
   }
-  const activeDays = isCurMonth
-    ? Object.keys(ACT)
-        .map(Number)
-        .sort((a, b) => a - b)
-    : [];
-  const pts = activeDays
-    .map((d) => {
-      const i = d + lead - 1;
-      return (i % 7) + 0.5 + ',' + (Math.floor(i / 7) + 0.5);
-    })
-    .join(' ');
-  const constellation = React.createElement(
-    'svg',
-    {
-      'aria-hidden': 'true',
-      viewBox: '0 0 7 ' + rows,
-      preserveAspectRatio: 'none',
-      style: { width: '100%', height: '100%', display: 'block' },
-    },
-    React.createElement('polyline', {
-      points: pts,
-      fill: 'none',
-      stroke: 'var(--color-periwinkle)',
-      strokeWidth: 0.015,
-      strokeDasharray: '0.06 0.05',
-      strokeLinejoin: 'round',
-    }),
-  );
   return {
     actForDate,
     listForDate,
@@ -296,7 +267,6 @@ export function calendarStage(ctx: Ctx): Ctx {
     actFor,
     weekRows,
     monthCells,
-    constellation,
     months,
     pickYOff,
     days,

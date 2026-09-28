@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { Button, IconButton } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
-import { ChevronRight, Close, Plus, Search } from '@moonshot/design-system/icons';
+import { ChevronRight, Plus } from '@moonshot/design-system/icons';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { Text } from '@moonshot/design-system/typography';
 import { FormActions } from '@/frontend/components/FormActions';
