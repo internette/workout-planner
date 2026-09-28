@@ -1,19 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useWindowEvent } from '@moonshot/design-system/useWindowEvent';
-
-// Chrome's install event. It is not in the DOM types.
-interface InstallEvent extends Event {
-  prompt(): Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-}
-declare global {
-  interface WindowEventMap {
-    beforeinstallprompt: InstallEvent;
-    appinstalled: Event;
-  }
-}
+import { openInstallDialog, setInstallOffer } from './installOffer';
 
 const KEY = 'moonshot.install-prompt';
 /** The same answers, for being asked to add the app back once it has been removed. */
@@ -29,26 +18,36 @@ const NOTICE_MS = 6000;
 
 // What the person told us, kept in the browser. `never` is the toggle: once set it is never cleared here, so the prompt
 // stays gone for good. Storage can be blocked (private windows), and then it simply asks each visit.
-type Choice = { never?: boolean; until?: number };
-const readChoice = (key: string): Choice => {
-  try {
-    return JSON.parse(localStorage.getItem(key) ?? '{}') as Choice;
-  } catch {
-    return {};
-  }
-};
+// `v: 2` marks an answer saved since installing stopped writing `never` too. Before, an install saved the same
+// `{ never: true }` as "Don't ask me again", so a removed app was never offered again; an unmarked `never` is read as
+// unanswered, once (it is rewritten as unanswered), and whatever is answered then is kept for good.
+type Choice = { never?: boolean; until?: number; v?: 2 };
 const saveChoice = (key: string, choice: Choice) => {
   try {
-    localStorage.setItem(key, JSON.stringify(choice));
+    localStorage.setItem(key, JSON.stringify({ ...choice, v: 2 }));
   } catch {
     /* blocked: the choice lasts until the page closes */
   }
+};
+const readChoice = (key: string): Choice => {
+  let choice: Choice;
+  try {
+    choice = JSON.parse(localStorage.getItem(key) ?? '{}') as Choice;
+  } catch {
+    return {};
+  }
+  if (key === KEY && choice.never && !choice.v) {
+    saveChoice(key, {});
+    return {};
+  }
+  return choice;
 };
 const alreadyAnswered = (key: string) => {
   const { never, until = 0 } = readChoice(key);
   return !!never || until > Date.now();
 };
-const wasInstalled = () => {
+/** Whether the app was installed on this device before (so, if it can be installed now, it has been removed). */
+export const wasInstalled = () => {
   try {
     return !!localStorage.getItem(INSTALLED_KEY);
   } catch {
@@ -78,7 +77,6 @@ const isInstalled = () => window.matchMedia('(display-mode: standalone)').matche
  * add it back, with its own "don't ask again". (iPhone gives no way to tell: its installed app keeps separate storage.)
  */
 export function useInstallPrompt(ready: boolean) {
-  const offer = useRef<InstallEvent | null>(null);
   const [available, setAvailable] = useState(false);
   const [open, setOpen] = useState(false);
   const [notice, setNotice] = useState(false);
@@ -92,21 +90,25 @@ export function useInstallPrompt(ready: boolean) {
   }, []);
 
   useWindowEvent('beforeinstallprompt', (event) => {
+    if (isInstalled()) return;
+    // Kept for the button in Profile → Settings, which offers it whatever was answered here.
+    setInstallOffer(event);
     // A desktop browser keeps its own behaviour. On a phone the browser's bar is held back: we ask once, in our own way,
     // and someone who said no does not get the browser's version either.
-    if (!isMobile() || isInstalled()) return;
+    if (!isMobile()) return;
     event.preventDefault();
     const removed = wasInstalled();
     if (alreadyAnswered(removed ? REINSTALL_KEY : KEY)) return;
-    offer.current = event;
     setKind(removed ? 'reinstall' : 'install');
     setAvailable(true);
   });
 
+  // Installed, from here or the browser's menu: remembered, so a removal later is noticed. The prompt's answers stay as
+  // they are, except that a "not now" for adding it back is over.
   useWindowEvent('appinstalled', () => {
-    saveChoice(KEY, { never: true });
     markInstalled();
-    offer.current = null;
+    if (!readChoice(REINSTALL_KEY).never) saveChoice(REINSTALL_KEY, {});
+    setInstallOffer(null);
     setAvailable(false);
     setOpen(false);
   });
@@ -125,7 +127,6 @@ export function useInstallPrompt(ready: boolean) {
 
   const finish = (dontAsk: boolean) => {
     saveChoice(key, dontAsk ? { never: true } : { until: Date.now() + SNOOZE_MS });
-    offer.current = null;
     setAvailable(false);
     setOpen(false);
   };
@@ -141,20 +142,12 @@ export function useInstallPrompt(ready: boolean) {
     },
     /** Hands over to the browser's own install dialog. Cancelling there counts as Not now, and the toggle still counts. */
     install: async (dontAsk: boolean) => {
-      const event = offer.current;
-      if (!event) return;
-      offer.current = null;
       setOpen(false);
       setAvailable(false);
-      try {
-        await event.prompt();
-        const { outcome } = await event.userChoice;
-        // Added back: nothing more to ask until it's removed again, unless they said never.
-        if (outcome === 'accepted') saveChoice(key, dontAsk ? { never: true } : {});
-        else saveChoice(key, dontAsk ? { never: true } : { until: Date.now() + SNOOZE_MS });
-      } catch {
-        saveChoice(key, dontAsk ? { never: true } : { until: Date.now() + SNOOZE_MS });
-      }
+      const outcome = await openInstallDialog();
+      // Installed: nothing more to ask until it's removed again, unless they said never.
+      if (outcome === 'accepted') saveChoice(key, dontAsk ? { never: true } : {});
+      else saveChoice(key, dontAsk ? { never: true } : { until: Date.now() + SNOOZE_MS });
     },
   };
 }
