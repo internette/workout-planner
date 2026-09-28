@@ -398,6 +398,7 @@ export default function Planner({ account = null }: { account?: Account | null }
       <InstallPrompt
         open={installPrompt.open}
         notice={installPrompt.notice}
+        kind={installPrompt.kind}
         onInstall={installPrompt.install}
         onNotNow={installPrompt.notNow}
       />
