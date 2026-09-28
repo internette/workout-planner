@@ -64,6 +64,8 @@ const AVAILABLE: Who[] = (['claude', 'chatgpt'] as const).filter((w) => vendorOn
 const senderName = (source: string) => (source === 'claude' || source === 'chatgpt' ? ASSISTANTS[source].name : 'Your assistant');
 /** Whether "Summon a plan" has any assistant to offer. When not, the planner leaves it out entirely. */
 export const SUMMON_ON = AVAILABLE.length > 0;
+/** The "Summon a plan" button, hidden for now. A plan an assistant sends anyway still shows, to look over. */
+const SHOW_BUTTON = false;
 const sourceWho = (source: string): Who | null => (source === 'claude' || source === 'chatgpt') && AVAILABLE.includes(source) ? source : null;
 
 const store = {
@@ -193,12 +195,12 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
             Look it over
           </Button>
         </Card>
-      ) : (
+      ) : SHOW_BUTTON ? (
         <Button type="secondary" size="md" fullWidth onClick={start} style={{ marginTop: 14 }}>
           <Sparkle size={15} color="var(--color-accent-deep)" />
           {AVAILABLE.length > 1 ? 'Summon a plan' : `Summon a plan with ${a.name}`}
         </Button>
-      )}
+      ) : null}
 
       {step === 'pick' ? (
         <Dialog
