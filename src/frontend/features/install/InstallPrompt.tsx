@@ -24,13 +24,13 @@ const WORDS = {
     title: 'Install Moonshot',
     body: 'Open it like an app: full screen, no browser bar, one tap away.',
     action: 'Install',
-    notice: 'We won’t ask again. You can still install Moonshot from your browser’s menu.',
+    notice: 'We won’t ask again. You can still install Moonshot from Profile → Settings.',
   },
   reinstall: {
     title: 'Add Moonshot back?',
     body: 'It looks like Moonshot was removed from this phone. Add it back to open it like an app again, one tap away.',
     action: 'Add it back',
-    notice: 'We won’t ask again. You can add Moonshot back from your browser’s menu.',
+    notice: 'We won’t ask again. You can add Moonshot back from Profile → Settings.',
   },
 };
 
