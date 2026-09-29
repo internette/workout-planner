@@ -50,11 +50,7 @@ export const ICON_NAMES: Record<string, string> = {
   v: 'Upright dumbbell',
   d: 'Small dumbbell',
   bike: 'Bike',
-  lotus: 'Lotus pose',
   flower: 'Lotus flower',
-  tree: 'Tree pose',
-  fold: 'Forward fold',
-  reach: 'Reach',
   lunge: 'Lunge',
 };
 export const RANK_STEPS = [3,6,10,15,21,28,36,45,55,66,78,91,105,120,136,153,171,190,210,240];

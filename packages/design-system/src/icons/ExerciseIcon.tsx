@@ -1,4 +1,4 @@
-import { Bike, Dumbbell, DumbbellSmall, DumbbellUpright, ForwardFold, LotusFlower, LotusPose, Lunge, Reach, TreePose } from './glyphs';
+import { Bike, Dumbbell, DumbbellSmall, DumbbellUpright, LotusFlower, Lunge } from './glyphs';
 import type { IconProps } from './Svg';
 
 // The icons a workout or exercise can be tagged with. The keys are what the database stores.
@@ -7,11 +7,7 @@ const EXERCISE_ICONS = {
   v: DumbbellUpright,
   d: DumbbellSmall,
   bike: Bike,
-  lotus: LotusPose,
   flower: LotusFlower,
-  tree: TreePose,
-  fold: ForwardFold,
-  reach: Reach,
   lunge: Lunge,
 };
 

@@ -203,19 +203,9 @@ export const Bike = strokeIcon(
     <path d="M10 9h4" />
   </>,
 );
-// ---- yoga and stretching. People have a solid dot for a head (a stroked ring fills in at 20px), in the icon colour.
+// ---- yoga and stretching. A person's head is a solid dot (a stroked ring fills in at 20px), in the icon colour.
 const Head = ({ cx, cy, r = 2 }: { cx: number; cy: number; r?: number }) => <circle cx={cx} cy={cy} r={r} fill="currentColor" stroke="none" />;
-// Seated, legs crossed, hands on knees.
-export const LotusPose = strokeIcon(
-  'LotusPose',
-  <>
-    <Head cx={12} cy={4.6} r={2.1} />
-    <path d="M12 8.6v5" />
-    <path d="M12 9.8c-2 .9-3.6 2.4-4.8 4.8" />
-    <path d="M12 9.8c2 .9 3.6 2.4 4.8 4.8" />
-    <path d="M4 18.2c3-2.6 13-2.6 16 0-3 1.7-13 1.7-16 0z" />
-  </>,
-);
+// Yoga.
 export const LotusFlower = strokeIcon(
   'LotusFlower',
   <>
@@ -225,37 +215,7 @@ export const LotusFlower = strokeIcon(
     <path d="M5 18.5c4.5 1.6 9.5 1.6 14 0" />
   </>,
 );
-// Standing on one leg, the other foot at the knee, arms raised.
-export const TreePose = strokeIcon(
-  'TreePose',
-  <>
-    <Head cx={12} cy={3.6} />
-    <path d="M12 8v13" />
-    <path d="M12 8.6 7.8 5.2" />
-    <path d="M12 8.6l4.2-3.4" />
-    <path d="M12 16l-3.8-2 3.8-1.7" />
-  </>,
-);
-// Seated, folding forward over straight legs.
-export const ForwardFold = strokeIcon(
-  'ForwardFold',
-  <>
-    <Head cx={18.2} cy={11.6} />
-    <path d="M4 19h16" />
-    <path d="M5.5 19c0-4.8 3.4-7.3 9.5-7.4" />
-    <path d="M11 12.3l5.8 5" />
-  </>,
-);
-// Standing, arms out wide.
-export const Reach = strokeIcon(
-  'Reach',
-  <>
-    <Head cx={12} cy={4.8} />
-    <path d="M12 8.8v6.2" />
-    <path d="M9 21l3-6 3 6" />
-    <path d="M4 8l8 2.2L20 8" />
-  </>,
-);
+// Stretching: a lunge, as in a hip flexor stretch.
 export const Lunge = strokeIcon(
   'Lunge',
   <>
