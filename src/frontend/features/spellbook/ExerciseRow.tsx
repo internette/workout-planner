@@ -1,4 +1,4 @@
-import { IconButton } from '@moonshot/design-system/buttons';
+import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { ChevronRight, Plus } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
@@ -62,14 +62,11 @@ export function ExerciseRow({ exercise }: { exercise: any }) {
           In workout
         </Text>
       ) : (
-        <IconButton
-          label={'Add ' + exercise?.name + ' to workout'}
-          size="lg"
-          onClick={exercise?.add}
-          style={{ background: 'var(--color-accent-tint)' }}
-        >
-          <Plus color="var(--color-accent-deep)" strokeWidth={2.4} size={18} />
-        </IconButton>
+        // Said in words, not just +: it adds the exercise to a workout (the one being built, or one to choose).
+        <Button type="secondary" size="sm" onClick={exercise?.add} aria-label={'Add ' + exercise?.name + ' to a workout'} style={{ flex: 'none' }}>
+          <Plus color="var(--color-accent-deep)" strokeWidth={2.4} size={15} />
+          Add
+        </Button>
       )}
     </Card>
   );

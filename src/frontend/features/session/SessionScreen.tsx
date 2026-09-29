@@ -6,8 +6,9 @@ import { t } from '@/frontend/features/planner/viewHelpers';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { Chip } from '@moonshot/design-system/chip';
-import { Button, IconButton } from '@moonshot/design-system/buttons';
-import { ChevronDown, Clock, Close, Pencil, Repeat } from '@moonshot/design-system/icons';
+import { Button } from '@moonshot/design-system/buttons';
+import { ChevronDown, Clock, Pencil, Repeat } from '@moonshot/design-system/icons';
+import { Popover } from '@moonshot/design-system/popover';
 import { BackBar } from '@/frontend/components/BackBar';
 import { FormActions } from '@/frontend/components/FormActions';
 import { NeedsLine } from '@/frontend/components/NeedsLine';
@@ -45,23 +46,38 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
           </Chip>
           {v.inSeries ? (
             <>
-              <Chip
-                tone="accent"
-                icon={<Repeat color="var(--color-on-accent)" size={15} />}
-                trailing={
-                  <IconButton
-                    label="End this series"
-                    size="xs"
-                    tone="inverse"
-                    onClick={v.endSeries}
-                    title="End this series"
-                  >
-                    <Close color="var(--color-on-accent-soft)" strokeWidth={2.2} size={13} />
-                  </IconButton>
+              {/* Opens a panel saying when it repeats, with End series: a × on the chip read as removing a tag. */}
+              <Popover
+                open={!!v.seriesOpen}
+                onClose={v.closeSeries}
+                width={240}
+                top={44}
+                pad="sm"
+                as="span"
+                content={
+                  <>
+                    <Text variant="body" tone="ink" as="p" style={{ margin: 0 }}>
+                      {v.seriesRepeats}
+                    </Text>
+                    <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 12px' }}>
+                      Ending it takes the repeats still ahead off the calendar.
+                    </Text>
+                    <Button type="danger" size="sm" onClick={v.endSeries}>
+                      End series
+                    </Button>
+                  </>
                 }
               >
-                {'Weekly series'}
-              </Chip>
+                <Chip
+                  tone="accent"
+                  icon={<Repeat color="var(--color-on-accent)" size={15} />}
+                  onClick={v.toggleSeries}
+                  aria-expanded={!!v.seriesOpen}
+                  trailing={<ChevronDown color="var(--color-on-accent)" strokeWidth={2.2} size={14} />}
+                >
+                  Weekly series
+                </Chip>
+              </Popover>
             </>
           ) : null}
           {(v.areaPills ?? []).map((a, i) => (

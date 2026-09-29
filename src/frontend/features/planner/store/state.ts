@@ -143,6 +143,8 @@ export interface PlannerState {
   warmups?: Record<string, boolean> | null;
   // Back on "What kind of workout?" from the editor, to change its type.
   retype?: boolean | null;
+  // The session page's Weekly series panel is open.
+  seriesOpen?: boolean | null;
   exOrder?: Record<string, string[]> | null;
   exExpanded?: Record<string, boolean>;
   exOpen?: string | null;

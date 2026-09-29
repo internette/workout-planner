@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { IconChoiceGroup, type IconChoiceOption } from '@moonshot/design-system/icon-choice-group';
 import { IconTileButton } from '@moonshot/design-system/icon-tile';
+import { Pencil } from '@moonshot/design-system/icons';
 import { Popover } from '@moonshot/design-system/popover';
 import { Text } from '@moonshot/design-system/typography';
 
@@ -48,9 +49,31 @@ export function IconPicker({ open, onToggle, onClose, current, label, iconsLabel
         </>
       }
     >
-      <IconTileButton size={size} onClick={onToggle} className={size === 'sm' ? 'hit' : undefined} aria-label={label} aria-expanded={open}>
-        {current}
-      </IconTileButton>
+      {/* A pencil on its corner says the icon can be changed: the same tile elsewhere is only a picture. */}
+      <span style={{ position: 'relative', display: 'inline-flex' }}>
+        <IconTileButton size={size} onClick={onToggle} className={size === 'sm' ? 'hit' : undefined} aria-label={label} aria-expanded={open}>
+          {current}
+        </IconTileButton>
+        <span
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            right: size === 'sm' ? '-4px' : '-5px',
+            bottom: size === 'sm' ? '-4px' : '-5px',
+            width: size === 'sm' ? '16px' : '20px',
+            height: size === 'sm' ? '16px' : '20px',
+            borderRadius: 'var(--radius-full)',
+            background: 'var(--color-accent)',
+            boxShadow: '0 0 0 2px var(--color-surface)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+          }}
+        >
+          <Pencil color="var(--color-on-accent)" size={size === 'sm' ? 9 : 11} strokeWidth={2.6} />
+        </span>
+      </span>
     </Popover>
   );
 }
