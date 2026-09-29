@@ -11,7 +11,18 @@ import { Label } from '../../src/text-field';
 import { Text } from '../../src/typography';
 import { DocPage, h2, note } from '../docs';
 
-const ICON_LABELS: Record<ExerciseIconName, string> = { h: 'Dumbbell', v: 'Upright dumbbell', d: 'Small dumbbell', bike: 'Bike' };
+const ICON_LABELS: Record<ExerciseIconName, string> = {
+  h: 'Dumbbell',
+  v: 'Upright dumbbell',
+  d: 'Small dumbbell',
+  bike: 'Bike',
+  lotus: 'Lotus pose',
+  flower: 'Lotus flower',
+  tree: 'Tree pose',
+  fold: 'Forward fold',
+  reach: 'Reach',
+  lunge: 'Lunge',
+};
 const SWATCHES = [
   { value: colors.pink, label: 'Pink' },
   { value: colors.periwinkle, label: 'Periwinkle' },
