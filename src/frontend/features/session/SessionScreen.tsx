@@ -93,7 +93,7 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
           <>
             {/* Nothing to tick off before its day, so no progress to show. */}
             {!v.isFuture ? (
-            <SessionProgress label={v.progLabel} pct={v.progPct ?? 0} allDone={!!v.allDone} note={v.progNote ?? ''} />
+            <SessionProgress label={v.progLabel} pct={v.progPct ?? 0} allDone={!!v.allDone} note={v.progNote ?? ''} now={v.setNow} />
             ) : null}
             <div
               style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}
