@@ -923,7 +923,7 @@ export function editVals(ctx: Ctx) {
         isDone: !!doneSet[e.name],
         // Ticking off belongs to a session on the calendar, not to a workout being built or a saved one.
         showTick: !creating && !tplMode && mi * 100 + selDay <= ctx.TK,
-        // Sets, one at a time, on today's session: "Done set" counts one and starts the rest; the last ticks it off.
+        // Sets, one at a time, on today's session: how far through them it is. "Done set" is on the progress card.
         ...(() => {
           const of = setsIn(e);
           const count = doneSet[e.name] ? of : Math.min(sets.setsDoneOf(listKey, e.name), of - 1);
@@ -932,8 +932,6 @@ export function editVals(ctx: Ctx) {
               st.screen === 'detail' && !creating && !tplMode && !isCycleView && mi * 100 + selDay === ctx.TK && !doneSet[e.name],
             setPips: Array.from({ length: of }, (_, i) => i < count),
             setsLabel: of > 1 ? 'Set ' + (count + 1) + ' of ' + of : 'One set',
-            doneSetAria: 'Done: ' + e.name + (of > 1 ? ', set ' + (count + 1) + ' of ' + of : ''),
-            doneSet: () => sets.completeSet(listKey, e.name),
           };
         })(),
         // One line per exercise until it's opened to edit. Added ones too: they come with their sets, reps and

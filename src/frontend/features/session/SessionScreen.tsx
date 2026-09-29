@@ -12,14 +12,12 @@ import { BackBar } from '@/frontend/components/BackBar';
 import { FormActions } from '@/frontend/components/FormActions';
 import { NeedsLine } from '@/frontend/components/NeedsLine';
 import { PageTitle } from '@/frontend/components/PageTitle';
-import { SessionProgress } from '@/frontend/components/SessionProgress';
 import { WarmupTag } from '@/frontend/components/WarmupTag';
 import { FinishDialog } from '@/frontend/features/session/FinishDialog';
 import { LeaveWorkoutDialog } from '@/frontend/features/session/LeaveWorkoutDialog';
 import { RideSessionCard } from '@/frontend/features/session/RideSessionCard';
 import { SessionExerciseRow } from '@/frontend/features/session/SessionExerciseRow';
-import { SessionTimer } from '@/frontend/features/session/SessionTimer';
-import { RestCard } from '@/frontend/features/session/RestCard';
+import { WorkoutCard } from '@/frontend/features/session/WorkoutCard';
 import { ChipRow } from '@/frontend/components/ChipRow';
 
 export function SessionScreen({ v }: { v: PlannerVals }) {
@@ -86,15 +84,11 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
             </Button>
           </Card>
         ) : null}
-        {v.showTimer ? <SessionTimer v={v} /> : null}
-        {v.restShown ? <RestCard v={v} /> : null}
+        {/* The clock, and for a lift its progress, sets and rest (nothing to tick off before its day). */}
+        <WorkoutCard v={v} />
         {v.dayIsRide ? <RideSessionCard v={v} /> : null}
         {v.dayIsLift ? (
           <>
-            {/* Nothing to tick off before its day, so no progress to show. */}
-            {!v.isFuture ? (
-            <SessionProgress label={v.progLabel} pct={v.progPct ?? 0} allDone={!!v.allDone} note={v.progNote ?? ''} />
-            ) : null}
             <div
               style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}
             >

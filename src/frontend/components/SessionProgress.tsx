@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { vars } from '@moonshot/design-system/colors';
 import { Card } from '@moonshot/design-system/card';
 import { Sparkle } from '@moonshot/design-system/icons';
@@ -13,14 +14,19 @@ export interface SessionProgressProps {
   allDone: boolean;
   /** A line under the bar, e.g. "Mark each exercise as you clear it." */
   note: string;
+  /** Drawn as a section of another card (the session page's workout card), not a card of its own. */
+  bare?: boolean;
+  /** Under the bar, above the note: on the session page, the set up next or the rest. */
+  children?: ReactNode;
 }
 
 /** How far through a lifting session someone is, on the session page and in its editor. */
-export function SessionProgress({ label, pct, allDone, note }: SessionProgressProps) {
-  return (
-    <Card style={{ marginTop: '16px' }}>
+export function SessionProgress({ label, pct, allDone, note, bare, children }: SessionProgressProps) {
+  const body = (
+    <>
       <SectionHeader title="PROGRESS" value={label} />
       <ProgressBar value={pct} track="tint" style={{ marginTop: '12px' }} />
+      {children}
       <p
         style={{
           margin: '12px 0 0',
@@ -39,6 +45,7 @@ export function SessionProgress({ label, pct, allDone, note }: SessionProgressPr
         ) : null}
         <span>{note}</span>
       </p>
-    </Card>
+    </>
   );
+  return bare ? body : <Card style={{ marginTop: '16px' }}>{body}</Card>;
 }
