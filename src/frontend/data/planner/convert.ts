@@ -7,7 +7,7 @@ import { minText } from '@/frontend/shared/helpers';
 import type { Exercise } from './types';
 
 export const fmtSets = (sets: number | null, reps: number | null) =>
-  sets && reps ? `${sets} × ${reps}` : sets ? `${sets} sets` : '—';
+  sets && reps ? `${sets} × ${reps}` : sets ? `${sets} ${sets === 1 ? 'set' : 'sets'}` : '—';
 
 export function parseSets(text: string): { sets: number | null; reps: number | null } | null {
   const m = text.trim().match(/^(\d+)\s*[×xX*]\s*(\d+)/);
