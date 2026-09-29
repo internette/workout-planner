@@ -203,6 +203,29 @@ export const Bike = strokeIcon(
     <path d="M10 9h4" />
   </>,
 );
+// ---- yoga and stretching. A person's head is a solid dot (a stroked ring fills in at 20px), in the icon colour.
+const Head = ({ cx, cy, r = 2 }: { cx: number; cy: number; r?: number }) => <circle cx={cx} cy={cy} r={r} fill="currentColor" stroke="none" />;
+// Yoga.
+export const LotusFlower = strokeIcon(
+  'LotusFlower',
+  <>
+    <path d="M12 4c-2.6 3-2.6 7 0 10 2.6-3 2.6-7 0-10z" />
+    <path d="M12 14c-4-.5-7-3-8-6.5 3.5.3 6.5 2.5 8 6.5" />
+    <path d="M12 14c4-.5 7-3 8-6.5-3.5.3-6.5 2.5-8 6.5" />
+    <path d="M5 18.5c4.5 1.6 9.5 1.6 14 0" />
+  </>,
+);
+// Stretching: a lunge, as in a hip flexor stretch.
+export const Lunge = strokeIcon(
+  'Lunge',
+  <>
+    <Head cx={11} cy={3.8} />
+    <path d="M11 7.5v7" />
+    <path d="M11 14.5l5 1.3v5" />
+    <path d="M11 14.5 5 20" />
+    <path d="M11 9l4.5 2.5" />
+  </>,
+);
 export const Waves = strokeIcon(
   'Waves',
   <>
