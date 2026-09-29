@@ -70,7 +70,7 @@ export async function addPlanDraft(draft: PlanDraft, model: Model) {
       iconColor: null,
       exercises,
       dates: dates.sort(),
-      repeat: false,
+      repeatDays: [],
       notes: w.notes ?? '',
       warmup: model.warmupReady && !!w.warmup,
       stretch: model.stretchReady && !!w.stretch,

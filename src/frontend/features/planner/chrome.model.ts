@@ -191,7 +191,7 @@ export function chromeVals(ctx: Ctx) {
         } else logic.save(() => db.deleteDiary(c.day), noticePatch('Entry deleted.', st.screen));
       }
       if (c.kind === 'series')
-        logic.save(() => db.endSeries(c.sid, isoOf(new Date(Y, mi, selDay)), ctx.isoToday), {
+        logic.save(() => db.endSeries(c.sid, isoOf(new Date(Y, mi, selDay)), ctx.isoToday, c.days || []), {
           ...noticePatch('Weekly series ended. Its repeats still ahead are off the calendar.', 'detail'),
         });
       // Deleting from the Spellbook goes back to the list it was opened from, which then no longer shows it.

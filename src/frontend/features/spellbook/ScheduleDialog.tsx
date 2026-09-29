@@ -3,9 +3,11 @@ import { Checkbox } from '@moonshot/design-system/checkbox';
 import { Dialog } from '@moonshot/design-system/dialog';
 import { TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
+import { RepeatWeekly } from '@/frontend/components/RepeatWeekly';
+import { WeekdayToggles } from '@/frontend/components/WeekdayToggles';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
-/** A saved workout’s “Add to calendar”: the day, and repeating it. */
+/** A saved workout’s “Add to calendar”: the day it starts on, the weekdays, and repeating them. */
 export function ScheduleDialog({ v }: { v: PlannerVals }) {
   return (
     <Dialog
@@ -25,14 +27,31 @@ export function ScheduleDialog({ v }: { v: PlannerVals }) {
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '16px' }}>
         <TextField
-          label="Day"
+          label="Starting"
           type="date"
           value={v.scheduleCalendar?.date ?? ''}
           onChange={v.scheduleCalendar?.setDate}
         />
-        <Checkbox switch checked={!!v.scheduleCalendar?.repeat} onChange={v.scheduleCalendar?.setRepeat}>
-          Repeat weekly
-        </Checkbox>
+        {v.scheduleCalendar?.showDays ? (
+          <div>
+            <Text variant="eyebrow" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: '8px' }}>
+              ON
+            </Text>
+            <WeekdayToggles
+              label="Days it goes on"
+              days={v.scheduleCalendar?.days ?? []}
+              onToggle={v.scheduleCalendar?.toggleDay}
+            />
+          </div>
+        ) : null}
+        <div>
+          <RepeatWeekly
+            on={!!v.scheduleCalendar?.repeat}
+            onChange={v.scheduleCalendar?.setRepeat}
+            weeks={v.scheduleCalendar?.weeks}
+            onWeeks={v.scheduleCalendar?.setWeeks}
+          />
+        </div>
         {v.scheduleCalendar?.showLogDone ? (
           <Checkbox switch checked={!!v.scheduleCalendar?.logDone} onChange={v.scheduleCalendar?.setLogDone}>
             Log it as done

@@ -18,6 +18,16 @@ export const isoWeekday = (iso: string) => {
   return new Date(y, mo - 1, d).getDay();
 };
 
+// The weekdays a weekly series repeats on: the ones stored with it, or for a series from before they were stored, the
+// one most of its sessions (ISO dates) fall on.
+export const seriesWeekdays = (stored: number[] | null | undefined, isos: string[]): number[] => {
+  if (stored && stored.length) return [...stored].sort((a, b) => a - b);
+  if (!isos.length) return [];
+  const counts = [0, 0, 0, 0, 0, 0, 0];
+  isos.forEach((iso) => counts[isoWeekday(iso)]++);
+  return [counts.indexOf(Math.max(...counts))];
+};
+
 // Dates as the app writes them. Each takes a Date; the caller adds a year when it isn't this one.
 // "Mon"
 export const dayShort = (date: Date) => DOW3[date.getDay()].charAt(0) + DOW3[date.getDay()].slice(1).toLowerCase();

@@ -56,6 +56,7 @@ export interface ConfirmState {
   id?: string;
   day?: string;
   sid?: string;
+  days?: number[]; // a weekly series' weekdays, for ending it
   name?: string;
   after?: Screen;
   /** How many sessions are still ahead (deleting a saved workout). */
@@ -130,6 +131,10 @@ export interface PlannerState {
   newFrom?: 'calendar' | 'arsenal' | null;
   schedule?: boolean | null;
   repeat: boolean;
+  // The weekdays (0 = Sunday) it goes on from its day, when others than that day's own were picked.
+  repeatDays?: number[] | null;
+  // How many weeks it repeats for, when not the default.
+  repeatWeeks?: number | null;
   logDone?: boolean | null;
   extra?: Record<string, Exercise[]> | null;
   removed?: Record<string, string[]> | null;
@@ -222,7 +227,7 @@ export interface PlannerState {
   exEditNav?: boolean;
   exCopy?: boolean;
   exEquipOpen?: boolean;
-  tplSchedule?: { date: string; repeat: boolean; logDone?: boolean } | null;
+  tplSchedule?: { date: string; repeat: boolean; logDone?: boolean; days?: number[] | null; weeks?: number | null } | null;
   tplScheduled?: { templateId: string; text: string; month: string; yOff: number; day: number; entryId: string | null } | null;
   tplConfirm?: TemplateConfirm | null;
 

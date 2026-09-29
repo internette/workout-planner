@@ -1,14 +1,14 @@
 // Loading everything the planner shows, in one go.
 
 import { supabase } from '../supabase';
-import { isoMonthDay, isoOf, isoWeekday, splitMinutes } from '@/frontend/shared/helpers';
+import { isoMonthDay, isoOf, isoWeekday, seriesWeekdays, splitMinutes } from '@/frontend/shared/helpers';
 import type { Exercise, Entry, WorkoutSummary, BuiltinWorkout, Model } from './types';
 import { toExercise, areasOf, numStr, workoutView, estimateMinutes } from './convert';
 import { ok, okOr } from './db';
 import type { Mood } from '@moonshot/design-system/icons';
 
 export async function loadModel(today: Date): Promise<Model> {
-  const [workouts, exercises, plan, diary, library, builtins, builtinWorkoutRows] = await Promise.all([
+  const [workouts, exercises, plan, diary, library, builtins, builtinWorkoutRows, repeatDaysProbe] = await Promise.all([
     ok(supabase.from('workouts').select('*')),
     ok(supabase.from('workout_exercises').select('*').order('order_index')),
     ok(supabase.from('plan_entries').select('*').order('scheduled_date').order('id')),
@@ -17,6 +17,8 @@ export async function loadModel(today: Date): Promise<Model> {
     ok(supabase.from('builtin_exercises').select('*').order('sort_order')),
     // Until the built-in workouts migration has run there is no such table: the Spellbook just has none to show.
     okOr<any[]>(supabase.from('builtin_workouts').select('*').order('sort_order'), []),
+    // Whether a weekly series can keep its weekdays yet: asked of the column itself, as an account may have no workouts.
+    supabase.from('workouts').select('repeat_days').limit(1),
   ]);
 
   const byId: Record<string, any> = {};
@@ -42,19 +44,15 @@ export async function loadModel(today: Date): Promise<Model> {
   const rideDone: Model['rideDone'] = {};
   const entryById: Record<string, Entry> = {};
 
-  // A repeating workout's series is on one weekday: the one most of its sessions fall on. A session of it on another
-  // day (put there on its own) isn't part of the series.
-  const seriesDay: Record<string, number> = {};
-  const dayCounts: Record<string, number[]> = {};
+  // A repeating workout's series is on the weekdays stored with it, or (from before those were stored) the one most of
+  // its sessions fall on. A session of it on another day (put there on its own) isn't part of the series.
+  const seriesDates: Record<string, string[]> = {};
   plan.forEach((p: any) => {
     const w = byId[p.workout_id];
-    if (!w || !w.repeat_enabled) return;
-    (dayCounts[w.id] = dayCounts[w.id] || [0, 0, 0, 0, 0, 0, 0])[isoWeekday(p.scheduled_date)]++;
+    if (w && w.repeat_enabled) (seriesDates[w.id] = seriesDates[w.id] || []).push(p.scheduled_date);
   });
-  Object.keys(dayCounts).forEach((id) => {
-    const c = dayCounts[id];
-    seriesDay[id] = c.indexOf(Math.max(...c));
-  });
+  const seriesDays: Record<string, number[]> = {};
+  Object.keys(seriesDates).forEach((id) => (seriesDays[id] = seriesWeekdays(byId[id].repeat_days, seriesDates[id])));
 
   plan.forEach((p: any) => {
     const w = byId[p.workout_id];
@@ -80,8 +78,8 @@ export async function loadModel(today: Date): Promise<Model> {
       warmup: view.warmup,
       stretch: view.stretch,
       yoga: view.yoga,
-      series: w.repeat_enabled && seriesDay[w.id] === isoWeekday(p.scheduled_date) ? w.id : undefined,
-      seriesDay: w.repeat_enabled ? seriesDay[w.id] : undefined,
+      series: w.repeat_enabled && seriesDays[w.id].includes(isoWeekday(p.scheduled_date)) ? w.id : undefined,
+      seriesDays: w.repeat_enabled ? seriesDays[w.id] : undefined,
       ride: view.ride && { ...view.ride, ...splitMinutes(view.minutes) },
       actual: hasActual
         ? {
@@ -180,5 +178,6 @@ export async function loadModel(today: Date): Promise<Model> {
     warmupReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_warmup' in r),
     stretchReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_stretch' in r),
     yogaReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_yoga' in r),
+    repeatDaysReady: !repeatDaysProbe.error,
   };
 }

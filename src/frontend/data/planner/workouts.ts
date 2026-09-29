@@ -1,6 +1,7 @@
 // Saved workouts: creating, editing and archiving them.
 
 import { supabase } from '../supabase';
+import { isoWeekday } from '@/frontend/shared/helpers';
 import type { BuiltinWorkout, NewWorkout, WorkoutEdit } from './types';
 import { numOrNull, rideCols, nameKey, freeName } from './convert';
 import { ok, workoutById, savedWorkoutOf, renameDoneExercise, insertExercises, patchExercise, takenWorkoutNames } from './db';
@@ -21,7 +22,7 @@ export async function ownCopyOfBuiltin(w: BuiltinWorkout): Promise<{ workoutId: 
     iconColor: null,
     exercises: w.list,
     dates: [],
-    repeat: false,
+    repeatDays: [],
     notes: '',
     warmup: w.warmup,
     stretch: w.stretch,
@@ -44,7 +45,8 @@ export async function createWorkout(w: NewWorkout) {
         icon: w.icon,
         icon_color: w.iconColor,
         ...(w.ride ? rideCols(w.ride) : { ride_distance_miles: null, ride_elevation_ft: null, ride_zone: null }),
-        repeat_enabled: w.repeat,
+        // Repeating is turned on by scheduling it, below, with the weekdays it repeats on.
+        repeat_enabled: false,
         notes: w.notes || null,
         // Only when set, so a workout can still be saved before the warm-ups migration has run.
         ...(w.warmup ? { is_warmup: true } : {}),
@@ -63,7 +65,7 @@ export async function createWorkout(w: NewWorkout) {
   const { entryId } = await scheduleWorkout(
     workoutId,
     w.dates,
-    false,
+    w.repeatDays,
     w.done ? { exercises: w.exercises.map((e) => e.name) } : undefined,
   );
   return { entryId, workoutId, name };
@@ -127,7 +129,7 @@ export async function updateWorkout(e: WorkoutEdit) {
   // A weekly series belongs to a saved workout: a session saved on its own repeats the saved workout it came from.
   if (e.repeatDates.length) {
     const w = await workoutById(e.workoutId);
-    await scheduleWorkout(((await savedWorkoutOf(w)) || w).id, e.repeatDates, true);
+    await scheduleWorkout(((await savedWorkoutOf(w)) || w).id, e.repeatDates, e.repeatDays || [isoWeekday(e.repeatDates[0])]);
   }
 }
 

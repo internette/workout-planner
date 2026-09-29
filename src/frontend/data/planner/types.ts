@@ -37,7 +37,7 @@ export interface Entry {
   areas: string[];
   ride?: Ride;
   series?: string;
-  seriesDay?: number; // the weekday (0 = Sunday) its workout's weekly series repeats on
+  seriesDays?: number[]; // the weekdays (0 = Sunday) its workout's weekly series repeats on
   repeat: boolean;
   actual: { dist: string; elev: string; hrs: string; mins: string } | null;
   notes: string;
@@ -101,6 +101,8 @@ export interface Model {
   stretchReady: boolean;
   // Whether workouts can be marked as yoga yet (the yoga migration has added the column).
   yogaReady: boolean;
+  // Whether a weekly series can repeat on more than one weekday yet (the repeat-days migration has added the column).
+  repeatDaysReady: boolean;
 }
 
 export interface NewWorkout {
@@ -113,7 +115,7 @@ export interface NewWorkout {
   exercises: Exercise[];
   done?: boolean; // put on a day that has gone by, logged as already done (every exercise ticked)
   dates: string[]; // ISO dates to schedule
-  repeat: boolean;
+  repeatDays: number[]; // the weekdays (0 = Sunday) its weekly series repeats on; none when it doesn't repeat
   notes: string;
   warmup?: boolean;
   stretch?: boolean;
@@ -138,6 +140,7 @@ export interface WorkoutEdit {
     order?: string[];
   };
   repeatDates: string[]; // extra weekly dates to schedule
+  repeatDays?: number[]; // the weekdays they repeat on
   warmup?: boolean; // marked as a warm-up, or not, when that changed
   stretch?: boolean; // marked as a stretch, or not, when that changed
   yoga?: boolean; // marked as yoga, or not, when that changed

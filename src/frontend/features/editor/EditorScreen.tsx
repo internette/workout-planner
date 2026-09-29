@@ -24,6 +24,7 @@ import { LeaveEditorDialog } from '@/frontend/features/editor/LeaveEditorDialog'
 import { RideActualCard } from '@/frontend/features/editor/RideActualCard';
 import { RidePlanFields } from '@/frontend/features/editor/RidePlanFields';
 import { ChipRow } from '@/frontend/components/ChipRow';
+import { WeekdayToggles } from '@/frontend/components/WeekdayToggles';
 
 export function EditorScreen({ v }: { v: PlannerVals }) {
   return (
@@ -69,6 +70,12 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
               {v.scheduleNote}
             </Text>
+            {v.showRepeatDays ? <RepeatDays v={v} /> : null}
+            {v.daysNote ? (
+              <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+                {v.daysNote}
+              </Text>
+            ) : null}
             {v.showLogDone ? (
               <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid var(--color-line)' }}>
                 <Checkbox switch checked={!!v.logDoneOn} onChange={v.setLogDone}>
@@ -84,7 +91,13 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
                   borderTop: '1px solid var(--color-line)',
                 }}
               >
-                <RepeatWeekly on={!!v.repeatOn} onChange={v.setRepeat} note={v.repeatNote} />
+                <RepeatWeekly
+                  on={!!v.repeatOn}
+                  onChange={v.setRepeat}
+                  note={v.repeatNote}
+                  weeks={v.repeatWeeks}
+                  onWeeks={v.setRepeatWeeks}
+                />
               </div>
             ) : null}
           </Card>
@@ -99,7 +112,15 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             ) : null}
             {v.canRepeat ? (
               <Card pad="sm" style={{ marginTop: '16px' }}>
-                <RepeatWeekly on={!!v.repeatOn} onChange={v.setRepeat} note={v.repeatNote} />
+                <RepeatWeekly
+                  on={!!v.repeatOn}
+                  onChange={v.setRepeat}
+                  note={v.repeatNote}
+                  weeks={v.repeatWeeks}
+                  onWeeks={v.setRepeatWeeks}
+                >
+                  {v.showRepeatDays ? <RepeatDays v={v} /> : null}
+                </RepeatWeekly>
               </Card>
             ) : null}
           </>
@@ -230,5 +251,17 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
         </FormActions>
       </div>
     </>
+  );
+}
+
+/** "On" and the week's days to pick from, under "Add to calendar" or a session's "Repeat weekly". */
+function RepeatDays({ v }: { v: PlannerVals }) {
+  return (
+    <div style={{ marginTop: '14px' }}>
+      <Text variant="eyebrow" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: '8px' }}>
+        ON
+      </Text>
+      <WeekdayToggles label="Days it goes on" days={v.repeatDays ?? []} onToggle={v.toggleRepeatDay} />
+    </div>
   );
 }
