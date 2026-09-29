@@ -126,20 +126,21 @@ export function editVals(ctx: Ctx) {
         return now ? sum + ((setsOf(now) - setsOf(orig)) * (restOf(now) + 40)) / 60 : sum;
       }, 0);
   // What kind of workout it is (lifts only, once the migrations have added the kinds): a plain one, a warm-up or a
-  // stretch. A draft value until Save.
-  const { warmupReady, stretchReady } = logic.model;
-  const kindShown = (warmupReady || stretchReady) && (creating ? st.newType !== 'cycle' : !selRide);
-  const savedKind = creating || !srcAct ? 'main' : srcAct.warmup ? 'warmup' : srcAct.stretch ? 'stretch' : 'main';
+  // stretch or yoga. A draft value until Save.
+  const { warmupReady, stretchReady, yogaReady } = logic.model;
+  const kindShown = (warmupReady || stretchReady || yogaReady) && (creating ? st.newType !== 'cycle' : !selRide);
+  const savedKind = creating || !srcAct ? 'main' : srcAct.warmup ? 'warmup' : srcAct.stretch ? 'stretch' : srcAct.yoga ? 'yoga' : 'main';
   const workoutKind = kindShown ? ((st.workoutKinds || {})[listKey] ?? savedKind) : 'main';
   const warmupOn = workoutKind === 'warmup';
   const stretchOn = workoutKind === 'stretch';
+  const yogaOn = workoutKind === 'yoga';
   const kindChanged = !creating && kindShown && workoutKind !== savedKind;
   const lengthChanged = exDelta !== 0 || Math.round(setDeltaMin) !== 0 || kindChanged;
-  // A warm-up's or a stretch's length is a fresh estimate from its exercises (they're quick ones), as is a workout's
+  // A warm-up's, a stretch's or a yoga flow's length is a fresh estimate from its exercises (they're quick ones), as is a workout's
   // that stopped being one.
   const estMin =
-    creating || kindChanged || warmupOn || stretchOn
-      ? db.estimateMinutes(selList.length, warmupOn || stretchOn)
+    creating || kindChanged || warmupOn || stretchOn || yogaOn
+      ? db.estimateMinutes(selList.length, warmupOn || stretchOn || yogaOn)
       : Math.max(20, Math.round((baseMin + exDelta * 10 + setDeltaMin) / 5) * 5);
   const saving = logic.busy('workout');
   // Every exercise needs at least one set of at least one rep (a held one, at least one set).
@@ -176,6 +177,7 @@ export function editVals(ctx: Ctx) {
       name: w.name,
       warmup: !!w.warmup && !builtinOne,
       stretch: !!w.stretch && !builtinOne,
+      yoga: !!w.yoga && !builtinOne,
       svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || undefined),
       meta:
         (w.kind === 'ride'
@@ -277,6 +279,14 @@ export function editVals(ctx: Ctx) {
         newType: 'lift',
         workoutKinds: Object.assign({}, st.workoutKinds, { __draft: 'stretch' }),
         icons: Object.assign({}, st.icons, { __draft: 'lunge' }),
+      }),
+    // Yoga the same way, with the lotus flower.
+    canPickYoga: logic.model.yogaReady,
+    pickTypeYoga: () =>
+      logic.s({
+        newType: 'lift',
+        workoutKinds: Object.assign({}, st.workoutKinds, { __draft: 'yoga' }),
+        icons: Object.assign({}, st.icons, { __draft: 'flower' }),
       }),
     needsType: creating && !st.newType,
     rideLockNote: rideDone ? 'Completed — plan locked' : ridePast ? 'Past ride — plan locked' : '',
@@ -626,6 +636,7 @@ export function editVals(ctx: Ctx) {
           // Only a flag the database has: without the stretches migration there's no stretch to clear.
           warmup: kindChanged && warmupReady ? warmupOn : undefined,
           stretch: kindChanged && stretchReady ? stretchOn : undefined,
+          yoga: kindChanged && yogaReady ? yogaOn : undefined,
           durationMinutes: !selRide && lengthChanged ? estMin : undefined,
         };
         // Normally back to the workout's own detail screen; if a nav click was waiting on this save, go there instead.
@@ -793,6 +804,7 @@ export function editVals(ctx: Ctx) {
             done: scheduled && logDoneOn,
             warmup: warmupOn,
             stretch: stretchOn,
+            yoga: yogaOn,
           }),
         // Normally: saved only goes back to the Spellbook's workouts, where it now is; scheduled goes to the day it
         // was put on. If a nav click was waiting on this save, go there instead — that's what was actually asked
@@ -869,13 +881,16 @@ export function editVals(ctx: Ctx) {
       // A non-breaking hyphen, so it isn't split over two lines.
       ...(warmupReady ? [{ value: 'warmup', label: 'Warm\u2011up' }] : []),
       ...(stretchReady ? [{ value: 'stretch', label: 'Stretch' }] : []),
+      ...(yogaReady ? [{ value: 'yoga', label: 'Yoga' }] : []),
     ],
     editKindNote: warmupOn
       ? 'Listed before the other workouts on its day, and tagged as a warm-up.'
       : stretchOn
         ? 'Listed after the other workouts on its day, as a cool-down, and tagged as a stretch.'
-        : 'A workout of its own. A warm-up comes before the day’s other workouts, a stretch after them.',
-    setEditKind: (k: 'main' | 'warmup' | 'stretch') =>
+        : yogaOn
+          ? 'A yoga flow: poses held in turn, tagged as yoga.'
+          : 'A workout of its own. A warm-up comes before the day’s other workouts, a stretch after them.',
+    setEditKind: (k: 'main' | 'warmup' | 'stretch' | 'yoga') =>
       logic.s({ workoutKinds: Object.assign({}, st.workoutKinds, { [listKey]: k }) }),
     setRepeat: (on) => logic.s({ repeat: !!on }),
     repeatOn: !!st.repeat,

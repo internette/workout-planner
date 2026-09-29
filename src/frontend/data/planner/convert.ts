@@ -7,7 +7,7 @@ import { minText } from '@/frontend/shared/helpers';
 import type { Exercise } from './types';
 
 export const fmtSets = (sets: number | null, reps: number | null) =>
-  sets && reps ? `${sets} × ${reps}` : sets ? `${sets} sets` : '—';
+  sets && reps ? `${sets} × ${reps}` : sets ? `${sets} ${sets === 1 ? 'set' : 'sets'}` : '—';
 
 export function parseSets(text: string): { sets: number | null; reps: number | null } | null {
   const m = text.trim().match(/^(\d+)\s*[×xX*]\s*(\d+)/);
@@ -104,12 +104,13 @@ export function workoutView(w: any, exercises: Exercise[]) {
     notes: (w.notes || '') as string,
     warmup: !!w.is_warmup,
     stretch: !!w.is_stretch,
+    yoga: !!w.is_yoga,
     ride: isRide ? { dist: numStr(w.ride_distance_miles), elev: numStr(w.ride_elevation_ft), zone: w.ride_zone || DEFAULT_ZONE } : undefined,
   };
 }
 
 // How long a lift of this many exercises is likely to take: about ten minutes each, at least twenty. A warm-up's or a
-// stretch's exercises are quick ones, about two minutes each, at least five.
+// stretch's (or a yoga flow's poses) are quick ones, about two minutes each, at least five.
 export function estimateMinutes(count: number, quick: boolean) {
   return quick ? Math.max(5, count * 2) : Math.max(20, count * 10);
 }

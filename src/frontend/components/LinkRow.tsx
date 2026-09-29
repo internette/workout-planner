@@ -8,7 +8,7 @@ export interface LinkRowProps {
   title: ReactNode;
   /** A line under the title, e.g. "3 exercises · 45 min". */
   detail?: ReactNode;
-  /** Marks a warm-up or a stretch above the title. */
+  /** Marks a warm-up, a stretch or yoga above the title. */
   kind?: WorkoutKind | null;
   /** Before the text, e.g. an IconSquare. */
   leading?: ReactNode;

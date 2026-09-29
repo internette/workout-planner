@@ -143,6 +143,7 @@ export function calendarVals(ctx: Ctx) {
       name: nameOf(a.name),
       warmup: !!a.warmup,
       stretch: !!a.stretch,
+      yoga: !!a.yoga,
       meta: metaFor(a),
       open: () =>
         logic.openSession(TODAY_M, TODAY_D, a.id),

@@ -79,6 +79,7 @@ export async function loadModel(today: Date): Promise<Model> {
       notes: view.notes,
       warmup: view.warmup,
       stretch: view.stretch,
+      yoga: view.yoga,
       series: w.repeat_enabled && seriesDay[w.id] === isoWeekday(p.scheduled_date) ? w.id : undefined,
       seriesDay: w.repeat_enabled ? seriesDay[w.id] : undefined,
       ride: view.ride && { ...view.ride, ...splitMinutes(view.minutes) },
@@ -142,7 +143,7 @@ export async function loadModel(today: Date): Promise<Model> {
     const list = (r.exercises || []).map((n: string) => builtinByName[n]).filter(Boolean) as Exercise[];
     // Its own length when it says one (a stretching routine's is short), else estimated the way a new workout is: about
     // ten minutes an exercise, at least twenty (a warm-up's are quicker).
-    const minutes = r.minutes || estimateMinutes(list.length, !!r.is_warmup || !!r.is_stretch);
+    const minutes = r.minutes || estimateMinutes(list.length, !!r.is_warmup || !!r.is_stretch || !!r.is_yoga);
     return {
       id: r.id,
       name: r.name,
@@ -156,6 +157,7 @@ export async function loadModel(today: Date): Promise<Model> {
       notes: '',
       warmup: !!r.is_warmup,
       stretch: !!r.is_stretch,
+      yoga: !!r.is_yoga,
       builtin: true,
       category: r.category,
       list,
@@ -177,5 +179,6 @@ export async function loadModel(today: Date): Promise<Model> {
     year: today.getFullYear(),
     warmupReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_warmup' in r),
     stretchReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_stretch' in r),
+    yogaReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_yoga' in r),
   };
 }

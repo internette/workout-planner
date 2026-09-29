@@ -5,6 +5,7 @@ import { Fragment } from 'react';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
+import { ChoiceChips } from '@/frontend/components/ChoiceChips';
 import { Button } from '@moonshot/design-system/buttons';
 import { ChevronLeft, Plus } from '@moonshot/design-system/icons';
 import { GroupLabel } from '@/frontend/components/GroupLabel';
@@ -149,14 +150,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
             ) : null}
             {v.showKindFilter ? (
               <div style={{ marginTop: '14px' }}>
-                <SegmentedControl
-                  label="Show"
-                  size="sm"
-                  compact
-                  options={v.workoutKindOptions}
-                  value={v.workoutKind}
-                  onChange={v.setWorkoutKind}
-                />
+                <ChoiceChips label="Show" options={v.workoutKindOptions} value={v.workoutKind} onChange={v.setWorkoutKind} />
               </div>
             ) : null}
             {/* Grouped like the Exercises tab: the person's own, then the built-in ones by group. */}

@@ -1,15 +1,15 @@
 import { Text } from '@moonshot/design-system/typography';
 
-/** What kind of workout something is, when it isn't a plain one: a warm-up or a stretch. */
-export type WorkoutKind = 'warmup' | 'stretch';
+/** What kind of workout something is, when it isn't a plain one: a warm-up, a stretch or yoga. */
+export type WorkoutKind = 'warmup' | 'stretch' | 'yoga';
 
-/** The kind of a workout, session or row that says whether it's a warm-up or a stretch, or null for a plain one. */
-export const kindOf = (x?: { warmup?: boolean; stretch?: boolean } | null): WorkoutKind | null =>
-  x?.warmup ? 'warmup' : x?.stretch ? 'stretch' : null;
+/** The kind of a workout, session or row that says whether it's a warm-up, a stretch or yoga, or null for a plain one. */
+export const kindOf = (x?: { warmup?: boolean; stretch?: boolean; yoga?: boolean } | null): WorkoutKind | null =>
+  x?.warmup ? 'warmup' : x?.stretch ? 'stretch' : x?.yoga ? 'yoga' : null;
 
-const LABEL: Record<WorkoutKind, string> = { warmup: 'WARM-UP', stretch: 'STRETCH' };
+const LABEL: Record<WorkoutKind, string> = { warmup: 'WARM-UP', stretch: 'STRETCH', yoga: 'YOGA' };
 
-// Marks a warm-up or a stretch: a small label above its name, or beside it (inline) where a row has no room above.
+// Marks a warm-up, a stretch or yoga: a small label above its name, or beside it (inline) where a row has no room above.
 // Nothing for a plain workout.
 export function KindTag({ kind, inline }: { kind: WorkoutKind | null; inline?: boolean }) {
   if (!kind) return null;
