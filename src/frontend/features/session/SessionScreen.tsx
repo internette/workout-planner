@@ -7,7 +7,7 @@ import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { Chip } from '@moonshot/design-system/chip';
 import { Button, IconButton } from '@moonshot/design-system/buttons';
-import { Clock, Close, Pencil, Repeat } from '@moonshot/design-system/icons';
+import { ChevronDown, Clock, Close, Pencil, Repeat } from '@moonshot/design-system/icons';
 import { BackBar } from '@/frontend/components/BackBar';
 import { FormActions } from '@/frontend/components/FormActions';
 import { NeedsLine } from '@/frontend/components/NeedsLine';
@@ -38,6 +38,8 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
             icon={<Clock color="var(--color-muted)" size={15} />}
             onClick={v.editTook}
             title={v.editTook ? 'Change what you recorded' : undefined}
+            // Only a finished session's time can be changed; the ▾ says when it can.
+            trailing={v.editTook ? <ChevronDown color="var(--color-muted)" strokeWidth={2.2} size={14} /> : undefined}
           >
             {t(v.eTime)}
           </Chip>

@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { Chip } from '@moonshot/design-system/chip';
-import { Calendar } from '@moonshot/design-system/icons';
+import { Calendar, ChevronDown } from '@moonshot/design-system/icons';
 import { Popover } from '@moonshot/design-system/popover';
 import { Text } from '@moonshot/design-system/typography';
 import { css, t } from '@/frontend/features/planner/viewHelpers';
@@ -76,6 +76,8 @@ export function DatePicker({ v }: { v: PlannerVals }) {
       <Chip
         icon={<Calendar color="var(--color-muted)" size={15} />}
         onClick={v.toggleDate}
+        // The ▾ says it opens something, unlike the length beside it.
+        trailing={<ChevronDown color="var(--color-muted)" strokeWidth={2.2} size={14} />}
         aria-expanded={!!v.dateOpen}
         aria-label={'Date: ' + v.eDateAria + '. Change date'}
       >
