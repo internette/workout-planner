@@ -1,6 +1,6 @@
 import { IconButton } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
-import { ChevronRight, Close, MoodFace } from '@moonshot/design-system/icons';
+import { ChevronRight, MoodFace, Trash } from '@moonshot/design-system/icons';
 import { StarRating } from '@moonshot/design-system/rating';
 import { Text } from '@moonshot/design-system/typography';
 import { css } from '@/frontend/features/planner/viewHelpers';
@@ -67,7 +67,8 @@ export function ChronicleRow({ entry }: { entry: any }) {
         title="Delete entry"
         style={{ position: 'absolute', top: '6px', right: '6px' }}
       >
-        <Close color="var(--color-subtle)" strokeWidth={2.2} size={14} />
+        {/* A bin, not ×: this deletes the entry, where a corner × reads as close. */}
+        <Trash color="var(--color-subtle)" size={17} />
       </IconButton>
     </div>
   );

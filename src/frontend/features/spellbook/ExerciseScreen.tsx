@@ -5,7 +5,7 @@ import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { Chip } from '@moonshot/design-system/chip';
 import { Button } from '@moonshot/design-system/buttons';
-import { Copy, Pencil, Plus } from '@moonshot/design-system/icons';
+import { ChevronRight, Copy, Pencil, Plus } from '@moonshot/design-system/icons';
 import { BackBar } from '@/frontend/components/BackBar';
 import { DeleteSection } from '@/frontend/components/DeleteSection';
 import { StatRow } from '@/frontend/components/StatRow';
@@ -76,7 +76,7 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
             {(v.exercise.usedIn ?? []).length ? (
               <ChipRow>
                 {(v.exercise.usedIn ?? []).map((w, i) => (
-                  <Chip key={i} onClick={w?.open}>
+                  <Chip key={i} onClick={w?.open} trailing={<ChevronRight color="var(--color-muted)" strokeWidth={2.2} size={14} />}>
                     {w?.name}
                   </Chip>
                 ))}

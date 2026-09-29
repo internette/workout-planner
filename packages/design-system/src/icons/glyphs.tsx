@@ -24,6 +24,17 @@ export const Close = strokeIcon(
     <line x1="18" y1="6" x2="6" y2="18" />
   </>,
 );
+// A bin: deleting something for good (a corner × reads as close or dismiss).
+export const Trash = strokeIcon(
+  'Trash',
+  <>
+    <path d="M4 7h16" />
+    <path d="M9 7V4.5h6V7" />
+    <path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" />
+    <path d="M10 11v6" />
+    <path d="M14 11v6" />
+  </>,
+);
 export const Plus = strokeIcon(
   'Plus',
   <>
