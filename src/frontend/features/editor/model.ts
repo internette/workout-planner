@@ -494,11 +494,18 @@ export function editVals(ctx: Ctx) {
     seriesNote:
       'Part of a weekly series: it repeats every ' +
       DOWFULL[selAct && selAct.seriesDay != null ? selAct.seriesDay : selDate.getDay()] +
-      '. To stop the repeats, tap × on “Weekly series” on this session’s page.',
+      '. To stop the repeats, tap “Weekly series” on this session’s page.',
+    // The Weekly series chip opens a panel saying when it repeats, with End series in it (which still asks first).
+    seriesOpen: !!st.seriesOpen,
+    toggleSeries: () => logic.s({ seriesOpen: !st.seriesOpen }),
+    closeSeries: () => logic.s({ seriesOpen: false }),
+    seriesRepeats:
+      'Repeats every ' + DOWFULL[selAct && selAct.seriesDay != null ? selAct.seriesDay : selDate.getDay()] + '.',
     endSeries: () => {
       const sid = selAct && selAct.series;
       if (!sid) return;
       return logic.s({
+        seriesOpen: false,
         confirm: {
           kind: 'series',
           sid,

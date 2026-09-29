@@ -154,7 +154,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
     const st = this.state;
     const snap: HistoryEntry = { screen:st.screen, month:st.month, yOff:st.yOff, day:st.day, seg:st.seg,
       diaryFrom:st.diaryFrom, diaryEdit:st.diaryEdit, creating:st.creating };
-    this.setState(Object.assign({ hist: (st.hist || []).concat([snap]), notice: null }, p));
+    this.setState(Object.assign({ hist: (st.hist || []).concat([snap]), notice: null, seriesOpen: false }, p));
   }
   /** Opens a session's page: the session `entryId` on month `m` (counted from this January), day `d`. */
   openSession(m: number, d: number, entryId: string, extra: any = {}) {
@@ -172,11 +172,11 @@ export class PlannerLogic extends DCLogic<PlannerState> {
     // Nothing before this screen (it was opened from a link): up to its section's own page.
     if (!h.length) {
       const home = HOME_OF[st.screen];
-      if (home) return this.setState({ screen: home, monthOpen:false, creating:false });
-      return this.setState({ screen:'day', monthOpen:false, seg:'Day', creating:false });
+      if (home) return this.setState({ screen: home, monthOpen:false, seriesOpen:false, creating:false });
+      return this.setState({ screen:'day', monthOpen:false, seriesOpen:false, seg:'Day', creating:false });
     }
     const prev = h[h.length - 1];
-    this.setState(Object.assign({}, prev, { hist: h.slice(0, -1), monthOpen:false }));
+    this.setState(Object.assign({}, prev, { hist: h.slice(0, -1), monthOpen:false, seriesOpen:false }));
   }
   /** History without its last screen, for a screen that replaces the one it was opened from (a new Chronicle entry,
    * once saved, stands in for the picker it was started from). */
@@ -192,7 +192,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
     if (i < 0) return this.back();
     this.focusBack = this.openers[i] ?? null;
     this.openers = this.openers.slice(0, i);
-    this.setState(Object.assign({}, h[i], { hist: h.slice(0, i), monthOpen:false }, patch));
+    this.setState(Object.assign({}, h[i], { hist: h.slice(0, i), monthOpen:false, seriesOpen:false }, patch));
   }
   renderVals() {
     const ctx = buildContext(this);
