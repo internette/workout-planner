@@ -1,6 +1,7 @@
 import { DOWFULL, EDIT_OVERLAYS, ICON_COLOR_NAMES, ICON_COLORS, LIFT_MINUTES, MONTHS, NEW_WORKOUT_CLEARED, RIDE_MINUTES } from '@/frontend/shared/constants';
 import { digitsOnly, exLine, idOf, isoOf, joinSetsReps, longDay, minText, mod12, monDay, monthPatch, needsLine, noticePatch, numericOnly, plural, rollMinutes, isHold, setsRepsOk, shortDay, splitSetsReps, toMinutes, withLb, withSec, workoutDraftDirty } from '@/frontend/shared/helpers';
 import { iconOptions, iconSvg } from '@/frontend/shared/icons';
+import { DEFAULT_WEEKS, dayNames, pickedDays, planDays, toggleDay } from '@/frontend/shared/schedule';
 import * as db from '@/frontend/data/plannerData';
 import { themed } from '@moonshot/design-system/colors';
 import type { Ctx } from '../planner/store/types';
@@ -89,24 +90,43 @@ export function editVals(ctx: Ctx) {
         null
       : null;
   const todayIso = ctx.isoToday;
-  // Repeating: this weekday for the 12 weeks after the day, leaving out days already gone by (they'd only show as
-  // missed) and days that already have this workout.
   // A day that has gone by: whatever is put on it is most likely already done, so it's logged as done unless
   // switched off (as in the Spellbook's "Add to calendar").
   const pastDay = isoOf(new Date(Y, mi, selDay)) < todayIso;
   const logDoneOn = pastDay && st.logDone !== false;
   // An exercise's icon picked in this editor (not yet saved), kept per workout like its other fields.
   const iconPick = (name) => (st.exIcons || {})[listKey + '|' + name];
-  const weeklyAfter = (name) => {
-    const out: string[] = [];
-    for (let w = 1; w <= 12; w++) {
-      const d = new Date(Y, mi, selDay + w * 7);
-      const iso = isoOf(d);
-      if (iso >= todayIso && !logic.model.entries.some((x) => x.m === relM(d) && x.d === d.getDate() && x.av.name === name))
-        out.push(iso);
-    }
-    return out;
+  // The days it goes on: the weekdays picked from this day (its own, unless others were), for the week from it or,
+  // repeating, for the weeks chosen. Days gone by and days that already have this workout are left out.
+  const startDate = new Date(Y, mi, selDay);
+  // Until the repeat-days migration has run, a weekly series keeps just the one weekday it's started on.
+  const oneRepeatDay = !logic.model.repeatDaysReady && !!st.repeat;
+  const repeatDays = pickedDays(st.repeatDays, startDate, pastDay || oneRepeatDay);
+  const repeatWeeks = st.repeatWeeks || DEFAULT_WEEKS;
+  const planFor = (name, repeat = !!st.repeat) =>
+    planDays({
+      start: startDate,
+      days: repeatDays,
+      repeat,
+      weeks: repeatWeeks,
+      today: new Date(Y, TODAY_M, TODAY_D),
+      has: (d) => logic.model.entries.some((x) => x.m === relM(d) && x.d === d.getDate() && x.av.name === name),
+    });
+  // A session's repeats: the plan from its day, without the session itself.
+  const repeatsAfter = (name) => planFor(name, true).dates.filter((d) => d.getTime() !== startDate.getTime());
+  // "Tue, Sep 29, Thu, Oct 1 and Sat, Oct 3".
+  const dayList = (dates: Date[]) => {
+    const each = dates.map((d) => shortDay(d) + (d.getFullYear() !== Y ? ', ' + d.getFullYear() : ''));
+    return each.length > 1 ? each.slice(0, -1).join(', ') + ' and ' + each[each.length - 1] : each[0] || '';
   };
+  // What adding them does, said the same way before and after saving.
+  const plannedText = (dates: Date[], skipped: number) =>
+    (st.repeat
+      ? 'every ' + dayNames(repeatDays) + ' for ' + repeatWeeks + ' weeks, ' + plural(dates.length, 'session') + ' in all'
+      : dates.length > 3
+        ? plural(dates.length, 'day')
+        : dayList(dates)) +
+    (skipped ? ' (' + plural(skipped, 'day') + ' that already ' + (skipped === 1 ? 'has' : 'have') + ' it left out)' : '');
   // A new workout needs a name, and a lifting one at least one exercise, before it can be saved: an empty
   // "Untitled workout" used to land in the Spellbook with one tap.
   // The same holds when editing: a saved workout or session can't be left without a name, or a lift without exercises.
@@ -197,7 +217,7 @@ export function editVals(ctx: Ctx) {
               db.scheduleWorkout(
                 id,
                 [isoOf(new Date(Y, mi, selDay))],
-                false,
+                [],
                 logDoneOn ? { exercises: w.kind === 'ride' ? [] : w.exercises } : undefined,
               ),
             ),
@@ -231,6 +251,14 @@ export function editVals(ctx: Ctx) {
     if (!g) savedChoiceGroups.push((g = { label, items: [] }));
     g.items.push(choiceOf(w, true));
   });
+  // Creating for the calendar: the days it would go on, and whether that's more than the one it was started on.
+  const createPlan = planFor((st.newName || '').trim());
+  const manyDays =
+    creating &&
+    st.schedule !== false &&
+    (!!st.repeat || createPlan.dates.length !== 1 || createPlan.dates[0].getTime() !== startDate.getTime());
+  // The series' own days, not this session's date (which may have just been moved in this editor).
+  const seriesDayNames = dayNames(selAct && selAct.seriesDays && selAct.seriesDays.length ? selAct.seriesDays : [selDate.getDay()]);
   return {
     nameError: nameClash ? 'You already have a workout called “' + nameClash.name + '”. Give this one another name.' : '',
     saveBlocked: !!nameClash || needsName || needsExercise || !!badCounts || saving,
@@ -250,13 +278,14 @@ export function editVals(ctx: Ctx) {
     useSavedLabel: nameClash ? 'Schedule your saved “' + nameClash.name + '” instead' : '',
     useSaved: () => {
       if (!nameClash) return;
-      const dates = [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weeklyAfter(nameClash.name) : []);
+      const dates = planFor(nameClash.name).dates;
+      const first = dates[0] || startDate;
       logic.saveOnce(
         'workout',
-        () => db.scheduleWorkout(nameClash.id, dates, dates.length > 1),
+        () => db.scheduleWorkout(nameClash.id, dates.map(isoOf), st.repeat ? repeatDays : []),
         (r) =>
           Object.assign(
-            { screen: 'day' },
+            { screen: 'day', ...monthPatch(relM(first)), day: first.getDate() },
             NEW_WORKOUT_CLEARED,
             EDIT_OVERLAYS,
             { extra: Object.assign({}, st.extra, { __draft: [] }) },
@@ -493,14 +522,13 @@ export function editVals(ctx: Ctx) {
     // The series' own day, not this session's date (which may have just been moved in this editor).
     seriesNote:
       'Part of a weekly series: it repeats every ' +
-      DOWFULL[selAct && selAct.seriesDay != null ? selAct.seriesDay : selDate.getDay()] +
+      seriesDayNames +
       '. To stop the repeats, tap “Weekly series” on this session’s page.',
     // The Weekly series chip opens a panel saying when it repeats, with End series in it (which still asks first).
     seriesOpen: !!st.seriesOpen,
     toggleSeries: () => logic.s({ seriesOpen: !st.seriesOpen }),
     closeSeries: () => logic.s({ seriesOpen: false }),
-    seriesRepeats:
-      'Repeats every ' + DOWFULL[selAct && selAct.seriesDay != null ? selAct.seriesDay : selDate.getDay()] + '.',
+    seriesRepeats: 'Repeats every ' + seriesDayNames + '.',
     endSeries: () => {
       const sid = selAct && selAct.series;
       if (!sid) return;
@@ -509,6 +537,7 @@ export function editVals(ctx: Ctx) {
         confirm: {
           kind: 'series',
           sid,
+          days: (selAct && selAct.seriesDays) || [],
           title: 'End this weekly series?',
           body:
             'Its repeats still ahead come off the calendar. This one, past ones, and any you’ve started or written about stay.',
@@ -657,7 +686,8 @@ export function editVals(ctx: Ctx) {
             add: added.map(plainExercise),
             order: reordered ? selList.map((e) => e.name) : undefined,
           },
-          repeatDates: st.repeat && !selAct.series ? weeklyAfter(baseName) : [],
+          repeatDates: st.repeat && !selAct.series ? repeatsAfter(baseName).map(isoOf) : [],
+          repeatDays: st.repeat && !selAct.series ? repeatDays : [],
           // Only a flag the database has: without the stretches migration there's no stretch to clear.
           warmup: warmupChanged ? warmupOn : undefined,
           stretch: kindChanged && stretchReady ? stretchOn : undefined,
@@ -676,7 +706,7 @@ export function editVals(ctx: Ctx) {
             : noticePatch(
                 'Changes saved.' +
                   (edit.repeatDates.length
-                    ? ' Repeats every ' + DOWFULL[new Date(Y, mi, selDay).getDay()] + ', ' +
+                    ? ' Repeats every ' + dayNames(repeatDays) + ', ' +
                       plural(edit.repeatDates.length, 'more session') + ' on the calendar.'
                     : ''),
                 'detail',
@@ -811,6 +841,8 @@ export function editVals(ctx: Ctx) {
       const isRide = st.newType === 'cycle';
       // A workout is saved on its own; it only gets a session on the calendar when "Add to calendar" is on.
       const scheduled = st.schedule !== false;
+      const plan = planFor(nm);
+      const first = plan.dates[0] || startDate;
       return logic.saveOnce(
         'workout',
         () =>
@@ -825,8 +857,8 @@ export function editVals(ctx: Ctx) {
             iconColor: (st.iconColors || {}).__draft || null,
             notes: notesVal,
             exercises: selList.map((e) => plainExercise(iconPick(e.name) ? { ...e, i: iconPick(e.name) } : e)),
-            dates: scheduled ? [isoOf(new Date(Y, mi, selDay))].concat(st.repeat ? weeklyAfter(nm) : []) : [],
-            repeat: scheduled && !!st.repeat && weeklyAfter(nm).length > 0,
+            dates: scheduled ? plan.dates.map(isoOf) : [],
+            repeatDays: scheduled && st.repeat ? repeatDays : [],
             done: scheduled && logDoneOn,
             warmup: warmupOn,
             stretch: stretchOn,
@@ -842,7 +874,9 @@ export function editVals(ctx: Ctx) {
               ? NAV_DESTINATIONS[st.pendingNav]
               : Object.assign(
                   // Saved only: its own page, so it's right there (not somewhere down the Spellbook's list).
-                  scheduled ? { screen: 'day' } : { screen: 'template', templateId: r.workoutId, arsenalView: 'workouts' },
+                  scheduled
+                    ? { screen: 'day', ...monthPatch(relM(first)), day: first.getDate() }
+                    : { screen: 'template', templateId: r.workoutId, arsenalView: 'workouts' },
                   // Scheduled: back where it started, the new-workout screen's history entry gone too. Saved only:
                   // its page takes that entry's place, so Back returns to where "New workout" was pressed.
                   scheduled ? { hist: (st.hist || []).slice(0, -1) } : {},
@@ -857,9 +891,7 @@ export function editVals(ctx: Ctx) {
                 ? noticePatch(
                     '“' +
                       r.name +
-                      '” saved and added to ' +
-                      monDay(selDate) +
-                      (st.repeat ? ', and every ' + DOWFULL[selDate.getDay()] + ' for 12 weeks after (13 sessions).' : '.'),
+                      '” saved and added ' + (st.repeat ? '' : 'to ') + plannedText(plan.dates, plan.skipped) + '.',
                     'day',
                   )
                 : noticePatch('“' + r.name + '” is written into your Spellbook.', 'template'),
@@ -883,10 +915,11 @@ export function editVals(ctx: Ctx) {
       logic.s(cleared);
       logic.back();
     },
-    eDate: shortDay(selDate) + yearNote,
+    // Going on more than one day, the date is where they start from.
+    eDate: (manyDays ? 'From ' : '') + shortDay(selDate) + yearNote,
     // A warm-up says so on its page, beside the date.
     eKind: creating ? null : kindOf(srcAct),
-    eDateAria: longDay(selDate) + yearNote,
+    eDateAria: (manyDays ? 'Starting ' : '') + longDay(selDate) + yearNote,
     // Once finished, how long it actually took; before that, the plan.
     eTime:
       selAct && ctx.actualMinutes(selAct)
@@ -913,22 +946,36 @@ export function editVals(ctx: Ctx) {
     setWarmup: (on) => logic.s({ warmups: Object.assign({}, st.warmups, { [listKey]: !!on }) }),
     setRepeat: (on) => logic.s({ repeat: !!on }),
     repeatOn: !!st.repeat,
+    repeatWeeks,
+    setRepeatWeeks: (w) => logic.s({ repeatWeeks: w }),
+    // The weekdays it goes on. Creating, they're picked whether or not it repeats; a session picks them to repeat on.
+    // A day gone by only has its own.
+    showRepeatDays: !pastDay && !oneRepeatDay && (creating ? st.schedule !== false : !!st.repeat),
+    repeatDays,
+    toggleRepeatDay: (d) => logic.s({ repeatDays: toggleDay(repeatDays, d) }),
+    // Creating without repeating, and not just the one day: which days those are.
+    daysNote: creating && !st.repeat && manyDays ? createPlan.dates.map((d) => shortDay(d)).join(' · ') : '',
     // Said from the dates it would add: weeks gone by, and days that already have it, are left out.
-    repeatNote: (() => {
-      const n = weeklyAfter(creating ? (st.newName || '').trim() : baseName).length;
-      return n
-        ? 'Adds this workout every ' + DOWFULL[selDate.getDay()] + ' after this one, ' + plural(n, 'more session') + '.'
-        : 'The weeks after this one have gone by or already have it.';
-    })(),
+    repeatNote: creating
+      ? 'Every ' + dayNames(repeatDays) + ', ' + plural(createPlan.dates.length, 'session') + ' in all.' +
+        (createPlan.skipped ? ' ' + plural(createPlan.skipped, 'day') + ' that already have it are left out.' : '')
+      : (() => {
+          const n = repeatsAfter(baseName).length;
+          return n
+            ? 'Adds this workout every ' + dayNames(repeatDays) + ' after this one, ' + plural(n, 'more session') + '.'
+            : 'The weeks after this one have gone by or already have it.';
+        })(),
     // Creating: whether the new workout also goes on the calendar. Editing a session is always on the calendar.
     isCreating: creating,
     scheduleOn: creating ? st.schedule !== false : true,
     showDate: !tplMode && (!creating || st.schedule !== false),
     setSchedule: (on) => logic.s({ schedule: !!on, repeat: on ? st.repeat : false }),
     scheduleNote:
-      st.schedule !== false
-        ? 'Puts it on ' + DOWFULL[selDate.getDay()] + ', ' + monDay(selDate) + yearNote + ', and keeps it in your Spellbook.'
-        : 'Only saved to your Spellbook. You can add it to the calendar any time.',
+      st.schedule === false
+        ? 'Only saved to your Spellbook. You can add it to the calendar any time.'
+        : manyDays
+          ? 'Puts it on the calendar, and keeps it in your Spellbook.'
+          : 'Puts it on ' + longDay(createPlan.dates[0] || selDate) + yearNote + ', and keeps it in your Spellbook.',
     exercises: selList.map((e, ix) => {
       const cur = iconPick(e.name) || e.i;
       // A click picks and closes the picker; the arrow keys move the pick and leave it open.

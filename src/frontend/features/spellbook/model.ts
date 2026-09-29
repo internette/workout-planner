@@ -1,5 +1,6 @@
-import { DOWFULL, EQUIPMENT, EQUIPMENT_GROUPS, EX_DRAFT_CLEARED, MONTHS, TARGET_AREAS } from '@/frontend/shared/constants';
+import { EQUIPMENT, EQUIPMENT_GROUPS, EX_DRAFT_CLEARED, MONTHS, TARGET_AREAS } from '@/frontend/shared/constants';
 import { iconOptions, iconSvg } from '@/frontend/shared/icons';
+import { DEFAULT_WEEKS, dayNames, pickedDays, planDays, toggleDay } from '@/frontend/shared/schedule';
 import * as db from '@/frontend/data/plannerData';
 import { countsOk, digitsOnly, editTemplatePatch, exerciseDraftDirty, exLine, isoOf, joinSetsReps, longDay, monthPatch, needsLine, newWorkoutPatch, noticePatch, numericOnly, plural, splitSetsReps, withLb, withSec } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
@@ -519,21 +520,35 @@ export function arsenalVals(ctx: Ctx) {
   const logPast = schedPast && !(sched && sched.logDone === false);
   // Whether the chosen workout is already on a day.
   const hasOn = (d) => !!chosen && logic.model.entries.some((x) => x.m === relM(d) && x.d === d.getDate() && x.av.name === chosen.name);
-  // Repeating: the same weekday for the 12 weeks after, leaving out days already gone by (they'd only show as
-  // missed) and days the workout is already on.
-  const weekAfter = (w) => new Date(schedDate.getFullYear(), schedDate.getMonth(), schedDate.getDate() + w * 7);
-  const repeatDays =
-    schedDate && sched && sched.repeat
-      ? Array.from({ length: 12 }, (_, i) => weekAfter(i + 1)).filter((d) => d >= new Date(Y, TODAY_M, TODAY_D) && !hasOn(d))
-      : [];
+  // The weekdays picked from the day (its own, unless others were), for the week from it or, repeating, for the weeks
+  // chosen, leaving out days already gone by (they'd only show as missed) and days the workout is already on.
+  // Until the repeat-days migration has run, a weekly series keeps just the one weekday it's started on.
+  const oneRepeatDay = !logic.model.repeatDaysReady && !!(sched && sched.repeat);
+  const schedDays = schedDate ? pickedDays(sched && sched.days, schedDate, schedPast || oneRepeatDay) : [];
+  const schedWeeks = (sched && sched.weeks) || DEFAULT_WEEKS;
+  const plan = schedDate
+    ? planDays({
+        start: schedDate,
+        days: schedDays,
+        repeat: !!(sched && sched.repeat),
+        weeks: schedWeeks,
+        today: new Date(Y, TODAY_M, TODAY_D),
+        has: hasOn,
+      })
+    : { dates: [], skipped: 0 };
+  // The days after the first.
+  const repeatDays = plan.dates.slice(1);
   const lastRepeat = repeatDays[repeatDays.length - 1];
   const md = (d) => MONTHS[d.getMonth()] + ' ' + d.getDate() + (d.getFullYear() !== Y ? ', ' + d.getFullYear() : '');
-  // "every Tuesday through November 24", or "from September 29" too when weeks were left out after the day.
+  const first = plan.dates[0] || schedDate;
+  // "Monday, September 5", with the year when it isn't this one.
+  const firstWhen = first ? longDay(first) + (first.getFullYear() !== Y ? ', ' + first.getFullYear() : '') : '';
+  // "every Tuesday and Thursday through November 24", or the days themselves, a week's worth without repeating.
   const repeatText = !lastRepeat
     ? ''
-    : 'every ' + DOWFULL[schedDate.getDay()] +
-      (repeatDays[0].getTime() !== weekAfter(1).getTime() ? ' from ' + md(repeatDays[0]) : '') +
-      ' through ' + md(lastRepeat);
+    : sched && sched.repeat
+      ? 'every ' + dayNames(schedDays) + ' through ' + md(lastRepeat)
+      : 'on ' + (repeatDays.length > 1 ? repeatDays.slice(0, -1).map(md).join(', ') + ' and ' : '') + md(lastRepeat);
   const scheduleCalendar = {
     open: !!sched,
     title: chosen ? 'Add “' + chosen.name + '” to the calendar' : '',
@@ -541,15 +556,22 @@ export function arsenalVals(ctx: Ctx) {
     setDate: (e) => logic.s({ tplSchedule: { ...sched, date: e.target.value } }),
     repeat: !!(sched && sched.repeat),
     setRepeat: (on) => logic.s({ tplSchedule: { ...sched, repeat: !!on } }),
+    weeks: schedWeeks,
+    setWeeks: (w) => logic.s({ tplSchedule: { ...sched, weeks: w } }),
+    // The weekdays it goes on from the day. A day gone by only has its own.
+    showDays: !!schedDate && !schedPast && !oneRepeatDay,
+    days: schedDays,
+    toggleDay: (d) => logic.s({ tplSchedule: { ...sched, days: toggleDay(schedDays, d) } }),
     note: !schedDate
       ? 'Pick a day.'
-      : (sched && sched.repeat
-          ? repeatDays.length
-            ? schedWhen + ', then ' + repeatText + ': ' + (repeatDays.length + 1) + ' sessions in all.'
-            : 'Just ' + schedWhen + '. The weeks after have gone by or already have it.'
-          : 'Just ' + schedWhen + '.') +
+      : (repeatDays.length
+          ? firstWhen + ', then ' + repeatText + ': ' + plan.dates.length + ' sessions in all.'
+          : sched && sched.repeat
+            ? 'Just ' + firstWhen + '. The weeks after have gone by or already have it.'
+            : 'Just ' + firstWhen + '.') +
+        (plan.skipped ? ' ' + plural(plan.skipped, 'day') + ' that already ' + (plan.skipped === 1 ? 'has' : 'have') + ' it left out.' : '') +
         // Said before adding: a second one on a day that has it, or a day already gone by.
-        (hasOn(schedDate) ? ' “' + chosen.name + '” is already on that day, so it would be there twice.' : '') +
+        (schedDays.includes(schedDate.getDay()) && hasOn(schedDate) ? ' “' + chosen.name + '” is already on that day, so it would be there twice.' : '') +
         (schedPast
           ? (logPast ? ' ' + schedWhen + ' goes on the calendar as done.' : ' ' + schedWhen + ' has gone by, so it will show as missed.')
           : ''),
@@ -557,13 +579,14 @@ export function arsenalVals(ctx: Ctx) {
     showLogDone: schedPast,
     logDone: logPast,
     setLogDone: (on) => logic.s({ tplSchedule: { ...sched, logDone: !!on } }),
-    canAdd: !!schedDate && !logic.busy('schedule'),
+    canAdd: plan.dates.length > 0 && !logic.busy('schedule'),
     cancel: () => logic.s({ tplSchedule: null }),
     // Afterwards it stays here and says where the workout went, with a way to go and see that day.
     add: () => {
       if (!chosen || !schedDate) return;
-      const dates = [isoOf(schedDate)].concat(repeatDays.map(isoOf));
-      const when = schedWhen;
+      if (!plan.dates.length) return;
+      const dates = plan.dates.map(isoOf);
+      const when = firstWhen;
       const then = repeatText;
       // A built-in workout goes on the calendar as one of the person's own: theirs by that name, or a new copy.
       const saving = builtin && !mine;
@@ -574,7 +597,7 @@ export function arsenalVals(ctx: Ctx) {
             db.scheduleWorkout(
               id,
               dates,
-              dates.length > 1,
+              sched && sched.repeat ? schedDays : [],
               logPast ? { exercises: chosen.kind === 'ride' ? [] : chosen.exercises } : undefined,
             ),
           ),
@@ -584,9 +607,9 @@ export function arsenalVals(ctx: Ctx) {
             templateId: chosen.id,
             text:
               (saving ? 'Saved to your workouts. ' : '') +
-              (logPast ? 'Logged as done: ' : 'On the calendar: ') + when + (then ? '. On the calendar ' + then + '.' : '.'),
-            ...monthPatch(relM(schedDate)),
-            day: schedDate.getDate(),
+              (logPast ? 'Logged as done: ' : 'On the calendar: ') + when + (then ? ', then ' + then + '.' : '.'),
+            ...monthPatch(relM(first)),
+            day: first.getDate(),
             entryId: r && r.entryId,
           },
         }),

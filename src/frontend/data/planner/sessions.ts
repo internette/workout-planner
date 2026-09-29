@@ -1,7 +1,7 @@
 // Sessions on the calendar: ticking off, finishing, scheduling and counting them, and their Chronicle entries.
 
 import { supabase } from '../supabase';
-import { isoWeekday } from '@/frontend/shared/helpers';
+import { isoWeekday, seriesWeekdays } from '@/frontend/shared/helpers';
 import { numOrNull, completionCols } from './convert';
 import { ok, workoutById, isAhead, untouchedIds, SESSION_COLS, savedWorkoutOf } from './db';
 
@@ -66,28 +66,43 @@ export async function deletePlanEntries(entryIds: string[]) {
 
 // Ends a weekly series: removes its repeats still ahead (after the chosen day, and from today on) and turns
 // repeating off for the workout. Anything finished, started or written about stays.
-export async function endSeries(workoutId: string, afterIso: string, todayIso: string) {
+export async function endSeries(workoutId: string, afterIso: string, todayIso: string, days: number[]) {
   const later: any[] = await ok(
     supabase.from('plan_entries').select(SESSION_COLS).eq('workout_id', workoutId).gt('scheduled_date', afterIso),
   );
-  // Only the series' own weekday: a session of the same workout put on another day stays.
-  const day = isoWeekday(afterIso);
+  // Only the series' own weekdays: a session of the same workout put on another day stays.
+  const on = days.length ? days : [isoWeekday(afterIso)];
   await deletePlanEntries(
-    await untouchedIds(later.filter((r) => isAhead(r, todayIso) && isoWeekday(r.scheduled_date) === day)),
+    await untouchedIds(later.filter((r) => isAhead(r, todayIso) && on.includes(isoWeekday(r.scheduled_date)))),
   );
   await ok(supabase.from('workouts').update({ repeat_enabled: false }).eq('id', workoutId));
 }
 
-// Puts an existing workout on the calendar: one session per date. Repeating dates also turn its weekly series on.
+// Puts an existing workout on the calendar: one session per date. Weekdays to repeat on also turn its weekly series on,
+// on those days as well as any it already repeats on.
 // `done` logs the first date as already done (a workout added to a day that has gone by), with these exercises ticked.
 export async function scheduleWorkout(
   workoutId: string,
   dates: string[],
-  repeat: boolean,
+  repeatDays: number[],
   done?: { exercises: string[] },
 ) {
   if (!dates.length) return { entryId: null };
-  if (repeat) await ok(supabase.from('workouts').update({ repeat_enabled: true }).eq('id', workoutId));
+  if (repeatDays.length) {
+    const w = await workoutById(workoutId);
+    const days = new Set<number>(repeatDays);
+    if (w && w.repeat_enabled) {
+      const had: any[] = await ok(supabase.from('plan_entries').select('scheduled_date').eq('workout_id', workoutId));
+      seriesWeekdays(w.repeat_days, had.map((r) => r.scheduled_date)).forEach((d) => days.add(d));
+    }
+    await ok(
+      supabase
+        .from('workouts')
+        // The weekdays only once the repeat-days migration has run; before it, a series has just one.
+        .update({ repeat_enabled: true, ...(w && 'repeat_days' in w ? { repeat_days: [...days].sort((a, b) => a - b) } : {}) })
+        .eq('id', workoutId),
+    );
+  }
   const rows: { id: string; scheduled_date: string }[] = await ok(
     supabase
       .from('plan_entries')
