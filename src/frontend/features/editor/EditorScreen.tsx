@@ -5,14 +5,13 @@ import { Fragment } from 'react';
 import { t } from '@/frontend/features/planner/viewHelpers';
 import { Card } from '@moonshot/design-system/card';
 import { Checkbox } from '@moonshot/design-system/checkbox';
-import { ChoiceChips } from '@/frontend/components/ChoiceChips';
 import { ReorderableList } from '@moonshot/design-system/reorderable-list';
 import { Stat } from '@moonshot/design-system/stat';
 import { Text } from '@moonshot/design-system/typography';
 import { Chip } from '@moonshot/design-system/chip';
 import { TextArea } from '@moonshot/design-system/text-field';
 import { Button } from '@moonshot/design-system/buttons';
-import { Clock, Plus, Repeat } from '@moonshot/design-system/icons';
+import { Clock, ExerciseIcon, Plus, Repeat } from '@moonshot/design-system/icons';
 import { BackBar } from '@/frontend/components/BackBar';
 import { FormActions } from '@/frontend/components/FormActions';
 import { RepeatWeekly } from '@/frontend/components/RepeatWeekly';
@@ -45,6 +44,16 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             </>
           ) : null}
           <Chip icon={<Clock color="var(--color-muted)" size={17} />}>{t(v.eTime)}</Chip>
+          {v.editType ? (
+            // Goes back to "What kind of workout?" to change it.
+            <Chip
+              icon={<ExerciseIcon name={v.editType.icon} color="var(--color-muted)" size={17} />}
+              onClick={v.openRetype}
+              aria-label={'Type: ' + v.editType.label + '. Change it'}
+            >
+              {v.editType.label}
+            </Chip>
+          ) : null}
         </ChipRow>
         {v.canUseSaved ? (
           <Button type="secondary" size="md" onClick={v.useSaved} style={{ marginTop: '12px' }}>
@@ -94,23 +103,14 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             ) : null}
           </>
         )}
-        {/* What kind of workout it is. */}
-        {v.editKindShown ? (
-          <Card pad="sm" style={{ marginTop: '16px' }}>
-            <ChoiceChips label="Kind" options={v.editKindOptions} value={v.editKind} onChange={v.setEditKind} />
-            <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
-              {v.editKindNote}
-            </Text>
-          </Card>
-        ) : null}
-        {/* Whether it's a warm-up: apart from its kind, so a workout or a stretch or yoga can be one. */}
+        {/* Whether it's a warm-up, whatever its kind: a workout, a stretch or yoga can each be one. */}
         {v.warmupShown ? (
           <Card pad="sm" style={{ marginTop: '16px' }}>
             <Checkbox switch checked={!!v.warmupOn} onChange={v.setWarmup}>
               Warm-up
             </Checkbox>
             <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
-              Listed before the other workouts on its day, and tagged as a warm-up. Any kind can be one.
+              Listed before the other workouts on its day, and tagged as a warm-up.
             </Text>
           </Card>
         ) : null}

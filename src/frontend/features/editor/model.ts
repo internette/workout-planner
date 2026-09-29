@@ -126,7 +126,8 @@ export function editVals(ctx: Ctx) {
         return now ? sum + ((setsOf(now) - setsOf(orig)) * (restOf(now) + 40)) / 60 : sum;
       }, 0);
   // What kind of workout it is (lifts only, once the migrations have added the kinds): a plain one, a stretch or yoga.
-  // And, whatever its kind, whether it's a warm-up: a switch of its own. Both draft values until Save.
+  // It's chosen with the workout's type when it's made (Lifting, Stretching or Yoga) and kept after. And, whatever its
+  // kind, whether it's a warm-up: a switch of its own in the editor, a draft value until Save.
   const { warmupReady, stretchReady, yogaReady } = logic.model;
   const lift = creating ? st.newType !== 'cycle' : !selRide;
   const kindShown = (stretchReady || yogaReady) && lift;
@@ -273,25 +274,39 @@ export function editVals(ctx: Ctx) {
     logDoneOn,
     setLogDone: (on) => logic.s({ logDone: !!on }),
     savedChoiceGroups,
-    pickTypeLift: () => logic.s({ newType: 'lift' }),
-    pickTypeCycle: () => logic.s({ newType: 'cycle' }),
-    // A stretch is a list of exercises like a lift, marked as a stretch, with the lunge for its icon to start with.
-    canPickStretch: logic.model.stretchReady,
-    pickTypeStretch: () =>
-      logic.s({
-        newType: 'lift',
-        workoutKinds: Object.assign({}, st.workoutKinds, { __draft: 'stretch' }),
-        icons: Object.assign({}, st.icons, { __draft: 'lunge' }),
-      }),
-    // Yoga the same way, with the lotus flower.
-    canPickYoga: logic.model.yogaReady,
-    pickTypeYoga: () =>
-      logic.s({
-        newType: 'lift',
-        workoutKinds: Object.assign({}, st.workoutKinds, { __draft: 'yoga' }),
-        icons: Object.assign({}, st.icons, { __draft: 'flower' }),
-      }),
-    needsType: creating && !st.newType,
+    // The type picked on "What kind of workout?": lifting, cycling, stretching or yoga. For a new workout it sets
+    // whether it's a ride, its kind, and its icon (the type's own, unless one was chosen). For one being edited, its
+    // kind: a lift can become a stretch or yoga and back, but not a ride, which has a plan instead of exercises.
+    typeChoices: (() => {
+      const cur: 'lift' | 'cycle' | 'stretch' | 'yoga' = !lift ? 'cycle' : stretchOn ? 'stretch' : yogaOn ? 'yoga' : 'lift';
+      const DEFAULT_ICON = { lift: null, cycle: null, stretch: 'lunge', yoga: 'flower' };
+      const pick = (t: 'lift' | 'cycle' | 'stretch' | 'yoga') => {
+        const kind = t === 'stretch' || t === 'yoga' ? t : 'main';
+        const icon = (st.icons || {})[listKey];
+        // Its icon follows the type when it was the last type's own (or none), not when it was picked by hand.
+        const ownIcon = icon == null || ['h', 'bike', 'lunge', 'flower'].includes(icon);
+        logic.s({
+          ...(creating ? { newType: t === 'cycle' ? 'cycle' : 'lift' } : {}),
+          workoutKinds: Object.assign({}, st.workoutKinds, { [listKey]: kind }),
+          ...(creating && ownIcon ? { icons: Object.assign({}, st.icons, { [listKey]: DEFAULT_ICON[t] }) } : {}),
+          retype: false,
+        });
+      };
+      const can = (t) => (creating ? true : srcAct && srcAct.ride ? t === 'cycle' : t !== 'cycle');
+      return {
+        // Chosen already, when coming back to change it: the one it is now.
+        selected: creating && !st.newType ? null : cur,
+        stretch: logic.model.stretchReady,
+        yoga: logic.model.yogaReady,
+        can: { lift: can('lift'), cycle: can('cycle'), stretch: can('stretch'), yoga: can('yoga') },
+        pick,
+      };
+    })(),
+    // The type chip beside its length goes back to "What kind of workout?" to change it; Back returns to the editor.
+    retyping: !!st.retype,
+    openRetype: () => logic.s({ retype: true }),
+    closeRetype: () => logic.s({ retype: false }),
+    needsType: st.screen === 'edit' && ((creating && !st.newType) || !!st.retype),
     rideLockNote: rideDone ? 'Completed — plan locked' : ridePast ? 'Past ride — plan locked' : '',
     ridePlanEdit: isCycleView && (creating || ridePlanOpen),
     ridePlanStatic: isCycleView && !creating && !ridePlanOpen,
@@ -878,22 +893,14 @@ export function editVals(ctx: Ctx) {
           : !selRide && lengthChanged
             ? '~' + estMin + ' min'
             : (selAct && selAct.time) || '~50 min',
-    editKindShown: kindShown,
-    editKind: workoutKind,
-    editKindOptions: [
-      { value: 'main', label: 'Workout' },
-      ...(stretchReady ? [{ value: 'stretch', label: 'Stretch' }] : []),
-      ...(yogaReady ? [{ value: 'yoga', label: 'Yoga' }] : []),
-    ],
-    editKindNote: stretchOn
-      ? warmupOn
-        ? 'Held stretches, tagged as a stretch.'
-        : 'Held stretches, tagged as a stretch. Listed after the day’s other workouts, as a cool-down.'
-      : yogaOn
-        ? 'A yoga flow: poses held in turn, tagged as yoga.'
-        : 'Exercises with sets, reps and weight.',
-    setEditKind: (k: 'main' | 'stretch' | 'yoga') =>
-      logic.s({ workoutKinds: Object.assign({}, st.workoutKinds, { [listKey]: k }) }),
+    // The workout's type, beside its length: what was picked when it was made, named as "What kind of workout?" names it.
+    editType: !lift
+      ? { label: 'Cycling', icon: 'bike' }
+      : stretchOn
+        ? { label: 'Stretching', icon: 'lunge' }
+        : yogaOn
+          ? { label: 'Yoga', icon: 'flower' }
+          : { label: 'Lifting', icon: 'h' },
     warmupShown,
     warmupOn,
     setWarmup: (on) => logic.s({ warmups: Object.assign({}, st.warmups, { [listKey]: !!on }) }),
