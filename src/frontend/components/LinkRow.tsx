@@ -9,7 +9,7 @@ export interface LinkRowProps {
   /** A line under the title, e.g. "3 exercises · 45 min". */
   detail?: ReactNode;
   /** Marks a warm-up, a stretch or yoga above the title. */
-  kind?: WorkoutKind | null;
+  kind?: WorkoutKind[] | null;
   /** Before the text, e.g. an IconSquare. */
   leading?: ReactNode;
   /** What pressing it does: go somewhere (a chevron) or add something (a plus). */

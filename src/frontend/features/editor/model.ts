@@ -125,21 +125,24 @@ export function editVals(ctx: Ctx) {
         const now = selList.find((e) => e.name === orig.name);
         return now ? sum + ((setsOf(now) - setsOf(orig)) * (restOf(now) + 40)) / 60 : sum;
       }, 0);
-  // What kind of workout it is (lifts only, once the migrations have added the kinds): a plain one, a warm-up or a
-  // stretch or yoga. A draft value until Save.
+  // What kind of workout it is (lifts only, once the migrations have added the kinds): a plain one, a stretch or yoga.
+  // And, whatever its kind, whether it's a warm-up: a switch of its own. Both draft values until Save.
   const { warmupReady, stretchReady, yogaReady } = logic.model;
-  const kindShown = (warmupReady || stretchReady || yogaReady) && (creating ? st.newType !== 'cycle' : !selRide);
-  const savedKind = creating || !srcAct ? 'main' : srcAct.warmup ? 'warmup' : srcAct.stretch ? 'stretch' : srcAct.yoga ? 'yoga' : 'main';
+  const lift = creating ? st.newType !== 'cycle' : !selRide;
+  const kindShown = (stretchReady || yogaReady) && lift;
+  const savedKind = creating || !srcAct ? 'main' : srcAct.stretch ? 'stretch' : srcAct.yoga ? 'yoga' : 'main';
   const workoutKind = kindShown ? ((st.workoutKinds || {})[listKey] ?? savedKind) : 'main';
-  const warmupOn = workoutKind === 'warmup';
   const stretchOn = workoutKind === 'stretch';
   const yogaOn = workoutKind === 'yoga';
   const kindChanged = !creating && kindShown && workoutKind !== savedKind;
-  const lengthChanged = exDelta !== 0 || Math.round(setDeltaMin) !== 0 || kindChanged;
+  const warmupShown = warmupReady && lift;
+  const warmupOn = warmupShown && ((st.warmups || {})[listKey] ?? (!creating && !!(srcAct && srcAct.warmup)));
+  const warmupChanged = !creating && warmupShown && warmupOn !== !!(srcAct && srcAct.warmup);
+  const lengthChanged = exDelta !== 0 || Math.round(setDeltaMin) !== 0 || kindChanged || warmupChanged;
   // A warm-up's, a stretch's or a yoga flow's length is a fresh estimate from its exercises (they're quick ones), as is a workout's
   // that stopped being one.
   const estMin =
-    creating || kindChanged || warmupOn || stretchOn || yogaOn
+    creating || kindChanged || warmupChanged || warmupOn || stretchOn || yogaOn
       ? db.estimateMinutes(selList.length, warmupOn || stretchOn || yogaOn)
       : Math.max(20, Math.round((baseMin + exDelta * 10 + setDeltaMin) / 5) * 5);
   const saving = logic.busy('workout');
@@ -634,7 +637,7 @@ export function editVals(ctx: Ctx) {
           },
           repeatDates: st.repeat && !selAct.series ? weeklyAfter(baseName) : [],
           // Only a flag the database has: without the stretches migration there's no stretch to clear.
-          warmup: kindChanged && warmupReady ? warmupOn : undefined,
+          warmup: warmupChanged ? warmupOn : undefined,
           stretch: kindChanged && stretchReady ? stretchOn : undefined,
           yoga: kindChanged && yogaReady ? yogaOn : undefined,
           durationMinutes: !selRide && lengthChanged ? estMin : undefined,
@@ -669,7 +672,8 @@ export function editVals(ctx: Ctx) {
           edit.exercises.removeIds.length > 0 ||
           added.length > 0 ||
           reordered ||
-          kindChanged;
+          kindChanged ||
+          warmupChanged;
         // A saved workout, edited from the Spellbook: saved the way the Spellbook always has, asking whether sessions
         // still ahead should follow (or saving it as a new workout). Then back to the saved workout's page.
         if (tplMode) {
@@ -878,20 +882,21 @@ export function editVals(ctx: Ctx) {
     editKind: workoutKind,
     editKindOptions: [
       { value: 'main', label: 'Workout' },
-      // A non-breaking hyphen, so it isn't split over two lines.
-      ...(warmupReady ? [{ value: 'warmup', label: 'Warm\u2011up' }] : []),
       ...(stretchReady ? [{ value: 'stretch', label: 'Stretch' }] : []),
       ...(yogaReady ? [{ value: 'yoga', label: 'Yoga' }] : []),
     ],
-    editKindNote: warmupOn
-      ? 'Listed before the other workouts on its day, and tagged as a warm-up.'
-      : stretchOn
-        ? 'Listed after the other workouts on its day, as a cool-down, and tagged as a stretch.'
-        : yogaOn
-          ? 'A yoga flow: poses held in turn, tagged as yoga.'
-          : 'A workout of its own. A warm-up comes before the day’s other workouts, a stretch after them.',
-    setEditKind: (k: 'main' | 'warmup' | 'stretch' | 'yoga') =>
+    editKindNote: stretchOn
+      ? warmupOn
+        ? 'Held stretches, tagged as a stretch.'
+        : 'Held stretches, tagged as a stretch. Listed after the day’s other workouts, as a cool-down.'
+      : yogaOn
+        ? 'A yoga flow: poses held in turn, tagged as yoga.'
+        : 'Exercises with sets, reps and weight.',
+    setEditKind: (k: 'main' | 'stretch' | 'yoga') =>
       logic.s({ workoutKinds: Object.assign({}, st.workoutKinds, { [listKey]: k }) }),
+    warmupShown,
+    warmupOn,
+    setWarmup: (on) => logic.s({ warmups: Object.assign({}, st.warmups, { [listKey]: !!on }) }),
     setRepeat: (on) => logic.s({ repeat: !!on }),
     repeatOn: !!st.repeat,
     // Said from the dates it would add: weeks gone by, and days that already have it, are left out.

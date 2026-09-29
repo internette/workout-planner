@@ -3,16 +3,17 @@ import { Text } from '@moonshot/design-system/typography';
 /** What kind of workout something is, when it isn't a plain one: a warm-up, a stretch or yoga. */
 export type WorkoutKind = 'warmup' | 'stretch' | 'yoga';
 
-/** The kind of a workout, session or row that says whether it's a warm-up, a stretch or yoga, or null for a plain one. */
-export const kindOf = (x?: { warmup?: boolean; stretch?: boolean; yoga?: boolean } | null): WorkoutKind | null =>
-  x?.warmup ? 'warmup' : x?.stretch ? 'stretch' : x?.yoga ? 'yoga' : null;
+/** What a workout, session or row is marked as: a warm-up, and (apart from that) a stretch or yoga. None for a plain
+ * workout. A warm-up can be any kind, so there can be two: a warm-up stretch. */
+export const kindOf = (x?: { warmup?: boolean; stretch?: boolean; yoga?: boolean } | null): WorkoutKind[] =>
+  [x?.warmup && 'warmup', x?.stretch ? 'stretch' : x?.yoga ? 'yoga' : null].filter(Boolean) as WorkoutKind[];
 
 const LABEL: Record<WorkoutKind, string> = { warmup: 'WARM-UP', stretch: 'STRETCH', yoga: 'YOGA' };
 
-// Marks a warm-up, a stretch or yoga: a small label above its name, or beside it (inline) where a row has no room above.
-// Nothing for a plain workout.
-export function KindTag({ kind, inline }: { kind: WorkoutKind | null; inline?: boolean }) {
-  if (!kind) return null;
+// Marks a warm-up, a stretch or yoga ("WARM-UP · STRETCH" for both): a small label above its name, or beside it
+// (inline) where a row has no room above. Nothing for a plain workout.
+export function KindTag({ kind, inline }: { kind: WorkoutKind[] | null; inline?: boolean }) {
+  if (!kind || !kind.length) return null;
   return (
     <>
       {/* A real space, so it isn't read run together with the words before it. */}
@@ -28,7 +29,7 @@ export function KindTag({ kind, inline }: { kind: WorkoutKind | null; inline?: b
             : { display: 'block', marginBottom: '3px' }
         }
       >
-        {LABEL[kind]}
+        {kind.map((k) => LABEL[k]).join(' · ')}
       </Text>
     </>
   );

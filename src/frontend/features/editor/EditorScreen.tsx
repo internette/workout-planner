@@ -94,12 +94,30 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             ) : null}
           </>
         )}
-        {v.editKindShown ? (
+        {/* What kind of workout it is, and apart from that, whether it's a warm-up: any kind can be one. */}
+        {v.editKindShown || v.warmupShown ? (
           <Card pad="sm" style={{ marginTop: '16px' }}>
-            <ChoiceChips label="Kind" options={v.editKindOptions} value={v.editKind} onChange={v.setEditKind} />
-            <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
-              {v.editKindNote}
-            </Text>
+            {v.editKindShown ? (
+              <>
+                <ChoiceChips label="Kind" options={v.editKindOptions} value={v.editKind} onChange={v.setEditKind} />
+                <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+                  {v.editKindNote}
+                </Text>
+              </>
+            ) : null}
+            {v.editKindShown && v.warmupShown ? (
+              <hr style={{ border: 0, borderTop: '1px solid var(--color-divider)', margin: '14px 0' }} />
+            ) : null}
+            {v.warmupShown ? (
+              <>
+                <Checkbox switch checked={!!v.warmupOn} onChange={v.setWarmup}>
+                  Warm-up
+                </Checkbox>
+                <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+                  Listed before the other workouts on its day, and tagged as a warm-up.
+                </Text>
+              </>
+            ) : null}
           </Card>
         ) : null}
         {v.ridePlanStatic ? (
