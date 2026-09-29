@@ -268,6 +268,7 @@ export function workoutVals(ctx: Ctx) {
       name: nameOf(av.name),
       warmup: !!av.warmup,
       stretch: !!av.stretch,
+      yoga: !!av.yoga,
       meta: complete
         ? 'Completed · ' + (ride && distOf(av) ? distOf(av) + ' mi · ' : '') + ctx.doneTimeOf(av)
         : st.rest && st.rest.id === id && st.rest.endsAt > Date.now()

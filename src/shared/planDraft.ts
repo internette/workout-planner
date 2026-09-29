@@ -23,6 +23,8 @@ export interface PlanWorkout {
   warmup?: boolean;
   /** A stretching routine (a cool-down), listed after that day's other workouts. Not also a warm-up. */
   stretch?: boolean;
+  /** A yoga flow. Not also a warm-up or a stretch. */
+  yoga?: boolean;
   /** How long it takes. For a lift it's estimated from the exercises when left out. */
   minutes?: number;
   notes?: string;
@@ -78,6 +80,7 @@ export function checkPlan(raw: unknown, today: string): { plan: PlanBody } | { p
     const out: PlanWorkout = { date, name, kind: w?.kind === 'ride' ? 'ride' : 'lift' };
     if (w?.warmup === true) out.warmup = true;
     else if (w?.stretch === true) out.stretch = true;
+    else if (w?.yoga === true) out.yoga = true;
     if (isInt(w?.minutes, 5, 600)) out.minutes = w.minutes;
     const notes = text(w?.notes, PLAN_LIMITS.notes);
     if (notes) out.notes = notes;

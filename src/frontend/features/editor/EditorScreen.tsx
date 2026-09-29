@@ -5,7 +5,7 @@ import { Fragment } from 'react';
 import { t } from '@/frontend/features/planner/viewHelpers';
 import { Card } from '@moonshot/design-system/card';
 import { Checkbox } from '@moonshot/design-system/checkbox';
-import { SegmentedControl } from '@moonshot/design-system/segmented-control';
+import { ChoiceChips } from '@/frontend/components/ChoiceChips';
 import { ReorderableList } from '@moonshot/design-system/reorderable-list';
 import { Stat } from '@moonshot/design-system/stat';
 import { Text } from '@moonshot/design-system/typography';
@@ -96,7 +96,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
         )}
         {v.editKindShown ? (
           <Card pad="sm" style={{ marginTop: '16px' }}>
-            <SegmentedControl label="Kind" size="sm" fullWidth equalWidth options={v.editKindOptions} value={v.editKind} onChange={v.setEditKind} />
+            <ChoiceChips label="Kind" options={v.editKindOptions} value={v.editKind} onChange={v.setEditKind} />
             <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
               {v.editKindNote}
             </Text>

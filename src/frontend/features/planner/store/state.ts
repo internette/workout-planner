@@ -139,7 +139,7 @@ export interface PlannerState {
   iconColors?: Record<string, string | null> | null;
   exIcons?: Record<string, string> | null;
   notes?: Record<string, string> | null;
-  workoutKinds?: Record<string, 'main' | 'warmup' | 'stretch'> | null;
+  workoutKinds?: Record<string, 'main' | 'warmup' | 'stretch' | 'yoga'> | null;
   exOrder?: Record<string, string[]> | null;
   exExpanded?: Record<string, boolean>;
   exOpen?: string | null;

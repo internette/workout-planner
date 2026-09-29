@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Card } from '@moonshot/design-system/card';
-import { Bike, Dumbbell, Lunge } from '@moonshot/design-system/icons';
+import { Bike, Dumbbell, LotusFlower, Lunge } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
@@ -54,7 +54,7 @@ function TypeChoiceCard({ icon, tint, title, note, onClick }: { icon: ReactNode;
   );
 }
 
-/** A new workout’s first choice: lifting, cycling or (once stretches can be saved) stretching. */
+/** A new workout’s first choice: lifting, cycling, or (once the database has them) stretching or yoga. */
 export function TypeChoiceCards({ v }: { v: PlannerVals }) {
   return (
     <div
@@ -87,6 +87,17 @@ export function TypeChoiceCards({ v }: { v: PlannerVals }) {
           title="Stretching"
           note="A few held stretches, as a cool-down or on their own."
           onClick={v.pickTypeStretch}
+        />
+      ) : null}
+      {v.canPickYoga ? (
+        <TypeChoiceCard
+          // Slate, the palette's fourth colour after pink, periwinkle and teal: its deep shade on its tint, as the
+          // rank badges have it.
+          icon={<LotusFlower color="var(--color-slate-deep)" size={22} />}
+          tint="var(--color-slate-tint)"
+          title="Yoga"
+          note="A flow of poses, each held for a few breaths."
+          onClick={v.pickTypeYoga}
         />
       ) : null}
     </div>

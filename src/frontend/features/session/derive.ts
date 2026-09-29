@@ -87,6 +87,7 @@ export function workoutStage(ctx: StatsCtx) {
         notes: tplWorkout.notes,
         warmup: tplWorkout.warmup,
         stretch: tplWorkout.stretch,
+        yoga: tplWorkout.yoga,
         actual: null,
         ride: tplWorkout.ride
           ? {
