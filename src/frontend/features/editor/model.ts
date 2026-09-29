@@ -126,7 +126,8 @@ export function editVals(ctx: Ctx) {
         return now ? sum + ((setsOf(now) - setsOf(orig)) * (restOf(now) + 40)) / 60 : sum;
       }, 0);
   // What kind of workout it is (lifts only, once the migrations have added the kinds): a plain one, a stretch or yoga.
-  // And, whatever its kind, whether it's a warm-up: a switch of its own. Both draft values until Save.
+  // It's chosen with the workout's type when it's made (Lifting, Stretching or Yoga) and kept after. And, whatever its
+  // kind, whether it's a warm-up: a switch of its own in the editor, a draft value until Save.
   const { warmupReady, stretchReady, yogaReady } = logic.model;
   const lift = creating ? st.newType !== 'cycle' : !selRide;
   const kindShown = (stretchReady || yogaReady) && lift;
@@ -273,8 +274,9 @@ export function editVals(ctx: Ctx) {
     logDoneOn,
     setLogDone: (on) => logic.s({ logDone: !!on }),
     savedChoiceGroups,
-    pickTypeLift: () => logic.s({ newType: 'lift' }),
-    pickTypeCycle: () => logic.s({ newType: 'cycle' }),
+    // Each type sets the new workout's kind, so a stretch or yoga picked before and backed out of doesn't linger.
+    pickTypeLift: () => logic.s({ newType: 'lift', workoutKinds: Object.assign({}, st.workoutKinds, { __draft: 'main' }) }),
+    pickTypeCycle: () => logic.s({ newType: 'cycle', workoutKinds: Object.assign({}, st.workoutKinds, { __draft: 'main' }) }),
     // A stretch is a list of exercises like a lift, marked as a stretch, with the lunge for its icon to start with.
     canPickStretch: logic.model.stretchReady,
     pickTypeStretch: () =>
@@ -878,22 +880,6 @@ export function editVals(ctx: Ctx) {
           : !selRide && lengthChanged
             ? '~' + estMin + ' min'
             : (selAct && selAct.time) || '~50 min',
-    editKindShown: kindShown,
-    editKind: workoutKind,
-    editKindOptions: [
-      { value: 'main', label: 'Workout' },
-      ...(stretchReady ? [{ value: 'stretch', label: 'Stretch' }] : []),
-      ...(yogaReady ? [{ value: 'yoga', label: 'Yoga' }] : []),
-    ],
-    editKindNote: stretchOn
-      ? warmupOn
-        ? 'Held stretches, tagged as a stretch.'
-        : 'Held stretches, tagged as a stretch. Listed after the day’s other workouts, as a cool-down.'
-      : yogaOn
-        ? 'A yoga flow: poses held in turn, tagged as yoga.'
-        : 'Exercises with sets, reps and weight.',
-    setEditKind: (k: 'main' | 'stretch' | 'yoga') =>
-      logic.s({ workoutKinds: Object.assign({}, st.workoutKinds, { [listKey]: k }) }),
     warmupShown,
     warmupOn,
     setWarmup: (on) => logic.s({ warmups: Object.assign({}, st.warmups, { [listKey]: !!on }) }),
