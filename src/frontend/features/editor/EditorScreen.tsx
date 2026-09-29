@@ -11,7 +11,7 @@ import { Text } from '@moonshot/design-system/typography';
 import { Chip } from '@moonshot/design-system/chip';
 import { TextArea } from '@moonshot/design-system/text-field';
 import { Button } from '@moonshot/design-system/buttons';
-import { Clock, Plus, Repeat } from '@moonshot/design-system/icons';
+import { Clock, ExerciseIcon, Plus, Repeat } from '@moonshot/design-system/icons';
 import { BackBar } from '@/frontend/components/BackBar';
 import { FormActions } from '@/frontend/components/FormActions';
 import { RepeatWeekly } from '@/frontend/components/RepeatWeekly';
@@ -44,6 +44,9 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             </>
           ) : null}
           <Chip icon={<Clock color="var(--color-muted)" size={17} />}>{t(v.eTime)}</Chip>
+          {v.editType ? (
+            <Chip icon={<ExerciseIcon name={v.editType.icon} color="var(--color-muted)" size={17} />}>{v.editType.label}</Chip>
+          ) : null}
         </ChipRow>
         {v.canUseSaved ? (
           <Button type="secondary" size="md" onClick={v.useSaved} style={{ marginTop: '12px' }}>

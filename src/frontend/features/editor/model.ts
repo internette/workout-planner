@@ -880,6 +880,14 @@ export function editVals(ctx: Ctx) {
           : !selRide && lengthChanged
             ? '~' + estMin + ' min'
             : (selAct && selAct.time) || '~50 min',
+    // The workout's type, beside its length: what was picked when it was made, named as "What kind of workout?" names it.
+    editType: !lift
+      ? { label: 'Cycling', icon: 'bike' }
+      : stretchOn
+        ? { label: 'Stretching', icon: 'lunge' }
+        : yogaOn
+          ? { label: 'Yoga', icon: 'flower' }
+          : { label: 'Lifting', icon: 'h' },
     warmupShown,
     warmupOn,
     setWarmup: (on) => logic.s({ warmups: Object.assign({}, st.warmups, { [listKey]: !!on }) }),
