@@ -13,7 +13,7 @@ import { Check, ChevronLeft, ChevronRight, Gem, Moon, Plus, Sparkle } from '@moo
 import { vars } from '@moonshot/design-system/colors';
 import { IconSquare } from '@/frontend/components/IconSquare';
 import { LinkRow } from '@/frontend/components/LinkRow';
-import { StatusDot, StatusKey } from '@/frontend/components/StatusDot';
+import { STATUS_NAMES, StatusDot } from '@/frontend/components/StatusDot';
 import { Twinkles } from '@/frontend/components/Twinkles';
 import { StepButton } from '@/frontend/components/StepButton';
 import { DayWorkoutCard } from '@/frontend/features/calendar/DayWorkoutCard';
@@ -105,8 +105,6 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               </div>
               <StepButton dir="next" unit="week" onClick={v.nextWeek} />
             </div>
-            {/* What the dots under the dates mean, as the Month view has it under its grid. */}
-            <StatusKey compact style={{ marginTop: '12px', justifyContent: 'center' }} />
           </>
         ) : null}
         {v.showQuest ? (
@@ -352,7 +350,14 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                 </Card>
               </div>
               <MonthGrid v={v} />
-              <StatusKey style={{ marginTop: '20px' }} />
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', marginTop: '20px' }}>
+                {STATUS_NAMES.map(([status, name]) => (
+                  <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                    <StatusDot status={status} />
+                    {name}
+                  </Text>
+                ))}
+              </div>
               {v.hasToday ? (
                 <>
                   <div style={{ marginTop: '30px' }}>

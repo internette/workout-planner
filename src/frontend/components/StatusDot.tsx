@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'react';
-import { Text } from '@moonshot/design-system/typography';
 
 /** Where a day or a session stands. */
 export type DayStatus = 'done' | 'partly' | 'missed' | 'planned' | 'rest';
@@ -49,18 +48,3 @@ export const STATUS_NAMES: [DayStatus, string][] = [
   ['missed', 'Missed'],
   ['rest', 'Rest'],
 ];
-
-/** The key to the dots: each status beside its name, wrapping onto more lines as needed. Under the Day view's week strip
- * (compact) and the Month view's grid. */
-export function StatusKey({ compact, style }: { compact?: boolean; style?: CSSProperties }) {
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: compact ? '4px 10px' : '18px', ...style }}>
-      {STATUS_NAMES.map(([status, name]) => (
-        <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: compact ? '5px' : '7px' }}>
-          <StatusDot status={status} />
-          {name}
-        </Text>
-      ))}
-    </div>
-  );
-}
