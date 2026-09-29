@@ -97,9 +97,13 @@ export const splitSetsReps = (text: string | null | undefined) => {
 };
 // An exercise needs at least one set of at least one rep.
 export const countsOk = (sets: string | number | null | undefined, reps: string | number | null | undefined) => Number(sets) >= 1 && Number(reps) >= 1;
-export const setsRepsOk = (text: string | null | undefined) => {
+/** A held exercise, timed rather than counted: its hold is in its name, as the catalog writes it ("Forearm Plank
+ * (30 sec)", "Pigeon Pose (30 sec each side)"). */
+export const isHold = (name: string | null | undefined) => /\(\d+\s*sec\b/i.test(name || '');
+/** At least one set of at least one rep, or for a held exercise (named with it), at least one set. */
+export const setsRepsOk = (text: string | null | undefined, name?: string | null) => {
   const p = splitSetsReps(text);
-  return countsOk(p.sets, p.reps);
+  return isHold(name) ? Number(p.sets) >= 1 : countsOk(p.sets, p.reps);
 };
 export const joinSetsReps = (sets: string | null | undefined, reps: string | null | undefined) => {
   const s = (sets || '').trim();

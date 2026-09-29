@@ -1,5 +1,5 @@
 import { DOWFULL, EDIT_OVERLAYS, ICON_COLOR_NAMES, ICON_COLORS, LIFT_MINUTES, MONTHS, NEW_WORKOUT_CLEARED, RIDE_MINUTES } from '@/frontend/shared/constants';
-import { digitsOnly, exLine, idOf, isoOf, joinSetsReps, longDay, minText, mod12, monDay, monthPatch, needsLine, noticePatch, numericOnly, plural, rollMinutes, setsRepsOk, shortDay, splitSetsReps, toMinutes, withLb, withSec, workoutDraftDirty } from '@/frontend/shared/helpers';
+import { digitsOnly, exLine, idOf, isoOf, joinSetsReps, longDay, minText, mod12, monDay, monthPatch, needsLine, noticePatch, numericOnly, plural, rollMinutes, isHold, setsRepsOk, shortDay, splitSetsReps, toMinutes, withLb, withSec, workoutDraftDirty } from '@/frontend/shared/helpers';
 import { iconOptions, iconSvg } from '@/frontend/shared/icons';
 import * as db from '@/frontend/data/plannerData';
 import { themed } from '@moonshot/design-system/colors';
@@ -142,8 +142,8 @@ export function editVals(ctx: Ctx) {
       ? db.estimateMinutes(selList.length, warmupOn || stretchOn)
       : Math.max(20, Math.round((baseMin + exDelta * 10 + setDeltaMin) / 5) * 5);
   const saving = logic.busy('workout');
-  // Every exercise needs at least one set of at least one rep.
-  const badCounts = selRide ? null : selList.find((e) => !setsRepsOk(e.sets));
+  // Every exercise needs at least one set of at least one rep (a held one, at least one set).
+  const badCounts = selRide ? null : selList.find((e) => !setsRepsOk(e.sets, e.name));
   // A new exercise's name must be new where it's going: among the person's exercises and the built-ins in the Spellbook
   // (saving one there would otherwise overwrite the old one), or among this workout's exercises in the editor (a
   // workout keeps track of its exercises by name).
@@ -231,7 +231,7 @@ export function editVals(ctx: Ctx) {
     saveHint: nameClash
       ? ''
       : badCounts
-        ? '“' + badCounts.name + '” needs at least 1 set and 1 rep.'
+        ? '“' + badCounts.name + (isHold(badCounts.name) ? '” needs at least 1 set.' : '” needs at least 1 set and 1 rep.')
         : needsName && needsExercise
           ? 'Name it and add an exercise to save it.'
           : needsName
@@ -270,6 +270,14 @@ export function editVals(ctx: Ctx) {
     savedChoiceGroups,
     pickTypeLift: () => logic.s({ newType: 'lift' }),
     pickTypeCycle: () => logic.s({ newType: 'cycle' }),
+    // A stretch is a list of exercises like a lift, marked as a stretch, with the lunge for its icon to start with.
+    canPickStretch: logic.model.stretchReady,
+    pickTypeStretch: () =>
+      logic.s({
+        newType: 'lift',
+        workoutKinds: Object.assign({}, st.workoutKinds, { __draft: 'stretch' }),
+        icons: Object.assign({}, st.icons, { __draft: 'lunge' }),
+      }),
     needsType: creating && !st.newType,
     rideLockNote: rideDone ? 'Completed — plan locked' : ridePast ? 'Past ride — plan locked' : '',
     ridePlanEdit: isCycleView && (creating || ridePlanOpen),
