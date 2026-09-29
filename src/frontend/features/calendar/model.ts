@@ -142,6 +142,7 @@ export function calendarVals(ctx: Ctx) {
     todayCards: todayActs.map((a) => ({
       name: nameOf(a.name),
       warmup: !!a.warmup,
+      stretch: !!a.stretch,
       meta: metaFor(a),
       open: () =>
         logic.openSession(TODAY_M, TODAY_D, a.id),

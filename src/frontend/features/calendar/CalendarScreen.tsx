@@ -22,6 +22,7 @@ import { MonthPicker } from '@/frontend/features/calendar/MonthPicker';
 import { QuestCard } from '@/frontend/features/calendar/QuestCard';
 import { RestartDialog } from '@/frontend/features/calendar/RestartDialog';
 import { WeekRow } from '@/frontend/features/calendar/WeekRow';
+import { kindOf } from '@/frontend/components/KindTag';
 
 export function CalendarScreen({ v }: { v: PlannerVals }) {
   return (
@@ -365,7 +366,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                     </Text>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: '12px' }}>
                       {(v.todayCards ?? []).map((c, i) => (
-                        <LinkRow key={i} title={c?.name} detail={c?.meta} warmup={!!c?.warmup} onClick={c?.open} />
+                        <LinkRow key={i} title={c?.name} detail={c?.meta} kind={kindOf(c)} onClick={c?.open} />
                       ))}
                     </div>
                   </div>

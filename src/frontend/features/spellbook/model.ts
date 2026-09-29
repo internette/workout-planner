@@ -89,12 +89,22 @@ export function arsenalVals(ctx: Ctx) {
           : 'No ' + things) + (equipFilter.length ? ' with the equipment you ticked.' : '.');
   const workouts = logic.model.workouts;
   const builtinWorkouts = logic.model.builtinWorkouts || [];
-  // Warm-ups, or the other workouts, on their own (once there are any warm-ups to tell apart).
-  const hasWarmups = workouts.some((w) => w.warmup) || builtinWorkouts.some((w) => w.warmup);
-  const kind = hasWarmups ? st.arsenalKind || 'all' : 'all';
+  // Workouts, warm-ups or stretches on their own, once there are warm-ups or stretches to tell apart. Only the kinds
+  // there are any of are offered.
+  const all = [...workouts, ...builtinWorkouts];
+  const hasWarmups = all.some((w) => w.warmup);
+  const hasStretches = all.some((w) => w.stretch);
+  const kindOptions = [
+    { value: 'all', label: 'All' },
+    { value: 'main', label: 'Workouts' },
+    ...(hasWarmups ? [{ value: 'warmups', label: 'Warm-ups' }] : []),
+    ...(hasStretches ? [{ value: 'stretches', label: 'Stretches' }] : []),
+  ];
+  const kind = kindOptions.some((o) => o.value === st.arsenalKind) ? st.arsenalKind : 'all';
   const workoutFiltering = filtering || kind !== 'all';
+  const kindKey = (w) => (w.warmup ? 'warmups' : w.stretch ? 'stretches' : 'main');
   const matches = (w) =>
-    (kind === 'all' || (kind === 'warmups') === !!w.warmup) &&
+    (kind === 'all' || kind === kindKey(w)) &&
     inAreas(w.areas) &&
     (w.builtin ? w.list : EX[w.name] || []).every(canDo) &&
     (!q || w.name.toLowerCase().includes(q) || w.exercises.some((n) => n.toLowerCase().includes(q)));
@@ -104,8 +114,9 @@ export function arsenalVals(ctx: Ctx) {
   const mineOf = (w) => workouts.find((x) => x.name.trim().toLowerCase() === w.name.trim().toLowerCase()) || null;
   const workoutCard = (w: WorkoutSummary | BuiltinWorkout) => ({
     name: w.name,
-    // Built-in warm-ups are grouped under a WARM-UP heading already.
+    // Built-in warm-ups and stretches are grouped under their own heading already.
     warmup: !!w.warmup && !('builtin' in w && w.builtin),
+    stretch: !!w.stretch && !('builtin' in w && w.builtin),
     svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || undefined),
     meta:
       w.kind === 'ride'
@@ -456,7 +467,7 @@ export function arsenalVals(ctx: Ctx) {
           logic.nav(editTemplatePatch(chosen.id)),
         notes: chosen.notes || '',
         builtin,
-        eyebrow: (builtin ? 'BUILT-IN ' : 'SAVED ') + (chosen.warmup ? 'WARM-UP' : 'WORKOUT'),
+        eyebrow: (builtin ? 'BUILT-IN ' : 'SAVED ') + (chosen.warmup ? 'WARM-UP' : chosen.stretch ? 'STRETCH' : 'WORKOUT'),
         // A built-in workout can't be changed: copied to the person's own to edit, or, once it is theirs, opened.
         builtinNote: !builtin
           ? ''
@@ -766,8 +777,9 @@ export function arsenalVals(ctx: Ctx) {
     noSavedWorkouts: workouts.length + builtinWorkouts.length === 0,
     noWorkoutMatches:
       workouts.length + builtinWorkouts.length > 0 && workoutFiltering && hits.length + builtinHits.length === 0,
-    noWorkoutMatchNote: noMatchText(kind === 'warmups' ? 'warm-ups' : 'workouts'),
-    showKindFilter: hasWarmups,
+    noWorkoutMatchNote: noMatchText(kind === 'warmups' ? 'warm-ups' : kind === 'stretches' ? 'stretches' : 'workouts'),
+    showKindFilter: kindOptions.length > 2,
+    workoutKindOptions: kindOptions,
     workoutKind: kind,
     setWorkoutKind: (k) => logic.s({ arsenalKind: k }),
     arsenalAddOpen: !!st.arsenalAdd,

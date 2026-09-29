@@ -12,13 +12,13 @@ import { BackBar } from '@/frontend/components/BackBar';
 import { FormActions } from '@/frontend/components/FormActions';
 import { NeedsLine } from '@/frontend/components/NeedsLine';
 import { PageTitle } from '@/frontend/components/PageTitle';
-import { WarmupTag } from '@/frontend/components/WarmupTag';
 import { FinishDialog } from '@/frontend/features/session/FinishDialog';
 import { LeaveWorkoutDialog } from '@/frontend/features/session/LeaveWorkoutDialog';
 import { RideSessionCard } from '@/frontend/features/session/RideSessionCard';
 import { SessionExerciseRow } from '@/frontend/features/session/SessionExerciseRow';
 import { WorkoutCard } from '@/frontend/features/session/WorkoutCard';
 import { ChipRow } from '@/frontend/components/ChipRow';
+import { KindTag } from '@/frontend/components/KindTag';
 
 export function SessionScreen({ v }: { v: PlannerVals }) {
   return (
@@ -32,7 +32,7 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
             Edit
           </Button>
         </BackBar>
-        <PageTitle icon={v.dayIcoSvg} eyebrow={<>{v.eDate}{v.eWarmup ? <WarmupTag inline /> : null}</>} title={v.eName} />
+        <PageTitle icon={v.dayIcoSvg} eyebrow={<>{v.eDate}<KindTag inline kind={v.eKind ?? null} /></>} title={v.eName} />
         <ChipRow style={{ marginTop: '20px' }}>
           <Chip
             icon={<Clock color="var(--color-muted)" size={15} />}

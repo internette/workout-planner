@@ -78,6 +78,7 @@ export async function loadModel(today: Date): Promise<Model> {
       repeat: !!w.repeat_enabled,
       notes: view.notes,
       warmup: view.warmup,
+      stretch: view.stretch,
       series: w.repeat_enabled && seriesDay[w.id] === isoWeekday(p.scheduled_date) ? w.id : undefined,
       seriesDay: w.repeat_enabled ? seriesDay[w.id] : undefined,
       ride: view.ride && { ...view.ride, ...splitMinutes(view.minutes) },
@@ -98,11 +99,12 @@ export async function loadModel(today: Date): Promise<Model> {
     else done[p.id] = p.done_exercises ?? (completed ? EXV[keyOf(w)].map((e) => e.name) : []);
   });
 
-  // A day's warm-ups come before its other workouts, however they were added.
-  const warmupFirst = (a: Entry, b: Entry) => Number(b.warmup) - Number(a.warmup);
-  Object.values(SEED).forEach((month) => Object.values(month).forEach((list) => list.sort(warmupFirst)));
+  // A day's warm-ups come before its other workouts, and its stretches after them, however they were added.
+  const place = (e: Entry) => (e.warmup ? 0 : e.stretch ? 2 : 1);
+  const inDayOrder = (a: Entry, b: Entry) => place(a) - place(b);
+  Object.values(SEED).forEach((month) => Object.values(month).forEach((list) => list.sort(inDayOrder)));
   // By date, whatever order the rows came back in: "what's next" and similar take the first match.
-  entries.sort((a, b) => (a.iso < b.iso ? -1 : a.iso > b.iso ? 1 : warmupFirst(a.av, b.av)));
+  entries.sort((a, b) => (a.iso < b.iso ? -1 : a.iso > b.iso ? 1 : inDayOrder(a.av, b.av)));
 
   const DIARY: Model['DIARY'] = {};
   diary.forEach((r: any) => {
@@ -140,7 +142,7 @@ export async function loadModel(today: Date): Promise<Model> {
     const list = (r.exercises || []).map((n: string) => builtinByName[n]).filter(Boolean) as Exercise[];
     // Its own length when it says one (a stretching routine's is short), else estimated the way a new workout is: about
     // ten minutes an exercise, at least twenty (a warm-up's are quicker).
-    const minutes = r.minutes || estimateMinutes(list.length, !!r.is_warmup);
+    const minutes = r.minutes || estimateMinutes(list.length, !!r.is_warmup || !!r.is_stretch);
     return {
       id: r.id,
       name: r.name,
@@ -153,6 +155,7 @@ export async function loadModel(today: Date): Promise<Model> {
       exercises: list.map((e) => e.name),
       notes: '',
       warmup: !!r.is_warmup,
+      stretch: !!r.is_stretch,
       builtin: true,
       category: r.category,
       list,
@@ -173,5 +176,6 @@ export async function loadModel(today: Date): Promise<Model> {
     rideDone,
     year: today.getFullYear(),
     warmupReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_warmup' in r),
+    stretchReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_stretch' in r),
   };
 }

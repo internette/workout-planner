@@ -1,8 +1,8 @@
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { IconSquare } from '@/frontend/components/IconSquare';
-import { WarmupTag } from '@/frontend/components/WarmupTag';
 import { StatusDot } from '@/frontend/components/StatusDot';
+import { KindTag, kindOf } from '@/frontend/components/KindTag';
 
 /** A day in the Week view: its session, or a rest day. */
 export function WeekRow({ row }: { row: any }) {
@@ -49,7 +49,7 @@ export function WeekRow({ row }: { row: any }) {
           >
             <IconSquare size={36} decorative>{row?.icoSvg}</IconSquare>
             <div style={{ minWidth: '0', flex: '1' }}>
-              {row?.warmup ? <WarmupTag /> : null}
+              <KindTag kind={kindOf(row)} />
               <Text variant="itemTitle" as="div">
                 {row?.name}
               </Text>

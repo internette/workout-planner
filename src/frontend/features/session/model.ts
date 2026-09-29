@@ -236,6 +236,8 @@ export function workoutVals(ctx: Ctx) {
     isH: e.i === 'h',
     isV: e.i === 'v',
     isD: e.i === 'd',
+    // Any other exercise icon (the lotus flower, the lunge), drawn as it is.
+    otherIcon: e.i && !['h', 'v', 'd'].includes(e.i) ? e.i : null,
     textStyle:
       'flex:1;min-width:0;font-size:var(--text-lg);font-weight:var(--font-weight-medium);' +
       (doneNames.includes(e.name) ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
@@ -265,6 +267,7 @@ export function workoutVals(ctx: Ctx) {
       key: id,
       name: nameOf(av.name),
       warmup: !!av.warmup,
+      stretch: !!av.stretch,
       meta: complete
         ? 'Completed · ' + (ride && distOf(av) ? distOf(av) + ' mi · ' : '') + ctx.doneTimeOf(av)
         : st.rest && st.rest.id === id && st.rest.endsAt > Date.now()

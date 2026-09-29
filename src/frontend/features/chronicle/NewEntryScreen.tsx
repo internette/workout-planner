@@ -7,7 +7,7 @@ import { Text } from '@moonshot/design-system/typography';
 import { BackBar } from '@/frontend/components/BackBar';
 import { GroupLabel } from '@/frontend/components/GroupLabel';
 import { PageHeader } from '@/frontend/components/PageHeader';
-import { WarmupTag } from '@/frontend/components/WarmupTag';
+import { KindTag, kindOf } from '@/frontend/components/KindTag';
 
 export function NewEntryScreen({ v }: { v: PlannerVals }) {
   return (
@@ -51,7 +51,7 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
                       {u.dayBottom}
                     </Text>
                     <span style={{ flex: '1', minWidth: '0' }}>
-                      {u.warmup ? <WarmupTag /> : null}
+                      <KindTag kind={kindOf(u)} />
                       <Text variant="itemTitle" as="span" tone="ink" style={{ display: 'block' }}>
                         {u.name}
                       </Text>

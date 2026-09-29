@@ -42,6 +42,7 @@ export interface Entry {
   actual: { dist: string; elev: string; hrs: string; mins: string } | null;
   notes: string;
   warmup: boolean; // a warm-up: listed before the day's other workouts, and tagged WARM-UP
+  stretch: boolean; // a stretch: listed after the day's other workouts (a cool-down), and tagged STRETCH
 }
 
 export interface DiaryEntry {
@@ -67,6 +68,7 @@ export interface WorkoutSummary {
   ride?: { dist: string; elev: string; zone: string };
   notes: string;
   warmup: boolean;
+  stretch: boolean;
 }
 
 // A ready-made workout from the shared catalog: read-only, listed with its group. Its exercises are built-in ones.
@@ -93,6 +95,8 @@ export interface Model {
   year: number;
   // Whether workouts can be marked as warm-ups yet (the warm-ups migration has added the column).
   warmupReady: boolean;
+  // Whether workouts can be marked as stretches yet (the stretches migration has added the column).
+  stretchReady: boolean;
 }
 
 export interface NewWorkout {
@@ -108,6 +112,7 @@ export interface NewWorkout {
   repeat: boolean;
   notes: string;
   warmup?: boolean;
+  stretch?: boolean;
 }
 
 export interface WorkoutEdit {
@@ -129,6 +134,7 @@ export interface WorkoutEdit {
   };
   repeatDates: string[]; // extra weekly dates to schedule
   warmup?: boolean; // marked as a warm-up, or not, when that changed
+  stretch?: boolean; // marked as a stretch, or not, when that changed
   durationMinutes?: number; // a lift's new length, when its exercises changed
 }
 
