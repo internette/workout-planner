@@ -5,6 +5,7 @@ import { Fragment } from 'react';
 import { t } from '@/frontend/features/planner/viewHelpers';
 import { Card } from '@moonshot/design-system/card';
 import { Checkbox } from '@moonshot/design-system/checkbox';
+import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { ReorderableList } from '@moonshot/design-system/reorderable-list';
 import { Stat } from '@moonshot/design-system/stat';
 import { Text } from '@moonshot/design-system/typography';
@@ -93,13 +94,11 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             ) : null}
           </>
         )}
-        {v.warmupShown ? (
+        {v.editKindShown ? (
           <Card pad="sm" style={{ marginTop: '16px' }}>
-            <Checkbox switch checked={!!v.warmupOn} onChange={v.setWarmup}>
-              Warm-up
-            </Checkbox>
+            <SegmentedControl label="Kind" size="sm" fullWidth equalWidth options={v.editKindOptions} value={v.editKind} onChange={v.setEditKind} />
             <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
-              Listed before the other workouts on its day, and tagged as a warm-up.
+              {v.editKindNote}
             </Text>
           </Card>
         ) : null}

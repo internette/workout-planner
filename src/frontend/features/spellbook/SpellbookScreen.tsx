@@ -153,11 +153,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
                   label="Show"
                   size="sm"
                   compact
-                  options={[
-                    { value: 'all', label: 'All' },
-                    { value: 'main', label: 'Main workouts' },
-                    { value: 'warmups', label: 'Warm-ups' },
-                  ]}
+                  options={v.workoutKindOptions}
                   value={v.workoutKind}
                   onChange={v.setWorkoutKind}
                 />

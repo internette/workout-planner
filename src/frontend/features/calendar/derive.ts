@@ -141,6 +141,7 @@ export function calendarStage(ctx: EntriesCtx) {
       isRest: false,
       name: nameOf(a.name),
       warmup: !!a.warmup,
+      stretch: !!a.stretch,
       done: isDoneEntry(a),
       meta: metaFor(a),
       // The icon and colour chosen for the workout, as on the Day view's cards.

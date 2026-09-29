@@ -99,6 +99,7 @@ export function diaryVals(ctx: Ctx) {
           : MON3[mod12(x.m)].toUpperCase() + ' ' + x.d + (Math.floor(x.m / 12) ? ' ' + (Y + Math.floor(x.m / 12)) : ''),
       name: nameOf(x.av.name),
       warmup: !!x.av.warmup,
+      stretch: !!x.av.stretch,
       meta: x.av.ride ? (ctx.distOf(x.av) ? ctx.distOf(x.av) + ' mi · ' : '') + ctx.timeOf(x.av) : ctx.timeOf(x.av),
       // Whether it was done, so writing about a missed one is a choice, not a surprise.
       status: x.done ? 'Done' : ctx.sessionStatus(x.m, x.d, x.av),
@@ -251,8 +252,9 @@ export function diaryVals(ctx: Ctx) {
     // Read out when the Chronicle's filter changes how many entries are listed.
     diaryResults: plural(diaryDays.length, 'entry', 'entries') + ' shown.',
     diaryList: (() => {
-      // Which diary entries belong to a session with a warm-up, looked up once rather than per entry.
+      // Which diary entries belong to a warm-up or a stretch, looked up once rather than per entry.
       const warmupIds = new Set(logic.model.entries.filter((x) => x.av.warmup).map((x) => x.av.id));
+      const stretchIds = new Set(logic.model.entries.filter((x) => x.av.stretch).map((x) => x.av.id));
       return diaryDays.map((id) => {
         const en = ENTRIES[id];
         const dt = new Date(Y, en.m, en.d);
@@ -263,6 +265,7 @@ export function diaryVals(ctx: Ctx) {
           date: DOW3[dt.getDay()] + ', ' + MON3[mod12(en.m)].toUpperCase() + ' ' + en.d + yr,
           name: en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout',
           warmup: warmupIds.has(id),
+          stretch: stretchIds.has(id),
           deleteLabel:
             'Delete entry for ' + (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') + ', ' + monDay(dt) + yr,
           note: en.note,

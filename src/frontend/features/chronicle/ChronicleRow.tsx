@@ -3,8 +3,8 @@ import { Card } from '@moonshot/design-system/card';
 import { ChevronRight, Close, MoodFace } from '@moonshot/design-system/icons';
 import { StarRating } from '@moonshot/design-system/rating';
 import { Text } from '@moonshot/design-system/typography';
-import { WarmupTag } from '@/frontend/components/WarmupTag';
 import { css } from '@/frontend/features/planner/viewHelpers';
+import { KindTag, kindOf } from '@/frontend/components/KindTag';
 
 /** An entry in the Chronicle’s list: how it felt, its session and note, and deleting it. */
 export function ChronicleRow({ entry }: { entry: any }) {
@@ -41,7 +41,7 @@ export function ChronicleRow({ entry }: { entry: any }) {
             }}
           >
             <Text variant="itemTitle">{entry?.name}</Text>
-            {entry?.warmup ? <WarmupTag inline /> : null}
+            <KindTag inline kind={kindOf(entry)} />
             <ChevronRight color="var(--color-subtle)" strokeWidth={2.2} size={16} />
           </span>
           <StarRating readOnly value={entry?.rpe ?? 0} style={{ marginTop: '6px' }} />

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Card } from '@moonshot/design-system/card';
-import { Bike, Dumbbell } from '@moonshot/design-system/icons';
+import { Bike, Dumbbell, Lunge } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
@@ -54,7 +54,7 @@ function TypeChoiceCard({ icon, tint, title, note, onClick }: { icon: ReactNode;
   );
 }
 
-/** A new workout’s first choice: lifting or cycling. */
+/** A new workout’s first choice: lifting, cycling or (once stretches can be saved) stretching. */
 export function TypeChoiceCards({ v }: { v: PlannerVals }) {
   return (
     <div
@@ -79,6 +79,16 @@ export function TypeChoiceCards({ v }: { v: PlannerVals }) {
         note="Set a distance, duration and target effort for the ride."
         onClick={v.pickTypeCycle}
       />
+      {v.canPickStretch ? (
+        <TypeChoiceCard
+          // The deep teal: plain teal on its tint is too faint for an icon.
+          icon={<Lunge color="var(--color-teal-deep)" size={22} />}
+          tint="var(--color-teal-tint)"
+          title="Stretching"
+          note="A few held stretches, as a cool-down or on their own."
+          onClick={v.pickTypeStretch}
+        />
+      ) : null}
     </div>
   );
 }

@@ -97,9 +97,13 @@ export const splitSetsReps = (text: string | null | undefined) => {
 };
 // An exercise needs at least one set of at least one rep.
 export const countsOk = (sets: string | number | null | undefined, reps: string | number | null | undefined) => Number(sets) >= 1 && Number(reps) >= 1;
-export const setsRepsOk = (text: string | null | undefined) => {
+/** A held exercise, timed rather than counted: its hold is in its name, as the catalog writes it ("Forearm Plank
+ * (30 sec)", "Pigeon Pose (30 sec each side)"). */
+export const isHold = (name: string | null | undefined) => /\(\d+\s*sec\b/i.test(name || '');
+/** At least one set of at least one rep, or for a held exercise (named with it), at least one set. */
+export const setsRepsOk = (text: string | null | undefined, name?: string | null) => {
   const p = splitSetsReps(text);
-  return countsOk(p.sets, p.reps);
+  return isHold(name) ? Number(p.sets) >= 1 : countsOk(p.sets, p.reps);
 };
 export const joinSetsReps = (sets: string | null | undefined, reps: string | null | undefined) => {
   const s = (sets || '').trim();
@@ -130,7 +134,7 @@ export const workoutDraftDirty = st => !!(
   st.renames || st.fields || st.removed || st.newName ||
   st.rDist || st.rElev || st.rHrs || st.rMins ||
   st.aDist || st.aElev || st.aHrs || st.aMins ||
-  st.repeat || st.icons || st.iconColors || st.exIcons || st.notes || st.rZone || st.editDone || st.exOrder || st.warmups ||
+  st.repeat || st.icons || st.iconColors || st.exIcons || st.notes || st.rZone || st.editDone || st.exOrder || st.workoutKinds ||
   // A session moved to another day in the editor.
   (st.editKey && st.editKey !== (MONTHS.indexOf(st.month) + 12 * (st.yOff || 0)) + '-' + st.day) ||
   (st.extra && Object.keys(st.extra).some(k => (st.extra[k] || []).length))

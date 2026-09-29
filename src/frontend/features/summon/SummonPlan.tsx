@@ -518,13 +518,13 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
           {wk.list.map((w, j) => (
             <div key={w.date + w.name + j} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '9px 0', borderTop: j ? '1px solid var(--color-line)' : 'none' }}>
               <IconTile size="sm">
-                <ExerciseIcon name={w.kind === 'ride' ? 'bike' : 'h'} color="var(--color-accent)" />
+                <ExerciseIcon name={w.kind === 'ride' ? 'bike' : w.stretch ? 'lunge' : 'h'} color="var(--color-accent)" />
               </IconTile>
               <div style={{ minWidth: 0 }}>
                 <Text variant="itemTitle" as="div" tone="ink">
-                  {w.warmup ? (
+                  {w.warmup || w.stretch ? (
                     <Text variant="micro" tone="accent" style={{ marginRight: 6 }}>
-                      WARM-UP
+                      {w.warmup ? 'WARM-UP' : 'STRETCH'}
                     </Text>
                   ) : null}
                   {w.name}

@@ -2,14 +2,14 @@ import type { ReactNode } from 'react';
 import { Card } from '@moonshot/design-system/card';
 import { ChevronRight, Plus } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
-import { WarmupTag } from './WarmupTag';
+import { KindTag, type WorkoutKind } from './KindTag';
 
 export interface LinkRowProps {
   title: ReactNode;
   /** A line under the title, e.g. "3 exercises · 45 min". */
   detail?: ReactNode;
-  /** Marks a warm-up above the title. */
-  warmup?: boolean;
+  /** Marks a warm-up or a stretch above the title. */
+  kind?: WorkoutKind | null;
   /** Before the text, e.g. an IconSquare. */
   leading?: ReactNode;
   /** What pressing it does: go somewhere (a chevron) or add something (a plus). */
@@ -21,7 +21,7 @@ export interface LinkRowProps {
 
 /** A card-sized row you press to open or add something: an optional icon, a title with a detail line, and a chevron
  * or plus at the end. Lists of them sit in a column 8px apart. */
-export function LinkRow({ title, detail, warmup, leading, action = 'open', onClick, disabled }: LinkRowProps) {
+export function LinkRow({ title, detail, kind, leading, action = 'open', onClick, disabled }: LinkRowProps) {
   return (
     <Card
       as="button"
@@ -33,7 +33,7 @@ export function LinkRow({ title, detail, warmup, leading, action = 'open', onCli
     >
       {leading}
       <span style={{ flex: '1', minWidth: '0' }}>
-        {warmup ? <WarmupTag /> : null}
+        <KindTag kind={kind ?? null} />
         <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
           {title}
         </Text>

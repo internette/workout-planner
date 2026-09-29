@@ -5,6 +5,7 @@ import { IconSquare } from '@/frontend/components/IconSquare';
 import { LinkRow } from '@/frontend/components/LinkRow';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { GroupLabel } from '@/frontend/components/GroupLabel';
+import { kindOf } from '@/frontend/components/KindTag';
 
 /** Picking a workout already in the Spellbook instead of making a new one. */
 export function SavedChoices({ v }: { v: PlannerVals }) {
@@ -32,7 +33,7 @@ export function SavedChoices({ v }: { v: PlannerVals }) {
             ) : null}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {(g?.items ?? []).map((w, i) => (
-                <LinkRow key={i} leading={<IconSquare>{w?.svg}</IconSquare>} title={w?.name} detail={w?.meta} warmup={!!w?.warmup} action="add" onClick={w?.pick} />
+                <LinkRow key={i} leading={<IconSquare>{w?.svg}</IconSquare>} title={w?.name} detail={w?.meta} kind={kindOf(w)} action="add" onClick={w?.pick} />
               ))}
             </div>
           </div>

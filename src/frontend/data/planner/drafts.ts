@@ -62,7 +62,7 @@ export async function addPlanDraft(draft: PlanDraft, model: Model) {
     await createWorkout({
       name: w.name,
       isRide,
-      durationMinutes: w.minutes ?? estimateMinutes(exercises.length, !!w.warmup),
+      durationMinutes: w.minutes ?? estimateMinutes(exercises.length, !!w.warmup || !!w.stretch),
       ride: isRide
         ? { dist: numStr(w.ride?.miles), elev: numStr(w.ride?.elevation_ft), zone: w.ride?.zone ?? DEFAULT_ZONE }
         : null,
@@ -73,6 +73,7 @@ export async function addPlanDraft(draft: PlanDraft, model: Model) {
       repeat: false,
       notes: w.notes ?? '',
       warmup: model.warmupReady && !!w.warmup,
+      stretch: model.stretchReady && !!w.stretch,
     });
   }
   await decidePlanDraft(draft.id, 'added');

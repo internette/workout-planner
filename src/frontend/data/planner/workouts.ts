@@ -24,6 +24,7 @@ export async function ownCopyOfBuiltin(w: BuiltinWorkout): Promise<{ workoutId: 
     repeat: false,
     notes: '',
     warmup: w.warmup,
+    stretch: w.stretch,
   });
   return { workoutId, created: true };
 }
@@ -46,6 +47,7 @@ export async function createWorkout(w: NewWorkout) {
         notes: w.notes || null,
         // Only when set, so a workout can still be saved before the warm-ups migration has run.
         ...(w.warmup ? { is_warmup: true } : {}),
+        ...(w.stretch ? { is_stretch: true } : {}),
       })
       .select('id'),
   );
@@ -77,6 +79,7 @@ export async function updateWorkout(e: WorkoutEdit) {
   if (e.ride) Object.assign(patch, rideCols(e.ride), { duration_minutes: e.ride.minutes });
   if (e.durationMinutes != null && !e.ride) patch.duration_minutes = e.durationMinutes;
   if (e.warmup !== undefined) patch.is_warmup = e.warmup;
+  if (e.stretch !== undefined) patch.is_stretch = e.stretch;
   if (Object.keys(patch).length) await ok(supabase.from('workouts').update(patch).eq('id', e.workoutId));
 
   for (const u of e.exercises.update) {

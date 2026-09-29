@@ -2,13 +2,13 @@ import { Fragment } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { IconTile } from '@moonshot/design-system/icon-tile';
-import { ChevronRight, Dumbbell, DumbbellSmall } from '@moonshot/design-system/icons';
+import { ChevronRight, Dumbbell, DumbbellSmall, ExerciseIcon } from '@moonshot/design-system/icons';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import { StatRow } from '@/frontend/components/StatRow';
-import { WarmupTag } from '@/frontend/components/WarmupTag';
 import { css, t } from '@/frontend/features/planner/viewHelpers';
 import { DisclosureChevron } from '@/frontend/components/DisclosureChevron';
+import { KindTag, kindOf } from '@/frontend/components/KindTag';
 
 /** A session on the Day view: its exercises or ride, progress, and what to do next. */
 export function DayWorkoutCard({ card }: { card: any }) {
@@ -18,8 +18,9 @@ export function DayWorkoutCard({ card }: { card: any }) {
           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '14px' }}
         >
           <IconTile size="sm">{card?.icoSvg}</IconTile>
-          <div style={{ minWidth: '0' }}>
-            {card?.warmup ? <WarmupTag /> : null}
+          {/* Takes the rest of the row, so a long name wraps beside the icon rather than dropping below it. */}
+          <div style={{ minWidth: '0', flex: '1 1 0' }}>
+            <KindTag kind={kindOf(card)} />
             <Text variant="heading" as="h2" style={{ margin: '0' }}>
               <button
                 onClick={card?.open}
@@ -111,6 +112,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
                         <DumbbellSmall color="var(--color-accent)" size={20} />
                       </>
                     ) : null}
+                    {x?.otherIcon ? <ExerciseIcon name={x.otherIcon} color="var(--color-accent)" size={20} /> : null}
                     <span style={css(x?.textStyle)}>{x?.text}</span>
                   </div>
                 </Fragment>

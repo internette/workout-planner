@@ -2,8 +2,8 @@ import { Card } from '@moonshot/design-system/card';
 import { Chip } from '@moonshot/design-system/chip';
 import { Text } from '@moonshot/design-system/typography';
 import { IconSquare } from '@/frontend/components/IconSquare';
-import { WarmupTag } from '@/frontend/components/WarmupTag';
 import { ChipRow } from '@/frontend/components/ChipRow';
+import { KindTag, kindOf } from '@/frontend/components/KindTag';
 
 /** A saved workout in the Spellbook’s list, with its exercises and target areas. */
 export function WorkoutRow({ workout }: { workout: any }) {
@@ -23,7 +23,7 @@ export function WorkoutRow({ workout }: { workout: any }) {
     >
       <IconSquare size={40}>{workout?.svg}</IconSquare>
       <span style={{ flex: '1 1 200px', minWidth: '0' }}>
-        {workout?.warmup ? <WarmupTag /> : null}
+        <KindTag kind={kindOf(workout)} />
         <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
           {workout?.name}
         </Text>

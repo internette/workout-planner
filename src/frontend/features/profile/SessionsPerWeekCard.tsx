@@ -2,10 +2,10 @@ import { Fragment } from 'react';
 import { Badge } from '@moonshot/design-system/badge';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
-import { WarmupTag } from '@/frontend/components/WarmupTag';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import { SectionHeader } from '@/frontend/components/SectionHeader';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
+import { KindTag, kindOf } from '@/frontend/components/KindTag';
 
 /** Profile: sessions per week as a bar chart, and the picked week’s sessions. */
 export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
@@ -95,7 +95,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
                 }}
               >
                 {w?.name}
-                {w?.warmup ? <WarmupTag inline /> : null}
+                <KindTag inline kind={kindOf(w)} />
               </span>
               <Badge tone={w?.statusTone}>{w?.statusLabel}</Badge>
             </button>

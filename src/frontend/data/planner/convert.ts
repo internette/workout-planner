@@ -103,14 +103,15 @@ export function workoutView(w: any, exercises: Exercise[]) {
     areas: isRide ? [] : areasOf(exercises),
     notes: (w.notes || '') as string,
     warmup: !!w.is_warmup,
+    stretch: !!w.is_stretch,
     ride: isRide ? { dist: numStr(w.ride_distance_miles), elev: numStr(w.ride_elevation_ft), zone: w.ride_zone || DEFAULT_ZONE } : undefined,
   };
 }
 
-// How long a lift of this many exercises is likely to take: about ten minutes each, at least twenty. A warm-up's
-// exercises are quick ones, about two minutes each, at least five.
-export function estimateMinutes(count: number, warmup: boolean) {
-  return warmup ? Math.max(5, count * 2) : Math.max(20, count * 10);
+// How long a lift of this many exercises is likely to take: about ten minutes each, at least twenty. A warm-up's or a
+// stretch's exercises are quick ones, about two minutes each, at least five.
+export function estimateMinutes(count: number, quick: boolean) {
+  return quick ? Math.max(5, count * 2) : Math.max(20, count * 10);
 }
 
 // Names are compared ignoring case and the spaces around them, everywhere: "Leg day" is taken when "Leg Day" is.
