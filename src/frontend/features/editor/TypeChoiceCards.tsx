@@ -4,25 +4,14 @@ import { Bike, Dumbbell, LotusFlower, Lunge } from '@moonshot/design-system/icon
 import { Text } from '@moonshot/design-system/typography';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
-/** One kind of workout to start: its icon on a tinted square, its name and what it's for. */
+/** One kind of workout to start, as a row: its icon on a tinted square, and beside it its name over what it's for. */
 function TypeChoiceCard({ icon, tint, title, note, onClick }: { icon: ReactNode; tint: string; title: string; note: string; onClick: () => void }) {
   return (
-    <Card
-      as="button"
-      pad="lg"
-      interactive
-      onClick={onClick}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        gap: '14px',
-      }}
-    >
+    <Card as="button" pad="md" interactive onClick={onClick} style={{ display: 'flex', alignItems: 'center', gap: '14px', textAlign: 'left' }}>
       <span
         style={{
-          width: '46px',
-          height: '46px',
+          width: '44px',
+          height: '44px',
           flex: 'none',
           borderRadius: 'var(--radius-md)',
           background: tint,
@@ -33,20 +22,11 @@ function TypeChoiceCard({ icon, tint, title, note, onClick }: { icon: ReactNode;
       >
         {icon}
       </span>
-      <span>
+      <span style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: '3px' }}>
         <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
           {title}
         </Text>
-        <Text
-          variant="body"
-          tone="muted"
-          style={{
-            display: 'block',
-            lineHeight: 'var(--leading-snug)',
-            marginTop: '5px',
-            textWrap: 'pretty',
-          }}
-        >
+        <Text variant="body" tone="muted" style={{ display: 'block', lineHeight: 'var(--leading-snug)', textWrap: 'pretty' }}>
           {note}
         </Text>
       </span>
@@ -60,7 +40,7 @@ export function TypeChoiceCards({ v }: { v: PlannerVals }) {
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))',
+        gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))',
         gap: '12px',
         marginTop: '22px',
       }}
