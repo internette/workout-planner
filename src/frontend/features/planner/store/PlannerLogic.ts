@@ -25,6 +25,8 @@ export class PlannerLogic extends DCLogic<PlannerState> {
   /** Who is signed in (null when nobody is, or sign-in is off), and how to sign out. The host component keeps it current. */
   auth: { account: Account | null; signOut: () => void } = { account: null, signOut: () => undefined };
   model: Model | null = null;
+  /** Opened from the "Today" app shortcut: the first load goes to today's next session, or the calendar on today. */
+  openToday = false;
   status: 'loading' | 'error' | 'ready' = 'loading';
   loadError = '';
   state: PlannerState = { screen:'day', day: new Date().getDate(), seg:'Day', monthOpen:false, month: MONTHS[new Date().getMonth()], yOff: 0,
@@ -47,7 +49,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
       const opened: any = {};
       if (first && this.state.screen === 'detail' && this.state.entryId) Object.assign(opened, this.placeFor({ screen: 'detail', entryId: this.state.entryId }));
       // A reload on the calendar comes back to the view and day it was on (kept for this tab, for an hour).
-      if (first && this.state.screen === 'day') {
+      if (first && this.state.screen === 'day' && !this.openToday) {
         try {
           const kept = JSON.parse(window.sessionStorage.getItem(CALENDAR_KEY) || 'null');
           // Only a recent visit: coming back hours later starts on today again.
@@ -61,6 +63,15 @@ export class PlannerLogic extends DCLogic<PlannerState> {
       // Sets done only for sessions still on the clock: a finished one's are done with.
       const setsDone = Object.fromEntries(Object.entries(this.state.setsDone || {}).filter(([k]) => workoutTimer[k]));
       this.setState({ done: model.done, rideDone: model.rideDone, workoutTimer, setsDone, ...opened, ...patch });
+      // The "Today" shortcut: today's first session not yet done, as its card on the calendar opens it. With none left
+      // today, the calendar stays on today.
+      if (first && this.openToday) {
+        this.openToday = false;
+        const up = buildContext(this).nextUp;
+        const now = new Date();
+        if (up && up.m === now.getMonth() && up.d === now.getDate())
+          this.setState({ screen: 'detail', seg: 'Day', creating: false, ...monthPatch(up.m), day: up.d, entryId: up.id });
+      }
     } catch (e) {
       this.status = 'error';
       this.loadError = e instanceof Error ? e.message : String(e);

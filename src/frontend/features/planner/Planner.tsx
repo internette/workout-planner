@@ -27,6 +27,9 @@ export default function Planner({ account = null }: { account?: Account | null }
     // opens on today's Day view.
     const opens = stateForPath(pathname);
     if (opens) l.state = { ...l.state, ...opens };
+    // The "Today" app shortcut (see app/manifest.ts) is the calendar's address with ?open=today.
+    if (opens?.screen === 'day' && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('open') === 'today')
+      l.openToday = true;
     return l;
   });
   const [, rerender] = useReducer((n: number) => n + 1, 0);
