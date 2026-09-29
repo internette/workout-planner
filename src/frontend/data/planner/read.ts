@@ -138,8 +138,9 @@ export async function loadModel(today: Date): Promise<Model> {
   builtinList.forEach((e) => (builtinByName[e.name] = e));
   const builtinWorkouts: BuiltinWorkout[] = builtinWorkoutRows.map((r: any) => {
     const list = (r.exercises || []).map((n: string) => builtinByName[n]).filter(Boolean) as Exercise[];
-    // Estimated the way a new workout is: about ten minutes an exercise, at least twenty (a warm-up's are quicker).
-    const minutes = estimateMinutes(list.length, !!r.is_warmup);
+    // Its own length when it says one (a stretching routine's is short), else estimated the way a new workout is: about
+    // ten minutes an exercise, at least twenty (a warm-up's are quicker).
+    const minutes = r.minutes || estimateMinutes(list.length, !!r.is_warmup);
     return {
       id: r.id,
       name: r.name,
@@ -147,7 +148,7 @@ export async function loadModel(today: Date): Promise<Model> {
       time: `~${minutes} min`,
       minutes,
       areas: areasOf(list),
-      icon: 'h',
+      icon: r.icon || 'h',
       iconColor: null,
       exercises: list.map((e) => e.name),
       notes: '',
