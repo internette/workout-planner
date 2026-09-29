@@ -81,7 +81,7 @@ export const RANKS = [
 export const EDIT_OVERLAYS = { renames:null, fields:null, removed:null, icons:null, iconColors:null, exIcons:null,
   extra:null, repeat:false, rDist:null, rElev:null, rHrs:null, rMins:null, rZone:null,
   aDist:null, aElev:null, aHrs:null, aMins:null, editKey:null, editId:null, pendingNav:null, notes:null, editDone:null,
-  logDone:null, exOrder:null, workoutKinds:null, warmups:null };
+  logDone:null, exOrder:null, workoutKinds:null, warmups:null, retype:null };
 
 // Leaves the new-workout form: nothing of it carried into the next one.
 export const NEW_WORKOUT_CLEARED = { creating:false, newType:null, newName:'', newFrom:null, schedule:null };

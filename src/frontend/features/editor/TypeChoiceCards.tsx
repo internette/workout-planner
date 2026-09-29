@@ -1,13 +1,45 @@
 import type { ReactNode } from 'react';
 import { Card } from '@moonshot/design-system/card';
-import { Bike, Dumbbell, LotusFlower, Lunge } from '@moonshot/design-system/icons';
+import { Bike, Check, Dumbbell, LotusFlower, Lunge } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
-/** One kind of workout to start, as a row: its icon on a tinted square, and beside it its name over what it's for. */
-function TypeChoiceCard({ icon, tint, title, note, onClick }: { icon: ReactNode; tint: string; title: string; note: string; onClick: () => void }) {
+/** One kind of workout to start, as a row: its icon on a tinted square, and beside it its name over what it's for.
+ * The one chosen already (when coming back to change it) has an accent ring and a tick; one it can't become is dimmed. */
+function TypeChoiceCard({
+  icon,
+  tint,
+  title,
+  note,
+  onClick,
+  selected,
+  disabled,
+}: {
+  icon: ReactNode;
+  tint: string;
+  title: string;
+  note: string;
+  onClick: () => void;
+  selected?: boolean;
+  disabled?: boolean;
+}) {
   return (
-    <Card as="button" pad="md" interactive onClick={onClick} style={{ display: 'flex', alignItems: 'center', gap: '14px', textAlign: 'left' }}>
+    <Card
+      as="button"
+      pad="md"
+      interactive={!disabled}
+      disabled={disabled}
+      onClick={onClick}
+      aria-pressed={selected}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '14px',
+        textAlign: 'left',
+        opacity: disabled ? 0.55 : 1,
+        boxShadow: selected ? 'inset 0 0 0 2px var(--color-accent)' : undefined,
+      }}
+    >
       <span
         style={{
           width: '44px',
@@ -22,7 +54,7 @@ function TypeChoiceCard({ icon, tint, title, note, onClick }: { icon: ReactNode;
       >
         {icon}
       </span>
-      <span style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: '3px' }}>
+      <span style={{ minWidth: 0, flex: '1 1 auto', display: 'flex', flexDirection: 'column', gap: '3px' }}>
         <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
           {title}
         </Text>
@@ -30,12 +62,36 @@ function TypeChoiceCard({ icon, tint, title, note, onClick }: { icon: ReactNode;
           {note}
         </Text>
       </span>
+      {selected ? (
+        <span
+          aria-hidden="true"
+          style={{
+            width: '24px',
+            height: '24px',
+            flex: 'none',
+            borderRadius: 'var(--radius-full)',
+            background: 'var(--color-accent)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Check color="var(--color-on-accent)" size={14} strokeWidth={3} />
+        </span>
+      ) : null}
     </Card>
   );
 }
 
-/** A new workout’s first choice: lifting, cycling, or (once the database has them) stretching or yoga. */
+/** A new workout's first choice: lifting, cycling, or (once the database has them) stretching or yoga. Coming back from
+ * the editor to change it, the current one is chosen, and one it can't become is dimmed. */
 export function TypeChoiceCards({ v }: { v: PlannerVals }) {
+  const c = v.typeChoices;
+  const card = (t: 'lift' | 'cycle' | 'stretch' | 'yoga') => ({
+    onClick: () => c.pick(t),
+    selected: c.selected === t,
+    disabled: !c.can[t],
+  });
   return (
     <div
       style={{
@@ -50,26 +106,26 @@ export function TypeChoiceCards({ v }: { v: PlannerVals }) {
         tint="var(--color-accent-tint)"
         title="Lifting"
         note="Build a list of exercises with sets, reps and weight."
-        onClick={v.pickTypeLift}
+        {...card('lift')}
       />
       <TypeChoiceCard
         icon={<Bike color="var(--color-periwinkle)" size={22} />}
         tint="var(--color-periwinkle-tint)"
         title="Cycling"
         note="Set a distance, duration and target effort for the ride."
-        onClick={v.pickTypeCycle}
+        {...card('cycle')}
       />
-      {v.canPickStretch ? (
+      {c.stretch ? (
         <TypeChoiceCard
           // The deep teal: plain teal on its tint is too faint for an icon.
           icon={<Lunge color="var(--color-teal-deep)" size={22} />}
           tint="var(--color-teal-tint)"
           title="Stretching"
           note="A few held stretches, as a cool-down or on their own."
-          onClick={v.pickTypeStretch}
+          {...card('stretch')}
         />
       ) : null}
-      {v.canPickYoga ? (
+      {c.yoga ? (
         <TypeChoiceCard
           // Slate, the palette's fourth colour after pink, periwinkle and teal: its deep shade on its tint, as the
           // rank badges have it.
@@ -77,7 +133,7 @@ export function TypeChoiceCards({ v }: { v: PlannerVals }) {
           tint="var(--color-slate-tint)"
           title="Yoga"
           note="A flow of poses, each held for a few breaths."
-          onClick={v.pickTypeYoga}
+          {...card('yoga')}
         />
       ) : null}
     </div>

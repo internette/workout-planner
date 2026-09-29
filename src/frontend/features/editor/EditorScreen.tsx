@@ -45,7 +45,14 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
           ) : null}
           <Chip icon={<Clock color="var(--color-muted)" size={17} />}>{t(v.eTime)}</Chip>
           {v.editType ? (
-            <Chip icon={<ExerciseIcon name={v.editType.icon} color="var(--color-muted)" size={17} />}>{v.editType.label}</Chip>
+            // Goes back to "What kind of workout?" to change it.
+            <Chip
+              icon={<ExerciseIcon name={v.editType.icon} color="var(--color-muted)" size={17} />}
+              onClick={v.openRetype}
+              aria-label={'Type: ' + v.editType.label + '. Change it'}
+            >
+              {v.editType.label}
+            </Chip>
           ) : null}
         </ChipRow>
         {v.canUseSaved ? (

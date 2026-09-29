@@ -261,7 +261,7 @@ export function chromeVals(ctx: Ctx) {
       return names[prev.screen] || 'Back';
     })(),
     isCal: st.screen === 'day' || st.screen === 'rest',
-    isEdit: st.screen === 'edit' && !(creating && !st.newType),
+    isEdit: st.screen === 'edit' && !(creating && !st.newType) && !st.retype,
     isDiary: st.screen === 'diary',
     isDetail: st.screen === 'detail',
   };
