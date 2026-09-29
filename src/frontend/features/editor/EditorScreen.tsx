@@ -94,30 +94,24 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             ) : null}
           </>
         )}
-        {/* What kind of workout it is, and apart from that, whether it's a warm-up: any kind can be one. */}
-        {v.editKindShown || v.warmupShown ? (
+        {/* What kind of workout it is. */}
+        {v.editKindShown ? (
           <Card pad="sm" style={{ marginTop: '16px' }}>
-            {v.editKindShown ? (
-              <>
-                <ChoiceChips label="Kind" options={v.editKindOptions} value={v.editKind} onChange={v.setEditKind} />
-                <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
-                  {v.editKindNote}
-                </Text>
-              </>
-            ) : null}
-            {v.editKindShown && v.warmupShown ? (
-              <hr style={{ border: 0, borderTop: '1px solid var(--color-divider)', margin: '14px 0' }} />
-            ) : null}
-            {v.warmupShown ? (
-              <>
-                <Checkbox switch checked={!!v.warmupOn} onChange={v.setWarmup}>
-                  Warm-up
-                </Checkbox>
-                <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
-                  Listed before the other workouts on its day, and tagged as a warm-up.
-                </Text>
-              </>
-            ) : null}
+            <ChoiceChips label="Kind" options={v.editKindOptions} value={v.editKind} onChange={v.setEditKind} />
+            <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+              {v.editKindNote}
+            </Text>
+          </Card>
+        ) : null}
+        {/* Whether it's a warm-up: apart from its kind, so a workout or a stretch or yoga can be one. */}
+        {v.warmupShown ? (
+          <Card pad="sm" style={{ marginTop: '16px' }}>
+            <Checkbox switch checked={!!v.warmupOn} onChange={v.setWarmup}>
+              Warm-up
+            </Checkbox>
+            <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+              Listed before the other workouts on its day, and tagged as a warm-up. Any kind can be one.
+            </Text>
           </Card>
         ) : null}
         {v.ridePlanStatic ? (
