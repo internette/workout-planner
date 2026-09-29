@@ -29,9 +29,15 @@ export function AppearanceSetting() {
   return (
     <>
       <div style={row}>
-        <Text variant="label" as="div" tone="ink" id="colour-label" style={{ flex: '1 1 120px' }}>
-          Colour
-        </Text>
+        <div style={{ flex: '1 1 120px', minWidth: 0 }}>
+          <Text variant="label" as="div" tone="ink" id="colour-label">
+            Colour
+          </Text>
+          {/* The chosen one's name: the swatches alone only say it on hover. */}
+          <Text variant="caption" as="div" tone="muted" style={{ marginTop: '2px' }}>
+            {(ACCENTS.find((a) => a.name === accent) || ACCENTS[0]).label}
+          </Text>
+        </div>
         <IconChoiceGroup
           labelledBy="colour-label"
           kind="swatch"
