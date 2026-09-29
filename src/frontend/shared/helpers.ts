@@ -108,7 +108,8 @@ export const setsRepsOk = (text: string | null | undefined, name?: string | null
 export const joinSetsReps = (sets: string | null | undefined, reps: string | null | undefined) => {
   const s = (sets || '').trim();
   const r = (reps || '').trim();
-  return s && r ? s + ' × ' + r : s || (r ? '× ' + r : '');
+  // Sets alone read as the database gives them back ("2 sets"), so a rep typed and then cleared doesn't leave a bare "2".
+  return s && r ? s + ' × ' + r : s ? plural(Number(s), 'set') : r ? '× ' + r : '';
 };
 
 // Digits only, for a field that should never hold anything else (sets, reps, and the number inside "90 sec").
