@@ -105,9 +105,13 @@ export function arsenalVals(ctx: Ctx) {
   ];
   const kind = kindOptions.some((o) => o.value === st.arsenalKind) ? st.arsenalKind : 'all';
   const workoutFiltering = filtering || kind !== 'all';
-  const kindKey = (w) => (w.warmup ? 'warmups' : w.stretch ? 'stretches' : w.yoga ? 'yoga' : 'main');
+  // A warm-up is listed under Warm-ups and under its kind too (a warm-up stretch under Stretches). Workouts are the plain
+  // ones: neither a stretch nor yoga, and not a warm-up.
+  const inKind = (w) =>
+    kind === 'all' ||
+    (kind === 'warmups' ? !!w.warmup : kind === 'stretches' ? !!w.stretch : kind === 'yoga' ? !!w.yoga : !w.warmup && !w.stretch && !w.yoga);
   const matches = (w) =>
-    (kind === 'all' || kind === kindKey(w)) &&
+    inKind(w) &&
     inAreas(w.areas) &&
     (w.builtin ? w.list : EX[w.name] || []).every(canDo) &&
     (!q || w.name.toLowerCase().includes(q) || w.exercises.some((n) => n.toLowerCase().includes(q)));
@@ -471,7 +475,11 @@ export function arsenalVals(ctx: Ctx) {
           logic.nav(editTemplatePatch(chosen.id)),
         notes: chosen.notes || '',
         builtin,
-        eyebrow: (builtin ? 'BUILT-IN ' : 'SAVED ') + (chosen.warmup ? 'WARM-UP' : chosen.stretch ? 'STRETCH' : chosen.yoga ? 'YOGA' : 'WORKOUT'),
+        eyebrow:
+          (builtin ? 'BUILT-IN ' : 'SAVED ') +
+          [chosen.warmup && 'WARM-UP', chosen.stretch ? 'STRETCH' : chosen.yoga ? 'YOGA' : !chosen.warmup && 'WORKOUT']
+            .filter(Boolean)
+            .join(' · '),
         // A built-in workout can't be changed: copied to the person's own to edit, or, once it is theirs, opened.
         builtinNote: !builtin
           ? ''

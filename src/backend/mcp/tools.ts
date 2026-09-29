@@ -55,9 +55,9 @@ export const TOOLS = [
               date: { type: 'string', description: 'YYYY-MM-DD' },
               name: { type: 'string', maxLength: PLAN_LIMITS.name, description: 'e.g. "Upper Push", "Easy Ride". Reuse a name for the same workout on different days.' },
               kind: { type: 'string', enum: ['lift', 'ride'] },
-              warmup: { type: 'boolean', description: 'True for a short warm-up done before another workout that day.' },
-              yoga: { type: 'boolean', description: 'True for a yoga flow (poses held in turn). Not together with warmup or stretch.' },
-              stretch: { type: 'boolean', description: 'True for a stretching routine (a cool-down), done after another workout that day or on its own. Not together with warmup.' },
+              warmup: { type: 'boolean', description: 'True for a short warm-up done before another workout that day. Any kind can be a warm-up: a lift, a stretch or yoga.' },
+              yoga: { type: 'boolean', description: 'True for a yoga flow (poses held in turn). Not together with stretch; can be a warmup.' },
+              stretch: { type: 'boolean', description: 'True for a stretching routine (a cool-down), done after another workout that day or on its own, or a warm-up stretch with warmup true too.' },
               minutes: { type: 'integer', minimum: 5, maximum: 600, description: 'Required for a ride. Optional for a lift.' },
               notes: { type: 'string', maxLength: PLAN_LIMITS.notes },
               exercises: {
