@@ -346,10 +346,10 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
         audio.current?.pause();
         act('pause', a.id);
       });
-      // "Next": the next set done, or, resting, on to it now.
+      // "Next": the next set done (not while paused, as on the page), or, resting, on to it now.
       ms.setActionHandler(
         'nexttrack',
-        a.rest ? () => act('skip', a.id) : a.kind === 'lift' && a.now ? () => act('set', a.id) : null,
+        a.rest ? () => act('skip', a.id) : a.kind === 'lift' && a.now && !paused ? () => act('set', a.id) : null,
       );
     }
     // The player's bar is the clock: it runs by itself while playing, so it's only set when the clock changes. Its

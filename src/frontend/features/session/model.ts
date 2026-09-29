@@ -318,7 +318,7 @@ export function workoutVals(ctx: Ctx) {
     };
   });
   // The set up next, on today's session page, for the progress card: the exercise the rows' sets are counting, and
-  // "Done set" for it while the workout is going (its clock started, running or paused, and not finished).
+  // "Done set" for it while the workout is going (its clock running, not paused, and not finished).
   const setNow = (() => {
     if (st.screen !== 'detail' || selRide || isCycleView || mi * 100 + selDay !== TK || !selAct || doneSel) return null;
     const sets = setsFor(ctx);
@@ -328,7 +328,7 @@ export function workoutVals(ctx: Ctx) {
       name: n.e.name,
       label: n.of > 1 ? 'Set ' + n.set + ' of ' + n.of : 'One set',
       pips: Array.from({ length: n.of }, (_, i) => i < n.set - 1),
-      onDone: timerState && !finished ? () => sets.completeSet(listKey, n.e.name) : undefined,
+      onDone: timerRunning && !finished ? () => sets.completeSet(listKey, n.e.name) : undefined,
       doneAria: 'Done: ' + n.e.name + (n.of > 1 ? ', set ' + n.set + ' of ' + n.of : ''),
     };
   })();
