@@ -78,7 +78,8 @@ export function calendarStage(ctx: EntriesCtx) {
         'font-size:var(--text-xl);font-weight:' +
         (on ? 'var(--font-weight-bold)' : 'var(--font-weight-semibold)') +
         ';color:' +
-        (on ? 'var(--color-on-accent)' : same ? 'var(--color-ink)' : 'var(--color-hairline)'),
+        // Another month's dates are dimmer than this month's, but still readable (muted meets 4.5:1).
+        (on ? 'var(--color-on-accent)' : same ? 'var(--color-ink)' : 'var(--color-muted)'),
       dot: (!dot ? 'rest' : done ? 'done' : part ? 'partly' : miss ? 'missed' : 'planned') as DayStatus,
     };
   });
