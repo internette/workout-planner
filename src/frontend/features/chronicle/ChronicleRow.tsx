@@ -1,11 +1,10 @@
 import { Card } from '@moonshot/design-system/card';
 import { ChevronRight, MoodFace } from '@moonshot/design-system/icons';
-import { StarRating } from '@moonshot/design-system/rating';
 import { Text } from '@moonshot/design-system/typography';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import { KindTag, kindOf } from '@/frontend/components/KindTag';
 
-/** An entry in the Chronicle’s list, a card of its own: how it felt beside its day, session, effort and note. Opening it
+/** An entry in the Chronicle’s list, a card of its own: how it felt beside its day, session and the start of its note. Opening it
  * reads it; deleting it is done there. */
 export function ChronicleRow({ entry }: { entry: any }) {
   return (
@@ -36,20 +35,12 @@ export function ChronicleRow({ entry }: { entry: any }) {
           <KindTag inline kind={kindOf(entry)} />
           <ChevronRight color="var(--color-subtle)" strokeWidth={2.2} size={16} />
         </span>
-        <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
-          <Text variant="caption" tone="muted">
-            Effort
-          </Text>
-          <Text variant="caption" tone="ink" weight="bold">
-            {entry?.effort}
-          </Text>
-          <StarRating readOnly size={14} value={entry?.rpe ?? 0} />
-        </span>
         {entry?.note ? (
           <Text
             variant="caption"
             tone="muted"
-            style={{ display: 'block', lineHeight: 'var(--leading-snug)', marginTop: '4px', textWrap: 'pretty' }}
+            // One line; a longer note ends in "…", and reads in full on the entry.
+            style={{ display: 'block', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
           >
             {entry.note}
           </Text>

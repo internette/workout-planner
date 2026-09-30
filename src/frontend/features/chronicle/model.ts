@@ -299,8 +299,6 @@ export function diaryVals(ctx: Ctx) {
             bg,
           mood: en.mood,
           rpe: en.rpe,
-          // The stars named, as the entry names them: "Solid".
-          effort: en.rpe ? RPE_WORDS[Math.max(1, Math.min(5, en.rpe)) - 1] : '',
         };
       });
     })(),
