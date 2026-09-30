@@ -155,8 +155,7 @@ export function workoutVals(ctx: Ctx) {
         logic.save(() => db.setExercisesDone(listKey, [], false));
       }
     }
-    // From the Day view it opens the session; on the session's own page it stays there.
-    if (st.screen !== 'detail') goDetail();
+    goDetail();
   };
   const restartWorkout = () => (hasProgress ? logic.s({ restartPrompt: true }) : doRestart());
   // Finishing: stops the clock and records what the session actually took — a ride's distance, time and climb, a
@@ -531,9 +530,6 @@ export function workoutVals(ctx: Ctx) {
     startWorkout,
     restartWorkout,
     continueWorkout,
-    // On the session's page, beside its clock: once there's something to start over (the clock started, something
-    // ticked, or finished), today, and not yet written about in the Chronicle.
-    canRestart: !!selAct && !isFutureDay && !isPastDay && !DIARY[idOf(selAct)] && (!!timerState || hasProgress || finished),
     restartPromptOpen: !!st.restartPrompt,
     restartPromptBody: selRide
       ? 'This marks the ride as not done and starts the timer from zero.'
