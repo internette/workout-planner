@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
+import { Repeat } from '@moonshot/design-system/icons';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
@@ -29,33 +30,44 @@ export function WorkoutCard({ v }: { v: PlannerVals }) {
   );
 }
 
-/** The session's clock, with start, pause and finish. */
+/** The session's clock, with start, pause and finish, and starting over while it's stopped (never mid-set). */
 function TimerSection({ v }: { v: PlannerVals }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-      <div>
+    <>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', minHeight: '32px' }}>
         <Text variant="eyebrow" tone="slate">
           WORKOUT TIMER
         </Text>
-        <Text variant="title" as="div" style={{ margin: '4px 0 0', fontVariantNumeric: 'tabular-nums' }}>
-          {v.timerLabel}
-        </Text>
-      </div>
-      <div style={{ display: 'flex', gap: '8px' }}>
-        <Button
-          type={v.canFinish || v.timerButtonLabel === 'Pause' ? 'secondary' : 'primary'}
-          size="md"
-          onClick={v.timerButtonAction}
-        >
-          {v.timerButtonLabel}
-        </Button>
-        {v.canFinish ? (
-          <Button type="primary" size="md" onClick={v.openFinish}>
-            Finish
+        {/* Clears the ticks and starts the clock from zero (asking first when there's something to lose). */}
+        {v.canRestart ? (
+          <Button type="neutral" ghost size="sm" onClick={v.restartWorkout} style={{ marginRight: '-10px' }}>
+            <Repeat color="var(--color-muted)" size={15} />
+            Start over
           </Button>
         ) : null}
       </div>
-    </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+        <div>
+          <Text variant="title" as="div" style={{ margin: '0', fontVariantNumeric: 'tabular-nums' }}>
+            {v.timerLabel}
+          </Text>
+        </div>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <Button
+            type={v.canFinish || v.timerButtonLabel === 'Pause' ? 'secondary' : 'primary'}
+            size="md"
+            onClick={v.timerButtonAction}
+          >
+            {v.timerButtonLabel}
+          </Button>
+          {v.canFinish ? (
+            <Button type="primary" size="md" onClick={v.openFinish}>
+              Finish
+            </Button>
+          ) : null}
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -78,6 +90,10 @@ function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
         <Button type="primary" size="sm" onClick={now.onDone} aria-label={now.doneAria}>
           Done set
         </Button>
+      ) : now.paused ? (
+        <Text variant="caption" tone="muted">
+          Paused
+        </Text>
       ) : null}
     </div>
   );
