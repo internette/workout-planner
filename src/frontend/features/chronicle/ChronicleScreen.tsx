@@ -77,12 +77,14 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
                   onChange={v.setRangeFrom}
                   type="date"
                 />
+                {/* Only to look at: the fields are named From and To. */}
                 <span
+                  aria-hidden="true"
                   style={{
                     flex: 'none',
                     fontSize: 'var(--text-md)',
                     fontWeight: 'var(--font-weight-semibold)',
-                    color: 'var(--color-hairline)',
+                    color: 'var(--color-muted)',
                   }}
                 >
                   →

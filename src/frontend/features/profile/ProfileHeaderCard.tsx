@@ -41,7 +41,10 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
             position: 'absolute',
             inset: '6px',
             borderRadius: 'var(--radius-full)',
-            background: 'var(--gradient-gem)',
+            // A wash of the ink colour over the gradient keeps the initial readable (3:1) on its palest part: a
+            // little darker in light mode, where the initial is white, a little lighter in dark, where it's dark.
+            background:
+              'linear-gradient(color-mix(in srgb, var(--color-ink) 16%, transparent), color-mix(in srgb, var(--color-ink) 16%, transparent)), var(--gradient-gem)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -96,7 +99,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
         </span>
       </div>
       <div style={{ minWidth: '0', flex: '1 1 200px' }}>
-        <Text variant="title" as="h1" style={{ margin: '0' }}>
+        <Text variant="title" as="h2" style={{ margin: '0' }}>
           {v.profileName}
         </Text>
         {v.profileSince ? (

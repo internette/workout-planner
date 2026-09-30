@@ -19,7 +19,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
         style={{
           display: 'flex',
           alignItems: 'flex-end',
-          gap: '4px',
+          // No gap: each week's column is tappable edge to edge (the space between bars is inside each column).
           height: '132px',
           marginTop: '14px',
         }}
@@ -36,7 +36,8 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
                 minHeight: '44px',
                 border: 'none',
                 background: 'none',
-                padding: '0',
+                // The 4 px between bars, inside each column's tap area rather than between them.
+                padding: '0 2px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'flex-end',
