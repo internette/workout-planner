@@ -4,22 +4,22 @@ import { useEffect, useState } from 'react';
 import { Checkbox } from '@moonshot/design-system/checkbox';
 import { Text } from '@moonshot/design-system/typography';
 import { SettingsCard } from './SettingsCard';
-import { canNotify, canPlayer, liveSettings, onLiveSettings, setLiveSetting, type LiveSettings } from '@/frontend/features/live/settings';
+import { canNotify, canPlayer, canWake, liveSettings, onLiveSettings, setLiveSetting, type LiveSettings } from '@/frontend/features/live/settings';
 
-/** Settings → During a workout: whether a workout in progress shows outside the app. Saved in this browser. Nothing,
- * card and all, where the browser can do neither. */
+/** Settings → During a workout: whether the screen stays on, and whether a workout in progress shows outside the app.
+ * Saved in this browser. Each shows only where the browser can do it; nothing, card and all, where it can do none. */
 export function LiveSetting() {
-  const [s, setS] = useState<LiveSettings>({ notify: false, player: false });
-  const [can, setCan] = useState({ notify: false, player: false });
+  const [s, setS] = useState<LiveSettings>({ awake: false, notify: false, player: false });
+  const [can, setCan] = useState({ awake: false, notify: false, player: false });
   const [blocked, setBlocked] = useState(false);
   // Read after mounting: the server doesn't know what this browser saved, or what it can do.
   useEffect(() => {
     setS(liveSettings());
-    setCan({ notify: canNotify(), player: canPlayer() });
+    setCan({ awake: canWake(), notify: canNotify(), player: canPlayer() });
     setBlocked(canNotify() && Notification.permission === 'denied');
     return onLiveSettings((p) => setS((cur) => ({ ...cur, ...p })));
   }, []);
-  if (!can.notify && !can.player) return null;
+  if (!can.awake && !can.notify && !can.player) return null;
   // Turning notifications on asks the browser now, while there's a tap to ask from.
   const pickNotify = (on: boolean) => {
     setLiveSetting('notify', on);
@@ -30,8 +30,18 @@ export function LiveSetting() {
   };
   return (
     <SettingsCard title="DURING A WORKOUT">
-      {can.notify ? (
+      {can.awake ? (
         <div style={{ marginTop: '12px' }}>
+          <Checkbox switch checked={s.awake} onChange={(on) => setLiveSetting('awake', on)}>
+            Keep the screen on during a workout
+          </Checkbox>
+          <Text variant="caption" as="p" tone="muted" style={{ margin: '6px 0 0', paddingLeft: 'calc(20px + var(--space-3))' }}>
+            From Start until you finish, paused or not. Low Power Mode can overrule it.
+          </Text>
+        </div>
+      ) : null}
+      {can.notify ? (
+        <div style={{ marginTop: can.awake ? '10px' : '12px' }}>
           <Checkbox switch checked={s.notify} onChange={pickNotify}>
             Show it in a notification, with buttons to tick off and finish
           </Checkbox>
