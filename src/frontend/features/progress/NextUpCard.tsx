@@ -1,6 +1,6 @@
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
-import { progCard } from './progCard';
+import { OpensChevron, progCard } from './progCard';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** Progress: the next session planned, opening it. */
@@ -13,6 +13,7 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
       onClick={v.hasNext ? v.openNext : undefined}
       style={progCard('1 1 260px')}
     >
+      {v.hasNext ? <OpensChevron /> : null}
       <Text variant="eyebrow" as="span" tone="muted" style={{ display: 'block' }}>
         NEXT CALL
       </Text>

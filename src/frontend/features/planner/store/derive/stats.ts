@@ -83,7 +83,7 @@ export function statsStage(ctx: CalendarCtx) {
   });
   // "This week" is one thing everywhere: the Sunday-to-Saturday week today is in. The chart shows the last few of
   // those real weeks, this one last.
-  const WEEKS = 6;
+  const WEEKS = 8;
   const weekBuckets: { start: Date; end: Date; sessions: WeekSession[]; planned: number; done: number }[] = [];
   for (let w = WEEKS - 1; w >= 0; w--) {
     const start = new Date(Y, TODAY_M, TODAY_D - todayDate.getDay() - w * 7);

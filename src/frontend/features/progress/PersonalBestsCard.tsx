@@ -1,14 +1,14 @@
-import { Fragment } from 'react';
+import { Fragment, type CSSProperties } from 'react';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import { SectionHeader } from '@/frontend/components/SectionHeader';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
-/** Profile: personal bests, all time. */
-export function PersonalBestsCard({ v }: { v: PlannerVals }) {
+/** Progress: personal bests, all time. */
+export function PersonalBestsCard({ v, style }: { v: PlannerVals; style?: CSSProperties }) {
   return (
-    <Card>
+    <Card style={style}>
       <SectionHeader title="PERSONAL BESTS" note={v.allTimeLabel} />
       {v.recordsEmpty ? (
         <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
@@ -35,7 +35,7 @@ export function PersonalBestsCard({ v }: { v: PlannerVals }) {
               >
                 {r?.value}
               </span>
-              <span style={css(r?.deltaStyle)}>{r?.delta}</span>
+              {r?.delta ? <span style={css(r?.deltaStyle)}>{r?.delta}</span> : null}
             </div>
           </Fragment>
         ))}
