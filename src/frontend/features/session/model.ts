@@ -6,6 +6,7 @@ import type { Ctx } from '../planner/store/types';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import type { Entry } from '@/frontend/data/plannerData';
 import { setsFor } from './sets';
+import type { DayStatus } from '@/frontend/components/StatusDot';
 
 // The day card and the workout detail screen (today's quest, exercise preview, completion).
 export function workoutVals(ctx: Ctx) {
@@ -229,6 +230,16 @@ export function workoutVals(ctx: Ctx) {
       { label: 'EFFORT', value: r.zone || DEFAULT_ZONE, note: '' },
     ];
   };
+  // A ride's plan in a line. Folded to a row, all of it: "14 mi · 1 h · 600 ft · Endurance". Open, the effort is under
+  // its name and the figures on a line of their own: "14 mi · 1 h · 600 ft climb".
+  const rideLine = (av: Entry) => {
+    const r = av.ride;
+    return [r.dist ? r.dist + ' mi' : '', av.time, r.elev ? r.elev + ' ft' : '', r.zone || DEFAULT_ZONE].filter(Boolean).join(' · ');
+  };
+  const rideFigures = (av: Entry) => {
+    const r = av.ride;
+    return [r.dist ? r.dist + ' mi' : '', av.time, r.elev ? r.elev + ' ft climb' : ''].filter(Boolean).join(' · ');
+  };
   // Day view shows a card for every workout on the day. A card's buttons pick its session first, then do what
   // the same button does for the session on screen, so the detail, timer and diary all follow that session.
   const exerciseRow = (e, doneNames) => ({
@@ -242,12 +253,9 @@ export function workoutVals(ctx: Ctx) {
       'flex:1;min-width:0;font-size:var(--text-lg);font-weight:var(--font-weight-medium);' +
       (doneNames.includes(e.name) ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
   });
-  const dayCards = dayEntries.map((av) => {
+  // Where a session on the day stands: its exercises and ticks, and whether it's done or under way.
+  const progressOf = (av: Entry) => {
     const id = idOf(av);
-    const run = (action) => () => {
-      logic.s({ entryId: id });
-      logic.renderVals()[action]();
-    };
     const list = instList(av.exKey, id).map((e) => Object.assign({}, e, (st.fields || {})[id + '|' + e.name] || {}));
     const doneNames = (st.done || {})[id] || [];
     const doneN = list.filter((e) => doneNames.includes(e.name)).length;
@@ -255,16 +263,45 @@ export function workoutVals(ctx: Ctx) {
     const rideIsDone = !!(st.rideDone || {})[id];
     // Finished with Finish counts as done here too, even with an exercise left unticked.
     const complete = ride ? rideIsDone : (list.length > 0 && doneN === list.length) || actualMinutes(av) > 0;
-    const logged = !!DIARY[id];
     const timer = (st.workoutTimer || {})[id] || null;
+    return { id, list, doneNames, doneN, ride, rideIsDone, complete, timer, started: !!timer || doneN > 0 };
+  };
+  // One card on the day is open, with its exercises and buttons; the rest are rows that open when tapped. The one tapped
+  // open last, else the one under way, else the first not done yet. With everything done, none is. A day with one
+  // workout always has it open.
+  const dayKey = mi * 100 + selDay;
+  const dayProgress = dayEntries.map(progressOf);
+  const openId =
+    dayEntries.length === 1
+      ? idOf(dayEntries[0])
+      : st.dayOpen && st.dayOpen.day === dayKey && dayProgress.some((p) => p.id === st.dayOpen.id)
+        ? st.dayOpen.id
+        : (dayProgress.find((p) => p.started && !p.complete) || dayProgress.find((p) => !p.complete) || { id: null }).id;
+  const dayCards = dayEntries.map((av, ix) => {
+    const { id, list, doneNames, doneN, ride, rideIsDone, complete, timer } = dayProgress[ix];
+    const run = (action) => () => {
+      logic.s({ entryId: id });
+      logic.renderVals()[action]();
+    };
+    const logged = !!DIARY[id];
     const timed = !!timer;
     const timerSec = timer
       ? timer.elapsed + (timer.runningSince ? Math.floor((Date.now() - timer.runningSince) / 1000) : 0)
       : 0;
     const rows = list.map((e) => exerciseRow(e, doneNames));
     const expanded = !!(st.moreIds || {})[id];
+    const open = id === openId;
     return {
       key: id,
+      isOpen: open,
+      // Open and under way (the clock going or something ticked, and not done yet): it says so above its name.
+      inProgress: !complete && (!!timer || doneN > 0),
+      // Open, a ride still to do says its effort under its name, its figures below (see ridePlan).
+      openMeta: ride && !rideIsDone && !timer ? ride.zone || DEFAULT_ZONE : '',
+      // Folded: the whole row opens it (and folds the one that was open).
+      expand: () => logic.s({ dayOpen: { day: dayKey, id } }),
+      expandLabel: 'Show ' + nameOf(av.name),
+      dot: (complete ? 'done' : timer || doneN > 0 ? 'partly' : isPastDay ? 'missed' : 'planned') as DayStatus,
       name: nameOf(av.name),
       warmup: !!av.warmup,
       stretch: !!av.stretch,
@@ -276,9 +313,7 @@ export function workoutVals(ctx: Ctx) {
           : timer
           ? (timer.runningSince ? 'In progress · ' : 'Paused · ') + formatElapsed(timerSec)
           : ride
-          ? ride.dist
-            ? ride.dist + ' mi · ' + av.time
-            : av.time
+          ? rideLine(av)
           : doneN > 0
             ? doneN + ' of ' + list.length + ' done · ' + av.time
             : plural(list.length, 'exercise') + ' · ' + av.time,
@@ -291,7 +326,10 @@ export function workoutVals(ctx: Ctx) {
       isRide: !!ride,
       progLabel: doneN + '/' + list.length,
       progPct: list.length ? Math.round((doneN / list.length) * 100) : 0,
-      rideStats: !ride ? [] : rideStatsFor(av, rideIsDone),
+      // A ride done is set against its plan, figure by figure. One still to do says its plan once: its effort under its
+      // name (or the clock, while it's being timed) and its figures on the line below.
+      rideStats: ride && rideIsDone ? rideStatsFor(av, rideIsDone) : [],
+      ridePlan: ride && !rideIsDone ? rideFigures(av) : '',
       preview: expanded ? rows : rows.slice(0, 3),
       hasMore: rows.length > 3,
       moreLabel: expanded ? 'Show less' : '+ ' + (rows.length - 3) + ' more',
@@ -455,7 +493,7 @@ export function workoutVals(ctx: Ctx) {
     questOpen: !dayCleared,
     questEyebrow: dayCleared ? 'QUEST CLEARED' : mi === TODAY_M && selDay === TODAY_D ? "TODAY'S QUEST" : 'QUEST',
     questIconWrap:
-      'width:40px;height:40px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;' +
+      'width:32px;height:32px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;' +
       (dayCleared
         ? 'background:var(--gradient-gem)'
         : 'background:var(--color-surface);box-shadow:var(--elevation-hairline)'),
