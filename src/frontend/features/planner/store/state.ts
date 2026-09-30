@@ -198,6 +198,8 @@ export interface PlannerState {
   pausePrompt?: { proceed: () => void } | null;
   restartPrompt?: boolean;
   moreIds?: Record<string, boolean>;
+  // The Day view's open card, when one was tapped open: the day (month * 100 + day) and its session.
+  dayOpen?: { day: number; id: string } | null;
 
   // The Chronicle
   mood: Mood | null;
