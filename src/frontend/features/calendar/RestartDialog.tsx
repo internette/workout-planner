@@ -8,15 +8,15 @@ export function RestartDialog({ v }: { v: PlannerVals }) {
     <Dialog
       open={!!v.restartPromptOpen}
       onClose={v.cancelRestart}
-      title="Restart this workout?"
+      title={v.restartPromptTitle ?? 'Start this workout over?'}
       description={v.restartPromptBody}
       actions={
         <>
           <Button type="neutral" ghost size="md" onClick={v.cancelRestart}>
-            Keep my progress
+            Keep going
           </Button>
           <Button type="danger" size="md" onClick={v.confirmRestart}>
-            Restart
+            Start over
           </Button>
         </>
       }

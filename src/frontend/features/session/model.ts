@@ -134,8 +134,8 @@ export function workoutVals(ctx: Ctx) {
     if (!timerRunning) resumeTimer();
     goDetail();
   };
-  // Restarting starts the clock from zero and clears the ticks. Clearing them can't be undone, so when there are
-  // any it asks first; with nothing ticked there is nothing to lose and it just restarts.
+  // Restarting starts the clock from zero and clears the ticks. That can't be undone, so it asks first when there's
+  // anything to lose: something ticked, or a minute or more on the clock. Otherwise it just restarts.
   const hasProgress = !!selAct && (selRide ? rideDone : doneCount > 0);
   const doRestart = () => {
     startTimer();
@@ -155,9 +155,11 @@ export function workoutVals(ctx: Ctx) {
         logic.save(() => db.setExercisesDone(listKey, [], false));
       }
     }
-    goDetail();
+    // From the Day view it opens the session; on the session's own page it stays there.
+    if (st.screen !== 'detail') goDetail();
   };
-  const restartWorkout = () => (hasProgress ? logic.s({ restartPrompt: true }) : doRestart());
+  const timedAMinute = !!timerState && timerElapsedSec >= 60;
+  const restartWorkout = () => (hasProgress || timedAMinute ? logic.s({ restartPrompt: true }) : doRestart());
   // Finishing: stops the clock and records what the session actually took — a ride's distance, time and climb, a
   // lifting session's time — pre-filled from the timer (or the plan), so it's usually one tap. A ride is marked
   // complete here too; a lifting session is complete once every exercise is ticked, as before.
@@ -371,6 +373,8 @@ export function workoutVals(ctx: Ctx) {
       label: n.of > 1 ? 'Set ' + n.set + ' of ' + n.of : 'One set',
       pips: Array.from({ length: n.of }, (_, i) => i < n.set - 1),
       onDone: timerRunning && !finished ? () => sets.completeSet(listKey, n.e.name) : undefined,
+      // Paused: the clock says so where "Done set" was.
+      paused: !!timerState && !timerRunning && !finished,
       doneAria: 'Done: ' + n.e.name + (n.of > 1 ? ', set ' + n.set + ' of ' + n.of : ''),
     };
   })();
@@ -530,12 +534,22 @@ export function workoutVals(ctx: Ctx) {
     startWorkout,
     restartWorkout,
     continueWorkout,
+    // On the session's page, beside its clock: once there's something to start over (the clock started, something
+    // ticked, or finished), today, and not yet written about in the Chronicle. Not while the clock is running, so it
+    // can't be tapped by mistake mid-workout: pause, and it's there.
+    canRestart:
+      !!selAct && !isFutureDay && !isPastDay && !DIARY[idOf(selAct)] && !timerRunning && (!!timerState || hasProgress || finished),
     restartPromptOpen: !!st.restartPrompt,
-    restartPromptBody: selRide
-      ? 'This marks the ride as not done and starts the timer from zero.'
-      : 'This clears the ' +
-        plural(doneCount, 'exercise') +
-        " you've ticked off and starts the timer from zero. It can't be undone.",
+    // What starting over loses, said before it's lost: the ticks (or the ride's done), and the time on the clock.
+    restartPromptTitle: hasProgress ? 'Start this workout over?' : 'Start the timer over?',
+    restartPromptBody:
+      (!hasProgress
+        ? 'This starts the timer again from 0:00.'
+        : selRide
+          ? 'This marks the ride as not done and starts the timer again from 0:00.'
+          : 'This clears the ' + plural(doneCount, 'exercise') + " you've ticked off and starts the timer again from 0:00.") +
+      (timedAMinute ? " You've been going for " + formatElapsed(timerElapsedSec) + '.' : '') +
+      (hasProgress ? " It can't be undone." : ''),
     cancelRestart: () => logic.s({ restartPrompt: false }),
     confirmRestart: () => {
       logic.s({ restartPrompt: false });

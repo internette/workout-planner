@@ -18,6 +18,7 @@ import { LeaveWorkoutDialog } from '@/frontend/features/session/LeaveWorkoutDial
 import { RideSessionCard } from '@/frontend/features/session/RideSessionCard';
 import { SessionExerciseRow } from '@/frontend/features/session/SessionExerciseRow';
 import { WorkoutCard } from '@/frontend/features/session/WorkoutCard';
+import { RestartDialog } from '@/frontend/features/calendar/RestartDialog';
 import { ChipRow } from '@/frontend/components/ChipRow';
 import { KindTag } from '@/frontend/components/KindTag';
 
@@ -104,6 +105,7 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
         ) : null}
         {/* The clock, and for a lift its progress, sets and rest (nothing to tick off before its day). */}
         <WorkoutCard v={v} />
+        <RestartDialog v={v} />
         {v.dayIsRide ? <RideSessionCard v={v} /> : null}
         {v.dayIsLift ? (
           <>
