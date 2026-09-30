@@ -8,17 +8,19 @@ export function ChoiceChips<T extends string>({
   options,
   value,
   onChange,
+  size = 'md',
 }: {
   label: string;
   options: { value: T; label: string }[];
   value: T;
   onChange: (value: T) => void;
+  size?: 'sm' | 'md';
 }) {
   return (
     <div role="group" aria-label={label}>
       <ChipRow>
         {options.map((o) => (
-          <Chip key={o.value} tone="choice" size="md" selected={o.value === value} onClick={() => onChange(o.value)}>
+          <Chip key={o.value} tone="choice" size={size} selected={o.value === value} onClick={() => onChange(o.value)}>
             {o.label}
           </Chip>
         ))}

@@ -209,7 +209,7 @@ export interface PlannerState {
   entryMarkDone?: boolean;
   diaryFrom?: 'day' | 'list';
   diaryEdit?: boolean;
-  diaryScope?: 'all' | 'today' | 'week' | 'month' | 'range';
+  diaryScope?: 'all' | 'week' | 'month' | 'range';
   rFrom?: string;
   rTo?: string;
 

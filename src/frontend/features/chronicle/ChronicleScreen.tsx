@@ -1,14 +1,31 @@
 // The Chronicle: every entry, filtered by when.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
-import { Fragment } from 'react';
 import { Text } from '@moonshot/design-system/typography';
 import { TextField } from '@moonshot/design-system/text-field';
-import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { Button } from '@moonshot/design-system/buttons';
 import { Calendar } from '@moonshot/design-system/icons';
 import { PageHeader } from '@/frontend/components/PageHeader';
+import { ChoiceChips } from '@/frontend/components/ChoiceChips';
 import { ChronicleRow } from '@/frontend/features/chronicle/ChronicleRow';
+import { plural } from '@/frontend/shared/helpers';
+
+type Scope = 'all' | 'week' | 'month' | 'range';
+const SCOPES: { value: Scope; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'week', label: 'Week' },
+  { value: 'month', label: '30 days' },
+  { value: 'range', label: 'Range' },
+];
+
+// The entries (newest first) under their months, each month once.
+const monthsOf = (list: any[]) =>
+  list.reduce<{ label: string; entries: any[] }[]>((groups, e) => {
+    const last = groups[groups.length - 1];
+    if (last && last.label === e.month) last.entries.push(e);
+    else groups.push({ label: e.month, entries: [e] });
+    return groups;
+  }, []);
 
 export function ChronicleScreen({ v }: { v: PlannerVals }) {
   return (
@@ -22,28 +39,22 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
               New entry
             </Button>
           }
-          intro={<>Every session you&apos;ve written about, newest first. Open one to read or edit it.</>}
+          intro="Newest first."
         />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
           <span className="sr-only" role="status">
             {v.diaryResults}
           </span>
-          <SegmentedControl
-            label="Show entries from"
-            size="sm"
-            compact
-            wrap
-            options={[
-              { value: 'all', label: 'All' },
-              { value: 'today', label: 'Today' },
-              { value: 'week', label: 'Week' },
-              { value: 'month', label: '30 days' },
-              { value: 'range', label: 'Range' },
-            ]}
-            value={v.diaryScope}
-            onChange={v.setDiaryScope}
-            style={{ alignSelf: 'flex-start' }}
-          />
+          {/* White on the page, where a choice chip's own grey would vanish; small, so all four fit on a narrow phone. */}
+          <div className="scope-chips">
+            <ChoiceChips
+              label="Show entries from"
+              size="sm"
+              options={SCOPES}
+              value={(v.diaryScope ?? 'all') as Scope}
+              onChange={v.setDiaryScope}
+            />
+          </div>
           {v.rangeShown ? (
             <>
               <div
@@ -90,13 +101,21 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
             </>
           ) : null}
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
-          {(v.diaryList ?? []).map((e, i) => (
-            <Fragment key={i}>
-              <ChronicleRow entry={e} />
-            </Fragment>
-          ))}
-        </div>
+        {monthsOf(v.diaryList ?? []).map((g) => (
+          <section key={g.label} aria-label={g.label.charAt(0) + g.label.slice(1).toLowerCase()}>
+            <Text variant="eyebrow" as="h2" tone="slate" style={{ margin: '20px 0 8px' }}>
+              {g.label}{' '}
+              <Text variant="caption" tone="muted" weight="regular" style={{ letterSpacing: '0', textTransform: 'none', marginLeft: '4px' }}>
+                {plural(g.entries.length, 'entry', 'entries')}
+              </Text>
+            </Text>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {g.entries.map((e, i) => (
+                <ChronicleRow key={i} entry={e} />
+              ))}
+            </div>
+          </section>
+        ))}
         {v.diaryEmpty ? (
           <>
             <Text variant="body" as="p" tone="muted" style={{ margin: '24px 0 0' }}>

@@ -32,3 +32,11 @@ html { scroll-padding-top: 16px; scroll-padding-bottom: 104px; }
   /* The Month's streak and done, a line each: no rule between them. */
   .stats-rule { display: none; }
 }
+
+/* The Chronicle's "Show entries from" chips sit on the page, not a card: white until picked. */
+.scope-chips [aria-pressed='false'] { background: var(--color-surface); box-shadow: var(--elevation-hairline); }
+/* On the narrowest phones, a little closer and slimmer, so Range stays on the line. */
+@media (max-width: 359px) {
+  .scope-chips > div > * { gap: 6px !important; }
+  .scope-chips button { padding: 8px 10px; }
+}

@@ -37,7 +37,8 @@ export function entriesStage(ctx: BaseCtx) {
     return 'Planned';
   };
   const ENTRIES = { ...DIARY };
-  const dScope = st.diaryScope || 'all';
+  // "Today" was a filter once; one still saved with it shows its day as a range.
+  const dScope = ((st.diaryScope as string) === 'today' ? 'range' : st.diaryScope) || 'all';
   const isoToday = isoOf(nowDate);
   const iso30 = isoOf(new Date(Y, TODAY_M, TODAY_D - 29));
   const rideDoneAt = (av: Entry) => !!(st.rideDone || {})[idOf(av)];
