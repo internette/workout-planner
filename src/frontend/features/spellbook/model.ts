@@ -790,8 +790,8 @@ export function arsenalVals(ctx: Ctx) {
     arsenalView: view,
     setArsenalView: (next) => logic.s({ arsenalView: next, arsenalAdd: false }),
     showArsenalWorkouts: view === 'workouts',
-    // The "New" button shares a row with the Workouts/Exercises toggle. On a phone there's only room for "New",
-    // and the toggle beside it already says which kind; screen readers still get the whole name.
+    // The "New" button is at the end of the title's line. On a phone there's only room for "New", and the
+    // Workouts/Exercises toggle below already says which kind; screen readers still get the whole name.
     arsenalNewLabel: narrow ? 'New' : view === 'workouts' ? 'New workout' : 'New exercise',
     arsenalNewName: view === 'workouts' ? 'New workout' : 'New exercise',
     showArsenalExercises: view === 'exercises',
@@ -801,19 +801,19 @@ export function arsenalVals(ctx: Ctx) {
         ? (workoutFiltering ? hits.length + builtinHits.length + ' of ' : '') +
           plural(workouts.length + builtinWorkouts.length, 'workout')
         : (filtering ? moveGroups.reduce((n, g) => n + g.items.length, 0) + ' of ' : '') + exerciseCount,
+    // One line: the group labels say the rest.
     arsenalIntro:
       view === 'workouts'
         ? builtinWorkouts.length
-          ? 'Your own workouts, then built-in ones you can add to the calendar as they are or copy to make your own.'
-          : "Every workout you've written. Open one to add it to the calendar."
-        : "Your exercises, grouped by the workout they belong to, then built-in ones you can add to any workout or copy to make your own.",
+          ? 'Your workouts first, then built\u2011in ones.'
+          : "Every workout you've written."
+        : 'By the workout they’re in, then built\u2011in ones.',
     arsenalSearchPlaceholder: view === 'workouts' ? 'Search workouts' : 'Search exercises',
     workoutGroups,
     noSavedWorkouts: workouts.length + builtinWorkouts.length === 0,
     noWorkoutMatches:
       workouts.length + builtinWorkouts.length > 0 && workoutFiltering && hits.length + builtinHits.length === 0,
     noWorkoutMatchNote: noMatchText(kind === 'warmups' ? 'warm-ups' : kind === 'stretches' ? 'stretches' : kind === 'yoga' ? 'yoga flows' : 'workouts'),
-    showKindFilter: kindOptions.length > 2,
     workoutKindOptions: kindOptions,
     workoutKind: kind,
     setWorkoutKind: (k) => logic.s({ arsenalKind: k }),
@@ -854,10 +854,43 @@ export function arsenalVals(ctx: Ctx) {
     arsenalPickTitle: pick ? pick.title || 'your new workout' : '',
     backToPickedWorkout: () =>
       logic.backTo('edit', { arsenalPick: null, arsenalAreas: pick ? pick.prevAreas || [] : st.arsenalAreas }),
-    areaFilterOpen: !!st.arsenalAreasOpen,
-    toggleAreaFilter: () => logic.s({ arsenalAreasOpen: !st.arsenalAreasOpen }),
-    closeAreaFilter: () => logic.s({ arsenalAreasOpen: false }),
-    areaFilterLabel: areaFilter.length ? TARGET_AREAS.filter((a) => areaFilter.includes(a)).join(', ') : 'All',
+    // ---- The Filter button and its sheet: the kind (workouts only), target areas and equipment. Each change applies at
+    // once; the sheet's button says how many that leaves, and closes it.
+    filterOpen: !!st.arsenalFilterOpen,
+    openFilter: () => logic.s({ arsenalFilterOpen: true }),
+    closeFilter: () => logic.s({ arsenalFilterOpen: false }),
+    filterTitle: view === 'workouts' ? 'Filter workouts' : 'Filter exercises',
+    showKindInFilter: view === 'workouts' && kindOptions.length > 2,
+    filterShowLabel: (() => {
+      const n =
+        view === 'workouts' ? hits.length + builtinHits.length : moveGroups.reduce((sum, g) => sum + g.items.length, 0);
+      return n ? 'Show ' + plural(n, view === 'workouts' ? 'workout' : 'exercise') : 'Nothing matches';
+    })(),
+    // What's filtered, as chips under the search: one each, ✕ to take it off.
+    activeFilters: [
+      ...(view === 'workouts' && kind !== 'all'
+        ? [{ label: kindOptions.find((o) => o.value === kind)?.label || '', remove: () => logic.s({ arsenalKind: 'all' }) }]
+        : []),
+      ...TARGET_AREAS.filter((a) => areaFilter.includes(a)).map((a) => ({
+        label: a,
+        remove: () => logic.s({ arsenalAreas: areaFilter.filter((x) => x !== a) }),
+      })),
+      ...(equipFilter.length
+        ? [
+            {
+              label: equipFilter.length <= 2 ? equipFilter.join(', ') : equipFilter.length + ' pieces of equipment',
+              remove: () => {
+                saveEquipment([]);
+                logic.s({ arsenalEquip: [] });
+              },
+            },
+          ]
+        : []),
+    ],
+    clearFilters: () => {
+      if (equipFilter.length) saveEquipment([]);
+      logic.s({ arsenalKind: 'all', arsenalAreas: [], ...(equipFilter.length ? { arsenalEquip: [] } : {}) });
+    },
     areaFilterActive: areaFilter.length > 0,
     areaFilterOptions: TARGET_AREAS.map((name) => ({
       name,
@@ -865,15 +898,9 @@ export function arsenalVals(ctx: Ctx) {
       set: (on) =>
         logic.s({ arsenalAreas: on ? areaFilter.concat([name]) : areaFilter.filter((a) => a !== name) }),
     })),
-    clearAreaFilter: () => logic.s({ arsenalAreas: [], arsenalAreasOpen: false }),
+    clearAreaFilter: () => logic.s({ arsenalAreas: [] }),
     // Shown once exercises know their equipment (the equipment migration has run).
     equipFilterShown: logic.model.builtins.some((e) => e.equipment !== undefined),
-    equipFilterOpen: !!st.arsenalEquipOpen,
-    toggleEquipFilter: () => logic.s({ arsenalEquipOpen: !st.arsenalEquipOpen }),
-    closeEquipFilter: () => logic.s({ arsenalEquipOpen: false }),
-    // Short enough for half a phone's width ("3 ticked"); the button's name spells out what's ticked.
-    equipFilterLabel: equipFilter.length ? equipFilter.length + ' ticked' : 'Any',
-    equipFilterName: 'Filter by equipment: ' + (equipFilter.length ? equipFilter.join(', ') : 'any'),
     equipFilterActive: equipFilter.length > 0,
     // Each group of the filter opens and closes on its own; one with something ticked starts open.
     equipFilterGroups: EQUIPMENT_GROUPS.map((g) => ({
@@ -899,7 +926,7 @@ export function arsenalVals(ctx: Ctx) {
     })),
     clearEquipFilter: () => {
       saveEquipment([]);
-      logic.s({ arsenalEquip: [], arsenalEquipOpen: false });
+      logic.s({ arsenalEquip: [] });
     },
   };
 }

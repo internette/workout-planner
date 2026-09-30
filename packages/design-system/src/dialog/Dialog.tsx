@@ -23,6 +23,9 @@ export interface DialogProps {
   actions?: ReactNode;
   /** md is a little wider than the default sm. */
   size?: 'sm' | 'md';
+  /** On a phone, a sheet along the bottom of the screen, its buttons across it: choices to pick from while the page
+   * stays in view above. Wider screens show it in the middle, like any dialog. */
+  sheet?: boolean;
   /** Anything between the description and the buttons. */
   children?: ReactNode;
 }
@@ -36,7 +39,7 @@ export function Dialog(props: DialogProps) {
 }
 
 // Mounted only while open, so showModal() runs once per opening.
-function DialogPanel({ onClose, title, aside, closeButton = true, description, actions, size = 'sm', children }: DialogProps) {
+function DialogPanel({ onClose, title, aside, closeButton = true, description, actions, size = 'sm', sheet = false, children }: DialogProps) {
   const titleId = useId();
   const descId = useId();
   const ref = useRef<HTMLDialogElement>(null);
@@ -47,13 +50,18 @@ function DialogPanel({ onClose, title, aside, closeButton = true, description, a
     const dialog = ref.current;
     if (!dialog) return;
     live.current = true;
+    // A sheet holds the page still behind it: focus inside it, low on the screen, would otherwise scroll the page.
+    const unlock = sheet ? holdPage() : null;
     dialog.showModal();
     // Start on the first action if there is one (Cancel, Keep it), otherwise on the close button.
     (dialog.querySelector<HTMLElement>('[data-dialog-actions] button') ?? dialog.querySelector<HTMLElement>('button'))?.focus();
     return () => {
       live.current = false;
       if (dialog.open) dialog.close();
+      unlock?.();
     };
+    // Mounted once per opening: `sheet` doesn't change while it's open.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // The parent owns `open`, so Escape asks it to close rather than closing the dialog itself.
@@ -80,7 +88,7 @@ function DialogPanel({ onClose, title, aside, closeButton = true, description, a
       aria-labelledby={titleId}
       // Read out with the title when it opens, since focus lands on a button past the text.
       aria-describedby={description ? descId : undefined}
-      className={`${styles.panel} ${styles[size]}`}
+      className={`${styles.panel} ${styles[size]}${sheet ? ' ' + styles.sheet : ''}`}
       onClick={onPress as never}
       // React supports these two events on <dialog>, but Card's props are typed for a generic element.
       {...({ onCancel, onClose: onNativeClose } as object)}
@@ -113,4 +121,16 @@ function DialogPanel({ onClose, title, aside, closeButton = true, description, a
       ) : null}
     </Card>
   );
+}
+
+// Pins the page where it is, so nothing can scroll it, and returns what puts it back.
+function holdPage() {
+  const { scrollX, scrollY } = window;
+  const body = document.body.style;
+  const was = { position: body.position, top: body.top, left: body.left, right: body.right };
+  Object.assign(body, { position: 'fixed', top: -scrollY + 'px', left: '0', right: '0' });
+  return () => {
+    Object.assign(body, was);
+    window.scrollTo(scrollX, scrollY);
+  };
 }

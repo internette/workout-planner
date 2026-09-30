@@ -19,3 +19,6 @@ html { scroll-padding-top: 16px; scroll-padding-bottom: 104px; }
   .bar-actions svg { display: none; }
   .bar-actions button { padding-left: 14px; padding-right: 14px; }
 }
+
+/* The Spellbook's Filter button: its icon alone on the narrowest phones, leaving the search beside it room. */
+@media (max-width: 359px) { .filter-word { display: none; } }

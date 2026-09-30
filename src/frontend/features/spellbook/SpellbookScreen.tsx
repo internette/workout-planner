@@ -5,14 +5,12 @@ import { Fragment } from 'react';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
-import { ChoiceChips } from '@/frontend/components/ChoiceChips';
 import { Button } from '@moonshot/design-system/buttons';
 import { ChevronLeft, Plus } from '@moonshot/design-system/icons';
 import { GroupLabel } from '@/frontend/components/GroupLabel';
 import { PageHeader } from '@/frontend/components/PageHeader';
 import { SearchBar } from '@/frontend/components/SearchBar';
-import { AreaFilter } from '@/frontend/features/spellbook/AreaFilter';
-import { EquipmentFilter } from '@/frontend/features/spellbook/EquipmentFilter';
+import { ActiveFilters, FilterButton } from '@/frontend/features/spellbook/FilterSheet';
 import { ExerciseRow } from '@/frontend/features/spellbook/ExerciseRow';
 import { NewExerciseCard } from '@/frontend/features/spellbook/NewExerciseCard';
 import { WorkoutRow } from '@/frontend/features/spellbook/WorkoutRow';
@@ -21,7 +19,27 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
   return (
     <>
       <div>
-        <PageHeader title="Spellbook" count={v.arsenalCount} intro={v.arsenalIntro} />
+        {/* "New" makes whichever kind the list is showing. */}
+        <PageHeader
+          title="Spellbook"
+          count={v.arsenalCount}
+          intro={v.arsenalIntro}
+          action={
+            <Button
+              type="primary"
+              size="sm"
+              onClick={v.showArsenalWorkouts ? v.goNewWorkoutFromArsenal : v.openArsenalAdd}
+              aria-label={v.arsenalNewName}
+              aria-expanded={v.showArsenalWorkouts ? undefined : !!v.arsenalAddOpen}
+              aria-controls={!v.showArsenalWorkouts && v.arsenalAddOpen ? 'new-exercise' : undefined}
+              data-arsenal-new
+              style={{ whiteSpace: 'nowrap' }}
+            >
+              <Plus color="var(--color-on-accent)" strokeWidth={2.2} size={16} />
+              {v.arsenalNewLabel}
+            </Button>
+          }
+        />
         {v.arsenalPicking ? (
           // Stays in view down the long list, so it's always clear the Spellbook is picking for a workout.
           // The page-coloured band behind it keeps the list from showing through above the card.
@@ -50,62 +68,34 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
             </Card>
           </div>
         ) : null}
-        {/* The "New" button sits with the toggle it follows: it makes whichever kind the list is showing. */}
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            gap: '10px',
-            marginTop: '18px',
-          }}
-        >
-          <SegmentedControl
-            label="Spellbook view"
-            size="sm"
-            options={[
-              { value: 'workouts', label: 'Workouts' },
-              { value: 'exercises', label: 'Exercises' },
-            ]}
-            value={v.arsenalView}
-            onChange={v.setArsenalView}
-          />
-          <Button
-            type="primary"
-            size="sm"
-            onClick={v.showArsenalWorkouts ? v.goNewWorkoutFromArsenal : v.openArsenalAdd}
-            aria-label={v.arsenalNewName}
-            aria-expanded={v.showArsenalWorkouts ? undefined : !!v.arsenalAddOpen}
-            aria-controls={!v.showArsenalWorkouts && v.arsenalAddOpen ? 'new-exercise' : undefined}
-            data-arsenal-new
-            style={{ marginLeft: 'auto' }}
-          >
-            <Plus color="var(--color-on-accent)" strokeWidth={2.2} size={16} />
-            {v.arsenalNewLabel}
-          </Button>
+        <SegmentedControl
+          label="Spellbook view"
+          size="sm"
+          fullWidth
+          equalWidth
+          options={[
+            { value: 'workouts', label: 'Workouts' },
+            { value: 'exercises', label: 'Exercises' },
+          ]}
+          value={v.arsenalView}
+          onChange={v.setArsenalView}
+          style={{ marginTop: '16px' }}
+        />
+        {/* The search, and beside it everything else that narrows the list, in one sheet. */}
+        <div style={{ display: 'flex', alignItems: 'stretch', gap: '10px', marginTop: '12px' }}>
+          <div style={{ flex: '1', minWidth: '0' }}>
+            <SearchBar
+              value={v.arsenalQuery ?? ''}
+              onChange={v.setArsenalQuery}
+              placeholder={v.arsenalSearchPlaceholder}
+              label="Search the Spellbook"
+              onClear={v.clearArsenalQuery}
+              status={v.arsenalResults}
+            />
+          </div>
+          <FilterButton v={v} />
         </div>
-        <div style={{ marginTop: '12px' }}>
-          <SearchBar
-            value={v.arsenalQuery ?? ''}
-            onChange={v.setArsenalQuery}
-            placeholder={v.arsenalSearchPlaceholder}
-            label="Search the Spellbook"
-            onClear={v.clearArsenalQuery}
-            status={v.arsenalResults}
-          />
-        </div>
-        {/* The two filters side by side, where there's room for both. */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: v.equipFilterShown ? 'repeat(auto-fit,minmax(150px,1fr))' : '1fr',
-            gap: '10px',
-            marginTop: '8px',
-          }}
-        >
-          <AreaFilter v={v} />
-          {v.equipFilterShown ? <EquipmentFilter v={v} /> : null}
-        </div>
+        <ActiveFilters v={v} />
         {v.showArsenalExercises ? (
           <>
             {v.noMatches ? (
@@ -147,11 +137,6 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
               <Text variant="body" as="p" tone="muted" style={{ margin: '20px 0 0' }}>
                 {v.noWorkoutMatchNote}
               </Text>
-            ) : null}
-            {v.showKindFilter ? (
-              <div style={{ marginTop: '14px' }}>
-                <ChoiceChips label="Show" options={v.workoutKindOptions} value={v.workoutKind} onChange={v.setWorkoutKind} />
-              </div>
             ) : null}
             {/* Grouped like the Exercises tab: the person's own, then the built-in ones by group. */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: '18px' }}>
