@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
 import { Text } from '@moonshot/design-system/typography';
+import { SettingsCard } from './SettingsCard';
 import { openInstallDialog, useInstallOffer } from '@/frontend/features/install/installOffer';
 import { wasInstalled } from '@/frontend/features/install/useInstallPrompt';
 
@@ -18,20 +19,22 @@ export function InstallSetting() {
   useEffect(() => setRemoved(wasInstalled()), [offer]);
   if (!offer) return null;
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', marginTop: '18px' }}>
-      <div style={{ flex: '1 1 180px', minWidth: 0 }}>
-        <Text variant="label" as="div" tone="ink">
-          Moonshot app
-        </Text>
-        <Text variant="caption" as="p" tone="muted" style={{ margin: '4px 0 0', textWrap: 'pretty' }}>
-          {removed
-            ? 'It was removed from this device. Add it back to open it like an app, one tap away.'
-            : 'Install it to open it like an app: full screen, no browser bar, one tap away.'}
-        </Text>
+    <SettingsCard title="THIS DEVICE">
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
+        <div style={{ flex: '1 1 180px', minWidth: 0 }}>
+          <Text variant="label" as="div" tone="ink">
+            Moonshot app
+          </Text>
+          <Text variant="caption" as="p" tone="muted" style={{ margin: '4px 0 0', textWrap: 'pretty' }}>
+            {removed
+              ? 'It was removed from this device. Add it back to open it like an app, one tap away.'
+              : 'Install it to open it like an app: full screen, no browser bar, one tap away.'}
+          </Text>
+        </div>
+        <Button type="secondary" size="sm" onClick={() => void openInstallDialog()}>
+          {removed ? 'Add it back' : 'Install'}
+        </Button>
       </div>
-      <Button type="secondary" size="sm" onClick={() => void openInstallDialog()}>
-        {removed ? 'Add it back' : 'Install'}
-      </Button>
-    </div>
+    </SettingsCard>
   );
 }

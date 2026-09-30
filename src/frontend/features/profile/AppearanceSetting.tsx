@@ -9,7 +9,7 @@ import { savedAccent, savedTheme, setAccent, setTheme, type Accent, type Theme }
 
 const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', marginTop: '14px' };
 
-/** Profile → Settings: the colour and light or dark. Saved in this browser and applied at once. */
+/** Settings → Appearance: the colour and light or dark. Saved in this browser and applied at once (its card says so). */
 export function AppearanceSetting() {
   const [theme, setThemeState] = useState<Theme>('light');
   const [accent, setAccentState] = useState<Accent>('pink');
@@ -56,11 +56,11 @@ export function AppearanceSetting() {
       <div style={row}>
         <div style={{ flex: '1 1 120px', minWidth: 0 }}>
           <Text variant="label" as="div" tone="ink">
-            Appearance
+            Theme
           </Text>
         </div>
         <SegmentedControl
-          label="Appearance"
+          label="Theme"
           size="sm"
           options={[
             { value: 'light', label: 'Light' },
@@ -70,9 +70,6 @@ export function AppearanceSetting() {
           onChange={pickTheme}
         />
       </div>
-      <Text variant="caption" as="p" tone="muted" style={{ margin: '12px 0 0' }}>
-        Saved on this device.
-      </Text>
     </>
   );
 }

@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react';
 import { Checkbox } from '@moonshot/design-system/checkbox';
 import { Text } from '@moonshot/design-system/typography';
+import { SettingsCard } from './SettingsCard';
 import { canNotify, canPlayer, liveSettings, onLiveSettings, setLiveSetting, type LiveSettings } from '@/frontend/features/live/settings';
 
-/** Profile → Settings: whether a workout in progress shows outside the app. Saved in this browser. */
+/** Settings → During a workout: whether a workout in progress shows outside the app. Saved in this browser. Nothing,
+ * card and all, where the browser can do neither. */
 export function LiveSetting() {
   const [s, setS] = useState<LiveSettings>({ notify: false, player: false });
   const [can, setCan] = useState({ notify: false, player: false });
@@ -27,12 +29,9 @@ export function LiveSetting() {
         .catch(() => undefined);
   };
   return (
-    <div style={{ marginTop: '18px' }}>
-      <Text variant="label" as="div" tone="ink">
-        During a workout
-      </Text>
+    <SettingsCard title="DURING A WORKOUT">
       {can.notify ? (
-        <div style={{ marginTop: '10px' }}>
+        <div style={{ marginTop: '12px' }}>
           <Checkbox switch checked={s.notify} onChange={pickNotify}>
             Show it in a notification, with buttons to tick off and finish
           </Checkbox>
@@ -53,6 +52,6 @@ export function LiveSetting() {
           </Text>
         </div>
       ) : null}
-    </div>
+    </SettingsCard>
   );
 }

@@ -15,6 +15,7 @@ import { SaveScopeDialog } from '@/frontend/features/spellbook/SaveScopeDialog';
 import { CalendarScreen } from '@/frontend/features/calendar/CalendarScreen';
 import { SavedScreen } from '@/frontend/features/chronicle/SavedScreen';
 import { ProfileScreen } from '@/frontend/features/profile/ProfileScreen';
+import { SettingsScreen } from '@/frontend/features/profile/SettingsScreen';
 import { ProgressScreen } from '@/frontend/features/progress/ProgressScreen';
 import { SpellbookScreen } from '@/frontend/features/spellbook/SpellbookScreen';
 import { ExerciseScreen } from '@/frontend/features/spellbook/ExerciseScreen';
@@ -58,6 +59,7 @@ export function PlannerView({ v }: { v: PlannerVals }) {
             {v.isCal ? <CalendarScreen v={v} /> : null}
             {v.isSaved ? <SavedScreen v={v} /> : null}
             {v.isProfile ? <ProfileScreen v={v} /> : null}
+            {v.isSettings ? <SettingsScreen v={v} /> : null}
             {v.isSummary ? <ProgressScreen v={v} /> : null}
             {v.isArsenal ? <SpellbookScreen v={v} /> : null}
             {v.isExercise && v.exercise ? <ExerciseScreen v={v} /> : null}

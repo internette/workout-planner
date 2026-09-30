@@ -9,6 +9,9 @@ export const TAB_PATHS = {
   profile: '/profile',
 } as const;
 
+// Settings is a page of Profile's, with its own address under it.
+export const SETTINGS_PATH = TAB_PATHS.profile + '/settings';
+
 const CALENDAR = ['day', 'rest', 'edit', 'detail'];
 const ARSENAL = ['arsenal', 'template', 'exercise', 'exerciseEdit'];
 
@@ -22,6 +25,7 @@ export function pathForScreen(screen: string): string | null {
   if (ARSENAL.includes(screen)) return TAB_PATHS.arsenal;
   if (screen === 'summary') return TAB_PATHS.progress;
   if (screen === 'profile') return TAB_PATHS.profile;
+  if (screen === 'settings') return SETTINGS_PATH;
   return null;
 }
 
@@ -86,6 +90,8 @@ export function screenForPath(path: string): string | null {
       return 'summary';
     case TAB_PATHS.profile:
       return 'profile';
+    case SETTINGS_PATH:
+      return 'settings';
     default:
       return null;
   }

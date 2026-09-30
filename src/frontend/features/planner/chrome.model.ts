@@ -35,13 +35,15 @@ export function chromeVals(ctx: Ctx) {
   const goArsenal = () => logic.nav({ screen: 'arsenal', monthOpen: false, arsenalPick: null });
   const goSummary = () => logic.nav({ screen: 'summary', monthOpen: false });
   const goProfile = () => logic.nav({ screen: 'profile', monthOpen: false });
+  const goSettings = () => logic.nav({ screen: 'settings', monthOpen: false });
   // The five places, in the sidebar's and the tab bar's order: whether each is where the person is, and how to go.
   const navOn: Record<NavId, boolean> = {
     day: calActive,
     diaryList: inChronicle,
     arsenal: arsenalActive,
     summary: st.screen === 'summary',
-    profile: st.screen === 'profile',
+    // Settings is Profile's page: Profile stays lit while it's open.
+    profile: st.screen === 'profile' || st.screen === 'settings',
   };
   const navGoTo: Record<NavId, () => void> = { day: goDay, diaryList: goDiaryList, arsenal: goArsenal, summary: goSummary, profile: goProfile };
   return {
@@ -50,6 +52,7 @@ export function chromeVals(ctx: Ctx) {
     goArsenal,
     goSummary,
     goProfile,
+    goSettings,
     nav: NAV_IDS.map((id) => ({
       id,
       current: navOn[id] ? ('page' as const) : false,
@@ -76,6 +79,7 @@ export function chromeVals(ctx: Ctx) {
       : 'display:none',
     isDiaryList: st.screen === 'diaryList',
     isProfile: st.screen === 'profile',
+    isSettings: st.screen === 'settings',
     isSummary: st.screen === 'summary',
     isSaved: st.screen === 'saved',
     isNewEntry: st.screen === 'newEntry',
@@ -233,7 +237,14 @@ export function chromeVals(ctx: Ctx) {
     // the calendar when there's nothing before it (a page opened from a link).
     backLabel: (() => {
       const prev = (st.hist || [])[(st.hist || []).length - 1];
-      if (!prev) return HOME_OF[st.screen] === 'arsenal' ? 'Spellbook' : HOME_OF[st.screen] === 'diaryList' ? 'Chronicle' : 'Calendar';
+      if (!prev)
+        return HOME_OF[st.screen] === 'arsenal'
+          ? 'Spellbook'
+          : HOME_OF[st.screen] === 'diaryList'
+            ? 'Chronicle'
+            : HOME_OF[st.screen] === 'profile'
+              ? 'Profile'
+              : 'Calendar';
       const w =
         st.templateId &&
         (logic.model.workouts.find((x) => x.id === st.templateId) ||
@@ -257,6 +268,7 @@ export function chromeVals(ctx: Ctx) {
         newEntry: 'New entry',
         summary: 'Progress',
         profile: 'Profile',
+        settings: 'Settings',
       };
       return names[prev.screen] || 'Back';
     })(),
