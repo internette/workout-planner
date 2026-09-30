@@ -19,7 +19,7 @@ const FAILURES: Record<string, string> = {
 };
 
 /**
- * "Delete my account and information": a row for the Account card and the confirmation behind it. Permanent, so the
+ * "Delete my account and information": the row for Settings' last card, and the confirmation behind it. Permanent, so the
  * dialog says what goes, says there is no way back, and asks for the word DELETE before it will do anything.
  */
 export function DeleteAccount() {
@@ -66,7 +66,8 @@ export function DeleteAccount() {
         <Text variant="body" tone="muted" as="p" className={styles.explain} style={{ margin: 0 }}>
           Permanently delete your account and everything in it. This cannot be undone.
         </Text>
-        <Button type="danger" ghost size="sm" onClick={() => setOpen(true)} style={{ flex: 'none' }}>
+        {/* Its label wraps on the narrowest phones rather than running past the card. */}
+        <Button type="danger" ghost size="sm" onClick={() => setOpen(true)} style={{ flex: '0 1 auto', minWidth: 0, whiteSpace: 'normal', textAlign: 'left' }}>
           Delete my account and information
         </Button>
       </div>

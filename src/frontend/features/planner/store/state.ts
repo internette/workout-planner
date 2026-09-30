@@ -17,6 +17,7 @@ export type Screen =
   | 'saved'
   | 'summary'
   | 'profile'
+  | 'settings'
   | 'arsenal'
   | 'template'
   | 'exercise'

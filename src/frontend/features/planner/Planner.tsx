@@ -147,7 +147,9 @@ export default function Planner({ account = null }: { account?: Account | null }
                 ? (v.diaryTitle ? v.diaryTitle + ' entry' : 'Entry')
                 : st.screen === 'newEntry'
                   ? 'New entry'
-                  : '';
+                  : st.screen === 'settings'
+                    ? 'Settings'
+                    : '';
     const title = [inner, section, 'Moonshot'].filter(Boolean).join(' — ');
     if (document.title !== title) document.title = title;
   });
