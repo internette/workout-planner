@@ -1,4 +1,4 @@
-import { DOW3, MON3 } from '@/frontend/shared/constants';
+import { DOW3, MON3, MONTHS } from '@/frontend/shared/constants';
 import { isoOf, mod12, monDay, monthPatch, noticePatch, plural, shortDay } from '@/frontend/shared/helpers';
 import { moodSvg } from '@/frontend/shared/icons';
 import { MOOD_COLORS } from '@moonshot/design-system/icons';
@@ -79,7 +79,6 @@ export function diaryVals(ctx: Ctx) {
   const nextDate = nextEntry ? new Date(Y, nextEntry.m, nextEntry.d) : null;
   const scopeHandlers = {
     all: () => logic.s({ diaryScope: 'all', rFrom: '', rTo: '' }),
-    today: () => logic.s({ diaryScope: 'today', rFrom: isoToday, rTo: isoToday }),
     week: () =>
       logic.s({
         diaryScope: 'week',
@@ -241,15 +240,13 @@ export function diaryVals(ctx: Ctx) {
     rangeShown: dScope === 'range',
     diaryEmpty: diaryDays.length === 0,
     diaryEmptyNote:
-      dScope === 'today'
-        ? 'Nothing written down today yet.'
-        : dScope === 'week'
-          ? 'Nothing written this week yet.'
-          : dScope === 'month'
-            ? 'Nothing written in the last 30 days.'
-            : dScope === 'range'
-              ? 'Nothing written down in that stretch.'
-              : 'The chronicle is still blank.',
+      dScope === 'week'
+        ? 'Nothing written this week yet.'
+        : dScope === 'month'
+          ? 'Nothing written in the last 30 days.'
+          : dScope === 'range'
+            ? 'Nothing written down in that stretch.'
+            : 'The chronicle is still blank.',
     // Read out when the Chronicle's filter changes how many entries are listed.
     diaryResults: plural(diaryDays.length, 'entry', 'entries') + ' shown.',
     diaryList: (() => {
@@ -269,8 +266,8 @@ export function diaryVals(ctx: Ctx) {
           warmup: warmupIds.has(id),
           stretch: stretchIds.has(id),
           yoga: yogaIds.has(id),
-          deleteLabel:
-            'Delete entry for ' + (en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout') + ', ' + monDay(dt) + yr,
+          // The month it's listed under: "SEPTEMBER", with its year when it isn't this one.
+          month: MONTHS[mod12(en.m)].toUpperCase() + yr,
           note: en.note,
           href: '#',
           aria:
@@ -297,23 +294,13 @@ export function diaryVals(ctx: Ctx) {
               diaryFrom: 'list',
               diaryEdit: false,
             }),
-          remove: (ev) => {
-            if (ev && ev.stopPropagation) ev.stopPropagation();
-            logic.s({
-              confirm: {
-                kind: 'entry',
-                day: id,
-                title: 'Delete this entry?',
-                body: 'Your reflection for ' + monDay(dt) + ' will be gone for good.',
-                label: 'Delete entry',
-              },
-            });
-          },
           faceWrap:
-            'width:48px;height:48px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
+            'width:40px;height:40px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
             bg,
           mood: en.mood,
           rpe: en.rpe,
+          // The stars named, as the entry names them: "Solid".
+          effort: en.rpe ? RPE_WORDS[Math.max(1, Math.min(5, en.rpe)) - 1] : '',
         };
       });
     })(),
