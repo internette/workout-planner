@@ -17,16 +17,28 @@ export interface PageHeaderProps {
 export function PageHeader({ title, count, action, intro, style }: PageHeaderProps) {
   return (
     <div style={style}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 'var(--space-2) var(--space-3)' }}>
-        <Text variant="title" as="h1" style={{ margin: 0 }}>
-          {title}
-        </Text>
-        {count != null ? (
-          <Text variant="label" tone="muted">
-            {count}
+      {/* The action keeps its place at the end of the line; on a narrow screen the count goes under the title instead. */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'baseline',
+            gap: '0 var(--space-3)',
+            flex: '1',
+            minWidth: 0,
+          }}
+        >
+          <Text variant="title" as="h1" style={{ margin: 0 }}>
+            {title}
           </Text>
-        ) : null}
-        {action ? <span style={{ marginLeft: 'auto' }}>{action}</span> : null}
+          {count != null ? (
+            <Text variant="label" tone="muted">
+              {count}
+            </Text>
+          ) : null}
+        </div>
+        {action ? <span style={{ flex: 'none' }}>{action}</span> : null}
       </div>
       {intro ? (
         <Text

@@ -215,9 +215,9 @@ export interface PlannerState {
   arsenalView?: 'workouts' | 'exercises';
   arsenalKind?: string;
   arsenalAreas?: string[];
-  arsenalAreasOpen?: boolean;
   arsenalEquip?: string[];
-  arsenalEquipOpen?: boolean;
+  // The Filter sheet: kind, target areas and equipment.
+  arsenalFilterOpen?: boolean;
   equipGroupsOpen?: Record<string, boolean>;
   arsenalAdd?: boolean;
   arsenalPick?: { key: string; names: string[]; title: string; prevAreas: string[] } | null;

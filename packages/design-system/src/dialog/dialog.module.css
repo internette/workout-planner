@@ -20,3 +20,17 @@
 .withClose { padding-right: 34px; }
 .description { margin: 10px 0 0; text-wrap: pretty; }
 .actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 22px; }
+
+/* A sheet: along the bottom of a phone's screen, full width, its buttons stretched across it. */
+@media (max-width: 599px) {
+  .sheet {
+    width: 100%;
+    max-width: none;
+    max-height: 88vh;
+    margin: auto 0 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-bottom: max(var(--space-6, 24px), env(safe-area-inset-bottom));
+  }
+  .sheet .actions > * { flex: 1 1 auto; }
+}

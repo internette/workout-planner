@@ -87,6 +87,15 @@ export const Search = strokeIcon(
     <line x1="16.5" y1="16.5" x2="21" y2="21" />
   </>,
 );
+// Filters: three sliders, each at a different setting.
+export const Sliders = strokeIcon(
+  'Sliders',
+  <>
+    <path d="M4 6h3M11 6h9M9 3.5v5" />
+    <path d="M4 12h9M17 12h3M15 9.5v5" />
+    <path d="M4 18h1M9 18h11M7 15.5v5" />
+  </>,
+);
 export const Moon = strokeIcon('Moon', <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />);
 
 // ---- navigation
