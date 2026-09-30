@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { Card } from '@moonshot/design-system/card';
-import { Check } from '@moonshot/design-system/icons';
+import { Check, ChevronRight } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import { SectionHeader } from '@/frontend/components/SectionHeader';
@@ -30,14 +30,9 @@ export function WeekQuestsCard({ v }: { v: PlannerVals }) {
               <Text variant="eyebrow" tone="muted" style={{ flex: 'none', width: '44px' }}>
                 {q?.day}
               </Text>
-              <span style={css(q?.title)}>
-                {q?.name}
-                {q?.doneLine ? (
-                  <Text variant="caption" tone="muted" as="span" style={{ display: 'block', marginTop: '2px', fontWeight: 'var(--font-weight-regular)' }}>
-                    {q?.doneLine}
-                  </Text>
-                ) : null}
-              </span>
+              <span style={css(q?.title)}>{q?.name}</span>
+              {/* It opens its day on the calendar. */}
+              <ChevronRight color="var(--color-muted)" size={15} style={{ flex: 'none', marginLeft: 'auto' }} />
             </button>
           </Fragment>
         ))}

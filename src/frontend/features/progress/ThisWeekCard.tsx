@@ -1,16 +1,24 @@
+import { Fragment } from 'react';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
-import { t } from '@/frontend/features/planner/viewHelpers';
-import { progCard } from './progCard';
-import { css } from '@/frontend/features/planner/viewHelpers';
+import { OpensChevron, progCard } from './progCard';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
-/** Progress: sessions done this week, opening the week. */
+// The bar's parts: done solid, partly done striped, missed grey. What's still to go is the track.
+const SEGMENT = {
+  done: 'var(--color-accent)',
+  partly:
+    'repeating-linear-gradient(135deg,color-mix(in srgb, var(--color-accent) 55%, transparent) 0 3px,color-mix(in srgb, var(--color-accent) 22%, transparent) 3px 6px)',
+  missed: 'color-mix(in srgb, var(--color-ink) 18%, transparent)',
+};
+
+/** Progress: this week's sessions, done, partly done, missed and to go, opening the week. */
 export function ThisWeekCard({ v }: { v: PlannerVals }) {
   return (
     <Card as="button" interactive pad="sm" onClick={v.openWeek} style={progCard('1 1 260px')}>
+      <OpensChevron />
       <Text variant="eyebrow" as="span" tone="muted" style={{ display: 'block' }}>
-        THIS WEEK
+        {v.wkHas ? v.wkEyebrow : 'THIS WEEK'}
       </Text>
       {v.wkEmpty ? (
         <Text variant="caption" as="span" tone="muted" weight="medium" style={{ display: 'block', margin: '6px 0 0' }}>
@@ -19,17 +27,20 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
       ) : null}
       {v.wkHas ? (
         <>
-          <span style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
-            <Text variant="subheading">{v.wkDone}</Text>
-            <Text variant="caption" tone="muted" weight="medium">
-              {'of '}
-              {t(v.wkTotal)}
-              {' ' + v.wkTotalUnit}
-            </Text>
+          <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '2px 14px', marginTop: '6px' }}>
+            {(v.wkParts ?? []).map((p) => (
+              <span key={p.label} style={{ display: 'inline-flex', alignItems: 'baseline', gap: '5px' }}>
+                <Text variant="subheading">{p.n}</Text>
+                <Text variant="caption" tone="muted" weight="medium">
+                  {p.label}
+                </Text>
+              </span>
+            ))}
           </span>
           <span
+            aria-hidden="true"
             style={{
-              display: 'block',
+              display: 'flex',
               height: '7px',
               borderRadius: '4px',
               background: 'var(--color-accent-tint)',
@@ -37,7 +48,11 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
               overflow: 'hidden',
             }}
           >
-            <span style={{ display: 'block', ...css(v.wkBar) }}></span>
+            {(v.wkSegments ?? []).map((g) => (
+              <Fragment key={g.kind}>
+                <span style={{ display: 'block', width: g.pct + '%', background: SEGMENT[g.kind] }} />
+              </Fragment>
+            ))}
           </span>
         </>
       ) : null}

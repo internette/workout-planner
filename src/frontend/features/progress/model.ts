@@ -3,6 +3,7 @@ import { displayName } from '@/shared/auth';
 import { plural, questSeed } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
 import { MOOD_COLORS, MOODS } from '@moonshot/design-system/icons';
+import type { DayStatus } from '@/frontend/components/StatusDot';
 
 // Progress and profile: streaks, weekly chart, records, XP and the rank ladder.
 export function progressVals(ctx: Ctx) {
@@ -146,30 +147,24 @@ export function progressVals(ctx: Ctx) {
       }
       return n === 1 ? 'LAST TRAINING DAY' : 'LAST ' + (n || 7) + ' TRAINING DAYS';
     })(),
+    // A dot for each recent training day, as the calendar draws them: done, partly done, missed, and today still to do.
     streakTicks: (() => {
-      const out: { label: string; bar: string; cap: string }[] = [];
+      const out: { day: string; num: number; dot: DayStatus; today: boolean; aria: string }[] = [];
       for (let back = 0; back <= 90 && out.length < 7; back++) {
         const dt = new Date(Y, TODAY_M, TODAY_D - back);
         const k = relM(dt) + '|' + dt.getDate();
         if (!plannedByDay[k]) continue;
-        const pending = back === 0 && !dayComplete[k];
+        const list = entriesAt(relM(dt), dt.getDate());
+        const someDone = list.some((av) => ['Done', 'Partly done'].includes(ctx.sessionStatus(relM(dt), dt.getDate(), av)));
+        const dot: DayStatus = dayComplete[k] ? 'done' : back === 0 ? 'planned' : someDone ? 'partly' : 'missed';
         out.unshift({
-          // Two letters, so Tuesday and Thursday (and the weekend days) can be told apart.
-          label: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'][dt.getDay()] + ' ' + dt.getDate(),
-          bar:
-            'display:block;height:7px;border-radius:4px;background:' +
-            (dayComplete[k]
-              ? 'linear-gradient(135deg,var(--color-accent),var(--color-periwinkle))'
-              : pending
-                ? 'repeating-linear-gradient(135deg,color-mix(in srgb, var(--color-accent) 45%, transparent) 0 3px,color-mix(in srgb, var(--color-accent) 16%, transparent) 3px 6px)'
-                : 'color-mix(in srgb, var(--color-ink) 13%, transparent)'),
-          cap:
-            'display:block;margin-top:6px;font-size:var(--text-2xs);font-weight:var(--font-weight-semibold);letter-spacing:var(--tracking-loose);text-align:center;color:' +
-            (pending
-              ? 'var(--color-accent-deep)'
-              : dayComplete[k]
-                ? 'var(--color-ink)'
-                : 'var(--color-slate-deep)'),
+          day: DOW3[dt.getDay()].charAt(0) + DOW3[dt.getDay()].slice(1).toLowerCase(),
+          num: dt.getDate(),
+          dot,
+          today: back === 0,
+          aria:
+            DOWFULL[dt.getDay()] + ' ' + dt.getDate() + ': ' +
+            (dot === 'done' ? 'done' : dot === 'partly' ? 'partly done' : dot === 'missed' ? 'missed' : 'today, still to do'),
         });
       }
       return out;
@@ -240,7 +235,8 @@ export function progressVals(ctx: Ctx) {
       .map((b) => b.done)
       .map((n, ix) => ({
         // The week's Sunday under each bar; "Now" for this week. The same words for screen readers.
-        week: ix === thisWeekIx ? 'Now' : MON3[weekBuckets[ix].start.getMonth()] + ' ' + weekBuckets[ix].start.getDate(),
+        // Month over day, on two lines for every bar, so the bars stay level whatever width the chart has.
+        week: ix === thisWeekIx ? 'Now' : MON3[weekBuckets[ix].start.getMonth()] + '\n' + weekBuckets[ix].start.getDate(),
         count: n,
         tip: weekName(ix) + ': ' + plural(n, 'session') + ' done',
         pick: () => logic.s({ barSel: ix }),
@@ -262,7 +258,7 @@ export function progressVals(ctx: Ctx) {
             ? 'linear-gradient(180deg,var(--color-accent) 0%,var(--color-periwinkle) 100%)'
             : 'color-mix(in srgb, var(--color-accent) 30%, transparent)'),
         label:
-          'font-size:var(--text-2xs);font-weight:' +
+          'white-space:pre-line;text-align:center;line-height:1.25;height:2.5em;font-size:var(--text-2xs);font-weight:' +
           (ix === barSel
             ? 'var(--font-weight-bold);color:var(--color-accent-deep)'
             : 'var(--font-weight-medium);color:var(--color-muted)'),
@@ -292,6 +288,30 @@ export function progressVals(ctx: Ctx) {
         deltaStyle:
           'flex:none;width:44px;text-align:right;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:var(--color-accent-deep)',
       })),
+    // This week in one line: done, partly done and missed (days gone by), and to go (today on), with a bar of the same.
+    ...(() => {
+      const b = weekBuckets[thisWeekIx] || { planned: 0, done: 0, sessions: [], start: todayDate, end: todayDate };
+      const count = (label) => b.sessions.filter((x) => statusOf(x) === label).length;
+      const done = b.sessions.filter((x) => x.done).length;
+      const partly = count('Partly done');
+      const missed = count('Missed');
+      const toGo = b.sessions.length - done - partly - missed;
+      const pct = (n) => (b.sessions.length ? (n / b.sessions.length) * 100 : 0);
+      return {
+        wkEyebrow: 'THIS WEEK · ' + weekRange(b).toUpperCase(),
+        wkParts: [
+          { n: done, label: 'done' },
+          ...(partly ? [{ n: partly, label: 'partly' }] : []),
+          ...(missed ? [{ n: missed, label: 'missed' }] : []),
+          { n: toGo, label: 'to go' },
+        ],
+        wkSegments: [
+          { pct: pct(done), kind: 'done' as const },
+          { pct: pct(partly), kind: 'partly' as const },
+          { pct: pct(missed), kind: 'missed' as const },
+        ].filter((x) => x.pct > 0),
+      };
+    })(),
     wkDone: weekAll.filter(isDoneEntry).length,
     wkTotal: weekAll.length,
     wkTotalUnit: weekAll.length === 1 ? 'session' : 'sessions',
@@ -329,7 +349,6 @@ export function progressVals(ctx: Ctx) {
       const out: {
         day: string;
         name: string;
-        doneLine: string;
         done: boolean;
         open: () => void;
         aria: string;
@@ -347,9 +366,8 @@ export function progressVals(ctx: Ctx) {
         const q = questSeed(dm, relM(d));
         out.push({
           day: DOW3[d.getDay()].slice(0, 3),
-          // Named by its title, as on Profile; once cleared, its "done" line sits under it.
+          // Named by its title, as on Profile; once cleared, the tick says so (the row stays one line, like the rest).
           name: q.title,
-          doneLine: isDone ? q.done : '',
           done: isDone,
           open: () => logic.openDay(relM(d), dm),
           aria: DOWFULL[d.getDay()] + ': ' + q.title + (isDone ? ', cleared' : ''),
@@ -369,29 +387,9 @@ export function progressVals(ctx: Ctx) {
       if (out.length) out[out.length - 1].row = out[out.length - 1].row.replace(/;border-bottom:[^;]*/, '');
       return out;
     })(),
-    summarySub: (() => {
-      const b = weekBuckets[thisWeekIx] || { planned: 0, done: 0, sessions: [] };
-      // "Left" is what can still be done: today and later. Days already gone by count as missed.
-      const left = b.sessions.filter((x) => !x.done && x.date >= todayDate).length;
-      // Gone by with something done is partly done, not missed (the same as the calendar says).
-      const missed = b.sessions.filter((x) => statusOf(x) === 'Missed').length;
-      const partlyN = b.sessions.filter((x) => statusOf(x) === 'Partly done').length;
-      const missedNote = (partlyN ? ' ' + partlyN + ' partly done.' : '') + (missed ? ' ' + missed + ' missed.' : '');
-      return (
-        DOWFULL[todayDate.getDay()] +
-        ', ' +
-        MONTHS[TODAY_M] +
-        ' ' +
-        TODAY_D +
-        '. ' +
-        (b.planned === 0
-          ? 'Nothing on the plan this week yet.'
-          : left === 0 && !missed && !partlyN
-            ? 'Every session this week is done.'
-            : left === 0
-              ? 'Nothing left this week.' + missedNote
-              : plural(left, 'session') + ' left this week.' + missedNote)
-      );
-    })(),
+    // The date. The week's own card says how it's going.
+    summarySub: DOWFULL[todayDate.getDay()] + ', ' + MONTHS[TODAY_M] + ' ' + TODAY_D,
+    // The chart's sessions for a week show once one is picked: this week's are on its own card already.
+    barPicked: st.barSel != null,
   };
 }

@@ -10,10 +10,8 @@ import { InstallSetting } from '@/frontend/features/profile/InstallSetting';
 import { Text } from '@moonshot/design-system/typography';
 import { AccountCard } from '@/frontend/features/profile/AccountCard';
 import { MoodSplitCard } from '@/frontend/features/profile/MoodSplitCard';
-import { PersonalBestsCard } from '@/frontend/features/profile/PersonalBestsCard';
 import { ProfileHeaderCard } from '@/frontend/features/profile/ProfileHeaderCard';
 import { QuestsClearedCard } from '@/frontend/features/profile/QuestsClearedCard';
-import { SessionsPerWeekCard } from '@/frontend/features/profile/SessionsPerWeekCard';
 
 export function ProfileScreen({ v }: { v: PlannerVals }) {
   return (
@@ -29,7 +27,6 @@ export function ProfileScreen({ v }: { v: PlannerVals }) {
             </Fragment>
           ))}
         </div>
-        <SessionsPerWeekCard v={v} />
         <QuestsClearedCard v={v} />
         <div
           style={{
@@ -40,7 +37,6 @@ export function ProfileScreen({ v }: { v: PlannerVals }) {
           }}
         >
           <MoodSplitCard v={v} />
-          <PersonalBestsCard v={v} />
         </div>
         <Card style={{ marginTop: '14px' }}>
           <Text variant="eyebrow" as="h2" tone="slate" style={{ margin: 0 }}>
