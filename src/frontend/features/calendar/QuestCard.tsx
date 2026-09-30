@@ -4,18 +4,17 @@ import { Text } from '@moonshot/design-system/typography';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
-/** The Day view’s quest for the day. */
+/** The Day view’s quest for the day: all of it, kept compact so the workouts start close under it. */
 export function QuestCard({ v }: { v: PlannerVals }) {
   return (
     <div
       style={{
         position: 'relative',
         display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        gap: '14px',
-        marginTop: '22px',
-        padding: '18px 20px',
+        alignItems: 'flex-start',
+        gap: '12px',
+        marginTop: '16px',
+        padding: '12px 16px',
         borderRadius: 'var(--radius-lg)',
         background:
           'var(--gradient-gem-tint)',
@@ -35,16 +34,17 @@ export function QuestCard({ v }: { v: PlannerVals }) {
       <span style={css(v.questIconWrap)}>
         {v.questDone ? (
           <>
-            <Check color="var(--color-on-accent)" strokeWidth={2.6} size={19} />
+            <Check color="var(--color-on-accent)" strokeWidth={2.6} size={16} />
           </>
         ) : null}
         {v.questOpen ? (
           <>
-            <Sparkle size={19} color={vars.pink} />
+            <Sparkle size={16} color={vars.pink} />
           </>
         ) : null}
       </span>
-      <div style={{ flex: '1 1 200px', minWidth: '0' }}>
+      {/* Beside the icon at any width: on a narrow phone the text wraps rather than dropping under it. */}
+      <div style={{ flex: '1 1 0', minWidth: '0' }}>
         <Text variant="micro" as="div" tone="accent">
           {v.questEyebrow}
         </Text>
@@ -52,7 +52,7 @@ export function QuestCard({ v }: { v: PlannerVals }) {
           variant="itemTitle"
           as="div"
           tone={v.questCleared ? 'muted' : 'ink'}
-          style={{ marginTop: '4px', textDecoration: v.questCleared ? 'line-through' : undefined }}
+          style={{ marginTop: '2px', textDecoration: v.questCleared ? 'line-through' : undefined }}
         >
           {v.questTitle}
         </Text>
@@ -62,7 +62,7 @@ export function QuestCard({ v }: { v: PlannerVals }) {
           tone="slateDeep"
           style={{
             lineHeight: 'var(--leading-snug)',
-            marginTop: '3px',
+            marginTop: '2px',
             textWrap: 'pretty',
           }}
         >

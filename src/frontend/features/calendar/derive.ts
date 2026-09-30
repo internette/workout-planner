@@ -53,17 +53,20 @@ export function calendarStage(ctx: EntriesCtx) {
       num,
       selected: on,
       pick: () => logic.s({ ...monthPatch(cellMonth), day: num, monthOpen: false, entryId: null }),
-      mon: spansMonths ? MON3[mod12(cellMonth)].toUpperCase() : '',
-      monStyle: spansMonths
-        ? 'font-size:var(--text-2xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);color:' + (on ? 'var(--color-on-accent-muted)' : 'var(--color-subtle)')
-        : 'display:none',
+      // A week across two months says the new one once, above its 1st, rather than a month under every day. It sits
+      // above the strip, so it takes no row of its own.
+      mon: spansMonths && num === 1 ? MON3[mod12(cellMonth)].toUpperCase() : '',
+      monStyle:
+        spansMonths && num === 1
+          ? 'position:absolute;left:0;right:0;top:-14px;text-align:center;font-size:var(--text-2xs);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);color:var(--color-accent-deep)'
+          : 'display:none',
       aria:
         longDay(new Date(Y, cellMonth, num)) +
         ' — ' +
         (!dot ? 'rest day' : workoutsWord(list) + (done ? 'completed' : part ? 'partly done, ' + partText(list) : miss ? 'missed' : 'planned')),
       isToday: cellMonth === TODAY_M && num === TODAY_D ? ('date' as const) : false,
       wrapStyle:
-        'flex:1;min-width:0;padding:8px 2px 10px;border:none;border-radius:var(--radius-md);background:' +
+        'position:relative;flex:1;min-width:0;padding:8px 2px 10px;border:none;border-radius:var(--radius-md);background:' +
         (on ? ACCENT : 'none') +
         ';display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer',
       letterStyle:
