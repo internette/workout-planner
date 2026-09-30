@@ -9,22 +9,19 @@ import { StatRow } from '@/frontend/components/StatRow';
 import { css, t } from '@/frontend/features/planner/viewHelpers';
 import { DisclosureChevron } from '@/frontend/components/DisclosureChevron';
 import { KindTag, kindOf } from '@/frontend/components/KindTag';
-import { StatusDot } from '@/frontend/components/StatusDot';
 
-/** A session on the Day view: its exercises or ride, progress, and what to do next. Only one on the day is open at a
- * time; the others are folded to a row, which opens it. */
+/** A session on the Day view: its exercises or ride, progress, and what to do next. */
 export function DayWorkoutCard({ card }: { card: any }) {
-  if (!card?.isOpen) return <FoldedCard card={card} />;
   return (
-    <Card pad="lg" className="day-card">
+    <Card pad="lg">
         <div
-          style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
+          style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '14px' }}
         >
-          <IconTile size="sm" className="day-card-tile">{card?.icoSvg}</IconTile>
+          <IconTile size="sm">{card?.icoSvg}</IconTile>
           {/* Takes the rest of the row, so a long name wraps beside the icon rather than dropping below it. */}
           <div style={{ minWidth: '0', flex: '1 1 0' }}>
             <KindTag kind={kindOf(card)} />
-            <Text variant="heading" as="h2" className="day-card-title" style={{ margin: '0' }}>
+            <Text variant="heading" as="h2" style={{ margin: '0' }}>
               <button
                 onClick={card?.open}
                 style={{
@@ -70,12 +67,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
             </div>
           </>
         ) : null}
-        {card?.ridePlan ? (
-          <Text variant="label" as="p" tone="ink" style={{ margin: '16px 0 0' }}>
-            {card.ridePlan}
-          </Text>
-        ) : null}
-        {card?.rideStats?.length ? (
+        {card?.isRide ? (
           <>
             <StatRow stats={card?.rideStats ?? []} style={{ marginTop: '20px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }} />
           </>
@@ -152,7 +144,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
               <Button
                 type="secondary"
                 size="lg"
-                style={{ flex: '1 1 120px', minWidth: '0', whiteSpace: 'nowrap' }}
+                style={{ flex: '1 1 120px', minWidth: '0' }}
                 onClick={card?.restart}
               >
                 {card?.restartLabel}
@@ -160,7 +152,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
               <Button
                 type="primary"
                 size="lg"
-                style={{ flex: '1 1 120px', minWidth: '0', whiteSpace: 'nowrap' }}
+                style={{ flex: '1 1 120px', minWidth: '0' }}
                 onClick={card?.continue}
               >
                 {card?.continueLabel}
@@ -181,46 +173,5 @@ export function DayWorkoutCard({ card }: { card: any }) {
           </>
         )}
       </Card>
-  );
-}
-
-/** A session folded to a row: its icon, name, where it stands, and its status dot. The whole row opens it. */
-function FoldedCard({ card }: { card: any }) {
-  return (
-    <Card pad="none">
-      <button
-        type="button"
-        onClick={card?.expand}
-        aria-expanded={false}
-        aria-label={card?.expandLabel + ', ' + card?.meta}
-        className="hv6"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '14px',
-          width: '100%',
-          padding: '14px 20px',
-          border: 'none',
-          borderRadius: 'inherit',
-          background: 'none',
-          font: 'inherit',
-          color: 'inherit',
-          textAlign: 'left',
-          cursor: 'pointer',
-        }}
-      >
-        <IconTile size="sm" className="day-card-tile">{card?.icoSvg}</IconTile>
-        <span style={{ flex: '1', minWidth: '0' }}>
-          <KindTag kind={kindOf(card)} />
-          <Text variant="cardTitle" as="span" style={{ display: 'block' }}>
-            {t(card?.name)}
-          </Text>
-          <Text variant="caption" as="span" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
-            {card?.meta}
-          </Text>
-        </span>
-        <StatusDot status={card?.dot} size="md" />
-      </button>
-    </Card>
   );
 }

@@ -11,6 +11,7 @@ import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { Button } from '@moonshot/design-system/buttons';
 import { Check, ChevronLeft, ChevronRight, Gem, Moon, Plus, Sparkle } from '@moonshot/design-system/icons';
 import { vars } from '@moonshot/design-system/colors';
+import { IconSquare } from '@/frontend/components/IconSquare';
 import { LinkRow } from '@/frontend/components/LinkRow';
 import { STATUS_NAMES, StatusDot } from '@/frontend/components/StatusDot';
 import { Twinkles } from '@/frontend/components/Twinkles';
@@ -287,49 +288,76 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                 <ChevronRight color="var(--color-muted)" size={16} />
               </Button>
             </div>
-            <div style={{ marginTop: '10px' }}>
-              <MonthGrid v={v} />
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 14px', marginTop: '16px' }}>
-                {STATUS_NAMES.map(([status, name]) => (
-                  <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <StatusDot status={status} />
-                    {name}
-                  </Text>
-                ))}
-              </div>
-              {/* The month in two numbers, under its grid: the grid comes straight after the month's arrows. */}
-              <Card
-                pad="none"
-                style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 24px', marginTop: '16px', padding: '12px 18px' }}
+            <div style={{ marginTop: '18px' }}>
+              <div
+                style={{
+                  display: 'grid',
+                  // Side by side, until that leaves too little room to say "of 16 done" on one line.
+                  gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))',
+                  gap: '12px',
+                  alignItems: 'stretch',
+                }}
               >
-                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Gem size={18} />
-                  <Text variant="cardTitle">{v.streakCount}</Text>
-                  <Text variant="small" tone="muted">
-                    day streak
-                  </Text>
-                </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span
+                <Card pad="sm" style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
+                  <IconSquare size={40} decorative>
+                    <Gem size={20} />
+                  </IconSquare>
+                  <div style={{ minWidth: '0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Text variant="subheading">{v.streakCount}</Text>
+                    </div>
+                    <Text variant="small" as="div" tone="muted" style={{ marginTop: '2px' }}>
+                      day streak
+                    </Text>
+                  </div>
+                </Card>
+                <Card pad="sm" style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
+                  <div
                     style={{
-                      width: '20px',
-                      height: '20px',
+                      width: '40px',
+                      height: '40px',
                       flex: 'none',
                       borderRadius: 'var(--radius-full)',
-                      background: 'var(--gradient-gem)',
+                      background:
+                        'var(--gradient-gem)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}
                   >
-                    <Check color="var(--color-on-accent)" strokeWidth={2.6} size={12} />
-                  </span>
-                  <Text variant="cardTitle">{v.shownMonthDone}</Text>
-                  <Text variant="small" tone="muted">
-                    {v.shownMonthDoneUnit}
+                    <span
+                      style={{
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: 'var(--radius-full)',
+                        background: 'var(--color-surface)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Check color="var(--color-accent)" size={20} />
+                    </span>
+                  </div>
+                  <div style={{ minWidth: '0' }}>
+                    <Text variant="subheading" as="div">
+                      {v.shownMonthDone}
+                    </Text>
+                    <Text variant="small" as="div" tone="muted" style={{ marginTop: '2px' }}>
+                      {v.shownMonthDoneUnit}
+                    </Text>
+                  </div>
+                </Card>
+              </div>
+              <MonthGrid v={v} />
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', marginTop: '20px' }}>
+                {STATUS_NAMES.map(([status, name]) => (
+                  <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                    <StatusDot status={status} />
+                    {name}
                   </Text>
-                </span>
-              </Card>
+                ))}
+              </div>
               {v.hasToday ? (
                 <>
                   <div style={{ marginTop: '30px' }}>

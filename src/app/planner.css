@@ -22,11 +22,3 @@ html { scroll-padding-top: 16px; scroll-padding-bottom: 104px; }
 
 /* The Spellbook's Filter button: its icon alone on the narrowest phones, leaving the search beside it room. */
 @media (max-width: 359px) { .filter-word { display: none; } }
-
-/* The Day view's open workout card on the narrowest phones: a little less padding, a smaller icon tile and title, so
-   a name like "Morning Mobility" stays on one line. (The title's size is set inline, hence !important.) */
-@media (max-width: 359px) {
-  .day-card { padding: var(--space-5) !important; }
-  .day-card-tile { width: 34px !important; height: 34px !important; }
-  .day-card-title { font-size: var(--text-2xl) !important; }
-}

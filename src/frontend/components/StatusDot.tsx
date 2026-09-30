@@ -40,12 +40,11 @@ export function StatusDot({ status, size = 'sm', onAccent = false }: StatusDotPr
   return <span aria-hidden="true" style={{ flex: 'none', display: 'block', ...style }} />;
 }
 
-/** The key under the calendar: each status with its name, short enough for all five on a phone's line. (A day's own
- * name says it in full: "completed", "partly done, 1 of 2 exercises done".) */
+/** The key under the calendar: each status with its name. */
 export const STATUS_NAMES: [DayStatus, string][] = [
   ['planned', 'Planned'],
-  ['done', 'Done'],
-  ['partly', 'Partly'],
+  ['done', 'Completed'],
+  ['partly', 'Partly done'],
   ['missed', 'Missed'],
   ['rest', 'Rest'],
 ];
