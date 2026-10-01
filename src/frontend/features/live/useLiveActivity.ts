@@ -95,7 +95,7 @@ const post = (m: Record<string, unknown>) =>
  * page needs to redraw every second.
  */
 export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, anyRunning: boolean) {
-  const [settings, setSettings] = useState<LiveSettings>({ notify: false, player: false });
+  const [settings, setSettings] = useState<LiveSettings>({ awake: false, notify: false, player: false });
   useEffect(() => {
     setSettings(liveSettings());
     return onLiveSettings((s) => setSettings((cur) => ({ ...cur, ...s })));

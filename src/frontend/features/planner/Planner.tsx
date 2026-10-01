@@ -14,6 +14,7 @@ import { PlannerStatus } from './PlannerStatus';
 import { InstallPrompt } from '../install/InstallPrompt';
 import { useInstallPrompt } from '../install/useInstallPrompt';
 import { useLiveActivity } from '../live/useLiveActivity';
+import { useWakeLock } from '../live/useWakeLock';
 import { RankUp } from '@moonshot/design-system/rank-up';
 
 // How long the plan may take before the loading screen says so.
@@ -363,6 +364,8 @@ export default function Planner({ account = null }: { account?: Account | null }
   const anyTimerRunning =
     Object.values(logic.state.workoutTimer || {}).some((t) => t && t.runningSince) || !!logic.state.rest;
   useLiveActivity(logic, view, anyTimerRunning);
+  // The screen stays on from Start until the workout is finished, paused or not (unless turned off in Settings).
+  useWakeLock(!!view?.liveActivity);
   const rank: number | null = view ? view.rankIndex : null;
   const [rankUp, setRankUp] = useState<number | null>(null);
   useEffect(() => {

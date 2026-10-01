@@ -1,17 +1,22 @@
-// Whether the session in progress shows outside the page: as a notification (on unless turned off; the browser asks
-// the first time a workout starts), and as the lock screen's player (off unless turned on: it plays silent audio,
-// which stops other music). Both are chosen in Profile → Settings and kept in this browser.
+// During a workout: whether the screen stays on (on unless turned off), and whether the session in progress shows
+// outside the page: as a notification (on unless turned off; the browser asks the first time a workout starts), and as
+// the lock screen's player (off unless turned on: it plays silent audio, which stops other music). All are chosen in
+// Profile → Settings and kept in this browser.
 
-export type LiveSettings = { notify: boolean; player: boolean };
+export type LiveSettings = { awake: boolean; notify: boolean; player: boolean };
 
-const KEYS = { notify: 'moonshot.live.notify', player: 'moonshot.live.player' } as const;
+const KEYS = { awake: 'moonshot.live.awake', notify: 'moonshot.live.notify', player: 'moonshot.live.player' } as const;
 const EVENT = 'moonshot-live-settings';
 
 export function liveSettings(): LiveSettings {
   try {
-    return { notify: localStorage.getItem(KEYS.notify) !== '0', player: localStorage.getItem(KEYS.player) === '1' };
+    return {
+      awake: localStorage.getItem(KEYS.awake) !== '0',
+      notify: localStorage.getItem(KEYS.notify) !== '0',
+      player: localStorage.getItem(KEYS.player) === '1',
+    };
   } catch {
-    return { notify: true, player: false };
+    return { awake: true, notify: true, player: false };
   }
 }
 
@@ -24,7 +29,7 @@ export function setLiveSetting(key: keyof LiveSettings, on: boolean) {
   window.dispatchEvent(new CustomEvent(EVENT, { detail: { [key]: on } }));
 }
 
-/** Calls back whenever either setting changes on this page. */
+/** Calls back whenever a setting changes on this page. */
 export function onLiveSettings(fn: (s: Partial<LiveSettings>) => void) {
   const handler = (e: Event) => fn((e as CustomEvent<Partial<LiveSettings>>).detail);
   window.addEventListener(EVENT, handler);
@@ -36,3 +41,12 @@ export const canNotify = () => typeof window !== 'undefined' && 'Notification' i
 
 /** The lock screen's player can be used here. */
 export const canPlayer = () => typeof navigator !== 'undefined' && 'mediaSession' in navigator;
+
+/** The screen can be kept on here. An app added to an iPhone's or iPad's home screen before iOS 18.4 has the API but
+ * it does nothing there, so it doesn't count. */
+export const canWake = () => {
+  if (typeof navigator === 'undefined' || !('wakeLock' in navigator)) return false;
+  const ios = /\b(?:iPhone|iPad|iPod)\b.* OS (\d+)_(\d+)/.exec(navigator.userAgent);
+  const homeScreen = typeof window !== 'undefined' && window.matchMedia?.('(display-mode: standalone)').matches;
+  return !(ios && homeScreen && Number(ios[1]) * 100 + Number(ios[2]) < 1804);
+};
