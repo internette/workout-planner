@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { Checkbox } from '@moonshot/design-system/checkbox';
-import { Text } from '@moonshot/design-system/typography';
 import { SettingsCard } from './SettingsCard';
 import { canNotify, canPlayer, canWake, liveSettings, onLiveSettings, setLiveSetting, type LiveSettings } from '@/frontend/features/live/settings';
 
@@ -32,34 +31,38 @@ export function LiveSetting() {
     <SettingsCard title="DURING A WORKOUT">
       {can.awake ? (
         <div style={{ marginTop: '12px' }}>
-          <Checkbox switch checked={s.awake} onChange={(on) => setLiveSetting('awake', on)}>
+          <Checkbox
+            switch
+            checked={s.awake}
+            onChange={(on) => setLiveSetting('awake', on)}
+            description="From Start until you finish, paused or not. Low Power Mode can overrule it."
+          >
             Keep the screen on during a workout
           </Checkbox>
-          <Text variant="caption" as="p" tone="muted" style={{ margin: '6px 0 0', paddingLeft: 'calc(20px + var(--space-3))' }}>
-            From Start until you finish, paused or not. Low Power Mode can overrule it.
-          </Text>
         </div>
       ) : null}
       {can.notify ? (
         <div style={{ marginTop: can.awake ? '10px' : '12px' }}>
-          <Checkbox switch checked={s.notify} onChange={pickNotify}>
+          <Checkbox
+            switch
+            checked={s.notify}
+            onChange={pickNotify}
+            description={s.notify && blocked ? 'Notifications are blocked for Moonshot. Allow them in your browser’s site settings.' : undefined}
+          >
             Show it in a notification, with buttons to tick off and finish
           </Checkbox>
-          {s.notify && blocked ? (
-            <Text variant="caption" as="p" tone="muted" style={{ margin: '6px 0 0', paddingLeft: 'calc(20px + var(--space-3))' }}>
-              Notifications are blocked for Moonshot. Allow them in your browser’s site settings.
-            </Text>
-          ) : null}
         </div>
       ) : null}
       {can.player ? (
         <div style={{ marginTop: '10px' }}>
-          <Checkbox switch checked={s.player} onChange={(on) => setLiveSetting('player', on)}>
+          <Checkbox
+            switch
+            checked={s.player}
+            onChange={(on) => setLiveSetting('player', on)}
+            description="This plays silence to hold the spot, so it stops other music."
+          >
             Show it on the lock screen as what’s playing
           </Checkbox>
-          <Text variant="caption" as="p" tone="muted" style={{ margin: '6px 0 0', paddingLeft: 'calc(20px + var(--space-3))' }}>
-            This plays silence to hold the spot, so it stops other music.
-          </Text>
         </div>
       ) : null}
     </SettingsCard>

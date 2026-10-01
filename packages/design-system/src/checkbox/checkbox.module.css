@@ -37,3 +37,13 @@
   color: var(--color-slate);
   text-wrap: pretty;
 }
+
+/* Under the label, lined up with its text: past the 20 px box and the gap. */
+.description {
+  margin: 6px 0 0;
+  padding-left: calc(20px + var(--space-3));
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  color: var(--color-muted);
+  text-wrap: pretty;
+}

@@ -39,6 +39,17 @@ export default function CheckboxPage() {
         </Checkbox>
       </div>
 
+      <h2 id="description" style={h2}>With a description</h2>
+      <p style={note}>
+        Pass <code>description</code> for a line more: what it does, or what it costs. It sits under the label, lined
+        up with its text, and a screen reader reads it with the box. Only the label is the press target.
+      </p>
+      <div style={panel}>
+        <Checkbox switch checked={follow} onChange={setFollow} description="From Start until you finish, paused or not.">
+          Keep the screen on during a workout
+        </Checkbox>
+      </div>
+
       <h2 id="behaviour" style={h2}>Behaviour</h2>
       <ul style={{ ...note, paddingLeft: 20 }}>
         <li>It is a native checkbox underneath, so Space toggles it and it joins forms and label clicks as usual.</li>

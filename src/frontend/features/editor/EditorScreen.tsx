@@ -60,12 +60,9 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       ) : null}
       {v.isCreating ? (
         <Card pad="sm" style={{ marginTop: '16px' }}>
-          <Checkbox switch checked={!!v.scheduleOn} onChange={v.setSchedule}>
+          <Checkbox switch checked={!!v.scheduleOn} onChange={v.setSchedule} description={v.scheduleNote}>
             Add to calendar
           </Checkbox>
-          <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
-            {v.scheduleNote}
-          </Text>
           {v.showRepeatDays ? <RepeatDays v={v} /> : null}
           {v.daysNote ? (
             <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
