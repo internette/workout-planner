@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { Card } from '@moonshot/design-system/card';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
@@ -22,17 +21,15 @@ export function QuestsClearedCard({ v }: { v: PlannerVals }) {
       ) : null}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '16px' }}>
         {(v.questStats ?? []).map((q, i) => (
-          <Fragment key={i}>
-            <div style={css(q?.row)}>
-              <RankGem fill={q?.color} />
-              <Text variant="label" tone="ink" style={{ flex: '1', minWidth: '0' }}>
-                {q?.name}
-              </Text>
-              <Text variant="figure" tone="slate" style={{ flex: 'none' }}>
-                {q?.count}
-              </Text>
-            </div>
-          </Fragment>
+          <div key={i} style={css(q?.row)}>
+            <RankGem fill={q?.color} />
+            <Text variant="label" tone="ink" style={{ flex: '1', minWidth: '0' }}>
+              {q?.name}
+            </Text>
+            <Text variant="figure" tone="slate" style={{ flex: 'none' }}>
+              {q?.count}
+            </Text>
+          </div>
         ))}
       </div>
     </Card>

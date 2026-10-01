@@ -1,7 +1,6 @@
 // The calendar: the Day, Week and Month views and the month picker.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
-import { Fragment } from 'react';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import { Card } from '@moonshot/design-system/card';
 import { EmptyState } from '@moonshot/design-system/empty-state';
@@ -25,332 +24,312 @@ import { kindOf } from '@/frontend/components/KindTag';
 
 export function CalendarScreen({ v }: { v: PlannerVals }) {
   return (
-    <>
-      <div style={{ position: 'relative' }}>
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '12px',
-          }}
-        >
-          {/* Takes the room left on the row, so Today stays on it beside a long month name on a narrow phone. */}
-          <span style={{ display: 'flex', alignItems: 'center', flex: '1 1 0', minWidth: 0 }}>
-            <MonthPicker v={v} />
-          </span>
-          {/* On the right: at the end of the first row on a phone (the view switch wraps below), beside the view
-              switch on a wider screen. */}
-          {v.awayFromToday ? (
-            <Button type="secondary" ghost size="xs" onClick={v.goToday} style={{ marginLeft: 'auto' }}>
-              Today
-            </Button>
-          ) : null}
-          <SegmentedControl
-            label="Calendar view"
-            semantics="tabs"
-            equalWidth
-            options={[
-              { value: 'Day', label: 'Day' },
-              { value: 'Week', label: 'Week' },
-              { value: 'Month', label: 'Month' },
-            ]}
-            value={v.calendarView}
-            onChange={v.setCalendarView}
-            panelId="calendar-view"
-            style={v.segLayout}
-          />
-        </div>
-        {SUMMON_ON ? <SummonPlan onAdd={v.addPlanDraft} adding={!!v.addingPlan} /> : null}
-        <div role="tabpanel" id="calendar-view" aria-labelledby={'calendar-view-' + v.calendarView}>
-        {v.showDay ? (
-          <>
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                gap: '10px',
-                marginTop: '20px',
-              }}
-            >
-              <Text variant="title" as="h1" style={{ margin: '0' }}>
-                {v.dayName}
-              </Text>
-              <Text variant="label" tone="muted">
-                {v.shortDate}
-              </Text>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '20px' }}>
-              <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
-              <div style={{ flex: '1', display: 'flex' }}>
-                {(v.days ?? []).map((d, i) => (
-                  <Fragment key={i}>
-                    <button
-                      onClick={d?.pick}
-                      aria-label={d?.aria}
-                      aria-current={d?.isToday}
-                      aria-pressed={!!d?.selected}
-                      style={css(d?.wrapStyle)}
-                    >
-                      <span style={css(d?.letterStyle)}>{d?.letter}</span>
-                      <span style={css(d?.monStyle)}>{d?.mon}</span>
-                      <span style={css(d?.numStyle)}>{d?.num}</span>
-                      <StatusDot status={d?.dot} onAccent={!!d?.selected} />
-                    </button>
-                  </Fragment>
-                ))}
-              </div>
-              <StepButton dir="next" unit="week" onClick={v.nextWeek} />
-            </div>
-          </>
+    <div style={{ position: 'relative' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '12px',
+        }}
+      >
+        {/* Takes the room left on the row, so Today stays on it beside a long month name on a narrow phone. */}
+        <span style={{ display: 'flex', alignItems: 'center', flex: '1 1 0', minWidth: 0 }}>
+          <MonthPicker v={v} />
+        </span>
+        {/* On the right: at the end of the first row on a phone (the view switch wraps below), beside the view
+            switch on a wider screen. */}
+        {v.awayFromToday ? (
+          <Button type="secondary" ghost size="xs" onClick={v.goToday} style={{ marginLeft: 'auto' }}>
+            Today
+          </Button>
         ) : null}
-        {v.showQuest ? (
-          <>
-            <QuestCard v={v} />
-          </>
-        ) : null}
-        <RestartDialog v={v} />
-        {v.hasWorkout ? (
-          <>
-            <div style={{ marginTop: '14px' }}>
-              {(v.dayCards ?? []).map((c, i) => (
-                <Fragment key={c?.key}>
-                  <div style={{ marginTop: i ? '12px' : '0' }}>
-                    <DayWorkoutCard card={c} />
-                  </div>
-                </Fragment>
+        <SegmentedControl
+          label="Calendar view"
+          semantics="tabs"
+          equalWidth
+          options={[
+            { value: 'Day', label: 'Day' },
+            { value: 'Week', label: 'Week' },
+            { value: 'Month', label: 'Month' },
+          ]}
+          value={v.calendarView}
+          onChange={v.setCalendarView}
+          panelId="calendar-view"
+          style={v.segLayout}
+        />
+      </div>
+      {SUMMON_ON ? <SummonPlan onAdd={v.addPlanDraft} adding={!!v.addingPlan} /> : null}
+      <div role="tabpanel" id="calendar-view" aria-labelledby={'calendar-view-' + v.calendarView}>
+      {v.showDay ? (
+        <>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              gap: '10px',
+              marginTop: '20px',
+            }}
+          >
+            <Text variant="title" as="h1" style={{ margin: '0' }}>
+              {v.dayName}
+            </Text>
+            <Text variant="label" tone="muted">
+              {v.shortDate}
+            </Text>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '20px' }}>
+            <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
+            <div style={{ flex: '1', display: 'flex' }}>
+              {(v.days ?? []).map((d, i) => (
+                <button key={i}
+                  onClick={d?.pick}
+                  aria-label={d?.aria}
+                  aria-current={d?.isToday}
+                  aria-pressed={!!d?.selected}
+                  style={css(d?.wrapStyle)}
+                >
+                  <span style={css(d?.letterStyle)}>{d?.letter}</span>
+                  <span style={css(d?.monStyle)}>{d?.mon}</span>
+                  <span style={css(d?.numStyle)}>{d?.num}</span>
+                  <StatusDot status={d?.dot} onAccent={!!d?.selected} />
+                </button>
               ))}
-              <aside style={{ display: 'flex', marginTop: '14px' }}>
-                <Button type="dashed" size="md" onClick={v.goNewWorkout} style={{ flex: '1' }}>
-                  <Plus color="var(--color-accent-deep)" size={17} />
-                  Add workout
-                </Button>
-              </aside>
             </div>
-          </>
-        ) : null}
-        {v.firstRun ? (
-          <EmptyState
-            style={{ marginTop: '48px' }}
-            medallion="gem"
-            icon={<Gem size={40} />}
-            title="The call is coming"
-            description="Put your first lift or ride on the calendar. That day gets a quest, and every exercise you clear starts your climb from First spark."
-            actions={
-              <>
-                <Button type="primary" size="lg" glow onClick={v.goNewWorkout}>
-                  <Plus color="var(--color-on-accent)" size={16} />
-                  Plan your first workout
-                </Button>
-                <Button type="neutral" ghost size="md" onClick={v.goArsenal}>
-                  Browse the Spellbook
-                </Button>
-              </>
-            }
-          />
-        ) : null}
-        {v.isRest ? (
-          <EmptyState
-            style={{ marginTop: '56px' }}
-            icon={
-              <>
-                <Moon color="var(--color-periwinkle)" size={40} />
-                <span style={{ position: 'absolute', top: '21px', right: '20px', display: 'flex' }}>
-                  <Sparkle size={9.5} outline color={vars.gold} strokeWidth={2.2} />
-                </span>
-              </>
-            }
-            title="The city is quiet"
-            description={
-              <>
-                No quest {v.restDayPhrase}. Rest is how the power comes back — or add a workout if you&apos;re
-                feeling it.
-              </>
-            }
-            actions={
+            <StepButton dir="next" unit="week" onClick={v.nextWeek} />
+          </div>
+        </>
+      ) : null}
+      {v.showQuest ? (
+        <QuestCard v={v} />
+      ) : null}
+      <RestartDialog v={v} />
+      {v.hasWorkout ? (
+        <div style={{ marginTop: '14px' }}>
+          {(v.dayCards ?? []).map((c, i) => (
+            <div key={c?.key} style={{ marginTop: i ? '12px' : '0' }}>
+              <DayWorkoutCard card={c} />
+            </div>
+          ))}
+          <aside style={{ display: 'flex', marginTop: '14px' }}>
+            <Button type="dashed" size="md" onClick={v.goNewWorkout} style={{ flex: '1' }}>
+              <Plus color="var(--color-accent-deep)" size={17} />
+              Add workout
+            </Button>
+          </aside>
+        </div>
+      ) : null}
+      {v.firstRun ? (
+        <EmptyState
+          style={{ marginTop: '48px' }}
+          medallion="gem"
+          icon={<Gem size={40} />}
+          title="The call is coming"
+          description="Put your first lift or ride on the calendar. That day gets a quest, and every exercise you clear starts your climb from First spark."
+          actions={
+            <>
               <Button type="primary" size="lg" glow onClick={v.goNewWorkout}>
                 <Plus color="var(--color-on-accent)" size={16} />
-                Add workout
+                Plan your first workout
               </Button>
-            }
-            decoration={
-              <span style={{ position: 'absolute', left: '14%', bottom: '120px', animation: 'twinkle 4s ease-in-out infinite' }}>
-                <Sparkle size={13} color={vars.periwinkle} glow={0.5} />
+              <Button type="neutral" ghost size="md" onClick={v.goArsenal}>
+                Browse the Spellbook
+              </Button>
+            </>
+          }
+        />
+      ) : null}
+      {v.isRest ? (
+        <EmptyState
+          style={{ marginTop: '56px' }}
+          icon={
+            <>
+              <Moon color="var(--color-periwinkle)" size={40} />
+              <span style={{ position: 'absolute', top: '21px', right: '20px', display: 'flex' }}>
+                <Sparkle size={9.5} outline color={vars.gold} strokeWidth={2.2} />
               </span>
-            }
-          />
-        ) : null}
-        {v.showWeek ? (
-          <>
-            <div style={{ marginTop: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
-                <Text variant="itemTitle" as="h1" style={{ flex: 'none', whiteSpace: 'nowrap', margin: 0 }}>
-                  {v.weekLabel}
-                </Text>
-                <StepButton dir="next" unit="week" onClick={v.nextWeek} />
-              </div>
+            </>
+          }
+          title="The city is quiet"
+          description={
+            <>
+              No quest {v.restDayPhrase}. Rest is how the power comes back — or add a workout if you&apos;re
+              feeling it.
+            </>
+          }
+          actions={
+            <Button type="primary" size="lg" glow onClick={v.goNewWorkout}>
+              <Plus color="var(--color-on-accent)" size={16} />
+              Add workout
+            </Button>
+          }
+          decoration={
+            <span style={{ position: 'absolute', left: '14%', bottom: '120px', animation: 'twinkle 4s ease-in-out infinite' }}>
+              <Sparkle size={13} color={vars.periwinkle} glow={0.5} />
+            </span>
+          }
+        />
+      ) : null}
+      {v.showWeek ? (
+        <div style={{ marginTop: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
+            <Text variant="itemTitle" as="h1" style={{ flex: 'none', whiteSpace: 'nowrap', margin: 0 }}>
+              {v.weekLabel}
+            </Text>
+            <StepButton dir="next" unit="week" onClick={v.nextWeek} />
+          </div>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '26px', paddingBottom: v.hasRows ? '8px' : 0 }}
+          >
+            {(v.weekRows ?? []).map((w, i) => (
+              <WeekRow key={i} row={w} />
+            ))}
+          </div>
+          {v.weekAllDone ? (
+            <div
+              style={{
+                position: 'relative',
+                marginTop: '16px',
+                padding: '26px 24px',
+                borderRadius: 'var(--radius-lg)',
+                background:
+                  'var(--gradient-gem-tint)',
+                textAlign: 'center',
+                overflow: 'hidden',
+              }}
+            >
+              <Twinkles />
               <div
-                style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '26px', paddingBottom: v.hasRows ? '8px' : 0 }}
+                style={{
+                  width: '56px',
+                  height: '56px',
+                  margin: '0 auto',
+                  borderRadius: 'var(--radius-full)',
+                  background:
+                    'var(--gradient-gem)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
               >
-                {(v.weekRows ?? []).map((w, i) => (
-                  <Fragment key={i}>
-                    <WeekRow row={w} />
-                  </Fragment>
-                ))}
+                <Check color="var(--color-on-accent)" strokeWidth={2.6} size={26} />
               </div>
-              {v.weekAllDone ? (
-                <>
-                  <div
-                    style={{
-                      position: 'relative',
-                      marginTop: '16px',
-                      padding: '26px 24px',
-                      borderRadius: 'var(--radius-lg)',
-                      background:
-                        'var(--gradient-gem-tint)',
-                      textAlign: 'center',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <Twinkles />
-                    <div
-                      style={{
-                        width: '56px',
-                        height: '56px',
-                        margin: '0 auto',
-                        borderRadius: 'var(--radius-full)',
-                        background:
-                          'var(--gradient-gem)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Check color="var(--color-on-accent)" strokeWidth={2.6} size={26} />
-                    </div>
-                    <Text variant="subheading" as="h3" style={{ margin: '16px 0 0' }}>
-                      Week sealed
-                    </Text>
-                    <Text
-                      variant="body"
-                      as="p"
-                      tone="slate"
-                      style={{ margin: '8px auto 0', maxWidth: '320px', textWrap: 'pretty' }}
-                    >
-                      {v.weekDoneNote}
-                    </Text>
-                  </div>
-                </>
-              ) : null}
-              {v.noRows ? (
-                <EmptyState
-                  size="md"
-                  panel
-                  titleAs="h3"
-                  style={{ margin: '34px 0 0' }}
-                  icon={<Gem size={32} />}
-                  title="Your wand&apos;s still charging"
-                  description={v.emptyWeekNote}
-                  actions={
-                    <Button
-                      type="primary"
-                      size="lg"
-                      onClick={v.goNewWorkout}
-                    >
-                      <Plus color="var(--color-on-accent)" size={16} />
-                      Add workout
-                    </Button>
-                  }
-                  decoration={
-                    <>
-                      <Twinkles />
-                    </>
-                  }
-                />
-              ) : null}
-            </div>
-          </>
-        ) : null}
-        {v.showMonth ? (
-          <>
-            <h1 className="sr-only">{v.monthName}</h1>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '8px', marginTop: '14px' }}>
-              <Button type="neutral" ghost size="sm" onClick={v.prevMonth} aria-label={'Previous month, ' + v.prevMonthName}>
-                <ChevronLeft color="var(--color-muted)" size={16} />
-                {v.prevMonthShort}
-              </Button>
-              <Button type="neutral" ghost size="sm" onClick={v.nextMonth} aria-label={'Next month, ' + v.nextMonthName}>
-                {v.nextMonthShort}
-                <ChevronRight color="var(--color-muted)" size={16} />
-              </Button>
-            </div>
-            <div style={{ marginTop: '10px' }}>
-              <MonthGrid v={v} />
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 14px', marginTop: '16px' }}>
-                {STATUS_NAMES.map(([status, name]) => (
-                  <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <StatusDot status={status} />
-                    {name}
-                  </Text>
-                ))}
-              </div>
-              {/* The month in two numbers, under its grid: the grid comes straight after the month's arrows. */}
-              <Card
-                pad="none"
-                style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 18px', marginTop: '16px', padding: '12px 18px' }}
+              <Text variant="subheading" as="h3" style={{ margin: '16px 0 0' }}>
+                Week sealed
+              </Text>
+              <Text
+                variant="body"
+                as="p"
+                tone="slate"
+                style={{ margin: '8px auto 0', maxWidth: '320px', textWrap: 'pretty' }}
               >
-                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Gem size={18} />
-                  <Text variant="cardTitle">{v.streakCount}</Text>
-                  <Text variant="small" tone="muted">
-                    day streak
-                  </Text>
-                </span>
-                {/* A rule between the two, except on the narrowest phones, where they're on a line each. */}
-                <span aria-hidden="true" className="stats-rule" style={{ width: '1px', alignSelf: 'stretch', background: 'var(--color-line)' }} />
-                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      flex: 'none',
-                      borderRadius: 'var(--radius-full)',
-                      background: 'var(--gradient-gem)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Check color="var(--color-on-accent)" strokeWidth={2.6} size={12} />
-                  </span>
-                  <Text variant="cardTitle">{v.shownMonthDone}</Text>
-                  <Text variant="small" tone="muted">
-                    {v.shownMonthDoneUnit}
-                  </Text>
-                </span>
-              </Card>
-              {v.hasToday ? (
-                <>
-                  <div style={{ marginTop: '30px' }}>
-                    <Text variant="eyebrow" as="div" tone="muted">
-                      {v.todayLabel}
-                    </Text>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: '12px' }}>
-                      {(v.todayCards ?? []).map((c, i) => (
-                        <LinkRow key={i} title={c?.name} detail={c?.meta} kind={kindOf(c)} onClick={c?.open} />
-                      ))}
-                    </div>
-                  </div>
-                </>
-              ) : null}
+                {v.weekDoneNote}
+              </Text>
             </div>
-          </>
-        ) : null}
+          ) : null}
+          {v.noRows ? (
+            <EmptyState
+              size="md"
+              panel
+              titleAs="h3"
+              style={{ margin: '34px 0 0' }}
+              icon={<Gem size={32} />}
+              title="Your wand&apos;s still charging"
+              description={v.emptyWeekNote}
+              actions={
+                <Button
+                  type="primary"
+                  size="lg"
+                  onClick={v.goNewWorkout}
+                >
+                  <Plus color="var(--color-on-accent)" size={16} />
+                  Add workout
+                </Button>
+              }
+              decoration={
+                <Twinkles />
+              }
+            />
+          ) : null}
         </div>
+      ) : null}
+      {v.showMonth ? (
+        <>
+          <h1 className="sr-only">{v.monthName}</h1>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '8px', marginTop: '14px' }}>
+            <Button type="neutral" ghost size="sm" onClick={v.prevMonth} aria-label={'Previous month, ' + v.prevMonthName}>
+              <ChevronLeft color="var(--color-muted)" size={16} />
+              {v.prevMonthShort}
+            </Button>
+            <Button type="neutral" ghost size="sm" onClick={v.nextMonth} aria-label={'Next month, ' + v.nextMonthName}>
+              {v.nextMonthShort}
+              <ChevronRight color="var(--color-muted)" size={16} />
+            </Button>
+          </div>
+          <div style={{ marginTop: '10px' }}>
+            <MonthGrid v={v} />
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 14px', marginTop: '16px' }}>
+              {STATUS_NAMES.map(([status, name]) => (
+                <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <StatusDot status={status} />
+                  {name}
+                </Text>
+              ))}
+            </div>
+            {/* The month in two numbers, under its grid: the grid comes straight after the month's arrows. */}
+            <Card
+              pad="none"
+              style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 18px', marginTop: '16px', padding: '12px 18px' }}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Gem size={18} />
+                <Text variant="cardTitle">{v.streakCount}</Text>
+                <Text variant="small" tone="muted">
+                  day streak
+                </Text>
+              </span>
+              {/* A rule between the two, except on the narrowest phones, where they're on a line each. */}
+              <span aria-hidden="true" className="stats-rule" style={{ width: '1px', alignSelf: 'stretch', background: 'var(--color-line)' }} />
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    flex: 'none',
+                    borderRadius: 'var(--radius-full)',
+                    background: 'var(--gradient-gem)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Check color="var(--color-on-accent)" strokeWidth={2.6} size={12} />
+                </span>
+                <Text variant="cardTitle">{v.shownMonthDone}</Text>
+                <Text variant="small" tone="muted">
+                  {v.shownMonthDoneUnit}
+                </Text>
+              </span>
+            </Card>
+            {v.hasToday ? (
+              <div style={{ marginTop: '30px' }}>
+                <Text variant="eyebrow" as="div" tone="muted">
+                  {v.todayLabel}
+                </Text>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: '12px' }}>
+                  {(v.todayCards ?? []).map((c, i) => (
+                    <LinkRow key={i} title={c?.name} detail={c?.meta} kind={kindOf(c)} onClick={c?.open} />
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </>
+      ) : null}
       </div>
-    </>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Fragment, type CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { css } from '@/frontend/features/planner/viewHelpers';
@@ -19,25 +19,23 @@ export function PersonalBestsCard({ v, style }: { v: PlannerVals; style?: CSSPro
         style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '12px' }}
       >
         {(v.records ?? []).map((r, i) => (
-          <Fragment key={i}>
-            <div style={css(r?.rowStyle)}>
-              <Text variant="label" tone="ink" style={{ flex: '1', minWidth: '0' }}>
-                {r?.name}
-              </Text>
-              <span
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'var(--text-base)',
-                  fontWeight: 'var(--font-weight-bold)',
-                  color: 'var(--color-ink)',
-                  flex: 'none',
-                }}
-              >
-                {r?.value}
-              </span>
-              {r?.delta ? <span style={css(r?.deltaStyle)}>{r?.delta}</span> : null}
-            </div>
-          </Fragment>
+          <div key={i} style={css(r?.rowStyle)}>
+            <Text variant="label" tone="ink" style={{ flex: '1', minWidth: '0' }}>
+              {r?.name}
+            </Text>
+            <span
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: 'var(--text-base)',
+                fontWeight: 'var(--font-weight-bold)',
+                color: 'var(--color-ink)',
+                flex: 'none',
+              }}
+            >
+              {r?.value}
+            </span>
+            {r?.delta ? <span style={css(r?.deltaStyle)}>{r?.delta}</span> : null}
+          </div>
         ))}
       </div>
     </Card>

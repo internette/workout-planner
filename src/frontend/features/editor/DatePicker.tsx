@@ -34,20 +34,18 @@ export function DatePicker({ v }: { v: PlannerVals }) {
             }}
           >
             {(v.dowLabels ?? []).map((l, i) => (
-              <Fragment key={i}>
-                <span
-                  aria-hidden="true"
-                  style={{
-                    textAlign: 'center',
-                    fontSize: 'var(--text-2xs)',
-                    fontWeight: 'var(--font-weight-bold)',
-                    color: 'var(--color-subtle)',
-                    paddingBottom: '4px',
-                  }}
-                >
-                  {l}
-                </span>
-              </Fragment>
+              <span key={i}
+                aria-hidden="true"
+                style={{
+                  textAlign: 'center',
+                  fontSize: 'var(--text-2xs)',
+                  fontWeight: 'var(--font-weight-bold)',
+                  color: 'var(--color-subtle)',
+                  paddingBottom: '4px',
+                }}
+              >
+                {l}
+              </span>
             ))}
             {(v.pickerCells ?? []).map((p, i) => (
               <Fragment key={i}>

@@ -48,7 +48,7 @@ export const editTemplatePatch = (id: string, extra: Partial<PlannerState> = {})
   ...extra,
 });
 
-export const questFor = (seed: number) => QUESTS[Math.abs(Math.round(seed)) % QUESTS.length];
+const questFor = (seed: number) => QUESTS[Math.abs(Math.round(seed)) % QUESTS.length];
 export const questSeed = (day: number, month: number) => questFor(day * 3 + month);
 export const idOf = (av: { id?: string } | null | undefined): string => (av && av.id) || 'unknown';
 // Durations. Hours and minutes as typed (either may be blank) to minutes, and minutes back to the two boxes, each
@@ -164,7 +164,7 @@ export const rollMinutes = (hrs: string | null | undefined, mins: string | null 
 };
 
 // Everything a list of exercises needs, once each, in the order the equipment list gives it.
-export const equipmentOf = (list: { equipment?: string[] }[] | null | undefined) => {
+const equipmentOf = (list: { equipment?: string[] }[] | null | undefined) => {
   const need = new Set((list || []).flatMap((e) => e.equipment || []));
   return EQUIPMENT.filter((x) => need.has(x));
 };

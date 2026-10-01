@@ -891,17 +891,14 @@ export function arsenalVals(ctx: Ctx) {
       if (equipFilter.length) saveEquipment([]);
       logic.s({ arsenalKind: 'all', arsenalAreas: [], ...(equipFilter.length ? { arsenalEquip: [] } : {}) });
     },
-    areaFilterActive: areaFilter.length > 0,
     areaFilterOptions: TARGET_AREAS.map((name) => ({
       name,
       on: areaFilter.includes(name),
       set: (on) =>
         logic.s({ arsenalAreas: on ? areaFilter.concat([name]) : areaFilter.filter((a) => a !== name) }),
     })),
-    clearAreaFilter: () => logic.s({ arsenalAreas: [] }),
     // Shown once exercises know their equipment (the equipment migration has run).
     equipFilterShown: logic.model.builtins.some((e) => e.equipment !== undefined),
-    equipFilterActive: equipFilter.length > 0,
     // Each group of the filter opens and closes on its own; one with something ticked starts open.
     equipFilterGroups: EQUIPMENT_GROUPS.map((g) => ({
       label: g.label,
@@ -924,9 +921,5 @@ export function arsenalVals(ctx: Ctx) {
         };
       }),
     })),
-    clearEquipFilter: () => {
-      saveEquipment([]);
-      logic.s({ arsenalEquip: [] });
-    },
   };
 }

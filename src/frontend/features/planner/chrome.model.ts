@@ -47,11 +47,9 @@ export function chromeVals(ctx: Ctx) {
   };
   const navGoTo: Record<NavId, () => void> = { day: goDay, diaryList: goDiaryList, arsenal: goArsenal, summary: goSummary, profile: goProfile };
   return {
-    goDay,
     goDiaryList,
     goArsenal,
     goSummary,
-    goProfile,
     goSettings,
     nav: NAV_IDS.map((id) => ({
       id,

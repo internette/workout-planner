@@ -14,59 +14,55 @@ export function WeekRow({ row }: { row: any }) {
         </Text>
       ) : null}
       {row?.isRest ? (
-        <>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '15px 20px',
-              borderRadius: 'var(--radius-lg)',
-              background: 'var(--color-surface-rest)',
-            }}
-          >
-            <StatusDot status="rest" size="md" />
-            <Text variant="label" tone="muted">
-              Rest day
-            </Text>
-          </div>
-        </>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            padding: '15px 20px',
+            borderRadius: 'var(--radius-lg)',
+            background: 'var(--color-surface-rest)',
+          }}
+        >
+          <StatusDot status="rest" size="md" />
+          <Text variant="label" tone="muted">
+            Rest day
+          </Text>
+        </div>
       ) : null}
       {row?.hasRow ? (
-        <>
-          <Card
-            as="button"
-            pad="sm"
-            interactive
-            onClick={row?.open}
-            aria-label={row?.aria}
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '13px',
-            }}
-          >
-            <IconSquare size={36} decorative>{row?.icoSvg}</IconSquare>
-            <div style={{ minWidth: '0', flex: '1' }}>
-              <KindTag kind={kindOf(row)} />
-              <Text variant="itemTitle" as="div">
-                {row?.name}
-              </Text>
-              <Text
-                variant="caption"
-                as="div"
-                tone="muted"
-                style={{ marginTop: '3px' }}
-              >
-                {row?.meta}
-              </Text>
-            </div>
-            <span style={{ marginLeft: 'auto' }}>
-              <StatusDot status={row?.dot} size="md" />
-            </span>
-          </Card>
-        </>
+        <Card
+          as="button"
+          pad="sm"
+          interactive
+          onClick={row?.open}
+          aria-label={row?.aria}
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '13px',
+          }}
+        >
+          <IconSquare size={36} decorative>{row?.icoSvg}</IconSquare>
+          <div style={{ minWidth: '0', flex: '1' }}>
+            <KindTag kind={kindOf(row)} />
+            <Text variant="itemTitle" as="div">
+              {row?.name}
+            </Text>
+            <Text
+              variant="caption"
+              as="div"
+              tone="muted"
+              style={{ marginTop: '3px' }}
+            >
+              {row?.meta}
+            </Text>
+          </div>
+          <span style={{ marginLeft: 'auto' }}>
+            <StatusDot status={row?.dot} size="md" />
+          </span>
+        </Card>
       ) : null}
     </div>
   );

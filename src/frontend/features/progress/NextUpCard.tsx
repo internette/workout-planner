@@ -43,17 +43,15 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
         </>
       ) : null}
       {v.noNext ? (
-        <>
-          <Text
-            variant="caption"
-            as="p"
-            tone="muted"
-            weight="medium"
-            style={{ margin: '9px 0 0' }}
-          >
-            No call yet. Plan a session and it shows up here.
-          </Text>
-        </>
+        <Text
+          variant="caption"
+          as="p"
+          tone="muted"
+          weight="medium"
+          style={{ margin: '9px 0 0' }}
+        >
+          No call yet. Plan a session and it shows up here.
+        </Text>
       ) : null}
     </Card>
   );

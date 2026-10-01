@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { OpensChevron, progCard } from './progCard';
@@ -49,9 +48,7 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
             }}
           >
             {(v.wkSegments ?? []).map((g) => (
-              <Fragment key={g.kind}>
-                <span style={{ display: 'block', width: g.pct + '%', background: SEGMENT[g.kind] }} />
-              </Fragment>
+              <span key={g.kind} style={{ display: 'block', width: g.pct + '%', background: SEGMENT[g.kind] }} />
             ))}
           </span>
         </>

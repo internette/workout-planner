@@ -312,13 +312,6 @@ export function progressVals(ctx: Ctx) {
         ].filter((x) => x.pct > 0),
       };
     })(),
-    wkDone: weekAll.filter(isDoneEntry).length,
-    wkTotal: weekAll.length,
-    wkTotalUnit: weekAll.length === 1 ? 'session' : 'sessions',
-    wkBar:
-      'width:' +
-      (weekAll.length ? Math.round((weekAll.filter(isDoneEntry).length / weekAll.length) * 100) : 0) +
-      '%;height:100%;border-radius:4px;background:var(--color-accent)',
     // The cards open what they sum up: the next session, this week and this month on the calendar, the Chronicle.
     openNext: () =>
       nextUp &&

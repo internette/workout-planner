@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { IconTile } from '@moonshot/design-system/icon-tile';
@@ -59,21 +58,19 @@ export function DayWorkoutCard({ card }: { card: any }) {
           </div>
         </div>
         {card?.isLift ? (
-          <>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                marginTop: '20px',
-              }}
-            >
-              <ProgressBar value={card?.progPct ?? 0} track="tint" style={{ flex: '1' }} />
-              <Text variant="figure" tone="ink" style={{ flex: 'none' }}>
-                {card?.progLabel}
-              </Text>
-            </div>
-          </>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              marginTop: '20px',
+            }}
+          >
+            <ProgressBar value={card?.progPct ?? 0} track="tint" style={{ flex: '1' }} />
+            <Text variant="figure" tone="ink" style={{ flex: 'none' }}>
+              {card?.progLabel}
+            </Text>
+          </div>
         ) : null}
         {card?.ridePlan ? (
           <Text variant="label" as="p" tone="ink" weight="semibold" style={{ margin: '14px 0 0' }}>
@@ -81,109 +78,91 @@ export function DayWorkoutCard({ card }: { card: any }) {
           </Text>
         ) : null}
         {card?.rideStats?.length ? (
-          <>
-            <StatRow stats={card?.rideStats ?? []} style={{ marginTop: '20px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }} />
-          </>
+          <StatRow stats={card?.rideStats ?? []} style={{ marginTop: '20px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }} />
         ) : null}
         {card?.isLift ? (
-          <>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '2px',
-                marginTop: '16px',
-              }}
-            >
-              {(card?.preview ?? []).map((x, i) => (
-                <Fragment key={i}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '11px',
-                      padding: '9px 0',
-                      borderBottom: '1px solid var(--color-line)',
-                    }}
-                  >
-                    {x?.isH ? (
-                      <>
-                        <Dumbbell color="var(--color-accent)" size={20} />
-                      </>
-                    ) : null}
-                    {x?.isV ? (
-                      <>
-                        <Dumbbell
-                          color="var(--color-accent)"
-                          size={17}
-                          style={{ transform: 'rotate(90deg)' }}
-                        />
-                      </>
-                    ) : null}
-                    {x?.isD ? (
-                      <>
-                        <DumbbellSmall color="var(--color-accent)" size={20} />
-                      </>
-                    ) : null}
-                    {x?.otherIcon ? <ExerciseIcon name={x.otherIcon} color="var(--color-accent)" size={20} /> : null}
-                    <span style={css(x?.textStyle)}>{x?.text}</span>
-                  </div>
-                </Fragment>
-              ))}
-            </div>
-          </>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '2px',
+              marginTop: '16px',
+            }}
+          >
+            {(card?.preview ?? []).map((x, i) => (
+              <div key={i}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '11px',
+                  padding: '9px 0',
+                  borderBottom: '1px solid var(--color-line)',
+                }}
+              >
+                {x?.isH ? (
+                  <Dumbbell color="var(--color-accent)" size={20} />
+                ) : null}
+                {x?.isV ? (
+                  <Dumbbell
+                    color="var(--color-accent)"
+                    size={17}
+                    style={{ transform: 'rotate(90deg)' }}
+                  />
+                ) : null}
+                {x?.isD ? (
+                  <DumbbellSmall color="var(--color-accent)" size={20} />
+                ) : null}
+                {x?.otherIcon ? <ExerciseIcon name={x.otherIcon} color="var(--color-accent)" size={20} /> : null}
+                <span style={css(x?.textStyle)}>{x?.text}</span>
+              </div>
+            ))}
+          </div>
         ) : null}
         {card?.hasMore ? (
-          <>
-            <Button
-              type="neutral"
-              link
-              size="sm"
-              aria-expanded={!!card?.moreOpen}
-              onClick={card?.toggleMore}
-              // On a line of its own, so it keeps the row height of the buttons below it.
-              style={{ marginTop: '10px', minHeight: '44px' }}
-            >
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                {t(card?.moreLabel)}
-                <DisclosureChevron open={!!card?.moreOpen} />
-              </span>
-            </Button>
-          </>
+          <Button
+            type="neutral"
+            link
+            size="sm"
+            aria-expanded={!!card?.moreOpen}
+            onClick={card?.toggleMore}
+            // On a line of its own, so it keeps the row height of the buttons below it.
+            style={{ marginTop: '10px', minHeight: '44px' }}
+          >
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              {t(card?.moreLabel)}
+              <DisclosureChevron open={!!card?.moreOpen} />
+            </span>
+          </Button>
         ) : null}
         {card?.ctaTwoButtons ? (
-          <>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '20px' }}>
-              <Button
-                type="secondary"
-                size="lg"
-                style={{ flex: '1 1 120px', minWidth: '0', whiteSpace: 'nowrap' }}
-                onClick={card?.restart}
-              >
-                {card?.restartLabel}
-              </Button>
-              <Button
-                type="primary"
-                size="lg"
-                style={{ flex: '1 1 120px', minWidth: '0', whiteSpace: 'nowrap' }}
-                onClick={card?.continue}
-              >
-                {card?.continueLabel}
-              </Button>
-            </div>
-          </>
-        ) : (
-          <>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '20px' }}>
+            <Button
+              type="secondary"
+              size="lg"
+              style={{ flex: '1 1 120px', minWidth: '0', whiteSpace: 'nowrap' }}
+              onClick={card?.restart}
+            >
+              {card?.restartLabel}
+            </Button>
             <Button
               type="primary"
               size="lg"
-              fullWidth
-              onClick={card?.cta}
-              style={{ marginTop: '20px' }}
+              style={{ flex: '1 1 120px', minWidth: '0', whiteSpace: 'nowrap' }}
+              onClick={card?.continue}
             >
-              {card?.ctaLabel}
+              {card?.continueLabel}
             </Button>
-          </>
+          </div>
+        ) : (
+          <Button
+            type="primary"
+            size="lg"
+            fullWidth
+            onClick={card?.cta}
+            style={{ marginTop: '20px' }}
+          >
+            {card?.ctaLabel}
+          </Button>
         )}
       </Card>
   );

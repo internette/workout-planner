@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { Gem } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
 import { t } from '@/frontend/features/planner/viewHelpers';
@@ -61,38 +60,36 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
         ) : null}
         <ul style={{ display: 'flex', gap: '6px', margin: '9px 0 0', padding: 0, listStyle: 'none' }}>
           {ticks.map((x, i) => (
-            <Fragment key={i}>
-              <li
+            <li key={i}
+              style={{
+                flex: '1',
+                minWidth: '0',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '2px',
+                fontFamily: 'var(--font-heading)',
+                color: x.today ? 'var(--color-accent-deep)' : 'var(--color-ink)',
+              }}
+            >
+              <span aria-hidden="true" style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-bold)' }}>
+                {x.day}
+              </span>
+              <span
+                aria-hidden="true"
                 style={{
-                  flex: '1',
-                  minWidth: '0',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '2px',
-                  fontFamily: 'var(--font-heading)',
-                  color: x.today ? 'var(--color-accent-deep)' : 'var(--color-ink)',
+                  fontSize: 'var(--text-xs)',
+                  fontWeight: 'var(--font-weight-semibold)',
+                  color: x.today ? 'var(--color-accent-deep)' : 'var(--color-muted)',
                 }}
               >
-                <span aria-hidden="true" style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-bold)' }}>
-                  {x.day}
-                </span>
-                <span
-                  aria-hidden="true"
-                  style={{
-                    fontSize: 'var(--text-xs)',
-                    fontWeight: 'var(--font-weight-semibold)',
-                    color: x.today ? 'var(--color-accent-deep)' : 'var(--color-muted)',
-                  }}
-                >
-                  {x.num}
-                </span>
-                <span style={{ marginTop: '4px' }}>
-                  <StatusDot status={x.dot} />
-                </span>
-                <span className="sr-only">{x.aria}</span>
-              </li>
-            </Fragment>
+                {x.num}
+              </span>
+              <span style={{ marginTop: '4px' }}>
+                <StatusDot status={x.dot} />
+              </span>
+              <span className="sr-only">{x.aria}</span>
+            </li>
           ))}
         </ul>
         {shown.length ? (
