@@ -7,7 +7,7 @@ import { Checkbox } from '@moonshot/design-system/checkbox';
 import { ReorderableList } from '@moonshot/design-system/reorderable-list';
 import { Stat } from '@moonshot/design-system/stat';
 import { Text } from '@moonshot/design-system/typography';
-import { Chip } from '@moonshot/design-system/chip';
+import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { TextArea } from '@moonshot/design-system/text-field';
 import { Button } from '@moonshot/design-system/buttons';
 import { ChevronDown, Clock, ExerciseIcon, Plus, Repeat } from '@moonshot/design-system/icons';
@@ -22,7 +22,6 @@ import { EditorHeader } from '@/frontend/features/editor/EditorHeader';
 import { LeaveEditorDialog } from '@/frontend/features/editor/LeaveEditorDialog';
 import { RideActualCard } from '@/frontend/features/editor/RideActualCard';
 import { RidePlanFields } from '@/frontend/features/editor/RidePlanFields';
-import { ChipRow } from '@/frontend/components/ChipRow';
 import { WeekdayToggles } from '@/frontend/components/WeekdayToggles';
 
 export function EditorScreen({ v }: { v: PlannerVals }) {
@@ -31,7 +30,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       <LeaveEditorDialog v={v} />
       <BackBar label={v.backLabel} onBack={v.tryLeave} />
       <EditorHeader v={v} />
-      <ChipRow style={{ marginTop: '20px' }}>
+      <ChipGroup style={{ marginTop: '20px' }}>
         {v.showDate ? (
         <DatePicker v={v} />
         ) : null}
@@ -52,7 +51,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             {v.editType.label}
           </Chip>
         ) : null}
-      </ChipRow>
+      </ChipGroup>
       {v.canUseSaved ? (
         <Button type="secondary" size="md" onClick={v.useSaved} style={{ marginTop: '12px' }}>
           {v.useSavedLabel}
@@ -157,11 +156,11 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             TARGET AREAS
           </Text>
           {v.hasTargetAreas ? (
-            <ChipRow style={{ marginTop: '14px' }}>
+            <ChipGroup style={{ marginTop: '14px' }}>
               {(v.targetAreaPills ?? []).map((name, i) => (
                 <Chip key={i} size="md">{name}</Chip>
               ))}
-            </ChipRow>
+            </ChipGroup>
           ) : (
             <Text variant="body" tone="muted" style={{ display: 'block', marginTop: '10px' }}>
               Give an exercise below a target area to see it here.

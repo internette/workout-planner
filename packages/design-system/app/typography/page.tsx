@@ -8,6 +8,7 @@ import {
   textStyles,
   textTones,
   tracking,
+  SectionLabel,
 } from '../../src/typography';
 import { DocPage, h2 } from '../docs';
 
@@ -81,6 +82,19 @@ export default function TypographyPage() {
           </div>
         );
       })}
+
+      <h2 id="section-label" style={h2}>Section label</h2>
+      <p style={note}>
+        <code>SectionLabel</code> is the small capitals over a section or a group of rows: a <code>note</code> beside
+        it (a count), and an <code>aside</code> note or a <code>value</code> at the right. It&apos;s an h2 by default;
+        pass <code>as</code> for another level, or a span inside a card&apos;s top line. <code>list</code> insets it a
+        little and leaves room below, over a list of rows.
+      </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 420 }}>
+        <SectionLabel list label="YOUR OWN EXERCISES" note="4 exercises" />
+        <SectionLabel as="span" label="PERSONAL BESTS" aside="All time" />
+        <SectionLabel as="span" label="QUESTS CLEARED" note="All time" value="12 of 20" />
+      </div>
 
       <h2 id="tones" style={h2}>Tones</h2>
       <p style={{ margin: '0 0 8px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>

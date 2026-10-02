@@ -1,15 +1,14 @@
 import { Card } from '@moonshot/design-system/card';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
-import { Text } from '@moonshot/design-system/typography';
+import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { css } from '@/frontend/features/planner/viewHelpers';
-import { SectionHeader } from '@/frontend/components/SectionHeader';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** Profile: how sessions felt, all time. */
 export function MoodSplitCard({ v }: { v: PlannerVals }) {
   return (
     <Card>
-      <SectionHeader title="HOW IT FEELS" note={v.allTimeLabel} />
+      <SectionLabel as="span" label="HOW IT FEELS" aside={v.allTimeLabel} />
       {v.moodEmpty ? (
         <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
           Write about a session in the Chronicle and your moods gather here.

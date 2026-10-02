@@ -1,12 +1,11 @@
+import { Badge } from '@moonshot/design-system/badge';
+import { DisclosureRow } from '@moonshot/design-system/disclosure';
 import { Button } from '@moonshot/design-system/buttons';
 import { Checkbox } from '@moonshot/design-system/checkbox';
-import { Chip } from '@moonshot/design-system/chip';
+import { Chip, ChipGroup, ChoiceChips } from '@moonshot/design-system/chip';
 import { Dialog } from '@moonshot/design-system/dialog';
 import { Close, Sliders } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
-import { ChipRow } from '@/frontend/components/ChipRow';
-import { ChoiceChips } from '@/frontend/components/ChoiceChips';
-import { DisclosureChevron } from '@/frontend/components/DisclosureChevron';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** The Spellbook's Filter button, beside the search: how many filters are on, and a sheet to change them. */
@@ -40,20 +39,9 @@ export function FilterButton({ v }: { v: PlannerVals }) {
         {/* The word goes on the narrowest phones, to leave the search room; the button's name still says it. */}
         <span className="filter-word">Filter</span>
         {n ? (
-          <span
-            aria-hidden="true"
-            style={{
-              minWidth: '20px',
-              padding: '1px 6px',
-              borderRadius: 'var(--radius-full)',
-              background: 'var(--color-accent)',
-              color: 'var(--color-on-accent)',
-              fontSize: 'var(--text-xs)',
-              textAlign: 'center',
-            }}
-          >
+          <Badge tone="accent" size="sm" aria-hidden="true">
             {n}
-          </span>
+          </Badge>
         ) : null}
       </button>
       <FilterSheet v={v} />
@@ -67,26 +55,24 @@ export function ActiveFilters({ v }: { v: PlannerVals }) {
   const list = v.activeFilters ?? [];
   if (!list.length) return null;
   return (
-    <div role="group" aria-label="Filters on" style={{ marginTop: '10px' }}>
-      <ChipRow>
-        {list.map((f) => (
-          <Chip
-            key={f.label}
-            size="md"
-            onClick={f.remove}
-            aria-label={'Remove filter: ' + f.label}
-            trailing={<Close color="var(--color-muted)" strokeWidth={2.2} size={13} />}
-          >
-            {f.label}
-          </Chip>
-        ))}
-        {list.length > 1 ? (
-          <Button type="neutral" ghost size="sm" onClick={v.clearFilters}>
-            Clear
-          </Button>
-        ) : null}
-      </ChipRow>
-    </div>
+    <ChipGroup label="Filters on" style={{ marginTop: '10px' }}>
+      {list.map((f) => (
+        <Chip
+          key={f.label}
+          size="md"
+          onClick={f.remove}
+          aria-label={'Remove filter: ' + f.label}
+          trailing={<Close color="var(--color-muted)" strokeWidth={2.2} size={13} />}
+        >
+          {f.label}
+        </Chip>
+      ))}
+      {list.length > 1 ? (
+        <Button type="neutral" ghost size="sm" onClick={v.clearFilters}>
+          Clear
+        </Button>
+      ) : null}
+    </ChipGroup>
   );
 }
 
@@ -126,15 +112,13 @@ function FilterSheet({ v }: { v: PlannerVals }) {
         <Text variant="eyebrow" as="div" tone="slate" aria-hidden="true" style={heading}>
           TARGET AREAS
         </Text>
-        <div role="group" aria-label="Target areas">
-          <ChipRow>
-            {(v.areaFilterOptions ?? []).map((o) => (
-              <Chip key={o.name} tone="choice" size="md" selected={o.on} onClick={() => o.set(!o.on)}>
-                {o.name}
-              </Chip>
-            ))}
-          </ChipRow>
-        </div>
+        <ChipGroup label="Target areas">
+          {(v.areaFilterOptions ?? []).map((o) => (
+            <Chip key={o.name} tone="choice" size="md" selected={o.on} onClick={() => o.set(!o.on)}>
+              {o.name}
+            </Chip>
+          ))}
+        </ChipGroup>
       </div>
       {v.equipFilterShown ? (
         <div style={section}>
@@ -157,26 +141,7 @@ function EquipmentGroups({ v }: { v: PlannerVals }) {
     <>
       {(v.equipFilterGroups ?? []).map((g, gi) => (
         <div key={g.label}>
-          <button
-            type="button"
-            aria-expanded={g.open}
-            aria-controls={'equip-filter-' + gi}
-            onClick={g.toggle}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              width: '100%',
-              minHeight: '44px',
-              padding: '0 2px',
-              border: 'none',
-              borderBottom: '1px solid var(--color-line)',
-              background: 'none',
-              fontFamily: 'inherit',
-              textAlign: 'left',
-              cursor: 'pointer',
-            }}
-          >
+          <DisclosureRow variant="divided" open={!!g.open} onToggle={g.toggle} controls={'equip-filter-' + gi}>
             <Text variant="label" as="span" tone="ink" style={{ flex: 'none' }}>
               {g.label}
             </Text>
@@ -189,8 +154,7 @@ function EquipmentGroups({ v }: { v: PlannerVals }) {
             >
               {g.picked}
             </Text>
-            <DisclosureChevron open={!!g.open} />
-          </button>
+          </DisclosureRow>
           {g.open ? (
             <div
               id={'equip-filter-' + gi}

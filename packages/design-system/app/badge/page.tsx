@@ -75,6 +75,15 @@ export default function BadgePage() {
           </div>
         </Card>
       </div>
+      <h2 id="count" style={h2}>Count</h2>
+      <p style={note}>
+        <code>size=&quot;sm&quot;</code> is a count on a button, such as how many filters are on. Hide it from screen
+        readers when the button&apos;s name already says the number.
+      </p>
+      <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+        <Badge tone="accent" size="sm">2</Badge>
+        <Badge tone="accent" size="sm">12</Badge>
+      </div>
       <p style={{ ...note, marginTop: 16 }}>
         The WARM-UP label above a workout&apos;s name isn&apos;t a badge: it&apos;s a line of text (micro, bold, accent)
         that names what the workout is, not a state it&apos;s in.

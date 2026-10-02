@@ -10,10 +10,18 @@
   border: 2px solid var(--color-surface);
   box-shadow: 0 2px 6px color-mix(in srgb, var(--color-accent) 28%, transparent), 0 0 0 1px color-mix(in srgb, var(--color-ink) 5%, transparent);
 }
-/* sm beside a row's or card's title, md beside a page's title. */
+/* xs at the start of a list row, sm beside a row's or card's title, md beside a page's title. */
+.xs { width: 34px; height: 34px; border-radius: var(--radius-sm); }
 .sm { width: 40px; height: 40px; border-radius: var(--radius-sm); }
 .md { width: 46px; height: 46px; border-radius: var(--radius-md); }
 
 /* As a button, it opens an icon picker (or a page). Drawn 40 px at sm; its tap area is 44 (the shared .hit in
    base.css). */
 .button { composes: hit from global; padding: 0; font: inherit; cursor: pointer; }
+
+/* Flat: just the pale square, for rows in a list. */
+.flat { border: none; box-shadow: none; }
+/* Compact: 34 px on the narrowest phones. */
+@media (max-width: 359px) {
+  .compact { width: 34px; height: 34px; }
+}

@@ -1,6 +1,6 @@
+import { IconTile } from '@moonshot/design-system/icon-tile';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
-import { IconSquare } from '@/frontend/components/IconSquare';
 import { StatusDot } from '@/frontend/components/StatusDot';
 import { KindTag, kindOf } from '@/frontend/components/KindTag';
 
@@ -44,7 +44,7 @@ export function WeekRow({ row }: { row: any }) {
             gap: '13px',
           }}
         >
-          <IconSquare size={36} decorative>{row?.icoSvg}</IconSquare>
+          <IconTile as="span" size="xs" variant="flat" aria-hidden>{row?.icoSvg}</IconTile>
           <div style={{ minWidth: '0', flex: '1' }}>
             <KindTag kind={kindOf(row)} />
             <Text variant="itemTitle" as="div">

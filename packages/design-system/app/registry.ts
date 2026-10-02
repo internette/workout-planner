@@ -83,6 +83,7 @@ export const sections: Section[] = [
     description: 'Families, sizes and weights, and the named text styles built from them.',
     anchors: [
       { id: 'text-styles', title: 'Text styles' },
+      { id: 'section-label', title: 'Section label' },
       { id: 'tones', title: 'Tones' },
       { id: 'families', title: 'Families' },
       { id: 'sizes', title: 'Sizes' },
@@ -194,6 +195,8 @@ export const sections: Section[] = [
       { id: 'info', title: 'Info' },
       { id: 'accent', title: 'Accent' },
       { id: 'choice', title: 'Choice' },
+      { id: 'on-the-page', title: 'On the page' },
+      { id: 'groups', title: 'Groups' },
       { id: 'sizes', title: 'Sizes' },
     ],
   },
@@ -239,6 +242,7 @@ export const sections: Section[] = [
     description: 'A workout’s or exercise’s icon on its pale pink tile.',
     anchors: [
       { id: 'sizes', title: 'Sizes' },
+      { id: 'flat', title: 'Flat, in a list' },
       { id: 'as-a-button', title: 'As a button' },
     ],
   },
@@ -250,6 +254,7 @@ export const sections: Section[] = [
     anchors: [
       { id: 'tones', title: 'Tones' },
       { id: 'in-a-list', title: 'In a list' },
+      { id: 'count', title: 'Count' },
     ],
   },
   {
@@ -320,6 +325,12 @@ export const sections: Section[] = [
       { id: 'using-it', title: 'Using it' },
       { id: 'behaviour', title: 'Behaviour' },
     ],
+  },
+  {
+    slug: 'disclosure',
+    title: 'Disclosure',
+    category: 'components',
+    description: 'A row that opens and closes what’s under it, with its chevron.',
   },
   {
     slug: 'dialog',

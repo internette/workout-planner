@@ -53,19 +53,38 @@ export default function IconTilePage() {
         </div>
       </Card>
 
+      <h2 id="flat" style={h2}>Flat, in a list</h2>
+      <p style={note}>
+        <code>variant=&quot;flat&quot;</code> drops the rim and glow, for the start of a row in a list, where a stack
+        of raised tiles would be busy. <code>xs</code> (34px) is the list size. <code>compact</code> shrinks a tile to
+        34px on the narrowest phones, to leave its title more room.
+      </p>
+      <Card>
+        <div style={row}>
+          <IconTile as="span" size="xs" variant="flat">
+            <ExerciseIcon name="h" size={19} color="var(--color-pink)" />
+          </IconTile>
+          <IconTile as="span" size="sm" variant="flat">
+            <Bike size={20} color="var(--color-pink)" />
+          </IconTile>
+          <Text variant="caption" tone="muted">
+            xs and sm, flat
+          </Text>
+        </div>
+      </Card>
+
       <h2 id="as-a-button" style={h2}>As a button</h2>
       <p style={note}>
         <code>IconTileButton</code> is the same tile as a button, for choosing the icon: in the workout editor it
         opens the icon picker, for the workout (md) and for each exercise (sm). It needs an <code>aria-label</code>{' '}
-        that says what it chooses, since it only shows the icon. Add the <code>hit</code> class at sm for a 44px tap
-        area.
+        that says what it chooses, since it only shows the icon. Its tap area is 44px at any size.
       </p>
       <Card>
         <div style={row}>
           <IconTileButton aria-label="Choose workout icon">
             <ExerciseIcon name="d" size={22} color="var(--color-pink)" />
           </IconTileButton>
-          <IconTileButton size="sm" className="hit" aria-label="Choose icon for Bench Press">
+          <IconTileButton size="sm" aria-label="Choose icon for Bench Press">
             <ExerciseIcon name="h" size={19} color="var(--color-pink)" />
           </IconTileButton>
           <Text variant="caption" tone="muted">

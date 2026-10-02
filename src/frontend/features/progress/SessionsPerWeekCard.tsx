@@ -1,8 +1,7 @@
 import { Badge } from '@moonshot/design-system/badge';
 import { Card } from '@moonshot/design-system/card';
-import { Text } from '@moonshot/design-system/typography';
+import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { css } from '@/frontend/features/planner/viewHelpers';
-import { SectionHeader } from '@/frontend/components/SectionHeader';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { KindTag, kindOf } from '@/frontend/components/KindTag';
 
@@ -10,7 +9,7 @@ import { KindTag, kindOf } from '@/frontend/components/KindTag';
 export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: '14px' }}>
-      <SectionHeader title="SESSIONS PER WEEK" note={v.chartRangeLabel} />
+      <SectionLabel as="span" label="SESSIONS PER WEEK" aside={v.chartRangeLabel} />
       <Text variant="caption" as="p" tone="muted" style={{ margin: '8px 0 0' }}>
         {v.chartCaption}
       </Text>

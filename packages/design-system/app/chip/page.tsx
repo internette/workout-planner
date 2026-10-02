@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Chip } from '../../src/chip';
+import { Chip, ChipGroup, ChoiceChips } from '../../src/chip';
 import { Calendar, Clock, Close, Repeat } from '../../src/icons';
 import { IconButton } from '../../src/buttons';
 import { DocPage, h2, note } from '../docs';
@@ -14,6 +14,7 @@ const areas = ['Core', 'Arms', 'Back', 'Legs'];
 export default function ChipPage() {
   const [zone, setZone] = useState('Endurance');
   const [picked, setPicked] = useState<string[]>(['Core', 'Legs']);
+  const [scope, setScope] = useState('all');
   const toggle = (a: string) => setPicked((p) => (p.includes(a) ? p.filter((x) => x !== a) : [...p, a]));
 
   return (
@@ -76,6 +77,37 @@ export default function ChipPage() {
             </Chip>
           ))}
         </div>
+      </div>
+
+      <h2 id="on-the-page" style={h2}>On the page</h2>
+      <p style={note}>
+        Choice chips sit on a white card by default. On the page itself, pass <code>surface=&quot;page&quot;</code>:
+        unpicked chips turn white so the page&apos;s tint doesn&apos;t swallow them.
+      </p>
+      <div style={row}>
+        {['All', 'Week', '30 days', 'Range'].map((s) => (
+          <Chip key={s} tone="choice" surface="page" selected={scope === s.toLowerCase()} onClick={() => setScope(s.toLowerCase())}>
+            {s}
+          </Chip>
+        ))}
+      </div>
+
+      <h2 id="groups" style={h2}>Groups</h2>
+      <p style={note}>
+        <code>ChipGroup</code> lays chips side by side, wrapping onto more lines; give it a <code>label</code> and it
+        is a named group for screen readers. <code>ChoiceChips</code> is a single choice made of choice chips, for a
+        few options where a segmented control would cut off the last. <code>compact</code> brings them closer on the
+        narrowest phones, so a short row stays on one line.
+      </p>
+      <div style={{ ...row, background: 'var(--color-white)' }}>
+        <ChoiceChips label="Effort" options={zones.map((z) => ({ value: z, label: z }))} value={zone} onChange={setZone} />
+      </div>
+      <div style={{ ...row, marginTop: 10 }}>
+        <ChipGroup label="Facts">
+          <Chip>Legs</Chip>
+          <Chip>Core</Chip>
+          <Chip>~45 min</Chip>
+        </ChipGroup>
       </div>
 
       <h2 id="sizes" style={h2}>Sizes</h2>

@@ -1,9 +1,9 @@
+import { SectionLabel } from '@moonshot/design-system/typography';
 import type { ReactNode } from 'react';
 import { vars } from '@moonshot/design-system/colors';
 import { Card } from '@moonshot/design-system/card';
 import { Sparkle } from '@moonshot/design-system/icons';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
-import { SectionHeader } from './SectionHeader';
 
 export interface SessionProgressProps {
   /** e.g. "2 of 5 done". */
@@ -24,7 +24,7 @@ export interface SessionProgressProps {
 export function SessionProgress({ label, pct, allDone, note, bare, children }: SessionProgressProps) {
   const body = (
     <>
-      <SectionHeader title="PROGRESS" value={label} />
+      <SectionLabel as="span" label="PROGRESS" value={label} />
       <ProgressBar value={pct} track="tint" style={{ marginTop: '12px' }} />
       {children}
       <p

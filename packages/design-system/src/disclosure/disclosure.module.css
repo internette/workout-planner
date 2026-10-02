@@ -1,0 +1,27 @@
+/* A row that opens and closes what's under it. */
+.row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+/* A box of its own, as a field in a form. */
+.outlined {
+  gap: 10px;
+  min-height: 52px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-outline);
+  border-radius: var(--radius-md);
+  background: var(--color-canvas);
+}
+/* A row in a list, with a line under it. */
+.divided {
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 2px;
+  border: none;
+  border-bottom: 1px solid var(--color-line);
+  background: none;
+}

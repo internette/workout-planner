@@ -1,7 +1,6 @@
-import { Chip } from '@moonshot/design-system/chip';
+import { DisclosureRow } from '@moonshot/design-system/disclosure';
+import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { Text } from '@moonshot/design-system/typography';
-import { ChipRow } from './ChipRow';
-import { DisclosureChevron } from './DisclosureChevron';
 
 export interface EquipmentPickerProps {
   id: string;
@@ -16,26 +15,7 @@ export interface EquipmentPickerProps {
 export function EquipmentPicker({ id, open, onToggle, summary, groups }: EquipmentPickerProps) {
   return (
     <div style={{ marginTop: '16px' }}>
-      <button
-        type="button"
-        aria-expanded={open}
-        aria-controls={id}
-        onClick={onToggle}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          width: '100%',
-          minHeight: '52px',
-          padding: '10px 14px',
-          border: '1px solid var(--color-outline)',
-          borderRadius: 'var(--radius-md)',
-          background: 'var(--color-canvas)',
-          fontFamily: 'inherit',
-          textAlign: 'left',
-          cursor: 'pointer',
-        }}
-      >
+      <DisclosureRow open={open} onToggle={onToggle} controls={id}>
         <span style={{ flex: '1', minWidth: '0' }}>
           <Text variant="eyebrow" as="span" tone="slate" style={{ display: 'block' }}>
             EQUIPMENT
@@ -44,8 +24,7 @@ export function EquipmentPicker({ id, open, onToggle, summary, groups }: Equipme
             {summary}
           </Text>
         </span>
-        <DisclosureChevron open={open} />
-      </button>
+      </DisclosureRow>
       {open ? (
         <div id={id} role="group" aria-label="Equipment" style={{ padding: '4px 2px 0' }}>
           <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
@@ -56,13 +35,13 @@ export function EquipmentPicker({ id, open, onToggle, summary, groups }: Equipme
               <Text variant="eyebrow" as="div" tone="muted" style={{ margin: '10px 0 6px' }}>
                 {g.label.toUpperCase()}
               </Text>
-              <ChipRow>
+              <ChipGroup>
                 {g.items.map((a) => (
                   <Chip key={a.name} tone="choice" size="md" selected={a.on} onClick={a.toggle}>
                     {a.name}
                   </Chip>
                 ))}
-              </ChipRow>
+              </ChipGroup>
             </div>
           ))}
         </div>

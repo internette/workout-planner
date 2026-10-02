@@ -10,7 +10,7 @@ export interface LinkRowProps {
   detail?: ReactNode;
   /** Marks a warm-up, a stretch or yoga above the title. */
   kind?: WorkoutKind[] | null;
-  /** Before the text, e.g. an IconSquare. */
+  /** Before the text, e.g. a flat IconTile. */
   leading?: ReactNode;
   /** What pressing it does: go somewhere (a chevron) or add something (a plus). */
   action?: 'open' | 'add';

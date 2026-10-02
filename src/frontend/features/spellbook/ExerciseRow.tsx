@@ -1,8 +1,8 @@
+import { IconTile } from '@moonshot/design-system/icon-tile';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { ChevronRight, Plus } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
-import { IconSquare } from '@/frontend/components/IconSquare';
 
 /** An exercise in the Spellbook’s list: open it, or add it to the workout being built. */
 export function ExerciseRow({ exercise }: { exercise: any }) {
@@ -37,7 +37,7 @@ export function ExerciseRow({ exercise }: { exercise: any }) {
           fontFamily: 'inherit',
         }}
       >
-        <IconSquare>{exercise?.svg}</IconSquare>
+        <IconTile as="span" size="xs" variant="flat">{exercise?.svg}</IconTile>
         <span style={{ flex: '1', minWidth: '0' }}>
           <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
             {exercise?.name}

@@ -3,9 +3,8 @@
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Card } from '@moonshot/design-system/card';
 import { Badge } from '@moonshot/design-system/badge';
-import { Text } from '@moonshot/design-system/typography';
+import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { BackBar } from '@/frontend/components/BackBar';
-import { GroupLabel } from '@/frontend/components/GroupLabel';
 import { PageHeader } from '@/frontend/components/PageHeader';
 import { KindTag, kindOf } from '@/frontend/components/KindTag';
 
@@ -22,7 +21,7 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
         {/* One card per group (this week, last week, earlier), its sessions as rows. Back leaves. */}
         {(v.unloggedGroups ?? []).map((g) => (
           <div key={g.label} style={{ marginBottom: '16px' }}>
-            <GroupLabel label={g.label} />
+            <SectionLabel list label={g.label} />
             <Card pad="none" style={{ overflow: 'hidden' }}>
               {g.items.map((u, i) => (
                 <button

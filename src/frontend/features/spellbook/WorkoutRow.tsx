@@ -1,8 +1,7 @@
+import { IconTile } from '@moonshot/design-system/icon-tile';
 import { Card } from '@moonshot/design-system/card';
-import { Chip } from '@moonshot/design-system/chip';
+import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { Text } from '@moonshot/design-system/typography';
-import { IconSquare } from '@/frontend/components/IconSquare';
-import { ChipRow } from '@/frontend/components/ChipRow';
 import { KindTag, kindOf } from '@/frontend/components/KindTag';
 
 /** A saved workout in the Spellbook’s list, with its exercises and target areas. */
@@ -21,7 +20,7 @@ export function WorkoutRow({ workout }: { workout: any }) {
         width: '100%',
       }}
     >
-      <IconSquare size={40}>{workout?.svg}</IconSquare>
+      <IconTile as="span" size="sm" variant="flat">{workout?.svg}</IconTile>
       <span style={{ flex: '1 1 200px', minWidth: '0' }}>
         <KindTag kind={kindOf(workout)} />
         <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
@@ -44,11 +43,11 @@ export function WorkoutRow({ workout }: { workout: any }) {
           </Text>
         ) : null}
         {(workout?.areas ?? []).length ? (
-          <ChipRow as="span" style={{ marginTop: '8px' }}>
+          <ChipGroup as="span" style={{ marginTop: '8px' }}>
             {(workout?.areas ?? []).map((a, k) => (
               <Chip key={k}>{a}</Chip>
             ))}
-          </ChipRow>
+          </ChipGroup>
         ) : null}
       </span>
     </Card>

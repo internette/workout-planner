@@ -1,11 +1,10 @@
 import { Card } from '@moonshot/design-system/card';
-import { Chip } from '@moonshot/design-system/chip';
+import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { Label, TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
 import { DurationFields } from '@/frontend/components/DurationFields';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { RIDE_ZONES } from '@/shared/planDraft';
-import { ChipRow } from '@/frontend/components/ChipRow';
 
 /** A ride’s plan: distance, elevation, duration and effort zone. */
 export function RidePlanFields({ v }: { v: PlannerVals }) {
@@ -46,7 +45,7 @@ export function RidePlanFields({ v }: { v: PlannerVals }) {
         </div>
       </div>
       <Label style={{ margin: '18px 0 9px' }}>Target effort</Label>
-      <ChipRow>
+      <ChipGroup>
         {RIDE_ZONES.map((zone) => (
           <Chip
             key={zone}
@@ -58,7 +57,7 @@ export function RidePlanFields({ v }: { v: PlannerVals }) {
             {zone}
           </Chip>
         ))}
-      </ChipRow>
+      </ChipGroup>
     </Card>
   );
 }
