@@ -5,14 +5,12 @@ import { cx } from './cx';
 export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label'> {
   /** What the button does: its name for screen readers. Pass `title` as well for a tooltip. */
   label: string;
-  size?: 'xs' | 'sm' | 'md' | 'lg';
-  /** default: grey hover. danger: red hover. inverse: for use on a colored background. */
-  tone?: 'default' | 'danger' | 'inverse';
+  size?: 'xs' | 'md' | 'lg';
   circle?: boolean;
 }
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(function IconButton(
-  { label, size = 'md', tone = 'default', circle, className, type = 'button', title, ...rest },
+  { label, size = 'md', circle, className, type = 'button', title, ...rest },
   ref,
 ) {
   return (
@@ -25,7 +23,6 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
         styles.base,
         styles.icon,
         styles[`icon-${size}`],
-        styles[`icon-${tone}`],
         circle && styles.circle,
         className,
       )}

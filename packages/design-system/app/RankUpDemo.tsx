@@ -32,13 +32,13 @@ export function RankUpDemo() {
       use="Plays once, the first time a new rank is reached, wherever you are in the app. Night falls, ribbons and sparkles spiral in, the rank’s gem forms, then its name. With reduced motion the finished card appears at once."
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        <IconButton label="Previous rank" size="sm" onClick={() => step(-1)} disabled={ix <= 0}>
+        <IconButton label="Previous rank" size="md" onClick={() => step(-1)} disabled={ix <= 0}>
           <ChevronLeft color="var(--color-muted)" size={16} />
         </IconButton>
         <Text variant="strong" tone="ink" style={{ flex: 1, minWidth: 0, textAlign: 'center' }}>
           {rank.name}
         </Text>
-        <IconButton label="Next rank" size="sm" onClick={() => step(1)} disabled={ix >= SAMPLES.length - 1}>
+        <IconButton label="Next rank" size="md" onClick={() => step(1)} disabled={ix >= SAMPLES.length - 1}>
           <ChevronRight color="var(--color-muted)" size={16} />
         </IconButton>
       </div>
