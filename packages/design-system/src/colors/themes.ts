@@ -29,7 +29,6 @@ type Dark = Light & {
   slate: string;
   slateDeep: string;
   textMuted: string;
-  subtle: string;
   hairline: string;
   outline: string;
   divider: string;
@@ -45,19 +44,19 @@ const LIGHT: Record<Exclude<Accent, 'pink'>, Light> = {
 const DARK: Record<Exclude<Accent, 'pink'>, Dark> = {
   teal: {
     canvas: '#10191C', surface: '#192629', mist: '#22343A', accent: '#5CC8D8', hover: '#7AD3E0', deep: '#7FD6E3', tint: '#173A41', muted: '#2A5760', on: '#192629',
-    ink: '#E6F0F2', slate: '#BBCBCF', slateDeep: '#CDDBDE', textMuted: '#A2B3B7', subtle: '#9DAEB2', hairline: '#3E5358', outline: '#7F9499', divider: '#2F4449',
+    ink: '#E6F0F2', slate: '#BBCBCF', slateDeep: '#CDDBDE', textMuted: '#A2B3B7', hairline: '#3E5358', outline: '#7F9499', divider: '#2F4449',
   },
   periwinkle: {
     canvas: '#14162A', surface: '#1D2038', mist: '#272B47', accent: '#9AAAF0', hover: '#B0BDF4', deep: '#AEBBF5', tint: '#2B3260', muted: '#3E4677', on: '#1D2038',
-    ink: '#ECEEF8', slate: '#C0C5DC', slateDeep: '#D0D4E6', textMuted: '#A9AEC7', subtle: '#A3A8C2', hairline: '#454A6A', outline: '#858AA7', divider: '#363B5A',
+    ink: '#ECEEF8', slate: '#C0C5DC', slateDeep: '#D0D4E6', textMuted: '#A9AEC7', hairline: '#454A6A', outline: '#858AA7', divider: '#363B5A',
   },
   slate: {
     canvas: '#15171C', surface: '#1E2128', mist: '#282C35', accent: '#B3BCD6', hover: '#C6CDE1', deep: '#C3CBE2', tint: '#333A4B', muted: '#4A5266', on: '#1E2128',
-    ink: '#ECEEF3', slate: '#C3C7D2', slateDeep: '#D3D6DF', textMuted: '#A9AEBB', subtle: '#A4A9B6', hairline: '#474C58', outline: '#878C99', divider: '#383C47',
+    ink: '#ECEEF3', slate: '#C3C7D2', slateDeep: '#D3D6DF', textMuted: '#A9AEBB', hairline: '#474C58', outline: '#878C99', divider: '#383C47',
   },
   coral: {
     canvas: '#1D1614', surface: '#281F1C', mist: '#342925', accent: '#F4AE93', hover: '#F7BEA7', deep: '#F7BEA7', tint: '#48302A', muted: '#6A443A', on: '#281F1C',
-    ink: '#F4EAE6', slate: '#D4C6C1', slateDeep: '#E0D5D1', textMuted: '#B9A9A3', subtle: '#B3A39D', hairline: '#574641', outline: '#95857F', divider: '#443632',
+    ink: '#F4EAE6', slate: '#D4C6C1', slateDeep: '#E0D5D1', textMuted: '#B9A9A3', hairline: '#574641', outline: '#95857F', divider: '#443632',
   },
 };
 
@@ -110,7 +109,6 @@ export const accentThemeCss = (Object.keys(LIGHT) as Exclude<Accent, 'pink'>[])
         slate: d.slate,
         slateDeep: d.slateDeep,
         muted: d.textMuted,
-        subtle: d.subtle,
         hairline: d.hairline,
         outline: d.outline,
         divider: d.divider,

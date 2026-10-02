@@ -30,7 +30,7 @@
   height: 18px;
   margin-top: 1px;
   border-radius: var(--radius-full);
-  border: 2px solid var(--color-subtle);
+  border: 2px solid var(--color-muted);
   background: var(--color-surface);
   transition: border-color var(--dur-state) var(--ease-standard), background var(--dur-state) var(--ease-standard), box-shadow var(--dur-state) var(--ease-standard);
 }

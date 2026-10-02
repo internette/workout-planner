@@ -43,7 +43,7 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--tracking-loose);
   text-transform: uppercase;
-  color: var(--color-subtle);
+  color: var(--color-muted);
 }
 
 .link {
@@ -151,7 +151,7 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--tracking-loose);
   text-transform: uppercase;
-  color: var(--color-subtle);
+  color: var(--color-muted);
 }
 .menu > .mGroup:first-child { margin-top: 4px; }
 .mGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }

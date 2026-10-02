@@ -9,7 +9,6 @@ export const darkColors: Record<ColorName, string> = {
   slate: '#C9BCCB',
   slateDeep: '#D8CCD9',
   muted: '#B3A3B3',
-  subtle: '#AC9CB0',
   hairline: '#54445A',
   outline: '#8E7F93',
   divider: '#45364C',

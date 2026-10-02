@@ -19,18 +19,9 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
       </Text>
       {v.hasNext ? (
         <>
-          <span
-            style={{
-              display: 'block',
-              fontFamily: 'var(--font-heading)',
-              margin: '9px 0 0',
-              fontSize: 'var(--text-lg)',
-              fontWeight: 'var(--font-weight-semibold)',
-              color: 'var(--color-ink)',
-            }}
-          >
+          <Text variant="subheading" tone="ink" style={{ display: 'block', margin: '9px 0 0' }}>
             {v.nextName}
-          </span>
+          </Text>
           <Text
             variant="caption"
             as="span"

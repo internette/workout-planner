@@ -65,7 +65,7 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
               borderBottom: '1.5px dashed color-mix(in srgb, var(--color-ink) 22%, transparent)',
             }}
           >
-            <Calendar color="var(--color-subtle)" size={16} />
+            <Calendar color="var(--color-muted)" size={16} />
             <TextField
               variant="bare"
               size="sm"

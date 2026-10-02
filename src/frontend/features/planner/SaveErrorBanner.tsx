@@ -1,3 +1,4 @@
+import { Text } from '@moonshot/design-system/typography';
 import { Button } from '@moonshot/design-system/buttons';
 import { Callout } from '@/frontend/components/Callout';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
@@ -16,9 +17,9 @@ export function SaveErrorBanner({ v }: { v: PlannerVals }) {
       style={{ marginBottom: 'var(--space-4)' }}
     >
       Couldn&apos;t save that. Check your connection and try again.
-      <span style={{ display: 'block', marginTop: '2px', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-regular)', opacity: 0.8 }}>
+      <Text variant="small" as="span" style={{ display: 'block', marginTop: '2px', opacity: 0.8 }}>
         {v.saveError}
-      </span>
+      </Text>
     </Callout>
   );
 }

@@ -33,7 +33,7 @@ export function ChronicleRow({ entry }: { entry: any }) {
         <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px 6px', marginTop: '2px' }}>
           <Text variant="subheading">{entry?.name}</Text>
           <KindTag inline kind={kindOf(entry)} />
-          <ChevronRight color="var(--color-subtle)" strokeWidth={2.2} size={16} />
+          <ChevronRight color="var(--color-muted)" strokeWidth={2.2} size={16} />
         </span>
         {entry?.note ? (
           <Text
