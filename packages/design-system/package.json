@@ -37,6 +37,7 @@
     "./rating": "./src/rating/index.ts",
     "./reorderable-list": "./src/reorderable-list/index.ts",
     "./segmented-control": "./src/segmented-control/index.ts",
+    "./select": "./src/select/index.ts",
     "./spacing": "./src/spacing/index.ts",
     "./stat": "./src/stat/index.ts",
     "./status-screen": "./src/status-screen/index.ts",

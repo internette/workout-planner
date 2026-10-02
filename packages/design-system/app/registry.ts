@@ -212,6 +212,17 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'select',
+    title: 'Select',
+    category: 'components',
+    description: 'A dropdown for picking one of a few options.',
+    anchors: [
+      { id: 'plain', title: 'Plain' },
+      { id: 'with-icons', title: 'With icons' },
+      { id: 'behaviour', title: 'Behaviour' },
+    ],
+  },
+  {
     slug: 'progress-bar',
     title: 'Progress bar',
     category: 'components',
