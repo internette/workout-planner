@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ACCENTS } from '@moonshot/design-system/colors';
+import { ACCENTS, paletteFor } from '@moonshot/design-system/colors';
 import { IconChoiceGroup } from '@moonshot/design-system/icon-choice-group';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { Text } from '@moonshot/design-system/typography';
@@ -47,7 +47,8 @@ export function AppearanceSetting() {
             value: a.name,
             label: a.label,
             color: a.swatch,
-            checkColor: a.name === 'slate' || a.name === 'pink' ? '#FFFFFF' : '#232A45',
+            // The tick is the theme's own colour for things on its accent.
+            checkColor: paletteFor('light', a.name).onAccent,
           }))}
           value={accent}
           onChange={pickAccent}

@@ -8,7 +8,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { SessionProgress } from '@/frontend/components/SessionProgress';
 import { SetPips } from '@/frontend/components/SetPips';
 
-const divider: CSSProperties = { border: 0, borderTop: '1px solid var(--color-divider)', margin: '16px 0' };
+const divider: CSSProperties = { border: 0, borderTop: '1px solid var(--color-hairline)', margin: '16px 0' };
 
 /**
  * The session being done, in one card: its clock (start, pause, finish), then for a lift how far through it is, with

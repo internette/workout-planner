@@ -5,3 +5,6 @@ node_modules
 *.log
 .vercel
 *.tsbuildinfo
+
+# Built by npm run check:contrast
+/.contrast

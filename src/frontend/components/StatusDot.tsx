@@ -35,7 +35,7 @@ export function StatusDot({ status, size = 'sm', onAccent = false }: StatusDotPr
                 width: s.rest[0],
                 height: s.rest[1],
                 borderRadius: 1,
-                background: onAccent ? 'var(--color-on-accent-faint)' : 'var(--color-divider)',
+                background: onAccent ? 'var(--color-on-accent-faint)' : 'var(--color-hairline)',
               };
   return <span aria-hidden="true" style={{ flex: 'none', display: 'block', ...style }} />;
 }

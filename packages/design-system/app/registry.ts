@@ -62,8 +62,8 @@ export const sections: Section[] = [
     description: 'The palette as CSS variables, grouped by role.',
     // One link per colour group; the page gives each group heading the same id.
     anchors: [
-      ...Object.keys(colorGroups).map((title) => ({ id: title.toLowerCase(), title })),
-      { id: 'gradients-and-overlays', title: 'Gradients and overlays' },
+      ...Object.keys(colorGroups).map((title) => ({ id: title.toLowerCase().replace(/\s+/g, '-'), title })),
+      { id: 'effects', title: 'Effects' },
     ],
   },
   {

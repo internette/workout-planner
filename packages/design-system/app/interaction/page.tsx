@@ -17,7 +17,7 @@ const demoBtn: React.CSSProperties = {
   fontWeight: 600,
   color: 'var(--color-ink)',
   cursor: 'pointer',
-  boxShadow: 'inset 0 0 0 1px var(--color-divider)',
+  boxShadow: 'inset 0 0 0 1px var(--color-hairline)',
 };
 const panel: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 32, padding: '28px 24px', background: 'var(--color-canvas)', borderRadius: 'var(--radius-lg)' };
 const list: React.CSSProperties = { ...note, margin: '8px 0 0', paddingLeft: 20 };
@@ -47,7 +47,7 @@ export default function InteractionPage() {
             <tr key={name}>
               <td style={{ ...cell, fontWeight: 600, whiteSpace: 'nowrap' }}>--hover-{name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())}</td>
               <td style={{ ...cell, width: 80 }}>
-                <div style={{ width: 48, height: 32, borderRadius: 'var(--radius-sm)', background: name === 'inverse' ? 'var(--color-ink)' : 'var(--color-white)', boxShadow: 'inset 0 0 0 1px var(--color-divider)' }}>
+                <div style={{ width: 48, height: 32, borderRadius: 'var(--radius-sm)', background: name === 'inverse' ? 'var(--color-ink)' : 'var(--color-white)', boxShadow: 'inset 0 0 0 1px var(--color-hairline)' }}>
                   <div style={{ width: '100%', height: '100%', borderRadius: 'var(--radius-sm)', background: `var(--hover-${name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())})` }} />
                 </div>
               </td>
@@ -106,7 +106,7 @@ export default function InteractionPage() {
       <div style={panel}>
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44 }}>
           <span aria-hidden style={{ position: 'absolute', inset: 0, border: '1.5px dashed var(--color-pink)', borderRadius: 'var(--radius-xs)' }} />
-          <span style={{ width: 24, height: 24, borderRadius: 'var(--radius-xs)', background: 'var(--color-white)', boxShadow: 'inset 0 0 0 1px var(--color-divider)' }} />
+          <span style={{ width: 24, height: 24, borderRadius: 'var(--radius-xs)', background: 'var(--color-white)', boxShadow: 'inset 0 0 0 1px var(--color-hairline)' }} />
         </div>
         <p style={{ ...note, margin: 0, maxWidth: 420 }}>
           A 24px control with <code>className=&quot;hit&quot;</code>: the dashed square is the 44px it answers to.

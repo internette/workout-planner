@@ -45,7 +45,7 @@
 }
 .provider { text-decoration: none; }
 .provider[aria-disabled='true'] { cursor: progress; }
-.google { background: var(--color-surface); color: var(--color-ink); box-shadow: inset 0 0 0 1.5px var(--color-divider); }
+.google { background: var(--color-surface); color: var(--color-ink); box-shadow: inset 0 0 0 1.5px var(--color-hairline); }
 .google:hover:not([aria-disabled='true']) { background: var(--color-canvas); }
 .apple { background: var(--color-ink); color: var(--color-on-strong); }
 .apple:hover:not([aria-disabled='true']) { background: var(--color-slate-deep); }
