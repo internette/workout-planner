@@ -1,6 +1,7 @@
 import { Button, IconButton } from '../../src/buttons';
 import { ChevronDown, ChevronLeft, ChevronRight, Close, Pencil, Plus } from '../../src/icons';
 import { DocPage, h2, note } from '../docs';
+import { ButtonTypes } from './ButtonTypes';
 
 export const metadata = { title: 'Buttons — Design system' };
 
@@ -49,33 +50,10 @@ export default function ButtonsPage() {
 
       <h2 id="types" style={h2}>Types</h2>
       <p style={note}>
-        <code>type</code> picks the color and role; <code>ghost</code> drops the fill. Sizes go across: xs,
-        sm, md, lg.
+        <code>type</code> picks the color and role; <code>ghost</code> drops the fill. Pick one to see it at each
+        size: xs, sm, md, lg.
       </p>
-      <div style={stack}>
-        {(
-          [
-            ['primary', { type: 'primary' }],
-            ['primary ghost', { type: 'primary', ghost: true }],
-            ['secondary', { type: 'secondary' }],
-            ['secondary ghost', { type: 'secondary', ghost: true }],
-            ['neutral', { type: 'neutral' }],
-            ['neutral ghost', { type: 'neutral', ghost: true }],
-            ['danger', { type: 'danger' }],
-            ['danger ghost', { type: 'danger', ghost: true }],
-            ['dashed', { type: 'dashed' }],
-          ] as const
-        ).map(([name, props]) => (
-          <div key={name} style={row}>
-            <span style={label}>{name}</span>
-            {sizes.map((size) => (
-              <Button key={size} size={size} {...props}>
-                {size === 'xs' ? 'Back' : 'Save workout'}
-              </Button>
-            ))}
-          </div>
-        ))}
-      </div>
+      <ButtonTypes rowStyle={row} />
 
       <h2 id="with-an-icon" style={h2}>With an icon</h2>
       <p style={note}>Icons sit before the label; the gap adjusts to the size.</p>
