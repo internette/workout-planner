@@ -1,5 +1,7 @@
 import { colorGroups, colors, cssVarName, gradients, translucents, type ColorName } from '../../src/colors';
 import { DocPage } from '../docs';
+import { Swatch } from './Swatch';
+import { ThemeColors } from './ThemeColors';
 
 export const metadata = { title: 'Colors — Design system' };
 
@@ -8,33 +10,15 @@ const groupId = (title: string) => title.toLowerCase().replace(/\s+/g, '-');
 
 // A line under a group's heading, where the group needs more than each swatch's own note.
 const groupNotes: Record<string, string> = {
-  Accent: 'The theme’s color: pink by default, and teal, periwinkle, slate or coral with Profile → Settings → Color. Everything in pink follows it: buttons, selection, ticks, the Happy mood, the first rank tiers and the gem. Text and icons on it are surface, as on any strong fill.',
+  'Theme color': 'The colors a theme sets: pink by default, and teal, periwinkle, slate or coral with Profile → Settings → Color. They are written as pink’s variables, so everything in pink follows the theme: buttons, selection, ticks, the Happy mood, the first rank tiers and the gem. Pick a theme to see its values, light on the left of each swatch and dark on the right.',
   Brand: 'Colors that stay themselves in every theme: the other moods, the later rank tiers and the sparkles. Each has a tint for a badge and a deep shade for text on it.',
 };
 
-const code: React.CSSProperties = { fontSize: 'var(--text-sm)', color: 'var(--color-muted)', wordBreak: 'break-word' };
 const sectionTitle: React.CSSProperties = { fontSize: 'var(--text-xl)', scrollMarginTop: 'var(--ds-anchor-offset)' };
 const intro: React.CSSProperties = { margin: '0 0 16px', maxWidth: 640, color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' };
 
 /** The swatch behind a see-through color: the color over the page. */
 const overCanvas = (variable: string) => `linear-gradient(0deg, var(${variable}), var(${variable})), var(--color-canvas)`;
-
-function Swatch({ name, swatch, lines, use }: { name: string; swatch: string; lines: string[]; use: string }) {
-  return (
-    <div style={{ background: 'var(--color-surface)', borderRadius: 'var(--radius-md)', overflow: 'hidden', boxShadow: 'var(--elevation-raised)' }}>
-      <div style={{ height: 64, background: swatch, borderBottom: '1px solid var(--color-line)' }} />
-      <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 4 }}>
-        <strong style={{ fontSize: 'var(--text-base)' }}>{name}</strong>
-        {lines.map((l) => (
-          <code key={l} style={code}>
-            {l}
-          </code>
-        ))}
-        <span style={{ fontSize: 'var(--text-base)', color: 'var(--color-slate)', lineHeight: 'var(--leading-base)' }}>{use}</span>
-      </div>
-    </div>
-  );
-}
 
 export default function ColorsPage() {
   const effects = [
@@ -53,17 +37,21 @@ export default function ColorsPage() {
         <section key={group} style={{ marginBottom: 36 }}>
           <h2 id={groupId(group)} style={sectionTitle}>{group}</h2>
           {groupNotes[group] ? <p style={intro}>{groupNotes[group]}</p> : null}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
-            {Object.entries(swatches).map(([name, c]) => (
-              <Swatch
-                key={name}
-                name={name}
-                swatch={`var(${cssVarName(name)})`}
-                lines={[`${colors[name as ColorName]} · default theme`, `var(${cssVarName(name)})`]}
-                use={c.use}
-              />
-            ))}
-          </div>
+          {group === 'Theme color' ? (
+            <ThemeColors />
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
+              {Object.entries(swatches).map(([name, c]) => (
+                <Swatch
+                  key={name}
+                  name={name}
+                  swatch={`var(${cssVarName(name)})`}
+                  lines={[`${colors[name as ColorName]} · default theme`, `var(${cssVarName(name)})`]}
+                  use={c.use}
+                />
+              ))}
+            </div>
+          )}
         </section>
       ))}
       <section style={{ marginBottom: 36 }}>
