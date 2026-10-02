@@ -40,7 +40,7 @@ export function SectionLabel({ label, note, aside, value, as = 'h2', tone = 'sla
         ...style,
       }}
     >
-      <Text variant="eyebrow" tone={tone} as={as} style={{ margin: 0 }}>
+      <Text variant="micro" tone={tone} as={as} style={{ margin: 0 }}>
         {label}
       </Text>
       {has(note) ? muted(note) : null}

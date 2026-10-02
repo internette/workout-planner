@@ -82,11 +82,11 @@ export default function IconChoiceGroupPage() {
             Upper Push
           </Text>
         </div>
-        <Text variant="eyebrow" as="div" tone="slate" style={{ padding: '0 2px 10px' }}>
+        <Text variant="micro" as="div" tone="slate" style={{ padding: '0 2px 10px' }}>
           ICON
         </Text>
         <IconChoiceGroup label="Workout icon" columns={5} options={icons(colour)} value={workoutIcon} onChange={setWorkoutIcon} />
-        <Text variant="eyebrow" as="div" tone="slate" style={{ padding: '14px 2px 10px' }}>
+        <Text variant="micro" as="div" tone="slate" style={{ padding: '14px 2px 10px' }}>
           COLOR
         </Text>
         <IconChoiceGroup label="Icon colour" kind="swatch" options={swatches} value={colour} onChange={setColour} />

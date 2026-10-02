@@ -8,7 +8,7 @@ export const colorGroups = {
     slate: { hex: '#5C6684', use: 'Secondary text, completed states' },
     slateDeep: { hex: '#4A5268', use: 'Text on slate tints' },
     muted: { hex: '#6E6881', use: 'Tertiary text, inactive controls (4.5:1 or more on canvas, mist and pink tint)' },
-    subtle: { hex: '#756B85', use: 'Inactive navigation icons, eyebrow labels (4.5:1 or more on white and canvas)' },
+    subtle: { hex: '#756B85', use: 'Inactive navigation icons, micro labels (4.5:1 or more on white and canvas)' },
     hairline: { hex: '#C7C4D0', use: 'Disabled and empty states, switch track' },
     outline: { hex: '#8A859A', use: 'Empty controls you can still use: unticked boxes, unrated stars (3:1 or more on canvas and white)' },
     divider: { hex: '#DAD7E0', use: 'Rest-day dashes' },

@@ -13,7 +13,7 @@ export function RideActualCard({ v }: { v: PlannerVals }) {
       <div
         style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
       >
-        <Text variant="eyebrow" tone="slate">
+        <Text variant="micro" tone="slate">
           WHAT YOU ACTUALLY RODE
         </Text>
         <span

@@ -10,7 +10,7 @@ import { RIDE_ZONES } from '@/shared/planDraft';
 export function RidePlanFields({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: '16px' }}>
-      <Text variant="eyebrow" as="div" tone="slate">
+      <Text variant="micro" as="div" tone="slate">
         RIDE PLAN
       </Text>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}>

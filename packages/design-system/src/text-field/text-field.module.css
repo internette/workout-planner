@@ -7,7 +7,7 @@
   margin-bottom: 7px;
   font-size: var(--text-sm);
   font-weight: var(--font-weight-bold);
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: var(--tracking-loose);
   text-transform: uppercase;
   color: var(--color-muted);
 }
@@ -66,7 +66,6 @@
   font-family: var(--font-heading);
   font-size: var(--text-3xl);
   font-weight: var(--font-weight-bold);
-  letter-spacing: var(--tracking-tight);
 }
 
 /* ---- text area: a white raised surface */

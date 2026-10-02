@@ -17,7 +17,7 @@ export function EquipmentPicker({ id, open, onToggle, summary, groups }: Equipme
     <div style={{ marginTop: '16px' }}>
       <DisclosureRow open={open} onToggle={onToggle} controls={id}>
         <span style={{ flex: '1', minWidth: '0' }}>
-          <Text variant="eyebrow" as="span" tone="slate" style={{ display: 'block' }}>
+          <Text variant="micro" as="span" tone="slate" style={{ display: 'block' }}>
             EQUIPMENT
           </Text>
           <Text variant="body" as="span" tone="ink" weight="semibold" style={{ display: 'block', marginTop: '2px' }}>
@@ -32,7 +32,7 @@ export function EquipmentPicker({ id, open, onToggle, summary, groups }: Equipme
           </Text>
           {groups.map((g) => (
             <div key={g.label} role="group" aria-label={g.label}>
-              <Text variant="eyebrow" as="div" tone="muted" style={{ margin: '10px 0 6px' }}>
+              <Text variant="micro" as="div" tone="muted" style={{ margin: '10px 0 6px' }}>
                 {g.label.toUpperCase()}
               </Text>
               <ChipGroup>

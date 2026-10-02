@@ -13,7 +13,7 @@ export const fontFamilies = {
 } as const;
 
 export const fontSizes = {
-  sm: { px: 12, use: 'Eyebrow and micro labels, tab-bar captions, chart captions, helper text' },
+  sm: { px: 12, use: 'Micro labels, tab-bar captions, chart captions, helper text' },
   md: { px: 13, use: 'Secondary text, compact buttons' },
   base: { px: 14, use: 'Body text, form fields' },
   lg: { px: 15, use: 'Emphasised body, primary buttons, card titles' },
@@ -42,10 +42,8 @@ export const fontWeights = {
 } as const;
 
 export const tracking = {
-  tight: { value: '-.02em', use: 'Large headings' },
-  snug: { value: '-.01em', use: 'Card titles' },
-  loose: { value: '.02em', use: 'Small badges' },
-  wide: { value: '.1em', use: 'Uppercase eyebrow labels' },
+  base: { value: '0', use: 'Everything, unless it is in small capitals' },
+  loose: { value: '.1em', use: 'Uppercase micro labels' },
 } as const;
 
 export const leading = {

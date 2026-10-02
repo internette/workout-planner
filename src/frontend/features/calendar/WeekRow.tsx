@@ -9,7 +9,7 @@ export function WeekRow({ row }: { row: any }) {
   return (
     <div>
       {row?.showLabel ? (
-        <Text variant="eyebrow" as="div" tone={row?.labelTone} style={{ margin: '14px 0 9px' }}>
+        <Text variant="micro" as="div" tone={row?.labelTone} style={{ margin: '14px 0 9px' }}>
           {row?.label}
         </Text>
       ) : null}

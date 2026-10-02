@@ -17,7 +17,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
   return (
     <Card pad="lg" className="day-card">
         {card?.inProgress ? (
-          <Text variant="eyebrow" as="div" tone="slate" style={{ marginBottom: '8px' }}>
+          <Text variant="micro" as="div" tone="slate" style={{ marginBottom: '8px' }}>
             IN PROGRESS
           </Text>
         ) : null}

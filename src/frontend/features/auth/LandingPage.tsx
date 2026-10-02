@@ -39,7 +39,7 @@ function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.R
   return (
     <div ref={cardRef}>
       <Card pad="lg" elevation="overlay" className={styles.authCard} style={{ borderRadius: 'var(--radius-xl)' }}>
-        <Text variant="eyebrow" tone="accent" as="div">
+        <Text variant="micro" tone="accent" as="div">
           {signingUp ? 'FIRST TRANSFORMATION' : 'WELCOME BACK'}
         </Text>
         <Text variant="heading" as="h2" className={styles.authTitle} style={{ margin: '8px 0 0' }}>
@@ -134,12 +134,12 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
           <div className={styles.inner}>
             <div className={styles.heroText}>
               <span className={styles.eyebrowRow}>
-                <Text variant="eyebrow" tone="accent">
+                <Text variant="micro" tone="accent">
                   THE WORK IS THE TRANSFORMATION
                 </Text>
                 <SparkleTrail className={styles.trail} />
               </span>
-              <Text variant="hero" as="h1" style={{ margin: '14px 0 0', letterSpacing: '-0.03em', lineHeight: 1.04, textWrap: 'balance' }}>
+              <Text variant="hero" as="h1" style={{ margin: '14px 0 0', lineHeight: 1.04, textWrap: 'balance' }}>
                 Answer the call.
                 <br />
                 Then do the sets.
@@ -155,7 +155,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
         </section>
 
         <Section>
-          <Text variant="eyebrow" tone="slate" as="h2" style={{ margin: 0 }}>
+          <Text variant="micro" tone="slate" as="h2" style={{ margin: 0 }}>
             HOW A DAY GOES
           </Text>
           <div className={styles.steps}>
@@ -178,7 +178,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
         <Section>
           <div className={styles.quest}>
             <div className={styles.col}>
-              <Text variant="eyebrow" tone="accent" as="div">
+              <Text variant="micro" tone="accent" as="div">
                 A QUEST A DAY
               </Text>
               <Text variant="headline" as="h2" className={styles.headline}>
@@ -193,7 +193,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
               <div className={styles.cleared}>
                 <Gem size={22} />
                 <div style={{ minWidth: 0 }}>
-                  <Text variant="eyebrow" tone="accent" as="div">
+                  <Text variant="micro" tone="accent" as="div">
                     QUEST CLEARED
                   </Text>
                   <Text variant="cardTitle" as="div" style={{ marginTop: 4 }}>
@@ -220,7 +220,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
         <Section>
           <div className={styles.ranks}>
             <div className={styles.ranksLeft}>
-              <Text variant="eyebrow" tone="slate" as="div">
+              <Text variant="micro" tone="slate" as="div">
                 {RANKS.length === 20 ? 'TWENTY RANKS' : `${RANKS.length} RANKS`}
               </Text>
               <Text variant="headline" as="h2" className={styles.headline}>

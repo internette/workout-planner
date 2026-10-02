@@ -43,7 +43,7 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
                     cursor: 'pointer',
                   }}
                 >
-                  <Text variant="eyebrow" as="span" tone="slate" style={{ flex: 'none', width: '52px', lineHeight: 1.35 }}>
+                  <Text variant="micro" as="span" tone="slate" style={{ flex: 'none', width: '52px', lineHeight: 1.35 }}>
                     {u.dayTop}
                     <br />
                     {u.dayBottom}

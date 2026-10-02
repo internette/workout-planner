@@ -128,7 +128,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', marginTop: '14px' }}
           content={
             <>
-              <Text variant="eyebrow" tone="slate" style={{ display: 'block' }}>
+              <Text variant="micro" tone="slate" style={{ display: 'block' }}>
                 HOW PROGRESS WORKS
               </Text>
               <Text

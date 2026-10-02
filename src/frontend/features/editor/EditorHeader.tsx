@@ -18,7 +18,7 @@ export function EditorHeader({ v }: { v: PlannerVals }) {
         colors={v.iconColors}
       />
       <div style={{ flex: '1 1 220px', minWidth: '0' }}>
-        <Text variant="eyebrow" as="h1" tone="slate" style={{ margin: 0 }}>
+        <Text variant="micro" as="h1" tone="slate" style={{ margin: 0 }}>
           {v.eEyebrow}
         </Text>
         {v.eNamePlaceholder ? (

@@ -41,7 +41,7 @@
   padding: 0 12px;
   font-size: var(--text-sm);
   font-weight: var(--font-weight-bold);
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: var(--tracking-loose);
   text-transform: uppercase;
   color: var(--color-subtle);
 }
@@ -149,7 +149,7 @@
   margin: 10px 8px 4px;
   font-size: var(--text-sm);
   font-weight: var(--font-weight-bold);
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: var(--tracking-loose);
   text-transform: uppercase;
   color: var(--color-subtle);
 }

@@ -16,7 +16,7 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
   return (
     <Card as="button" interactive pad="sm" onClick={v.openWeek} style={progCard('1 1 260px')}>
       <OpensChevron />
-      <Text variant="eyebrow" as="span" tone="muted" style={{ display: 'block' }}>
+      <Text variant="micro" as="span" tone="muted" style={{ display: 'block' }}>
         {v.wkHas ? v.wkEyebrow : 'THIS WEEK'}
       </Text>
       {v.wkEmpty ? (

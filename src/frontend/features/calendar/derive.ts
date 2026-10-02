@@ -57,7 +57,7 @@ export function calendarStage(ctx: EntriesCtx) {
       mon: spansMonths && num === 1 ? MON3[mod12(cellMonth)].toUpperCase() : '',
       monStyle:
         spansMonths && num === 1
-          ? 'position:absolute;left:0;right:0;top:-14px;text-align:center;font-size:var(--text-sm);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-wide);color:var(--color-accent-deep)'
+          ? 'position:absolute;left:0;right:0;top:-14px;text-align:center;font-size:var(--text-sm);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-loose);color:var(--color-accent-deep)'
           : 'display:none',
       aria:
         longDay(new Date(Y, cellMonth, num)) +

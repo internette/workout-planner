@@ -38,7 +38,7 @@ export default function ProgressBarPage() {
         <div style={stack}>
           <div>
             <div style={labelRow}>
-              <Text variant="eyebrow" tone="slate">PROGRESS</Text>
+              <Text variant="micro" tone="slate">PROGRESS</Text>
               <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
                 3 of 4 done
               </Text>
@@ -47,7 +47,7 @@ export default function ProgressBarPage() {
           </div>
           <div>
             <div style={labelRow}>
-              <Text variant="eyebrow" tone="slate">QUESTS CLEARED</Text>
+              <Text variant="micro" tone="slate">QUESTS CLEARED</Text>
               <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
                 5 of 12
               </Text>
@@ -82,7 +82,7 @@ export default function ProgressBarPage() {
       <p style={note}>A change of value slides the fill to it. Values outside 0–100 are clamped.</p>
       <Card pad="md">
         <div style={labelRow}>
-          <Text variant="eyebrow" tone="slate">PROGRESS</Text>
+          <Text variant="micro" tone="slate">PROGRESS</Text>
           <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
             {done} of {total} done
           </Text>
