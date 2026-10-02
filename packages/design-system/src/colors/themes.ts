@@ -30,7 +30,7 @@ const LIGHT: Record<Exclude<Accent, 'pink'>, Light> = {
   teal: { accent: '#24808F', hover: '#1F6D79', deep: '#276B76', tint: 'tealTint', canvas: '#F1F9FA', mist: '#EAF2F4' },
   periwinkle: { accent: '#5B73BC', hover: '#4963B3', deep: 'periwinkleDeep', tint: 'periwinkleTint', canvas: '#F4F5FB', mist: '#EDEFF7' },
   slate: { accent: 'slate', hover: '#505A77', deep: 'slateDeep', tint: 'slateTint', canvas: '#F5F5F8', mist: '#EEEFF3' },
-  coral: { accent: '#CC4B19', hover: '#B44216', deep: '#A4502C', tint: '#FDEDE6', canvas: '#FDF5F1', mist: '#F6EEEA' },
+  coral: { accent: '#C84E43', hover: '#BA4136', deep: '#A4502C', tint: '#FDEDE6', canvas: '#FDF5F1', mist: '#F6EEEA' },
 };
 
 const DARK: Record<Exclude<Accent, 'pink'>, Dark> = {
