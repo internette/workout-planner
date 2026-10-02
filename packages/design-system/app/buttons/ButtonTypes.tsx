@@ -1,47 +1,47 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, type ButtonProps } from '../../src/buttons';
+import { Button } from '../../src/buttons';
 import { Select } from '../../src/select';
 
-// Every type, with and without ghost, in the order they're listed in the dropdown.
+// Each type, and whether it has a ghost version (dashed is already unfilled).
 const TYPES = [
-  ['primary', { type: 'primary' }],
-  ['primary ghost', { type: 'primary', ghost: true }],
-  ['secondary', { type: 'secondary' }],
-  ['secondary ghost', { type: 'secondary', ghost: true }],
-  ['neutral', { type: 'neutral' }],
-  ['neutral ghost', { type: 'neutral', ghost: true }],
-  ['danger', { type: 'danger' }],
-  ['danger ghost', { type: 'danger', ghost: true }],
-  ['dashed', { type: 'dashed' }],
+  ['primary', true],
+  ['secondary', true],
+  ['neutral', true],
+  ['danger', true],
+  ['dashed', false],
 ] as const;
-type Name = (typeof TYPES)[number][0];
+type Type = (typeof TYPES)[number][0];
 
 const sizes = ['xs', 'sm', 'md', 'lg'] as const;
+const label: React.CSSProperties = { width: 130, fontSize: 'var(--text-sm)', color: 'var(--color-muted)' };
 
-/** The Types example: pick a type, and see it at every size. */
+/** The Types example: pick a type, and see it, and its ghost version, at every size. */
 export function ButtonTypes({ rowStyle }: { rowStyle: React.CSSProperties }) {
-  const [name, setName] = useState<Name>('primary');
-  const props = TYPES.find(([n]) => n === name)![1] as Pick<ButtonProps, 'type' | 'ghost'>;
+  const [type, setType] = useState<Type>('primary');
+  const hasGhost = TYPES.find(([t]) => t === type)![1];
+  const versions = hasGhost ? [false, true] : [false];
   return (
     <>
-      <Select<Name>
+      <Select<Type>
         label="Type"
-        options={TYPES.map(([n]) => ({ value: n, label: n }))}
-        value={name}
-        onChange={setName}
+        options={TYPES.map(([t]) => ({ value: t, label: t }))}
+        value={type}
+        onChange={setType}
         style={{ maxWidth: 280, marginBottom: 12 }}
       />
-      <div style={rowStyle}>
-        {sizes.map((size) => (
-          <Button key={size} size={size} {...props}>
-            {size === 'xs' ? 'Back' : 'Save workout'}
-          </Button>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {versions.map((ghost) => (
+          <div key={String(ghost)} style={rowStyle}>
+            <code style={label}>{ghost ? `${type} ghost` : type}</code>
+            {sizes.map((size) => (
+              <Button key={size} size={size} type={type} ghost={ghost}>
+                {size === 'xs' ? 'Back' : 'Save workout'}
+              </Button>
+            ))}
+          </div>
         ))}
-        <code style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)' }}>
-          {`type="${props.type}"${props.ghost ? ' ghost' : ''}`}
-        </code>
       </div>
     </>
   );
