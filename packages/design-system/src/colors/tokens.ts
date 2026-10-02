@@ -23,7 +23,7 @@ export const colorGroups = {
   // The theme's color: pink by default, and teal, periwinkle, slate or coral in the other color themes (Profile →
   // Settings → Color), so everything in pink follows the theme: buttons, selection, ticks, the Happy mood, the first
   // rank tiers, the gem. Text and icons on it are surface, as on any strong fill.
-  Accent: {
+  'Theme color': {
     pink: { hex: '#D63479', use: 'Actions, selection, marks, bars and ticks; the Happy mood, the first rank tiers, the gem. White text on it is 4.5:1' },
     accentHover: { hex: '#C7286C', use: 'Primary action, hovered' },
     pinkDeep: { hex: '#B22461', use: 'Pink text on white and on the pink tint (5.4:1 on pink tint, 6.3:1 on white)' },
