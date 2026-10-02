@@ -21,7 +21,7 @@
   to { transform: translateY(0); }
 }
 
-.handle { align-self: center; width: 36px; height: 4px; border-radius: 2px; background: var(--color-divider); }
+.handle { align-self: center; width: 36px; height: 4px; border-radius: 2px; background: var(--color-hairline); }
 .head { display: flex; align-items: center; gap: var(--space-4); }
 .icon {
   width: 56px;

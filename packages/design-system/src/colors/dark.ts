@@ -11,7 +11,6 @@ export const darkColors: Record<ColorName, string> = {
   muted: '#B3A3B3',
   hairline: '#54445A',
   outline: '#8E7F93',
-  divider: '#45364C',
   // Roles
   surface: '#281D2F',
   onAccent: '#281D2F',
@@ -21,19 +20,15 @@ export const darkColors: Record<ColorName, string> = {
   accentHover: '#F48AB6',
   accentDeep: '#F58BB8',
   accentTint: '#45223A',
-  accentMuted: '#6B3552',
   // Surfaces (white stays white: it's only used where white is meant)
   white: '#FFFFFF',
   canvas: '#1B1320',
   mist: '#33263B',
-  cloud: '#34283F',
   slateTint: '#2F2640',
   // Pink
   pink: '#F06FA6',
-  pinkHover: '#F48AB6',
   pinkDeep: '#F58BB8',
   pinkTint: '#45223A',
-  pinkMuted: '#6B3552',
   // Periwinkle and teal
   periwinkle: '#95A6DC',
   periwinkleTint: '#2A2C45',
@@ -57,7 +52,6 @@ export const darkTranslucents: Record<string, string> = {
   surfaceRest: 'rgba(255, 255, 255, 0.04)',
   surfaceBar: 'rgba(40, 29, 47, 0.94)',
   onAccentSoft: 'rgba(40, 29, 47, 0.85)',
-  onAccentMuted: 'rgba(40, 29, 47, 0.8)',
   onAccentFaint: 'rgba(40, 29, 47, 0.7)',
   shadow: 'rgba(0, 0, 0, 0.5)',
   accentWash: 'rgba(69, 34, 58, 0.6)',
