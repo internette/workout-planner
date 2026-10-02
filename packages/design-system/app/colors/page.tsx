@@ -1,4 +1,4 @@
-import { colorGroups, cssVarName, gradients, translucents } from '../../src/colors';
+import { colorGroups, colors, cssVarName, gradients, translucents, type ColorName } from '../../src/colors';
 import { DocPage } from '../docs';
 
 export const metadata = { title: 'Colors — Design system' };
@@ -64,7 +64,7 @@ export default function ColorsPage() {
                 key={name}
                 name={name}
                 swatch={swatchFor(name)}
-                lines={['ref' in c ? `Same as ${c.ref} · default theme` : `${c.hex} · default theme`, `var(${cssVarName(name)})`]}
+                lines={[`${colors[name as ColorName]} · default theme`, `var(${cssVarName(name)})`]}
                 use={c.use}
               />
             ))}
