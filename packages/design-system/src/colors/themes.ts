@@ -2,8 +2,10 @@
 // version. Chosen in Profile → Settings → Colour, and applied as <html data-accent="teal"> (with data-theme="dark" for
 // the dark version). Pink needs nothing here: it's the default light palette and Plum dusk.
 //
-// Light: the accent is the palette colour itself. Teal, periwinkle and coral are light, so text on them is dark (ink,
-// and a deeper navy on periwinkle, 4.5:1 or more, hovered too); slate keeps white text. Accent text uses each colour's deep shade (5:1 or more on white and tint).
+// Light: pink and slate are the palette colours themselves, with white text. Teal, periwinkle and coral are deepened
+// just enough that a tick, bar or mark in them is 3:1 or more on the page and on a card; text on them is a near-black
+// navy (5:1 or more), and their hover goes a step lighter so it stays 4.5:1. Accent text uses each colour's deep shade
+// (5:1 or more on white and tint).
 // Dark: the page and cards lean toward the colour, the accent is brightened, and text on it is the card colour.
 import { colors, cssVarName, type ColorName } from './tokens';
 import { darkColors } from './dark';
@@ -11,10 +13,10 @@ import { darkColors } from './dark';
 export type Accent = 'pink' | 'teal' | 'periwinkle' | 'slate' | 'coral';
 export const ACCENTS: { name: Accent; label: string; swatch: string }[] = [
   { name: 'pink', label: 'Pink', swatch: '#D63479' },
-  { name: 'teal', label: 'Teal', swatch: '#5EC4D6' },
-  { name: 'periwinkle', label: 'Periwinkle', swatch: '#7C8FC9' },
+  { name: 'teal', label: 'Teal', swatch: '#2C9BAE' },
+  { name: 'periwinkle', label: 'Periwinkle', swatch: '#788CC8' },
   { name: 'slate', label: 'Slate', swatch: '#5C6684' },
-  { name: 'coral', label: 'Coral', swatch: '#F0A385' },
+  { name: 'coral', label: 'Coral', swatch: '#E76938' },
 ];
 
 const alpha = (hex: string, a: number) => {
@@ -34,10 +36,10 @@ type Dark = Light & {
 };
 
 const LIGHT: Record<Exclude<Accent, 'pink'>, Light> = {
-  teal: { accent: '#5EC4D6', hover: '#4DB6C9', deep: '#276B76', tint: '#E4F4F7', on: '#232A45', canvas: '#F1F9FA', mist: '#EAF2F4' },
-  periwinkle: { accent: '#7C8FC9', hover: '#6E82BF', deep: '#4C5E96', tint: '#E9EEF9', on: '#161B2E', canvas: '#F4F5FB', mist: '#EDEFF7' },
+  teal: { accent: '#2C9BAE', hover: '#32B1C6', deep: '#276B76', tint: '#E4F4F7', on: '#161B2E', canvas: '#F1F9FA', mist: '#EAF2F4' },
+  periwinkle: { accent: '#788CC8', hover: '#8E9FD1', deep: '#4C5E96', tint: '#E9EEF9', on: '#161B2E', canvas: '#F4F5FB', mist: '#EDEFF7' },
   slate: { accent: '#5C6684', hover: '#505A77', deep: '#4A5268', tint: '#EDEFF6', on: '#FFFFFF', canvas: '#F5F5F8', mist: '#EEEFF3' },
-  coral: { accent: '#F0A385', hover: '#EB9373', deep: '#A4502C', tint: '#FDEDE6', on: '#232A45', canvas: '#FDF5F1', mist: '#F6EEEA' },
+  coral: { accent: '#E76938', hover: '#EA7E53', deep: '#A4502C', tint: '#FDEDE6', on: '#161B2E', canvas: '#FDF5F1', mist: '#F6EEEA' },
 };
 
 const DARK: Record<Exclude<Accent, 'pink'>, Dark> = {
