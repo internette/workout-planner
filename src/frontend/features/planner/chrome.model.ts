@@ -56,7 +56,7 @@ export function chromeVals(ctx: Ctx) {
       current: navOn[id] ? ('page' as const) : false,
       go: navGoTo[id],
       item: navItem(navOn[id], navExtra),
-      itemInk: navOn[id] ? 'var(--color-accent)' : 'var(--color-subtle)',
+      itemInk: navOn[id] ? 'var(--color-accent)' : 'var(--color-muted)',
       tab: mTab(navOn[id]),
       tabInk: navOn[id] ? 'var(--color-accent-deep)' : 'var(--color-muted)',
       tabLabel: mLabel(navOn[id]),

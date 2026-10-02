@@ -89,7 +89,7 @@ export default function LoadingPage() {
             key={name}
             style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 16px', padding: '14px 20px', borderTop: i ? '1px solid var(--color-line)' : 'none' }}
           >
-            <Text variant="itemTitle" tone="ink" style={{ flex: '0 0 140px' }}>
+            <Text variant="subheading" tone="ink" style={{ flex: '0 0 140px' }}>
               {name}
             </Text>
             <Text variant="body" tone="slateDeep" style={{ flex: '1 1 260px' }}>

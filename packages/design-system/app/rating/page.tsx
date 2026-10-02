@@ -44,7 +44,7 @@ export default function RatingPage() {
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', marginTop: 8 }}>
           <StarRating label="How hard did it feel?" value={effort} onChange={setEffort} words={WORDS} style={{ marginLeft: -6 }} />
           {effort ? (
-            <Text variant="cardTitle" as="span" tone="accent" style={{ marginLeft: 8 }}>
+            <Text variant="subheading" as="span" tone="accent" style={{ marginLeft: 8 }}>
               {WORDS[effort - 1]}
             </Text>
           ) : null}
@@ -57,11 +57,11 @@ export default function RatingPage() {
         so say the rating in text beside them.
       </p>
       <Card pad="sm" style={{ maxWidth: 260 }}>
-        <Text variant="micro" as="div" tone="subtle">
+        <Text variant="micro" as="div" tone="muted">
           EFFORT
         </Text>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 5 }}>
-          <Text variant="cardTitle" tone="ink">
+          <Text variant="subheading" tone="ink">
             Hard
           </Text>
           <StarRating readOnly value={4} />

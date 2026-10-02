@@ -10,6 +10,7 @@
   border-radius: var(--radius-full);
   font-family: inherit;
   font-size: var(--text-md);
+  line-height: var(--leading-tight);
   box-sizing: border-box;
   transition: background-color var(--dur-state) var(--ease-standard), box-shadow var(--dur-state) var(--ease-standard), filter var(--dur-state) var(--ease-standard);
 }

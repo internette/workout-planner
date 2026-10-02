@@ -76,7 +76,7 @@ function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 12px', marginTop: '14px' }}>
       <span style={{ flex: '1 1 160px', minWidth: 0 }}>
-        <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+        <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
           {now.name}
         </Text>
         <span style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
@@ -118,7 +118,7 @@ function RestSection({ v }: { v: PlannerVals }) {
             <Text variant="micro" tone="slate" as="div">
               UP NEXT
             </Text>
-            <Text variant="itemTitle" as="div" style={{ marginTop: '4px' }}>
+            <Text variant="subheading" as="div" style={{ marginTop: '4px' }}>
               {v.restNextName}
             </Text>
             <Text variant="caption" tone="muted" as="div" style={{ marginTop: '2px' }}>

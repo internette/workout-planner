@@ -36,12 +36,12 @@ function Tile({ name, children }: { name: string; children: React.ReactNode }) {
 export default function IconsPage() {
   return (
     <DocPage title="Icons">
-      <p style={{ margin: '8px 0 32px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
+      <p style={{ margin: '8px 0 32px', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' }}>
         Everything is drawn on a 24×24 canvas and takes <code>size</code>, <code>color</code> and{' '}
         <code>strokeWidth</code>. Line icons default to the surrounding text colour.
       </p>
 
-      <h2 id="glyphs" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-2xl)' }}>
+      <h2 id="glyphs" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-xl)' }}>
         Glyphs
       </h2>
       <div style={grid}>
@@ -52,7 +52,7 @@ export default function IconsPage() {
         ))}
       </div>
 
-      <h2 id="exercise-icons" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-2xl)', marginTop: 40 }}>
+      <h2 id="exercise-icons" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-xl)', marginTop: 40 }}>
         Exercise icons
       </h2>
       <div style={grid}>
@@ -63,7 +63,7 @@ export default function IconsPage() {
         ))}
       </div>
 
-      <h2 id="decorative" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-2xl)', marginTop: 40 }}>
+      <h2 id="decorative" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-xl)', marginTop: 40 }}>
         Decorative
       </h2>
       <div style={grid}>
@@ -87,7 +87,7 @@ export default function IconsPage() {
         </Tile>
       </div>
 
-      <h2 id="mood-faces" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-2xl)', marginTop: 40 }}>
+      <h2 id="mood-faces" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-xl)', marginTop: 40 }}>
         Mood faces
       </h2>
       <div style={grid}>
@@ -116,10 +116,10 @@ export default function IconsPage() {
         ))}
       </div>
 
-      <h2 id="rating-stars" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-2xl)', marginTop: 40 }}>
+      <h2 id="rating-stars" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-xl)', marginTop: 40 }}>
         Rating stars
       </h2>
-      <p style={{ margin: '8px 0 16px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
+      <p style={{ margin: '8px 0 16px', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' }}>
         <code>RatingStar</code> takes <code>on</code> and <code>size</code>, not a colour: on, it fills with the pink →
         periwinkle → teal gradient; off, it&apos;s a pale pink. Round joins on a stroke of the same paint soften its
         points. For a row of them, to pick or show a rating, use <code>StarRating</code> (see Rating). In forced colours the

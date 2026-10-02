@@ -45,7 +45,7 @@ export function QuestCard({ v }: { v: PlannerVals }) {
           {v.questEyebrow}
         </Text>
         <Text
-          variant="itemTitle"
+          variant="subheading"
           as="div"
           tone={v.questCleared ? 'muted' : 'ink'}
           style={{ marginTop: '2px', textDecoration: v.questCleared ? 'line-through' : undefined }}
@@ -57,7 +57,6 @@ export function QuestCard({ v }: { v: PlannerVals }) {
           as="div"
           tone="slateDeep"
           style={{
-            lineHeight: 'var(--leading-snug)',
             marginTop: '2px',
             textWrap: 'pretty',
           }}

@@ -10,7 +10,7 @@ export function ShowcaseCard({ stage, stageStyle, title, use, children }: { stag
       <div className={styles.brandStage} style={stageStyle}>
         {stage}
       </div>
-      <Text variant="itemTitle" tone="ink" as="h3" style={{ margin: 0 }}>
+      <Text variant="subheading" tone="ink" as="h3" style={{ margin: 0 }}>
         {title}
       </Text>
       <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 10px' }}>

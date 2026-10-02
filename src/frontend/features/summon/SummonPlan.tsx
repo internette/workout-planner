@@ -111,7 +111,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
         <Card pad="sm" style={{ marginTop: 14, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 14px', background: 'var(--gradient-gem-tint)' }}>
           <Sparkle size={16} color={vars.pink} glow={0.5} />
           <div style={{ flex: '1 1 180px', minWidth: 0 }}>
-            <Text variant="itemTitle" as="div" tone="ink">
+            <Text variant="subheading" as="div" tone="ink">
               {senderName(waiting.source)} sent you a new arc
             </Text>
             <Text variant="caption" as="div" tone="slateDeep">
@@ -191,7 +191,7 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 18 }}>
       {weeks.map((wk, i) => (
         <section key={wk.start} aria-label={`Week ${i + 1}`} style={{ padding: '12px 14px', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)' }}>
-          <Text variant="micro" as="h3" tone="subtle" style={{ margin: 0 }}>
+          <Text variant="micro" as="h3" tone="muted" style={{ margin: 0 }}>
             WEEK {i + 1} · FROM {shortDate(wk.start).toUpperCase()}
           </Text>
           {wk.list.map((w, j) => (
@@ -200,7 +200,7 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
                 <ExerciseIcon name={w.kind === 'ride' ? 'bike' : w.stretch ? 'lunge' : w.yoga ? 'flower' : 'h'} color="var(--color-accent)" />
               </IconTile>
               <div style={{ minWidth: 0 }}>
-                <Text variant="itemTitle" as="div" tone="ink">
+                <Text variant="subheading" as="div" tone="ink">
                   {w.warmup || w.stretch || w.yoga ? (
                     <Text variant="micro" tone="accent" style={{ marginRight: 6 }}>
                       {w.warmup ? 'WARM-UP' : w.stretch ? 'STRETCH' : 'YOGA'}

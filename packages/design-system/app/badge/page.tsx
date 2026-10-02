@@ -51,7 +51,7 @@ export default function BadgePage() {
             ['Evening Ride', 'soft', 'Done'],
           ].map(([name, tone, label], i) => (
             <div key={name} style={{ ...listRow, borderRadius: 0, padding: '14px 18px', borderTop: i ? '1px solid var(--color-line)' : 'none' }}>
-              <Text variant="itemTitle" tone="ink" style={{ flex: 1 }}>
+              <Text variant="subheading" tone="ink" style={{ flex: 1 }}>
                 {name}
               </Text>
               <Badge tone={tone as 'soft' | 'neutral'}>{label}</Badge>

@@ -27,7 +27,7 @@ export function ProfileScreen({ v }: { v: PlannerVals }) {
       <div id="profileStats" style={{ display: 'grid', gap: '12px', marginTop: '14px' }}>
         {(v.profileStats ?? []).map((s, i) => (
           <Card key={i} pad="sm">
-            <Stat size="xl" labelTone="muted" label={s?.label} value={s?.value} unit={s?.unit ?? ''} note={s?.span} />
+            <Stat size="xl" label={s?.label} value={s?.value} unit={s?.unit ?? ''} note={s?.span} />
           </Card>
         ))}
       </div>

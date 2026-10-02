@@ -13,7 +13,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
   return (
     <Card elevation="overlay" id="add-exercise" data-add-exercise-panel style={{ marginTop: '14px' }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
-        <Text variant="cardTitle">Add exercise</Text>
+        <Text variant="subheading">Add exercise</Text>
         <SegmentedControl
           label="Add exercise from"
           size="sm"

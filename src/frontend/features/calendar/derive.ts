@@ -74,7 +74,7 @@ export function calendarStage(ctx: EntriesCtx) {
         (on ? 'var(--color-on-accent)' : 'var(--color-muted)'),
       numStyle:
         "font-family:var(--font-heading);" +
-        'font-size:var(--text-xl);font-weight:' +
+        'font-size:var(--text-lg);font-weight:' +
         (on ? 'var(--font-weight-bold)' : 'var(--font-weight-semibold)') +
         ';color:' +
         // Another month's dates are dimmer than this month's, but still readable (muted meets 4.5:1).

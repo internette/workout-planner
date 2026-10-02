@@ -23,7 +23,7 @@ export function WorkoutRow({ workout }: { workout: any }) {
       <IconTile as="span" size="sm" variant="flat">{workout?.svg}</IconTile>
       <span style={{ flex: '1 1 200px', minWidth: '0' }}>
         <KindTag kind={kindOf(workout)} />
-        <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+        <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
           {workout?.name}
         </Text>
         <Text
@@ -36,7 +36,7 @@ export function WorkoutRow({ workout }: { workout: any }) {
         {workout?.exercises ? (
           <Text
             variant="small"
-            tone="subtle"
+            tone="muted"
             style={{ display: 'block', marginTop: '3px' }}
           >
             {workout?.exercises}

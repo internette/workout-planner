@@ -61,17 +61,9 @@ export function RideActualCard({ v }: { v: PlannerVals }) {
             placeholders={['0', '0']}
             name="Actual duration"
           />
-          <span
-            style={{
-              display: 'block',
-              fontSize: 'var(--text-sm)',
-              fontWeight: 'var(--font-weight-regular)',
-              color: 'var(--color-subtle)',
-              marginTop: '6px',
-            }}
-          >
+          <Text variant="small" tone="muted" as="span" style={{ display: 'block', marginTop: '6px' }}>
             {v.plannedDur}
-          </span>
+          </Text>
         </div>
       </div>
       <p style={css(v.rideNoteStyle)}>{v.rideNote}</p>

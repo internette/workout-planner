@@ -39,7 +39,7 @@ export default function ProgressBarPage() {
           <div>
             <div style={labelRow}>
               <Text variant="micro" tone="slate">PROGRESS</Text>
-              <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
+              <Text variant="subheading" tone="ink" style={{ marginLeft: 'auto' }}>
                 3 of 4 done
               </Text>
             </div>
@@ -48,7 +48,7 @@ export default function ProgressBarPage() {
           <div>
             <div style={labelRow}>
               <Text variant="micro" tone="slate">QUESTS CLEARED</Text>
-              <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
+              <Text variant="subheading" tone="ink" style={{ marginLeft: 'auto' }}>
                 5 of 12
               </Text>
             </div>
@@ -83,7 +83,7 @@ export default function ProgressBarPage() {
       <Card pad="md">
         <div style={labelRow}>
           <Text variant="micro" tone="slate">PROGRESS</Text>
-          <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
+          <Text variant="subheading" tone="ink" style={{ marginLeft: 'auto' }}>
             {done} of {total} done
           </Text>
         </div>

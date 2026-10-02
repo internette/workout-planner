@@ -11,7 +11,7 @@
   text-transform: uppercase;
   color: var(--color-muted);
 }
-.note { color: var(--color-subtle); }
+.note { color: var(--color-muted); }
 
 /* ---- filled: a canvas box with an outline that holds the input and an optional suffix */
 .control {
@@ -64,7 +64,7 @@
   padding: 5px 0;
   border-bottom: 1.5px dashed color-mix(in srgb, var(--color-ink) 30%, transparent);
   font-family: var(--font-heading);
-  font-size: var(--text-3xl);
+  font-size: var(--text-xl);
   font-weight: var(--font-weight-bold);
 }
 
@@ -86,7 +86,7 @@
 }
 .textarea.invalid { outline: 2px solid var(--color-danger); }
 
-.hint { display: block; margin-top: 6px; font-size: var(--text-sm); font-weight: var(--font-weight-regular); color: var(--color-subtle); }
+.hint { display: block; margin-top: 6px; font-size: var(--text-sm); font-weight: var(--font-weight-regular); color: var(--color-muted); }
 .error { margin-top: 6px; font-size: var(--text-sm); color: var(--color-danger); }
 .disabled { opacity: 0.5; }
 

@@ -50,7 +50,7 @@ export function OptionCard({ name, value, checked, onChange, title, description,
         />
         <span className={styles.dot} aria-hidden="true" />
         <span className={styles.text}>
-          <Text variant="itemTitle" tone="ink" as="span" className={styles.title}>
+          <Text variant="subheading" tone="ink" as="span" className={styles.title}>
             {title}
           </Text>
           {description ? (

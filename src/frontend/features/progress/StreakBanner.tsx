@@ -30,7 +30,7 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
         <Gem size={30} />
         <div style={{ minWidth: '0' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '7px' }}>
-            <Text variant="bigNumber" tone="ink">
+            <Text variant="display" tone="ink">
               {v.streakCount}
             </Text>
             <Text variant="label" weight="semibold" tone="accent">

@@ -69,7 +69,7 @@ export default function EmptyStatePage() {
       <p style={note}>
         <code>size=&quot;md&quot;</code> with <code>panel</code>, for an empty part of a screen that has other things
         on it, like a week with nothing planned: on the soft gem gradient, with a 66px medallion and a{' '}
-        <code>subheading</code>. <code>decoration</code> takes twinkling sparkles, placed absolutely; they&apos;re
+        <code>heading</code>. <code>decoration</code> takes twinkling sparkles, placed absolutely; they&apos;re
         hidden from screen readers.
       </p>
       <div style={{ maxWidth: 460 }}>

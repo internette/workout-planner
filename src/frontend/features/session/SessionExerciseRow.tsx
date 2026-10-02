@@ -14,7 +14,7 @@ export function SessionExerciseRow({ exercise }: { exercise: any }) {
       <IconTile as="span" size="xs" variant="flat">{exercise?.icoSvg}</IconTile>
       <span style={{ minWidth: '0', flex: '1 1 auto' }}>
         <Text
-          variant="cardTitle"
+          variant="subheading"
           tone={exercise?.nameDone ? 'muted' : 'ink'}
           style={{ display: 'block', textDecoration: exercise?.nameDone ? 'line-through' : undefined }}
         >

@@ -19,19 +19,12 @@ export default function StatPage() {
 
       <h2 id="sizes" style={h2}>Sizes</h2>
       <p style={note}>
-        The size sets the value&apos;s text style. <code>sm</code> (itemTitle) for a row of several, like a ride plan;{' '}
-        <code>md</code> (cardTitle, the default) inside a card, like a ride&apos;s stats or a mood; <code>lg</code>{' '}
-        (subheading) for an exercise&apos;s numbers; <code>xl</code> (heading) for a page&apos;s headline figures.
+        The size sets the value&apos;s text style. <code>md</code> (subheading, the default) inside a card or a row of
+        several, like a ride&apos;s stats or a mood; <code>lg</code> (heading) for an exercise&apos;s numbers;{' '}
+        <code>xl</code> (title) for a page&apos;s headline figures.
       </p>
       <Card>
-        <p style={caption}>sm</p>
-        <div style={row}>
-          <Stat size="sm" label="DISTANCE" value="14 mi" />
-          <Stat size="sm" label="DURATION" value="1 h" />
-          <Stat size="sm" label="ELEVATION" value="600 ft" />
-          <Stat size="sm" label="TARGET EFFORT" value="Endurance" />
-        </div>
-        <p style={{ ...caption, marginTop: 24 }}>md</p>
+        <p style={caption}>md</p>
         <div style={row}>
           <Stat label="DISTANCE" value="12.5 mi" />
           <Stat label="MOOD" value="Happy" />

@@ -75,7 +75,7 @@ function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.R
           </p>
         ) : null}
 
-        <Text variant="small" tone="subtle" as="p" className={styles.legal} style={{ lineHeight: 'var(--leading-snug)' }}>
+        <Text variant="small" tone="muted" as="p" className={styles.legal}>
           No password to lose. {signingUp ? 'Continuing accepts the terms and the privacy policy.' : 'We only ever read your name and email.'}
         </Text>
 
@@ -139,7 +139,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                 </Text>
                 <SparkleTrail className={styles.trail} />
               </span>
-              <Text variant="hero" as="h1" style={{ margin: '14px 0 0', lineHeight: 1.04, textWrap: 'balance' }}>
+              <Text variant="hero" as="h1" style={{ margin: '14px 0 0', textWrap: 'balance' }}>
                 Answer the call.
                 <br />
                 Then do the sets.
@@ -164,7 +164,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                 <span className={styles.stepIcon}>
                   <Icon size={21} color="var(--color-accent)" />
                 </span>
-                <Text variant="cardTitle" as="h3" className={styles.stepTitle}>
+                <Text variant="subheading" as="h3" className={styles.stepTitle}>
                   {title}
                 </Text>
                 <Text variant="body" tone="muted" as="p" className={styles.stepBody}>
@@ -196,7 +196,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                   <Text variant="micro" tone="accent" as="div">
                     QUEST CLEARED
                   </Text>
-                  <Text variant="cardTitle" as="div" style={{ marginTop: 4 }}>
+                  <Text variant="subheading" as="div" style={{ marginTop: 4 }}>
                     Break the illusion
                   </Text>
                   <Text variant="caption" tone="muted" as="div" style={{ marginTop: 3 }}>
@@ -242,7 +242,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                   </Text>
                 </div>
               ))}
-              <Text variant="caption" tone="subtle" className={styles.more}>
+              <Text variant="caption" tone="muted" className={styles.more}>
                 …and {RANKS.length - LADDER.length} more above these.
               </Text>
             </div>
@@ -251,7 +251,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
 
         <Section last>
           <Card pad="lg" className={styles.closing} style={{ borderRadius: 'var(--radius-xl)', padding: '44px 24px' }}>
-            <Text variant="headline" as="h2" style={{ margin: 0, lineHeight: 1.1, textWrap: 'balance' }}>
+            <Text variant="headline" as="h2" style={{ margin: 0, textWrap: 'balance' }}>
               The city is quiet. That never lasts.
             </Text>
             <Text variant="body" tone="muted" as="p" className={styles.closingBody}>
@@ -270,7 +270,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
       <footer className={styles.footer}>
         <div className={styles.footerRow}>
           <Lockup height={24} />
-          <Text variant="caption" tone="subtle">
+          <Text variant="caption" tone="muted">
             A training plan with a transformation sequence.
           </Text>
         </div>

@@ -78,7 +78,7 @@ export default function IconChoiceGroupPage() {
           <IconTile>
             <ExerciseIcon name={workoutIcon} color={themed(colour)} />
           </IconTile>
-          <Text variant="subheading" as="div">
+          <Text variant="heading" as="div">
             Upper Push
           </Text>
         </div>

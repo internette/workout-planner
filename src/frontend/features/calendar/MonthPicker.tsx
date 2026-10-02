@@ -28,7 +28,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             }}
           >
             <StepButton dir="prev" unit="year" onClick={v.prevYear} />
-            <Text variant="subheading">{v.yearLabel}</Text>
+            <Text variant="heading">{v.yearLabel}</Text>
             <StepButton dir="next" unit="year" onClick={v.nextYear} />
           </div>
           <div

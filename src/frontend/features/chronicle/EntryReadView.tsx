@@ -13,7 +13,7 @@ import { NotesCard } from '@/frontend/components/NotesCard';
 export function EntryReadView({ v }: { v: PlannerVals }) {
   return (
     <div style={{ marginTop: '30px' }}>
-      <Text variant="micro" as="div" tone="subtle">
+      <Text variant="micro" as="div" tone="muted">
         {v.longDate}
       </Text>
       <div
@@ -25,7 +25,7 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
           marginTop: '8px',
         }}
       >
-        <Text variant="display" as="h1" style={{ margin: '0' }}>
+        <Text variant="title" as="h1" style={{ margin: '0' }}>
           {v.eName}
         </Text>
         <Button type="secondary" ghost size="xs" onClick={v.goDetail} style={{ alignSelf: 'center' }}>
@@ -42,13 +42,13 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
           <Stat label="MOOD" value={v.readMood} style={{ minWidth: '0' }} />
         </Card>
         <Card pad="sm" style={{ flex: '1 1 200px' }}>
-          <Text variant="micro" as="div" tone="subtle">
+          <Text variant="micro" as="div" tone="muted">
             EFFORT
           </Text>
           <div
             style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '5px' }}
           >
-            <Text variant="cardTitle" tone="ink">
+            <Text variant="subheading" tone="ink">
               {v.rpeLabel}
             </Text>
             <StarRating readOnly value={v.rpe} />

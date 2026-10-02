@@ -81,7 +81,7 @@ export default function SegmentedControlPage() {
       </p>
       <Card pad="md">
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
-          <strong style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-xl)' }}>Add exercise</strong>
+          <strong style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-lg)' }}>Add exercise</strong>
           <SegmentedControl
             label="Add exercise from"
             size="sm"

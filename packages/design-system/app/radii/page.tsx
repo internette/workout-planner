@@ -4,7 +4,7 @@ import { DocPage, h2, note } from '../docs';
 export const metadata = { title: 'Radii — Design system' };
 
 const grid: React.CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 };
-const meta: React.CSSProperties = { fontSize: 'var(--text-sm)', color: 'var(--color-muted)', lineHeight: 'var(--leading-snug)' };
+const meta: React.CSSProperties = { fontSize: 'var(--text-sm)', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' };
 
 export default function RadiiPage() {
   return (

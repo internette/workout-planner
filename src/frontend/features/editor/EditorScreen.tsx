@@ -136,15 +136,15 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             <Text variant="micro" tone="slate">
               RIDE PLAN
             </Text>
-            <Text variant="small" tone="subtle" weight="medium" style={{ marginLeft: 'auto' }}>
+            <Text variant="small" tone="muted" weight="medium" style={{ marginLeft: 'auto' }}>
               {v.rideLockNote}
             </Text>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '22px', marginTop: '12px' }}>
-            <Stat size="sm" label="DISTANCE" value={v.planDistText} />
-            <Stat size="sm" label="DURATION" value={v.planDurText} />
-            <Stat size="sm" label="ELEVATION" value={v.planElevText} />
-            <Stat size="sm" label="TARGET EFFORT" value={v.rideZone} />
+            <Stat label="DISTANCE" value={v.planDistText} />
+            <Stat label="DURATION" value={v.planDurText} />
+            <Stat label="ELEVATION" value={v.planElevText} />
+            <Stat label="TARGET EFFORT" value={v.rideZone} />
           </div>
         </div>
       ) : null}

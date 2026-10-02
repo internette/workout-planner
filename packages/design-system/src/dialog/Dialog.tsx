@@ -99,7 +99,7 @@ function DialogPanel({ onClose, title, aside, closeButton = true, description, a
         </IconButton>
       ) : null}
       <div className={`${styles.header} ${closeButton ? styles.withClose : ''}`}>
-        <Text variant="subheading" as="h2" id={titleId} className={styles.title}>
+        <Text variant="heading" as="h2" id={titleId} className={styles.title}>
           {title}
         </Text>
         {aside ? (

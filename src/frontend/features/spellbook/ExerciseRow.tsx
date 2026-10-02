@@ -39,7 +39,7 @@ export function ExerciseRow({ exercise }: { exercise: any }) {
       >
         <IconTile as="span" size="xs" variant="flat">{exercise?.svg}</IconTile>
         <span style={{ flex: '1', minWidth: '0' }}>
-          <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+          <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
             {exercise?.name}
           </Text>
           <Text

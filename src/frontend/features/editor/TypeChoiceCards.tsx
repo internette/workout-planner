@@ -55,10 +55,10 @@ function TypeChoiceCard({
         {icon}
       </span>
       <span style={{ minWidth: 0, flex: '1 1 auto', display: 'flex', flexDirection: 'column', gap: '3px' }}>
-        <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
+        <Text variant="heading" tone="ink" style={{ display: 'block' }}>
           {title}
         </Text>
-        <Text variant="body" tone="muted" style={{ display: 'block', lineHeight: 'var(--leading-snug)', textWrap: 'pretty' }}>
+        <Text variant="body" tone="muted" style={{ display: 'block', textWrap: 'pretty' }}>
           {note}
         </Text>
       </span>

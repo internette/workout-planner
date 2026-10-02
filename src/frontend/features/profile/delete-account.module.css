@@ -7,8 +7,8 @@
 }
 .explain { flex: 1 1 200px; min-width: 0; }
 
-.list { margin: var(--space-3) 0 0; padding-left: var(--space-5); color: var(--color-slate); font-size: var(--text-base); line-height: var(--leading-relaxed); }
+.list { margin: var(--space-3) 0 0; padding-left: var(--space-5); color: var(--color-slate); font-size: var(--text-base); line-height: var(--leading-base); }
 .list li + li { margin-top: var(--space-1); }
-.permanent { margin: var(--space-4) 0 0; font-size: var(--text-base); font-weight: var(--font-weight-semibold); color: var(--color-danger); line-height: var(--leading-snug); }
+.permanent { margin: var(--space-4) 0 0; font-size: var(--text-base); font-weight: var(--font-weight-semibold); color: var(--color-danger); line-height: var(--leading-base); }
 .field { margin-top: var(--space-4); }
-.error { margin: var(--space-3) 0 0; font-size: var(--text-base); line-height: var(--leading-snug); color: var(--color-danger); }
+.error { margin: var(--space-3) 0 0; font-size: var(--text-base); line-height: var(--leading-base); color: var(--color-danger); }

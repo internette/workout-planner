@@ -31,7 +31,7 @@ export function SearchBar({ value, onChange, placeholder, label, onClear, status
           : { padding: '12px 16px', background: 'var(--color-surface)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--elevation-hairline)' }),
       }}
     >
-      <Search color="var(--color-subtle)" size={inset ? 16 : 17} />
+      <Search color="var(--color-muted)" size={inset ? 16 : 17} />
       <TextField variant="bare" aria-label={label ?? placeholder} value={value} onChange={onChange} placeholder={placeholder} />
       {status != null ? (
         <span className="sr-only" role="status">

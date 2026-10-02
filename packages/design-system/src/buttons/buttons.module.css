@@ -10,6 +10,7 @@
   cursor: pointer;
   font-family: inherit;
   font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-tight);
   transition: background-color var(--dur-state) var(--ease-standard), color var(--dur-state) var(--ease-standard);
 }
 

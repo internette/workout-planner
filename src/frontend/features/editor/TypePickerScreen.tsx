@@ -16,7 +16,7 @@ export function TypePickerScreen({ v }: { v: PlannerVals }) {
         <Text variant="micro" as="div" tone="slate">
           {v.retyping ? v.eEyebrow : 'NEW WORKOUT'}
         </Text>
-        <Text variant="heading" as="h1" style={{ margin: '3px 0 0' }}>
+        <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
           What kind of workout?
         </Text>
       </div>

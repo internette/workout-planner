@@ -46,7 +46,7 @@ export function SectionLabel({ label, note, aside, value, as = 'h2', tone = 'sla
       {has(note) ? muted(note) : null}
       {has(aside) ? muted(aside, { marginLeft: 'auto' }) : null}
       {has(value) ? (
-        <Text variant="itemTitle" tone="ink" style={{ marginLeft: 'auto' }}>
+        <Text variant="subheading" tone="ink" style={{ marginLeft: 'auto' }}>
           {value}
         </Text>
       ) : null}

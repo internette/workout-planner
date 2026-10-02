@@ -47,7 +47,7 @@ export function WeekRow({ row }: { row: any }) {
           <IconTile as="span" size="xs" variant="flat" aria-hidden>{row?.icoSvg}</IconTile>
           <div style={{ minWidth: '0', flex: '1' }}>
             <KindTag kind={kindOf(row)} />
-            <Text variant="itemTitle" as="div">
+            <Text variant="subheading" as="div">
               {row?.name}
             </Text>
             <Text

@@ -53,7 +53,7 @@ export default function ReorderableListPage() {
                   <ExerciseIcon name={r.icon} color="var(--color-accent)" />
                 </IconTile>
                 <div style={{ minWidth: 0 }}>
-                  <Text variant="itemTitle" as="div">
+                  <Text variant="subheading" as="div">
                     {r.name}
                   </Text>
                   <Text variant="caption" tone="muted" as="div">

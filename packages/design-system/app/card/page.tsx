@@ -8,8 +8,8 @@ import { DocPage, h2, note } from '../docs';
 export const metadata = { title: 'Card — Design system' };
 
 const grid: React.CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 };
-const title: React.CSSProperties = { fontFamily: 'var(--font-heading)', fontWeight: 'var(--font-weight-bold)', fontSize: 'var(--text-xl)' };
-const body: React.CSSProperties = { margin: '6px 0 0', fontSize: 'var(--text-md)', color: 'var(--color-muted)', lineHeight: 'var(--leading-snug)' };
+const title: React.CSSProperties = { fontFamily: 'var(--font-heading)', fontWeight: 'var(--font-weight-bold)', fontSize: 'var(--text-lg)' };
+const body: React.CSSProperties = { margin: '6px 0 0', fontSize: 'var(--text-md)', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' };
 const row: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
@@ -117,7 +117,7 @@ export default function CardPage() {
                     {r.day[1]}
                   </Text>
                   <span style={{ flex: 1, minWidth: 0 }}>
-                    <Text variant="itemTitle" as="span" tone="ink" style={{ display: 'block' }}>
+                    <Text variant="subheading" as="span" tone="ink" style={{ display: 'block' }}>
                       {r.name}
                     </Text>
                     <Text variant="caption" as="span" tone="muted" style={{ display: 'block', marginTop: 1 }}>
