@@ -13,7 +13,7 @@ export function CountCard({ label, count, unit, onClick }: { label: ReactNode; c
       </Text>
       <span style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>
         <Text variant="heading">{count}</Text>
-        <Text variant="body" tone="muted" weight="medium">
+        <Text variant="strong" tone="muted">
           {unit}
         </Text>
       </span>

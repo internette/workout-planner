@@ -8,7 +8,7 @@ export function NotesCard({ children, lead = false, style }: { children: ReactNo
   return (
     <Card style={style}>
       <Text variant="micro" as="div" tone="muted">
-        NOTES
+        Notes
       </Text>
       <Text
         variant="body"

@@ -192,7 +192,7 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
       {weeks.map((wk, i) => (
         <section key={wk.start} aria-label={`Week ${i + 1}`} style={{ padding: '12px 14px', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)' }}>
           <Text variant="micro" as="h3" tone="muted" style={{ margin: 0 }}>
-            WEEK {i + 1} · FROM {shortDate(wk.start).toUpperCase()}
+            Week {i + 1} · from {shortDate(wk.start)}
           </Text>
           {wk.list.map((w, j) => (
             <div key={w.date + w.name + j} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '9px 0', borderTop: j ? '1px solid var(--color-line)' : 'none' }}>
@@ -203,7 +203,7 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
                 <Text variant="subheading" as="div" tone="ink">
                   {w.warmup || w.stretch || w.yoga ? (
                     <Text variant="micro" tone="accent" style={{ marginRight: 6 }}>
-                      {w.warmup ? 'WARM-UP' : w.stretch ? 'STRETCH' : 'YOGA'}
+                      {w.warmup ? 'Warm-up' : w.stretch ? 'Stretch' : 'Yoga'}
                     </Text>
                   ) : null}
                   {w.name}

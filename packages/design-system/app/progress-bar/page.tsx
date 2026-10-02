@@ -66,7 +66,7 @@ export default function ProgressBarPage() {
         <div style={{ ...stack, gap: 12 }}>
           {moods.map((m) => (
             <div key={m.name} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <Text variant="label" tone="ink" style={{ flex: 'none', width: 66 }}>
+              <Text variant="strong" tone="ink" style={{ flex: 'none', width: 66 }}>
                 {m.name}
               </Text>
               <ProgressBar value={m.pct} fill={m.color} style={{ flex: 1 }} />

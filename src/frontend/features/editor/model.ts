@@ -242,11 +242,11 @@ export function editVals(ctx: Ctx) {
   const savedChoiceGroups: { label: string; items: ReturnType<typeof choiceOf>[] }[] = [];
   if (logic.model.workouts.length)
     savedChoiceGroups.push({
-      label: builtinChoices.length ? 'YOUR WORKOUTS' : '',
+      label: builtinChoices.length ? 'Your workouts' : '',
       items: logic.model.workouts.map((w) => choiceOf(w, false)),
     });
   builtinChoices.forEach((w) => {
-    const label = 'BUILT-IN · ' + w.category.toUpperCase();
+    const label = 'Built-in · ' + w.category;
     let g = savedChoiceGroups.find((x) => x.label === label);
     if (!g) savedChoiceGroups.push((g = { label, items: [] }));
     g.items.push(choiceOf(w, true));
@@ -554,7 +554,7 @@ export function editVals(ctx: Ctx) {
       if (e.key === 'Enter') e.preventDefault();
     },
     setEditName: (e) => logic.s({ renames: Object.assign({}, st.renames, { [baseName]: e.target.value }) }),
-    eEyebrow: tplMode ? 'EDITING SAVED WORKOUT' : st.editing ? 'EDITING WORKOUT' : 'NEW WORKOUT',
+    eEyebrow: tplMode ? 'Editing saved workout' : st.editing ? 'Editing workout' : 'New workout',
     eSaveLabel: saving
       ? 'Saving…'
       : tplMode

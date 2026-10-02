@@ -103,14 +103,14 @@ function FilterSheet({ v }: { v: PlannerVals }) {
       {v.showKindInFilter ? (
         <div style={section}>
           <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={heading}>
-            KIND
+            Kind
           </Text>
           <ChoiceChips label="Kind" options={v.workoutKindOptions ?? []} value={v.workoutKind} onChange={v.setWorkoutKind} />
         </div>
       ) : null}
       <div style={section}>
         <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={heading}>
-          TARGET AREAS
+          Target areas
         </Text>
         <ChipGroup label="Target areas">
           {(v.areaFilterOptions ?? []).map((o) => (
@@ -123,7 +123,7 @@ function FilterSheet({ v }: { v: PlannerVals }) {
       {v.equipFilterShown ? (
         <div style={section}>
           <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: '2px' }}>
-            EQUIPMENT YOU HAVE
+            Equipment you have
           </Text>
           <Text variant="body" tone="muted" as="p" style={{ margin: '0 0 4px' }}>
             Shows what you can do with what you tick. Bodyweight exercises always show. Kept on this device.
@@ -142,7 +142,7 @@ function EquipmentGroups({ v }: { v: PlannerVals }) {
       {(v.equipFilterGroups ?? []).map((g, gi) => (
         <div key={g.label}>
           <DisclosureRow variant="divided" open={!!g.open} onToggle={g.toggle} controls={'equip-filter-' + gi}>
-            <Text variant="label" as="span" tone="ink" style={{ flex: 'none' }}>
+            <Text variant="strong" as="span" tone="ink" style={{ flex: 'none' }}>
               {g.label}
             </Text>
             <Text

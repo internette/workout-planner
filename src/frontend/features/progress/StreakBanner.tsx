@@ -33,15 +33,15 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
             <Text variant="display" tone="ink">
               {v.streakCount}
             </Text>
-            <Text variant="label" weight="semibold" tone="accent">
+            <Text variant="strong" weight="semibold" tone="accent">
               {t(v.streakUnit)}
               {' streak'}
             </Text>
           </div>
           <Text
-            variant="body"
+            variant="strong"
             as="p"
-            weight="medium"
+           
             tone="slateDeep"
             style={{ margin: '6px 0 0' }}
           >
@@ -54,7 +54,7 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
           {v.ticksLabel}
         </Text>
         {v.ticksEmpty ? (
-          <Text variant="body" as="p" weight="medium" tone="slateDeep" style={{ margin: '9px 0 0' }}>
+          <Text variant="strong" as="p" tone="slateDeep" style={{ margin: '9px 0 0' }}>
             Clear a day and it lights up here.
           </Text>
         ) : null}

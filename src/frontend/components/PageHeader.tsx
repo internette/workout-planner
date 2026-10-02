@@ -33,7 +33,7 @@ export function PageHeader({ title, count, action, intro, style }: PageHeaderPro
             {title}
           </Text>
           {count != null ? (
-            <Text variant="label" tone="muted">
+            <Text variant="strong" tone="muted">
               {count}
             </Text>
           ) : null}

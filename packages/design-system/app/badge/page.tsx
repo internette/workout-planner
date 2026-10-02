@@ -66,7 +66,7 @@ export default function BadgePage() {
               ['Leg Day', 'quiet', 'Planned'],
             ].map(([name, tone, label]) => (
               <div key={name} style={{ ...listRow, background: 'var(--color-canvas)' }}>
-                <Text variant="label" tone="ink" weight="semibold" style={{ flex: 1 }}>
+                <Text variant="strong" tone="ink" weight="semibold" style={{ flex: 1 }}>
                   {name}
                 </Text>
                 <Badge tone={tone as 'accent' | 'neutral' | 'quiet'}>{label}</Badge>

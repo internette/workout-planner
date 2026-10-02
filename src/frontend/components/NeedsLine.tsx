@@ -6,7 +6,7 @@ export function NeedsLine({ text }: { text?: string | null }) {
   return (
     <p style={{ margin: '14px 0 0' }}>
       <Text variant="micro" as="span" tone="slate" style={{ display: 'block' }}>
-        YOU&apos;LL NEED
+        You&apos;ll need
       </Text>
       <Text variant="body" as="span" tone="ink" style={{ display: 'block', marginTop: '2px' }}>
         {text}

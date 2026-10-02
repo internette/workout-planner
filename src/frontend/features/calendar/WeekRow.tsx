@@ -25,7 +25,7 @@ export function WeekRow({ row }: { row: any }) {
           }}
         >
           <StatusDot status="rest" size="md" />
-          <Text variant="label" tone="muted">
+          <Text variant="strong" tone="muted">
             Rest day
           </Text>
         </div>

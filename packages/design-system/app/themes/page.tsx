@@ -59,7 +59,7 @@ function Preview({ accent, dark }: { accent: string; dark: boolean }) {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 12 }}>
           <StarRating readOnly value={4} />
-          <Text variant="label" weight="semibold" tone="accent">
+          <Text variant="strong" weight="semibold" tone="accent">
             Hard
           </Text>
         </div>
@@ -105,7 +105,7 @@ export default function ThemesPage() {
       <div style={grid}>
         {ACCENTS.map((a) => (
           <div key={a.name}>
-            <Text variant="label" weight="semibold" as="h3" tone="ink" style={{ margin: '0 0 8px' }}>
+            <Text variant="strong" weight="semibold" as="h3" tone="ink" style={{ margin: '0 0 8px' }}>
               {a.label}
             </Text>
             <Preview accent={a.name} dark={false} />
@@ -122,7 +122,7 @@ export default function ThemesPage() {
       <div style={grid}>
         {ACCENTS.map((a) => (
           <div key={a.name}>
-            <Text variant="label" weight="semibold" as="h3" tone="ink" style={{ margin: '0 0 8px' }}>
+            <Text variant="strong" weight="semibold" as="h3" tone="ink" style={{ margin: '0 0 8px' }}>
               {a.label}
             </Text>
             <Preview accent={a.name} dark />

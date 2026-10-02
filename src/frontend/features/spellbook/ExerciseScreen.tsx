@@ -31,14 +31,14 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
           Add
         </Button>
       </BackBar>
-      <PageTitle icon={v.exercise.svg} eyebrow={v.exercise.builtin ? 'BUILT-IN EXERCISE' : 'EXERCISE'} title={v.exercise.name} />
+      <PageTitle icon={v.exercise.svg} eyebrow={v.exercise.builtin ? 'Built-in exercise' : 'Exercise'} title={v.exercise.name} />
       <Card style={{ marginTop: '18px' }}>
         <StatRow
           size="lg"
           stats={[
             { label: 'SETS × REPS', value: v.exercise.sets },
-            { label: 'WEIGHT', value: v.exercise.weight },
-            { label: 'REST', value: v.exercise.rest },
+            { label: 'Weight', value: v.exercise.weight },
+            { label: 'Rest', value: v.exercise.rest },
           ]}
         />
         {(v.exercise.areas ?? []).length ? (
@@ -50,7 +50,7 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
         ) : null}
         {v.exercise.equipment ? (
           <>
-            <SectionLabel label="EQUIPMENT" style={{ margin: '16px 0 8px' }} />
+            <SectionLabel label="Equipment" style={{ margin: '16px 0 8px' }} />
             <ChipGroup>
               {v.exercise.equipment.map((a, i) => (
                 <Chip key={i}>{a}</Chip>
@@ -66,7 +66,7 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
         </Text>
       ) : (
         <>
-          <SectionLabel label="USED IN" style={{ margin: '24px 0 10px' }} />
+          <SectionLabel label="Used in" style={{ margin: '24px 0 10px' }} />
           {(v.exercise.usedIn ?? []).length ? (
             <ChipGroup>
               {(v.exercise.usedIn ?? []).map((w, i) => (

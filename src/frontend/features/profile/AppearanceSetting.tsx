@@ -30,7 +30,7 @@ export function AppearanceSetting() {
     <>
       <div style={row}>
         <div style={{ flex: '1 1 120px', minWidth: 0 }}>
-          <Text variant="label" as="div" tone="ink" id="colour-label">
+          <Text variant="strong" as="div" tone="ink" id="colour-label">
             Colour
           </Text>
           {/* The chosen one's name: the swatches alone only say it on hover. */}
@@ -55,7 +55,7 @@ export function AppearanceSetting() {
       </div>
       <div style={row}>
         <div style={{ flex: '1 1 120px', minWidth: 0 }}>
-          <Text variant="label" as="div" tone="ink">
+          <Text variant="strong" as="div" tone="ink">
             Theme
           </Text>
         </div>

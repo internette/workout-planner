@@ -14,19 +14,11 @@ export function RideActualCard({ v }: { v: PlannerVals }) {
         style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
       >
         <Text variant="micro" tone="slate">
-          WHAT YOU ACTUALLY RODE
+          What you actually rode
         </Text>
-        <span
-          style={{
-            marginLeft: 'auto',
-            fontFamily: 'var(--font-heading)',
-            fontSize: 'var(--text-base)',
-            fontWeight: 'var(--font-weight-bold)',
-            color: 'var(--color-ink)',
-          }}
-        >
+        <Text variant="figure" tone="ink" style={{ marginLeft: 'auto' }}>
           {v.ridePctLabel}
-        </span>
+        </Text>
       </div>
       <ProgressBar value={v.rideBarPct ?? 0} track="mist" style={{ marginTop: '12px' }} />
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '18px' }}>

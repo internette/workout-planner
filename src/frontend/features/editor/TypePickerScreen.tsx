@@ -14,7 +14,7 @@ export function TypePickerScreen({ v }: { v: PlannerVals }) {
       {v.retyping ? <BackBar label="Back" onBack={v.closeRetype} /> : <BackBar label={v.backLabel} onBack={v.backToDay} />}
       <div style={{ marginTop: '18px' }}>
         <Text variant="micro" as="div" tone="slate">
-          {v.retyping ? v.eEyebrow : 'NEW WORKOUT'}
+          {v.retyping ? v.eEyebrow : 'New workout'}
         </Text>
         <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
           What kind of workout?

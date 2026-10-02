@@ -5,7 +5,7 @@ import { Text } from '@moonshot/design-system/typography';
 export interface PageTitleProps {
   /** The workout's or exercise's icon, on its tile. */
   icon: ReactNode;
-  /** A small line above, e.g. "EXERCISE" or the session's date. */
+  /** A small line above, e.g. "Exercise" or the session's date. */
   eyebrow: ReactNode;
   /** The page's heading. */
   title: ReactNode;

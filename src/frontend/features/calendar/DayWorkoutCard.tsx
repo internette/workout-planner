@@ -18,7 +18,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
     <Card pad="lg" className="day-card">
         {card?.inProgress ? (
           <Text variant="micro" as="div" tone="slate" style={{ marginBottom: '8px' }}>
-            IN PROGRESS
+            In progress
           </Text>
         ) : null}
         <div
@@ -52,7 +52,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
                 <ChevronRight color="var(--color-muted)" size={17} />
               </button>
             </Text>
-            <Text variant="label" as="p" tone="muted" style={{ margin: '4px 0 0' }}>
+            <Text variant="strong" as="p" tone="muted" style={{ margin: '4px 0 0' }}>
               {card?.openMeta || card?.meta}
             </Text>
           </div>
@@ -73,7 +73,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
           </div>
         ) : null}
         {card?.ridePlan ? (
-          <Text variant="label" as="p" tone="ink" weight="semibold" style={{ margin: '14px 0 0' }}>
+          <Text variant="strong" as="p" tone="ink" weight="semibold" style={{ margin: '14px 0 0' }}>
             {card.ridePlan}
           </Text>
         ) : null}

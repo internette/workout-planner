@@ -9,7 +9,7 @@ import { KindTag, kindOf } from '@/frontend/components/KindTag';
 export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: '14px' }}>
-      <SectionLabel as="span" label="SESSIONS PER WEEK" aside={v.chartRangeLabel} />
+      <SectionLabel as="span" label="Sessions per week" aside={v.chartRangeLabel} />
       <Text variant="body" as="p" tone="muted" style={{ margin: '8px 0 0' }}>
         {v.chartCaption}
       </Text>

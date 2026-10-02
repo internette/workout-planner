@@ -25,7 +25,7 @@ export function ProgressScreen({ v }: { v: PlannerVals }) {
       <WeekQuestsCard v={v} />
       <PersonalBestsCard v={v} style={{ marginTop: '14px' }} />
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '14px' }}>
-        <CountCard label="CHRONICLE" count={v.loggedCount} unit={v.loggedUnit} onClick={v.openChronicle} />
+        <CountCard label="Chronicle" count={v.loggedCount} unit={v.loggedUnit} onClick={v.openChronicle} />
         <CountCard label={v.monthLabel} count={v.monthDone} unit={v.monthDoneUnit} onClick={v.openMonth} />
       </div>
     </div>

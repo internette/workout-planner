@@ -15,7 +15,7 @@ export function SettingsScreen({ v }: { v: PlannerVals }) {
     <div>
       <BackBar label={v.backLabel} onBack={v.goBack} />
       <PageHeader title="Settings" style={{ marginTop: '8px' }} />
-      <SettingsCard title="APPEARANCE" note="on this device">
+      <SettingsCard title="Appearance" note="on this device">
         <AppearanceSetting />
       </SettingsCard>
       <LiveSetting />
@@ -23,7 +23,7 @@ export function SettingsScreen({ v }: { v: PlannerVals }) {
       {v.canSignOut ? (
         <>
           <AccountCard v={v} />
-          <SettingsCard title="DELETE ACCOUNT" danger>
+          <SettingsCard title="Delete account" danger>
             <DeleteAccount />
           </SettingsCard>
         </>

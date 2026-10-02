@@ -146,12 +146,12 @@ export function arsenalVals(ctx: Ctx) {
   const workoutGroups: { label: string; count: string; items: ReturnType<typeof workoutCard>[] }[] = [];
   if (hits.length)
     workoutGroups.push({
-      label: builtinWorkouts.length ? 'YOUR WORKOUTS' : '',
+      label: builtinWorkouts.length ? 'Your workouts' : '',
       count: builtinWorkouts.length ? plural(hits.length, 'workout') : '',
       items: hits.map(workoutCard),
     });
   builtinHits.forEach((w) => {
-    const label = 'BUILT-IN · ' + w.category.toUpperCase();
+    const label = 'Built-in · ' + w.category;
     let g = workoutGroups.find((x) => x.label === label);
     if (!g) workoutGroups.push((g = { label, count: '', items: [] }));
     const card = workoutCard(w);
@@ -368,7 +368,7 @@ export function arsenalVals(ctx: Ctx) {
           : !(exDraft.areas || []).length
             ? 'Pick at least one target area.'
             : '',
-    heading: copying ? 'COPY OF ' + (found ? found.ex.name.toUpperCase() : 'EXERCISE') : 'EDITING EXERCISE',
+    heading: copying ? 'Copy of ' + (found ? found.ex.name : 'exercise') : 'Editing exercise',
     saveLabel: copying ? 'Save copy' : 'Save changes',
     cancel: cancelEdit,
     save: () => {
@@ -418,10 +418,10 @@ export function arsenalVals(ctx: Ctx) {
         isRide: chosen.kind === 'ride',
         rideStats: chosen.ride
           ? [
-              { label: 'DISTANCE', value: chosen.ride.dist ? chosen.ride.dist + ' mi' : '—' },
-              { label: 'DURATION', value: chosen.time },
-              { label: 'ELEVATION', value: chosen.ride.elev ? chosen.ride.elev + ' ft' : '—' },
-              { label: 'EFFORT', value: chosen.ride.zone },
+              { label: 'Distance', value: chosen.ride.dist ? chosen.ride.dist + ' mi' : '—' },
+              { label: 'Duration', value: chosen.time },
+              { label: 'Elevation', value: chosen.ride.elev ? chosen.ride.elev + ' ft' : '—' },
+              { label: 'Effort', value: chosen.ride.zone },
             ]
           : [],
         // A built-in workout lists its own exercises: one of the person's might share its name.
@@ -477,8 +477,8 @@ export function arsenalVals(ctx: Ctx) {
         notes: chosen.notes || '',
         builtin,
         eyebrow:
-          (builtin ? 'BUILT-IN ' : 'SAVED ') +
-          [chosen.warmup && 'WARM-UP', chosen.stretch ? 'STRETCH' : chosen.yoga ? 'YOGA' : !chosen.warmup && 'WORKOUT']
+          (builtin ? 'Built-in ' : 'Saved ') +
+          [chosen.warmup && 'warm-up', chosen.stretch ? 'stretch' : chosen.yoga ? 'yoga' : !chosen.warmup && 'workout']
             .filter(Boolean)
             .join(' · '),
         // A built-in workout can't be changed: copied to the person's own to edit, or, once it is theirs, opened.
@@ -700,7 +700,7 @@ export function arsenalVals(ctx: Ctx) {
     const hit = list
       .filter((e) => inAreas(e.areas) && canDo(e) && (!q || e.name.toLowerCase().includes(q)))
       .map(exerciseRow);
-    if (hit.length) moveGroups.push({ label: label.toUpperCase(), count: plural(hit.length, 'exercise'), items: hit });
+    if (hit.length) moveGroups.push({ label, count: plural(hit.length, 'exercise'), items: hit });
   };
   Object.keys(EX).forEach((w) => pushGroup(w, EX[w] || []));
   // The person's own exercises, made in the Spellbook. Adding one to a workout puts a copy there, listed under that

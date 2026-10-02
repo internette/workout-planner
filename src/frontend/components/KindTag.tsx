@@ -8,9 +8,9 @@ export type WorkoutKind = 'warmup' | 'stretch' | 'yoga';
 export const kindOf = (x?: { warmup?: boolean; stretch?: boolean; yoga?: boolean } | null): WorkoutKind[] =>
   [x?.warmup && 'warmup', x?.stretch ? 'stretch' : x?.yoga ? 'yoga' : null].filter(Boolean) as WorkoutKind[];
 
-const LABEL: Record<WorkoutKind, string> = { warmup: 'WARM-UP', stretch: 'STRETCH', yoga: 'YOGA' };
+const LABEL: Record<WorkoutKind, string> = { warmup: 'Warm-up', stretch: 'Stretch', yoga: 'Yoga' };
 
-// Marks a warm-up, a stretch or yoga ("WARM-UP · STRETCH" for both): a small label above its name, or beside it
+// Marks a warm-up, a stretch or yoga ("Warm-up · Stretch" for both): a small label above its name, or beside it
 // (inline) where a row has no room above. Nothing for a plain workout.
 export function KindTag({ kind, inline }: { kind: WorkoutKind[] | null; inline?: boolean }) {
   if (!kind || !kind.length) return null;
@@ -22,7 +22,6 @@ export function KindTag({ kind, inline }: { kind: WorkoutKind[] | null; inline?:
         variant="micro"
         as="span"
         tone="accent"
-        weight="bold"
         style={
           inline
             ? { display: 'inline-block', marginLeft: '4px', verticalAlign: 'middle' }

@@ -39,11 +39,11 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
           style={{ flex: '1 1 200px', display: 'flex', alignItems: 'center', gap: '14px' }}
         >
           <span className="fc-keep" style={css(v.readMoodFace)}>{v.readMoodSvg}</span>
-          <Stat label="MOOD" value={v.readMood} style={{ minWidth: '0' }} />
+          <Stat label="Mood" value={v.readMood} style={{ minWidth: '0' }} />
         </Card>
         <Card pad="sm" style={{ flex: '1 1 200px' }}>
           <Text variant="micro" as="div" tone="muted">
-            EFFORT
+            Effort
           </Text>
           <div
             style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '5px' }}

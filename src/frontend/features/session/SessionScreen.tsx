@@ -87,7 +87,7 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
         <Card style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
           <div style={{ flex: '1 1 180px', minWidth: 0 }}>
             <Text variant="micro" tone="slate" as="div">
-              COMING UP
+              Coming up
             </Text>
             <Text variant="body" tone="ink" as="p" style={{ margin: '4px 0 0' }}>
               {v.futureNote} Doing it now? Move it to today.

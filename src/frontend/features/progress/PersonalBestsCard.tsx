@@ -8,9 +8,9 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 export function PersonalBestsCard({ v, style }: { v: PlannerVals; style?: CSSProperties }) {
   return (
     <Card style={style}>
-      <SectionLabel as="span" label="PERSONAL BESTS" aside={v.allTimeLabel} />
+      <SectionLabel as="span" label="Personal bests" aside={v.allTimeLabel} />
       {v.recordsEmpty ? (
-        <Text variant="body" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
+        <Text variant="strong" as="p" tone="muted" style={{ margin: '10px 0 0' }}>
           Tick off an exercise with a weight, or finish a ride, and your bests show up here.
         </Text>
       ) : null}
@@ -19,20 +19,12 @@ export function PersonalBestsCard({ v, style }: { v: PlannerVals; style?: CSSPro
       >
         {(v.records ?? []).map((r, i) => (
           <div key={i} style={css(r?.rowStyle)}>
-            <Text variant="label" tone="ink" style={{ flex: '1', minWidth: '0' }}>
+            <Text variant="strong" tone="ink" style={{ flex: '1', minWidth: '0' }}>
               {r?.name}
             </Text>
-            <span
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-base)',
-                fontWeight: 'var(--font-weight-bold)',
-                color: 'var(--color-ink)',
-                flex: 'none',
-              }}
-            >
+            <Text variant="figure" tone="ink" style={{ flex: 'none' }}>
               {r?.value}
-            </span>
+            </Text>
             {r?.delta ? <span style={css(r?.deltaStyle)}>{r?.delta}</span> : null}
           </div>
         ))}

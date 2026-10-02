@@ -45,13 +45,14 @@ export const textStyles = {
     use: 'A small number beside a bar or a label: 1 of 4, 72%',
   },
   body: { family: 'body', size: 'base', weight: 'regular', use: 'Paragraphs, and with tone="muted" secondary text under a title' },
-  label: { family: 'body', size: 'base', weight: 'medium', use: 'Names and values in rows' },
+  strong: { family: 'body', size: 'base', weight: 'medium', use: 'Names and values in rows; body text that stands out' },
   small: { family: 'body', size: 'sm', weight: 'regular', use: 'Helper text and fine print' },
   micro: {
     family: 'body',
     size: 'sm',
     weight: 'bold',
     tracking: 'loose',
+    upper: true,
     use: 'Small capitals: labels above content, section headings, stat captions',
   },
 } as const;
