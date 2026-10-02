@@ -48,8 +48,7 @@ export const colorGroups = {
     tealTint: { hex: '#E4F4F7', use: 'Teal rank badge' },
     tealDeep: { hex: '#2A7480', use: 'Text on teal tints (4.75:1 on teal tint)' },
     peach: { hex: '#F0A385', use: 'Sparkles, and a workout icon colour' },
-    gold: { hex: '#E0A93A', use: 'Rest-day sparkle' },
-    goldLight: { hex: '#F0C060', use: 'Streak sparkle' },
+    gold: { hex: '#E0A93A', use: 'Sparkles: the rest-day moon and the profile picture' },
   },
   Status: {
     danger: { hex: '#B23A4C', use: 'Destructive actions, errors, the Mad mood' },
