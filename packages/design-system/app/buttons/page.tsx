@@ -1,5 +1,5 @@
 import { Button, IconButton } from '../../src/buttons';
-import { ChevronDown, ChevronLeft, ChevronRight, Close, Info, Pencil, Plus, Trash } from '../../src/icons';
+import { ChevronDown, ChevronLeft, ChevronRight, Close, Info, Pencil, Plus } from '../../src/icons';
 import { DocPage, h2, note } from '../docs';
 import { ButtonTypes } from './ButtonTypes';
 
@@ -129,8 +129,8 @@ export default function ButtonsPage() {
       <p style={note}>
         <code>IconButton</code> is an icon with no text. <code>label</code> is required: it is the button&apos;s name
         for screen readers (pass <code>title</code> as well for a tooltip). The icon inside sets its own color and
-        size, usually muted. It has no fill until it is hovered or has keyboard focus, and its tap area is 44px at
-        every size.
+        size, usually muted. It has no fill until it is hovered or has keyboard focus, when it takes a grey wash. Its
+        tap area is 44px at every size.
       </p>
 
       <h3 style={h3}>Sizes</h3>
@@ -138,8 +138,7 @@ export default function ButtonsPage() {
         {(
           [
             ['xs', 24, 'Inside a field: clearing a search', <IconButton key="x" label="Clear search" size="xs"><Close size={14} strokeWidth={2.2} color="var(--color-muted)" /></IconButton>],
-            ['sm', 34, 'In a row or banner: removing an exercise, dismissing a notice', <IconButton key="x" label="Dismiss" size="sm"><Close size={14} strokeWidth={2.2} color="var(--color-muted)" /></IconButton>],
-            ['md', 36, 'Stepping and closing: previous and next, a dialog’s close', <span key="x" style={{ display: 'flex', gap: 6 }}><IconButton label="Previous week" size="md"><ChevronLeft size={17} strokeWidth={2.2} color="var(--color-slate)" /></IconButton><IconButton label="Next week" size="md"><ChevronRight size={17} strokeWidth={2.2} color="var(--color-slate)" /></IconButton></span>],
+            ['md', 36, 'The default: previous and next, closing a dialog, removing an exercise, dismissing a notice', <span key="x" style={{ display: 'flex', gap: 6 }}><IconButton label="Previous week" size="md"><ChevronLeft size={17} strokeWidth={2.2} color="var(--color-slate)" /></IconButton><IconButton label="Next week" size="md"><ChevronRight size={17} strokeWidth={2.2} color="var(--color-slate)" /></IconButton></span>],
             ['lg', 44, 'A row’s main action: adding an exercise from the list', <IconButton key="x" label="Add Back Squat to workout" size="lg" style={{ background: 'var(--color-surface)', boxShadow: 'inset 0 0 0 1px var(--color-line)' }}><Plus size={18} strokeWidth={2.4} color="var(--color-pink-deep)" /></IconButton>],
           ] as const
         ).map(([size, px, use, example]) => (
@@ -163,26 +162,6 @@ export default function ButtonsPage() {
         </IconButton>
       </div>
 
-      <h3 style={h3}>Tones</h3>
-      <p style={note}>
-        <code>tone</code> sets only the hover wash; the icon&apos;s color is yours to set. Hover or tab onto each to see
-        it: grey for <strong>default</strong>, red for <strong>danger</strong> (give it a red icon), and a light wash
-        for <strong>inverse</strong>, on a colored fill.
-      </p>
-      <div style={row}>
-        <IconButton label="Close" size="md">
-          <Close size={16} strokeWidth={2.2} color="var(--color-muted)" />
-        </IconButton>
-        <IconButton label="Delete" size="md" tone="danger">
-          <Trash size={16} color="var(--color-danger)" />
-        </IconButton>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 4px 4px 12px', borderRadius: 'var(--radius-full)', background: 'var(--color-pink)', color: 'var(--color-surface)', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-bold)' }}>
-          Weekly
-          <IconButton label="End this series" size="xs" tone="inverse" circle>
-            <Close size={13} strokeWidth={2.4} color="var(--color-surface)" />
-          </IconButton>
-        </span>
-      </div>
     </DocPage>
   );
 }

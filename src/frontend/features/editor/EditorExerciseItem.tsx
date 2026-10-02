@@ -67,7 +67,7 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
         ) : (
           <span style={{ marginLeft: 'auto' }} />
         )}
-        <IconButton label={exercise?.removeAria} size="sm" onClick={exercise?.remove}>
+        <IconButton label={exercise?.removeAria} size="md" onClick={exercise?.remove}>
           <Close color="var(--color-muted)" size={19} />
         </IconButton>
       </div>

@@ -39,7 +39,7 @@ export default function InteractionPage() {
       </p>
 
       <h2 id="hover" style={h2}>Hover</h2>
-      <p style={note}>Each wash is a tint laid over the control&apos;s own background. Shown on white, and on the dark surface for the inverse one.</p>
+      <p style={note}>Each wash is a tint laid over the control&apos;s own background, shown here on white.</p>
       <div style={tableScroll} tabIndex={0} role="region" aria-label="Hover table, scrolls sideways">
         <table style={table}>
         <tbody>
@@ -47,7 +47,7 @@ export default function InteractionPage() {
             <tr key={name}>
               <td style={{ ...cell, fontWeight: 600, whiteSpace: 'nowrap' }}>--hover-{name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())}</td>
               <td style={{ ...cell, width: 80 }}>
-                <div style={{ width: 48, height: 32, borderRadius: 'var(--radius-sm)', background: name === 'inverse' ? 'var(--color-ink)' : 'var(--color-surface)', boxShadow: 'inset 0 0 0 1px var(--color-hairline)' }}>
+                <div style={{ width: 48, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--color-surface)', boxShadow: 'inset 0 0 0 1px var(--color-hairline)' }}>
                   <div style={{ width: '100%', height: '100%', borderRadius: 'var(--radius-sm)', background: `var(--hover-${name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())})` }} />
                 </div>
               </td>

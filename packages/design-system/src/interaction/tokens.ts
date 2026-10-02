@@ -5,9 +5,7 @@ import { toVariables, type Token } from '../tokenVariables';
 export const hovers = {
   neutral: { value: 'rgba(35, 42, 69, 0.05)', use: 'A ghost button in the neutral tone' },
   icon: { value: 'rgba(35, 42, 69, 0.06)', use: 'An icon button, and a focused button' },
-  danger: { value: 'rgba(178, 58, 76, 0.09)', use: 'A danger icon button' },
   dangerGhost: { value: 'rgba(178, 58, 76, 0.08)', use: 'A ghost button in the danger tone' },
-  inverse: { value: 'rgba(255, 255, 255, 0.22)', use: 'An icon button on a dark or colored surface' },
 } as const satisfies Record<string, Token>;
 
 export const focus = {
@@ -15,13 +13,11 @@ export const focus = {
   offset: { value: '2px', use: 'The gap between a control and its ring' },
 } as const satisfies Record<string, Token>;
 
-/** The dark theme's hover washes: light over dark surfaces, and dark plum over pink. */
+/** The dark theme's hover washes: light over dark surfaces. */
 export const darkInteraction: Record<string, string> = {
   '--hover-neutral': 'rgba(255, 255, 255, 0.06)',
   '--hover-icon': 'rgba(255, 255, 255, 0.08)',
-  '--hover-danger': 'rgba(224, 103, 122, 0.14)',
   '--hover-danger-ghost': 'rgba(224, 103, 122, 0.12)',
-  '--hover-inverse': 'rgba(40, 29, 47, 0.14)',
 };
 
 export const interactionVariables: Record<string, string> = {

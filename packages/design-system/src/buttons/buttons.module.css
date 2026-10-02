@@ -88,14 +88,9 @@
 /* ---- Icon buttons: square, icon only */
 .icon { padding: 0; flex: none; }
 .icon-xs { width: 24px; height: 24px; border-radius: var(--radius-xs); }
-.icon-sm { width: 34px; height: 34px; border-radius: var(--radius-sm); }
 .icon-md { width: 36px; height: 36px; border-radius: var(--radius-sm); }
 .icon-lg { width: 44px; height: 44px; border-radius: var(--radius-sm); }
 .circle { border-radius: var(--radius-full); }
 
-.icon-default:hover:not(:disabled):not([aria-disabled='true']),
-.icon-default:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-icon); }
-.icon-danger:hover:not(:disabled):not([aria-disabled='true']),
-.icon-danger:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-danger); }
-.icon-inverse:hover:not(:disabled):not([aria-disabled='true']),
-.icon-inverse:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-inverse); }
+.icon:hover:not(:disabled):not([aria-disabled='true']),
+.icon:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-icon); }
