@@ -76,7 +76,7 @@ function TypeChoiceCard({
             justifyContent: 'center',
           }}
         >
-          <Check color="var(--color-on-accent)" size={14} strokeWidth={3} />
+          <Check color="var(--color-on-strong)" size={14} strokeWidth={3} />
         </span>
       ) : null}
     </Card>

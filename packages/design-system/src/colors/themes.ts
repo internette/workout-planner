@@ -2,11 +2,11 @@
 // version. Chosen in Profile → Settings → Color, and applied as <html data-accent="teal"> (with data-theme="dark" for
 // the dark version). Pink needs nothing here: it's the default light palette and Plum dusk.
 //
-// Light: pink and slate are the palette colors themselves, with white text. Teal, periwinkle and coral are deepened
-// just enough that a tick, bar or mark in them is 3:1 or more on the page and on a card; text on them is a near-black
-// navy (5:1 or more), and their hover goes a step lighter so it stays 4.5:1. Accent text uses each color's deep shade
-// (5:1 or more on white and tint).
+// Light: pink and slate are the palette colors themselves. Teal, periwinkle and coral are deepened just enough that
+// white text on them is 4.5:1, and their hover goes a step darker, as pink's does. Accent text uses each color's deep
+// shade (5:1 or more on white and tint).
 // Dark: the page and cards lean toward the color, the accent is brightened, and text on it is the card color.
+// Text on the accent is onStrong in every theme: white in light, the card color in dark.
 //
 // As in the palette, a value can name a color instead of repeating its hex: the slate theme's accent is the slate
 // text color, some light tints and deep shades are the brand's, and in dark, text on the accent is the card color.
@@ -15,7 +15,7 @@ import { darkColors } from './dark';
 
 export type Accent = 'pink' | 'teal' | 'periwinkle' | 'slate' | 'coral';
 
-type Light = { accent: string; hover: string; deep: string; tint: string; on: string; canvas: string; mist: string };
+type Light = { accent: string; hover: string; deep: string; tint: string; canvas: string; mist: string };
 type Dark = Light & {
   surface: string;
   ink: string;
@@ -26,31 +26,28 @@ type Dark = Light & {
   outline: string;
 };
 
-// Text on the light teal, periwinkle and coral accents: a near-black navy.
-const NAVY = '#161B2E';
-
 const LIGHT: Record<Exclude<Accent, 'pink'>, Light> = {
-  teal: { accent: '#2C9BAE', hover: '#32B1C6', deep: '#276B76', tint: 'tealTint', on: NAVY, canvas: '#F1F9FA', mist: '#EAF2F4' },
-  periwinkle: { accent: '#788CC8', hover: '#8E9FD1', deep: 'periwinkleDeep', tint: 'periwinkleTint', on: NAVY, canvas: '#F4F5FB', mist: '#EDEFF7' },
-  slate: { accent: 'slate', hover: '#505A77', deep: 'slateDeep', tint: 'slateTint', on: 'white', canvas: '#F5F5F8', mist: '#EEEFF3' },
-  coral: { accent: '#E76938', hover: '#EA7E53', deep: '#A4502C', tint: '#FDEDE6', on: NAVY, canvas: '#FDF5F1', mist: '#F6EEEA' },
+  teal: { accent: '#24808F', hover: '#1F6D79', deep: '#276B76', tint: 'tealTint', canvas: '#F1F9FA', mist: '#EAF2F4' },
+  periwinkle: { accent: '#5B73BC', hover: '#4963B3', deep: 'periwinkleDeep', tint: 'periwinkleTint', canvas: '#F4F5FB', mist: '#EDEFF7' },
+  slate: { accent: 'slate', hover: '#505A77', deep: 'slateDeep', tint: 'slateTint', canvas: '#F5F5F8', mist: '#EEEFF3' },
+  coral: { accent: '#CC4B19', hover: '#B44216', deep: '#A4502C', tint: '#FDEDE6', canvas: '#FDF5F1', mist: '#F6EEEA' },
 };
 
 const DARK: Record<Exclude<Accent, 'pink'>, Dark> = {
   teal: {
-    canvas: '#10191C', surface: '#192629', mist: '#22343A', accent: '#5CC8D8', hover: '#7AD3E0', deep: '#7FD6E3', tint: '#173A41', on: 'surface',
+    canvas: '#10191C', surface: '#192629', mist: '#22343A', accent: '#5CC8D8', hover: '#7AD3E0', deep: '#7FD6E3', tint: '#173A41',
     ink: '#E6F0F2', slate: '#BBCBCF', slateDeep: '#CDDBDE', textMuted: '#A2B3B7', hairline: '#3E5358', outline: '#7F9499',
   },
   periwinkle: {
-    canvas: '#14162A', surface: '#1D2038', mist: '#272B47', accent: '#9AAAF0', hover: '#B0BDF4', deep: '#AEBBF5', tint: '#2B3260', on: 'surface',
+    canvas: '#14162A', surface: '#1D2038', mist: '#272B47', accent: '#9AAAF0', hover: '#B0BDF4', deep: '#AEBBF5', tint: '#2B3260',
     ink: '#ECEEF8', slate: '#C0C5DC', slateDeep: '#D0D4E6', textMuted: '#A9AEC7', hairline: '#454A6A', outline: '#858AA7',
   },
   slate: {
-    canvas: '#15171C', surface: '#1E2128', mist: '#282C35', accent: '#B3BCD6', hover: '#C6CDE1', deep: '#C3CBE2', tint: '#333A4B', on: 'surface',
+    canvas: '#15171C', surface: '#1E2128', mist: '#282C35', accent: '#B3BCD6', hover: '#C6CDE1', deep: '#C3CBE2', tint: '#333A4B',
     ink: '#ECEEF3', slate: '#C3C7D2', slateDeep: '#D3D6DF', textMuted: '#A9AEBB', hairline: '#474C58', outline: '#878C99',
   },
   coral: {
-    canvas: '#1D1614', surface: '#281F1C', mist: '#342925', accent: '#F4AE93', hover: '#F7BEA7', deep: 'accentHover', tint: '#48302A', on: 'surface',
+    canvas: '#1D1614', surface: '#281F1C', mist: '#342925', accent: '#F4AE93', hover: '#F7BEA7', deep: 'accentHover', tint: '#48302A',
     ink: '#F4EAE6', slate: '#D4C6C1', slateDeep: '#E0D5D1', textMuted: '#B9A9A3', hairline: '#574641', outline: '#95857F',
   },
 };
@@ -61,7 +58,6 @@ const accentVars = (t: Light) => ({
   accentHover: t.hover,
   accentDeep: t.deep,
   accentTint: t.tint,
-  onAccent: t.on,
   canvas: t.canvas,
   mist: t.mist,
 });

@@ -27,7 +27,7 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
           </Button>
         )}
         <Button type="primary" size="sm" onClick={v.exercise.add} style={{ whiteSpace: 'nowrap' }}>
-          <Plus color="var(--color-on-accent)" size={16} />
+          <Plus color="var(--color-on-strong)" size={16} />
           Add
         </Button>
       </BackBar>

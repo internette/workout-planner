@@ -32,7 +32,7 @@ export function WeekdayToggles({ label, days, onToggle }: WeekdayTogglesProps) {
               border: 'none',
               borderRadius: 'var(--radius-full)',
               background: on ? 'var(--color-accent)' : 'var(--color-canvas)',
-              color: on ? 'var(--color-on-accent)' : 'var(--color-muted)',
+              color: on ? 'var(--color-on-strong)' : 'var(--color-muted)',
               font: 'inherit',
               fontSize: 'var(--text-base)',
               fontWeight: 'var(--font-weight-bold)',

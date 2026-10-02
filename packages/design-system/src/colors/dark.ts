@@ -22,7 +22,6 @@ export const darkColors: Partial<Record<ColorName, string>> = {
   // Accent (pink, as in light; only its hover differs from the brand pink's shades)
   accentHover: '#F48AB6',
   // Text on the bright fills: the card color
-  onAccent: 'surface',
   onStrong: 'surface',
   // Brand
   pink: '#F06FA6',

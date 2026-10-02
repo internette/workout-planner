@@ -71,14 +71,14 @@ export function calendarStage(ctx: EntriesCtx) {
       letterStyle:
         "font-family:var(--font-heading);" +
         'font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:' +
-        (on ? 'var(--color-on-accent)' : 'var(--color-muted)'),
+        (on ? 'var(--color-on-strong)' : 'var(--color-muted)'),
       numStyle:
         "font-family:var(--font-heading);" +
         'font-size:var(--text-lg);font-weight:' +
         (on ? 'var(--font-weight-bold)' : 'var(--font-weight-semibold)') +
         ';color:' +
         // Another month's dates are dimmer than this month's, but still readable (muted meets 4.5:1).
-        (on ? 'var(--color-on-accent)' : same ? 'var(--color-ink)' : 'var(--color-muted)'),
+        (on ? 'var(--color-on-strong)' : same ? 'var(--color-ink)' : 'var(--color-muted)'),
       dot: (!dot ? 'rest' : done ? 'done' : part ? 'partly' : miss ? 'missed' : 'planned') as DayStatus,
     };
   });
@@ -98,7 +98,7 @@ export function calendarStage(ctx: EntriesCtx) {
         "font-family:var(--font-heading);" +
         'padding:11px 6px;border-radius:var(--radius-sm);font-size:var(--text-base);border:none;cursor:pointer;' +
         (current
-          ? 'background:' + ACCENT + ';color:var(--color-on-accent);font-weight:var(--font-weight-bold)'
+          ? 'background:' + ACCENT + ';color:var(--color-on-strong);font-weight:var(--font-weight-bold)'
           : now
             ? 'box-shadow:inset 0 0 0 1.5px var(--color-accent);color:var(--color-accent-deep);font-weight:var(--font-weight-bold)'
             : 'color:var(--color-ink);font-weight:var(--font-weight-medium)'),
@@ -235,7 +235,7 @@ export function calendarStage(ctx: EntriesCtx) {
         "font-family:var(--font-heading);font-size:var(--text-base);font-weight:" +
         (a ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)') +
         ';color:' +
-        (sel ? 'var(--color-on-accent)' : missed ? 'var(--color-muted)' : a ? 'var(--color-ink)' : 'var(--color-muted)'),
+        (sel ? 'var(--color-on-strong)' : missed ? 'var(--color-muted)' : a ? 'var(--color-ink)' : 'var(--color-muted)'),
       dot: (part ? 'partly' : a === 'c' ? 'done' : missed ? 'missed' : a ? 'planned' : 'rest') as DayStatus,
     });
   }

@@ -71,7 +71,7 @@ export function IconPicker({ open, onToggle, onClose, current, label, iconsLabel
             pointerEvents: 'none',
           }}
         >
-          <Pencil color="var(--color-on-accent)" size={size === 'sm' ? 9 : 11} strokeWidth={2.6} />
+          <Pencil color="var(--color-on-strong)" size={size === 'sm' ? 9 : 11} strokeWidth={2.6} />
         </span>
       </span>
     </Popover>

@@ -8,13 +8,9 @@ const groupId = (title: string) => title.toLowerCase().replace(/\s+/g, '-');
 
 // A line under a group's heading, where the group needs more than each swatch's own note.
 const groupNotes: Record<string, string> = {
-  Accent: 'The theme’s color, which changes with Profile → Settings → Color: pink by default. Use it for anything that means “the app’s color”; for pink that must stay pink, use Brand. onAccent is what goes on it: in the light teal, periwinkle and coral themes the accent is light, so onAccent turns dark. onAccentSoft and onAccentFaint are onAccent at a lower strength, so they follow it.',
+  Accent: 'The theme’s color, which changes with Profile → Settings → Color: pink by default. Use it for anything that means “the app’s color”; for pink that must stay pink, use Brand. Text and icons on it are onStrong, as on any strong fill.',
   Brand: 'Colors that stay themselves in every theme: the moods, the rank tiers, the gem and the sparkles. Each has a tint for a badge and a deep shade for text on it.',
 };
-
-// See-through colors shown with the group they belong to, rather than under Effects.
-const translucentsIn: Record<string, (keyof typeof translucents)[]> = { Accent: ['onAccentSoft', 'onAccentFaint'] };
-const shownInGroups = new Set<string>(Object.values(translucentsIn).flat());
 
 const code: React.CSSProperties = { fontSize: 'var(--text-sm)', color: 'var(--color-muted)', wordBreak: 'break-word' };
 const sectionTitle: React.CSSProperties = { fontSize: 'var(--text-xl)', scrollMarginTop: 'var(--ds-anchor-offset)' };
@@ -26,12 +22,7 @@ const overCanvas = (variable: string) => `linear-gradient(0deg, var(${variable})
 /** An on-color swatch: a block of the color on the fill it goes on, so its strength shows. */
 const onFill = (variable: string, fill: string) =>
   `linear-gradient(0deg, var(${variable}), var(${variable})) center / 40% 36% no-repeat, var(${fill})`;
-const swatchFor = (name: string) =>
-  name.startsWith('on')
-    ? onFill(cssVarName(name), name === 'onStrong' ? '--color-ink' : '--color-accent')
-    : name in translucents
-      ? overCanvas(cssVarName(name))
-      : `var(${cssVarName(name)})`;
+const swatchFor = (name: string) => (name === 'onStrong' ? onFill(cssVarName(name), '--color-accent') : `var(${cssVarName(name)})`);
 
 function Swatch({ name, swatch, lines, use }: { name: string; swatch: string; lines: string[]; use: string }) {
   return (
@@ -52,9 +43,7 @@ function Swatch({ name, swatch, lines, use }: { name: string; swatch: string; li
 
 export default function ColorsPage() {
   const effects = [
-    ...Object.entries(translucents)
-      .filter(([name]) => !shownInGroups.has(name))
-      .map(([name, { value, use }]) => ({ name, variable: cssVarName(name), value, use, swatch: overCanvas(cssVarName(name)) })),
+    ...Object.entries(translucents).map(([name, { value, use }]) => ({ name, variable: cssVarName(name), value, use, swatch: overCanvas(cssVarName(name)) })),
     ...Object.entries(gradients).map(([name, { value, use }]) => ({ name, variable: `--gradient-${name}`, value, use, swatch: `var(--gradient-${name})` })),
   ];
   return (
@@ -77,15 +66,6 @@ export default function ColorsPage() {
                 swatch={swatchFor(name)}
                 lines={['ref' in c ? `Same as ${c.ref} · default theme` : `${c.hex} · default theme`, `var(${cssVarName(name)})`]}
                 use={c.use}
-              />
-            ))}
-            {(translucentsIn[group] ?? []).map((name) => (
-              <Swatch
-                key={name}
-                name={name}
-                swatch={swatchFor(name)}
-                lines={[translucents[name].value, `var(${cssVarName(name)})`]}
-                use={translucents[name].use}
               />
             ))}
           </div>

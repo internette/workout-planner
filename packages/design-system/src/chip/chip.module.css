@@ -31,7 +31,7 @@
 /* accent: solid pink, for something that is switched on */
 .accent {
   background: var(--color-accent);
-  color: var(--color-on-accent);
+  color: var(--color-on-strong);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -41,7 +41,7 @@
   color: var(--color-slate);
   font-weight: var(--font-weight-semibold);
 }
-.choice.selected { background: var(--color-accent); color: var(--color-on-accent); }
+.choice.selected { background: var(--color-accent); color: var(--color-on-strong); }
 /* On the page rather than a card: white until picked, as the page's own tint would hide it. */
 .choice.onPage:not(.selected) { background: var(--color-surface); box-shadow: var(--elevation-hairline); }
 .choice:not(.selected):hover { filter: brightness(0.97); }
