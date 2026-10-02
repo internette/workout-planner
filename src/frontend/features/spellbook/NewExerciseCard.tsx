@@ -9,7 +9,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 export function NewExerciseCard({ v }: { v: PlannerVals }) {
   return (
     <Card elevation="overlay" id="new-exercise" data-arsenal-add style={{ marginTop: '18px' }}>
-      <Text variant="cardTitle" style={{ display: 'block' }}>
+      <Text variant="subheading" style={{ display: 'block' }}>
         New exercise
       </Text>
       <div style={{ marginTop: 'var(--space-4)' }}>

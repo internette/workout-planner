@@ -29,7 +29,7 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
           <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '2px 14px', marginTop: '6px' }}>
             {(v.wkParts ?? []).map((p) => (
               <span key={p.label} style={{ display: 'inline-flex', alignItems: 'baseline', gap: '5px' }}>
-                <Text variant="subheading">{p.n}</Text>
+                <Text variant="heading">{p.n}</Text>
                 <Text variant="caption" tone="muted" weight="medium">
                   {p.label}
                 </Text>

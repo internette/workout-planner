@@ -34,7 +34,7 @@ export function LinkRow({ title, detail, kind, leading, action = 'open', onClick
       {leading}
       <span style={{ flex: '1', minWidth: '0' }}>
         <KindTag kind={kind ?? null} />
-        <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+        <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
           {title}
         </Text>
         {detail != null && detail !== '' ? (

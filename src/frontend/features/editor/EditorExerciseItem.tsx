@@ -48,7 +48,7 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
           {/* The name fills the row, so every chevron lines up in one column beside the tick and ✕. */}
           <span style={{ flex: '1', minWidth: '0' }}>
             <Text
-          variant="cardTitle"
+          variant="subheading"
           tone={exercise?.nameDone ? 'muted' : 'ink'}
           style={{ display: 'block', textDecoration: exercise?.nameDone ? 'line-through' : undefined }}
         >

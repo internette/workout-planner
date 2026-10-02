@@ -82,7 +82,7 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
             <Card key={i} pad="sm" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
               <IconTile as="span" size="xs" variant="flat">{e?.svg}</IconTile>
               <span style={{ flex: '1', minWidth: '0' }}>
-                <Text variant="itemTitle" tone="ink" style={{ display: 'block' }}>
+                <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
                   {e?.name}
                 </Text>
                 <Text

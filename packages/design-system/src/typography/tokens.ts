@@ -1,4 +1,4 @@
-// The type system: two families, a 10-step size scale (nothing under 12 px, the smallest that reads comfortably on a phone), four weights, tracking and leading.
+// The type system: two families, a 7-step size scale (nothing under 12 px, the smallest that reads comfortably on a phone), four weights, tracking and leading.
 // In styles, write the CSS variable (e.g. `var(--text-md)`, `var(--font-weight-bold)`).
 
 export const fontFamilies = {
@@ -13,16 +13,13 @@ export const fontFamilies = {
 } as const;
 
 export const fontSizes = {
-  sm: { px: 12, use: 'Micro labels, tab-bar captions, chart captions, helper text' },
-  md: { px: 13, use: 'Secondary text, compact buttons' },
-  base: { px: 14, use: 'Body text, form fields' },
-  lg: { px: 15, use: 'Emphasised body, primary buttons, card titles' },
-  xl: { px: 16, use: 'Small headings, list titles' },
-  '2xl': { px: 18, use: 'Section headings, stat numbers' },
-  '3xl': { px: 20, use: 'Card headings' },
-  '4xl': { px: 22, use: 'Screen headings' },
-  '5xl': { px: 26, use: 'Display numbers' },
-  '6xl': { px: 32, use: 'Hero numbers' },
+  sm: { px: 12, use: 'Micro labels, small print, chart captions, the tab bar' },
+  md: { px: 13, use: 'Captions and secondary text, compact buttons' },
+  base: { px: 14, use: 'Body text, labels, form fields' },
+  lg: { px: 16, use: 'Row and card titles, primary buttons' },
+  xl: { px: 20, use: 'Card and dialog headings, stat numbers' },
+  '2xl': { px: 22, use: 'Screen titles' },
+  '3xl': { px: 32, use: 'The one big number or letter on a screen' },
 } as const;
 
 /**
@@ -47,9 +44,8 @@ export const tracking = {
 } as const;
 
 export const leading = {
-  none: { value: 1, use: 'Single-line icons and stars' },
-  snug: { value: 1.5, use: 'Compact paragraphs' },
-  relaxed: { value: 1.6, use: 'Body paragraphs' },
+  tight: { value: 1.2, use: 'Headings and big numbers' },
+  base: { value: 1.5, use: 'Everything else (the page default)' },
 } as const;
 
 /** Every token as a CSS custom property name and value. */

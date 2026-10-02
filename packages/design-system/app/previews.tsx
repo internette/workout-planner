@@ -90,7 +90,7 @@ export function Preview({ slug }: { slug: string }) {
     case 'card':
       return (
         <Card pad="sm" style={{ width: 180 }}>
-          <Text variant="itemTitle" tone="ink" as="div">
+          <Text variant="subheading" tone="ink" as="div">
             Upper Body Push
           </Text>
           <Text variant="caption" tone="muted" as="div">
@@ -263,7 +263,7 @@ export function Preview({ slug }: { slug: string }) {
     case 'dialog':
       return (
         <Card pad="sm" elevation="overlay" style={{ width: 190 }}>
-          <Text variant="itemTitle" tone="ink" as="div">
+          <Text variant="subheading" tone="ink" as="div">
             Delete this workout?
           </Text>
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 6, marginTop: 10 }}>

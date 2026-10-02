@@ -59,7 +59,7 @@ export default function InteractionPage() {
       </table>
       </div>
 
-      <h3 id="hover-classes" style={{ fontSize: 'var(--text-xl)', margin: '28px 0 4px' }}>Hover classes</h3>
+      <h3 id="hover-classes" style={{ fontSize: 'var(--text-lg)', margin: '28px 0 4px' }}>Hover classes</h3>
       <p style={note}>
         For a control styled inline, add one of these classes from <code>app/planner.css</code> rather than a hover
         handler. They&apos;re <code>!important</code>, so they win over the inline background. Hover each example to
@@ -90,7 +90,7 @@ export default function InteractionPage() {
         <div style={{ padding: '12px 22px', borderRadius: 'var(--radius-md)', background: 'var(--color-white)', outline: 'var(--focus-ring)', outlineOffset: 'var(--focus-offset)' }}>Focused</div>
         <div>
           {Object.entries(focus).map(([name, { value, use }]) => (
-            <div key={name} style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)', lineHeight: 'var(--leading-snug)', marginBottom: 6 }}>
+            <div key={name} style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)', marginBottom: 6 }}>
               <strong style={{ color: 'var(--color-ink)' }}>--focus-{name}</strong> <code>{value}</code> — {use}
             </div>
           ))}

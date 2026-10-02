@@ -5,7 +5,7 @@ const sizes = {
   // A whole screen with nothing on it yet: the first visit, a rest day.
   lg: { medallion: 78, title: 'title', gap: 22, maxWidth: 340 },
   // A section with nothing in it, inside a screen that has other things: an empty week.
-  md: { medallion: 66, title: 'subheading', gap: 20, maxWidth: 340 },
+  md: { medallion: 66, title: 'heading', gap: 20, maxWidth: 340 },
 } as const;
 
 export interface EmptyStateProps {
@@ -77,7 +77,6 @@ export function EmptyState({
               maxWidth: s.maxWidth + 'px',
               fontSize: 'var(--text-lg)',
               fontWeight: 'var(--font-weight-medium)',
-              lineHeight: 'var(--leading-relaxed)',
               color: 'var(--color-muted)',
               textWrap: 'pretty',
             }}

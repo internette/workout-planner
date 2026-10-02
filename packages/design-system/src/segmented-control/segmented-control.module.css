@@ -28,6 +28,7 @@
   min-width: 0;
   text-wrap: balance;
   transition: background-color var(--dur-state) var(--ease-standard), color var(--dur-state) var(--ease-standard);
+  line-height: var(--leading-tight);
 }
 .equalWidth .segment { flex: 1; min-width: 0; }
 /* Segments are drawn 33–40 px tall; the tap area is 44 (the shared .hit in base.css). */

@@ -176,7 +176,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
         <div style={{ marginTop: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
-            <Text variant="itemTitle" as="h1" style={{ flex: 'none', whiteSpace: 'nowrap', margin: 0 }}>
+            <Text variant="subheading" as="h1" style={{ flex: 'none', whiteSpace: 'nowrap', margin: 0 }}>
               {v.weekLabel}
             </Text>
             <StepButton dir="next" unit="week" onClick={v.nextWeek} />
@@ -217,7 +217,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               >
                 <Check color="var(--color-on-accent)" strokeWidth={2.6} size={26} />
               </div>
-              <Text variant="subheading" as="h3" style={{ margin: '16px 0 0' }}>
+              <Text variant="heading" as="h3" style={{ margin: '16px 0 0' }}>
                 Week sealed
               </Text>
               <Text
@@ -286,7 +286,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             >
               <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Gem size={18} />
-                <Text variant="cardTitle">{v.streakCount}</Text>
+                <Text variant="subheading">{v.streakCount}</Text>
                 <Text variant="small" tone="muted">
                   day streak
                 </Text>
@@ -308,7 +308,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                 >
                   <Check color="var(--color-on-accent)" strokeWidth={2.6} size={12} />
                 </span>
-                <Text variant="cardTitle">{v.shownMonthDone}</Text>
+                <Text variant="subheading">{v.shownMonthDone}</Text>
                 <Text variant="small" tone="muted">
                   {v.shownMonthDoneUnit}
                 </Text>

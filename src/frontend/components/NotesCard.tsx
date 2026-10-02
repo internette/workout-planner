@@ -7,7 +7,7 @@ import { Text } from '@moonshot/design-system/typography';
 export function NotesCard({ children, lead = false, style }: { children: ReactNode; lead?: boolean; style?: CSSProperties }) {
   return (
     <Card style={style}>
-      <Text variant="micro" as="div" tone="subtle">
+      <Text variant="micro" as="div" tone="muted">
         NOTES
       </Text>
       <Text

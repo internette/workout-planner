@@ -11,15 +11,15 @@ const groupNotes: Record<string, string> = {
 export default function ColorsPage() {
   return (
     <DocPage title="Colors">
-      <p style={{ margin: '8px 0 32px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
+      <p style={{ margin: '8px 0 32px', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' }}>
         Every colour is a CSS variable on <code>:root</code>, for example <code>var(--color-pink)</code>. Import{' '}
         <code>colors</code> from <code>@moonshot/design-system/colors</code> only where a real hex string is needed.
       </p>
       {Object.entries(colorGroups).map(([group, swatches]) => (
         <section key={group} style={{ marginBottom: 36 }}>
-          <h2 id={group.toLowerCase()} style={{ fontSize: 'var(--text-2xl)', scrollMarginTop: 'var(--ds-anchor-offset)' }}>{group}</h2>
+          <h2 id={group.toLowerCase()} style={{ fontSize: 'var(--text-xl)', scrollMarginTop: 'var(--ds-anchor-offset)' }}>{group}</h2>
           {groupNotes[group] ? (
-            <p style={{ margin: '0 0 16px', maxWidth: 640, color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
+            <p style={{ margin: '0 0 16px', maxWidth: 640, color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' }}>
               {groupNotes[group]}
             </p>
           ) : null}
@@ -42,7 +42,7 @@ export default function ColorsPage() {
                   <strong style={{ fontSize: 'var(--text-base)' }}>{name}</strong>
                   <code style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)' }}>{hex}</code>
                   <code style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)' }}>var({cssVarName(name)})</code>
-                  <span style={{ fontSize: 'var(--text-md)', color: 'var(--color-slate)', lineHeight: 'var(--leading-snug)' }}>{use}</span>
+                  <span style={{ fontSize: 'var(--text-md)', color: 'var(--color-slate)', lineHeight: 'var(--leading-base)' }}>{use}</span>
                 </div>
               </div>
             ))}
@@ -50,8 +50,8 @@ export default function ColorsPage() {
         </section>
       ))}
       <section style={{ marginBottom: 36 }}>
-        <h2 id="gradients-and-overlays" style={{ fontSize: 'var(--text-2xl)', scrollMarginTop: 'var(--ds-anchor-offset)' }}>Gradients and overlays</h2>
-        <p style={{ margin: '0 0 16px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
+        <h2 id="gradients-and-overlays" style={{ fontSize: 'var(--text-xl)', scrollMarginTop: 'var(--ds-anchor-offset)' }}>Gradients and overlays</h2>
+        <p style={{ margin: '0 0 16px', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' }}>
           Composites built from the palette, also CSS variables. Write <code>var(--gradient-gem)</code>, not the
           gradient itself.
         </p>
@@ -65,7 +65,7 @@ export default function ColorsPage() {
               <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <strong style={{ fontSize: 'var(--text-base)' }}>{name}</strong>
                 <code style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)' }}>var({variable})</code>
-                <span style={{ fontSize: 'var(--text-md)', color: 'var(--color-slate)', lineHeight: 'var(--leading-snug)' }}>{use}</span>
+                <span style={{ fontSize: 'var(--text-md)', color: 'var(--color-slate)', lineHeight: 'var(--leading-base)' }}>{use}</span>
                 <code style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)', wordBreak: 'break-word' }}>{value}</code>
               </div>
             </div>

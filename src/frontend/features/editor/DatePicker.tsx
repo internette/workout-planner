@@ -20,7 +20,7 @@ export function DatePicker({ v }: { v: PlannerVals }) {
         <>
           <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <StepButton dir="prev" unit="month" onClick={v.pickPrevMonth} />
-            <Text variant="itemTitle" style={{ flex: '1', textAlign: 'center' }}>
+            <Text variant="subheading" style={{ flex: '1', textAlign: 'center' }}>
               {v.pickMonthName}
             </Text>
             <StepButton dir="next" unit="month" onClick={v.pickNextMonth} />

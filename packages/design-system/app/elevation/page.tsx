@@ -5,7 +5,7 @@ import { DocPage, h2, note } from '../docs';
 export const metadata = { title: 'Elevation — Design system' };
 
 const row: React.CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20, padding: '28px 24px', background: 'var(--color-canvas)', borderRadius: 'var(--radius-lg)', boxShadow: 'inset 0 0 0 1px var(--color-line)' };
-const meta: React.CSSProperties = { fontSize: 'var(--text-sm)', color: 'var(--color-muted)', lineHeight: 'var(--leading-snug)' };
+const meta: React.CSSProperties = { fontSize: 'var(--text-sm)', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' };
 
 export default function ElevationPage() {
   return (

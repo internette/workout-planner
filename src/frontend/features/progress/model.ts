@@ -258,7 +258,7 @@ export function progressVals(ctx: Ctx) {
             ? 'linear-gradient(180deg,var(--color-accent) 0%,var(--color-periwinkle) 100%)'
             : 'color-mix(in srgb, var(--color-accent) 30%, transparent)'),
         label:
-          'white-space:pre-line;text-align:center;line-height:1.25;height:2.5em;font-size:var(--text-sm);font-weight:' +
+          'white-space:pre-line;text-align:center;line-height:var(--leading-tight);height:2.4em;font-size:var(--text-sm);font-weight:' +
           (ix === barSel
             ? 'var(--font-weight-bold);color:var(--color-accent-deep)'
             : 'var(--font-weight-medium);color:var(--color-muted)'),

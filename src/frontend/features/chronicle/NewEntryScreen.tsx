@@ -43,14 +43,14 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
                     cursor: 'pointer',
                   }}
                 >
-                  <Text variant="micro" as="span" tone="slate" style={{ flex: 'none', width: '52px', lineHeight: 1.35 }}>
+                  <Text variant="micro" as="span" tone="slate" style={{ flex: 'none', width: '52px', lineHeight: 'var(--leading-tight)' }}>
                     {u.dayTop}
                     <br />
                     {u.dayBottom}
                   </Text>
                   <span style={{ flex: '1', minWidth: '0' }}>
                     <KindTag kind={kindOf(u)} />
-                    <Text variant="itemTitle" as="span" tone="ink" style={{ display: 'block' }}>
+                    <Text variant="subheading" as="span" tone="ink" style={{ display: 'block' }}>
                       {u.name}
                     </Text>
                     <Text variant="caption" as="span" tone="muted" style={{ display: 'block', marginTop: '1px' }}>

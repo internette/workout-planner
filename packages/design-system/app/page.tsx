@@ -61,7 +61,7 @@ export default function DesignSystemPage() {
                     <div className={styles.preview} aria-hidden="true" {...({ inert: '' } as object)}>
                       <Preview slug={s.slug} />
                     </div>
-                    <Text variant="itemTitle" tone="ink" as="h3" style={{ margin: 0 }}>
+                    <Text variant="subheading" tone="ink" as="h3" style={{ margin: 0 }}>
                       {s.title}
                     </Text>
                     <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
@@ -97,7 +97,7 @@ export default function DesignSystemPage() {
         </Text>
         <div className={styles.grid}>
           <Card pad="sm">
-            <Text variant="itemTitle" tone="ink" as="h3" style={{ margin: 0 }}>
+            <Text variant="subheading" tone="ink" as="h3" style={{ margin: 0 }}>
               Import a component
             </Text>
             <Text variant="caption" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
@@ -106,7 +106,7 @@ export default function DesignSystemPage() {
             </Text>
           </Card>
           <Card pad="sm">
-            <Text variant="itemTitle" tone="ink" as="h3" style={{ margin: 0 }}>
+            <Text variant="subheading" tone="ink" as="h3" style={{ margin: 0 }}>
               Use the tokens
             </Text>
             <Text variant="caption" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
@@ -115,7 +115,7 @@ export default function DesignSystemPage() {
             </Text>
           </Card>
           <Card pad="sm">
-            <Text variant="itemTitle" tone="ink" as="h3" style={{ margin: 0 }}>
+            <Text variant="subheading" tone="ink" as="h3" style={{ margin: 0 }}>
               Add a section
             </Text>
             <Text variant="caption" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
@@ -139,7 +139,7 @@ export default function DesignSystemPage() {
           <div className={styles.grid}>
             {planned.map((p) => (
               <Card key={p.title} pad="sm">
-                <Text variant="itemTitle" tone="ink" as="h3" style={{ margin: 0 }}>
+                <Text variant="subheading" tone="ink" as="h3" style={{ margin: 0 }}>
                   {p.title}
                 </Text>
                 <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 0' }}>

@@ -3,10 +3,9 @@ import { Text, type TextTone } from '../typography';
 
 // The value's text style for each size, the gap between the label and it, and the gap above a note.
 const sizes = {
-  sm: { variant: 'itemTitle', gap: 4, noteGap: 2 },
-  md: { variant: 'cardTitle', gap: 4, noteGap: 2 },
-  lg: { variant: 'subheading', gap: 4, noteGap: 2 },
-  xl: { variant: 'heading', gap: 6, noteGap: 4 },
+  md: { variant: 'subheading', gap: 4, noteGap: 2 },
+  lg: { variant: 'heading', gap: 4, noteGap: 2 },
+  xl: { variant: 'title', gap: 6, noteGap: 4 },
 } as const;
 
 export interface StatProps {
@@ -28,7 +27,7 @@ export interface StatProps {
 }
 
 /** A labelled figure: a micro label, the value under it, and optionally a unit and a note. */
-export function Stat({ label, value, unit, note, size = 'md', labelTone = 'subtle', style, className }: StatProps) {
+export function Stat({ label, value, unit, note, size = 'md', labelTone = 'muted', style, className }: StatProps) {
   const { variant, gap, noteGap } = sizes[size];
   return (
     <div style={style} className={className}>

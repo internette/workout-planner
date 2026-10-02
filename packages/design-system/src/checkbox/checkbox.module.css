@@ -33,7 +33,7 @@
 .label {
   min-width: 0;
   font-size: var(--text-md);
-  line-height: var(--leading-snug);
+  line-height: var(--leading-base);
   color: var(--color-slate);
   text-wrap: pretty;
 }

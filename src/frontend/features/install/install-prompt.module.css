@@ -50,5 +50,5 @@
   color: var(--color-on-strong);
   box-shadow: var(--elevation-overlay);
   font-size: var(--text-base);
-  line-height: var(--leading-snug);
+  line-height: var(--leading-base);
 }

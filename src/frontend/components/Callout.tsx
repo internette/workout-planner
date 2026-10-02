@@ -32,7 +32,6 @@ export function Callout({ tone, icon, action, role = 'status', style, children }
         borderRadius: 'var(--radius-md)',
         fontSize: 'var(--text-base)',
         fontWeight: 'var(--font-weight-medium)',
-        lineHeight: 'var(--leading-snug)',
         ...TONES[tone],
         ...style,
       }}

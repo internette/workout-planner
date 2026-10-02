@@ -22,23 +22,23 @@ const row: React.CSSProperties = {
   padding: '14px 0',
   borderBottom: '1px solid var(--color-line)',
 };
-const note: React.CSSProperties = { margin: '0 0 8px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-relaxed)' };
+const note: React.CSSProperties = { margin: '0 0 8px', color: 'var(--color-muted)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-base)' };
 const meta: React.CSSProperties = {
   fontSize: 'var(--text-sm)',
   color: 'var(--color-muted)',
-  lineHeight: 'var(--leading-snug)',
+  lineHeight: 'var(--leading-base)',
 };
 
 export default function TypographyPage() {
   return (
     <DocPage title="Typography">
-      <p style={{ margin: '8px 0 0', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
+      <p style={{ margin: '8px 0 0', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' }}>
         Two families, twelve sizes, four weights, and sixteen named text styles built from them. Each token is
         a CSS variable, for example <code>var(--text-md)</code> or <code>var(--font-weight-bold)</code>.
       </p>
 
       <h2 id="text-styles" style={h2}>Text styles</h2>
-      <p style={{ margin: '0 0 8px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
+      <p style={{ margin: '0 0 8px', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' }}>
         A style is a family, size, weight, tracking and leading that go together. Use{' '}
         <code>{'<Text variant="title" as="h1" tone="ink">'}</code>; without <code>tone</code> the text
         inherits its colour. <code>weight</code> overrides the weight and <code>uppercase</code> capitalises.
@@ -71,7 +71,7 @@ export default function TypographyPage() {
               >
                 {name === 'body'
                   ? 'No quest today. Rest is how the power comes back, or add a workout if you’re feeling it.'
-                  : name === 'bigNumber'
+                  : name === 'display'
                     ? '12'
                     : name === 'figure'
                       ? '3 of 4'
@@ -97,7 +97,7 @@ export default function TypographyPage() {
       </div>
 
       <h2 id="tones" style={h2}>Tones</h2>
-      <p style={{ margin: '0 0 8px', color: 'var(--color-muted)', lineHeight: 'var(--leading-relaxed)' }}>
+      <p style={{ margin: '0 0 8px', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' }}>
         Text colour by role, set with <code>tone</code>.
       </p>
       <div style={{ ...row, gridTemplateColumns: '1fr' }}>
@@ -139,7 +139,7 @@ export default function TypographyPage() {
             <div
               style={{
                 fontFamily: `var(--font-${name})`,
-                fontSize: 'var(--text-4xl)',
+                fontSize: 'var(--text-2xl)',
                 fontWeight: 'var(--font-weight-bold)',
               }}
             >
@@ -161,7 +161,7 @@ export default function TypographyPage() {
             </div>
           </div>
           <div style={{ minWidth: 0, overflowWrap: 'anywhere' }}>
-            <div style={{ fontSize: `var(--text-${name})`, lineHeight: 'var(--leading-snug)' }}>
+            <div style={{ fontSize: `var(--text-${name})`, lineHeight: 'var(--leading-base)' }}>
               Every session, one step closer
             </div>
             <div style={meta}>{use}</div>
@@ -202,7 +202,7 @@ export default function TypographyPage() {
             </div>
           </div>
           <div>
-            <div style={{ fontSize: 'var(--text-xl)', fontWeight: `var(--font-weight-${name})` }}>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: `var(--font-weight-${name})` }}>
               Rest is how the power comes back
             </div>
             <div style={meta}>{use}</div>
@@ -222,7 +222,7 @@ export default function TypographyPage() {
           <div>
             <div
               style={{
-                fontSize: 'var(--text-xl)',
+                fontSize: 'var(--text-lg)',
                 fontWeight: 'var(--font-weight-bold)',
                 letterSpacing: `var(--tracking-${name})`,
                 textTransform: name === 'loose' ? 'uppercase' : undefined,

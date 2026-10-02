@@ -32,7 +32,7 @@ function Preview({ accent, dark }: { accent: string; dark: boolean }) {
         <Text variant="micro" as="div" tone="slateDeep">
           TODAY&apos;S QUEST
         </Text>
-        <Text variant="itemTitle" as="div" tone="ink" style={{ marginTop: 3 }}>
+        <Text variant="subheading" as="div" tone="ink" style={{ marginTop: 3 }}>
           Break the illusion
         </Text>
       </div>
@@ -42,7 +42,7 @@ function Preview({ accent, dark }: { accent: string; dark: boolean }) {
             <ExerciseIcon name="h" color="var(--color-accent)" />
           </IconTile>
           <div style={{ minWidth: 0, flex: 1 }}>
-            <Text variant="itemTitle" as="div" tone="ink">
+            <Text variant="subheading" as="div" tone="ink">
               Upper Push
             </Text>
             <Text variant="caption" as="div" tone="muted">

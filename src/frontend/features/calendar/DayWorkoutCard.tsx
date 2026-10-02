@@ -28,7 +28,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
           {/* Takes the rest of the row, so a long name wraps beside the icon rather than dropping below it. */}
           <div style={{ minWidth: '0', flex: '1 1 0' }}>
             <KindTag kind={kindOf(card)} />
-            <Text variant="heading" as="h2" className="day-card-title" style={{ margin: '0' }}>
+            <Text variant="heading" as="h2" style={{ margin: '0' }}>
               <button
                 onClick={card?.open}
                 style={{
@@ -196,7 +196,7 @@ function FoldedCard({ card }: { card: any }) {
         <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
         <span style={{ flex: '1', minWidth: '0' }}>
           <KindTag kind={kindOf(card)} />
-          <Text variant="cardTitle" as="span" style={{ display: 'block' }}>
+          <Text variant="subheading" as="span" style={{ display: 'block' }}>
             {t(card?.name)}
           </Text>
           <Text variant="caption" as="span" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
