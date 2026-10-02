@@ -102,14 +102,14 @@ function FilterSheet({ v }: { v: PlannerVals }) {
     >
       {v.showKindInFilter ? (
         <div style={section}>
-          <Text variant="eyebrow" as="div" tone="slate" aria-hidden="true" style={heading}>
+          <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={heading}>
             KIND
           </Text>
           <ChoiceChips label="Kind" options={v.workoutKindOptions ?? []} value={v.workoutKind} onChange={v.setWorkoutKind} />
         </div>
       ) : null}
       <div style={section}>
-        <Text variant="eyebrow" as="div" tone="slate" aria-hidden="true" style={heading}>
+        <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={heading}>
           TARGET AREAS
         </Text>
         <ChipGroup label="Target areas">
@@ -122,7 +122,7 @@ function FilterSheet({ v }: { v: PlannerVals }) {
       </div>
       {v.equipFilterShown ? (
         <div style={section}>
-          <Text variant="eyebrow" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: '2px' }}>
+          <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: '2px' }}>
             EQUIPMENT YOU HAVE
           </Text>
           <Text variant="caption" tone="muted" as="p" style={{ margin: '0 0 4px' }}>

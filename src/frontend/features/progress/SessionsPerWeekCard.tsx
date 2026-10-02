@@ -79,7 +79,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
               }}
               className="hv7"
             >
-              <Text variant="eyebrow" tone="muted" style={{ flex: 'none', width: '56px' }}>
+              <Text variant="micro" tone="muted" style={{ flex: 'none', width: '56px' }}>
                 {w?.day}
               </Text>
               <span

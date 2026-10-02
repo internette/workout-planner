@@ -10,7 +10,7 @@ export function SettingsCard({ title, note, danger, children }: { title: string;
       aria-label={title.charAt(0) + title.slice(1).toLowerCase()}
       style={{ marginTop: '14px', ...(danger ? { boxShadow: 'inset 0 0 0 1.5px color-mix(in srgb, var(--color-danger) 35%, transparent)' } : {}) }}
     >
-      <Text variant="eyebrow" as="h2" tone={danger ? 'danger' : 'slate'} style={{ margin: 0 }}>
+      <Text variant="micro" as="h2" tone={danger ? 'danger' : 'slate'} style={{ margin: 0 }}>
         {title}
         {note ? (
           <Text variant="caption" tone="muted" style={{ letterSpacing: 0, textTransform: 'none', fontWeight: 'var(--font-weight-regular)' }}>

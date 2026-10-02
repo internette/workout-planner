@@ -29,7 +29,7 @@ export default function IconTilePage() {
               <ExerciseIcon name="h" size={22} color="var(--color-pink)" />
             </IconTile>
             <div>
-              <Text variant="eyebrow" as="div" tone="slate">
+              <Text variant="micro" as="div" tone="slate">
                 FRI, SEP 25
               </Text>
               <Text variant="title" as="div" tone="ink" style={{ marginTop: 3 }}>

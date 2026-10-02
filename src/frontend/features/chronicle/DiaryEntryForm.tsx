@@ -14,7 +14,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
       {/* Centred on a phone; beside the sidebar it sits in the page's column, like a saved entry. */}
       <div style={{ marginTop: '34px', textAlign: v.entryLeft ? 'left' : 'center' }}>
         {v.writeEyebrow ? (
-          <Text variant="eyebrow" as="div" tone="slate" style={{ marginBottom: '6px' }}>
+          <Text variant="micro" as="div" tone="slate" style={{ marginBottom: '6px' }}>
             {v.writeEyebrow}
           </Text>
         ) : null}

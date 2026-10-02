@@ -23,7 +23,7 @@ export default function DisclosurePage() {
       <Card style={{ maxWidth: 460 }}>
         <DisclosureRow open={outlined} onToggle={() => setOutlined(!outlined)} controls="demo-outlined">
           <span style={{ flex: 1, minWidth: 0 }}>
-            <Text variant="eyebrow" as="span" tone="slate" style={{ display: 'block' }}>
+            <Text variant="micro" as="span" tone="slate" style={{ display: 'block' }}>
               EQUIPMENT
             </Text>
             <Text variant="body" as="span" tone="ink" weight="semibold" style={{ display: 'block', marginTop: 2 }}>

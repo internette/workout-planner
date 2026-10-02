@@ -143,7 +143,6 @@
   font-family: var(--font-heading);
   font-size: clamp(30px, 7vw, 44px);
   font-weight: var(--font-weight-bold);
-  letter-spacing: var(--tracking-snug);
   line-height: 1.1;
   animation: rise 0.7s ease-out 1.9s both;
 }

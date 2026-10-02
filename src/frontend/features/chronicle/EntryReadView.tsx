@@ -13,7 +13,7 @@ import { NotesCard } from '@/frontend/components/NotesCard';
 export function EntryReadView({ v }: { v: PlannerVals }) {
   return (
     <div style={{ marginTop: '30px' }}>
-      <Text variant="eyebrow" as="div" tone="subtle">
+      <Text variant="micro" as="div" tone="subtle">
         {v.longDate}
       </Text>
       <div

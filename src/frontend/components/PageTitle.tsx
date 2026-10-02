@@ -17,7 +17,7 @@ export function PageTitle({ icon, eyebrow, title }: PageTitleProps) {
     <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '18px' }}>
       <IconTile as="span">{icon}</IconTile>
       <div style={{ minWidth: 0 }}>
-        <Text variant="eyebrow" as="div" tone="slate">
+        <Text variant="micro" as="div" tone="slate">
           {eyebrow}
         </Text>
         <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>

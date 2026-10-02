@@ -67,7 +67,7 @@ export default function TypographyPage() {
                 variant={name as keyof typeof textStyles}
                 tone="ink"
                 as="div"
-                uppercase={name === 'eyebrow' || name === 'micro'}
+                uppercase={name === 'micro'}
               >
                 {name === 'body'
                   ? 'No quest today. Rest is how the power comes back, or add a workout if you’re feeling it.'
@@ -184,7 +184,7 @@ export default function TypographyPage() {
             </div>
           </div>
           <div style={{ minWidth: 0, overflowWrap: 'anywhere' }}>
-            <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 'var(--font-weight-bold)', fontSize: `var(--text-${name})`, lineHeight: 1.1, letterSpacing: 'var(--tracking-tight)' }}>
+            <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 'var(--font-weight-bold)', fontSize: `var(--text-${name})`, lineHeight: 1.1 }}>
               Answer the call
             </div>
             <div style={meta}>{use}</div>

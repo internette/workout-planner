@@ -34,13 +34,13 @@ export function IconPicker({ open, onToggle, onClose, current, label, iconsLabel
       top={size === 'sm' ? 48 : 52}
       content={
         <>
-          <Text variant="eyebrow" as="div" tone="slate" style={{ padding: '0 2px 10px' }}>
+          <Text variant="micro" as="div" tone="slate" style={{ padding: '0 2px 10px' }}>
             ICON
           </Text>
           <IconChoiceGroup label={iconsLabel} columns={4} {...icons} />
           {colors ? (
             <>
-              <Text variant="eyebrow" as="div" tone="slate" style={{ padding: '14px 2px 10px' }}>
+              <Text variant="micro" as="div" tone="slate" style={{ padding: '14px 2px 10px' }}>
                 COLOR
               </Text>
               <IconChoiceGroup label="Icon colour" kind="swatch" {...colors} />

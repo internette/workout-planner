@@ -133,7 +133,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
           <div
             style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
           >
-            <Text variant="eyebrow" tone="slate">
+            <Text variant="micro" tone="slate">
               RIDE PLAN
             </Text>
             <Text variant="small" tone="subtle" weight="medium" style={{ marginLeft: 'auto' }}>
@@ -152,7 +152,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       {v.ridePlanStatic ? <RideActualCard v={v} /> : null}
       {v.isLift ? (
         <Card style={{ marginTop: '16px' }}>
-          <Text variant="eyebrow" as="div" tone="slate">
+          <Text variant="micro" as="div" tone="slate">
             TARGET AREAS
           </Text>
           {v.hasTargetAreas ? (
@@ -200,7 +200,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       ) : null}
       {v.addOpen ? <AddExercisePanel v={v} /> : null}
       <div style={{ marginTop: '24px' }}>
-        <Text variant="eyebrow" tone="muted" style={{ display: 'block', marginBottom: '10px' }}>
+        <Text variant="micro" tone="muted" style={{ display: 'block', marginBottom: '10px' }}>
           WORKOUT NOTES
         </Text>
         <TextArea
@@ -237,7 +237,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
 function RepeatDays({ v }: { v: PlannerVals }) {
   return (
     <div style={{ marginTop: '14px' }}>
-      <Text variant="eyebrow" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: '8px' }}>
+      <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: '8px' }}>
         ON
       </Text>
       <WeekdayToggles label="Days it goes on" days={v.repeatDays ?? []} onToggle={v.toggleRepeatDay} />

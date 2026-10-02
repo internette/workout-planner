@@ -95,12 +95,12 @@ export default function CardPage() {
         with <code>overflow: hidden</code>, so the rows run edge to edge and their hover stays inside the corners. Each
         row is a full-width button at least 60px tall, with 12px 18px padding, a 1px{' '}
         <code>var(--color-line)</code> line above every row but the first, and the <code>hv7</code> hover wash.
-        Related lists are grouped, each card under an eyebrow heading.
+        Related lists are grouped, each card under a micro heading.
       </p>
       <div style={{ maxWidth: 620 }}>
         {listGroups.map((g) => (
           <div key={g.label} style={{ marginBottom: 16 }}>
-            <Text variant="eyebrow" as="h3" tone="slate" style={{ margin: '0 4px 8px' }}>
+            <Text variant="micro" as="h3" tone="slate" style={{ margin: '0 4px 8px' }}>
               {g.label}
             </Text>
             <Card pad="none" style={{ overflow: 'hidden' }}>
@@ -111,7 +111,7 @@ export default function CardPage() {
                   className="hv7"
                   style={{ ...row, borderTop: i ? '1px solid var(--color-line)' : 'none' }}
                 >
-                  <Text variant="eyebrow" as="span" tone="slate" style={{ flex: 'none', width: 52, lineHeight: 1.35 }}>
+                  <Text variant="micro" as="span" tone="slate" style={{ flex: 'none', width: 52, lineHeight: 1.35 }}>
                     {r.day[0]}
                     <br />
                     {r.day[1]}

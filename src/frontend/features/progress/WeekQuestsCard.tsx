@@ -22,7 +22,7 @@ export function WeekQuestsCard({ v }: { v: PlannerVals }) {
                 <Check color="var(--color-on-accent)" strokeWidth={3} size={10} />
               ) : null}
             </span>
-            <Text variant="eyebrow" tone="muted" style={{ flex: 'none', width: '44px' }}>
+            <Text variant="micro" tone="muted" style={{ flex: 'none', width: '44px' }}>
               {q?.day}
             </Text>
             <span style={css(q?.title)}>{q?.name}</span>

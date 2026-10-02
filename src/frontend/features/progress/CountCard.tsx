@@ -8,7 +8,7 @@ export function CountCard({ label, count, unit, onClick }: { label: ReactNode; c
   return (
     <Card as="button" interactive pad="sm" onClick={onClick} style={progCard('1 1 170px')}>
       <OpensChevron />
-      <Text variant="eyebrow" as="span" tone="muted" style={{ display: 'block' }}>
+      <Text variant="micro" as="span" tone="muted" style={{ display: 'block' }}>
         {label}
       </Text>
       <span style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '6px' }}>

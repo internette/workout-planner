@@ -27,7 +27,7 @@ export function ChronicleRow({ entry }: { entry: any }) {
         {entry?.mood ? <MoodFace mood={entry.mood} size={24} /> : null}
       </span>
       <span style={{ flex: '1', minWidth: '0' }}>
-        <Text variant="eyebrow" tone="muted" style={{ display: 'block' }}>
+        <Text variant="micro" tone="muted" style={{ display: 'block' }}>
           {entry?.date}
         </Text>
         <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px 6px', marginTop: '2px' }}>

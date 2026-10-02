@@ -14,7 +14,7 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
       style={progCard('1 1 260px')}
     >
       {v.hasNext ? <OpensChevron /> : null}
-      <Text variant="eyebrow" as="span" tone="muted" style={{ display: 'block' }}>
+      <Text variant="micro" as="span" tone="muted" style={{ display: 'block' }}>
         NEXT CALL
       </Text>
       {v.hasNext ? (

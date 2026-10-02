@@ -316,7 +316,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             </Card>
             {v.hasToday ? (
               <div style={{ marginTop: '30px' }}>
-                <Text variant="eyebrow" as="div" tone="muted">
+                <Text variant="micro" as="div" tone="muted">
                   {v.todayLabel}
                 </Text>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: '12px' }}>
