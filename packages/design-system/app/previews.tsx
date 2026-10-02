@@ -15,6 +15,7 @@ import { ProgressBar } from '../src/progress-bar';
 import { StarRating } from '../src/rating';
 import { ReorderableList } from '../src/reorderable-list';
 import { SegmentedControl } from '../src/segmented-control';
+import { Select } from '../src/select';
 import { Stat } from '../src/stat';
 import { TextField } from '../src/text-field';
 import { Text } from '../src/typography';
@@ -120,6 +121,16 @@ export function Preview({ slug }: { slug: string }) {
           ]}
           value="Week"
           onChange={noop}
+        />
+      );
+    case 'select':
+      return (
+        <Select
+          label="Weight unit"
+          options={[{ value: 'lb', label: 'Pounds' }]}
+          value="lb"
+          onChange={noop}
+          style={{ width: 180 }}
         />
       );
     case 'elevation':
