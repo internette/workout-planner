@@ -8,13 +8,12 @@ const groupId = (title: string) => title.toLowerCase().replace(/\s+/g, '-');
 
 // A line under a group's heading, where the group needs more than each swatch's own note.
 const groupNotes: Record<string, string> = {
-  Accent: 'The theme’s colour, which changes with Profile → Settings → Colour: pink by default. Use it for anything that means “the app’s colour”; for pink that must stay pink, use Brand.',
-  'On colour': 'What sits on a coloured fill. In the light teal, periwinkle and coral themes the accent is light, so onAccent turns dark; onAccentSoft and onAccentFaint are onAccent at a lower strength, so they follow it.',
+  Accent: 'The theme’s colour, which changes with Profile → Settings → Colour: pink by default. Use it for anything that means “the app’s colour”; for pink that must stay pink, use Brand. onAccent is what goes on it: in the light teal, periwinkle and coral themes the accent is light, so onAccent turns dark. onAccentSoft and onAccentFaint are onAccent at a lower strength, so they follow it.',
   Brand: 'Colours that stay themselves in every theme: the moods, the rank tiers, the gem and the sparkles. Each has a tint for a badge and a deep shade for text on it.',
 };
 
 // See-through colours shown with the group they belong to, rather than under Effects.
-const translucentsIn: Record<string, (keyof typeof translucents)[]> = { 'On colour': ['onAccentSoft', 'onAccentFaint'] };
+const translucentsIn: Record<string, (keyof typeof translucents)[]> = { Accent: ['onAccentSoft', 'onAccentFaint'] };
 const shownInGroups = new Set<string>(Object.values(translucentsIn).flat());
 
 const code: React.CSSProperties = { fontSize: 'var(--text-sm)', color: 'var(--color-muted)', wordBreak: 'break-word' };
@@ -27,8 +26,8 @@ const overCanvas = (variable: string) => `linear-gradient(0deg, var(${variable})
 /** An on-colour swatch: a block of the colour on the fill it goes on, so its strength shows. */
 const onFill = (variable: string, fill: string) =>
   `linear-gradient(0deg, var(${variable}), var(${variable})) center / 40% 36% no-repeat, var(${fill})`;
-const swatchFor = (group: string, name: string) =>
-  group === 'On colour'
+const swatchFor = (name: string) =>
+  name.startsWith('on')
     ? onFill(cssVarName(name), name === 'onStrong' ? '--color-ink' : '--color-accent')
     : name in translucents
       ? overCanvas(cssVarName(name))
@@ -75,7 +74,7 @@ export default function ColorsPage() {
               <Swatch
                 key={name}
                 name={name}
-                swatch={swatchFor(group, name)}
+                swatch={swatchFor(name)}
                 lines={['ref' in c ? `Same as ${c.ref} · default theme` : `${c.hex} · default theme`, `var(${cssVarName(name)})`]}
                 use={c.use}
               />
@@ -84,7 +83,7 @@ export default function ColorsPage() {
               <Swatch
                 key={name}
                 name={name}
-                swatch={swatchFor(group, name)}
+                swatch={swatchFor(name)}
                 lines={[translucents[name].value, `var(${cssVarName(name)})`]}
                 use={translucents[name].use}
               />

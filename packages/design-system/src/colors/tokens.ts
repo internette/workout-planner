@@ -10,6 +10,7 @@ export const colorGroups = {
     slate: { hex: '#5C6684', use: 'Secondary text, completed states' },
     slateDeep: { hex: '#4A5268', use: 'Text on the tinted gradient cards and grey badges, where slate would fall short of 4.5:1' },
     muted: { hex: '#6E6881', use: 'Tertiary text, inactive controls (4.5:1 or more on canvas, mist and the accent tint)' },
+    onStrong: { ref: 'white', use: 'Text and icons on ink and danger fills, in any colour theme' },
   },
   'Lines and controls': {
     outline: { hex: '#8A859A', use: 'Empty controls you can still use: unticked boxes, unrated stars (3:1 or more on canvas and white)' },
@@ -23,17 +24,14 @@ export const colorGroups = {
     white: { hex: '#FFFFFF', use: 'White that stays white in every theme, such as the rank-up ceremony' },
   },
   // The theme's colour: pink here, and teal, periwinkle, slate or coral in the other colour themes (Profile →
-  // Settings → Colour). Buttons, selection, ticks, accent text and tints use these.
+  // Settings → Colour). Buttons, selection, ticks, accent text and tints use these, and onAccent is what goes on the
+  // accent: dark in the light teal, periwinkle and coral themes, where the accent is light.
   Accent: {
     accent: { ref: 'pink', use: 'Actions, selection, marks, bars and ticks' },
     accentHover: { hex: '#C7286C', use: 'Primary action, hovered' },
     accentDeep: { ref: 'pinkDeep', use: 'Accent text on white and on the accent tint' },
     accentTint: { ref: 'pinkTint', use: 'Selected and active backgrounds' },
-  },
-  // What goes on a coloured fill, so it can change with the theme.
-  'On colour': {
     onAccent: { ref: 'white', use: 'Text and icons on the accent and the gem gradient' },
-    onStrong: { ref: 'white', use: 'Text and icons on ink and danger fills, in any colour theme' },
   },
   // The brand's own colours, which stay themselves whatever the theme: pink for the Happy mood and the first rank
   // tier, periwinkle and teal for the planned and upcoming marks and the later tiers, and the sparkles.
