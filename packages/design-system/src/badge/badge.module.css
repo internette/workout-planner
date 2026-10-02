@@ -29,7 +29,7 @@
 /* quiet: white, for planned on a tinted surface */
 .quiet { background: var(--color-surface); color: var(--color-muted); }
 
-/* Forced colours drop the fill: keep the pill's shape with an outline. */
+/* Forced colors drop the fill: keep the pill's shape with an outline. */
 @media (forced-colors: active) {
   .badge { outline: 1px solid CanvasText; outline-offset: -1px; }
 }

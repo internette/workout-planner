@@ -20,7 +20,7 @@ export interface StatProps {
   /** sm for a row of several (a ride plan), md in a card (a ride's stats, a mood), lg for an exercise's numbers, xl
    * for a page's headline figures (Profile). */
   size?: keyof typeof sizes;
-  /** The label's colour: subtle by default, muted where it sits on a tinted card. */
+  /** The label's color: subtle by default, muted where it sits on a tinted card. */
   labelTone?: TextTone;
   style?: CSSProperties;
   className?: string;

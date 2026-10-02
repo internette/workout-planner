@@ -22,9 +22,9 @@ export default function RatingPage() {
 
       <h2 id="mood" style={h2}>Mood</h2>
       <p style={note}>
-        <code>MoodRating</code>: four faces, Happy to Mad, each on its own colour with its name beneath. They sit four
-        across at every width, the faces sized to the screen (48–60px). Once one is picked it takes a ring in its colour
-        and the others fade back, their names still at full strength. The colours are the moods&apos; own
+        <code>MoodRating</code>: four faces, Happy to Mad, each on its own color with its name beneath. They sit four
+        across at every width, the faces sized to the screen (48–60px). Once one is picked it takes a ring in its color
+        and the others fade back, their names still at full strength. The colors are the moods&apos; own
         (<code>MOOD_COLORS</code>), so Happy stays pink in every theme.
       </p>
       <Card style={{ maxWidth: 420 }}>
@@ -71,8 +71,8 @@ export default function RatingPage() {
       <h2 id="behaviour" style={h2}>Behaviour</h2>
       <p style={note}>
         Tab reaches the picked option, or the first before anything is picked, and Tab again leaves the group. The arrow
-        keys move the pick one option, wrapping round; Home and End go to the first and last. In forced-colour modes the
-        faces keep their colours, and the stars fill with the text colour up to the rating and grey after it.
+        keys move the pick one option, wrapping round; Home and End go to the first and last. In forced-color modes the
+        faces keep their colors, and the stars fill with the text color up to the rating and grey after it.
       </p>
     </DocPage>
   );

@@ -5,7 +5,7 @@ export interface TextProps extends HTMLAttributes<HTMLElement> {
   variant: TextVariant;
   /** The element to render: a span by default, or p, div, h1, h2, h3 and so on. */
   as?: ElementType;
-  /** Text colour by role. Leave it out to inherit from the parent. */
+  /** Text color by role. Leave it out to inherit from the parent. */
   tone?: TextTone;
   /** Overrides the weight of the variant, for emphasis. */
   weight?: 'regular' | 'medium' | 'semibold' | 'bold';

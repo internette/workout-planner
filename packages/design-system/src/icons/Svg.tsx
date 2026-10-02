@@ -3,7 +3,7 @@ import type { CSSProperties, ReactNode, SVGProps } from 'react';
 export interface IconProps {
   /** Width and height in px. */
   size?: number;
-  /** Stroke colour (fill colour for solid icons). Defaults to the surrounding text colour. */
+  /** Stroke color (fill color for solid icons). Defaults to the surrounding text color. */
   color?: string;
   strokeWidth?: number;
   style?: CSSProperties;

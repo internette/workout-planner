@@ -9,7 +9,7 @@ function withAlpha(color: string, alpha: number) {
 }
 
 export interface SparkleProps extends IconProps {
-  /** Adds a soft glow in the sparkle's own colour; the value is the glow's opacity (0–1). */
+  /** Adds a soft glow in the sparkle's own color; the value is the glow's opacity (0–1). */
   glow?: number;
   glowBlur?: number;
   /** Draws only the outline instead of a solid shape. */

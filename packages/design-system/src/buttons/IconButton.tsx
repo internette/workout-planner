@@ -6,7 +6,7 @@ export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonEle
   /** What the button does. Icon-only buttons need this for screen readers; it is also the tooltip. */
   label: string;
   size?: 'xs' | 'sm' | 'md' | 'lg';
-  /** default: grey hover. danger: red hover. inverse: for use on a coloured background. */
+  /** default: grey hover. danger: red hover. inverse: for use on a colored background. */
   tone?: 'default' | 'danger' | 'inverse';
   circle?: boolean;
 }

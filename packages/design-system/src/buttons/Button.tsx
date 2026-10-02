@@ -4,15 +4,15 @@ import { cx } from './cx';
 
 export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
   /**
-   * What the button is for, and so how it is coloured.
+   * What the button is for, and so how it is colored.
    * primary: the main action. secondary: an alternative beside a primary. neutral: quiet actions such as
    * cancel and back. danger: destructive. dashed: "add something".
    */
   type?: 'primary' | 'secondary' | 'neutral' | 'danger' | 'dashed';
-  /** Drops the fill and keeps just the coloured text, for low-emphasis actions. Ignored for dashed. */
+  /** Drops the fill and keeps just the colored text, for low-emphasis actions. Ignored for dashed. */
   ghost?: boolean;
   /** Just text, with no padding, underlined on hover and keyboard focus: for an action inside a sentence, or a quiet
-   * one like "+ 2 more". Its tap area is still 44px. The colour comes from `type`: primary and secondary take the deep
+   * one like "+ 2 more". Its tap area is still 44px. The color comes from `type`: primary and secondary take the deep
    * accent, neutral the muted grey (in a lighter weight), danger red. Ignored for dashed. */
   link?: boolean;
   /** sm and md are 44px tall (md with larger text), for cards, dialogs and bars; lg is 52px, for a screen's main

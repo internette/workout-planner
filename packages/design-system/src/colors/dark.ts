@@ -2,7 +2,7 @@
 // <html data-theme="dark"> is set (Profile → Settings → Appearance). Text on its surfaces is 4.5:1 or more; the pink
 // is brightened so it glows, and text on it turns dark plum (5.8:1), since white on the brighter pink would be faint.
 // Only what changes is listed: white, peach and gold stay as they are, and the accent still names pink, so it
-// takes the brighter pink from here. As in the light palette, a value can name another colour instead of a hex.
+// takes the brighter pink from here. As in the light palette, a value can name another color instead of a hex.
 import type { ColorName } from './tokens';
 
 export const darkColors: Partial<Record<ColorName, string>> = {
@@ -21,7 +21,7 @@ export const darkColors: Partial<Record<ColorName, string>> = {
   slateTint: '#2F2640',
   // Accent (pink, as in light; only its hover differs from the brand pink's shades)
   accentHover: '#F48AB6',
-  // Text on the bright fills: the card colour
+  // Text on the bright fills: the card color
   onAccent: 'surface',
   onStrong: 'surface',
   // Brand
@@ -40,7 +40,7 @@ export const darkColors: Partial<Record<ColorName, string>> = {
   dangerTint: '#3E1D26',
 };
 
-/** The dark theme's see-through colours, where they differ from the light formula: light lines and rows on a dark
+/** The dark theme's see-through colors, where they differ from the light formula: light lines and rows on a dark
  * page, black shadows, and a stronger accent wash. The rest follow their tokens. */
 const mix = (token: string, pct: number) => `color-mix(in srgb, var(--color-${token}) ${pct}%, transparent)`;
 export const darkTranslucents: Record<string, string> = {

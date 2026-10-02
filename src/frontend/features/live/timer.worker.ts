@@ -65,7 +65,7 @@ function roundRect(g: OffscreenCanvasRenderingContext2D, x: number, y: number, w
 const FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
 const PAD = 40;
 
-// Moonshot's mark (the crescent), in its own colours, from its 64-unit drawing.
+// Moonshot's mark (the crescent), in its own colors, from its 64-unit drawing.
 const MARK: [string, string][] = [
   ['M24.9 9.1 L22.1 18.1 L10.8 20.7 Z', '#D53181'],
   ['M10.8 20.7 L22.1 18.1 L23.3 27.5 L9.1 39 Z', '#BE5D99'],
@@ -85,7 +85,7 @@ function mark(g: OffscreenCanvasRenderingContext2D, x: number, y: number, size: 
   g.restore();
 }
 
-// Stroke icons from the app's 24-unit set, drawn in one colour.
+// Stroke icons from the app's 24-unit set, drawn in one color.
 const ICON = {
   bike: ['M6 17m-3.4 0a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0', 'M18 17m-3.4 0a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0', 'M6 17l5-8h5l2 8', 'M10 9h4'],
   clock: ['M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0', 'M12 7L12 12L15.5 14'],
@@ -133,7 +133,7 @@ function stat(g: OffscreenCanvasRenderingContext2D, c: LiveLook, label: string, 
 }
 
 // The lock-screen card from the Live Activity designs, square, as the player's artwork: lifting, rest or ride, in
-// this browser's colour and light or dark. The designs' buttons aren't drawn (a picture can't be pressed; the player's
+// this browser's color and light or dark. The designs' buttons aren't drawn (a picture can't be pressed; the player's
 // own buttons do those jobs), nor a running clock: the player's bar keeps time without a redraw.
 async function draw(a: LiveActivity, c: LiveLook, paused: boolean): Promise<Blob | null> {
   if (typeof OffscreenCanvas === 'undefined') return null;

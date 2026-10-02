@@ -10,9 +10,9 @@ export interface IconChoiceOption<T extends string> {
   label: string;
   /** icon kind: the icon to show, drawn about 20px. */
   icon?: ReactNode;
-  /** swatch kind: the colour to fill the button with, a CSS colour or variable. */
+  /** swatch kind: the color to fill the button with, a CSS color or variable. */
   color?: string;
-  /** Round swatches: the colour of the tick on the chosen one, readable on `color`. White by default. */
+  /** Round swatches: the color of the tick on the chosen one, readable on `color`. White by default. */
   checkColor?: string;
 }
 
@@ -26,10 +26,10 @@ export interface IconChoiceGroupProps<T extends string> {
   /** `via` says whether a click (or Space) or an arrow key made the choice: a picker in a popover closes on a click
    * but stays open while the arrow keys move through it. */
   onChange: (value: T, via: 'click' | 'arrow') => void;
-  /** icon: a grid of icon tiles. swatch: a wrapping row of colour squares. */
+  /** icon: a grid of icon tiles. swatch: a wrapping row of color squares. */
   kind?: 'icon' | 'swatch';
-  /** swatch kind: square (the default) for a colour that tints something else, like a workout's icon; round, with a
-   * tick on the chosen one, for a colour that is itself the setting, like the app's theme colour. */
+  /** swatch kind: square (the default) for a color that tints something else, like a workout's icon; round, with a
+   * tick on the chosen one, for a color that is itself the setting, like the app's theme color. */
   shape?: 'square' | 'round';
   /** icon kind: how many tiles to a row. The up and down arrow keys move by a row. */
   columns?: number;
@@ -37,7 +37,7 @@ export interface IconChoiceGroupProps<T extends string> {
   className?: string;
 }
 
-/** Pick one icon, or one colour, from a set shown as pictures. A radio group: Tab reaches the chosen option, the arrow
+/** Pick one icon, or one color, from a set shown as pictures. A radio group: Tab reaches the chosen option, the arrow
  * keys (and Home, End) move the choice. */
 export function IconChoiceGroup<T extends string>({
   label,

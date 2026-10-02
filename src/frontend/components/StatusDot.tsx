@@ -7,7 +7,7 @@ export interface StatusDotProps {
   status: DayStatus;
   /** `sm` under a date (the week strip, the month grid, the legend); `md` at the end of a week row. */
   size?: 'sm' | 'md';
-  /** Drawn on the accent colour: a selected day. */
+  /** Drawn on the accent color: a selected day. */
   onAccent?: boolean;
 }
 

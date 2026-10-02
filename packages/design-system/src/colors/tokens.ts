@@ -1,7 +1,7 @@
-// The colour palette. Every colour the app uses is named here, grouped by role.
+// The color palette. Every color the app uses is named here, grouped by role.
 // In styles, write the CSS variable (e.g. `var(--color-pink)`); use the hex value from `colors`
 // only where a real hex string is needed (computed alphas, values saved to the database).
-// Each hex is written once: a colour that is the same as another names it with `ref` (surface is white, the default
+// Each hex is written once: a color that is the same as another names it with `ref` (surface is white, the default
 // accent is pink), and its CSS variable points at that one, e.g. `--color-surface: var(--color-white)`.
 
 export const colorGroups = {
@@ -10,7 +10,7 @@ export const colorGroups = {
     slate: { hex: '#5C6684', use: 'Secondary text, completed states' },
     slateDeep: { hex: '#4A5268', use: 'Text on the tinted gradient cards and grey badges, where slate would fall short of 4.5:1' },
     muted: { hex: '#6E6881', use: 'Tertiary text, inactive controls (4.5:1 or more on canvas, mist and the accent tint)' },
-    onStrong: { ref: 'white', use: 'Text and icons on ink and danger fills, in any colour theme' },
+    onStrong: { ref: 'white', use: 'Text and icons on ink and danger fills, in any color theme' },
   },
   'Lines and controls': {
     outline: { hex: '#8A859A', use: 'Empty controls you can still use: unticked boxes, unrated stars (3:1 or more on canvas and white)' },
@@ -23,8 +23,8 @@ export const colorGroups = {
     slateTint: { hex: '#EDEFF6', use: 'Rank badge, slate tier' },
     white: { hex: '#FFFFFF', use: 'White that stays white in every theme, such as the rank-up ceremony' },
   },
-  // The theme's colour: pink here, and teal, periwinkle, slate or coral in the other colour themes (Profile →
-  // Settings → Colour). Buttons, selection, ticks, accent text and tints use these, and onAccent is what goes on the
+  // The theme's color: pink here, and teal, periwinkle, slate or coral in the other color themes (Profile →
+  // Settings → Color). Buttons, selection, ticks, accent text and tints use these, and onAccent is what goes on the
   // accent: dark in the light teal, periwinkle and coral themes, where the accent is light.
   Accent: {
     accent: { ref: 'pink', use: 'Actions, selection, marks, bars and ticks' },
@@ -33,7 +33,7 @@ export const colorGroups = {
     accentTint: { ref: 'pinkTint', use: 'Selected and active backgrounds' },
     onAccent: { ref: 'white', use: 'Text and icons on the accent and the gem gradient' },
   },
-  // The brand's own colours, which stay themselves whatever the theme: pink for the Happy mood and the first rank
+  // The brand's own colors, which stay themselves whatever the theme: pink for the Happy mood and the first rank
   // tier, periwinkle and teal for the planned and upcoming marks and the later tiers, and the sparkles.
   Brand: {
     pink: { hex: '#D63479', use: 'The brand pink: the Happy mood, the first rank tier, the gem. White text on it is 4.5:1' },
@@ -45,7 +45,7 @@ export const colorGroups = {
     teal: { hex: '#5EC4D6', use: 'Upcoming markers, the third rank tier' },
     tealTint: { hex: '#E4F4F7', use: 'Teal rank badge' },
     tealDeep: { hex: '#2A7480', use: 'Text on teal tints (4.75:1 on teal tint)' },
-    peach: { hex: '#F0A385', use: 'Sparkles, and a workout icon colour' },
+    peach: { hex: '#F0A385', use: 'Sparkles, and a workout icon color' },
     gold: { hex: '#E0A93A', use: 'Sparkles: the rest-day moon and the profile picture' },
   },
   Status: {
@@ -60,10 +60,10 @@ export type ColorName = { [G in keyof Groups]: keyof Groups[G] }[keyof Groups] &
 
 const entries = Object.values(colorGroups).flatMap((g) => Object.entries(g)) as [ColorName, { hex?: string; ref?: ColorName }][];
 
-/** name -> its value as written: a hex, or the name of the colour it is the same as. */
+/** name -> its value as written: a hex, or the name of the color it is the same as. */
 export const colorValues = Object.fromEntries(entries.map(([name, c]) => [name, c.hex ?? c.ref])) as Record<ColorName, string>;
 
-/** Follows every name to its hex, for a palette whose values may name other colours. */
+/** Follows every name to its hex, for a palette whose values may name other colors. */
 export const resolveColors = (values: Record<ColorName, string>): Record<ColorName, string> => {
   const hex = (v: string, seen = 0): string => (v.startsWith('#') || seen > 10 ? v : hex(values[v as ColorName], seen + 1));
   return Object.fromEntries(Object.entries(values).map(([name, v]) => [name, hex(v)])) as Record<ColorName, string>;
@@ -75,11 +75,11 @@ export const colors = resolveColors(colorValues);
 /** "accentHover" -> "--color-accent-hover" */
 export const cssVarName = (name: string) => '--color-' + name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase());
 
-/** A palette value as CSS: a hex as it is, a colour's name as its variable. */
+/** A palette value as CSS: a hex as it is, a color's name as its variable. */
 export const cssColor = (value: string) => (value.startsWith('#') ? value : `var(${cssVarName(value)})`);
 
-/** A colour from the palette as its CSS variable, so it follows the theme; any other colour as it is. For colours
- * that arrive as hex, such as a workout's icon colour saved in the database. */
+/** A color from the palette as its CSS variable, so it follows the theme; any other color as it is. For colors
+ * that arrive as hex, such as a workout's icon color saved in the database. */
 export const themed = (color: string | null | undefined): string | undefined => {
   if (!color) return undefined;
   const hit = (Object.entries(colors) as [string, string][]).find(
@@ -99,7 +99,7 @@ const rgba = (hex: string, alpha: number) => {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-/** Composites built from the three accents. Written as CSS variables like the colours, e.g. `var(--gradient-gem)`. */
+/** Composites built from the three accents. Written as CSS variables like the colors, e.g. `var(--gradient-gem)`. */
 export const gradients = {
   gem: {
     value: 'linear-gradient(135deg, var(--color-accent) 0%, var(--color-periwinkle) 50%, var(--color-teal) 100%)',
@@ -111,7 +111,7 @@ export const gradients = {
   },
 } as const;
 
-/** See-through colours, written as CSS variables like the others, e.g. `var(--color-line)`. Most are a token at a set
+/** See-through colors, written as CSS variables like the others, e.g. `var(--color-line)`. Most are a token at a set
  * strength, written with color-mix so they follow the theme; the dark theme overrides the few that aren't. */
 const mix = (token: string, pct: number) => `color-mix(in srgb, var(--color-${token}) ${pct}%, transparent)`;
 export const translucents = {
@@ -125,7 +125,7 @@ export const translucents = {
   scrim: { value: rgba(colors.ink, 0.35), use: 'The dimmed page behind a dialog' },
 } as const;
 
-/** Every see-through colour and gradient as a CSS custom property name and value. */
+/** Every see-through color and gradient as a CSS custom property name and value. */
 export const compositeVariables: Record<string, string> = {
   ...Object.fromEntries(Object.entries(translucents).map(([k, v]) => [cssVarName(k), v.value])),
   ...Object.fromEntries(Object.entries(gradients).map(([k, v]) => [`--gradient-${k}`, v.value])),

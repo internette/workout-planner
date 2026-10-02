@@ -42,7 +42,7 @@ function Sample({ label, children }: { label: string; children: ReactNode }) {
 }
 
 const TIMING = [
-  ['Facets', 'Six, lit in order from rose to cyan, the way the moon’s colours run'],
+  ['Facets', 'Six, lit in order from rose to cyan, the way the moon’s colors run'],
   ['Each facet', 'Fades from 16% to full, holds from 30% to 70% of its cycle, then fades back'],
   ['Cycle', '2.4 s, ease-in-out, repeating for as long as it’s shown'],
   ['Stagger', '0.2 s between facets, so a wave of light runs round the crescent'],
@@ -54,7 +54,7 @@ export default function LoadingPage() {
     <DocPage title="Loading animation">
       <p style={{ ...note, marginTop: 8 }}>
         While something loads, the mark&apos;s facets light up one after another, rose to cyan, like the moon catching the
-        light. It&apos;s the mark with <code>animate</code>, so it needs nothing else: the colours and timing come with it.
+        light. It&apos;s the mark with <code>animate</code>, so it needs nothing else: the colors and timing come with it.
       </p>
 
       <h2 id="animation" style={h2}>The animation</h2>

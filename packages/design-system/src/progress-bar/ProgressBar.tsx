@@ -6,7 +6,7 @@ export interface ProgressBarProps {
   value: number;
   /** The track: mist on white cards, tint (pale pink) where the bar is the card's main point. */
   track?: 'mist' | 'tint';
-  /** The fill: the gem gradient, or any CSS colour (e.g. one per mood). */
+  /** The fill: the gem gradient, or any CSS color (e.g. one per mood). */
   fill?: 'gem' | string;
   /** Names it for screen readers, which makes it a progressbar. Leave it out when the number is already written
    * beside it: the bar is then only a picture of that number. */

@@ -38,7 +38,7 @@ export default function IconsPage() {
     <DocPage title="Icons">
       <p style={{ margin: '8px 0 32px', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' }}>
         Everything is drawn on a 24×24 canvas and takes <code>size</code>, <code>color</code> and{' '}
-        <code>strokeWidth</code>. Line icons default to the surrounding text colour.
+        <code>strokeWidth</code>. Line icons default to the surrounding text color.
       </p>
 
       <h2 id="glyphs" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-xl)' }}>
@@ -120,11 +120,11 @@ export default function IconsPage() {
         Rating stars
       </h2>
       <p style={{ margin: '8px 0 16px', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' }}>
-        <code>RatingStar</code> takes <code>on</code> and <code>size</code>, not a colour: on, it fills with the pink →
+        <code>RatingStar</code> takes <code>on</code> and <code>size</code>, not a color: on, it fills with the pink →
         periwinkle → teal gradient; off, it&apos;s a pale pink. Round joins on a stroke of the same paint soften its
-        points. For a row of them, to pick or show a rating, use <code>StarRating</code> (see Rating). In forced colours the
+        points. For a row of them, to pick or show a rating, use <code>StarRating</code> (see Rating). In forced colors the
         gradient can&apos;t show, so a star inside <code>data-star</code> or <code>.fc-star</code> fills with the system
-        text colour when it has <code>data-on</code>, and greyed text colour when it doesn&apos;t.
+        text color when it has <code>data-on</code>, and greyed text color when it doesn&apos;t.
       </p>
       <div style={grid}>
         <Tile name="On">

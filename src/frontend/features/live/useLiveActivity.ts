@@ -301,7 +301,7 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
     }
     const paused = !a.clock.runningSince;
     const now = Date.now();
-    // The artwork: drawn by the worker when what's on it changes, in the colours this browser uses.
+    // The artwork: drawn by the worker when what's on it changes, in the colors this browser uses.
     const accent = savedAccent();
     const theme = savedTheme();
     const artKey = JSON.stringify([a.name, a.kind, a.done, a.total, a.now, a.ride, a.rest && a.rest.next, a.rest && a.rest.endsAt, paused, accent, theme]);

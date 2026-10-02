@@ -55,7 +55,7 @@ export default function CheckboxPage() {
         <li>It is a native checkbox underneath, so Space toggles it and it joins forms and label clicks as usual.</li>
         <li>A press anywhere on the box or the label toggles it. The whole row is the target, not only the 20 px box.</li>
         <li>Keyboard focus draws a 2 px pink ring around the box.</li>
-        <li>The box uses the hairline outline colour. If that outline is later darkened for contrast, this component follows.</li>
+        <li>The box uses the hairline outline color. If that outline is later darkened for contrast, this component follows.</li>
       </ul>
     </DocPage>
   );

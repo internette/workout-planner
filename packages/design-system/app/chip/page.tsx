@@ -59,7 +59,7 @@ export default function ChipPage() {
       <h2 id="choice" style={h2}>Choice</h2>
       <p style={note}>
         A selectable option, pink when <code>selected</code> and exposed with <code>aria-pressed</code>. Use it one
-        at a time for a single choice, or several at once for a multi-select. Unselected choices are canvas-coloured,
+        at a time for a single choice, or several at once for a multi-select. Unselected choices are canvas-colored,
         so place them on a white card.
       </p>
       <div style={{ ...row, flexDirection: 'column', alignItems: 'flex-start', background: 'var(--color-white)' }}>

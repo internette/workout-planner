@@ -1,4 +1,4 @@
-/** The faceted gem that marks a rank (and, in the quest stats, a kind of quest), in the rank's colour. */
+/** The faceted gem that marks a rank (and, in the quest stats, a kind of quest), in the rank's color. */
 export function RankGem({ fill, faded = false }: { fill: string; faded?: boolean }) {
   return (
     <span

@@ -7,7 +7,7 @@ export const hovers = {
   icon: { value: 'rgba(35, 42, 69, 0.06)', use: 'An icon button, and a focused button' },
   danger: { value: 'rgba(178, 58, 76, 0.09)', use: 'A danger icon button' },
   dangerGhost: { value: 'rgba(178, 58, 76, 0.08)', use: 'A ghost button in the danger tone' },
-  inverse: { value: 'rgba(255, 255, 255, 0.22)', use: 'An icon button on a dark or coloured surface' },
+  inverse: { value: 'rgba(255, 255, 255, 0.22)', use: 'An icon button on a dark or colored surface' },
 } as const satisfies Record<string, Token>;
 
 export const focus = {

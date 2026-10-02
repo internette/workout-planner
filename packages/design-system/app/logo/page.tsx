@@ -45,7 +45,7 @@ function Size({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-/** The panel for one piece: its sizes on the page colour, then where it's used, its import and its download. */
+/** The panel for one piece: its sizes on the page color, then where it's used, its import and its download. */
 function Piece({ sizes, used, code, file }: { sizes: ReactNode; used: ReactNode; code?: string; file: string }) {
   return (
     <Card>

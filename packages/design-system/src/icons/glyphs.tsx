@@ -143,7 +143,7 @@ export const Quill = strokeIcon(
   </>,
 );
 // The Spellbook: a workout card with a spell card fanned out behind it, its star tucked under the front card.
-// Weights vary by part: the dumbbell is boldest, the card behind lightest. Solid parts fill with the icon colour.
+// Weights vary by part: the dumbbell is boldest, the card behind lightest. Solid parts fill with the icon color.
 export const SpellCards = strokeIcon(
   'SpellCards',
   <>
@@ -231,7 +231,7 @@ export const Bike = strokeIcon(
     <path d="M10 9h4" />
   </>,
 );
-// ---- yoga and stretching. A person's head is a solid dot (a stroked ring fills in at 20px), in the icon colour.
+// ---- yoga and stretching. A person's head is a solid dot (a stroked ring fills in at 20px), in the icon color.
 const Head = ({ cx, cy, r = 2 }: { cx: number; cy: number; r?: number }) => <circle cx={cx} cy={cy} r={r} fill="currentColor" stroke="none" />;
 // Yoga.
 export const LotusFlower = strokeIcon(

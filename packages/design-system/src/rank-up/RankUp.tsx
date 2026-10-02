@@ -14,7 +14,7 @@ export interface RankUpProps {
   step: string;
   /** The next rank's name, e.g. "Moonlit apprentice". */
   next: string;
-  /** The rank's gem colour or gradient, as a CSS value. */
+  /** The rank's gem color or gradient, as a CSS value. */
   gem: string;
   onClose: () => void;
 }

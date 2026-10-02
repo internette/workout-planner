@@ -5,7 +5,7 @@ import { darkInteraction, interactionVariables } from './interaction';
 import { themeScopeRule } from './tokenVariables';
 
 // Publishes the radii, spacing, motion and interaction tokens as CSS variables on :root, in one <style>. Render once in
-// the root layout, beside the colour, type and elevation variables.
+// the root layout, beside the color, type and elevation variables.
 export function StructureVariables() {
   const light = Object.entries({ ...radiiVariables, ...spacingVariables, ...motionVariables, ...interactionVariables }).map(
     ([name, value]) => `${name}:${value}`,

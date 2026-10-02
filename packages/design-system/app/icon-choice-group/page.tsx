@@ -33,7 +33,7 @@ const icons = (color?: string) =>
     icon: <ExerciseIcon name={name} color={themed(color) || 'var(--color-accent)'} />,
   }));
 const swatches = SWATCHES.map((s) => ({ ...s, color: themed(s.value) }));
-// The theme colours, as fixed colours: this setting picks the theme, so its swatches don't follow it.
+// The theme colors, as fixed colors: this setting picks the theme, so its swatches don't follow it.
 const ACCENT_SWATCHES = ACCENTS.map((a) => ({
   value: a.name,
   label: a.label,
@@ -44,20 +44,20 @@ const ACCENT_SWATCHES = ACCENTS.map((a) => ({
 export default function IconChoiceGroupPage() {
   const [icon, setIcon] = useState<string>('h');
   const [workoutIcon, setWorkoutIcon] = useState<string>('h');
-  const [colour, setColour] = useState<string>(colors.teal);
+  const [color, setColor] = useState<string>(colors.teal);
   const [accent, setAccent] = useState<string>('pink');
 
   return (
     <DocPage title="Icon choice group">
       <p style={{ ...note, marginTop: 8 }}>
-        Pick one icon, or one colour, from a set shown as pictures. Import it from{' '}
+        Pick one icon, or one color, from a set shown as pictures. Import it from{' '}
         <code>@moonshot/design-system/icon-choice-group</code>. Give every option a <code>label</code>: the buttons only show a
         picture, so the label is what a screen reader says.
       </p>
 
       <h2 id="icons" style={h2}>Icons</h2>
       <p style={note}>
-        The default <code>kind=&quot;icon&quot;</code>: a grid of 48px tiles on the canvas colour, the chosen one on
+        The default <code>kind=&quot;icon&quot;</code>: a grid of 48px tiles on the canvas color, the chosen one on
         pink tint with a pink ring. Set <code>columns</code> to fit the space; a form uses five, or four on a narrow
         card. Put a visible <code>Label</code> above it, and name the group with <code>label</code>.
       </p>
@@ -66,17 +66,17 @@ export default function IconChoiceGroupPage() {
         <IconChoiceGroup label="Icon" columns={5} options={icons()} value={icon} onChange={setIcon} />
       </Card>
 
-      <h2 id="colours" style={h2}>Colours</h2>
+      <h2 id="colors" style={h2}>Colors</h2>
       <p style={note}>
         <code>kind=&quot;swatch&quot;</code>: a wrapping row of 34px squares (the default <code>shape</code>), each filled with its option&apos;s{' '}
-        <code>color</code>. The chosen one takes a ring in its own colour, set off by a white gap. Pass the palette&apos;s
+        <code>color</code>. The chosen one takes a ring in its own color, set off by a white gap. Pass the palette&apos;s
         CSS variables (<code>themed(hex)</code>), so the swatches follow the theme. In a workout&apos;s icon picker the
-        colour recolours the icons above it.
+        color recolors the icons above it.
       </p>
       <Card elevation="overlay" style={{ maxWidth: 320 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <IconTile>
-            <ExerciseIcon name={workoutIcon} color={themed(colour)} />
+            <ExerciseIcon name={workoutIcon} color={themed(color)} />
           </IconTile>
           <Text variant="heading" as="div">
             Upper Push
@@ -85,27 +85,27 @@ export default function IconChoiceGroupPage() {
         <Text variant="micro" as="div" tone="slate" style={{ padding: '0 2px 10px' }}>
           ICON
         </Text>
-        <IconChoiceGroup label="Workout icon" columns={5} options={icons(colour)} value={workoutIcon} onChange={setWorkoutIcon} />
+        <IconChoiceGroup label="Workout icon" columns={5} options={icons(color)} value={workoutIcon} onChange={setWorkoutIcon} />
         <Text variant="micro" as="div" tone="slate" style={{ padding: '14px 2px 10px' }}>
           COLOR
         </Text>
-        <IconChoiceGroup label="Icon colour" kind="swatch" options={swatches} value={colour} onChange={setColour} />
+        <IconChoiceGroup label="Icon color" kind="swatch" options={swatches} value={color} onChange={setColor} />
       </Card>
 
       <h2 id="round-swatches" style={h2}>Round swatches</h2>
       <p style={note}>
-        <code>shape=&quot;round&quot;</code>, for a colour that is itself the setting rather than a tint for something
-        else: the app&apos;s colour, on Profile. The chosen one shows a tick; give each option a{' '}
-        <code>checkColor</code> that reads on its colour (white by default). A hairline keeps a pale colour off the card.
+        <code>shape=&quot;round&quot;</code>, for a color that is itself the setting rather than a tint for something
+        else: the app&apos;s color, on Profile. The chosen one shows a tick; give each option a{' '}
+        <code>checkColor</code> that reads on its color (white by default). A hairline keeps a pale color off the card.
         Each swatch has a 44px touch target, so a row of them can sit 6px apart.
       </p>
       <Card style={{ maxWidth: 420 }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
-          <Text variant="strong" as="div" tone="ink" id="ds-colour-label" style={{ flex: '1 1 120px' }}>
-            Colour
+          <Text variant="strong" as="div" tone="ink" id="ds-color-label" style={{ flex: '1 1 120px' }}>
+            Color
           </Text>
           <IconChoiceGroup
-            labelledBy="ds-colour-label"
+            labelledBy="ds-color-label"
             kind="swatch"
             shape="round"
             style={{ flexWrap: 'nowrap', gap: 6 }}
@@ -142,8 +142,8 @@ export default function IconChoiceGroupPage() {
       <p style={note}>
         A radio group. Tab reaches the chosen option (the first, when nothing is chosen) and Tab again leaves the group.
         The left and right arrow keys move the choice one option, wrapping round; in a grid, up and down move a row.
-        Home and End go to the first and last. In forced-colour modes the chosen option gets a highlight outline, and a
-        swatch keeps its colour, since the colour is the choice.
+        Home and End go to the first and last. In forced-color modes the chosen option gets a highlight outline, and a
+        swatch keeps its color, since the color is the choice.
       </p>
     </DocPage>
   );

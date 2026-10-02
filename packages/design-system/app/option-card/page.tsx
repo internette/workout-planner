@@ -49,7 +49,7 @@ export default function OptionCardPage() {
 
       <h2 id="states" style={h2}>States</h2>
       <p style={note}>
-        Unselected cards sit on the canvas colour and darken on hover; the selected one is pink with a filled dot.
+        Unselected cards sit on the canvas color and darken on hover; the selected one is pink with a filled dot.
         Keyboard focus adds a ring. <code>disabled</code> dims a card and stops it being chosen.
       </p>
       <div style={panel}>

@@ -2,7 +2,7 @@
 // The keyframes (twinkle, pop, draw) are in planner.css; prefers-reduced-motion switches all of it off there.
 
 export const durations = {
-  state: { value: '0.15s', use: 'Background, colour and shadow changes on controls: hover, press, select' },
+  state: { value: '0.15s', use: 'Background, color and shadow changes on controls: hover, press, select' },
   bar: { value: '0.35s', use: 'Progress and rank bars filling' },
 } as const;
 

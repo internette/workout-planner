@@ -39,7 +39,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
       />
       {v.arsenalPicking ? (
         // Stays in view down the long list, so it's always clear the Spellbook is picking for a workout.
-        // The page-coloured band behind it keeps the list from showing through above the card.
+        // The page-colored band behind it keeps the list from showing through above the card.
         <div
           style={{
             position: 'sticky',
