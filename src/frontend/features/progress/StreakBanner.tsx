@@ -78,7 +78,7 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
               <span
                 aria-hidden="true"
                 style={{
-                  fontSize: 'var(--text-xs)',
+                  fontSize: 'var(--text-sm)',
                   fontWeight: 'var(--font-weight-semibold)',
                   color: x.today ? 'var(--color-accent-deep)' : 'var(--color-muted)',
                 }}

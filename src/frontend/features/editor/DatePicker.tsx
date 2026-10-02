@@ -38,7 +38,7 @@ export function DatePicker({ v }: { v: PlannerVals }) {
                 aria-hidden="true"
                 style={{
                   textAlign: 'center',
-                  fontSize: 'var(--text-2xs)',
+                  fontSize: 'var(--text-sm)',
                   fontWeight: 'var(--font-weight-bold)',
                   color: 'var(--color-subtle)',
                   paddingBottom: '4px',

@@ -65,14 +65,14 @@ export const textStyles = {
   small: { family: 'body', size: 'sm', weight: 'regular', use: 'Helper text and fine print' },
   eyebrow: {
     family: 'body',
-    size: 'xs',
+    size: 'sm',
     weight: 'bold',
     tracking: 'wide',
     use: 'Small labels above content',
   },
   micro: {
     family: 'body',
-    size: '2xs',
+    size: 'sm',
     weight: 'bold',
     tracking: 'wide',
     use: 'The smallest labels, such as stat captions',
