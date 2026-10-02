@@ -298,7 +298,8 @@ export function progressVals(ctx: Ctx) {
       const toGo = b.sessions.length - done - partly - missed;
       const pct = (n) => (b.sessions.length ? (n / b.sessions.length) * 100 : 0);
       return {
-        wkEyebrow: 'THIS WEEK · ' + weekRange(b).toUpperCase(),
+        // The dates kept together: on a narrow phone it wraps after the dot, not inside the range.
+        wkEyebrow: 'THIS WEEK · ' + weekRange(b).toUpperCase().replace(/ /g, '\u00a0').replace(/–/g, '\u2060–\u2060'),
         wkParts: [
           { n: done, label: 'done' },
           ...(partly ? [{ n: partly, label: 'partly' }] : []),
