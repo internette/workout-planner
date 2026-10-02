@@ -64,19 +64,20 @@ export default function ColorsPage() {
         Every colour is a CSS variable on <code>:root</code>, for example <code>var(--color-pink)</code>. Import{' '}
         <code>colors</code> from <code>@moonshot/design-system/colors</code> only where a real hex string is needed. The
         hex values below are the default theme&apos;s (light, pink); the swatches show the theme you&apos;re viewing.
+        Each hex is written once: a colour that matches another is set as that one, so changing it changes both.
       </p>
       {Object.entries(colorGroups).map(([group, swatches]) => (
         <section key={group} style={{ marginBottom: 36 }}>
           <h2 id={groupId(group)} style={sectionTitle}>{group}</h2>
           {groupNotes[group] ? <p style={intro}>{groupNotes[group]}</p> : null}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
-            {Object.entries(swatches).map(([name, { hex, use }]) => (
+            {Object.entries(swatches).map(([name, c]) => (
               <Swatch
                 key={name}
                 name={name}
                 swatch={swatchFor(group, name)}
-                lines={[`${hex} · default theme`, `var(${cssVarName(name)})`]}
-                use={use}
+                lines={['ref' in c ? `Same as ${c.ref} · default theme` : `${c.hex} · default theme`, `var(${cssVarName(name)})`]}
+                use={c.use}
               />
             ))}
             {(translucentsIn[group] ?? []).map((name) => (

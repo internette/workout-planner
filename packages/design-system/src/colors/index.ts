@@ -1,6 +1,9 @@
 export {
   colorGroups,
   colors,
+  colorValues,
+  resolveColors,
+  cssColor,
   vars,
   cssVarName,
   themed,
