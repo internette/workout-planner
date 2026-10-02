@@ -1,17 +1,14 @@
 // The color palette. Every color the app uses is named here, grouped by role.
 // In styles, write the CSS variable (e.g. `var(--color-pink)`); use the hex value from `colors`
 // only where a real hex string is needed (computed alphas, values saved to the database).
-// Each hex is written once: a color that is the same as another names it with `ref` (onStrong is the surface color in
-// light, the default accent is pink), and its CSS variable points at that one, e.g. `--color-accent: var(--color-pink)`.
-// What must stay white in every theme (the rank-up ceremony) writes CSS's own `white`.
+// Each hex is written once. What must stay white in every theme (the rank-up ceremony) writes CSS's own `white`.
 
 export const colorGroups = {
   Text: {
     ink: { hex: '#232A45', use: 'Primary text and dark buttons' },
     slate: { hex: '#5C6684', use: 'Secondary text, completed states' },
     slateDeep: { hex: '#4A5268', use: 'Text on the tinted gradient cards and grey badges, where slate would fall short of 4.5:1' },
-    muted: { hex: '#6E6881', use: 'Tertiary text, inactive controls (4.5:1 or more on canvas, mist and the accent tint)' },
-    onStrong: { ref: 'surface', use: 'Text and icons on a strong fill: the accent, ink, danger and the gem gradient' },
+    muted: { hex: '#6E6881', use: 'Tertiary text, inactive controls (4.5:1 or more on canvas, mist and the pink tint)' },
   },
   'Lines and controls': {
     outline: { hex: '#8A859A', use: 'Empty controls you can still use: unticked boxes, unrated stars (3:1 or more on canvas and white)' },
@@ -19,25 +16,22 @@ export const colorGroups = {
   },
   Surfaces: {
     canvas: { hex: '#FBF1F3', use: 'Page background, input fills' },
-    surface: { hex: '#FFFFFF', use: 'Cards, dialogs, inputs and trays: anything raised off the page, and the rims around what sits on them' },
+    surface: { hex: '#FFFFFF', use: 'Cards, dialogs, inputs and trays: anything raised off the page, and the rims around what sits on them. Also text and icons on a strong fill: pink, ink, danger and the gem gradient' },
     mist: { hex: '#F4EFF1', use: 'Quiet chips and tracks' },
     slateTint: { hex: '#EDEFF6', use: 'Rank badge, slate tier' },
   },
-  // The theme's color: pink here, and teal, periwinkle, slate or coral in the other color themes (Profile →
-  // Settings → Color). Buttons, selection, ticks, accent text and tints use these. What goes on the accent is
-  // onStrong, as on any strong fill: every theme's accent is deep enough for it.
+  // The theme's color: pink by default, and teal, periwinkle, slate or coral in the other color themes (Profile →
+  // Settings → Color), so everything in pink follows the theme: buttons, selection, ticks, the Happy mood, the first
+  // rank tiers, the gem. Text and icons on it are surface, as on any strong fill.
   Accent: {
-    accent: { ref: 'pink', use: 'Actions, selection, marks, bars and ticks' },
+    pink: { hex: '#D63479', use: 'Actions, selection, marks, bars and ticks; the Happy mood, the first rank tiers, the gem. White text on it is 4.5:1' },
     accentHover: { hex: '#C7286C', use: 'Primary action, hovered' },
-    accentDeep: { ref: 'pinkDeep', use: 'Accent text on white and on the accent tint' },
-    accentTint: { ref: 'pinkTint', use: 'Selected and active backgrounds' },
+    pinkDeep: { hex: '#B22461', use: 'Pink text on white and on the pink tint (5.4:1 on pink tint, 6.3:1 on white)' },
+    pinkTint: { hex: '#FCE8F1', use: 'Selected and active backgrounds, the pink rank badge' },
   },
-  // The brand's own colors, which stay themselves whatever the theme: pink for the Happy mood and the first rank
-  // tier, periwinkle and teal for the planned and upcoming marks and the later tiers, and the sparkles.
+  // Colors that stay themselves whatever the theme: periwinkle and teal for the planned and upcoming marks and the
+  // later rank tiers, and the sparkles.
   Brand: {
-    pink: { hex: '#D63479', use: 'The brand pink: the Happy mood, the first rank tier, the gem. White text on it is 4.5:1' },
-    pinkTint: { hex: '#FCE8F1', use: 'Pink rank badge' },
-    pinkDeep: { hex: '#B22461', use: 'Pink text on light backgrounds (5.4:1 on pink tint, 6.3:1 on white)' },
     periwinkle: { hex: '#7C8FC9', use: 'Planned sessions, the Sad mood, the second rank tier' },
     periwinkleTint: { hex: '#E9EEF9', use: 'Periwinkle rank badge' },
     periwinkleDeep: { hex: '#4C5E96', use: 'Text on periwinkle tints' },
@@ -82,7 +76,7 @@ export const cssColor = (value: string) => (value.startsWith('#') ? value : `var
 export const themed = (color: string | null | undefined): string | undefined => {
   if (!color) return undefined;
   const hit = (Object.entries(colors) as [string, string][]).find(
-    ([name, hex]) => hex.toUpperCase() === color.toUpperCase() && !['surface', 'onStrong'].includes(name) && !name.startsWith('accent'),
+    ([name, hex]) => hex.toUpperCase() === color.toUpperCase() && !['surface', 'accentHover'].includes(name),
   );
   return hit ? `var(${cssVarName(hit[0])})` : color;
 };
@@ -101,11 +95,11 @@ const rgba = (hex: string, alpha: number) => {
 /** Composites built from the three accents. Written as CSS variables like the colors, e.g. `var(--gradient-gem)`. */
 export const gradients = {
   gem: {
-    value: 'linear-gradient(135deg, var(--color-accent) 0%, var(--color-periwinkle) 50%, var(--color-teal) 100%)',
+    value: 'linear-gradient(135deg, var(--color-pink) 0%, var(--color-periwinkle) 50%, var(--color-teal) 100%)',
     use: 'The crystal: progress fills, the avatar and the top ranks',
   },
   'gem-tint': {
-    value: 'linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 16%, transparent) 0%, color-mix(in srgb, var(--color-periwinkle) 16%, transparent) 50%, color-mix(in srgb, var(--color-teal) 16%, transparent) 100%)',
+    value: 'linear-gradient(135deg, color-mix(in srgb, var(--color-pink) 16%, transparent) 0%, color-mix(in srgb, var(--color-periwinkle) 16%, transparent) 50%, color-mix(in srgb, var(--color-teal) 16%, transparent) 100%)',
     use: 'A ceremonial panel: the quest and streak banners. Use it once per screen',
   },
 } as const;
@@ -117,7 +111,7 @@ export const translucents = {
   line: { value: rgba(colors.ink, 0.07), use: 'Every divider line: between rows, around cards, under a popover’s header. One strength everywhere.' },
   surfaceRest: { value: mix('surface', 50), use: 'A quiet row on the page: rest days, a day gone by' },
   surfaceBar: { value: mix('surface', 94), use: 'The phone tab bar, over the page as it scrolls' },
-  accentWash: { value: mix('accent-tint', 50), use: 'A see-through accent fill: the dashed "add" button' },
+  accentWash: { value: mix('pink-tint', 50), use: 'A see-through accent fill: the dashed "add" button' },
   shadow: { value: rgba(colors.ink, 0.14), use: 'The shadow under something lifted off the page, such as a row being dragged' },
   scrim: { value: rgba(colors.ink, 0.35), use: 'The dimmed page behind a dialog' },
 } as const;

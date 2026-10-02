@@ -35,7 +35,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
         <DatePicker v={v} />
         ) : null}
         {v.repeatOn ? (
-          <Chip tone="accent" icon={<Repeat color="var(--color-on-strong)" size={15} />}>
+          <Chip tone="accent" icon={<Repeat color="var(--color-surface)" size={15} />}>
             Weekly
           </Chip>
         ) : null}
@@ -194,7 +194,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
           data-add-exercise
           style={{ marginTop: '16px' }}
         >
-          <Plus color="var(--color-accent)" size={19} />
+          <Plus color="var(--color-pink)" size={19} />
           Add exercise
         </Button>
       ) : null}

@@ -37,10 +37,10 @@
 .segment-sm { padding: 9px 16px; border-radius: var(--radius-sm); font-size: var(--text-base); }
 .segment-md { padding: 12px 20px; border-radius: var(--radius-sm); font-size: var(--text-base); }
 
-.tone-brand .selected { background: var(--color-accent); color: var(--color-on-strong); }
+.tone-brand .selected { background: var(--color-pink); color: var(--color-surface); }
 .tone-quiet .selected {
   background: var(--color-surface);
-  color: var(--color-accent-deep);
+  color: var(--color-pink-deep);
   box-shadow: var(--elevation-hairline);
 }
 

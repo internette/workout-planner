@@ -27,7 +27,7 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
       <FinishDialog v={v} />
       <BackBar label={v.backLabel} onBack={v.backToDay}>
         <Button type="secondary" size="sm" onClick={v.goEdit} style={{ whiteSpace: 'nowrap' }}>
-          <Pencil color="var(--color-accent-deep)" size={16} />
+          <Pencil color="var(--color-pink-deep)" size={16} />
           Edit
         </Button>
       </BackBar>
@@ -68,10 +68,10 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
             >
               <Chip
                 tone="accent"
-                icon={<Repeat color="var(--color-on-strong)" size={15} />}
+                icon={<Repeat color="var(--color-surface)" size={15} />}
                 onClick={v.toggleSeries}
                 aria-expanded={!!v.seriesOpen}
-                trailing={<ChevronDown color="var(--color-on-strong)" strokeWidth={2.2} size={14} />}
+                trailing={<ChevronDown color="var(--color-surface)" strokeWidth={2.2} size={14} />}
               >
                 Weekly series
               </Chip>

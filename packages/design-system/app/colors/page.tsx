@@ -8,8 +8,8 @@ const groupId = (title: string) => title.toLowerCase().replace(/\s+/g, '-');
 
 // A line under a group's heading, where the group needs more than each swatch's own note.
 const groupNotes: Record<string, string> = {
-  Accent: 'The theme’s color, which changes with Profile → Settings → Color: pink by default. Use it for anything that means “the app’s color”; for pink that must stay pink, use Brand. Text and icons on it are onStrong, as on any strong fill.',
-  Brand: 'Colors that stay themselves in every theme: the moods, the rank tiers, the gem and the sparkles. Each has a tint for a badge and a deep shade for text on it.',
+  Accent: 'The theme’s color: pink by default, and teal, periwinkle, slate or coral with Profile → Settings → Color. Everything in pink follows it: buttons, selection, ticks, the Happy mood, the first rank tiers and the gem. Text and icons on it are surface, as on any strong fill.',
+  Brand: 'Colors that stay themselves in every theme: the other moods, the later rank tiers and the sparkles. Each has a tint for a badge and a deep shade for text on it.',
 };
 
 const code: React.CSSProperties = { fontSize: 'var(--text-sm)', color: 'var(--color-muted)', wordBreak: 'break-word' };
@@ -18,11 +18,6 @@ const intro: React.CSSProperties = { margin: '0 0 16px', maxWidth: 640, color: '
 
 /** The swatch behind a see-through color: the color over the page. */
 const overCanvas = (variable: string) => `linear-gradient(0deg, var(${variable}), var(${variable})), var(--color-canvas)`;
-
-/** An on-color swatch: a block of the color on the fill it goes on, so its strength shows. */
-const onFill = (variable: string, fill: string) =>
-  `linear-gradient(0deg, var(${variable}), var(${variable})) center / 40% 36% no-repeat, var(${fill})`;
-const swatchFor = (name: string) => (name === 'onStrong' ? onFill(cssVarName(name), '--color-accent') : `var(${cssVarName(name)})`);
 
 function Swatch({ name, swatch, lines, use }: { name: string; swatch: string; lines: string[]; use: string }) {
   return (
@@ -63,7 +58,7 @@ export default function ColorsPage() {
               <Swatch
                 key={name}
                 name={name}
-                swatch={swatchFor(name)}
+                swatch={`var(${cssVarName(name)})`}
                 lines={[`${colors[name as ColorName]} · default theme`, `var(${cssVarName(name)})`]}
                 use={c.use}
               />

@@ -27,10 +27,10 @@ export function DoneTick({ done, onToggle, label }: DoneTickProps) {
         borderRadius: 'var(--radius-sm)',
         cursor: 'pointer',
         border: done ? 'none' : '1.5px solid var(--color-outline)',
-        background: done ? 'var(--color-accent)' : 'none',
+        background: done ? 'var(--color-pink)' : 'none',
       }}
     >
-      <Check color={done ? 'var(--color-on-strong)' : 'var(--color-outline)'} strokeWidth={2.6} size={15} />
+      <Check color={done ? 'var(--color-surface)' : 'var(--color-outline)'} strokeWidth={2.6} size={15} />
     </button>
   );
 }

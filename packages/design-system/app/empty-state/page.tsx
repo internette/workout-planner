@@ -33,7 +33,7 @@ export default function EmptyStatePage() {
             actions={
               <>
                 <Button type="primary" size="lg" glow>
-                  <Plus color="var(--color-on-strong)" size={16} />
+                  <Plus color="var(--color-surface)" size={16} />
                   Plan your first workout
                 </Button>
                 <Button type="neutral" ghost size="md">
@@ -57,7 +57,7 @@ export default function EmptyStatePage() {
             description="No quest today. Rest is how the power comes back."
             actions={
               <Button type="primary" size="lg" glow>
-                <Plus color="var(--color-on-strong)" size={16} />
+                <Plus color="var(--color-surface)" size={16} />
                 Add workout
               </Button>
             }
@@ -82,7 +82,7 @@ export default function EmptyStatePage() {
           description="No sessions scheduled this week. Add one and that day gets a quest."
           actions={
             <Button type="primary" size="lg">
-              <Plus color="var(--color-on-strong)" size={16} />
+              <Plus color="var(--color-surface)" size={16} />
               Add workout
             </Button>
           }

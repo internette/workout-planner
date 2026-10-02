@@ -6,9 +6,9 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  background: var(--color-accent-tint);
+  background: var(--color-pink-tint);
   border: 2px solid var(--color-surface);
-  box-shadow: 0 2px 6px color-mix(in srgb, var(--color-accent) 28%, transparent), 0 0 0 1px color-mix(in srgb, var(--color-ink) 5%, transparent);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--color-pink) 28%, transparent), 0 0 0 1px color-mix(in srgb, var(--color-ink) 5%, transparent);
 }
 /* xs at the start of a list row, sm beside a row's or card's title, md beside a page's title. */
 .xs { width: 34px; height: 34px; border-radius: var(--radius-sm); }

@@ -8,7 +8,7 @@ export function NoticeBanner({ v }: { v: PlannerVals }) {
   return (
     <Callout
       tone="success"
-      icon={<Check color="var(--color-accent-deep)" strokeWidth={2.4} size={16} />}
+      icon={<Check color="var(--color-pink-deep)" strokeWidth={2.4} size={16} />}
       action={
         <IconButton label="Dismiss" size="sm" onClick={v.dismissNotice}>
           <Close color="var(--color-muted)" strokeWidth={2.2} size={14} />

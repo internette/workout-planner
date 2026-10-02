@@ -125,7 +125,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
                 onClick={l?.add}
                 style={{ background: 'var(--color-surface)' }}
               >
-                <Plus color="var(--color-accent-deep)" strokeWidth={2.4} size={18} />
+                <Plus color="var(--color-pink-deep)" strokeWidth={2.4} size={18} />
               </IconButton>
             </div>
           ))}
@@ -147,7 +147,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
             style={{ marginTop: '4px' }}
           >
             Browse the full Spellbook
-            <ChevronRight color="var(--color-accent-deep)" strokeWidth={2.2} size={14} />
+            <ChevronRight color="var(--color-pink-deep)" strokeWidth={2.2} size={14} />
           </Button>
         </div>
       ) : null}

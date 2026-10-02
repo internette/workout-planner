@@ -17,17 +17,17 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
       <BackBar label={v.backLabel} onBack={v.goBack}>
         {v.exercise.builtin ? (
           <Button type="secondary" size="sm" onClick={v.exercise.copy} style={{ whiteSpace: 'nowrap' }}>
-            <Copy color="var(--color-accent-deep)" size={16} />
+            <Copy color="var(--color-pink-deep)" size={16} />
             Copy
           </Button>
         ) : (
           <Button type="secondary" size="sm" onClick={v.exercise.edit} style={{ whiteSpace: 'nowrap' }}>
-            <Pencil color="var(--color-accent-deep)" size={16} />
+            <Pencil color="var(--color-pink-deep)" size={16} />
             Edit
           </Button>
         )}
         <Button type="primary" size="sm" onClick={v.exercise.add} style={{ whiteSpace: 'nowrap' }}>
-          <Plus color="var(--color-on-strong)" size={16} />
+          <Plus color="var(--color-surface)" size={16} />
           Add
         </Button>
       </BackBar>

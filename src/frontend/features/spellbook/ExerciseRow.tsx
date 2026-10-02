@@ -64,7 +64,7 @@ export function ExerciseRow({ exercise }: { exercise: any }) {
       ) : (
         // Said in words, not just +: it adds the exercise to a workout (the one being built, or one to choose).
         <Button type="secondary" size="sm" onClick={exercise?.add} aria-label={'Add ' + exercise?.name + ' to a workout'} style={{ flex: 'none' }}>
-          <Plus color="var(--color-accent-deep)" strokeWidth={2.4} size={15} />
+          <Plus color="var(--color-pink-deep)" strokeWidth={2.4} size={15} />
           Add
         </Button>
       )}

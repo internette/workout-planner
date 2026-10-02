@@ -20,7 +20,7 @@ const SIZES = {
 
 export function StatusDot({ status, size = 'sm', selected = false }: StatusDotProps) {
   const s = SIZES[size];
-  const ink = selected ? 'var(--color-on-strong)' : 'var(--color-slate)';
+  const ink = selected ? 'var(--color-surface)' : 'var(--color-slate)';
   const round = (px: number, rest: CSSProperties): CSSProperties => ({ width: px, height: px, borderRadius: 'var(--radius-full)', ...rest });
   const style: CSSProperties =
     status === 'done'

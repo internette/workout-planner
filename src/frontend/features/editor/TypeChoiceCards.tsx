@@ -37,7 +37,7 @@ function TypeChoiceCard({
         gap: '14px',
         textAlign: 'left',
         opacity: disabled ? 0.55 : 1,
-        boxShadow: selected ? 'inset 0 0 0 2px var(--color-accent)' : undefined,
+        boxShadow: selected ? 'inset 0 0 0 2px var(--color-pink)' : undefined,
       }}
     >
       <span
@@ -70,13 +70,13 @@ function TypeChoiceCard({
             height: '24px',
             flex: 'none',
             borderRadius: 'var(--radius-full)',
-            background: 'var(--color-accent)',
+            background: 'var(--color-pink)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          <Check color="var(--color-on-strong)" size={14} strokeWidth={3} />
+          <Check color="var(--color-surface)" size={14} strokeWidth={3} />
         </span>
       ) : null}
     </Card>
@@ -102,8 +102,8 @@ export function TypeChoiceCards({ v }: { v: PlannerVals }) {
       }}
     >
       <TypeChoiceCard
-        icon={<Dumbbell color="var(--color-accent)" size={22} />}
-        tint="var(--color-accent-tint)"
+        icon={<Dumbbell color="var(--color-pink)" size={22} />}
+        tint="var(--color-pink-tint)"
         title="Lifting"
         note="Build a list of exercises with sets, reps and weight."
         {...card('lift')}

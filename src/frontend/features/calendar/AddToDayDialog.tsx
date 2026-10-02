@@ -22,7 +22,7 @@ export function AddToDayDialog({ v }: { v: PlannerVals }) {
           <LinkRow key={i} title={o?.name} detail={o?.meta} disabled={o?.disabled} onClick={o?.pick} />
         ))}
         <Button type="dashed" size="md" fullWidth onClick={v.addToDialog?.pickNew}>
-          <Plus color="var(--color-accent-deep)" size={16} />
+          <Plus color="var(--color-pink-deep)" size={16} />
           New workout
         </Button>
       </div>

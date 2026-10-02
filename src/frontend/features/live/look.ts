@@ -20,9 +20,9 @@ export type LiveLook = {
 // Taken from the color themes themselves, so the artwork follows any change to them.
 export function liveLook(accent: Accent, theme: Theme): LiveLook {
   const p = paletteFor(theme, accent);
-  const card = { card: p.surface, ink: p.ink, muted: p.muted, soft: p.slate, track: p.mist, accent: p.accent, second: p.accentTint };
-  const gem: [string, string, string] = [p.accent, p.periwinkle, p.teal];
+  const card = { card: p.surface, ink: p.ink, muted: p.muted, soft: p.slate, track: p.mist, accent: p.pink, second: p.pinkTint };
+  const gem: [string, string, string] = [p.pink, p.periwinkle, p.teal];
   return theme === 'dark'
-    ? { ...card, onSecond: p.ink, iconInk: p.accent, gem }
-    : { ...card, onSecond: p.accentDeep, iconInk: p.accentDeep, gem };
+    ? { ...card, onSecond: p.ink, iconInk: p.pink, gem }
+    : { ...card, onSecond: p.pinkDeep, iconInk: p.pinkDeep, gem };
 }

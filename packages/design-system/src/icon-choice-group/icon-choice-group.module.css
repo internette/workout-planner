@@ -16,7 +16,7 @@
   transition: background var(--dur-state) var(--ease-standard);
 }
 .tile:hover { background: var(--color-mist); }
-.tile.selected { background: var(--color-accent-tint); box-shadow: 0 0 0 2px var(--color-accent); }
+.tile.selected { background: var(--color-pink-tint); box-shadow: 0 0 0 2px var(--color-pink); }
 
 .swatch {
   width: 34px;

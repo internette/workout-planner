@@ -65,9 +65,9 @@ export const textTones = {
   slate: 'var(--color-slate)',
   slateDeep: 'var(--color-slate-deep)',
   muted: 'var(--color-muted)',
-  accent: 'var(--color-accent-deep)',
+  accent: 'var(--color-pink-deep)',
   danger: 'var(--color-danger)',
-  inverse: 'var(--color-on-strong)',
+  inverse: 'var(--color-surface)',
 } as const;
 
 export type TextTone = keyof typeof textTones;

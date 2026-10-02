@@ -18,7 +18,7 @@ export function ProfileScreen({ v }: { v: PlannerVals }) {
         title="Profile"
         action={
           <IconTileButton size="sm" aria-label="Settings" onClick={v.goSettings}>
-            <Gear color="var(--color-accent)" size={20} />
+            <Gear color="var(--color-pink)" size={20} />
           </IconTileButton>
         }
         style={{ marginBottom: '14px' }}

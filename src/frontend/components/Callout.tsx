@@ -14,7 +14,7 @@ export interface CalloutProps {
 }
 
 const TONES = {
-  success: { background: 'var(--color-accent-tint)', color: 'var(--color-accent-deep)' },
+  success: { background: 'var(--color-pink-tint)', color: 'var(--color-pink-deep)' },
   danger: { background: 'var(--color-danger-tint)', color: 'var(--color-danger)' },
 };
 

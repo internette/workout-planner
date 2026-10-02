@@ -162,7 +162,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
             {STEPS.map(({ icon: Icon, title, body }) => (
               <Card key={title} pad="lg" className={styles.step} style={{ padding: 24 }}>
                 <span className={styles.stepIcon}>
-                  <Icon size={21} color="var(--color-accent)" />
+                  <Icon size={21} color="var(--color-pink)" />
                 </span>
                 <Text variant="subheading" as="h3" className={styles.stepTitle}>
                   {title}
@@ -260,7 +260,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
             <div className={styles.closingCta}>
               <Button type="primary" size="lg" glow onClick={toCard}>
                 Step through
-                <ChevronRight color="var(--color-on-strong)" strokeWidth={2.4} size={17} />
+                <ChevronRight color="var(--color-surface)" strokeWidth={2.4} size={17} />
               </Button>
             </div>
           </Card>

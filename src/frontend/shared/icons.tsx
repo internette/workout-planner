@@ -5,7 +5,7 @@ import { ICON_NAMES } from './constants';
 // Elements the screen builders hand to the view: an exercise icon in a chosen color, and a mood face. A color from the
 // palette (saved as hex) is drawn as its CSS variable, so it follows the theme.
 export const iconSvg = (key: string, color?: string) => (
-  <ExerciseIcon name={key} color={themed(color) || 'var(--color-accent)'} />
+  <ExerciseIcon name={key} color={themed(color) || 'var(--color-pink)'} />
 );
 
 export const moodSvg = (mood: string) => <MoodFace mood={mood} size={26} />;

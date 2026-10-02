@@ -100,19 +100,19 @@ export function DayWorkoutCard({ card }: { card: any }) {
                 }}
               >
                 {x?.isH ? (
-                  <Dumbbell color="var(--color-accent)" size={20} />
+                  <Dumbbell color="var(--color-pink)" size={20} />
                 ) : null}
                 {x?.isV ? (
                   <Dumbbell
-                    color="var(--color-accent)"
+                    color="var(--color-pink)"
                     size={17}
                     style={{ transform: 'rotate(90deg)' }}
                   />
                 ) : null}
                 {x?.isD ? (
-                  <DumbbellSmall color="var(--color-accent)" size={20} />
+                  <DumbbellSmall color="var(--color-pink)" size={20} />
                 ) : null}
-                {x?.otherIcon ? <ExerciseIcon name={x.otherIcon} color="var(--color-accent)" size={20} /> : null}
+                {x?.otherIcon ? <ExerciseIcon name={x.otherIcon} color="var(--color-pink)" size={20} /> : null}
                 <span style={css(x?.textStyle)}>{x?.text}</span>
               </div>
             ))}

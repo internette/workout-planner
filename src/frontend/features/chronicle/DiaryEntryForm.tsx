@@ -69,7 +69,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
                 marginLeft: '8px',
                 fontSize: 'var(--text-lg)',
                 fontWeight: 'var(--font-weight-semibold)',
-                color: 'var(--color-accent-deep)',
+                color: 'var(--color-pink-deep)',
               }}
             >
               {v.rpeLabel}
