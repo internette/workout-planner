@@ -103,9 +103,20 @@ function PopoverPanel({
     el.style.width = w + 'px';
     const left = align === 'center' ? r.left + r.width / 2 - w / 2 : r.left;
     el.style.left = Math.max(EDGE, Math.min(left, window.innerWidth - w - EDGE)) + 'px';
-    el.style.top = r.top + top + 'px';
+    // Under the trigger when it fits. When it doesn't and there's more room above, it opens above instead; either
+    // way it's capped to the room there and scrolls, so a long panel never runs off the window.
+    const gap = top - r.height;
+    const below = window.innerHeight - (r.top + top) - EDGE;
+    const above = r.top - gap - EDGE;
+    const h = el.scrollHeight; // its full height, even while capped
+    const up = h > below && above > below;
+    const room = up ? above : below;
+    el.style.maxHeight = h > room ? room + 'px' : '';
+    el.style.overflowY = h > room ? 'auto' : '';
+    el.style.top = (up ? r.top - gap - Math.min(h, room) : r.top + top) + 'px';
   }, [anchor, align, width, top]);
-  useWindowEvent('scroll', place, { capture: true });
+  // Any scroll moves the trigger, except the panel's own (a long list scrolling inside it).
+  useWindowEvent('scroll', (e) => !ref.current?.contains(e.target as Node) && place(), { capture: true });
   useWindowEvent('resize', place);
   // Tabbing out of the trigger and panel closes it, so focus never goes on behind a panel still covering the page.
   useWindowEvent('focusin', (e) => {
@@ -130,8 +141,9 @@ function PopoverPanel({
     if (!el || !anchor.current) return;
     panelRef.current = el;
     live.current = true;
-    place();
+    // Shown first, so place() can measure it; both happen before the browser paints.
     el.showPopover();
+    place();
     return () => {
       live.current = false;
       if (el.matches(':popover-open')) el.hidePopover();

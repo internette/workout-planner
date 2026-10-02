@@ -36,7 +36,10 @@ export function Select<T extends string>({ label, options, value, onChange, styl
   const items = () => Array.from(list.current?.querySelectorAll<HTMLElement>('[role="option"]') ?? []);
   const focusAt = (i: number) => {
     const all = items();
-    all[(i + all.length) % all.length]?.focus();
+    const el = all[(i + all.length) % all.length];
+    el?.focus();
+    // In a panel capped to the window, keep the focused option in view.
+    el?.scrollIntoView({ block: 'nearest' });
   };
   const pick = (v: T) => {
     onChange(v);
