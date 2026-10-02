@@ -64,7 +64,7 @@ export function RideActualCard({ v }: { v: PlannerVals }) {
           <span
             style={{
               display: 'block',
-              fontSize: 'var(--text-xs)',
+              fontSize: 'var(--text-sm)',
               fontWeight: 'var(--font-weight-regular)',
               color: 'var(--color-subtle)',
               marginTop: '6px',

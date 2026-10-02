@@ -243,7 +243,7 @@ export function progressVals(ctx: Ctx) {
         on: ix === barSel,
         aria: (ix >= thisWeekIx - 1 ? weekName(ix) + ', ' + weekRange(weekBuckets[ix]) : weekName(ix)) + ': ' + plural(n, 'session') + ' done',
         value:
-          'font-family:var(--font-heading);font-size:var(--text-xs);font-weight:var(--font-weight-bold);color:' +
+          'font-family:var(--font-heading);font-size:var(--text-sm);font-weight:var(--font-weight-bold);color:' +
           (ix === barSel ? 'var(--color-accent-deep)' : 'var(--color-muted)'),
         bar:
           'width:100%;border-radius:6px 6px 3px 3px;transition:background .2s;height:' +
@@ -258,7 +258,7 @@ export function progressVals(ctx: Ctx) {
             ? 'linear-gradient(180deg,var(--color-accent) 0%,var(--color-periwinkle) 100%)'
             : 'color-mix(in srgb, var(--color-accent) 30%, transparent)'),
         label:
-          'white-space:pre-line;text-align:center;line-height:1.25;height:2.5em;font-size:var(--text-2xs);font-weight:' +
+          'white-space:pre-line;text-align:center;line-height:1.25;height:2.5em;font-size:var(--text-sm);font-weight:' +
           (ix === barSel
             ? 'var(--font-weight-bold);color:var(--color-accent-deep)'
             : 'var(--font-weight-medium);color:var(--color-muted)'),
@@ -298,7 +298,8 @@ export function progressVals(ctx: Ctx) {
       const toGo = b.sessions.length - done - partly - missed;
       const pct = (n) => (b.sessions.length ? (n / b.sessions.length) * 100 : 0);
       return {
-        wkEyebrow: 'THIS WEEK · ' + weekRange(b).toUpperCase(),
+        // The dates kept together: on a narrow phone it wraps after the dot, not inside the range.
+        wkEyebrow: 'THIS WEEK · ' + weekRange(b).toUpperCase().replace(/ /g, '\u00a0').replace(/–/g, '\u2060–\u2060'),
         wkParts: [
           { n: done, label: 'done' },
           ...(partly ? [{ n: partly, label: 'partly' }] : []),

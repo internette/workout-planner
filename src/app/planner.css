@@ -4,9 +4,8 @@
 /* Whatever gets focus or is scrolled to stays clear of the phone tab bar at the bottom (and off the very top edge). */
 html { scroll-padding-top: 16px; scroll-padding-bottom: 104px; }
 
-/* Phone tab bar labels: 12 px, stepping down to 11 px where five tabs would not fit. */
+/* Phone tab bar labels: 12 px. */
 .mlabel { font-size: var(--text-sm); }
-@media (max-width: 324px) { .mlabel { font-size: var(--text-xs); } }
 
 #profileStats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 @media (max-width: 820px) {
