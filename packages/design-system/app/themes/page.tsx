@@ -1,16 +1,18 @@
+'use client';
+
+import { useState } from 'react';
 import { Badge } from '../../src/badge';
 import { Button } from '../../src/buttons';
 import { Card } from '../../src/card';
 import { Chip } from '../../src/chip';
-import { ACCENTS } from '../../src/colors/themes';
+import { ACCENTS, type Accent } from '../../src/colors/themes';
 import { ExerciseIcon, Repeat } from '../../src/icons';
 import { IconTile } from '../../src/icon-tile';
 import { ProgressBar } from '../../src/progress-bar';
+import { Select } from '../../src/select';
 import { StarRating } from '../../src/rating';
 import { Text } from '../../src/typography';
 import { DocPage, h2, note } from '../docs';
-
-export const metadata = { title: 'Themes — Design system' };
 
 const grid: React.CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 };
 
@@ -85,47 +87,43 @@ function Preview({ accent, dark }: { accent: string; dark: boolean }) {
   );
 }
 
+const Dot = ({ color }: { color: string }) => (
+  <span aria-hidden style={{ width: 18, height: 18, flex: 'none', borderRadius: 'var(--radius-full)', background: color }} />
+);
+
 export default function ThemesPage() {
+  const [accent, setAccent] = useState<Accent>('pink');
   return (
     <DocPage title="Themes">
       <p style={{ ...note, marginTop: 8 }}>
         Five colors, each with a light and a dark theme, picked on Profile → Settings. Every theme uses the same
         variables, so a component written with them (<code>var(--color-pink)</code>, not a hex) follows whichever is
         set. The theme is set on <code>&lt;html&gt;</code> as <code>data-accent</code> (left out for pink) and{' '}
-        <code>data-theme=&quot;dark&quot;</code>; the panels below set the same attributes on themselves. The rest of
+        <code>data-theme=&quot;dark&quot;</code>; the previews below set the same attributes on themselves. The rest of
         this site stays light pink.
       </p>
 
-      <h2 id="light" style={h2}>Light</h2>
+      <h2 id="light-and-dark" style={h2}>Light and dark</h2>
       <p style={note}>
-        The color runs through the accent (buttons, rings, the selected tab), its tint (soft fills) and the page
-        background. The gem gradient starts from it; in teal it runs to pink instead, so it doesn&apos;t start and end
-        on the same color.
+        The color runs through everything written in pink: buttons, rings, the selected tab, soft fills, the gem
+        gradient, and the Happy mood and first rank tiers. The page background leans toward it. In dark, each color has
+        its own surfaces and text, tinted toward it (pink&apos;s is Plum dusk); the color is lighter, and text on it is
+        the dark surface color.
       </p>
+      <Select<Accent>
+        label="Color"
+        options={ACCENTS.map((a) => ({ value: a.name, label: a.label, icon: <Dot color={a.swatch} /> }))}
+        value={accent}
+        onChange={setAccent}
+        style={{ maxWidth: 280, marginBottom: 16 }}
+      />
       <div style={grid}>
-        {ACCENTS.map((a) => (
-          <div key={a.name}>
+        {[false, true].map((dark) => (
+          <div key={String(dark)}>
             <Text variant="strong" weight="semibold" as="h3" tone="ink" style={{ margin: '0 0 8px' }}>
-              {a.label}
+              {dark ? 'Dark' : 'Light'}
             </Text>
-            <Preview accent={a.name} dark={false} />
-          </div>
-        ))}
-      </div>
-
-      <h2 id="dark" style={h2}>Dark</h2>
-      <p style={note}>
-        Pink&apos;s dark theme is Plum dusk; each other color has its own dark surfaces and text, tinted toward it. The
-        accent is lighter than in light, and text on it is the dark surface color. Mood colors and the rank gems stay
-        the same in every theme.
-      </p>
-      <div style={grid}>
-        {ACCENTS.map((a) => (
-          <div key={a.name}>
-            <Text variant="strong" weight="semibold" as="h3" tone="ink" style={{ margin: '0 0 8px' }}>
-              {a.label}
-            </Text>
-            <Preview accent={a.name} dark />
+            <Preview accent={accent} dark={dark} />
           </div>
         ))}
       </div>
