@@ -49,7 +49,7 @@ export function Stat({ label, value, unit, note, size = 'md', labelTone = 'muted
         </Text>
       )}
       {note ? (
-        <Text variant="caption" as="div" tone="muted" style={{ marginTop: noteGap + 'px' }}>
+        <Text variant="body" as="div" tone="muted" style={{ marginTop: noteGap + 'px' }}>
           {note}
         </Text>
       ) : null}

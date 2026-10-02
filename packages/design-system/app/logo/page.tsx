@@ -38,7 +38,7 @@ function Size({ label, children }: { label: string; children: ReactNode }) {
   return (
     <figure style={{ margin: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
       {children}
-      <Text variant="caption" tone="muted" as="figcaption">
+      <Text variant="body" tone="muted" as="figcaption">
         {label}
       </Text>
     </figure>
@@ -54,7 +54,7 @@ function Piece({ sizes, used, code, file }: { sizes: ReactNode; used: ReactNode;
         {used}
       </Text>
       {code ? (
-        <Text variant="caption" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
+        <Text variant="body" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
           <code>{code}</code>
         </Text>
       ) : null}

@@ -10,7 +10,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: '14px' }}>
       <SectionLabel as="span" label="SESSIONS PER WEEK" aside={v.chartRangeLabel} />
-      <Text variant="caption" as="p" tone="muted" style={{ margin: '8px 0 0' }}>
+      <Text variant="body" as="p" tone="muted" style={{ margin: '8px 0 0' }}>
         {v.chartCaption}
       </Text>
       <div

@@ -32,7 +32,7 @@
 
 .label {
   min-width: 0;
-  font-size: var(--text-md);
+  font-size: var(--text-base);
   line-height: var(--leading-base);
   color: var(--color-slate);
   text-wrap: pretty;
@@ -43,7 +43,7 @@
   margin: 6px 0 0;
   padding-left: calc(20px + var(--space-3));
   font-family: var(--font-body);
-  font-size: var(--text-md);
+  font-size: var(--text-base);
   color: var(--color-muted);
   text-wrap: pretty;
 }

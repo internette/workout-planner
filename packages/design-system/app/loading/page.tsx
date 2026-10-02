@@ -34,7 +34,7 @@ function Sample({ label, children }: { label: string; children: ReactNode }) {
   return (
     <figure style={{ margin: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
       {children}
-      <Text variant="caption" tone="muted" as="figcaption">
+      <Text variant="body" tone="muted" as="figcaption">
         {label}
       </Text>
     </figure>
@@ -76,7 +76,7 @@ export default function LoadingPage() {
             <Mark size={60} />
           </Sample>
         </div>
-        <Text variant="caption" tone="muted" as="p" style={{ margin: '12px 0 0' }}>
+        <Text variant="body" tone="muted" as="p" style={{ margin: '12px 0 0' }}>
           <code>{"import { Mark } from '@moonshot/design-system/brand'"}</code> · <code>{'<Mark size={60} animate />'}</code>
         </Text>
       </Card>

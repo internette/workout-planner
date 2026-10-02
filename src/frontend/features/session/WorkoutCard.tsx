@@ -81,7 +81,7 @@ function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
         </Text>
         <span style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
           <SetPips pips={now.pips} />
-          <Text variant="caption" tone="slate" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <Text variant="body" tone="slate" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {now.label}
           </Text>
         </span>
@@ -91,7 +91,7 @@ function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
           Done set
         </Button>
       ) : now.paused ? (
-        <Text variant="caption" tone="muted">
+        <Text variant="body" tone="muted">
           Paused
         </Text>
       ) : null}
@@ -121,7 +121,7 @@ function RestSection({ v }: { v: PlannerVals }) {
             <Text variant="subheading" as="div" style={{ marginTop: '4px' }}>
               {v.restNextName}
             </Text>
-            <Text variant="caption" tone="muted" as="div" style={{ marginTop: '2px' }}>
+            <Text variant="body" tone="muted" as="div" style={{ marginTop: '2px' }}>
               {v.restNextLine}
             </Text>
           </div>

@@ -27,7 +27,7 @@ export function EquipmentPicker({ id, open, onToggle, summary, groups }: Equipme
       </DisclosureRow>
       {open ? (
         <div id={id} role="group" aria-label="Equipment" style={{ padding: '4px 2px 0' }}>
-          <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
             Leave it empty for a bodyweight exercise.
           </Text>
           {groups.map((g) => (

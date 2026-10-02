@@ -34,7 +34,7 @@
 /* Segments are drawn 33–40 px tall; the tap area is 44 (the shared .hit in base.css). */
 .segment { composes: hit from global; }
 
-.segment-sm { padding: 9px 16px; border-radius: var(--radius-sm); font-size: var(--text-md); }
+.segment-sm { padding: 9px 16px; border-radius: var(--radius-sm); font-size: var(--text-base); }
 .segment-md { padding: 12px 20px; border-radius: var(--radius-sm); font-size: var(--text-base); }
 
 .tone-brand .selected { background: var(--color-accent); color: var(--color-on-accent); }

@@ -42,7 +42,7 @@ export default function ColorsPage() {
                   <strong style={{ fontSize: 'var(--text-base)' }}>{name}</strong>
                   <code style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)' }}>{hex}</code>
                   <code style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)' }}>var({cssVarName(name)})</code>
-                  <span style={{ fontSize: 'var(--text-md)', color: 'var(--color-slate)', lineHeight: 'var(--leading-base)' }}>{use}</span>
+                  <span style={{ fontSize: 'var(--text-base)', color: 'var(--color-slate)', lineHeight: 'var(--leading-base)' }}>{use}</span>
                 </div>
               </div>
             ))}
@@ -65,7 +65,7 @@ export default function ColorsPage() {
               <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <strong style={{ fontSize: 'var(--text-base)' }}>{name}</strong>
                 <code style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)' }}>var({variable})</code>
-                <span style={{ fontSize: 'var(--text-md)', color: 'var(--color-slate)', lineHeight: 'var(--leading-base)' }}>{use}</span>
+                <span style={{ fontSize: 'var(--text-base)', color: 'var(--color-slate)', lineHeight: 'var(--leading-base)' }}>{use}</span>
                 <code style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)', wordBreak: 'break-word' }}>{value}</code>
               </div>
             </div>

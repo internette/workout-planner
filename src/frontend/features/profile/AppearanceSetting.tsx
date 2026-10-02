@@ -34,7 +34,7 @@ export function AppearanceSetting() {
             Colour
           </Text>
           {/* The chosen one's name: the swatches alone only say it on hover. */}
-          <Text variant="caption" as="div" tone="muted" style={{ marginTop: '2px' }}>
+          <Text variant="body" as="div" tone="muted" style={{ marginTop: '2px' }}>
             {(ACCENTS.find((a) => a.name === accent) || ACCENTS[0]).label}
           </Text>
         </div>

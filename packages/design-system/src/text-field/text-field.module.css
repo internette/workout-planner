@@ -28,7 +28,7 @@
 }
 .control:focus-within { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
 .control.invalid { outline: 2px solid var(--color-danger); outline-offset: 0; }
-.suffix { flex: none; font-size: var(--text-md); font-weight: var(--font-weight-semibold); color: var(--color-muted); }
+.suffix { flex: none; font-size: var(--text-base); font-weight: var(--font-weight-semibold); color: var(--color-muted); }
 
 /* The input itself: no chrome of its own inside a control, and reset everywhere else. */
 .input {
@@ -50,7 +50,7 @@
   flex: 1;
   min-height: 36px;
   padding: 8px 0;
-  font-size: var(--text-md);
+  font-size: var(--text-base);
   font-weight: var(--font-weight-semibold);
   color: var(--color-slate);
 }

@@ -232,7 +232,7 @@ export function calendarStage(ctx: EntriesCtx) {
         : '',
       isToday: today ? ('date' as const) : false,
       num:
-        "font-family:var(--font-heading);font-size:var(--text-md);font-weight:" +
+        "font-family:var(--font-heading);font-size:var(--text-base);font-weight:" +
         (a ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)') +
         ';color:' +
         (sel ? 'var(--color-on-accent)' : missed ? 'var(--color-muted)' : a ? 'var(--color-ink)' : 'var(--color-muted)'),

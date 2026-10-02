@@ -33,7 +33,7 @@ export function SessionProgress({ label, pct, allDone, note, bare, children }: S
           display: 'flex',
           alignItems: 'center',
           gap: '7px',
-          fontSize: 'var(--text-md)',
+          fontSize: 'var(--text-base)',
           fontWeight: allDone ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)',
           color: allDone ? 'var(--color-accent-deep)' : 'var(--color-muted)',
         }}

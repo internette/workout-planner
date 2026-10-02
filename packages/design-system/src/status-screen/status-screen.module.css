@@ -73,7 +73,7 @@
   background: var(--color-surface);
   box-shadow: var(--elevation-hairline);
   font-family: ui-monospace, Menlo, monospace;
-  font-size: var(--text-md);
+  font-size: var(--text-base);
   line-height: var(--leading-base);
   color: var(--color-slate);
 }

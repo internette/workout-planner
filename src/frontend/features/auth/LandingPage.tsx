@@ -199,17 +199,17 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                   <Text variant="subheading" as="div" style={{ marginTop: 4 }}>
                     Break the illusion
                   </Text>
-                  <Text variant="caption" tone="muted" as="div" style={{ marginTop: 3 }}>
+                  <Text variant="body" tone="muted" as="div" style={{ marginTop: 3 }}>
                     The illusion broke. It was never impossible.
                   </Text>
                 </div>
               </div>
               <ProgressBar value={100} style={{ marginTop: 18 }} />
               <div className={styles.progressRow}>
-                <Text variant="caption" tone="accent" weight="semibold">
+                <Text variant="body" tone="accent" weight="semibold">
                   5 of 5 done
                 </Text>
-                <Text variant="caption" tone="muted">
+                <Text variant="body" tone="muted">
                   Upper Body Push
                 </Text>
               </div>
@@ -237,12 +237,12 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                   <Text variant="label" className={styles.rankName}>
                     {r.name}
                   </Text>
-                  <Text variant="caption" weight="bold" tone="muted" style={{ fontFamily: 'var(--font-heading)' }}>
+                  <Text variant="body" weight="bold" tone="muted" style={{ fontFamily: 'var(--font-heading)' }}>
                     {r.need}
                   </Text>
                 </div>
               ))}
-              <Text variant="caption" tone="muted" className={styles.more}>
+              <Text variant="body" tone="muted" className={styles.more}>
                 …and {RANKS.length - LADDER.length} more above these.
               </Text>
             </div>
@@ -270,7 +270,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
       <footer className={styles.footer}>
         <div className={styles.footerRow}>
           <Lockup height={24} />
-          <Text variant="caption" tone="muted">
+          <Text variant="body" tone="muted">
             A training plan with a transformation sequence.
           </Text>
         </div>

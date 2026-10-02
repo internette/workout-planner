@@ -27,7 +27,7 @@ export function WorkoutRow({ workout }: { workout: any }) {
           {workout?.name}
         </Text>
         <Text
-          variant="caption"
+          variant="body"
           tone="muted"
           style={{ display: 'block', marginTop: '3px' }}
         >

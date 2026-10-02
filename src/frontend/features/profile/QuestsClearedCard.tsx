@@ -15,7 +15,7 @@ export function QuestsClearedCard({ v }: { v: PlannerVals }) {
         {...(v.questsHas ? { note: v.allTimeLabel, value: v.questsClearedLabel } : { aside: v.allTimeLabel })}
       />
       {v.questsNone ? (
-        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
+        <Text variant="body" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
           Every day with a session gets a quest. The ones you clear gather here.
         </Text>
       ) : null}

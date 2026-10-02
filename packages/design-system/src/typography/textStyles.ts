@@ -40,13 +40,12 @@ export const textStyles = {
   },
   figure: {
     family: 'heading',
-    size: 'md',
+    size: 'base',
     weight: 'bold',
     use: 'A small number beside a bar or a label: 1 of 4, 72%',
   },
-  body: { family: 'body', size: 'base', weight: 'regular', use: 'Paragraphs' },
+  body: { family: 'body', size: 'base', weight: 'regular', use: 'Paragraphs, and with tone="muted" secondary text under a title' },
   label: { family: 'body', size: 'base', weight: 'medium', use: 'Names and values in rows' },
-  caption: { family: 'body', size: 'md', weight: 'regular', use: 'Secondary text under a title' },
   small: { family: 'body', size: 'sm', weight: 'regular', use: 'Helper text and fine print' },
   micro: {
     family: 'body',

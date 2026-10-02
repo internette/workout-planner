@@ -53,7 +53,7 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
                     <Text variant="subheading" as="span" tone="ink" style={{ display: 'block' }}>
                       {u.name}
                     </Text>
-                    <Text variant="caption" as="span" tone="muted" style={{ display: 'block', marginTop: '1px' }}>
+                    <Text variant="body" as="span" tone="muted" style={{ display: 'block', marginTop: '1px' }}>
                       {u.meta}
                     </Text>
                   </span>

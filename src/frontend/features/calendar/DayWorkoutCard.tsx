@@ -199,7 +199,7 @@ function FoldedCard({ card }: { card: any }) {
           <Text variant="subheading" as="span" style={{ display: 'block' }}>
             {t(card?.name)}
           </Text>
-          <Text variant="caption" as="span" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
+          <Text variant="body" as="span" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
             {card?.meta}
           </Text>
         </span>

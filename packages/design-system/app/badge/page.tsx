@@ -32,7 +32,7 @@ export default function BadgePage() {
             Planned
           </Badge>
         </div>
-        <Text variant="caption" as="p" tone="muted" style={{ margin: '12px 0 0' }}>
+        <Text variant="body" as="p" tone="muted" style={{ margin: '12px 0 0' }}>
           accent · soft · neutral · quiet (outlined here only so it shows on white)
         </Text>
       </Card>

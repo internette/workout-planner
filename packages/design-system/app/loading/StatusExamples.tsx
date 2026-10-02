@@ -31,7 +31,7 @@ export function StatusExamples() {
               detail={s.kind === 'error' ? 'Failed to fetch' : undefined}
             />
           </Card>
-          <Text variant="caption" tone="muted" as="figcaption" style={{ textAlign: 'center' }}>
+          <Text variant="body" tone="muted" as="figcaption" style={{ textAlign: 'center' }}>
             {s.label}
           </Text>
         </figure>

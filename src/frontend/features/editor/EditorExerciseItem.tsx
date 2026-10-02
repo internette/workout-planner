@@ -55,7 +55,7 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
           {exercise?.name}
         </Text>
             {!exercise?.expanded ? (
-              <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
+              <Text variant="body" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
                 {exercise?.detail}
               </Text>
             ) : null}

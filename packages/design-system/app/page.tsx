@@ -47,7 +47,7 @@ export default function DesignSystemPage() {
           <Text variant="heading" tone="ink" as="h2" style={{ margin: 0 }}>
             {categories[category].title}
           </Text>
-          <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 16px' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 16px' }}>
             {categories[category].description}
           </Text>
           <div className={styles.grid}>
@@ -64,7 +64,7 @@ export default function DesignSystemPage() {
                     <Text variant="subheading" tone="ink" as="h3" style={{ margin: 0 }}>
                       {s.title}
                     </Text>
-                    <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+                    <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
                       {s.description}
                     </Text>
                   </Card>
@@ -80,7 +80,7 @@ export default function DesignSystemPage() {
           <Text variant="heading" tone="ink" as="h2" style={{ margin: 0 }}>
             Not yet organised
           </Text>
-          <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 12px' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 12px' }}>
             These folders in <code>packages/design-system/src</code> are not in <code>packages/design-system/app/registry.ts</code> yet.
           </Text>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -100,7 +100,7 @@ export default function DesignSystemPage() {
             <Text variant="subheading" tone="ink" as="h3" style={{ margin: 0 }}>
               Import a component
             </Text>
-            <Text variant="caption" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
+            <Text variant="body" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
               Everything lives in <code>packages/design-system</code>, one entry per section:{' '}
               <code>{"import { Button } from '@moonshot/design-system/buttons'"}</code>.
             </Text>
@@ -109,16 +109,16 @@ export default function DesignSystemPage() {
             <Text variant="subheading" tone="ink" as="h3" style={{ margin: 0 }}>
               Use the tokens
             </Text>
-            <Text variant="caption" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
+            <Text variant="body" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
               Colours and type are CSS variables on <code>:root</code>, such as <code>var(--color-pink)</code> and{' '}
-              <code>var(--text-md)</code>. Avoid raw hex values and pixel sizes.
+              <code>var(--text-base)</code>. Avoid raw hex values and pixel sizes.
             </Text>
           </Card>
           <Card pad="sm">
             <Text variant="subheading" tone="ink" as="h3" style={{ margin: 0 }}>
               Add a section
             </Text>
-            <Text variant="caption" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
+            <Text variant="body" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
               Create a folder in the package&apos;s <code>src</code> and list it in its <code>package.json</code> exports, add
               its page at <code>app/&lt;name&gt;/page.tsx</code>, then list it in <code>registry.ts</code> so it appears here
               and in the sidebar.
@@ -133,7 +133,7 @@ export default function DesignSystemPage() {
           <Text variant="heading" tone="ink" as="h2" style={{ margin: 0 }}>
             Planned
           </Text>
-          <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 16px' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 16px' }}>
             Candidates for what to build next: patterns the planner still builds by hand.
           </Text>
           <div className={styles.grid}>
@@ -142,7 +142,7 @@ export default function DesignSystemPage() {
                 <Text variant="subheading" tone="ink" as="h3" style={{ margin: 0 }}>
                   {p.title}
                 </Text>
-                <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+                <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
                   {p.why}
                 </Text>
               </Card>

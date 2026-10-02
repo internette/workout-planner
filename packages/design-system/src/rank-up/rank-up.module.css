@@ -148,7 +148,7 @@
 }
 .sub {
   margin: 0;
-  font-size: var(--text-md);
+  font-size: var(--text-base);
   color: rgba(255, 255, 255, 0.75);
   animation: rise 0.7s ease-out 2.05s both;
 }

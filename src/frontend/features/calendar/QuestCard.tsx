@@ -53,7 +53,7 @@ export function QuestCard({ v }: { v: PlannerVals }) {
           {v.questTitle}
         </Text>
         <Text
-          variant="caption"
+          variant="body"
           as="div"
           tone="slateDeep"
           style={{

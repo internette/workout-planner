@@ -34,7 +34,7 @@ export default function TypographyPage() {
     <DocPage title="Typography">
       <p style={{ margin: '8px 0 0', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' }}>
         Two families, twelve sizes, four weights, and sixteen named text styles built from them. Each token is
-        a CSS variable, for example <code>var(--text-md)</code> or <code>var(--font-weight-bold)</code>.
+        a CSS variable, for example <code>var(--text-base)</code> or <code>var(--font-weight-bold)</code>.
       </p>
 
       <h2 id="text-styles" style={h2}>Text styles</h2>

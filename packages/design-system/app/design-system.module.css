@@ -74,7 +74,7 @@
   display: block;
   padding: 6px 10px;
   border-radius: var(--radius-xs);
-  font-size: var(--text-md);
+  font-size: var(--text-base);
   font-weight: var(--font-weight-medium);
   color: var(--color-muted);
   text-decoration: none;
@@ -159,7 +159,7 @@
   display: block;
   padding: 8px;
   border-radius: var(--radius-sm);
-  font-size: var(--text-md);
+  font-size: var(--text-base);
   font-weight: var(--font-weight-medium);
   color: var(--color-muted);
   text-decoration: none;
@@ -220,4 +220,4 @@
   background: var(--color-canvas);
   border-radius: var(--radius-md);
 }
-.download { font-size: var(--text-md); font-weight: var(--font-weight-semibold); color: var(--color-pink-deep); }
+.download { font-size: var(--text-base); font-weight: var(--font-weight-semibold); color: var(--color-pink-deep); }

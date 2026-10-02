@@ -37,7 +37,7 @@ export function ChronicleRow({ entry }: { entry: any }) {
         </span>
         {entry?.note ? (
           <Text
-            variant="caption"
+            variant="body"
             tone="muted"
             // One line; a longer note ends in "…", and reads in full on the entry.
             style={{ display: 'block', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}

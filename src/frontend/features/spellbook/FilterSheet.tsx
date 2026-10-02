@@ -29,7 +29,7 @@ export function FilterButton({ v }: { v: PlannerVals }) {
           borderRadius: 'var(--radius-md)',
           boxShadow: 'var(--elevation-hairline)',
           fontFamily: 'inherit',
-          fontSize: 'var(--text-md)',
+          fontSize: 'var(--text-base)',
           fontWeight: 'var(--font-weight-bold)',
           color: 'var(--color-ink)',
           cursor: 'pointer',
@@ -125,7 +125,7 @@ function FilterSheet({ v }: { v: PlannerVals }) {
           <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: '2px' }}>
             EQUIPMENT YOU HAVE
           </Text>
-          <Text variant="caption" tone="muted" as="p" style={{ margin: '0 0 4px' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: '0 0 4px' }}>
             Shows what you can do with what you tick. Bodyweight exercises always show. Kept on this device.
           </Text>
           <EquipmentGroups v={v} />
@@ -146,7 +146,7 @@ function EquipmentGroups({ v }: { v: PlannerVals }) {
               {g.label}
             </Text>
             <Text
-              variant="caption"
+              variant="body"
               as="span"
               tone="accent"
               weight="semibold"

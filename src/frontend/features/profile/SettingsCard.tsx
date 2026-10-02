@@ -13,7 +13,7 @@ export function SettingsCard({ title, note, danger, children }: { title: string;
       <Text variant="micro" as="h2" tone={danger ? 'danger' : 'slate'} style={{ margin: 0 }}>
         {title}
         {note ? (
-          <Text variant="caption" tone="muted" style={{ letterSpacing: 'var(--tracking-base)', textTransform: 'none', fontWeight: 'var(--font-weight-regular)' }}>
+          <Text variant="body" tone="muted" style={{ letterSpacing: 'var(--tracking-base)', textTransform: 'none', fontWeight: 'var(--font-weight-regular)' }}>
             {' · ' + note}
           </Text>
         ) : null}

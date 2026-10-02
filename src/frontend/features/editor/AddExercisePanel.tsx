@@ -44,7 +44,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px 8px', marginTop: '8px' }}>
               {v.libraryFilterNote ? (
                 <>
-                  <Text variant="caption" tone="muted">
+                  <Text variant="body" tone="muted">
                     {v.libraryFilterNote}
                   </Text>
                   <Button type="secondary" ghost size="xs" onClick={v.libraryShowAll}>
@@ -111,7 +111,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
                   >
                     {l?.name}
                   </span>
-                  <Text variant="caption" tone="muted">
+                  <Text variant="body" tone="muted">
                     {l?.detail}
                   </Text>
                 </span>
@@ -130,12 +130,12 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
             </div>
           ))}
           {v.libraryEmpty ? (
-            <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+            <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
               {v.libraryEmptyNote}
             </Text>
           ) : null}
           {v.libraryMore ? (
-            <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+            <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
               {v.libraryMore}
             </Text>
           ) : null}
@@ -173,7 +173,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
       ) : null}
       <FormActions compact>
         {v.addNew && v.draftHint ? (
-          <Text variant="caption" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
             {v.draftHint}
           </Text>
         ) : null}

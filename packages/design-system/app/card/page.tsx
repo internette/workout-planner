@@ -9,7 +9,7 @@ export const metadata = { title: 'Card — Design system' };
 
 const grid: React.CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 };
 const title: React.CSSProperties = { fontFamily: 'var(--font-heading)', fontWeight: 'var(--font-weight-bold)', fontSize: 'var(--text-lg)' };
-const body: React.CSSProperties = { margin: '6px 0 0', fontSize: 'var(--text-md)', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' };
+const body: React.CSSProperties = { margin: '6px 0 0', fontSize: 'var(--text-base)', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)' };
 const row: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
@@ -120,7 +120,7 @@ export default function CardPage() {
                     <Text variant="subheading" as="span" tone="ink" style={{ display: 'block' }}>
                       {r.name}
                     </Text>
-                    <Text variant="caption" as="span" tone="muted" style={{ display: 'block', marginTop: 1 }}>
+                    <Text variant="body" as="span" tone="muted" style={{ display: 'block', marginTop: 1 }}>
                       {r.meta}
                     </Text>
                   </span>

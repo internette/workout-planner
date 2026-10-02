@@ -64,7 +64,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
           </Checkbox>
           {v.showRepeatDays ? <RepeatDays v={v} /> : null}
           {v.daysNote ? (
-            <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+            <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
               {v.daysNote}
             </Text>
           ) : null}
@@ -97,7 +97,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
         <>
           {v.inSeries ? (
             <Card pad="sm" style={{ marginTop: '16px' }}>
-              <Text variant="caption" tone="muted" as="p" style={{ margin: 0 }}>
+              <Text variant="body" tone="muted" as="p" style={{ margin: 0 }}>
                 {v.seriesNote}
               </Text>
             </Card>
@@ -123,7 +123,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
           <Checkbox switch checked={!!v.warmupOn} onChange={v.setWarmup}>
             Warm-up
           </Checkbox>
-          <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
             Listed before the other workouts on its day, and tagged as a warm-up.
           </Text>
         </Card>
@@ -213,7 +213,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       </div>
       <FormActions>
         {v.saveHint ? (
-          <Text variant="caption" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
             {v.saveHint}
           </Text>
         ) : null}

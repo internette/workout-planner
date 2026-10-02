@@ -10,7 +10,7 @@ export function PersonalBestsCard({ v, style }: { v: PlannerVals; style?: CSSPro
     <Card style={style}>
       <SectionLabel as="span" label="PERSONAL BESTS" aside={v.allTimeLabel} />
       {v.recordsEmpty ? (
-        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
+        <Text variant="body" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
           Tick off an exercise with a weight, or finish a ride, and your bests show up here.
         </Text>
       ) : null}

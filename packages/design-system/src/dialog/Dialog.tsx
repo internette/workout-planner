@@ -103,7 +103,7 @@ function DialogPanel({ onClose, title, aside, closeButton = true, description, a
           {title}
         </Text>
         {aside ? (
-          <Text variant="caption" tone="muted" weight="medium">
+          <Text variant="body" tone="muted" weight="medium">
             {aside}
           </Text>
         ) : null}

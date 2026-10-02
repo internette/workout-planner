@@ -21,7 +21,7 @@ export function SessionExerciseRow({ exercise }: { exercise: any }) {
           {exercise?.name}
         </Text>
         <Text
-          variant="caption"
+          variant="body"
           tone="muted"
           style={{ display: 'block', marginTop: '3px' }}
         >
@@ -34,7 +34,7 @@ export function SessionExerciseRow({ exercise }: { exercise: any }) {
       {exercise?.showSets ? (
         <div style={{ flex: '1 1 100%', display: 'flex', alignItems: 'center', gap: '12px', paddingLeft: 'calc(34px + 13px)' }}>
           <SetPips pips={exercise.setPips as boolean[]} />
-          <Text variant="caption" tone="slate" style={{ flex: '1 1 auto', fontVariantNumeric: 'tabular-nums' }}>
+          <Text variant="body" tone="slate" style={{ flex: '1 1 auto', fontVariantNumeric: 'tabular-nums' }}>
             {exercise.setsLabel}
           </Text>
         </div>
