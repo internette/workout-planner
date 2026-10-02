@@ -122,10 +122,10 @@ export default function InteractionPage() {
         changed. Something that moves in a list, or appears after an action, is announced in words.
       </p>
 
-      <h2 id="forced-colours" style={h2}>Forced colours</h2>
+      <h2 id="forced-colors" style={h2}>Forced colors</h2>
       <p style={note}>
-        Windows High Contrast and other forced-colour modes drop backgrounds and shadows, which is how this interface
-        draws buttons and selection. <code>app/planner.css</code> puts them back in system colours:
+        Windows High Contrast and other forced-color modes drop backgrounds and shadows, which is how this interface
+        draws buttons and selection. <code>app/planner.css</code> puts them back in system colors:
       </p>
       <ul style={list}>
         <li>Every button, tab and radio gets a 1px <code>ButtonText</code> outline, drawn inside so nothing moves.</li>
@@ -134,16 +134,16 @@ export default function InteractionPage() {
           focus a 3px <code>Highlight</code> ring.
         </li>
         <li>
-          Where colour is the meaning, keep it: wrap it in <code>fc-keep</code>. The mood faces use it, so Happy stays
+          Where color is the meaning, keep it: wrap it in <code>fc-keep</code>. The mood faces use it, so Happy stays
           pink and Mad stays red.
         </li>
         <li>
           Rating stars can&apos;t keep their gradient, so a star inside <code>data-star</code> or <code>fc-star</code>{' '}
-          fills with the text colour when it has <code>data-on</code>, and greyed text colour when it doesn&apos;t.
+          fills with the text color when it has <code>data-on</code>, and greyed text color when it doesn&apos;t.
         </li>
       </ul>
       <p style={note}>
-        To check a screen, turn on forced colours in Chrome&apos;s DevTools (Rendering → Emulate CSS media feature
+        To check a screen, turn on forced colors in Chrome&apos;s DevTools (Rendering → Emulate CSS media feature
         forced-colors).
       </p>
     </DocPage>

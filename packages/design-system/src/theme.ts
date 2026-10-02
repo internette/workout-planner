@@ -1,6 +1,6 @@
-// The app's look: light (the default) or dark, in pink (the default) or one of four other colours. Chosen in Profile →
+// The app's look: light (the default) or dark, in pink (the default) or one of four other colors. Chosen in Profile →
 // Settings and remembered in this browser. Applied as <html data-theme="dark"> and <html data-accent="teal">, which
-// switch the colour, shadow and hover tokens.
+// switch the color, shadow and hover tokens.
 import { ACCENTS, PAGE_COLORS, type Accent } from './colors/themes';
 
 export type Theme = 'light' | 'dark';
@@ -8,7 +8,7 @@ export type { Accent };
 
 export const THEME_KEY = 'moonshot.theme';
 export const ACCENT_KEY = 'moonshot.accent';
-// The browser chrome (address bar, status bar) takes the page colour of each theme.
+// The browser chrome (address bar, status bar) takes the page color of each theme.
 const PAGE: Record<Accent, Record<Theme, string>> = PAGE_COLORS;
 
 const read = (key: string) => {
@@ -52,7 +52,7 @@ export function setTheme(theme: Theme) {
   applyLook(theme, savedAccent());
 }
 
-/** Saves the colour for this browser and applies it. */
+/** Saves the color for this browser and applies it. */
 export function setAccent(accent: Accent) {
   write(ACCENT_KEY, accent === 'pink' ? null : accent);
   applyLook(savedTheme(), accent);

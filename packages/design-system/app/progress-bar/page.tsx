@@ -59,7 +59,7 @@ export default function ProgressBarPage() {
 
       <h2 id="fills" style={h2}>Fills</h2>
       <p style={note}>
-        The gem gradient by default. Give <code>fill</code> a colour when each bar stands for something with its own,
+        The gem gradient by default. Give <code>fill</code> a color when each bar stands for something with its own,
         like Progress&apos;s mood split.
       </p>
       <Card pad="md">
@@ -102,8 +102,8 @@ export default function ProgressBarPage() {
       <p style={note}>
         When the number is written beside the bar, as it usually is, the bar is only a picture of it and screen readers
         skip it. Give it a <code>label</code> (and a <code>valueText</code> such as &ldquo;3 of 4 done&rdquo;) when it
-        stands alone: it then reads as a progress bar with its value. In forced colours the track is outlined and the
-        fill drawn in the system highlight colour, since backgrounds are dropped.
+        stands alone: it then reads as a progress bar with its value. In forced colors the track is outlined and the
+        fill drawn in the system highlight color, since backgrounds are dropped.
       </p>
     </DocPage>
   );

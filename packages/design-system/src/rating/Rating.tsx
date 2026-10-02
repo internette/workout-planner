@@ -88,7 +88,7 @@ export interface MoodRatingProps {
   className?: string;
 }
 
-/** Four faces, Happy to Mad, each on its colour with its name beneath. Once one is picked, the others step back. */
+/** Four faces, Happy to Mad, each on its color with its name beneath. Once one is picked, the others step back. */
 export function MoodRating({ label, value, onChange, style, className }: MoodRatingProps) {
   const current = MOODS.indexOf(value as Mood);
   const { group, onKeyDown } = useRadioKeys(MOODS.length, current, (i) => onChange(MOODS[i]));

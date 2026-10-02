@@ -95,7 +95,7 @@
   opacity: 0;
   animation: gemForm 0.75s cubic-bezier(0.2, 1.4, 0.4, 1) 1.15s both;
 }
-/* Facets: a light top face and a darker lower right face over the rank's own colour. */
+/* Facets: a light top face and a darker lower right face over the rank's own color. */
 .gem::after {
   content: '';
   position: absolute;

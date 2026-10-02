@@ -9,7 +9,7 @@ import { savedAccent, savedTheme, setAccent, setTheme, type Accent, type Theme }
 
 const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', marginTop: '14px' };
 
-/** Settings → Appearance: the colour and light or dark. Saved in this browser and applied at once (its card says so). */
+/** Settings → Appearance: the color and light or dark. Saved in this browser and applied at once (its card says so). */
 export function AppearanceSetting() {
   const [theme, setThemeState] = useState<Theme>('light');
   const [accent, setAccentState] = useState<Accent>('pink');
@@ -30,8 +30,8 @@ export function AppearanceSetting() {
     <>
       <div style={row}>
         <div style={{ flex: '1 1 120px', minWidth: 0 }}>
-          <Text variant="strong" as="div" tone="ink" id="colour-label">
-            Colour
+          <Text variant="strong" as="div" tone="ink" id="color-label">
+            Color
           </Text>
           {/* The chosen one's name: the swatches alone only say it on hover. */}
           <Text variant="body" as="div" tone="muted" style={{ marginTop: '2px' }}>
@@ -39,7 +39,7 @@ export function AppearanceSetting() {
           </Text>
         </div>
         <IconChoiceGroup
-          labelledBy="colour-label"
+          labelledBy="color-label"
           kind="swatch"
           shape="round"
           style={{ flexWrap: 'nowrap', gap: '6px' }}
@@ -47,7 +47,7 @@ export function AppearanceSetting() {
             value: a.name,
             label: a.label,
             color: a.swatch,
-            // The tick is the theme's own colour for things on its accent.
+            // The tick is the theme's own color for things on its accent.
             checkColor: paletteFor('light', a.name).onAccent,
           }))}
           value={accent}

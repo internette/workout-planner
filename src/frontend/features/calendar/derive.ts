@@ -148,7 +148,7 @@ export function calendarStage(ctx: EntriesCtx) {
       yoga: !!a.yoga,
       done: isDoneEntry(a),
       meta: metaFor(a),
-      // The icon and colour chosen for the workout, as on the Day view's cards.
+      // The icon and color chosen for the workout, as on the Day view's cards.
       icoSvg: iconSvg(a.icon || (a.ride ? 'bike' : 'h'), a.iconColor || undefined),
       open: () =>
         logic.openSession(relM(d), d.getDate(), a.id),

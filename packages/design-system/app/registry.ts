@@ -23,7 +23,7 @@ export const categories: Record<Category, { title: string; description: string }
   },
   foundations: {
     title: 'Foundations',
-    description: 'The tokens everything else is built from: colour, type and icons.',
+    description: 'The tokens everything else is built from: color, type and icons.',
   },
   components: {
     title: 'Components',
@@ -60,7 +60,7 @@ export const sections: Section[] = [
     title: 'Colors',
     category: 'foundations',
     description: 'The palette as CSS variables, grouped by role.',
-    // One link per colour group; the page gives each group heading the same id.
+    // One link per color group; the page gives each group heading the same id.
     anchors: [
       ...Object.keys(colorGroups).map((title) => ({ id: title.toLowerCase().replace(/\s+/g, '-'), title })),
       { id: 'effects', title: 'Effects' },
@@ -70,7 +70,7 @@ export const sections: Section[] = [
     slug: 'themes',
     title: 'Themes',
     category: 'foundations',
-    description: 'The five colours, each in light and dark, side by side.',
+    description: 'The five colors, each in light and dark, side by side.',
     anchors: [
       { id: 'light', title: 'Light' },
       { id: 'dark', title: 'Dark' },
@@ -86,7 +86,7 @@ export const sections: Section[] = [
       { id: 'text', title: 'Text' },
       { id: 'labels-and-numbers', title: 'Labels and numbers' },
       { id: 'marketing', title: 'Marketing' },
-      { id: 'colour', title: 'Colour' },
+      { id: 'color', title: 'Color' },
       { id: 'emphasis', title: 'Emphasis' },
       { id: 'tokens', title: 'Tokens' },
     ],
@@ -123,13 +123,13 @@ export const sections: Section[] = [
     slug: 'interaction',
     title: 'Interaction',
     category: 'foundations',
-    description: 'Hover washes, the one focus ring, tap targets and forced colours.',
+    description: 'Hover washes, the one focus ring, tap targets and forced colors.',
     anchors: [
       { id: 'hover', title: 'Hover' },
       { id: 'focus', title: 'Focus' },
       { id: 'tap-targets', title: 'Tap targets' },
       { id: 'screen-readers', title: 'Screen readers' },
-      { id: 'forced-colours', title: 'Forced colours' },
+      { id: 'forced-colors', title: 'Forced colors' },
     ],
   },
   {
@@ -292,10 +292,10 @@ export const sections: Section[] = [
     slug: 'icon-choice-group',
     title: 'Icon choice group',
     category: 'components',
-    description: 'Pick one icon or colour from a set of pictures.',
+    description: 'Pick one icon or color from a set of pictures.',
     anchors: [
       { id: 'icons', title: 'Icons' },
-      { id: 'colours', title: 'Colours' },
+      { id: 'colors', title: 'Colors' },
       { id: 'round-swatches', title: 'Round swatches' },
       { id: 'in-a-popover', title: 'In a popover' },
       { id: 'behaviour', title: 'Behaviour' },

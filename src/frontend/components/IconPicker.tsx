@@ -18,13 +18,13 @@ export interface IconPickerProps {
   /** Names the icon choices, e.g. "Workout icon". */
   iconsLabel?: string;
   icons: Choice;
-  /** A workout's colour swatches, under the icons. */
+  /** A workout's color swatches, under the icons. */
   colors?: Choice;
   /** sm beside a row's title, md beside the page's. */
   size?: 'sm' | 'md';
 }
 
-/** An icon on its tile that opens a picker of icons (and for a workout, its colour). */
+/** An icon on its tile that opens a picker of icons (and for a workout, its color). */
 export function IconPicker({ open, onToggle, onClose, current, label, iconsLabel = 'Icon', icons, colors, size = 'md' }: IconPickerProps) {
   return (
     <Popover
@@ -43,7 +43,7 @@ export function IconPicker({ open, onToggle, onClose, current, label, iconsLabel
               <Text variant="micro" as="div" tone="slate" style={{ padding: '14px 2px 10px' }}>
                 Color
               </Text>
-              <IconChoiceGroup label="Icon colour" kind="swatch" {...colors} />
+              <IconChoiceGroup label="Icon color" kind="swatch" {...colors} />
             </>
           ) : null}
         </>

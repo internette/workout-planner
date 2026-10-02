@@ -89,7 +89,7 @@ export default function ThemesPage() {
   return (
     <DocPage title="Themes">
       <p style={{ ...note, marginTop: 8 }}>
-        Five colours, each with a light and a dark theme, picked on Profile → Settings. Every theme uses the same
+        Five colors, each with a light and a dark theme, picked on Profile → Settings. Every theme uses the same
         variables, so a component written with them (<code>var(--color-accent)</code>, not a hex) follows whichever is
         set. The theme is set on <code>&lt;html&gt;</code> as <code>data-accent</code> (left out for pink) and{' '}
         <code>data-theme=&quot;dark&quot;</code>; the panels below set the same attributes on themselves. The rest of
@@ -98,9 +98,9 @@ export default function ThemesPage() {
 
       <h2 id="light" style={h2}>Light</h2>
       <p style={note}>
-        The colour runs through the accent (buttons, rings, the selected tab), its tint (soft fills) and the page
+        The color runs through the accent (buttons, rings, the selected tab), its tint (soft fills) and the page
         background. The gem gradient starts from it; in teal it runs to pink instead, so it doesn&apos;t start and end
-        on the same colour.
+        on the same color.
       </p>
       <div style={grid}>
         {ACCENTS.map((a) => (
@@ -115,8 +115,8 @@ export default function ThemesPage() {
 
       <h2 id="dark" style={h2}>Dark</h2>
       <p style={note}>
-        Pink&apos;s dark theme is Plum dusk; each other colour has its own dark surfaces and text, tinted toward it. The
-        accent is lighter than in light, and text on it is the dark surface colour. Mood colours and the rank gems stay
+        Pink&apos;s dark theme is Plum dusk; each other color has its own dark surfaces and text, tinted toward it. The
+        accent is lighter than in light, and text on it is the dark surface color. Mood colors and the rank gems stay
         the same in every theme.
       </p>
       <div style={grid}>

@@ -3,7 +3,7 @@ import { accentThemeCss } from './themes';
 import { colorValues, compositeVariables, cssColor, cssVarName } from './tokens';
 import { themeScopeRule } from '../tokenVariables';
 
-// Publishes every colour, see-through colour and gradient token as a CSS variable on :root, and the dark theme's values under
+// Publishes every color, see-through color and gradient token as a CSS variable on :root, and the dark theme's values under
 // [data-theme="dark"] (on <html> in the app, or on a panel that previews a theme). Render once in the root layout.
 export function ColorVariables() {
   const light = [

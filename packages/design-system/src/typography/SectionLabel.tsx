@@ -12,7 +12,7 @@ export interface SectionLabelProps {
   value?: ReactNode;
   /** The label's element: a heading for the page's outline (h2 by default), or a span inside a card's top line. */
   as?: 'h2' | 'h3' | 'div' | 'span';
-  /** The label's colour. */
+  /** The label's color. */
   tone?: TextProps['tone'];
   /** Over a list of rows: a little inset, with room below before the first row. */
   list?: boolean;

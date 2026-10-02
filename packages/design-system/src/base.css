@@ -1,8 +1,8 @@
-/* The design system's global rules: the page's base type and colours, the focus ring, reduced motion, the tap-area
+/* The design system's global rules: the page's base type and colors, the focus ring, reduced motion, the tap-area
    and screen-reader helpers, shared keyframes, the hover washes (hv1–hv7, see /design-system/interaction) and
-   forced-colour modes. Import it once, in the root layout: import '@moonshot/design-system/base.css'. */
+   forced-color modes. Import it once, in the root layout: import '@moonshot/design-system/base.css'. */
 
-/* Base page type and colours. */
+/* Base page type and colors. */
 body {
   margin: 0;
   background: var(--color-canvas);
@@ -35,8 +35,8 @@ button { line-height: inherit; }
   50% { opacity: 1; transform: scale(1.15); }
 }
 
-/* The one focus ring. It sets nothing else: a control keeps its own shape, and its own focus colours where it has any
-   (Button's are its hover colours). */
+/* The one focus ring. It sets nothing else: a control keeps its own shape, and its own focus colors where it has any
+   (Button's are its hover colors). */
 button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible,
 summary:focus-visible, [tabindex]:focus-visible {
   outline: var(--focus-ring);
@@ -57,9 +57,9 @@ summary:focus-visible, [tabindex]:focus-visible {
 .hv6:hover{filter:brightness(.97) !important}
 .hv7:hover{background:var(--color-accent-tint) !important}
 
-/* Windows High Contrast and other forced-colour modes drop backgrounds and shadows, which is how selection and
-   buttons are drawn here. Give them outlines in system colours instead (outlines don't move anything), and keep the
-   real colours where colour is the meaning: filled against empty stars, and the mood faces. */
+/* Windows High Contrast and other forced-color modes drop backgrounds and shadows, which is how selection and
+   buttons are drawn here. Give them outlines in system colors instead (outlines don't move anything), and keep the
+   real colors where color is the meaning: filled against empty stars, and the mood faces. */
 @media (forced-colors: active) {
   button,
   [role='tab'],
@@ -92,7 +92,7 @@ summary:focus-visible, [tabindex]:focus-visible {
   .fc-star[data-on] {
     color: CanvasText !important;
   }
-  /* The stars are drawn in colour: in forced colours they take the text colour above instead. */
+  /* The stars are drawn in color: in forced colors they take the text color above instead. */
   [data-star] svg polygon,
   .fc-star svg polygon {
     fill: currentColor !important;

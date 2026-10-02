@@ -215,8 +215,8 @@ packages/
     src/              Tokens and components, one folder per section: colors, typography, elevation, radii, spacing, motion,
                       interaction, icons, buttons, card, chip, dialog, popover, text-field, rank-up (the transformation),
                       status-screen (loading, slow and error)…
-                      Plus brand (the mark and lockup), theme.ts (light or dark and the accent colour, saved in this
-                      browser) and base.css (base type, focus ring, hover washes, forced colours). No Next.js or app code
+                      Plus brand (the mark and lockup), theme.ts (light or dark and the accent color, saved in this
+                      browser) and base.css (base type, focus ring, hover washes, forced colors). No Next.js or app code
     app/              The design-system site, its own Next.js app served at /design-system (basePath): overview, sidebar and
                       a page per section (registry.ts lists them; docs.tsx is the frame and text styles they share)
     public/brand/     The brand artwork: lockup, mark, favicon and app icon
@@ -228,7 +228,7 @@ supabase/migrations/  SQL to run in the Supabase SQL editor
 
 Ticks update the screen immediately. Other saves (creating or editing a workout, diary entries, deletes, the Spellbook) are written to Supabase first. When the writes finish, the model is reloaded and the UI state cleared. Writes run in order, and a failed one shows a dismissible error banner.
 
-**The screens started as the design's HTML.** They were converted from the design's template by a one-off script, then split into one `…Screen.tsx` per screen in its feature's folder; all of it is ordinary source now, so edit it directly. Colours and type are CSS variables such as `var(--color-pink)` and `var(--text-md)` (defined in the design system's `colors` and `typography`). Hover styles from the design are the `.hvN:hover` rules in the design system's `base.css`, and elements use them by class name.
+**The screens started as the design's HTML.** They were converted from the design's template by a one-off script, then split into one `…Screen.tsx` per screen in its feature's folder; all of it is ordinary source now, so edit it directly. Colors and type are CSS variables such as `var(--color-pink)` and `var(--text-md)` (defined in the design system's `colors` and `typography`). Hover styles from the design are the `.hvN:hover` rules in the design system's `base.css`, and elements use them by class name.
 
 ## Limitations
 

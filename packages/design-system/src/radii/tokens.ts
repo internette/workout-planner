@@ -5,7 +5,7 @@ import { toVariables, type Token } from '../tokenVariables';
 
 export const radii = {
   xs: { value: '8px', use: 'The smallest controls: Button xs, IconButton xs and the Checkbox box' },
-  sm: { value: '12px', use: 'IconButton sm to lg, TextField, SegmentedControl segments, IconTile sm, colour swatches, the drag grip, and the focus ring on plain elements' },
+  sm: { value: '12px', use: 'IconButton sm to lg, TextField, SegmentedControl segments, IconTile sm, color swatches, the drag grip, and the focus ring on plain elements' },
   md: { value: '16px', use: 'Button sm to lg, the SegmentedControl tray, OptionCard, IconTile md, icon picker tiles, rating stars and the tab bar’s tabs' },
   lg: { value: '20px', use: 'Card, TextArea, the sidebar and the quest cards' },
   xl: { value: '24px', use: 'Card overlay: dialogs, menus and popovers' },

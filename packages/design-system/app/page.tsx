@@ -33,7 +33,7 @@ export default function DesignSystemPage() {
         Design system
       </Text>
       <Text variant="body" tone="muted" as="p" style={{ margin: '10px 0 0', maxWidth: 560 }}>
-        The colours, type and components the planner is built from. Start with the foundations, then the components
+        The colors, type and components the planner is built from. Start with the foundations, then the components
         that use them. Each section has live examples and the props it takes.
       </Text>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 16 }}>
@@ -110,7 +110,7 @@ export default function DesignSystemPage() {
               Use the tokens
             </Text>
             <Text variant="body" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
-              Colours and type are CSS variables on <code>:root</code>, such as <code>var(--color-pink)</code> and{' '}
+              Colors and type are CSS variables on <code>:root</code>, such as <code>var(--color-pink)</code> and{' '}
               <code>var(--text-base)</code>. Avoid raw hex values and pixel sizes.
             </Text>
           </Card>

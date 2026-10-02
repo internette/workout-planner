@@ -15,7 +15,7 @@ export default function MotionPage() {
     <DocPage title="Motion">
       <p style={{ ...note, marginTop: 8 }}>
         How long things take, and how they ease. Write <code>transition: background-color var(--dur-state) var(--ease-standard)</code>.
-        Hover over the buttons below: their colour changes use exactly these. Everything switches off for people who ask for
+        Hover over the buttons below: their color changes use exactly these. Everything switches off for people who ask for
         reduced motion (see <code>planner.css</code>).
       </p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', marginTop: 16 }}>

@@ -157,7 +157,7 @@ export function workoutStage(ctx: StatsCtx) {
   const listKey = creating ? '__draft' : idOf(srcAct);
   const notesVal = (st.notes || {})[listKey] != null ? (st.notes || {})[listKey] : (srcAct && srcAct.notes) || '';
   const wIcon = (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (isCycleView ? 'bike' : 'h');
-  // The colour picked for this workout's icon, if any; with none, it's drawn in the theme's accent, and the picker
+  // The color picked for this workout's icon, if any; with none, it's drawn in the theme's accent, and the picker
   // shows pink (the first choice) as picked.
   const wColorSet = (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || undefined;
   const wColor = wColorSet || colors.pink;

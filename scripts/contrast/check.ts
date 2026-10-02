@@ -1,4 +1,4 @@
-// Checks every colour pairing the app relies on, in all ten colour themes (five accents, light and dark): text 4.5:1
+// Checks every color pairing the app relies on, in all ten color themes (five accents, light and dark): text 4.5:1
 // or more, marks and controls 3:1 or more. Run with `npm run check:contrast`; it fails if any pairing falls short.
 import { ACCENTS, paletteFor } from '../../packages/design-system/src/colors/themes';
 import type { ColorName } from '../../packages/design-system/src/colors/tokens';
@@ -50,5 +50,5 @@ for (const theme of ['light', 'dark'] as const)
       }
     }
   }
-console.log(failures ? `\n${failures} pairing(s) fall short.` : `✓ All ${PAIRS.length} pairings pass in all ${ACCENTS.length * 2} colour themes.`);
+console.log(failures ? `\n${failures} pairing(s) fall short.` : `✓ All ${PAIRS.length} pairings pass in all ${ACCENTS.length * 2} color themes.`);
 process.exit(failures ? 1 : 0);

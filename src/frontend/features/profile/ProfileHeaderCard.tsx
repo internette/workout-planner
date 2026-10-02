@@ -41,7 +41,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
             position: 'absolute',
             inset: '6px',
             borderRadius: 'var(--radius-full)',
-            // A wash of the ink colour over the gradient keeps the initial readable (3:1) on its palest part: a
+            // A wash of the ink color over the gradient keeps the initial readable (3:1) on its palest part: a
             // little darker in light mode, where the initial is white, a little lighter in dark, where it's dark.
             background:
               'linear-gradient(color-mix(in srgb, var(--color-ink) 16%, transparent), color-mix(in srgb, var(--color-ink) 16%, transparent)), var(--gradient-gem)',

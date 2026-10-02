@@ -17,7 +17,7 @@
 }
 .gem { background: var(--gradient-gem); }
 
-/* Forced colours drop backgrounds, which is all a bar is drawn with: outline the track and fill it in Highlight. */
+/* Forced colors drop backgrounds, which is all a bar is drawn with: outline the track and fill it in Highlight. */
 @media (forced-colors: active) {
   .track { outline: 1px solid CanvasText; outline-offset: -1px; }
   .fill { forced-color-adjust: none; background: Highlight; }

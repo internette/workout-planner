@@ -1,15 +1,15 @@
-// The colour themes: the same app in teal, periwinkle, slate or coral instead of pink, each with a light and a dark
-// version. Chosen in Profile → Settings → Colour, and applied as <html data-accent="teal"> (with data-theme="dark" for
+// The color themes: the same app in teal, periwinkle, slate or coral instead of pink, each with a light and a dark
+// version. Chosen in Profile → Settings → Color, and applied as <html data-accent="teal"> (with data-theme="dark" for
 // the dark version). Pink needs nothing here: it's the default light palette and Plum dusk.
 //
-// Light: pink and slate are the palette colours themselves, with white text. Teal, periwinkle and coral are deepened
+// Light: pink and slate are the palette colors themselves, with white text. Teal, periwinkle and coral are deepened
 // just enough that a tick, bar or mark in them is 3:1 or more on the page and on a card; text on them is a near-black
-// navy (5:1 or more), and their hover goes a step lighter so it stays 4.5:1. Accent text uses each colour's deep shade
+// navy (5:1 or more), and their hover goes a step lighter so it stays 4.5:1. Accent text uses each color's deep shade
 // (5:1 or more on white and tint).
-// Dark: the page and cards lean toward the colour, the accent is brightened, and text on it is the card colour.
+// Dark: the page and cards lean toward the color, the accent is brightened, and text on it is the card color.
 //
-// As in the palette, a value can name a colour instead of repeating its hex: the slate theme's accent is the slate
-// text colour, some light tints and deep shades are the brand's, and in dark, text on the accent is the card colour.
+// As in the palette, a value can name a color instead of repeating its hex: the slate theme's accent is the slate
+// text color, some light tints and deep shades are the brand's, and in dark, text on the accent is the card color.
 import { colorValues, cssColor, cssVarName, resolveColors, type ColorName } from './tokens';
 import { darkColors } from './dark';
 
@@ -66,7 +66,7 @@ const accentVars = (t: Light) => ({
   mist: t.mist,
 });
 
-// What a dark colour theme changes on top of Plum dusk, besides the accent.
+// What a dark color theme changes on top of Plum dusk, besides the accent.
 const darkVars = (d: Dark) => ({
   ...accentVars(d),
   surface: d.surface,
@@ -80,7 +80,7 @@ const darkVars = (d: Dark) => ({
   outline: d.outline,
 });
 
-/** Every palette colour as a hex value, for a colour theme in light or dark: for what can't read CSS variables, such
+/** Every palette color as a hex value, for a color theme in light or dark: for what can't read CSS variables, such
  * as the lock-screen artwork drawn in a worker, and for checking contrast. */
 export function paletteFor(theme: 'light' | 'dark', accent: Accent): Record<ColorName, string> {
   const over = accent === 'pink' ? {} : theme === 'dark' ? darkVars(DARK[accent]) : accentVars(LIGHT[accent]);
@@ -89,14 +89,14 @@ export function paletteFor(theme: 'light' | 'dark', accent: Accent): Record<Colo
 
 const ACCENT_LABELS: Record<Accent, string> = { pink: 'Pink', teal: 'Teal', periwinkle: 'Periwinkle', slate: 'Slate', coral: 'Coral' };
 
-/** The colour themes, each with its light accent as a swatch. */
+/** The color themes, each with its light accent as a swatch. */
 export const ACCENTS: { name: Accent; label: string; swatch: string }[] = (Object.keys(ACCENT_LABELS) as Accent[]).map((name) => ({
   name,
   label: ACCENT_LABELS[name],
   swatch: paletteFor('light', name).accent,
 }));
 
-/** Each theme's page colour, for the browser's own bars (<meta name="theme-color">). */
+/** Each theme's page color, for the browser's own bars (<meta name="theme-color">). */
 export const PAGE_COLORS = Object.fromEntries(
   ACCENTS.map(({ name }) => [name, { light: paletteFor('light', name).canvas, dark: paletteFor('dark', name).canvas }]),
 ) as Record<Accent, { light: string; dark: string }>;
@@ -109,7 +109,7 @@ const block = (selector: string, values: Record<string, string>) =>
 const TEAL_GEM_TINT =
   'linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 16%, transparent) 0%, color-mix(in srgb, var(--color-periwinkle) 16%, transparent) 50%, color-mix(in srgb, var(--color-pink) 16%, transparent) 100%)';
 
-/** Every colour theme as CSS, for ColorVariables. Each light block overrides the accent and page tint; each dark
+/** Every color theme as CSS, for ColorVariables. Each light block overrides the accent and page tint; each dark
  * block overrides Plum dusk's surfaces and text too. */
 export const accentThemeCss = (Object.keys(LIGHT) as Exclude<Accent, 'pink'>[])
   .map((name) => {

@@ -1,5 +1,5 @@
 // Named text styles: a family, size, weight, tracking and leading that go together.
-// Colour is not part of a style; pick it with the `tone` prop on <Text>.
+// Color is not part of a style; pick it with the `tone` prop on <Text>.
 
 export const textStyles = {
   hero: {
@@ -59,7 +59,7 @@ export const textStyles = {
 
 export type TextVariant = keyof typeof textStyles;
 
-// Text colours, by role.
+// Text colors, by role.
 export const textTones = {
   ink: 'var(--color-ink)',
   slate: 'var(--color-slate)',

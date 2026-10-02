@@ -49,7 +49,7 @@ export default function ButtonsPage() {
 
       <h2 id="types" style={h2}>Types</h2>
       <p style={note}>
-        <code>type</code> picks the colour and role; <code>ghost</code> drops the fill. Sizes go across: xs,
+        <code>type</code> picks the color and role; <code>ghost</code> drops the fill. Sizes go across: xs,
         sm, md, lg.
       </p>
       <div style={stack}>
@@ -114,7 +114,7 @@ export default function ButtonsPage() {
       <p style={note}>
         <code>link</code> draws just the text, with no padding and no fill, underlined on hover and keyboard focus. Use
         it for an action inside a sentence, or a quiet one that shouldn&apos;t look like a button, like &ldquo;+ 2
-        more&rdquo; under a list. The tap area is still 44px. The colour comes from <code>type</code>: primary (and
+        more&rdquo; under a list. The tap area is still 44px. The color comes from <code>type</code>: primary (and
         secondary) take the deep accent, neutral the muted grey in a lighter weight, danger red. <code>size</code> sets
         the text size.
       </p>

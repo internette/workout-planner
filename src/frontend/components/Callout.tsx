@@ -3,7 +3,7 @@ import type { CSSProperties, ReactNode } from 'react';
 export interface CalloutProps {
   /** `success` for something that went through (a plan added, a workout scheduled); `danger` for something that didn't. */
   tone: 'success' | 'danger';
-  /** A small icon before the message, drawn in the tone's colour. */
+  /** A small icon before the message, drawn in the tone's color. */
   icon?: ReactNode;
   /** A button after the message: Dismiss, View day. */
   action?: ReactNode;

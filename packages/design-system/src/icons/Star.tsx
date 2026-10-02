@@ -2,7 +2,7 @@ import { useId } from 'react';
 import { Svg, type IconProps } from './Svg';
 
 // A soft, round-pointed star for ratings: filled with the pink → blue → teal gradient, or a pale pink shape when it
-// isn't. The round joins on a stroke of the same colour give it its soft points. Each instance gets its own gradient id.
+// isn't. The round joins on a stroke of the same color give it its soft points. Each instance gets its own gradient id.
 export function RatingStar({ on, size, style, className }: { on: boolean } & Pick<IconProps, 'size' | 'style' | 'className'>) {
   const id = 'star' + useId().replace(/:/g, '');
   const paint = on ? `url(#${id})` : 'color-mix(in srgb, var(--color-accent) 24%, var(--color-surface))';
