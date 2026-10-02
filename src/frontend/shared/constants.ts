@@ -1,6 +1,6 @@
 import { colors } from '@moonshot/design-system/colors';
 
-export const ACCENT = 'var(--color-accent)';
+export const ACCENT = 'var(--color-pink)';
 export const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 export const MON3 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 // How long a workout is when nothing says otherwise.
@@ -74,7 +74,7 @@ export const RANKS = [
   { name:'Halcyon paragon', next:'Radiant', pill:'background:var(--color-slate-tint);color:var(--color-slate-deep)', gem:'var(--color-slate)' },
   { name:'Radiant paragon', next:'Celestial', pill:'background:var(--color-slate-tint);color:var(--color-slate-deep)', gem:'var(--color-slate)' },
   { name:'Celestial champion', next:'Eternal', pill:'background:var(--color-slate-tint);color:var(--color-slate-deep)', gem:'var(--color-slate)' },
-  { name:'Eternal sovereign', next:'the next season', pill:'background:var(--gradient-gem);color:var(--color-on-strong);box-shadow:0 2px 8px color-mix(in srgb, var(--color-accent) 35%, transparent)', gem:'white' },
+  { name:'Eternal sovereign', next:'the next season', pill:'background:var(--gradient-gem);color:var(--color-surface);box-shadow:0 2px 8px color-mix(in srgb, var(--color-pink) 35%, transparent)', gem:'white' },
 ];
 
 // Overlay state the edit screens accumulate; once a save lands in the database it is dropped.

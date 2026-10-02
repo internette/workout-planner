@@ -9,7 +9,7 @@ export const elevations = {
 
 /** The accent's glow on a primary button. Reserved for one call to action on an otherwise empty surface. */
 export const glow = {
-  primary: { value: '0 8px 20px color-mix(in srgb, var(--color-accent) 40%, transparent)', use: 'One primary call to action on an empty surface' },
+  primary: { value: '0 8px 20px color-mix(in srgb, var(--color-pink) 40%, transparent)', use: 'One primary call to action on an empty surface' },
 } as const;
 
 /** The dark theme's shadows: black and stronger, since a soft ink shadow doesn't show on a dark page. */
@@ -17,7 +17,7 @@ export const darkElevations: Record<string, string> = {
   '--elevation-hairline': '0 1px 3px rgba(0, 0, 0, 0.35)',
   '--elevation-raised': '0 4px 14px rgba(0, 0, 0, 0.35)',
   '--elevation-overlay': '0 8px 24px rgba(0, 0, 0, 0.5)',
-  '--glow-primary': '0 8px 20px color-mix(in srgb, var(--color-accent) 35%, transparent)',
+  '--glow-primary': '0 8px 20px color-mix(in srgb, var(--color-pink) 35%, transparent)',
 };
 
 export type ElevationName = keyof typeof elevations;

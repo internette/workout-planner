@@ -13,7 +13,7 @@ export function EntryScreen({ v }: { v: PlannerVals }) {
       <BackBar label={v.diaryBackLabel || v.backLabel} onBack={v.diaryBack}>
         {v.diaryReading ? (
           <Button type="secondary" size="sm" onClick={v.editEntry} style={{ whiteSpace: 'nowrap' }}>
-            <Pencil color="var(--color-accent-deep)" size={16} />
+            <Pencil color="var(--color-pink-deep)" size={16} />
             Edit
           </Button>
         ) : null}

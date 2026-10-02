@@ -30,7 +30,7 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
         </Text>
         <Button type="secondary" ghost size="xs" onClick={v.goDetail} style={{ alignSelf: 'center' }}>
           View workout
-          <ChevronRight color="var(--color-accent-deep)" strokeWidth={2.2} size={15} />
+          <ChevronRight color="var(--color-pink-deep)" strokeWidth={2.2} size={15} />
         </Button>
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '22px' }}>

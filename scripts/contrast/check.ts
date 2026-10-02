@@ -8,25 +8,24 @@ type Pair = [fg: ColorName, bg: ColorName, min: number, what: string];
 const TEXT = 4.5;
 const UI = 3;
 const PAIRS: Pair[] = [
-  ...(['ink', 'slate', 'muted', 'accentDeep', 'danger'] as ColorName[]).flatMap((c): Pair[] => [
+  ...(['ink', 'slate', 'muted', 'pinkDeep', 'danger'] as ColorName[]).flatMap((c): Pair[] => [
     [c, 'surface', TEXT, 'text on a card'],
     [c, 'canvas', TEXT, 'text on the page'],
   ]),
   ['muted', 'mist', TEXT, 'muted text on a quiet chip or track'],
-  ['accentDeep', 'accentTint', TEXT, 'accent text on the accent tint'],
-  ['onStrong', 'accent', TEXT, 'a primary button’s label'],
-  ['onStrong', 'accentHover', TEXT, 'a primary button’s label, hovered'],
-  ['onStrong', 'ink', TEXT, 'text on a dark button'],
-  ['onStrong', 'danger', TEXT, 'a delete button’s label'],
+  ['pinkDeep', 'pinkTint', TEXT, 'pink text on the pink tint'],
+  ['surface', 'pink', TEXT, 'a primary button’s label'],
+  ['surface', 'accentHover', TEXT, 'a primary button’s label, hovered'],
+  ['surface', 'ink', TEXT, 'text on a dark button'],
+  ['surface', 'danger', TEXT, 'a delete button’s label'],
   ['slateDeep', 'mist', TEXT, 'a grey badge'],
   ['slateDeep', 'slateTint', TEXT, 'the slate rank badge'],
-  ['pinkDeep', 'pinkTint', TEXT, 'the pink rank badge'],
   ['periwinkleDeep', 'periwinkleTint', TEXT, 'the periwinkle rank badge'],
   ['tealDeep', 'tealTint', TEXT, 'the teal rank badge'],
   ['outline', 'surface', UI, 'an unticked box on a card'],
   ['outline', 'canvas', UI, 'an unticked box on the page'],
-  ['accent', 'surface', UI, 'a tick, bar or mark on a card'],
-  ['accent', 'canvas', UI, 'a tick, bar or mark on the page'],
+  ['pink', 'surface', UI, 'a tick, bar or mark on a card'],
+  ['pink', 'canvas', UI, 'a tick, bar or mark on the page'],
 ];
 
 const lum = (hex: string) => {

@@ -27,7 +27,7 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
             onClick={v.template.copy}
             style={{ whiteSpace: 'nowrap' }}
           >
-            <Copy color="var(--color-accent-deep)" size={16} />
+            <Copy color="var(--color-pink-deep)" size={16} />
             {v.template.copyLabel}
           </Button>
         ) : (
@@ -37,7 +37,7 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
             onClick={v.template.edit}
             style={{ whiteSpace: 'nowrap' }}
           >
-            <Pencil color="var(--color-accent-deep)" size={16} />
+            <Pencil color="var(--color-pink-deep)" size={16} />
             Edit
           </Button>
         )}
@@ -54,13 +54,13 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
         <NotesCard style={{ marginTop: '12px' }}>{v.template.notes}</NotesCard>
       ) : null}
       <Button type="primary" size="lg" fullWidth onClick={v.template.schedule} style={{ marginTop: '18px' }}>
-        <Calendar color="var(--color-on-strong)" size={17} />
+        <Calendar color="var(--color-surface)" size={17} />
         Add to calendar
       </Button>
       {v.scheduleCalendar?.done ? (
         <Callout
           tone="success"
-          icon={<Check color="var(--color-accent-deep)" strokeWidth={2.4} size={16} />}
+          icon={<Check color="var(--color-pink-deep)" strokeWidth={2.4} size={16} />}
           action={
             <Button type="neutral" ghost size="sm" onClick={v.scheduleCalendar.viewDay}>
               View day

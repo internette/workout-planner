@@ -44,7 +44,7 @@ export function LinkRow({ title, detail, kind, leading, action = 'open', onClick
         ) : null}
       </span>
       {disabled ? null : action === 'add' ? (
-        <Plus color="var(--color-accent-deep)" size={17} />
+        <Plus color="var(--color-pink-deep)" size={17} />
       ) : (
         <ChevronRight color="var(--color-muted)" size={16} />
       )}

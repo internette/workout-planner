@@ -62,7 +62,7 @@ export function workoutStage(ctx: StatsCtx) {
       selected: pickM === mi && pd === selDay,
       style:
         "height:34px;border:none;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-heading);font-size:var(--text-base);font-weight:" +
-        (pickM === mi && pd === selDay ? 'var(--font-weight-bold);background:var(--color-accent);color:var(--color-on-strong)' : 'var(--font-weight-medium);background:none;color:var(--color-ink)'),
+        (pickM === mi && pd === selDay ? 'var(--font-weight-bold);background:var(--color-pink);color:var(--color-surface)' : 'var(--font-weight-medium);background:none;color:var(--color-ink)'),
     });
   }
   // Editing a saved workout from the Spellbook uses this same editor, with the workout standing in for a session: no

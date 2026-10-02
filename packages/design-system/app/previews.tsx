@@ -50,7 +50,7 @@ export function Preview({ slug }: { slug: string }) {
               data-accent={a === 'pink' ? undefined : a}
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 'var(--radius-sm)', background: 'var(--color-canvas)', boxShadow: 'inset 0 0 0 1px var(--color-line)' }}
             >
-              <span style={{ width: 16, height: 16, borderRadius: 'var(--radius-full)', background: 'var(--color-accent)' }} />
+              <span style={{ width: 16, height: 16, borderRadius: 'var(--radius-full)', background: 'var(--color-pink)' }} />
             </span>
           ))}
         </>
@@ -224,7 +224,7 @@ export function Preview({ slug }: { slug: string }) {
             options={(['h', 'v', 'd', 'bike'] as const).map((name) => ({
               value: name,
               label: name,
-              icon: <ExerciseIcon name={name} color="var(--color-accent)" />,
+              icon: <ExerciseIcon name={name} color="var(--color-pink)" />,
             }))}
           />
         </div>

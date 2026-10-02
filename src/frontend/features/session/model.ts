@@ -523,8 +523,8 @@ export function workoutVals(ctx: Ctx) {
     rideDoneType: rideDone ? ('secondary' as const) : ('neutral' as const),
     rideDoneMark:
       'width:24px;height:24px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;' +
-      (rideDone ? 'background:var(--color-accent)' : 'border:1.5px solid var(--color-outline)'),
-    rideDoneStroke: rideDone ? 'var(--color-on-strong)' : 'var(--color-outline)',
+      (rideDone ? 'background:var(--color-pink)' : 'border:1.5px solid var(--color-outline)'),
+    rideDoneStroke: rideDone ? 'var(--color-surface)' : 'var(--color-outline)',
     dayIcoSvg: iconSvg(
       (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (selRide ? 'bike' : 'h'),
       (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || undefined,

@@ -6,7 +6,7 @@
 // white text on them is 4.5:1, and their hover goes a step darker, as pink's does. Accent text uses each color's deep
 // shade (5:1 or more on white and tint).
 // Dark: the page and cards lean toward the color, the accent is brightened, and text on it is the card color.
-// Text on the accent is onStrong in every theme: white in light, the card color in dark.
+// Text on the theme color is surface in every theme: white in light, the card color in dark.
 //
 // As in the palette, a value can name a color instead of repeating its hex: the slate theme's accent is the slate
 // text color, some light tints and deep shades are the brand's, and in dark, text on the accent is the card color.
@@ -53,11 +53,12 @@ const DARK: Record<Exclude<Accent, 'pink'>, Dark> = {
 };
 
 
+// A theme's color takes pink's names: pink, its hover, its deep shade and its tint.
 const accentVars = (t: Light) => ({
-  accent: t.accent,
+  pink: t.accent,
   accentHover: t.hover,
-  accentDeep: t.deep,
-  accentTint: t.tint,
+  pinkDeep: t.deep,
+  pinkTint: t.tint,
   canvas: t.canvas,
   mist: t.mist,
 });
@@ -88,7 +89,7 @@ const ACCENT_LABELS: Record<Accent, string> = { pink: 'Pink', teal: 'Teal', peri
 export const ACCENTS: { name: Accent; label: string; swatch: string }[] = (Object.keys(ACCENT_LABELS) as Accent[]).map((name) => ({
   name,
   label: ACCENT_LABELS[name],
-  swatch: paletteFor('light', name).accent,
+  swatch: paletteFor('light', name).pink,
 }));
 
 /** Each theme's page color, for the browser's own bars (<meta name="theme-color">). */
@@ -98,11 +99,6 @@ export const PAGE_COLORS = Object.fromEntries(
 
 const block = (selector: string, values: Record<string, string>) =>
   selector + '{' + Object.entries(values).map(([k, v]) => `${cssVarName(k)}:${cssColor(v)}`).join(';') + '}';
-
-// The soft gem gradient (quest and streak panels, empty states) runs accent → periwinkle → teal. In the teal theme
-// that starts and ends on teal and reads as flat, so there it runs teal → periwinkle → pink instead.
-const TEAL_GEM_TINT =
-  'linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 16%, transparent) 0%, color-mix(in srgb, var(--color-periwinkle) 16%, transparent) 50%, color-mix(in srgb, var(--color-pink) 16%, transparent) 100%)';
 
 /** Every color theme as CSS, for ColorVariables. Each light block overrides the accent and page tint; each dark
  * block overrides Plum dusk's surfaces and text too. */
@@ -115,4 +111,4 @@ export const accentThemeCss = (Object.keys(LIGHT) as Exclude<Accent, 'pink'>[])
       block(`[data-accent="${name}"][data-theme="dark"]`, darkVars(d))
     );
   })
-  .join('') + `[data-accent="teal"]{--gradient-gem-tint:${TEAL_GEM_TINT}}`;
+  .join('');

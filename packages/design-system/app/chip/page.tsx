@@ -40,12 +40,12 @@ export default function ChipPage() {
       <h2 id="accent" style={h2}>Accent</h2>
       <p style={note}>Solid pink, for something that is switched on. A trailing slot holds a small action.</p>
       <div style={row}>
-        <Chip tone="accent" icon={<Repeat color="var(--color-on-strong)" size={15} />}>
+        <Chip tone="accent" icon={<Repeat color="var(--color-surface)" size={15} />}>
           Weekly
         </Chip>
         <Chip
           tone="accent"
-          icon={<Repeat color="var(--color-on-strong)" size={15} />}
+          icon={<Repeat color="var(--color-surface)" size={15} />}
           trailing={
             <IconButton label="End this series" size="xs" tone="inverse">
               <Close color="rgba(255,255,255,0.85)" strokeWidth={2.2} size={13} />

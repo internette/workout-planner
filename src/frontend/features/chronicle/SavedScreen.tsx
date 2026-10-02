@@ -47,7 +47,7 @@ export function SavedScreen({ v }: { v: PlannerVals }) {
           }}
         >
           <Check
-            color="var(--color-accent)"
+            color="var(--color-pink)"
             strokeWidth={2.4}
             size={30}
             style={{ strokeDasharray: '30', animation: 'draw .5s .2s ease-out both' }}

@@ -57,7 +57,7 @@ export function calendarStage(ctx: EntriesCtx) {
       mon: spansMonths && num === 1 ? MON3[mod12(cellMonth)].toUpperCase() : '',
       monStyle:
         spansMonths && num === 1
-          ? 'position:absolute;left:0;right:0;top:-14px;text-align:center;font-size:var(--text-sm);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-loose);color:var(--color-accent-deep)'
+          ? 'position:absolute;left:0;right:0;top:-14px;text-align:center;font-size:var(--text-sm);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-loose);color:var(--color-pink-deep)'
           : 'display:none',
       aria:
         longDay(new Date(Y, cellMonth, num)) +
@@ -71,14 +71,14 @@ export function calendarStage(ctx: EntriesCtx) {
       letterStyle:
         "font-family:var(--font-heading);" +
         'font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:' +
-        (on ? 'var(--color-on-strong)' : 'var(--color-muted)'),
+        (on ? 'var(--color-surface)' : 'var(--color-muted)'),
       numStyle:
         "font-family:var(--font-heading);" +
         'font-size:var(--text-lg);font-weight:' +
         (on ? 'var(--font-weight-bold)' : 'var(--font-weight-semibold)') +
         ';color:' +
         // Another month's dates are dimmer than this month's, but still readable (muted meets 4.5:1).
-        (on ? 'var(--color-on-strong)' : same ? 'var(--color-ink)' : 'var(--color-muted)'),
+        (on ? 'var(--color-surface)' : same ? 'var(--color-ink)' : 'var(--color-muted)'),
       dot: (!dot ? 'rest' : done ? 'done' : part ? 'partly' : miss ? 'missed' : 'planned') as DayStatus,
     };
   });
@@ -98,9 +98,9 @@ export function calendarStage(ctx: EntriesCtx) {
         "font-family:var(--font-heading);" +
         'padding:11px 6px;border-radius:var(--radius-sm);font-size:var(--text-base);border:none;cursor:pointer;' +
         (current
-          ? 'background:' + ACCENT + ';color:var(--color-on-strong);font-weight:var(--font-weight-bold)'
+          ? 'background:' + ACCENT + ';color:var(--color-surface);font-weight:var(--font-weight-bold)'
           : now
-            ? 'box-shadow:inset 0 0 0 1.5px var(--color-accent);color:var(--color-accent-deep);font-weight:var(--font-weight-bold)'
+            ? 'box-shadow:inset 0 0 0 1.5px var(--color-pink);color:var(--color-pink-deep);font-weight:var(--font-weight-bold)'
             : 'color:var(--color-ink);font-weight:var(--font-weight-medium)'),
     };
   });
@@ -216,13 +216,13 @@ export function calendarStage(ctx: EntriesCtx) {
       wrap:
         'height:50px;border:none;border-radius:var(--radius-md);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;' +
         (sel
-          ? 'background:var(--color-accent)'
+          ? 'background:var(--color-pink)'
           : missed
             ? 'background:var(--color-surface-rest)'
             : a
               ? 'background:var(--color-surface);box-shadow:var(--elevation-hairline)'
               : 'background:none') +
-        (today && !sel ? ';box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--color-accent) 45%, transparent)' : ''),
+        (today && !sel ? ';box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--color-pink) 45%, transparent)' : ''),
       aria: d
         ? longDay(new Date(Y, mi, d)) +
           ' — ' +
@@ -235,7 +235,7 @@ export function calendarStage(ctx: EntriesCtx) {
         "font-family:var(--font-heading);font-size:var(--text-base);font-weight:" +
         (a ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)') +
         ';color:' +
-        (sel ? 'var(--color-on-strong)' : missed ? 'var(--color-muted)' : a ? 'var(--color-ink)' : 'var(--color-muted)'),
+        (sel ? 'var(--color-surface)' : missed ? 'var(--color-muted)' : a ? 'var(--color-ink)' : 'var(--color-muted)'),
       dot: (part ? 'partly' : a === 'c' ? 'done' : missed ? 'missed' : a ? 'planned' : 'rest') as DayStatus,
     });
   }

@@ -151,7 +151,7 @@ export default function CardPage() {
       <p style={note}>
         <code>as=&quot;dialog&quot;</code> renders a native <code>&lt;dialog&gt;</code>, with{' '}
         <code>elevation=&quot;overlay&quot;</code> so it floats above the page. Don&apos;t build a modal from it
-        directly: use <Link href="/dialog" style={{ color: 'var(--color-accent-deep)', fontWeight: 'var(--font-weight-semibold)' }}>
+        directly: use <Link href="/dialog" style={{ color: 'var(--color-pink-deep)', fontWeight: 'var(--font-weight-semibold)' }}>
           Dialog
         </Link>, which is this card as a dialog, and adds opening it as
         a modal, moving focus in and back, closing on Escape or a press outside, and its title, text and buttons.

@@ -39,7 +39,7 @@ function Preview({ accent, dark }: { accent: string; dark: boolean }) {
       <Card pad="sm" style={{ marginTop: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <IconTile size="sm">
-            <ExerciseIcon name="h" color="var(--color-accent)" />
+            <ExerciseIcon name="h" color="var(--color-pink)" />
           </IconTile>
           <div style={{ minWidth: 0, flex: 1 }}>
             <Text variant="subheading" as="div" tone="ink">
@@ -90,7 +90,7 @@ export default function ThemesPage() {
     <DocPage title="Themes">
       <p style={{ ...note, marginTop: 8 }}>
         Five colors, each with a light and a dark theme, picked on Profile → Settings. Every theme uses the same
-        variables, so a component written with them (<code>var(--color-accent)</code>, not a hex) follows whichever is
+        variables, so a component written with them (<code>var(--color-pink)</code>, not a hex) follows whichever is
         set. The theme is set on <code>&lt;html&gt;</code> as <code>data-accent</code> (left out for pink) and{' '}
         <code>data-theme=&quot;dark&quot;</code>; the panels below set the same attributes on themselves. The rest of
         this site stays light pink.

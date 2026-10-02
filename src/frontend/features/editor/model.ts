@@ -385,7 +385,7 @@ export function editVals(ctx: Ctx) {
     rideNoteStyle:
       'margin:14px 0 0;font-size:var(--text-base);font-weight:' +
       (ridePct != null && ridePct >= 100
-        ? 'var(--font-weight-semibold);color:var(--color-accent-deep)'
+        ? 'var(--font-weight-semibold);color:var(--color-pink-deep)'
         : 'var(--font-weight-regular);color:var(--color-muted)'),
     setHours: (e) => logic.s({ rHrs: digitsOnly(e.target.value).slice(0, 2) }),
     setMins: (e) => {

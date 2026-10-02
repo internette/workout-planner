@@ -30,7 +30,7 @@ const icons = (color?: string) =>
   EXERCISE_ICON_NAMES.map((name) => ({
     value: name,
     label: ICON_LABELS[name] + ' icon',
-    icon: <ExerciseIcon name={name} color={themed(color) || 'var(--color-accent)'} />,
+    icon: <ExerciseIcon name={name} color={themed(color) || 'var(--color-pink)'} />,
   }));
 const swatches = SWATCHES.map((s) => ({ ...s, color: themed(s.value) }));
 // The theme colors, as fixed colors: this setting picks the theme, so its swatches don't follow it.
@@ -131,9 +131,9 @@ export default function IconChoiceGroupPage() {
           value={icon === 'bike' ? undefined : icon}
           onChange={setIcon}
           options={[
-            { value: 'h', label: 'Dumbbell icon', icon: <Dumbbell color="var(--color-accent)" size={20} /> },
-            { value: 'v', label: 'Upright dumbbell icon', icon: <Dumbbell color="var(--color-accent)" size={20} style={{ transform: 'rotate(90deg)' }} /> },
-            { value: 'd', label: 'Small dumbbell icon', icon: <ExerciseIcon name="d" color="var(--color-accent)" /> },
+            { value: 'h', label: 'Dumbbell icon', icon: <Dumbbell color="var(--color-pink)" size={20} /> },
+            { value: 'v', label: 'Upright dumbbell icon', icon: <Dumbbell color="var(--color-pink)" size={20} style={{ transform: 'rotate(90deg)' }} /> },
+            { value: 'd', label: 'Small dumbbell icon', icon: <ExerciseIcon name="d" color="var(--color-pink)" /> },
           ]}
         />
       </Card>

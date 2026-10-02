@@ -69,7 +69,7 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
                 alignItems: 'center',
                 gap: '2px',
                 fontFamily: 'var(--font-heading)',
-                color: x.today ? 'var(--color-accent-deep)' : 'var(--color-ink)',
+                color: x.today ? 'var(--color-pink-deep)' : 'var(--color-ink)',
               }}
             >
               <span aria-hidden="true" style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-bold)' }}>
@@ -80,7 +80,7 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
                 style={{
                   fontSize: 'var(--text-sm)',
                   fontWeight: 'var(--font-weight-semibold)',
-                  color: x.today ? 'var(--color-accent-deep)' : 'var(--color-muted)',
+                  color: x.today ? 'var(--color-pink-deep)' : 'var(--color-muted)',
                 }}
               >
                 {x.num}

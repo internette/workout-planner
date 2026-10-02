@@ -33,7 +33,7 @@ export function Checkbox({ checked, onChange, children, switch: asSwitch, disabl
         onChange={(e) => onChange(e.target.checked)}
       />
       <span className={styles.box} aria-hidden="true">
-        {checked ? <Check color="var(--color-on-strong)" strokeWidth={3} size={13} /> : null}
+        {checked ? <Check color="var(--color-surface)" strokeWidth={3} size={13} /> : null}
       </span>
       <span className={styles.label}>{children}</span>
     </label>

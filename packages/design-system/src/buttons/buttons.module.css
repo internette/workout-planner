@@ -31,22 +31,22 @@
 .fullWidth { display: flex; width: 100%; }
 
 /* ---- Button types. Each has a filled look and, with .ghost, a text-only look. */
-.primary { background: var(--color-accent); color: var(--color-on-strong); }
+.primary { background: var(--color-pink); color: var(--color-surface); }
 /* Keyboard focus looks the same as hover: a button's focus styles are its hover styles. The ring is the global one. */
 .primary:hover:not(:disabled):not([aria-disabled='true']),
 .primary:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-accent-hover); }
-.primary.ghost { background: none; color: var(--color-accent); }
+.primary.ghost { background: none; color: var(--color-pink); }
 .primary.ghost:hover:not(:disabled):not([aria-disabled='true']),
-.primary.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-accent-tint); }
+.primary.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-pink-tint); }
 
 .glow { box-shadow: var(--glow-primary); }
 
-.secondary { background: var(--color-accent-tint); color: var(--color-accent-deep); }
+.secondary { background: var(--color-pink-tint); color: var(--color-pink-deep); }
 .secondary:hover:not(:disabled):not([aria-disabled='true']),
 .secondary:focus-visible:not(:disabled):not([aria-disabled='true']) { filter: brightness(0.97); }
 .secondary.ghost { background: none; }
 .secondary.ghost:hover:not(:disabled):not([aria-disabled='true']),
-.secondary.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-accent-tint); filter: none; }
+.secondary.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-pink-tint); filter: none; }
 
 .neutral { background: var(--color-canvas); color: var(--color-slate); }
 .neutral:hover:not(:disabled):not([aria-disabled='true']),
@@ -55,7 +55,7 @@
 .neutral.ghost:hover:not(:disabled):not([aria-disabled='true']),
 .neutral.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-neutral); filter: none; }
 
-.danger { background: var(--color-danger); color: var(--color-on-strong); }
+.danger { background: var(--color-danger); color: var(--color-surface); }
 .danger:hover:not(:disabled):not([aria-disabled='true']),
 .danger:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-danger-hover); }
 .danger.ghost { background: none; color: var(--color-danger); }
@@ -63,19 +63,19 @@
 .danger.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-danger-ghost); }
 
 .dashed {
-  border: 1px dashed color-mix(in srgb, var(--color-accent) 50%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--color-pink) 50%, transparent);
   background: var(--color-accent-wash);
-  color: var(--color-accent-deep);
+  color: var(--color-pink-deep);
 }
 .dashed:hover:not(:disabled):not([aria-disabled='true']),
-.dashed:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-accent-tint); }
+.dashed:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--color-pink-tint); }
 
 /* ---- Link: just the text, underlined on hover and keyboard focus. After the sizes, so it drops their padding and
    height but keeps their text size. */
 .link { min-height: 0; padding: 0; border-radius: var(--radius-xs); text-decoration: none; text-underline-offset: 3px; }
 .link:hover:not(:disabled):not([aria-disabled='true']),
 .link:focus-visible:not(:disabled):not([aria-disabled='true']) { text-decoration: underline; }
-.link-primary, .link-secondary { color: var(--color-accent-deep); }
+.link-primary, .link-secondary { color: var(--color-pink-deep); }
 .link-neutral { color: var(--color-muted); font-weight: var(--font-weight-medium); }
 .link-danger { color: var(--color-danger); }
 

@@ -13,8 +13,8 @@ body {
 }
 * { box-sizing: border-box; }
 h1, h2, h3 { font-family: var(--font-heading); }
-a { color: var(--color-accent); }
-a:hover { color: var(--color-accent-deep); }
+a { color: var(--color-pink); }
+a:hover { color: var(--color-pink-deep); }
 /* Form controls take the page's type. A button that's a whole card or row reads like the rest of the page; the
    design system's own buttons, chips and segments set their single-line labels tight. */
 input, textarea, button { font-family: inherit; }
@@ -53,9 +53,9 @@ summary:focus-visible, [tabindex]:focus-visible {
 
 /* Generated from the design's style-hover attributes; !important so they beat inline styles. */
 .hv1:hover{background:var(--hover-neutral) !important}
-.hv3:hover{color:var(--color-accent-deep) !important;background:color-mix(in srgb, var(--color-ink) 4%, transparent) !important}
+.hv3:hover{color:var(--color-pink-deep) !important;background:color-mix(in srgb, var(--color-ink) 4%, transparent) !important}
 .hv6:hover{filter:brightness(.97) !important}
-.hv7:hover{background:var(--color-accent-tint) !important}
+.hv7:hover{background:var(--color-pink-tint) !important}
 
 /* Windows High Contrast and other forced-color modes drop backgrounds and shadows, which is how selection and
    buttons are drawn here. Give them outlines in system colors instead (outlines don't move anything), and keep the

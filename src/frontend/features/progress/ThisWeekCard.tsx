@@ -5,9 +5,9 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 // The bar's parts: done solid, partly done striped, missed grey. What's still to go is the track.
 const SEGMENT = {
-  done: 'var(--color-accent)',
+  done: 'var(--color-pink)',
   partly:
-    'repeating-linear-gradient(135deg,color-mix(in srgb, var(--color-accent) 55%, transparent) 0 3px,color-mix(in srgb, var(--color-accent) 22%, transparent) 3px 6px)',
+    'repeating-linear-gradient(135deg,color-mix(in srgb, var(--color-pink) 55%, transparent) 0 3px,color-mix(in srgb, var(--color-pink) 22%, transparent) 3px 6px)',
   missed: 'color-mix(in srgb, var(--color-ink) 18%, transparent)',
 };
 
@@ -42,7 +42,7 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
               display: 'flex',
               height: '7px',
               borderRadius: '4px',
-              background: 'var(--color-accent-tint)',
+              background: 'var(--color-pink-tint)',
               marginTop: '14px',
               overflow: 'hidden',
             }}

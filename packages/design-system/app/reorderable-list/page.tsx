@@ -50,7 +50,7 @@ export default function ReorderableListPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 13 }}>
                 {handle}
                 <IconTile size="sm">
-                  <ExerciseIcon name={r.icon} color="var(--color-accent)" />
+                  <ExerciseIcon name={r.icon} color="var(--color-pink)" />
                 </IconTile>
                 <div style={{ minWidth: 0 }}>
                   <Text variant="subheading" as="div">

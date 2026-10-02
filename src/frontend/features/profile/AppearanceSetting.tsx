@@ -48,7 +48,7 @@ export function AppearanceSetting() {
             label: a.label,
             color: a.swatch,
             // The tick is the theme's own color for things on its accent.
-            checkColor: paletteFor('light', a.name).onStrong,
+            checkColor: paletteFor('light', a.name).surface,
           }))}
           value={accent}
           onChange={pickAccent}

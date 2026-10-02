@@ -63,7 +63,7 @@ export function IconPicker({ open, onToggle, onClose, current, label, iconsLabel
             width: size === 'sm' ? '16px' : '20px',
             height: size === 'sm' ? '16px' : '20px',
             borderRadius: 'var(--radius-full)',
-            background: 'var(--color-accent)',
+            background: 'var(--color-pink)',
             boxShadow: '0 0 0 2px var(--color-surface)',
             display: 'flex',
             alignItems: 'center',
@@ -71,7 +71,7 @@ export function IconPicker({ open, onToggle, onClose, current, label, iconsLabel
             pointerEvents: 'none',
           }}
         >
-          <Pencil color="var(--color-on-strong)" size={size === 'sm' ? 9 : 11} strokeWidth={2.6} />
+          <Pencil color="var(--color-surface)" size={size === 'sm' ? 9 : 11} strokeWidth={2.6} />
         </span>
       </span>
     </Popover>
