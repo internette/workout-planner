@@ -3,7 +3,7 @@ import styles from './buttons.module.css';
 import { cx } from './cx';
 
 export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label'> {
-  /** What the button does. Icon-only buttons need this for screen readers; it is also the tooltip. */
+  /** What the button does: its name for screen readers. Pass `title` as well for a tooltip. */
   label: string;
   size?: 'xs' | 'sm' | 'md' | 'lg';
   /** default: grey hover. danger: red hover. inverse: for use on a colored background. */
