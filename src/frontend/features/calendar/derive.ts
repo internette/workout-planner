@@ -14,7 +14,6 @@ export function calendarStage(ctx: EntriesCtx) {
   const selDay = Math.min(st.day, dim);
   const isCurMonth = mi === TODAY_M;
   const actFor = (d) => seedAt(mi, d);
-  const actForDate = (d) => seedAt(relM(d), d.getDate());
   const listForDate = (d) => entriesAt(relM(d), d.getDate());
   // A day's marker sums up all of its workouts: done once every one is, missed once it is past and any one isn't.
   const allDone = (list) => list.length > 0 && list.every(isDoneEntry);
@@ -241,11 +240,9 @@ export function calendarStage(ctx: EntriesCtx) {
     });
   }
   return {
-    actForDate,
     listForDate,
     dayEntries: entriesAt(mi, selDay),
     mi,
-    dim,
     selDay,
     actFor,
     weekRows,
@@ -255,7 +252,6 @@ export function calendarStage(ctx: EntriesCtx) {
     days,
     selDate,
     weekLabel,
-    wkStart,
     isCurMonth,
     shownYOff,
   };

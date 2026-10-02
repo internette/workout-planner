@@ -7,15 +7,13 @@ import { ExerciseEditForm } from '@/frontend/features/spellbook/ExerciseEditForm
 
 export function ExerciseEditScreen({ v }: { v: PlannerVals }) {
   return (
-    <>
-      <div>
-        <BackBar label={v.backLabel} onBack={v.exerciseEdit.cancel} />
-        {/* The same as the workout editor: Back on its own row, then what's being edited. */}
-        <Text variant="eyebrow" as="h1" tone="slate" style={{ margin: '18px 0 0' }}>
-          {v.exerciseEdit.heading}
-        </Text>
-        <ExerciseEditForm v={v} />
-      </div>
-    </>
+    <div>
+      <BackBar label={v.backLabel} onBack={v.exerciseEdit.cancel} />
+      {/* The same as the workout editor: Back on its own row, then what's being edited. */}
+      <Text variant="eyebrow" as="h1" tone="slate" style={{ margin: '18px 0 0' }}>
+        {v.exerciseEdit.heading}
+      </Text>
+      <ExerciseEditForm v={v} />
+    </div>
   );
 }

@@ -269,7 +269,6 @@ export function diaryVals(ctx: Ctx) {
           // The month it's listed under: "SEPTEMBER", with its year when it isn't this one.
           month: MONTHS[mod12(en.m)].toUpperCase() + yr,
           note: en.note,
-          href: '#',
           aria:
             DOW3[dt.getDay()] +
             ', ' +

@@ -78,17 +78,11 @@
 .link-neutral { color: var(--color-muted); font-weight: var(--font-weight-medium); }
 .link-danger { color: var(--color-danger); }
 
-/* Icon buttons, the extra-small button and links are drawn smaller than 44 px; their tap area isn't. */
-.icon, .xs, .link { position: relative; }
-.icon::after, .xs::after, .link::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: max(100%, 44px);
-  height: max(100%, 44px);
-  transform: translate(-50%, -50%);
-}
+/* Icon buttons, the extra-small button and links are drawn smaller than 44 px; their tap area isn't (the shared
+   .hit in base.css). */
+.icon { composes: hit from global; }
+.xs { composes: hit from global; }
+.link { composes: hit from global; }
 
 /* ---- Icon buttons: square, icon only */
 .icon { padding: 0; flex: none; }

@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
 import { vars } from '@moonshot/design-system/colors';
 import { ChevronDown, Sparkle } from '@moonshot/design-system/icons';
@@ -41,16 +40,14 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             }}
           >
             {(v.months ?? []).map((m, i) => (
-              <Fragment key={i}>
-                <button
-                  onClick={m?.pick}
-                  aria-label={m?.name}
-                  aria-current={m?.current ? 'date' : undefined}
-                  style={css(m?.style)}
-                >
-                  {m?.short}
-                </button>
-              </Fragment>
+              <button key={i}
+                onClick={m?.pick}
+                aria-label={m?.name}
+                aria-current={m?.current ? 'date' : undefined}
+                style={css(m?.style)}
+              >
+                {m?.short}
+              </button>
             ))}
           </div>
           <div

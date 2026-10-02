@@ -51,7 +51,7 @@ export function IconPicker({ open, onToggle, onClose, current, label, iconsLabel
     >
       {/* A pencil on its corner says the icon can be changed: the same tile elsewhere is only a picture. */}
       <span style={{ position: 'relative', display: 'inline-flex' }}>
-        <IconTileButton size={size} onClick={onToggle} className={size === 'sm' ? 'hit' : undefined} aria-label={label} aria-expanded={open}>
+        <IconTileButton size={size} onClick={onToggle} aria-label={label} aria-expanded={open}>
           {current}
         </IconTileButton>
         <span

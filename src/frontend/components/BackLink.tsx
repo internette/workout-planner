@@ -9,7 +9,6 @@ export function BackLink({ label, onClick }: { label: string; onClick: () => voi
       ghost
       size="xs"
       onClick={onClick}
-      className="hit"
       data-back
       aria-label={'Back to ' + label}
       style={{ marginLeft: '-10px', minWidth: 0, maxWidth: '60%', flex: '0 1 auto' }}

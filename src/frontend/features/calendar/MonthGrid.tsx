@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { StatusDot } from '@/frontend/components/StatusDot';
@@ -15,20 +14,18 @@ export function MonthGrid({ v }: { v: PlannerVals }) {
         }}
       >
         {(v.dowLabels ?? []).map((l, i) => (
-          <Fragment key={i}>
-            <div
-              style={{
-                textAlign: 'center',
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-md)',
-                fontWeight: 'var(--font-weight-semibold)',
-                color: 'var(--color-muted)',
-                paddingBottom: '10px',
-              }}
-            >
-              {l}
-            </div>
-          </Fragment>
+          <div key={i}
+            style={{
+              textAlign: 'center',
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'var(--text-md)',
+              fontWeight: 'var(--font-weight-semibold)',
+              color: 'var(--color-muted)',
+              paddingBottom: '10px',
+            }}
+          >
+            {l}
+          </div>
         ))}
       </div>
       <div style={{ position: 'relative' }}>

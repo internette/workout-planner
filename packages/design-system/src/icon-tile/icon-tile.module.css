@@ -14,6 +14,6 @@
 .sm { width: 40px; height: 40px; border-radius: var(--radius-sm); }
 .md { width: 46px; height: 46px; border-radius: var(--radius-md); }
 
-/* As a button, it opens an icon picker (or a page). Drawn 40 px at sm; its tap area is 44. */
-.button { padding: 0; font: inherit; cursor: pointer; position: relative; }
-.button::after { content: ''; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
+/* As a button, it opens an icon picker (or a page). Drawn 40 px at sm; its tap area is 44 (the shared .hit in
+   base.css). */
+.button { composes: hit from global; padding: 0; font: inherit; cursor: pointer; }

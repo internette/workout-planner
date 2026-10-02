@@ -22,30 +22,26 @@ export function EditorHeader({ v }: { v: PlannerVals }) {
           {v.eEyebrow}
         </Text>
         {v.eNamePlaceholder ? (
-          <>
-            <TextField
-              variant="title"
-              aria-label="Workout name"
-              value={v.eName ?? ''}
-              onChange={v.setNewName}
-              onKeyDown={v.commitOnEnter}
-              placeholder="Name this workout"
-              error={v.nameError || undefined}
-            />
-          </>
+          <TextField
+            variant="title"
+            aria-label="Workout name"
+            value={v.eName ?? ''}
+            onChange={v.setNewName}
+            onKeyDown={v.commitOnEnter}
+            placeholder="Name this workout"
+            error={v.nameError || undefined}
+          />
         ) : null}
         {v.eNameStatic ? (
-          <>
-            <TextField
-              variant="title"
-              aria-label="Workout name"
-              value={v.eName ?? ''}
-              onChange={v.setEditName}
-              onKeyDown={v.commitOnEnter}
-              placeholder="Name this workout"
-              error={v.nameError || undefined}
-            />
-          </>
+          <TextField
+            variant="title"
+            aria-label="Workout name"
+            value={v.eName ?? ''}
+            onChange={v.setEditName}
+            onKeyDown={v.commitOnEnter}
+            placeholder="Name this workout"
+            error={v.nameError || undefined}
+          />
         ) : null}
       </div>
     </div>

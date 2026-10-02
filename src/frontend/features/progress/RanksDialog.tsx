@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { Dialog } from '@moonshot/design-system/dialog';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
@@ -17,13 +16,11 @@ export function RanksDialog({ v }: { v: PlannerVals }) {
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '18px' }}>
         {(v.rankLadder ?? []).map((r, i) => (
-          <Fragment key={i}>
-            <div style={css(r?.row)}>
-              <RankGem fill={r?.gemFill} faded={!!r?.gemFaded} />
-              <span style={css(r?.name)}>{r?.label}</span>
-              <span style={css(r?.xp)}>{r?.req}</span>
-            </div>
-          </Fragment>
+          <div key={i} style={css(r?.row)}>
+            <RankGem fill={r?.gemFill} faded={!!r?.gemFaded} />
+            <span style={css(r?.name)}>{r?.label}</span>
+            <span style={css(r?.xp)}>{r?.req}</span>
+          </div>
         ))}
       </div>
     </Dialog>

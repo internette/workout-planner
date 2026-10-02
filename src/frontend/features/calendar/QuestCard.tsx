@@ -33,14 +33,10 @@ export function QuestCard({ v }: { v: PlannerVals }) {
       </span>
       <span style={css(v.questIconWrap)}>
         {v.questDone ? (
-          <>
-            <Check color="var(--color-on-accent)" strokeWidth={2.6} size={16} />
-          </>
+          <Check color="var(--color-on-accent)" strokeWidth={2.6} size={16} />
         ) : null}
         {v.questOpen ? (
-          <>
-            <Sparkle size={16} color={vars.pink} />
-          </>
+          <Sparkle size={16} color={vars.pink} />
         ) : null}
       </span>
       {/* Beside the icon at any width: on a narrow phone the text wraps rather than dropping under it. */}

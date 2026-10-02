@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
 import { Check } from '../icons';
 import styles from './checkbox.module.css';
 
@@ -11,12 +11,16 @@ export interface CheckboxProps {
   switch?: boolean;
   disabled?: boolean;
   name?: string;
+  /** More about it, under the label and lined up with it: what it does, or what it costs. Read out with it, and not
+   * part of the press target. */
+  description?: ReactNode;
 }
 
 /** A tick box with its label. A native checkbox underneath, so Space toggles it and screen readers announce it. */
-export function Checkbox({ checked, onChange, children, switch: asSwitch, disabled, name }: CheckboxProps) {
+export function Checkbox({ checked, onChange, children, switch: asSwitch, disabled, name, description }: CheckboxProps) {
   const classes = [styles.wrap, checked && styles.checked, disabled && styles.disabled].filter(Boolean).join(' ');
-  return (
+  const descId = useId();
+  const box = (
     <label className={classes}>
       <input
         type="checkbox"
@@ -25,6 +29,7 @@ export function Checkbox({ checked, onChange, children, switch: asSwitch, disabl
         name={name}
         checked={checked}
         disabled={disabled}
+        aria-describedby={description ? descId : undefined}
         onChange={(e) => onChange(e.target.checked)}
       />
       <span className={styles.box} aria-hidden="true">
@@ -32,5 +37,14 @@ export function Checkbox({ checked, onChange, children, switch: asSwitch, disabl
       </span>
       <span className={styles.label}>{children}</span>
     </label>
+  );
+  if (!description) return box;
+  return (
+    <div>
+      {box}
+      <p id={descId} className={styles.description}>
+        {description}
+      </p>
+    </div>
   );
 }

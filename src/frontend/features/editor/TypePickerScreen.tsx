@@ -10,20 +10,18 @@ import { TypeChoiceCards } from '@/frontend/features/editor/TypeChoiceCards';
 
 export function TypePickerScreen({ v }: { v: PlannerVals }) {
   return (
-    <>
-      <div style={{ maxWidth: '560px' }}>
-        {v.retyping ? <BackBar label="Back" onBack={v.closeRetype} /> : <BackBar label={v.backLabel} onBack={v.backToDay} />}
-        <div style={{ marginTop: '18px' }}>
-          <Text variant="eyebrow" as="div" tone="slate">
-            {v.retyping ? v.eEyebrow : 'NEW WORKOUT'}
-          </Text>
-          <Text variant="heading" as="h1" style={{ margin: '3px 0 0' }}>
-            What kind of workout?
-          </Text>
-        </div>
-        <TypeChoiceCards v={v} />
-        {v.hasSavedChoices && !v.retyping ? <SavedChoices v={v} /> : null}
+    <div style={{ maxWidth: '560px' }}>
+      {v.retyping ? <BackBar label="Back" onBack={v.closeRetype} /> : <BackBar label={v.backLabel} onBack={v.backToDay} />}
+      <div style={{ marginTop: '18px' }}>
+        <Text variant="eyebrow" as="div" tone="slate">
+          {v.retyping ? v.eEyebrow : 'NEW WORKOUT'}
+        </Text>
+        <Text variant="heading" as="h1" style={{ margin: '3px 0 0' }}>
+          What kind of workout?
+        </Text>
       </div>
-    </>
+      <TypeChoiceCards v={v} />
+      {v.hasSavedChoices && !v.retyping ? <SavedChoices v={v} /> : null}
+    </div>
   );
 }
