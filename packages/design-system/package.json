@@ -21,6 +21,7 @@
     "./chip": "./src/chip/index.ts",
     "./colors": "./src/colors/index.ts",
     "./dialog": "./src/dialog/index.ts",
+    "./disclosure": "./src/disclosure/index.ts",
     "./elevation": "./src/elevation/index.ts",
     "./empty-state": "./src/empty-state/index.ts",
     "./icon-choice-group": "./src/icon-choice-group/index.ts",

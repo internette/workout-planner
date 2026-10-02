@@ -1,3 +1,4 @@
+import { DisclosureChevron } from '@moonshot/design-system/disclosure';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { IconTile } from '@moonshot/design-system/icon-tile';
@@ -6,7 +7,6 @@ import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import { StatRow } from '@/frontend/components/StatRow';
 import { css, t } from '@/frontend/features/planner/viewHelpers';
-import { DisclosureChevron } from '@/frontend/components/DisclosureChevron';
 import { KindTag, kindOf } from '@/frontend/components/KindTag';
 import { StatusDot } from '@/frontend/components/StatusDot';
 
@@ -24,7 +24,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
         <div
           style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
         >
-          <IconTile size="sm" className="day-card-tile">{card?.icoSvg}</IconTile>
+          <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
           {/* Takes the rest of the row, so a long name wraps beside the icon rather than dropping below it. */}
           <div style={{ minWidth: '0', flex: '1 1 0' }}>
             <KindTag kind={kindOf(card)} />
@@ -193,7 +193,7 @@ function FoldedCard({ card }: { card: any }) {
           cursor: 'pointer',
         }}
       >
-        <IconTile size="sm" className="day-card-tile">{card?.icoSvg}</IconTile>
+        <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
         <span style={{ flex: '1', minWidth: '0' }}>
           <KindTag kind={kindOf(card)} />
           <Text variant="cardTitle" as="span" style={{ display: 'block' }}>

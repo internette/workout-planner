@@ -1,6 +1,5 @@
-import { Chip } from '@moonshot/design-system/chip';
+import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { Label } from '@moonshot/design-system/text-field';
-import { ChipRow } from './ChipRow';
 
 export interface AreaChoiceProps {
   /** Every target area, with whether it's picked and how to change that. */
@@ -12,13 +11,13 @@ export function AreaChoice({ areas }: AreaChoiceProps) {
   return (
     <>
       <Label style={{ margin: 'var(--space-4) 0 var(--space-2)' }}>Target areas</Label>
-      <ChipRow>
+      <ChipGroup>
         {areas.map((a) => (
           <Chip key={a.name} tone="choice" size="md" selected={a.on} onClick={a.toggle}>
             {a.name}
           </Chip>
         ))}
-      </ChipRow>
+      </ChipGroup>
     </>
   );
 }

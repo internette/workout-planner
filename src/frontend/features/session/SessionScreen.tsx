@@ -4,7 +4,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { t } from '@/frontend/features/planner/viewHelpers';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
-import { Chip } from '@moonshot/design-system/chip';
+import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { Button } from '@moonshot/design-system/buttons';
 import { ChevronDown, Clock, Pencil, Repeat } from '@moonshot/design-system/icons';
 import { Popover } from '@moonshot/design-system/popover';
@@ -18,7 +18,6 @@ import { RideSessionCard } from '@/frontend/features/session/RideSessionCard';
 import { SessionExerciseRow } from '@/frontend/features/session/SessionExerciseRow';
 import { WorkoutCard } from '@/frontend/features/session/WorkoutCard';
 import { RestartDialog } from '@/frontend/features/calendar/RestartDialog';
-import { ChipRow } from '@/frontend/components/ChipRow';
 import { KindTag } from '@/frontend/components/KindTag';
 
 export function SessionScreen({ v }: { v: PlannerVals }) {
@@ -33,7 +32,7 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
         </Button>
       </BackBar>
       <PageTitle icon={v.dayIcoSvg} eyebrow={<>{v.eDate}<KindTag inline kind={v.eKind ?? null} /></>} title={v.eName} />
-      <ChipRow style={{ marginTop: '20px' }}>
+      <ChipGroup style={{ marginTop: '20px' }}>
         <Chip
           icon={<Clock color="var(--color-muted)" size={15} />}
           onClick={v.editTook}
@@ -82,7 +81,7 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
         {(v.areaPills ?? []).map((a, i) => (
           <Chip key={i}>{a}</Chip>
         ))}
-      </ChipRow>
+      </ChipGroup>
       <NeedsLine text={v.needs} />
       {v.isFuture ? (
         <Card style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>

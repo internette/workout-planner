@@ -1,12 +1,12 @@
 // The Chronicle: every entry, filtered by when.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import { ChoiceChips } from '@moonshot/design-system/chip';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
-import { Text } from '@moonshot/design-system/typography';
+import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { TextField } from '@moonshot/design-system/text-field';
 import { Button } from '@moonshot/design-system/buttons';
 import { Calendar } from '@moonshot/design-system/icons';
 import { PageHeader } from '@/frontend/components/PageHeader';
-import { ChoiceChips } from '@/frontend/components/ChoiceChips';
 import { ChronicleRow } from '@/frontend/features/chronicle/ChronicleRow';
 import { plural } from '@/frontend/shared/helpers';
 
@@ -44,16 +44,16 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
         <span className="sr-only" role="status">
           {v.diaryResults}
         </span>
-        {/* White on the page, where a choice chip's own grey would vanish; small, so all four fit on a narrow phone. */}
-        <div className="scope-chips">
-          <ChoiceChips
-            label="Show entries from"
-            size="sm"
-            options={SCOPES}
-            value={(v.diaryScope ?? 'all') as Scope}
-            onChange={v.setDiaryScope}
-          />
-        </div>
+        {/* On the page, not a card; small and compact, so all four fit on a narrow phone. */}
+        <ChoiceChips
+          label="Show entries from"
+          size="sm"
+          surface="page"
+          compact
+          options={SCOPES}
+          value={(v.diaryScope ?? 'all') as Scope}
+          onChange={v.setDiaryScope}
+        />
         {v.rangeShown ? (
           <div
             style={{
@@ -102,12 +102,7 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
       </div>
       {monthsOf(v.diaryList ?? []).map((g) => (
         <section key={g.label} aria-label={g.label.charAt(0) + g.label.slice(1).toLowerCase()}>
-          <Text variant="eyebrow" as="h2" tone="slate" style={{ margin: '20px 0 8px' }}>
-            {g.label}{' '}
-            <Text variant="caption" tone="muted" weight="regular" style={{ letterSpacing: '0', textTransform: 'none', marginLeft: '4px' }}>
-              {plural(g.entries.length, 'entry', 'entries')}
-            </Text>
-          </Text>
+          <SectionLabel label={g.label} note={plural(g.entries.length, 'entry', 'entries')} style={{ margin: '20px 0 8px' }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {g.entries.map((e, i) => (
               <ChronicleRow key={i} entry={e} />

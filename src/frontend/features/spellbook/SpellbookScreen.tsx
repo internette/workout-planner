@@ -2,11 +2,10 @@
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Card } from '@moonshot/design-system/card';
-import { Text } from '@moonshot/design-system/typography';
+import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { Button } from '@moonshot/design-system/buttons';
 import { ChevronLeft, Plus } from '@moonshot/design-system/icons';
-import { GroupLabel } from '@/frontend/components/GroupLabel';
 import { PageHeader } from '@/frontend/components/PageHeader';
 import { SearchBar } from '@/frontend/components/SearchBar';
 import { ActiveFilters, FilterButton } from '@/frontend/features/spellbook/FilterSheet';
@@ -107,7 +106,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
           >
             {(v.moveGroups ?? []).map((g, i) => (
               <div key={i}>
-                <GroupLabel label={g?.label} count={g?.count} />
+                <SectionLabel list label={g?.label} note={g?.count} />
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {(g?.items ?? []).map((m, i) => (
                     <ExerciseRow key={i} exercise={m} />
@@ -135,7 +134,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
             {(v.workoutGroups ?? []).map((g, gi) => (
               <div key={gi}>
                 {g?.label ? (
-                  <GroupLabel label={g?.label} count={g?.count} />
+                  <SectionLabel list label={g?.label} note={g?.count} />
                 ) : null}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {(g?.items ?? []).map((w, i) => (

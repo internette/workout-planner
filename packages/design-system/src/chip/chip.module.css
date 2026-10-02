@@ -41,8 +41,18 @@
   font-weight: var(--font-weight-semibold);
 }
 .choice.selected { background: var(--color-accent); color: var(--color-on-accent); }
+/* On the page rather than a card: white until picked, as the page's own tint would hide it. */
+.choice.onPage:not(.selected) { background: var(--color-surface); box-shadow: var(--elevation-hairline); }
 .choice:not(.selected):hover { filter: brightness(0.97); }
 
 /* A pressable chip is drawn about 36 px tall; its tap area is 44 (the shared .hit in base.css). */
 .clickable { composes: hit from global; cursor: pointer; }
 .icon, .trailing { display: inline-flex; }
+
+/* A row of chips, wrapping onto more lines as needed. */
+.group { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+/* Compact: on the narrowest phones, a little closer and slimmer, so a short row of choices stays on one line. */
+@media (max-width: 359px) {
+  .compact { gap: 6px; }
+  .compact .chip { padding: 8px 10px; }
+}

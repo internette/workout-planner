@@ -1,19 +1,16 @@
+import { IconTile } from '@moonshot/design-system/icon-tile';
 import { Card } from '@moonshot/design-system/card';
 import { Checkbox } from '@moonshot/design-system/checkbox';
-import { Text } from '@moonshot/design-system/typography';
-import { IconSquare } from '@/frontend/components/IconSquare';
+import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { LinkRow } from '@/frontend/components/LinkRow';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
-import { GroupLabel } from '@/frontend/components/GroupLabel';
 import { kindOf } from '@/frontend/components/KindTag';
 
 /** Picking a workout already in the Spellbook instead of making a new one. */
 export function SavedChoices({ v }: { v: PlannerVals }) {
   return (
     <>
-      <Text variant="eyebrow" tone="slate" as="h2" style={{ margin: '28px 0 4px' }}>
-        OR ONE FROM YOUR SPELLBOOK
-      </Text>
+      <SectionLabel label="OR ONE FROM YOUR SPELLBOOK" style={{ margin: '28px 0 4px' }} />
       <Text variant="caption" tone="muted" as="p" style={{ margin: '0 0 12px' }}>
         {v.savedChoicesNote}
       </Text>
@@ -29,11 +26,11 @@ export function SavedChoices({ v }: { v: PlannerVals }) {
         {(v.savedChoiceGroups ?? []).map((g, gi) => (
           <div key={gi}>
             {g?.label ? (
-              <GroupLabel label={g?.label} as="h3" />
+              <SectionLabel list label={g?.label} as="h3" />
             ) : null}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {(g?.items ?? []).map((w, i) => (
-                <LinkRow key={i} leading={<IconSquare>{w?.svg}</IconSquare>} title={w?.name} detail={w?.meta} kind={kindOf(w)} action="add" onClick={w?.pick} />
+                <LinkRow key={i} leading={<IconTile as="span" size="xs" variant="flat">{w?.svg}</IconTile>} title={w?.name} detail={w?.meta} kind={kindOf(w)} action="add" onClick={w?.pick} />
               ))}
             </div>
           </div>

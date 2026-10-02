@@ -1,7 +1,7 @@
+import { IconTile } from '@moonshot/design-system/icon-tile';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { DoneTick } from '@/frontend/components/DoneTick';
-import { IconSquare } from '@/frontend/components/IconSquare';
 import { SetPips } from '@/frontend/components/SetPips';
 
 /** An exercise on the session page, with its tick, and on today's session how far through its sets it is. */
@@ -11,7 +11,7 @@ export function SessionExerciseRow({ exercise }: { exercise: any }) {
       pad="sm"
       style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '13px' }}
     >
-      <IconSquare>{exercise?.icoSvg}</IconSquare>
+      <IconTile as="span" size="xs" variant="flat">{exercise?.icoSvg}</IconTile>
       <span style={{ minWidth: '0', flex: '1 1 auto' }}>
         <Text
           variant="cardTitle"

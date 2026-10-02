@@ -1,15 +1,14 @@
 import type { CSSProperties } from 'react';
 import { Card } from '@moonshot/design-system/card';
-import { Text } from '@moonshot/design-system/typography';
+import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { css } from '@/frontend/features/planner/viewHelpers';
-import { SectionHeader } from '@/frontend/components/SectionHeader';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** Progress: personal bests, all time. */
 export function PersonalBestsCard({ v, style }: { v: PlannerVals; style?: CSSProperties }) {
   return (
     <Card style={style}>
-      <SectionHeader title="PERSONAL BESTS" note={v.allTimeLabel} />
+      <SectionLabel as="span" label="PERSONAL BESTS" aside={v.allTimeLabel} />
       {v.recordsEmpty ? (
         <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
           Tick off an exercise with a weight, or finish a ride, and your bests show up here.

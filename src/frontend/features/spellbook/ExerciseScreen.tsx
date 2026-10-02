@@ -2,15 +2,14 @@
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Card } from '@moonshot/design-system/card';
-import { Text } from '@moonshot/design-system/typography';
-import { Chip } from '@moonshot/design-system/chip';
+import { SectionLabel, Text } from '@moonshot/design-system/typography';
+import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { Button } from '@moonshot/design-system/buttons';
 import { ChevronRight, Copy, Pencil, Plus } from '@moonshot/design-system/icons';
 import { BackBar } from '@/frontend/components/BackBar';
 import { DeleteSection } from '@/frontend/components/DeleteSection';
 import { StatRow } from '@/frontend/components/StatRow';
 import { PageTitle } from '@/frontend/components/PageTitle';
-import { ChipRow } from '@/frontend/components/ChipRow';
 
 export function ExerciseScreen({ v }: { v: PlannerVals }) {
   return (
@@ -43,22 +42,20 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
           ]}
         />
         {(v.exercise.areas ?? []).length ? (
-          <ChipRow style={{ marginTop: '18px' }}>
+          <ChipGroup style={{ marginTop: '18px' }}>
             {(v.exercise.areas ?? []).map((a, i) => (
               <Chip key={i}>{a}</Chip>
             ))}
-          </ChipRow>
+          </ChipGroup>
         ) : null}
         {v.exercise.equipment ? (
           <>
-            <Text variant="eyebrow" as="h2" tone="slate" style={{ margin: '16px 0 8px' }}>
-              EQUIPMENT
-            </Text>
-            <ChipRow>
+            <SectionLabel label="EQUIPMENT" style={{ margin: '16px 0 8px' }} />
+            <ChipGroup>
               {v.exercise.equipment.map((a, i) => (
                 <Chip key={i}>{a}</Chip>
               ))}
-            </ChipRow>
+            </ChipGroup>
           </>
         ) : null}
       </Card>
@@ -69,17 +66,15 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
         </Text>
       ) : (
         <>
-          <Text variant="eyebrow" tone="slate" as="div" style={{ margin: '24px 0 10px' }}>
-            USED IN
-          </Text>
+          <SectionLabel label="USED IN" style={{ margin: '24px 0 10px' }} />
           {(v.exercise.usedIn ?? []).length ? (
-            <ChipRow>
+            <ChipGroup>
               {(v.exercise.usedIn ?? []).map((w, i) => (
                 <Chip key={i} onClick={w?.open} trailing={<ChevronRight color="var(--color-muted)" strokeWidth={2.2} size={14} />}>
                   {w?.name}
                 </Chip>
               ))}
-            </ChipRow>
+            </ChipGroup>
           ) : (
             <Text variant="body" as="p" tone="muted" style={{ margin: '0' }}>
               Not part of a saved workout yet.
