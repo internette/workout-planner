@@ -42,8 +42,8 @@ export const fontWeights = {
 } as const;
 
 export const tracking = {
-  loose: { value: '.02em', use: 'Small badges' },
-  wide: { value: '.1em', use: 'Uppercase micro labels' },
+  base: { value: '0', use: 'Everything, unless it is in small capitals' },
+  loose: { value: '.1em', use: 'Uppercase micro labels' },
 } as const;
 
 export const leading = {

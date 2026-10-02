@@ -225,7 +225,7 @@ export default function TypographyPage() {
                 fontSize: 'var(--text-xl)',
                 fontWeight: 'var(--font-weight-bold)',
                 letterSpacing: `var(--tracking-${name})`,
-                textTransform: name === 'wide' ? 'uppercase' : undefined,
+                textTransform: name === 'loose' ? 'uppercase' : undefined,
               }}
             >
               Today&rsquo;s quest

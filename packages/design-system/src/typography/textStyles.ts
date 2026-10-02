@@ -61,7 +61,7 @@ export const textStyles = {
     family: 'body',
     size: 'sm',
     weight: 'bold',
-    tracking: 'wide',
+    tracking: 'loose',
     use: 'Small capitals: labels above content, section headings, stat captions',
   },
 } as const;

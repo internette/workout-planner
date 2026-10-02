@@ -139,7 +139,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                 </Text>
                 <SparkleTrail className={styles.trail} />
               </span>
-              <Text variant="hero" as="h1" style={{ margin: '14px 0 0', letterSpacing: '-0.03em', lineHeight: 1.04, textWrap: 'balance' }}>
+              <Text variant="hero" as="h1" style={{ margin: '14px 0 0', lineHeight: 1.04, textWrap: 'balance' }}>
                 Answer the call.
                 <br />
                 Then do the sets.
