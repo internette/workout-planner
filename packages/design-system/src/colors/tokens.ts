@@ -45,7 +45,7 @@ export const colorGroups = {
     teal: { hex: '#5EC4D6', use: 'Upcoming markers, the third rank tier' },
     tealTint: { hex: '#E4F4F7', use: 'Teal rank badge' },
     tealDeep: { hex: '#2A7480', use: 'Text on teal tints (4.75:1 on teal tint)' },
-    coral: { hex: '#F0A385', use: 'Sparkles' },
+    peach: { hex: '#F0A385', use: 'Sparkles, and a workout icon colour' },
     gold: { hex: '#E0A93A', use: 'Rest-day sparkle' },
     goldLight: { hex: '#F0C060', use: 'Streak sparkle' },
   },
@@ -100,24 +100,22 @@ export const gradients = {
   },
 } as const;
 
-/** See-through colours, written as CSS variables like the others, e.g. `var(--color-line)`. */
+/** See-through colours, written as CSS variables like the others, e.g. `var(--color-line)`. Most are a token at a set
+ * strength, written with color-mix so they follow the theme; the dark theme overrides the few that aren't. */
+const mix = (token: string, pct: number) => `color-mix(in srgb, var(--color-${token}) ${pct}%, transparent)`;
 export const translucents = {
   line: { value: rgba(colors.ink, 0.07), use: 'Every divider line: between rows, around cards, under a popover’s header. One strength everywhere.' },
   surfaceRest: { value: rgba('#FFFFFF', 0.5), use: 'A quiet row on the page: rest days, a day gone by' },
-  surfaceBar: { value: rgba('#FFFFFF', 0.94), use: 'The phone tab bar, over the page as it scrolls' },
-  onAccentSoft: { value: rgba('#FFFFFF', 0.85), use: 'Secondary text and icons on pink' },
-  onAccentFaint: { value: rgba('#FFFFFF', 0.6), use: 'Marks on pink, such as a rest-day dash' },
+  surfaceBar: { value: mix('surface', 94), use: 'The phone tab bar, over the page as it scrolls' },
+  onAccentSoft: { value: mix('on-accent', 85), use: 'Secondary text and icons on the accent' },
+  onAccentFaint: { value: mix('on-accent', 70), use: 'Marks on the accent, such as a rest-day dash' },
+  accentWash: { value: mix('accent-tint', 50), use: 'A see-through accent fill: the dashed "add" button' },
   shadow: { value: rgba(colors.ink, 0.14), use: 'The shadow under something lifted off the page, such as a row being dragged' },
-  accentWash: { value: 'rgba(252, 231, 239, 0.5)', use: 'A see-through pink fill: the dashed "add" button' },
-} as const;
-
-export const overlays = {
   scrim: { value: rgba(colors.ink, 0.35), use: 'The dimmed page behind a dialog' },
 } as const;
 
-/** Every gradient and overlay as a CSS custom property name and value. */
+/** Every see-through colour and gradient as a CSS custom property name and value. */
 export const compositeVariables: Record<string, string> = {
   ...Object.fromEntries(Object.entries(translucents).map(([k, v]) => [cssVarName(k), v.value])),
   ...Object.fromEntries(Object.entries(gradients).map(([k, v]) => [`--gradient-${k}`, v.value])),
-  ...Object.fromEntries(Object.entries(overlays).map(([k, v]) => [`--${k}`, v.value])),
 };

@@ -19,11 +19,6 @@ export const ACCENTS: { name: Accent; label: string; swatch: string }[] = [
   { name: 'coral', label: 'Coral', swatch: '#E76938' },
 ];
 
-const alpha = (hex: string, a: number) => {
-  const n = parseInt(hex.slice(1), 16);
-  return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
-};
-
 type Light = { accent: string; hover: string; deep: string; tint: string; on: string; canvas: string; mist: string };
 type Dark = Light & {
   surface: string;
@@ -76,8 +71,6 @@ const accentVars = (t: Light) => ({
   accentDeep: t.deep,
   accentTint: t.tint,
   onAccent: t.on,
-  onAccentSoft: alpha(t.on, 0.85),
-  onAccentFaint: alpha(t.on, 0.7),
   canvas: t.canvas,
   mist: t.mist,
 });
@@ -122,12 +115,8 @@ export const accentThemeCss = (Object.keys(LIGHT) as Exclude<Accent, 'pink'>[])
     const l = LIGHT[name];
     const d = DARK[name];
     return (
-      block(`[data-accent="${name}"]`, { ...accentVars(l), accentWash: alpha(l.tint, 0.5) }) +
-      block(`[data-accent="${name}"][data-theme="dark"]`, {
-        ...darkVars(d),
-        surfaceBar: alpha(d.surface, 0.94),
-        accentWash: alpha(d.tint, 0.6),
-      })
+      block(`[data-accent="${name}"]`, accentVars(l)) +
+      block(`[data-accent="${name}"][data-theme="dark"]`, darkVars(d))
     );
   })
   .join('') + `[data-accent="teal"]{--gradient-gem-tint:${TEAL_GEM_TINT}}`;

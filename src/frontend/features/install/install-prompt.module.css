@@ -14,7 +14,7 @@
   animation: rise var(--dur-bar) var(--ease-soft);
 }
 .sheet[open] { display: flex; flex-direction: column; gap: var(--space-4); }
-.sheet::backdrop { background: var(--scrim); }
+.sheet::backdrop { background: var(--color-scrim); }
 
 @keyframes rise {
   from { transform: translateY(100%); }

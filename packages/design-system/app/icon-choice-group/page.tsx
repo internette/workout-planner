@@ -24,7 +24,7 @@ const SWATCHES = [
   { value: colors.periwinkle, label: 'Periwinkle' },
   { value: colors.teal, label: 'Teal' },
   { value: colors.slate, label: 'Slate' },
-  { value: colors.coral, label: 'Coral' },
+  { value: colors.peach, label: 'Peach' },
 ];
 const icons = (color?: string) =>
   EXERCISE_ICON_NAMES.map((name) => ({
