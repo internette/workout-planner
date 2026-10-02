@@ -9,54 +9,48 @@ export const darkColors: Record<ColorName, string> = {
   slate: '#C9BCCB',
   slateDeep: '#D8CCD9',
   muted: '#B3A3B3',
-  hairline: '#54445A',
+  // Lines and controls
   outline: '#8E7F93',
-  // Roles
+  hairline: '#54445A',
+  // Surfaces (white stays white: it's only used where white is meant)
+  canvas: '#1B1320',
   surface: '#281D2F',
-  onAccent: '#281D2F',
-  onStrong: '#281D2F',
+  mist: '#33263B',
+  slateTint: '#2F2640',
+  white: '#FFFFFF',
   // Accent (Plum dusk's is pink)
   accent: '#F06FA6',
   accentHover: '#F48AB6',
   accentDeep: '#F58BB8',
   accentTint: '#45223A',
-  // Surfaces (white stays white: it's only used where white is meant)
-  white: '#FFFFFF',
-  canvas: '#1B1320',
-  mist: '#33263B',
-  slateTint: '#2F2640',
-  // Pink
+  // On colour
+  onAccent: '#281D2F',
+  onStrong: '#281D2F',
+  // Brand
   pink: '#F06FA6',
-  pinkDeep: '#F58BB8',
   pinkTint: '#45223A',
-  // Periwinkle and teal
+  pinkDeep: '#F58BB8',
   periwinkle: '#95A6DC',
   periwinkleTint: '#2A2C45',
   periwinkleDeep: '#B5C2EA',
   teal: '#6FD0E0',
   tealTint: '#1E3238',
   tealDeep: '#8FDCE8',
-  // Highlights
-  coral: '#F0A385',
+  peach: '#F0A385',
   gold: '#E0A93A',
   goldLight: '#F0C060',
-  // Danger
+  // Status
   danger: '#E0677A',
   dangerHover: '#E88595',
   dangerTint: '#3E1D26',
 };
 
-/** The see-through colours for the dark theme: light lines on dark, and dark plum dimmed on pink. */
+/** The dark theme's see-through colours, where they differ from the light formula: light lines and rows on a dark
+ * page, black shadows, and a stronger accent wash. The rest follow their tokens. */
 export const darkTranslucents: Record<string, string> = {
   line: 'rgba(255, 255, 255, 0.08)',
   surfaceRest: 'rgba(255, 255, 255, 0.04)',
-  surfaceBar: 'rgba(40, 29, 47, 0.94)',
-  onAccentSoft: 'rgba(40, 29, 47, 0.85)',
-  onAccentFaint: 'rgba(40, 29, 47, 0.7)',
+  accentWash: 'color-mix(in srgb, var(--color-accent-tint) 60%, transparent)',
   shadow: 'rgba(0, 0, 0, 0.5)',
-  accentWash: 'rgba(69, 34, 58, 0.6)',
-};
-
-export const darkOverlays: Record<string, string> = {
   scrim: 'rgba(0, 0, 0, 0.55)',
 };

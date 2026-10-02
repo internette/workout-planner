@@ -42,9 +42,9 @@ export const QUESTS = [
   { title:'Seal the rift', note:'Close it the only way it closes: finish everything on the plan.',
     done:'The rift is sealed.' },
 ];
-export const ICON_COLORS = [colors.pink, colors.periwinkle, colors.teal, colors.slate, colors.coral];
+export const ICON_COLORS = [colors.pink, colors.periwinkle, colors.teal, colors.slate, colors.peach];
 // What the icon and colour choices are called, for screen readers.
-export const ICON_COLOR_NAMES = ['Pink', 'Periwinkle', 'Teal', 'Slate', 'Coral'];
+export const ICON_COLOR_NAMES = ['Pink', 'Periwinkle', 'Teal', 'Slate', 'Peach'];
 export const ICON_NAMES: Record<string, string> = {
   h: 'Dumbbell',
   v: 'Upright dumbbell',

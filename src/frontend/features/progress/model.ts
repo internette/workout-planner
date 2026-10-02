@@ -201,7 +201,7 @@ export function progressVals(ctx: Ctx) {
           'var(--color-periwinkle)',
           'var(--color-teal)',
           'var(--color-slate)',
-          'var(--color-coral)',
+          'var(--color-peach)',
         ][i],
         String(questCounts[t]),
       ])
