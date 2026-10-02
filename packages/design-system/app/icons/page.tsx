@@ -12,7 +12,7 @@ const card: React.CSSProperties = {
   alignItems: 'center',
   gap: 10,
   padding: '18px 8px',
-  background: 'var(--color-white)',
+  background: 'var(--color-surface)',
   borderRadius: 'var(--radius-md)',
   boxShadow: '0 4px 14px var(--color-line)',
   color: 'var(--color-ink)',

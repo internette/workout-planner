@@ -19,7 +19,7 @@ export default function RadiiPage() {
       <p style={note}>Smallest first. The box shows each corner at its real size.</p>
       <div style={grid}>
         {Object.entries(radii).map(([name, { value, use }]) => (
-          <div key={name} style={{ padding: 16, background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)' }}>
+          <div key={name} style={{ padding: 16, background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)' }}>
             <div style={{ height: 56, background: 'var(--color-pink-tint)', boxShadow: 'inset 0 0 0 2px var(--color-pink)', borderRadius: `var(--radius-${name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())})` }} />
             <div style={{ marginTop: 12, fontWeight: 600 }}>{name}</div>
             <div style={meta}>{value}</div>

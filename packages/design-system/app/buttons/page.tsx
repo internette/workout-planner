@@ -10,7 +10,7 @@ const row: React.CSSProperties = {
   alignItems: 'center',
   gap: 14,
   padding: '18px 20px',
-  background: 'var(--color-white)',
+  background: 'var(--color-surface)',
   borderRadius: 'var(--radius-lg)',
 };
 const label: React.CSSProperties = { width: 90, fontSize: 'var(--text-sm)', color: 'var(--color-muted)' };
@@ -81,7 +81,7 @@ export default function ButtonsPage() {
       <p style={note}>Icons sit before the label; the gap adjusts to the size.</p>
       <div style={row}>
         <Button type="primary" size="sm">
-          <Plus size={16} color="var(--color-white)" />
+          <Plus size={16} color="var(--color-on-strong)" />
           Add workout
         </Button>
         <Button type="neutral" ghost size="lg">
@@ -174,7 +174,7 @@ export default function ButtonsPage() {
             style={{ display: 'inline-flex', padding: 10, borderRadius: 'var(--radius-md)', background: 'var(--color-pink)' }}
           >
             <IconButton label="Remove" size="xs" tone="inverse">
-              <Close size={13} color="var(--color-white)" />
+              <Close size={13} color="var(--color-on-strong)" />
             </IconButton>
           </span>
         </div>

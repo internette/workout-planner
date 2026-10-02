@@ -1,8 +1,9 @@
 // Plum dusk: the dark theme. The light palette's names, with values for a dark plum page. Applied when
 // <html data-theme="dark"> is set (Profile → Settings → Appearance). Text on its surfaces is 4.5:1 or more; the pink
 // is brightened so it glows, and text on it turns dark plum (5.8:1), since white on the brighter pink would be faint.
-// Only what changes is listed: white, peach and gold stay as they are, and the accent still names pink, so it
-// takes the brighter pink from here. As in the light palette, a value can name another color instead of a hex.
+// Only what changes is listed: peach and gold stay as they are, text on strong fills follows the card color, and the
+// accent still names pink, so it takes the brighter pink from here. As in the light palette, a value can name another
+// color instead of a hex.
 import type { ColorName } from './tokens';
 
 export const darkColors: Partial<Record<ColorName, string>> = {
@@ -21,8 +22,6 @@ export const darkColors: Partial<Record<ColorName, string>> = {
   slateTint: '#2F2640',
   // Accent (pink, as in light; only its hover differs from the brand pink's shades)
   accentHover: '#F48AB6',
-  // Text on the bright fills: the card color
-  onStrong: 'surface',
   // Brand
   pink: '#F06FA6',
   pinkTint: '#45223A',
@@ -43,8 +42,8 @@ export const darkColors: Partial<Record<ColorName, string>> = {
  * page, black shadows, and a stronger accent wash. The rest follow their tokens. */
 const mix = (token: string, pct: number) => `color-mix(in srgb, var(--color-${token}) ${pct}%, transparent)`;
 export const darkTranslucents: Record<string, string> = {
-  line: mix('white', 8),
-  surfaceRest: mix('white', 4),
+  line: 'color-mix(in srgb, white 8%, transparent)',
+  surfaceRest: 'color-mix(in srgb, white 4%, transparent)',
   accentWash: mix('accent-tint', 60),
   shadow: 'rgba(0, 0, 0, 0.5)',
   scrim: 'rgba(0, 0, 0, 0.55)',

@@ -35,7 +35,7 @@ export function Preview({ slug }: { slug: string }) {
           {(['pink', 'periwinkle', 'teal', 'coral', 'slate'] as const).map((name) => (
             <span
               key={name}
-              style={{ width: 24, height: 24, borderRadius: '50%', background: colors[name], boxShadow: '0 0 0 2px var(--color-white)' }}
+              style={{ width: 24, height: 24, borderRadius: '50%', background: colors[name], boxShadow: '0 0 0 2px var(--color-surface)' }}
             />
           ))}
         </>
@@ -126,7 +126,7 @@ export function Preview({ slug }: { slug: string }) {
       return (
         <>
           {(['hairline', 'raised', 'overlay'] as const).map((name) => (
-            <span key={name} style={{ width: 44, height: 44, borderRadius: 'var(--radius-sm)', background: 'var(--color-white)', boxShadow: `var(--elevation-${name})` }} />
+            <span key={name} style={{ width: 44, height: 44, borderRadius: 'var(--radius-sm)', background: 'var(--color-surface)', boxShadow: `var(--elevation-${name})` }} />
           ))}
         </>
       );
@@ -164,7 +164,7 @@ export function Preview({ slug }: { slug: string }) {
       return (
         <>
           <span style={{ width: 40, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--hover-neutral)', boxShadow: 'inset 0 0 0 1px var(--color-hairline)' }} />
-          <span style={{ width: 40, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--color-white)', outline: 'var(--focus-ring)', outlineOffset: 'var(--focus-offset)' }} />
+          <span style={{ width: 40, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--color-surface)', outline: 'var(--focus-ring)', outlineOffset: 'var(--focus-offset)' }} />
         </>
       );
     case 'progress-bar':

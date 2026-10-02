@@ -40,12 +40,12 @@ export default function ChipPage() {
       <h2 id="accent" style={h2}>Accent</h2>
       <p style={note}>Solid pink, for something that is switched on. A trailing slot holds a small action.</p>
       <div style={row}>
-        <Chip tone="accent" icon={<Repeat color="var(--color-white)" size={15} />}>
+        <Chip tone="accent" icon={<Repeat color="var(--color-on-strong)" size={15} />}>
           Weekly
         </Chip>
         <Chip
           tone="accent"
-          icon={<Repeat color="var(--color-white)" size={15} />}
+          icon={<Repeat color="var(--color-on-strong)" size={15} />}
           trailing={
             <IconButton label="End this series" size="xs" tone="inverse">
               <Close color="rgba(255,255,255,0.85)" strokeWidth={2.2} size={13} />
@@ -62,7 +62,7 @@ export default function ChipPage() {
         at a time for a single choice, or several at once for a multi-select. Unselected choices are canvas-colored,
         so place them on a white card.
       </p>
-      <div style={{ ...row, flexDirection: 'column', alignItems: 'flex-start', background: 'var(--color-white)' }}>
+      <div style={{ ...row, flexDirection: 'column', alignItems: 'flex-start', background: 'var(--color-surface)' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           {zones.map((z) => (
             <Chip key={z} tone="choice" size="md" selected={zone === z} onClick={() => setZone(z)}>
@@ -99,7 +99,7 @@ export default function ChipPage() {
         few options where a segmented control would cut off the last. <code>compact</code> brings them closer on the
         narrowest phones, so a short row stays on one line.
       </p>
-      <div style={{ ...row, background: 'var(--color-white)' }}>
+      <div style={{ ...row, background: 'var(--color-surface)' }}>
         <ChoiceChips label="Effort" options={zones.map((z) => ({ value: z, label: z }))} value={zone} onChange={setZone} />
       </div>
       <div style={{ ...row, marginTop: 10 }}>

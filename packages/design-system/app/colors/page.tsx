@@ -1,4 +1,4 @@
-import { colorGroups, cssVarName, gradients, translucents } from '../../src/colors';
+import { colorGroups, colors, cssVarName, gradients, translucents, type ColorName } from '../../src/colors';
 import { DocPage } from '../docs';
 
 export const metadata = { title: 'Colors — Design system' };
@@ -26,7 +26,7 @@ const swatchFor = (name: string) => (name === 'onStrong' ? onFill(cssVarName(nam
 
 function Swatch({ name, swatch, lines, use }: { name: string; swatch: string; lines: string[]; use: string }) {
   return (
-    <div style={{ background: 'var(--color-white)', borderRadius: 'var(--radius-md)', overflow: 'hidden', boxShadow: 'var(--elevation-raised)' }}>
+    <div style={{ background: 'var(--color-surface)', borderRadius: 'var(--radius-md)', overflow: 'hidden', boxShadow: 'var(--elevation-raised)' }}>
       <div style={{ height: 64, background: swatch, borderBottom: '1px solid var(--color-line)' }} />
       <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 4 }}>
         <strong style={{ fontSize: 'var(--text-base)' }}>{name}</strong>
@@ -64,7 +64,7 @@ export default function ColorsPage() {
                 key={name}
                 name={name}
                 swatch={swatchFor(name)}
-                lines={['ref' in c ? `Same as ${c.ref} · default theme` : `${c.hex} · default theme`, `var(${cssVarName(name)})`]}
+                lines={[`${colors[name as ColorName]} · default theme`, `var(${cssVarName(name)})`]}
                 use={c.use}
               />
             ))}
