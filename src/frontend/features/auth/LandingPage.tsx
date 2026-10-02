@@ -260,7 +260,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
             <div className={styles.closingCta}>
               <Button type="primary" size="lg" glow onClick={toCard}>
                 Step through
-                <ChevronRight color="var(--color-on-accent)" strokeWidth={2.4} size={17} />
+                <ChevronRight color="var(--color-on-strong)" strokeWidth={2.4} size={17} />
               </Button>
             </div>
           </Card>

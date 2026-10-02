@@ -30,7 +30,7 @@ export function DoneTick({ done, onToggle, label }: DoneTickProps) {
         background: done ? 'var(--color-accent)' : 'none',
       }}
     >
-      <Check color={done ? 'var(--color-on-accent)' : 'var(--color-outline)'} strokeWidth={2.6} size={15} />
+      <Check color={done ? 'var(--color-on-strong)' : 'var(--color-outline)'} strokeWidth={2.6} size={15} />
     </button>
   );
 }

@@ -94,7 +94,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                   <span style={css(d?.letterStyle)}>{d?.letter}</span>
                   <span style={css(d?.monStyle)}>{d?.mon}</span>
                   <span style={css(d?.numStyle)}>{d?.num}</span>
-                  <StatusDot status={d?.dot} onAccent={!!d?.selected} />
+                  <StatusDot status={d?.dot} selected={!!d?.selected} />
                 </button>
               ))}
             </div>
@@ -131,7 +131,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
           actions={
             <>
               <Button type="primary" size="lg" glow onClick={v.goNewWorkout}>
-                <Plus color="var(--color-on-accent)" size={16} />
+                <Plus color="var(--color-on-strong)" size={16} />
                 Plan your first workout
               </Button>
               <Button type="neutral" ghost size="md" onClick={v.goArsenal}>
@@ -161,7 +161,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
           }
           actions={
             <Button type="primary" size="lg" glow onClick={v.goNewWorkout}>
-              <Plus color="var(--color-on-accent)" size={16} />
+              <Plus color="var(--color-on-strong)" size={16} />
               Add workout
             </Button>
           }
@@ -215,7 +215,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                   justifyContent: 'center',
                 }}
               >
-                <Check color="var(--color-on-accent)" strokeWidth={2.6} size={26} />
+                <Check color="var(--color-on-strong)" strokeWidth={2.6} size={26} />
               </div>
               <Text variant="heading" as="h3" style={{ margin: '16px 0 0' }}>
                 Week sealed
@@ -245,7 +245,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                   size="lg"
                   onClick={v.goNewWorkout}
                 >
-                  <Plus color="var(--color-on-accent)" size={16} />
+                  <Plus color="var(--color-on-strong)" size={16} />
                   Add workout
                 </Button>
               }
@@ -306,7 +306,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                     justifyContent: 'center',
                   }}
                 >
-                  <Check color="var(--color-on-accent)" strokeWidth={2.6} size={12} />
+                  <Check color="var(--color-on-strong)" strokeWidth={2.6} size={12} />
                 </span>
                 <Text variant="subheading">{v.shownMonthDone}</Text>
                 <Text variant="small" tone="muted">

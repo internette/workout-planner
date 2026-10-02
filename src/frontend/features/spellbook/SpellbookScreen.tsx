@@ -32,7 +32,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
             data-arsenal-new
             style={{ whiteSpace: 'nowrap' }}
           >
-            <Plus color="var(--color-on-accent)" strokeWidth={2.2} size={16} />
+            <Plus color="var(--color-on-strong)" strokeWidth={2.2} size={16} />
             {v.arsenalNewLabel}
           </Button>
         }

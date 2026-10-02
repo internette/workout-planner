@@ -47,7 +47,7 @@ export function MonthGrid({ v }: { v: PlannerVals }) {
                 style={css(c?.wrap)}
               >
                 <span style={css(c?.num)}>{c?.label}</span>
-                <StatusDot status={c?.dot} onAccent={!!c?.selected} />
+                <StatusDot status={c?.dot} selected={!!c?.selected} />
               </button>
             ),
           )}

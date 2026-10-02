@@ -35,7 +35,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
         <DatePicker v={v} />
         ) : null}
         {v.repeatOn ? (
-          <Chip tone="accent" icon={<Repeat color="var(--color-on-accent)" size={15} />}>
+          <Chip tone="accent" icon={<Repeat color="var(--color-on-strong)" size={15} />}>
             Weekly
           </Chip>
         ) : null}

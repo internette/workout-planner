@@ -10,7 +10,7 @@ export const colorGroups = {
     slate: { hex: '#5C6684', use: 'Secondary text, completed states' },
     slateDeep: { hex: '#4A5268', use: 'Text on the tinted gradient cards and grey badges, where slate would fall short of 4.5:1' },
     muted: { hex: '#6E6881', use: 'Tertiary text, inactive controls (4.5:1 or more on canvas, mist and the accent tint)' },
-    onStrong: { ref: 'white', use: 'Text and icons on ink and danger fills, in any color theme' },
+    onStrong: { ref: 'white', use: 'Text and icons on a strong fill: the accent, ink, danger and the gem gradient' },
   },
   'Lines and controls': {
     outline: { hex: '#8A859A', use: 'Empty controls you can still use: unticked boxes, unrated stars (3:1 or more on canvas and white)' },
@@ -24,14 +24,13 @@ export const colorGroups = {
     white: { hex: '#FFFFFF', use: 'White that stays white in every theme, such as the rank-up ceremony' },
   },
   // The theme's color: pink here, and teal, periwinkle, slate or coral in the other color themes (Profile →
-  // Settings → Color). Buttons, selection, ticks, accent text and tints use these, and onAccent is what goes on the
-  // accent: dark in the light teal, periwinkle and coral themes, where the accent is light.
+  // Settings → Color). Buttons, selection, ticks, accent text and tints use these. What goes on the accent is
+  // onStrong, as on any strong fill: every theme's accent is deep enough for it.
   Accent: {
     accent: { ref: 'pink', use: 'Actions, selection, marks, bars and ticks' },
     accentHover: { hex: '#C7286C', use: 'Primary action, hovered' },
     accentDeep: { ref: 'pinkDeep', use: 'Accent text on white and on the accent tint' },
     accentTint: { ref: 'pinkTint', use: 'Selected and active backgrounds' },
-    onAccent: { ref: 'white', use: 'Text and icons on the accent and the gem gradient' },
   },
   // The brand's own colors, which stay themselves whatever the theme: pink for the Happy mood and the first rank
   // tier, periwinkle and teal for the planned and upcoming marks and the later tiers, and the sparkles.
@@ -83,7 +82,7 @@ export const cssColor = (value: string) => (value.startsWith('#') ? value : `var
 export const themed = (color: string | null | undefined): string | undefined => {
   if (!color) return undefined;
   const hit = (Object.entries(colors) as [string, string][]).find(
-    ([name, hex]) => hex.toUpperCase() === color.toUpperCase() && !['surface', 'onAccent', 'onStrong', 'white'].includes(name) && !name.startsWith('accent'),
+    ([name, hex]) => hex.toUpperCase() === color.toUpperCase() && !['surface', 'onStrong', 'white'].includes(name) && !name.startsWith('accent'),
   );
   return hit ? `var(${cssVarName(hit[0])})` : color;
 };
@@ -118,8 +117,6 @@ export const translucents = {
   line: { value: rgba(colors.ink, 0.07), use: 'Every divider line: between rows, around cards, under a popover’s header. One strength everywhere.' },
   surfaceRest: { value: mix('white', 50), use: 'A quiet row on the page: rest days, a day gone by' },
   surfaceBar: { value: mix('surface', 94), use: 'The phone tab bar, over the page as it scrolls' },
-  onAccentSoft: { value: mix('on-accent', 85), use: 'Secondary text and icons on the accent' },
-  onAccentFaint: { value: mix('on-accent', 70), use: 'Marks on the accent, such as a rest-day dash' },
   accentWash: { value: mix('accent-tint', 50), use: 'A see-through accent fill: the dashed "add" button' },
   shadow: { value: rgba(colors.ink, 0.14), use: 'The shadow under something lifted off the page, such as a row being dragged' },
   scrim: { value: rgba(colors.ink, 0.35), use: 'The dimmed page behind a dialog' },

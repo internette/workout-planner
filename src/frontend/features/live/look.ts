@@ -10,7 +10,6 @@ export type LiveLook = {
   soft: string;
   track: string;
   accent: string;
-  onAccent: string;
   second: string;
   onSecond: string;
   /** An icon on the second color's tile (the ride's bike). */
@@ -21,7 +20,7 @@ export type LiveLook = {
 // Taken from the color themes themselves, so the artwork follows any change to them.
 export function liveLook(accent: Accent, theme: Theme): LiveLook {
   const p = paletteFor(theme, accent);
-  const card = { card: p.surface, ink: p.ink, muted: p.muted, soft: p.slate, track: p.mist, accent: p.accent, onAccent: p.onAccent, second: p.accentTint };
+  const card = { card: p.surface, ink: p.ink, muted: p.muted, soft: p.slate, track: p.mist, accent: p.accent, second: p.accentTint };
   const gem: [string, string, string] = [p.accent, p.periwinkle, p.teal];
   return theme === 'dark'
     ? { ...card, onSecond: p.ink, iconInk: p.accent, gem }

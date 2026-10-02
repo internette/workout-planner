@@ -54,7 +54,7 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
         <NotesCard style={{ marginTop: '12px' }}>{v.template.notes}</NotesCard>
       ) : null}
       <Button type="primary" size="lg" fullWidth onClick={v.template.schedule} style={{ marginTop: '18px' }}>
-        <Calendar color="var(--color-on-accent)" size={17} />
+        <Calendar color="var(--color-on-strong)" size={17} />
         Add to calendar
       </Button>
       {v.scheduleCalendar?.done ? (

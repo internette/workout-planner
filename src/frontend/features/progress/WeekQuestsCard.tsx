@@ -19,7 +19,7 @@ export function WeekQuestsCard({ v }: { v: PlannerVals }) {
           <button key={i} type="button" onClick={q?.open} aria-label={q?.aria} style={css(q?.row)}>
             <span style={css(q?.mark)}>
               {q?.done ? (
-                <Check color="var(--color-on-accent)" strokeWidth={3} size={10} />
+                <Check color="var(--color-on-strong)" strokeWidth={3} size={10} />
               ) : null}
             </span>
             <Text variant="micro" tone="muted" style={{ flex: 'none', width: '44px' }}>

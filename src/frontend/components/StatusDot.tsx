@@ -8,7 +8,7 @@ export interface StatusDotProps {
   /** `sm` under a date (the week strip, the month grid, the legend); `md` at the end of a week row. */
   size?: 'sm' | 'md';
   /** Drawn on the accent color: a selected day. */
-  onAccent?: boolean;
+  selected?: boolean;
 }
 
 // Done is a filled dot, planned a ring, missed a fainter and slightly larger ring, partly done a half-filled one, and
@@ -18,9 +18,9 @@ const SIZES = {
   md: { dot: 8, partly: 8, missed: 9, rest: [14, 2] },
 };
 
-export function StatusDot({ status, size = 'sm', onAccent = false }: StatusDotProps) {
+export function StatusDot({ status, size = 'sm', selected = false }: StatusDotProps) {
   const s = SIZES[size];
-  const ink = onAccent ? 'var(--color-on-accent)' : 'var(--color-slate)';
+  const ink = selected ? 'var(--color-on-strong)' : 'var(--color-slate)';
   const round = (px: number, rest: CSSProperties): CSSProperties => ({ width: px, height: px, borderRadius: 'var(--radius-full)', ...rest });
   const style: CSSProperties =
     status === 'done'
@@ -28,14 +28,14 @@ export function StatusDot({ status, size = 'sm', onAccent = false }: StatusDotPr
       : status === 'partly'
         ? round(s.partly, { boxShadow: `inset 0 0 0 1.5px ${ink}`, background: `linear-gradient(90deg,${ink} 50%,transparent 50%)` })
         : status === 'missed'
-          ? round(s.missed, { boxShadow: `inset 0 0 0 1.5px ${onAccent ? 'var(--color-on-accent-soft)' : 'var(--color-muted)'}` })
+          ? round(s.missed, { boxShadow: `inset 0 0 0 1.5px ${selected ? ink : 'var(--color-muted)'}` })
           : status === 'planned'
-            ? round(s.dot, { boxShadow: `inset 0 0 0 1.5px ${onAccent ? 'var(--color-on-accent)' : 'var(--color-teal)'}` })
+            ? round(s.dot, { boxShadow: `inset 0 0 0 1.5px ${selected ? ink : 'var(--color-teal)'}` })
             : {
                 width: s.rest[0],
                 height: s.rest[1],
                 borderRadius: 1,
-                background: onAccent ? 'var(--color-on-accent-faint)' : 'var(--color-hairline)',
+                background: selected ? ink : 'var(--color-hairline)',
               };
   return <span aria-hidden="true" style={{ flex: 'none', display: 'block', ...style }} />;
 }

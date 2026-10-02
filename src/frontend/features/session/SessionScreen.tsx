@@ -68,10 +68,10 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
             >
               <Chip
                 tone="accent"
-                icon={<Repeat color="var(--color-on-accent)" size={15} />}
+                icon={<Repeat color="var(--color-on-strong)" size={15} />}
                 onClick={v.toggleSeries}
                 aria-expanded={!!v.seriesOpen}
-                trailing={<ChevronDown color="var(--color-on-accent)" strokeWidth={2.2} size={14} />}
+                trailing={<ChevronDown color="var(--color-on-strong)" strokeWidth={2.2} size={14} />}
               >
                 Weekly series
               </Chip>

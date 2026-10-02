@@ -33,7 +33,7 @@ export function QuestCard({ v }: { v: PlannerVals }) {
       </span>
       <span style={css(v.questIconWrap)}>
         {v.questDone ? (
-          <Check color="var(--color-on-accent)" strokeWidth={2.6} size={16} />
+          <Check color="var(--color-on-strong)" strokeWidth={2.6} size={16} />
         ) : null}
         {v.questOpen ? (
           <Sparkle size={16} color={vars.pink} />
