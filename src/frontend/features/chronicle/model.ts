@@ -95,7 +95,7 @@ export function diaryVals(ctx: Ctx) {
       dayBottom:
         x.m === TODAY_M
           ? String(x.d)
-          : MON3[mod12(x.m)].toUpperCase() + ' ' + x.d + (Math.floor(x.m / 12) ? ' ' + (Y + Math.floor(x.m / 12)) : ''),
+          : MON3[mod12(x.m)] + ' ' + x.d + (Math.floor(x.m / 12) ? ' ' + (Y + Math.floor(x.m / 12)) : ''),
       name: nameOf(x.av.name),
       warmup: !!x.av.warmup,
       stretch: !!x.av.stretch,
@@ -217,7 +217,7 @@ export function diaryVals(ctx: Ctx) {
       const groups: { label: string; items: ReturnType<typeof unloggedItem>[] }[] = [];
       unloggedDays.forEach((x) => {
         const d = new Date(Y, x.m, x.d);
-        const label = d >= todayWkStart ? 'THIS WEEK' : d >= lastWkStart ? 'LAST WEEK' : 'EARLIER';
+        const label = d >= todayWkStart ? 'This week' : d >= lastWkStart ? 'Last week' : 'Earlier';
         let g = groups.find((y) => y.label === label);
         if (!g) groups.push((g = { label, items: [] }));
         g.items.push(unloggedItem(x));
@@ -261,13 +261,13 @@ export function diaryVals(ctx: Ctx) {
         const yr = dt.getFullYear() !== Y ? ' ' + dt.getFullYear() : '';
         const bg = MOOD_COLORS[en.mood] || 'var(--color-danger)';
         return {
-          date: DOW3[dt.getDay()] + ', ' + MON3[mod12(en.m)].toUpperCase() + ' ' + en.d + yr,
+          date: DOW3[dt.getDay()] + ', ' + MON3[mod12(en.m)] + ' ' + en.d + yr,
           name: en.workout || (seedAt(en.m, en.d) || {}).name || 'Workout',
           warmup: warmupIds.has(id),
           stretch: stretchIds.has(id),
           yoga: yogaIds.has(id),
-          // The month it's listed under: "SEPTEMBER", with its year when it isn't this one.
-          month: MONTHS[mod12(en.m)].toUpperCase() + yr,
+          // The month it's listed under: "September", with its year when it isn't this one.
+          month: MONTHS[mod12(en.m)] + yr,
           note: en.note,
           aria:
             DOW3[dt.getDay()] +
@@ -327,7 +327,7 @@ export function diaryVals(ctx: Ctx) {
     // Changing a saved entry, Back returns to reading it; otherwise it goes where the screen was opened from.
     diaryBackLabel: writing && saved ? nameOf(selName) : '',
     // Changing an entry looks like writing one, so it says which it is.
-    writeEyebrow: writing && saved ? 'CHANGING YOUR ENTRY' : '',
+    writeEyebrow: writing && saved ? 'Changing your entry' : '',
     // Beside the sidebar (not on a phone) the entry form sits in the page's column, where a saved entry is read.
     entryLeft: logic.viewport !== 'narrow',
     // The session it's about, for the tab's title ("Leg Day entry").

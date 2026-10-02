@@ -35,7 +35,7 @@ export function ScheduleDialog({ v }: { v: PlannerVals }) {
         {v.scheduleCalendar?.showDays ? (
           <div>
             <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: '8px' }}>
-              ON
+              On
             </Text>
             <WeekdayToggles
               label="Days it goes on"

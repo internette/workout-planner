@@ -101,7 +101,7 @@ export default function IconChoiceGroupPage() {
       </p>
       <Card style={{ maxWidth: 420 }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
-          <Text variant="label" as="div" tone="ink" id="ds-colour-label" style={{ flex: '1 1 120px' }}>
+          <Text variant="strong" as="div" tone="ink" id="ds-colour-label" style={{ flex: '1 1 120px' }}>
             Colour
           </Text>
           <IconChoiceGroup

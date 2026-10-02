@@ -11,11 +11,11 @@ export function QuestsClearedCard({ v }: { v: PlannerVals }) {
     <Card style={{ marginTop: '14px' }}>
       <SectionLabel
         as="span"
-        label="QUESTS CLEARED"
+        label="Quests cleared"
         {...(v.questsHas ? { note: v.allTimeLabel, value: v.questsClearedLabel } : { aside: v.allTimeLabel })}
       />
       {v.questsNone ? (
-        <Text variant="body" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
+        <Text variant="strong" as="p" tone="muted" style={{ margin: '10px 0 0' }}>
           Every day with a session gets a quest. The ones you clear gather here.
         </Text>
       ) : null}
@@ -26,7 +26,7 @@ export function QuestsClearedCard({ v }: { v: PlannerVals }) {
         {(v.questStats ?? []).map((q, i) => (
           <div key={i} style={css(q?.row)}>
             <RankGem fill={q?.color} />
-            <Text variant="label" tone="ink" style={{ flex: '1', minWidth: '0' }}>
+            <Text variant="strong" tone="ink" style={{ flex: '1', minWidth: '0' }}>
               {q?.name}
             </Text>
             <Text variant="figure" tone="slate" style={{ flex: 'none' }}>

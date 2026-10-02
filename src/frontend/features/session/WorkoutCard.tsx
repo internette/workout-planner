@@ -36,7 +36,7 @@ function TimerSection({ v }: { v: PlannerVals }) {
     <>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', minHeight: '32px' }}>
         <Text variant="micro" tone="slate">
-          WORKOUT TIMER
+          Workout timer
         </Text>
         {/* Clears the ticks and starts the clock from zero (asking first when there's something to lose). */}
         {v.canRestart ? (
@@ -106,7 +106,7 @@ function RestSection({ v }: { v: PlannerVals }) {
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: '12px' }}>
         <div>
           <Text variant="micro" tone="slate" as="div">
-            REST
+            Rest
           </Text>
           {/* Read out once a second would be too much; the rest's end is announced instead. */}
           <Text variant="title" as="div" aria-hidden="true" style={{ margin: '4px 0 0', fontVariantNumeric: 'tabular-nums' }}>
@@ -116,7 +116,7 @@ function RestSection({ v }: { v: PlannerVals }) {
         {v.restNextName ? (
           <div style={{ flex: '1 1 160px', minWidth: 0, textAlign: 'right' }}>
             <Text variant="micro" tone="slate" as="div">
-              UP NEXT
+              Up next
             </Text>
             <Text variant="subheading" as="div" style={{ marginTop: '4px' }}>
               {v.restNextName}

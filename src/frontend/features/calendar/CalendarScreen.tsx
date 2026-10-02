@@ -76,7 +76,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             <Text variant="title" as="h1" style={{ margin: '0' }}>
               {v.dayName}
             </Text>
-            <Text variant="label" tone="muted">
+            <Text variant="strong" tone="muted">
               {v.shortDate}
             </Text>
           </div>

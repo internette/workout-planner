@@ -24,7 +24,7 @@ export interface SessionProgressProps {
 export function SessionProgress({ label, pct, allDone, note, bare, children }: SessionProgressProps) {
   const body = (
     <>
-      <SectionLabel as="span" label="PROGRESS" value={label} />
+      <SectionLabel as="span" label="Progress" value={label} />
       <ProgressBar value={pct} track="tint" style={{ marginTop: '12px' }} />
       {children}
       <p

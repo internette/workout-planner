@@ -17,10 +17,10 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
     <Card as="button" interactive pad="sm" onClick={v.openWeek} style={progCard('1 1 260px')}>
       <OpensChevron />
       <Text variant="micro" as="span" tone="muted" style={{ display: 'block' }}>
-        {v.wkHas ? v.wkEyebrow : 'THIS WEEK'}
+        {v.wkHas ? v.wkEyebrow : 'This week'}
       </Text>
       {v.wkEmpty ? (
-        <Text variant="body" as="span" tone="muted" weight="medium" style={{ display: 'block', margin: '6px 0 0' }}>
+        <Text variant="strong" as="span" tone="muted" style={{ display: 'block', margin: '6px 0 0' }}>
           Nothing planned this week yet.
         </Text>
       ) : null}
@@ -30,7 +30,7 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
             {(v.wkParts ?? []).map((p) => (
               <span key={p.label} style={{ display: 'inline-flex', alignItems: 'baseline', gap: '5px' }}>
                 <Text variant="heading">{p.n}</Text>
-                <Text variant="body" tone="muted" weight="medium">
+                <Text variant="strong" tone="muted">
                   {p.label}
                 </Text>
               </span>

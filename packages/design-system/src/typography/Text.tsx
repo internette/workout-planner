@@ -7,18 +7,18 @@ export interface TextProps extends HTMLAttributes<HTMLElement> {
   as?: ElementType;
   /** Text colour by role. Leave it out to inherit from the parent. */
   tone?: TextTone;
-  /** Overrides the weight of the variant. */
+  /** Overrides the weight of the variant, for emphasis. */
   weight?: 'regular' | 'medium' | 'semibold' | 'bold';
-  uppercase?: boolean;
 }
 
-export function Text({ variant, as: Tag = 'span', tone, weight, uppercase, style, ...rest }: TextProps) {
+export function Text({ variant, as: Tag = 'span', tone, weight, style, ...rest }: TextProps) {
   const spec = textStyles[variant] as {
     family: string;
     size: string;
     weight: string;
     tracking?: string;
     leading?: string;
+    upper?: boolean;
   };
   const css: CSSProperties = {
     fontFamily: `var(--font-${spec.family})`,
@@ -27,7 +27,8 @@ export function Text({ variant, as: Tag = 'span', tone, weight, uppercase, style
     ...(spec.tracking ? { letterSpacing: `var(--tracking-${spec.tracking})` } : {}),
     ...(spec.leading ? { lineHeight: `var(--leading-${spec.leading})` } : {}),
     ...(tone ? { color: textTones[tone] } : {}),
-    ...(uppercase ? { textTransform: 'uppercase' as const } : {}),
+    // Micro is small capitals: written in normal case, shown in capitals.
+    ...(spec.upper ? { textTransform: 'uppercase' as const } : {}),
     ...style,
   };
   return <Tag style={css} {...rest} />;

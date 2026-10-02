@@ -7,7 +7,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 /** Settings → Account: who is signed in, and signing out. Deleting the account has its own card, last. */
 export function AccountCard({ v }: { v: PlannerVals }) {
   return (
-    <SettingsCard title="ACCOUNT">
+    <SettingsCard title="Account">
       <div
         style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', marginTop: '12px' }}
       >
@@ -16,7 +16,7 @@ export function AccountCard({ v }: { v: PlannerVals }) {
           {v.accountEmail ? (
             <>
               {' as '}
-              <Text variant="body" tone="ink" weight="medium" style={{ overflowWrap: 'anywhere' }}>
+              <Text variant="strong" tone="ink" style={{ overflowWrap: 'anywhere' }}>
                 {v.accountEmail}
               </Text>
             </>

@@ -70,7 +70,7 @@ export function progressVals(ctx: Ctx) {
     questsHas: questDayCount > 0,
     moodEmpty: Object.keys(moodCounts).length === 0,
     recordsEmpty: Object.keys(bestByEx).length === 0 && !longestRide,
-    monthLabel: MONTHS[TODAY_M].toUpperCase(),
+    monthLabel: MONTHS[TODAY_M],
     rankName: RANKS[derivedRank].name,
     // For the rank-up transformation (RankUp, in @moonshot/design-system/rank-up).
     rankIndex: derivedRank,
@@ -145,7 +145,7 @@ export function progressVals(ctx: Ctx) {
         const dt = new Date(Y, TODAY_M, TODAY_D - back);
         if (plannedByDay[relM(dt) + '|' + dt.getDate()]) n++;
       }
-      return n === 1 ? 'LAST TRAINING DAY' : 'LAST ' + (n || 7) + ' TRAINING DAYS';
+      return n === 1 ? 'Last training day' : 'Last ' + (n || 7) + ' training days';
     })(),
     // A dot for each recent training day, as the calendar draws them: done, partly done, missed, and today still to do.
     streakTicks: (() => {
@@ -216,15 +216,15 @@ export function progressVals(ctx: Ctx) {
     // Each stat says what it covers. Totals and streaks are all time, up to today; the average says which weeks.
     profileStats: [
       {
-        label: 'SESSIONS DONE',
+        label: 'Sessions done',
         value: String(completedSessions),
         unit: totalSessions ? 'of ' + totalSessions : 'none planned yet',
         span: totalSessions ? 'Up to today' : '',
       },
-      { label: 'CURRENT STREAK', value: String(streak), unit: streak === 1 ? 'day' : 'days', span: 'Training days' },
-      { label: 'LONGEST STREAK', value: String(longest), unit: longest === 1 ? 'day' : 'days', span: 'All time' },
+      { label: 'Current streak', value: String(streak), unit: streak === 1 ? 'day' : 'days', span: 'Training days' },
+      { label: 'Longest streak', value: String(longest), unit: longest === 1 ? 'day' : 'days', span: 'All time' },
       {
-        label: 'WEEKLY AVERAGE',
+        label: 'Weekly average',
         value: completedSessions ? weeklyAvg : '—',
         unit: completedSessions ? 'a week' : 'no sessions yet',
         span: completedSessions ? weeklyAvgSpan : '',
@@ -299,7 +299,7 @@ export function progressVals(ctx: Ctx) {
       const pct = (n) => (b.sessions.length ? (n / b.sessions.length) * 100 : 0);
       return {
         // The dates kept together: on a narrow phone it wraps after the dot, not inside the range.
-        wkEyebrow: 'THIS WEEK · ' + weekRange(b).toUpperCase().replace(/ /g, '\u00a0').replace(/–/g, '\u2060–\u2060'),
+        wkEyebrow: 'This week · ' + weekRange(b).replace(/ /g, '\u00a0').replace(/–/g, '\u2060–\u2060'),
         wkParts: [
           { n: done, label: 'done' },
           ...(partly ? [{ n: partly, label: 'partly' }] : []),

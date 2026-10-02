@@ -40,7 +40,7 @@ function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.R
     <div ref={cardRef}>
       <Card pad="lg" elevation="overlay" className={styles.authCard} style={{ borderRadius: 'var(--radius-xl)' }}>
         <Text variant="micro" tone="accent" as="div">
-          {signingUp ? 'FIRST TRANSFORMATION' : 'WELCOME BACK'}
+          {signingUp ? 'First transformation' : 'Welcome back'}
         </Text>
         <Text variant="heading" as="h2" className={styles.authTitle} style={{ margin: '8px 0 0' }}>
           {signingUp ? 'Begin your ritual' : 'Step back through'}
@@ -135,7 +135,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
             <div className={styles.heroText}>
               <span className={styles.eyebrowRow}>
                 <Text variant="micro" tone="accent">
-                  THE WORK IS THE TRANSFORMATION
+                  The work is the transformation
                 </Text>
                 <SparkleTrail className={styles.trail} />
               </span>
@@ -156,7 +156,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
 
         <Section>
           <Text variant="micro" tone="slate" as="h2" style={{ margin: 0 }}>
-            HOW A DAY GOES
+            How a day goes
           </Text>
           <div className={styles.steps}>
             {STEPS.map(({ icon: Icon, title, body }) => (
@@ -179,7 +179,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
           <div className={styles.quest}>
             <div className={styles.col}>
               <Text variant="micro" tone="accent" as="div">
-                A QUEST A DAY
+                A quest a day
               </Text>
               <Text variant="headline" as="h2" className={styles.headline}>
                 Not a badge bolted on afterwards
@@ -194,7 +194,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                 <Gem size={22} />
                 <div style={{ minWidth: 0 }}>
                   <Text variant="micro" tone="accent" as="div">
-                    QUEST CLEARED
+                    Quest cleared
                   </Text>
                   <Text variant="subheading" as="div" style={{ marginTop: 4 }}>
                     Break the illusion
@@ -221,7 +221,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
           <div className={styles.ranks}>
             <div className={styles.ranksLeft}>
               <Text variant="micro" tone="slate" as="div">
-                {RANKS.length === 20 ? 'TWENTY RANKS' : `${RANKS.length} RANKS`}
+                {RANKS.length === 20 ? 'Twenty ranks' : `${RANKS.length} ranks`}
               </Text>
               <Text variant="headline" as="h2" className={styles.headline}>
                 Earned in experience, not in weeks
@@ -234,10 +234,10 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
               {LADDER.map((r) => (
                 <div key={r.name} className={styles.rank}>
                   <RankGem fill={r.gem} />
-                  <Text variant="label" className={styles.rankName}>
+                  <Text variant="strong" className={styles.rankName}>
                     {r.name}
                   </Text>
-                  <Text variant="body" weight="bold" tone="muted" style={{ fontFamily: 'var(--font-heading)' }}>
+                  <Text variant="figure" tone="muted">
                     {r.need}
                   </Text>
                 </div>

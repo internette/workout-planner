@@ -134,17 +134,17 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
           >
             <Text variant="micro" tone="slate">
-              RIDE PLAN
+              Ride plan
             </Text>
             <Text variant="small" tone="muted" weight="medium" style={{ marginLeft: 'auto' }}>
               {v.rideLockNote}
             </Text>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '22px', marginTop: '12px' }}>
-            <Stat label="DISTANCE" value={v.planDistText} />
-            <Stat label="DURATION" value={v.planDurText} />
-            <Stat label="ELEVATION" value={v.planElevText} />
-            <Stat label="TARGET EFFORT" value={v.rideZone} />
+            <Stat label="Distance" value={v.planDistText} />
+            <Stat label="Duration" value={v.planDurText} />
+            <Stat label="Elevation" value={v.planElevText} />
+            <Stat label="Target effort" value={v.rideZone} />
           </div>
         </div>
       ) : null}
@@ -153,7 +153,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       {v.isLift ? (
         <Card style={{ marginTop: '16px' }}>
           <Text variant="micro" as="div" tone="slate">
-            TARGET AREAS
+            Target areas
           </Text>
           {v.hasTargetAreas ? (
             <ChipGroup style={{ marginTop: '14px' }}>
@@ -201,7 +201,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       {v.addOpen ? <AddExercisePanel v={v} /> : null}
       <div style={{ marginTop: '24px' }}>
         <Text variant="micro" tone="muted" style={{ display: 'block', marginBottom: '10px' }}>
-          WORKOUT NOTES
+          Workout notes
         </Text>
         <TextArea
           aria-label="Workout notes"
@@ -238,7 +238,7 @@ function RepeatDays({ v }: { v: PlannerVals }) {
   return (
     <div style={{ marginTop: '14px' }}>
       <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: '8px' }}>
-        ON
+        On
       </Text>
       <WeekdayToggles label="Days it goes on" days={v.repeatDays ?? []} onToggle={v.toggleRepeatDay} />
     </div>

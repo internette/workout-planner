@@ -38,7 +38,7 @@ export default function RatingPage() {
         the picked word beside the stars, as the entry form does.
       </p>
       <Card style={{ maxWidth: 420 }}>
-        <Text variant="label" as="div" tone="slate">
+        <Text variant="strong" as="div" tone="slate">
           How hard did it feel?
         </Text>
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', marginTop: 8 }}>

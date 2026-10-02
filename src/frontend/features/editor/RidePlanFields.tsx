@@ -11,7 +11,7 @@ export function RidePlanFields({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: '16px' }}>
       <Text variant="micro" as="div" tone="slate">
-        RIDE PLAN
+        Ride plan
       </Text>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}>
         <TextField

@@ -10,7 +10,7 @@ import { kindOf } from '@/frontend/components/KindTag';
 export function SavedChoices({ v }: { v: PlannerVals }) {
   return (
     <>
-      <SectionLabel label="OR ONE FROM YOUR SPELLBOOK" style={{ margin: '28px 0 4px' }} />
+      <SectionLabel label="Or one from your Spellbook" style={{ margin: '28px 0 4px' }} />
       <Text variant="body" tone="muted" as="p" style={{ margin: '0 0 12px' }}>
         {v.savedChoicesNote}
       </Text>

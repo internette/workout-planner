@@ -129,7 +129,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
           content={
             <>
               <Text variant="micro" tone="slate" style={{ display: 'block' }}>
-                HOW PROGRESS WORKS
+                How progress works
               </Text>
               <Text
                 variant="body"

@@ -42,7 +42,7 @@ export default function DisclosurePage() {
       <p style={note}>A row in a list, with a line under it: the Spellbook filter&apos;s equipment groups.</p>
       <Card style={{ maxWidth: 460 }}>
         <DisclosureRow variant="divided" open={divided} onToggle={() => setDivided(!divided)} controls="demo-divided">
-          <Text variant="label" as="span" tone="ink" style={{ flex: 'none' }}>
+          <Text variant="strong" as="span" tone="ink" style={{ flex: 'none' }}>
             Free weights
           </Text>
           <Text variant="body" as="span" tone="accent" weight="semibold" style={{ flex: 1, minWidth: 0, textAlign: 'right' }}>

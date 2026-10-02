@@ -19,10 +19,10 @@ export function InstallSetting() {
   useEffect(() => setRemoved(wasInstalled()), [offer]);
   if (!offer) return null;
   return (
-    <SettingsCard title="THIS DEVICE">
+    <SettingsCard title="This device">
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
         <div style={{ flex: '1 1 180px', minWidth: 0 }}>
-          <Text variant="label" as="div" tone="ink">
+          <Text variant="strong" as="div" tone="ink">
             Moonshot app
           </Text>
           <Text variant="body" as="p" tone="muted" style={{ margin: '4px 0 0', textWrap: 'pretty' }}>

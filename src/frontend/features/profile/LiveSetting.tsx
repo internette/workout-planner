@@ -28,7 +28,7 @@ export function LiveSetting() {
         .catch(() => undefined);
   };
   return (
-    <SettingsCard title="DURING A WORKOUT">
+    <SettingsCard title="During a workout">
       {can.awake ? (
         <div style={{ marginTop: '12px' }}>
           <Checkbox

@@ -15,7 +15,7 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
     >
       {v.hasNext ? <OpensChevron /> : null}
       <Text variant="micro" as="span" tone="muted" style={{ display: 'block' }}>
-        NEXT CALL
+        Next call
       </Text>
       {v.hasNext ? (
         <>
@@ -23,10 +23,10 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
             {v.nextName}
           </Text>
           <Text
-            variant="body"
+            variant="strong"
             as="span"
             tone="muted"
-            weight="medium"
+           
             style={{ display: 'block', margin: '3px 0 0' }}
           >
             {v.nextMeta}
@@ -35,10 +35,10 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
       ) : null}
       {v.noNext ? (
         <Text
-          variant="body"
+          variant="strong"
           as="p"
           tone="muted"
-          weight="medium"
+         
           style={{ margin: '9px 0 0' }}
         >
           No call yet. Plan a session and it shows up here.

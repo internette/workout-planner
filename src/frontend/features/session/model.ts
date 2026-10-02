@@ -217,19 +217,19 @@ export function workoutVals(ctx: Ctx) {
     const a = done && av.actual ? av.actual : null;
     const took = a ? actualMinutes(av) : 0;
     return [
-      { label: 'DISTANCE', value: distOf(av) ? distOf(av) + ' mi' : '—', note: a ? vsPlan(a.dist, r.dist, ' mi') : '' },
+      { label: 'Distance', value: distOf(av) ? distOf(av) + ' mi' : '—', note: a ? vsPlan(a.dist, r.dist, ' mi') : '' },
       // Like the others, only when what it took differs from the plan.
       {
-        label: 'DURATION',
+        label: 'Duration',
         value: timeOf(av) || '—',
         note: took && took !== toMinutes(r.hrs, r.mins) ? 'Planned ' + av.time : '',
       },
       {
-        label: 'ELEVATION',
+        label: 'Elevation',
         value: (a && a.elev) || r.elev ? ((a && a.elev) || r.elev) + ' ft' : '—',
         note: a ? vsPlan(a.elev, r.elev, ' ft') : '',
       },
-      { label: 'EFFORT', value: r.zone || DEFAULT_ZONE, note: '' },
+      { label: 'Effort', value: r.zone || DEFAULT_ZONE, note: '' },
     ];
   };
   // A ride's plan in a line. Folded to a row, all of it: "14 mi · 1 h · 600 ft · Endurance". Open, the effort is under
@@ -495,7 +495,7 @@ export function workoutVals(ctx: Ctx) {
     questNote: dayCleared ? questSeed(selDay, mi).done : questSeed(selDay, mi).note,
     questDone: dayCleared,
     questOpen: !dayCleared,
-    questEyebrow: dayCleared ? 'QUEST CLEARED' : mi === TODAY_M && selDay === TODAY_D ? "TODAY'S QUEST" : 'QUEST',
+    questEyebrow: dayCleared ? 'Quest cleared' : mi === TODAY_M && selDay === TODAY_D ? "Today's quest" : 'Quest',
     questIconWrap:
       'width:32px;height:32px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;' +
       (dayCleared

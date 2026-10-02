@@ -50,7 +50,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
         <div
           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
         >
-          <Text variant="label" weight="semibold" tone="slate" as="p" style={{ margin: '0' }}>
+          <Text variant="strong" weight="semibold" tone="slate" as="p" style={{ margin: '0' }}>
             How hard did it feel?
           </Text>
         </div>
@@ -76,7 +76,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
             </span>
           ) : null}
         </div>
-        <Text variant="label" weight="semibold" tone="slate" as="p" style={{ margin: '28px 0 10px' }}>
+        <Text variant="strong" weight="semibold" tone="slate" as="p" style={{ margin: '28px 0 10px' }}>
           Notes (optional)
         </Text>
         <TextArea

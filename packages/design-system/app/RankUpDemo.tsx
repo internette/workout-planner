@@ -35,7 +35,7 @@ export function RankUpDemo() {
         <IconButton label="Previous rank" size="sm" onClick={() => step(-1)} disabled={ix <= 0}>
           <ChevronLeft color="var(--color-muted)" size={16} />
         </IconButton>
-        <Text variant="label" tone="ink" style={{ flex: 1, minWidth: 0, textAlign: 'center' }}>
+        <Text variant="strong" tone="ink" style={{ flex: 1, minWidth: 0, textAlign: 'center' }}>
           {rank.name}
         </Text>
         <IconButton label="Next rank" size="sm" onClick={() => step(1)} disabled={ix >= SAMPLES.length - 1}>
