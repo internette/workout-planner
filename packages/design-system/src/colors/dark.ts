@@ -1,7 +1,7 @@
 // Plum dusk: the dark theme. The light palette's names, with values for a dark plum page. Applied when
 // <html data-theme="dark"> is set (Profile → Settings → Appearance). Text on its surfaces is 4.5:1 or more; the pink
 // is brightened so it glows, and text on it turns dark plum (5.8:1), since white on the brighter pink would be faint.
-// Only what changes is listed: white, peach and the golds stay as they are, and the accent still names pink, so it
+// Only what changes is listed: white, peach and gold stay as they are, and the accent still names pink, so it
 // takes the brighter pink from here. As in the light palette, a value can name another colour instead of a hex.
 import type { ColorName } from './tokens';
 

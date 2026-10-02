@@ -77,7 +77,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
           ) : null}
         </div>
         <span style={{ position: 'absolute', top: '0', right: '-3px' }}>
-          <Sparkle size={16} color={vars.goldLight} glow={0.6} />
+          <Sparkle size={16} color={vars.gold} glow={0.6} />
         </span>
         <span
           aria-hidden="true"
