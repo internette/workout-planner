@@ -20,7 +20,7 @@ export interface RankUpProps {
 }
 
 const SPARKS = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
-const SPARK_COLORS = [vars.pink, vars.periwinkle, vars.teal, colors.white];
+const SPARK_COLORS = [vars.pink, vars.periwinkle, vars.teal, 'white'];
 // Small sparkles that keep twinkling around the gem once it has formed.
 const TWINKLES: { left: string; top: string; size: number; delay: string }[] = [
   { left: 'calc(50% - 110px)', top: 'calc(42% - 70px)', size: 14, delay: '1.9s' },
@@ -86,7 +86,7 @@ function RankUpPanel({ name, step, next, gem, onClose }: RankUpProps) {
         <div className={styles.flash} />
         {TWINKLES.map((s, i) => (
           <span key={i} className={styles.twinkle} style={{ left: s.left, top: s.top, animationDelay: s.delay }}>
-            <Sparkle size={s.size} color={colors.white} glow={0.7} />
+            <Sparkle size={s.size} color="white" glow={0.7} />
           </span>
         ))}
       </div>

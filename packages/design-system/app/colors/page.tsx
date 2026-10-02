@@ -26,7 +26,7 @@ const swatchFor = (name: string) => (name === 'onStrong' ? onFill(cssVarName(nam
 
 function Swatch({ name, swatch, lines, use }: { name: string; swatch: string; lines: string[]; use: string }) {
   return (
-    <div style={{ background: 'var(--color-white)', borderRadius: 'var(--radius-md)', overflow: 'hidden', boxShadow: 'var(--elevation-raised)' }}>
+    <div style={{ background: 'var(--color-surface)', borderRadius: 'var(--radius-md)', overflow: 'hidden', boxShadow: 'var(--elevation-raised)' }}>
       <div style={{ height: 64, background: swatch, borderBottom: '1px solid var(--color-line)' }} />
       <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 4 }}>
         <strong style={{ fontSize: 'var(--text-base)' }}>{name}</strong>

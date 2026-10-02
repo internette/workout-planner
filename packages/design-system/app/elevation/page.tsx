@@ -20,7 +20,7 @@ export default function ElevationPage() {
       <p style={note}>Three steps, from a quiet tray to a floating dialog.</p>
       <div style={row}>
         {Object.entries(elevations).map(([name, { value, use }]) => (
-          <div key={name} style={{ background: 'var(--color-white)', borderRadius: 'var(--radius-md)', padding: 18, boxShadow: `var(--elevation-${name})` }}>
+          <div key={name} style={{ background: 'var(--color-surface)', borderRadius: 'var(--radius-md)', padding: 18, boxShadow: `var(--elevation-${name})` }}>
             <strong style={{ fontSize: 'var(--text-base)' }}>{name}</strong>
             <div style={meta}>var(--elevation-{name})</div>
             <div style={{ ...meta, color: 'var(--color-slate)', marginTop: 6 }}>{use}</div>

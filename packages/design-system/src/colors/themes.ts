@@ -66,7 +66,6 @@ const accentVars = (t: Light) => ({
 const darkVars = (d: Dark) => ({
   ...accentVars(d),
   surface: d.surface,
-  onStrong: 'surface',
   slateTint: d.mist,
   ink: d.ink,
   slate: d.slate,

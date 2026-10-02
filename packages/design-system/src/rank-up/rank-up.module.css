@@ -12,7 +12,7 @@
   border: none;
   background: transparent;
   overflow: hidden;
-  color: var(--color-white);
+  color: white;
 }
 .overlay::backdrop {
   background: transparent;
@@ -108,7 +108,7 @@
 .flash {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 42%, var(--color-white) 0%, rgba(255, 255, 255, 0.9) 18%, rgba(255, 255, 255, 0) 62%);
+  background: radial-gradient(circle at 50% 42%, white 0%, rgba(255, 255, 255, 0.9) 18%, rgba(255, 255, 255, 0) 62%);
   opacity: 0;
   animation: flash 0.55s ease-out 1.55s both;
 }

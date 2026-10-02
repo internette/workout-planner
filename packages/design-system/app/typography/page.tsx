@@ -163,7 +163,7 @@ export default function TypographyPage() {
         accent color.
       </p>
       <div
-        style={{ display: 'flex', flexWrap: 'wrap', gap: 20, background: 'var(--color-white)', padding: 16, borderRadius: 'var(--radius-md)' }}
+        style={{ display: 'flex', flexWrap: 'wrap', gap: 20, background: 'var(--color-surface)', padding: 16, borderRadius: 'var(--radius-md)' }}
       >
         {(Object.keys(textTones) as (keyof typeof textTones)[]).map((tone) => (
           <span

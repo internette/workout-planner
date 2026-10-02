@@ -5,12 +5,12 @@ export const metadata = { title: 'Interaction — Design system' };
 
 const table: React.CSSProperties = { width: '100%', borderCollapse: 'collapse' };
 // The table's card. On a narrow screen the table scrolls sideways inside it instead of widening the page.
-const tableScroll: React.CSSProperties = { overflowX: 'auto', background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)' };
+const tableScroll: React.CSSProperties = { overflowX: 'auto', background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)' };
 const cell: React.CSSProperties = { padding: '12px 16px', textAlign: 'left', borderBottom: '1px solid var(--color-line)', fontSize: 'var(--text-base)', verticalAlign: 'middle' };
 const muted: React.CSSProperties = { ...cell, color: 'var(--color-muted)' };
 const demoBtn: React.CSSProperties = {
   border: 'none',
-  background: 'var(--color-white)',
+  background: 'var(--color-surface)',
   borderRadius: 'var(--radius-sm)',
   padding: '8px 14px',
   font: 'inherit',
@@ -47,7 +47,7 @@ export default function InteractionPage() {
             <tr key={name}>
               <td style={{ ...cell, fontWeight: 600, whiteSpace: 'nowrap' }}>--hover-{name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())}</td>
               <td style={{ ...cell, width: 80 }}>
-                <div style={{ width: 48, height: 32, borderRadius: 'var(--radius-sm)', background: name === 'inverse' ? 'var(--color-ink)' : 'var(--color-white)', boxShadow: 'inset 0 0 0 1px var(--color-hairline)' }}>
+                <div style={{ width: 48, height: 32, borderRadius: 'var(--radius-sm)', background: name === 'inverse' ? 'var(--color-ink)' : 'var(--color-surface)', boxShadow: 'inset 0 0 0 1px var(--color-hairline)' }}>
                   <div style={{ width: '100%', height: '100%', borderRadius: 'var(--radius-sm)', background: `var(--hover-${name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())})` }} />
                 </div>
               </td>
@@ -87,7 +87,7 @@ export default function InteractionPage() {
       <h2 id="focus" style={h2}>Focus</h2>
       <p style={note}>One ring for everything that can take keyboard focus. Never remove it without putting an equivalent in its place.</p>
       <div style={panel}>
-        <div style={{ padding: '12px 22px', borderRadius: 'var(--radius-md)', background: 'var(--color-white)', outline: 'var(--focus-ring)', outlineOffset: 'var(--focus-offset)' }}>Focused</div>
+        <div style={{ padding: '12px 22px', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)', outline: 'var(--focus-ring)', outlineOffset: 'var(--focus-offset)' }}>Focused</div>
         <div>
           {Object.entries(focus).map(([name, { value, use }]) => (
             <div key={name} style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted)', lineHeight: 'var(--leading-base)', marginBottom: 6 }}>
@@ -106,7 +106,7 @@ export default function InteractionPage() {
       <div style={panel}>
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44 }}>
           <span aria-hidden style={{ position: 'absolute', inset: 0, border: '1.5px dashed var(--color-pink)', borderRadius: 'var(--radius-xs)' }} />
-          <span style={{ width: 24, height: 24, borderRadius: 'var(--radius-xs)', background: 'var(--color-white)', boxShadow: 'inset 0 0 0 1px var(--color-hairline)' }} />
+          <span style={{ width: 24, height: 24, borderRadius: 'var(--radius-xs)', background: 'var(--color-surface)', boxShadow: 'inset 0 0 0 1px var(--color-hairline)' }} />
         </div>
         <p style={{ ...note, margin: 0, maxWidth: 420 }}>
           A 24px control with <code>className=&quot;hit&quot;</code>: the dashed square is the 44px it answers to.

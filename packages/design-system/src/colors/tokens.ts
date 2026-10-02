@@ -1,8 +1,9 @@
 // The color palette. Every color the app uses is named here, grouped by role.
 // In styles, write the CSS variable (e.g. `var(--color-pink)`); use the hex value from `colors`
 // only where a real hex string is needed (computed alphas, values saved to the database).
-// Each hex is written once: a color that is the same as another names it with `ref` (surface is white, the default
-// accent is pink), and its CSS variable points at that one, e.g. `--color-surface: var(--color-white)`.
+// Each hex is written once: a color that is the same as another names it with `ref` (onStrong is the surface color in
+// light, the default accent is pink), and its CSS variable points at that one, e.g. `--color-accent: var(--color-pink)`.
+// What must stay white in every theme (the rank-up ceremony) writes CSS's own `white`.
 
 export const colorGroups = {
   Text: {
@@ -10,7 +11,7 @@ export const colorGroups = {
     slate: { hex: '#5C6684', use: 'Secondary text, completed states' },
     slateDeep: { hex: '#4A5268', use: 'Text on the tinted gradient cards and grey badges, where slate would fall short of 4.5:1' },
     muted: { hex: '#6E6881', use: 'Tertiary text, inactive controls (4.5:1 or more on canvas, mist and the accent tint)' },
-    onStrong: { ref: 'white', use: 'Text and icons on a strong fill: the accent, ink, danger and the gem gradient' },
+    onStrong: { ref: 'surface', use: 'Text and icons on a strong fill: the accent, ink, danger and the gem gradient' },
   },
   'Lines and controls': {
     outline: { hex: '#8A859A', use: 'Empty controls you can still use: unticked boxes, unrated stars (3:1 or more on canvas and white)' },
@@ -18,10 +19,9 @@ export const colorGroups = {
   },
   Surfaces: {
     canvas: { hex: '#FBF1F3', use: 'Page background, input fills' },
-    surface: { ref: 'white', use: 'Cards, dialogs, inputs and trays: anything raised off the page, and the rims around what sits on them' },
+    surface: { hex: '#FFFFFF', use: 'Cards, dialogs, inputs and trays: anything raised off the page, and the rims around what sits on them' },
     mist: { hex: '#F4EFF1', use: 'Quiet chips and tracks' },
     slateTint: { hex: '#EDEFF6', use: 'Rank badge, slate tier' },
-    white: { hex: '#FFFFFF', use: 'White that stays white in every theme, such as the rank-up ceremony' },
   },
   // The theme's color: pink here, and teal, periwinkle, slate or coral in the other color themes (Profile →
   // Settings → Color). Buttons, selection, ticks, accent text and tints use these. What goes on the accent is
@@ -82,7 +82,7 @@ export const cssColor = (value: string) => (value.startsWith('#') ? value : `var
 export const themed = (color: string | null | undefined): string | undefined => {
   if (!color) return undefined;
   const hit = (Object.entries(colors) as [string, string][]).find(
-    ([name, hex]) => hex.toUpperCase() === color.toUpperCase() && !['surface', 'onStrong', 'white'].includes(name) && !name.startsWith('accent'),
+    ([name, hex]) => hex.toUpperCase() === color.toUpperCase() && !['surface', 'onStrong'].includes(name) && !name.startsWith('accent'),
   );
   return hit ? `var(${cssVarName(hit[0])})` : color;
 };
@@ -115,7 +115,7 @@ export const gradients = {
 const mix = (token: string, pct: number) => `color-mix(in srgb, var(--color-${token}) ${pct}%, transparent)`;
 export const translucents = {
   line: { value: rgba(colors.ink, 0.07), use: 'Every divider line: between rows, around cards, under a popover’s header. One strength everywhere.' },
-  surfaceRest: { value: mix('white', 50), use: 'A quiet row on the page: rest days, a day gone by' },
+  surfaceRest: { value: mix('surface', 50), use: 'A quiet row on the page: rest days, a day gone by' },
   surfaceBar: { value: mix('surface', 94), use: 'The phone tab bar, over the page as it scrolls' },
   accentWash: { value: mix('accent-tint', 50), use: 'A see-through accent fill: the dashed "add" button' },
   shadow: { value: rgba(colors.ink, 0.14), use: 'The shadow under something lifted off the page, such as a row being dragged' },

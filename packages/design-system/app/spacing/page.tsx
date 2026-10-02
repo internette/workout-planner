@@ -5,7 +5,7 @@ export const metadata = { title: 'Spacing — Design system' };
 
 const table: React.CSSProperties = { width: '100%', borderCollapse: 'collapse' };
 // The table's card. On a narrow screen the table scrolls sideways inside it instead of widening the page.
-const tableScroll: React.CSSProperties = { overflowX: 'auto', background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)' };
+const tableScroll: React.CSSProperties = { overflowX: 'auto', background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)' };
 const cell: React.CSSProperties = { padding: '12px 16px', textAlign: 'left', borderBottom: '1px solid var(--color-line)', fontSize: 'var(--text-base)', verticalAlign: 'middle' };
 const muted: React.CSSProperties = { ...cell, color: 'var(--color-muted)' };
 
