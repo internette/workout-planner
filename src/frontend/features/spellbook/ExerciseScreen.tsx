@@ -81,7 +81,7 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
             </Text>
           )}
           {v.exercise.usedInNote ? (
-            <Text variant="caption" as="p" tone="muted" style={{ margin: '10px 0 0' }}>
+            <Text variant="body" as="p" tone="muted" style={{ margin: '10px 0 0' }}>
               {v.exercise.usedInNote}
             </Text>
           ) : null}

@@ -23,7 +23,7 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
             {v.nextName}
           </Text>
           <Text
-            variant="caption"
+            variant="body"
             as="span"
             tone="muted"
             weight="medium"
@@ -35,7 +35,7 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
       ) : null}
       {v.noNext ? (
         <Text
-          variant="caption"
+          variant="body"
           as="p"
           tone="muted"
           weight="medium"

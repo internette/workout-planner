@@ -30,7 +30,7 @@ export function RepeatWeekly({ on, onChange, note, weeks, onWeeks, children }: R
       {on ? children : null}
       {on && weeks && onWeeks ? (
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '12px' }}>
-          <Text variant="caption" tone="muted" aria-hidden="true">
+          <Text variant="body" tone="muted" aria-hidden="true">
             For
           </Text>
           <SegmentedControl
@@ -41,13 +41,13 @@ export function RepeatWeekly({ on, onChange, note, weeks, onWeeks, children }: R
             value={String(weeks)}
             onChange={(w) => onWeeks(Number(w))}
           />
-          <Text variant="caption" tone="muted" aria-hidden="true">
+          <Text variant="body" tone="muted" aria-hidden="true">
             weeks
           </Text>
         </div>
       ) : null}
       {on ? (
-        <Text variant="caption" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+        <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
           {note}
         </Text>
       ) : null}

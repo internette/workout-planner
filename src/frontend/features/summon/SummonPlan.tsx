@@ -114,7 +114,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
             <Text variant="subheading" as="div" tone="ink">
               {senderName(waiting.source)} sent you a new arc
             </Text>
-            <Text variant="caption" as="div" tone="slateDeep">
+            <Text variant="body" as="div" tone="slateDeep">
               {waiting.title} · {countLabel(waiting.plan.workouts.length)}
             </Text>
           </div>
@@ -155,7 +155,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
         >
           <Weeks workouts={draft.plan.workouts} />
           {problem ? (
-            <Text variant="caption" as="p" tone="danger" role="alert" style={{ margin: '12px 0 0' }}>
+            <Text variant="body" as="p" tone="danger" role="alert" style={{ margin: '12px 0 0' }}>
               {problem}
             </Text>
           ) : null}
@@ -208,7 +208,7 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
                   ) : null}
                   {w.name}
                 </Text>
-                <Text variant="caption" as="div" tone="muted">
+                <Text variant="body" as="div" tone="muted">
                   {shortDate(w.date)} · {meta(w)}
                 </Text>
               </div>

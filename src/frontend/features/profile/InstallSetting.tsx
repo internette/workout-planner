@@ -25,7 +25,7 @@ export function InstallSetting() {
           <Text variant="label" as="div" tone="ink">
             Moonshot app
           </Text>
-          <Text variant="caption" as="p" tone="muted" style={{ margin: '4px 0 0', textWrap: 'pretty' }}>
+          <Text variant="body" as="p" tone="muted" style={{ margin: '4px 0 0', textWrap: 'pretty' }}>
             {removed
               ? 'It was removed from this device. Add it back to open it like an app, one tap away.'
               : 'Install it to open it like an app: full screen, no browser bar, one tap away.'}

@@ -1,5 +1,5 @@
-// The type system: two families, a 7-step size scale (nothing under 12 px, the smallest that reads comfortably on a phone), four weights, tracking and leading.
-// In styles, write the CSS variable (e.g. `var(--text-md)`, `var(--font-weight-bold)`).
+// The type system: two families, a 6-step size scale (nothing under 12 px, the smallest that reads comfortably on a phone), four weights, tracking and leading.
+// In styles, write the CSS variable (e.g. `var(--text-base)`, `var(--font-weight-bold)`).
 
 export const fontFamilies = {
   heading: {
@@ -14,8 +14,7 @@ export const fontFamilies = {
 
 export const fontSizes = {
   sm: { px: 12, use: 'Micro labels, small print, chart captions, the tab bar' },
-  md: { px: 13, use: 'Captions and secondary text, compact buttons' },
-  base: { px: 14, use: 'Body text, labels, form fields' },
+  base: { px: 14, use: 'Body text and secondary text, labels, form fields, chips and compact buttons' },
   lg: { px: 16, use: 'Row and card titles, primary buttons' },
   xl: { px: 20, use: 'Card and dialog headings, stat numbers' },
   '2xl': { px: 22, use: 'Screen titles' },

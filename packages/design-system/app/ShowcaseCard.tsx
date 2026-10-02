@@ -13,7 +13,7 @@ export function ShowcaseCard({ stage, stageStyle, title, use, children }: { stag
       <Text variant="subheading" tone="ink" as="h3" style={{ margin: 0 }}>
         {title}
       </Text>
-      <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 10px' }}>
+      <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 10px' }}>
         {use}
       </Text>
       {children}

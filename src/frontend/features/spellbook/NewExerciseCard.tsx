@@ -33,7 +33,7 @@ export function NewExerciseCard({ v }: { v: PlannerVals }) {
       </div>
       <FormActions compact>
         {v.draftHint ? (
-          <Text variant="caption" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
             {v.draftHint}
           </Text>
         ) : null}

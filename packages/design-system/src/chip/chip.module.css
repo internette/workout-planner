@@ -9,7 +9,7 @@
   border: none;
   border-radius: var(--radius-full);
   font-family: inherit;
-  font-size: var(--text-md);
+  font-size: var(--text-base);
   line-height: var(--leading-tight);
   box-sizing: border-box;
   transition: background-color var(--dur-state) var(--ease-standard), box-shadow var(--dur-state) var(--ease-standard), filter var(--dur-state) var(--ease-standard);
@@ -52,8 +52,11 @@
 
 /* A row of chips, wrapping onto more lines as needed. */
 .group { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-/* Compact: on the narrowest phones, a little closer and slimmer, so a short row of choices stays on one line. */
-@media (max-width: 359px) {
+/* Compact: on narrow phones, a little closer and slimmer, so a short row of choices stays on one line. */
+@media (max-width: 389px) {
   .compact { gap: 6px; }
   .compact .chip { padding: 8px 10px; }
+}
+@media (max-width: 359px) {
+  .compact .chip { padding: 8px 8px; }
 }

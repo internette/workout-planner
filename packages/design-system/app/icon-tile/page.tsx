@@ -45,7 +45,7 @@ export default function IconTilePage() {
               <Text variant="heading" as="div" tone="ink">
                 Evening Ride
               </Text>
-              <Text variant="caption" as="div" tone="muted">
+              <Text variant="body" as="div" tone="muted">
                 14 mi · 1 h
               </Text>
             </div>
@@ -67,7 +67,7 @@ export default function IconTilePage() {
           <IconTile as="span" size="sm" variant="flat">
             <Bike size={20} color="var(--color-pink)" />
           </IconTile>
-          <Text variant="caption" tone="muted">
+          <Text variant="body" tone="muted">
             xs and sm, flat
           </Text>
         </div>
@@ -87,7 +87,7 @@ export default function IconTilePage() {
           <IconTileButton size="sm" aria-label="Choose icon for Bench Press">
             <ExerciseIcon name="h" size={19} color="var(--color-pink)" />
           </IconTileButton>
-          <Text variant="caption" tone="muted">
+          <Text variant="body" tone="muted">
             Buttons open a picker in the app; here they do nothing.
           </Text>
         </div>

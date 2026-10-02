@@ -51,7 +51,7 @@ export function WeekRow({ row }: { row: any }) {
               {row?.name}
             </Text>
             <Text
-              variant="caption"
+              variant="body"
               as="div"
               tone="muted"
               style={{ marginTop: '3px' }}

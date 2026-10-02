@@ -70,7 +70,7 @@ export default function ProgressBarPage() {
                 {m.name}
               </Text>
               <ProgressBar value={m.pct} fill={m.color} style={{ flex: 1 }} />
-              <Text variant="caption" tone="slate" style={{ flex: 'none', width: 36, textAlign: 'right' }}>
+              <Text variant="body" tone="slate" style={{ flex: 'none', width: 36, textAlign: 'right' }}>
                 {m.pct}%
               </Text>
             </div>

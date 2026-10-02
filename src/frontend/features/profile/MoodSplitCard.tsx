@@ -10,7 +10,7 @@ export function MoodSplitCard({ v }: { v: PlannerVals }) {
     <Card>
       <SectionLabel as="span" label="HOW IT FEELS" aside={v.allTimeLabel} />
       {v.moodEmpty ? (
-        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
+        <Text variant="body" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
           Write about a session in the Chronicle and your moods gather here.
         </Text>
       ) : null}

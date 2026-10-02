@@ -56,7 +56,7 @@ export default function ReorderableListPage() {
                   <Text variant="subheading" as="div">
                     {r.name}
                   </Text>
-                  <Text variant="caption" tone="muted" as="div">
+                  <Text variant="body" tone="muted" as="div">
                     {r.sets}
                   </Text>
                 </div>

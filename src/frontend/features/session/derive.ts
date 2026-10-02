@@ -61,7 +61,7 @@ export function workoutStage(ctx: StatsCtx) {
       pick: () => logic.s({ ...monthPatch(pickM), day: pd, dateOpen: false, pickM: null, pickFocus: null }),
       selected: pickM === mi && pd === selDay,
       style:
-        "height:34px;border:none;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-heading);font-size:var(--text-md);font-weight:" +
+        "height:34px;border:none;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-heading);font-size:var(--text-base);font-weight:" +
         (pickM === mi && pd === selDay ? 'var(--font-weight-bold);background:var(--color-accent);color:var(--color-on-accent)' : 'var(--font-weight-medium);background:none;color:var(--color-ink)'),
     });
   }

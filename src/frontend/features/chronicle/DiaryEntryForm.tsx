@@ -94,7 +94,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
           </div>
         ) : null}
         {v.saveEntryHint ? (
-          <Text id="save-entry-hint" variant="caption" tone="muted" as="p" style={{ margin: '18px 0 0', textAlign: 'center' }}>
+          <Text id="save-entry-hint" variant="body" tone="muted" as="p" style={{ margin: '18px 0 0', textAlign: 'center' }}>
             {v.saveEntryHint}
           </Text>
         ) : null}

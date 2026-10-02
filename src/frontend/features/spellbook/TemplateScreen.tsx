@@ -86,7 +86,7 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
                   {e?.name}
                 </Text>
                 <Text
-                  variant="caption"
+                  variant="body"
                   tone="muted"
                   style={{ display: 'block', marginTop: '3px' }}
                 >

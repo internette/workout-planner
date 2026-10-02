@@ -57,7 +57,7 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
                   <Text variant="body" tone="ink" as="p" style={{ margin: 0 }}>
                     {v.seriesRepeats}
                   </Text>
-                  <Text variant="caption" tone="muted" as="p" style={{ margin: '4px 0 12px' }}>
+                  <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 12px' }}>
                     Ending it takes the repeats still ahead off the calendar.
                   </Text>
                   <Button type="danger" size="sm" onClick={v.endSeries}>

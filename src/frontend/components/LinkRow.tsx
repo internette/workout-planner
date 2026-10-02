@@ -38,7 +38,7 @@ export function LinkRow({ title, detail, kind, leading, action = 'open', onClick
           {title}
         </Text>
         {detail != null && detail !== '' ? (
-          <Text variant="caption" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
+          <Text variant="body" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
             {detail}
           </Text>
         ) : null}

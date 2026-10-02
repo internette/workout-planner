@@ -45,7 +45,7 @@ function Preview({ accent, dark }: { accent: string; dark: boolean }) {
             <Text variant="subheading" as="div" tone="ink">
               Upper Push
             </Text>
-            <Text variant="caption" as="div" tone="muted">
+            <Text variant="body" as="div" tone="muted">
               4 exercises · ~50 min
             </Text>
           </div>

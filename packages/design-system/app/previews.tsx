@@ -93,7 +93,7 @@ export function Preview({ slug }: { slug: string }) {
           <Text variant="subheading" tone="ink" as="div">
             Upper Body Push
           </Text>
-          <Text variant="caption" tone="muted" as="div">
+          <Text variant="body" tone="muted" as="div">
             3 exercises · ~50 min
           </Text>
         </Card>
@@ -281,7 +281,7 @@ export function Preview({ slug }: { slug: string }) {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6 }}>
           <Chip icon={<Calendar color="var(--color-muted)" size={15} />}>Thu, Sep 17</Chip>
           <Card pad="xs" elevation="overlay" style={{ width: 150 }}>
-            <Text variant="caption" tone="muted">
+            <Text variant="body" tone="muted">
               Floats under it
             </Text>
           </Card>

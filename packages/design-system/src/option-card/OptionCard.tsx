@@ -54,7 +54,7 @@ export function OptionCard({ name, value, checked, onChange, title, description,
             {title}
           </Text>
           {description ? (
-            <Text variant="caption" tone="muted" as="span" className={styles.description}>
+            <Text variant="body" tone="muted" as="span" className={styles.description}>
               {description}
             </Text>
           ) : null}

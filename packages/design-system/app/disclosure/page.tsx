@@ -32,7 +32,7 @@ export default function DisclosurePage() {
           </span>
         </DisclosureRow>
         {outlined ? (
-          <Text id="demo-outlined" variant="caption" tone="muted" as="p" style={{ margin: '12px 2px 0' }}>
+          <Text id="demo-outlined" variant="body" tone="muted" as="p" style={{ margin: '12px 2px 0' }}>
             What it opens goes here.
           </Text>
         ) : null}
@@ -45,12 +45,12 @@ export default function DisclosurePage() {
           <Text variant="label" as="span" tone="ink" style={{ flex: 'none' }}>
             Free weights
           </Text>
-          <Text variant="caption" as="span" tone="accent" weight="semibold" style={{ flex: 1, minWidth: 0, textAlign: 'right' }}>
+          <Text variant="body" as="span" tone="accent" weight="semibold" style={{ flex: 1, minWidth: 0, textAlign: 'right' }}>
             Dumbbells
           </Text>
         </DisclosureRow>
         {divided ? (
-          <Text id="demo-divided" variant="caption" tone="muted" as="p" style={{ margin: '12px 2px 0' }}>
+          <Text id="demo-divided" variant="body" tone="muted" as="p" style={{ margin: '12px 2px 0' }}>
             What it opens goes here.
           </Text>
         ) : null}

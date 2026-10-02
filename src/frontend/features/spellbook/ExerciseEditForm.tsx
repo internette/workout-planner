@@ -29,7 +29,7 @@ export function ExerciseEditForm({ v }: { v: PlannerVals }) {
       </Card>
       <FormActions>
         {v.exerciseEdit.saveHint ? (
-          <Text variant="caption" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
             {v.exerciseEdit.saveHint}
           </Text>
         ) : null}

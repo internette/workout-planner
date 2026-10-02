@@ -10,7 +10,7 @@ export function WeekQuestsCard({ v }: { v: PlannerVals }) {
     <Card style={{ marginTop: '14px' }}>
       <SectionLabel as="span" label="THIS WEEK'S QUESTS" aside={v.wkHas ? v.questsDoneLabel : undefined} />
       {v.wkEmpty ? (
-        <Text variant="caption" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
+        <Text variant="body" as="p" tone="muted" weight="medium" style={{ margin: '10px 0 0' }}>
           No quests this week yet. Plan a session and its day gets one.
         </Text>
       ) : null}

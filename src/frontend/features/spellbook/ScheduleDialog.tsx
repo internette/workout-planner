@@ -57,7 +57,7 @@ export function ScheduleDialog({ v }: { v: PlannerVals }) {
             Log it as done
           </Checkbox>
         ) : null}
-        <Text variant="caption" tone="muted" as="p" style={{ margin: 0 }}>
+        <Text variant="body" tone="muted" as="p" style={{ margin: 0 }}>
           {v.scheduleCalendar?.note}
         </Text>
       </div>

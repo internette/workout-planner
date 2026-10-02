@@ -80,7 +80,7 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
               aria-hidden="true"
               style={{
                 flex: 'none',
-                fontSize: 'var(--text-md)',
+                fontSize: 'var(--text-base)',
                 fontWeight: 'var(--font-weight-semibold)',
                 color: 'var(--color-muted)',
               }}
