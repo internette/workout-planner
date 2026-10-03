@@ -38,7 +38,6 @@ const ACCENT_SWATCHES = ACCENTS.map((a) => ({
   value: a.name,
   label: a.label,
   color: a.swatch,
-  checkColor: a.name === 'slate' || a.name === 'pink' ? '#FFFFFF' : '#232A45',
 }));
 
 export default function IconChoiceGroupPage() {
@@ -96,7 +95,7 @@ export default function IconChoiceGroupPage() {
       <p style={note}>
         <code>shape=&quot;round&quot;</code>, for a color that is itself the setting rather than a tint for something
         else: the app&apos;s color, on Profile. The chosen one shows a tick; give each option a{' '}
-        <code>checkColor</code> that reads on its color (white by default). A hairline keeps a pale color off the card.
+        <code>checkColor</code> that reads on its color (surface by default: white in light, the card color in dark). A hairline keeps a pale color off the card.
         Each swatch has a 44px touch target, so a row of them can sit 6px apart.
       </p>
       <Card style={{ maxWidth: 420 }}>

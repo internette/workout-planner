@@ -109,7 +109,7 @@ export function IconChoiceGroup<T extends string>({
               .join(' ')}
             style={kind === 'swatch' ? ({ '--swatch': option.color } as CSSProperties) : undefined}
           >
-            {isGrid ? option.icon : round && on ? <Check color={option.checkColor ?? '#FFFFFF'} strokeWidth={3} size={15} /> : null}
+            {isGrid ? option.icon : round && on ? <Check color={option.checkColor ?? 'var(--color-surface)'} strokeWidth={3} size={15} /> : null}
           </button>
         );
       })}
