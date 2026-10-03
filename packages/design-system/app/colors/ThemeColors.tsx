@@ -14,14 +14,23 @@ const ROLES: { role: string; token: ColorName; use: string }[] = [
   { role: 'onStrong', token: 'surface', use: 'Text and icons on the accent (and on ink and danger)' },
 ];
 
-/** The swatch: the light theme's value on the left, the dark theme's on the right. onStrong is shown as a block on the accent. */
+/** The swatch: the light theme's value on the left, the dark theme's on the right. onStrong is shown as text on the
+ * accent, as it's used. */
 function Halves({ accent, token }: { accent: Accent; token: ColorName }) {
   const half = (theme: 'light' | 'dark') => {
     const p = paletteFor(theme, accent);
-    const fill = token === 'surface'
-      ? `linear-gradient(0deg, ${p.surface}, ${p.surface}) center / 44% 36% no-repeat, ${p.pink}`
-      : p[token];
-    return <div style={{ flex: 1, background: fill }} />;
+    return token === 'surface' ? (
+      <div
+        style={{
+          flex: 1, display: 'grid', placeItems: 'center', background: p.pink, color: p.surface,
+          fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-bold)',
+        }}
+      >
+        Demo Text
+      </div>
+    ) : (
+      <div style={{ flex: 1, background: p[token] }} />
+    );
   };
   return (
     <div style={{ height: 64, display: 'flex', borderBottom: '1px solid var(--color-line)' }}>
