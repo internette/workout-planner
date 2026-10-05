@@ -12,6 +12,9 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Plan workouts, log how they felt, and rank up.',
     start_url: '/calendar',
     display: 'standalone',
+    // The installed app stays upright even with the phone's auto-rotate on: every screen is laid out for portrait.
+    // (Android honors this; iOS ignores it, and a browser tab always follows the phone.)
+    orientation: 'portrait',
     background_color: colors.canvas,
     theme_color: colors.canvas,
     icons: [
