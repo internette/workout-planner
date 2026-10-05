@@ -36,12 +36,13 @@ export const sections: Section[] = [
     slug: 'logo',
     title: 'Logo',
     category: 'brand',
-    description: 'The lockup, the mark, the favicon and the app icon, at the sizes they’re used.',
+    description: 'The lockup, the mark, the favicon, the app icon and the notification badge, at the sizes they’re used.',
     anchors: [
       { id: 'lockup', title: 'Lockup' },
       { id: 'mark', title: 'Mark' },
       { id: 'favicon', title: 'Favicon' },
       { id: 'app-icon', title: 'App icon' },
+      { id: 'notification-badge', title: 'Notification badge' },
     ],
   },
   {

@@ -24,7 +24,8 @@ self.addEventListener('message', (event) => {
         body: m.body,
         icon: '/icons/icon-192.png',
         // The small icon in the status bar. Android keeps only its shape (the alpha) and tints it, so it is the
-        // crescent in white on transparent; the app icon here showed as a filled square.
+        // crescent in white on transparent (the design system's brand/moonshot-badge.svg); the app icon here showed as a
+        // filled square.
         badge: '/icons/badge-96.png',
         timestamp: m.timestamp,
         // Updating it mustn't buzz: only the first one of a session makes a sound, as notifications usually do.
