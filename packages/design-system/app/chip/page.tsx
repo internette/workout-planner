@@ -48,7 +48,7 @@ export default function ChipPage() {
           icon={<Repeat color="var(--color-surface)" size={15} />}
           trailing={
             <IconButton label="End this series" size="xs">
-              <Close color="rgba(255,255,255,0.85)" strokeWidth={2.2} size={13} />
+              <Close color="color-mix(in srgb, var(--color-surface) 85%, transparent)" strokeWidth={2.2} size={13} />
             </IconButton>
           }
         >

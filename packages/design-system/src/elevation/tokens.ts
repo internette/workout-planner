@@ -2,9 +2,9 @@
 // In styles, write the CSS variable, e.g. `box-shadow: var(--elevation-raised)`.
 
 export const elevations = {
-  hairline: { value: '0 1px 3px rgba(35, 42, 69, 0.06)', use: 'Info chips and quiet trays' },
-  raised: { value: '0 4px 14px rgba(35, 42, 69, 0.07)', use: 'A card sitting on the page' },
-  overlay: { value: '0 8px 24px rgba(35, 42, 69, 0.14)', use: 'Dialogs, menus and popovers; also a card on hover' },
+  hairline: { value: '0 1px 3px color-mix(in srgb, var(--color-ink) 6%, transparent)', use: 'Info chips and quiet trays' },
+  raised: { value: '0 4px 14px color-mix(in srgb, var(--color-ink) 7%, transparent)', use: 'A card sitting on the page' },
+  overlay: { value: '0 8px 24px color-mix(in srgb, var(--color-ink) 14%, transparent)', use: 'Dialogs, menus and popovers; also a card on hover' },
 } as const;
 
 /** The accent's glow on a primary button. Reserved for one call to action on an otherwise empty surface. */

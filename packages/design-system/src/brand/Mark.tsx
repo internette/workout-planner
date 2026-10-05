@@ -17,11 +17,24 @@ export interface MarkProps {
   size?: number;
   /** Light the facets up one after another, for a loading screen. */
   animate?: boolean;
+  /** Draw it in one color, as a single silhouette with no seams: for where only its shape shows, like the
+   * notification badge in a phone's status bar. */
+  color?: string;
   className?: string;
 }
 
 /** The Moonshot mark on its own, decorative: put the name beside it, or give the parent a label. */
-export function Mark({ size = 64, animate = false, className }: MarkProps) {
+export function Mark({ size = 64, animate = false, color, className }: MarkProps) {
+  if (color) {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 64 64" width={size} height={size} fill="none" className={className}>
+        {/* A thin stroke in the same color closes the hairline gaps between facets, so they read as one shape. */}
+        {MARK_FACETS.map((f, i) => (
+          <path key={i} d={f.d} fill={color} stroke={color} strokeWidth=".6" strokeLinejoin="round" />
+        ))}
+      </svg>
+    );
+  }
   return (
     <svg aria-hidden="true" viewBox="0 0 64 64" width={size} height={size} fill="none" className={className}>
       {MARK_FACETS.map((f, i) => (

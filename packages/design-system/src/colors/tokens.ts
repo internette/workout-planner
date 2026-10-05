@@ -87,11 +87,6 @@ export const vars = Object.fromEntries(entries.map(([name]) => [name, `var(${css
   string
 >;
 
-const rgba = (hex: string, alpha: number) => {
-  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-};
-
 /** Composites built from the three accents. Written as CSS variables like the colors, e.g. `var(--gradient-gem)`. */
 export const gradients = {
   gem: {
@@ -108,12 +103,12 @@ export const gradients = {
  * strength, written with color-mix so they follow the theme; the dark theme overrides the few that aren't. */
 const mix = (token: string, pct: number) => `color-mix(in srgb, var(--color-${token}) ${pct}%, transparent)`;
 export const translucents = {
-  line: { value: rgba(colors.ink, 0.07), use: 'Every divider line: between rows, around cards, under a popover’s header. One strength everywhere.' },
+  line: { value: mix('ink', 7), use: 'Every divider line: between rows, around cards, under a popover’s header. One strength everywhere.' },
   surfaceRest: { value: mix('surface', 50), use: 'A quiet row on the page: rest days, a day gone by' },
   surfaceBar: { value: mix('surface', 94), use: 'The phone tab bar, over the page as it scrolls' },
   accentWash: { value: mix('pink-tint', 50), use: 'A see-through accent fill: the dashed "add" button' },
-  shadow: { value: rgba(colors.ink, 0.14), use: 'The shadow under something lifted off the page, such as a row being dragged' },
-  scrim: { value: rgba(colors.ink, 0.35), use: 'The dimmed page behind a dialog' },
+  shadow: { value: mix('ink', 14), use: 'The shadow under something lifted off the page, such as a row being dragged' },
+  scrim: { value: mix('ink', 35), use: 'The dimmed page behind a dialog' },
 } as const;
 
 /** Every see-through color and gradient as a CSS custom property name and value. */

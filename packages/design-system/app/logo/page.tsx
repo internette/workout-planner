@@ -70,7 +70,8 @@ export default function LogoPage() {
     <DocPage title="Logo">
       <p style={{ ...note, marginTop: 8 }}>
         Moonshot&apos;s logo is a faceted crescent moon, the mark, in the brand&apos;s pink, periwinkle and teal. It comes
-        in four pieces: the lockup (the mark with the name), the mark alone, the favicon and the app icon. The lockup
+        in five pieces: the lockup (the mark with the name), the mark alone, the favicon, the app icon and the
+        notification badge. The lockup
         and the mark are components, so the name stays live text; the favicon and the app icon are files.
       </p>
 
@@ -153,6 +154,37 @@ export default function LogoPage() {
             <Size label="96">{art('moonshot-app-icon-1024.svg', 96, true)}</Size>
             <Size label="60">{art('moonshot-app-icon-1024.svg', 60, true)}</Size>
             <Size label="40">{art('moonshot-app-icon-1024.svg', 40, true)}</Size>
+          </>
+        }
+      />
+
+      <h2 id="notification-badge" style={h2}>Notification badge</h2>
+      <p style={note}>
+        The mark as one flat shape, white on transparent. Android draws a notification&apos;s small icon from its shape
+        alone, tinted to suit the status bar, so a colored or filled image shows as a blank square. Exported at 96 (the
+        size Android asks for); shown here as it is tinted on a dark and a light status bar.
+      </p>
+      <Piece
+        file="moonshot-badge.svg"
+        used="The status-bar icon beside a workout in progress, and on its notification (icons/badge-96.png)."
+        code={'<Mark color="var(--color-ink)" />'}
+        sizes={
+          <>
+            <Size label="24, dark bar">
+              <span style={{ display: 'grid', placeItems: 'center', padding: 8, borderRadius: 'var(--radius-sm)', background: 'black' }}>
+                <Mark size={24} color="white" />
+              </span>
+            </Size>
+            <Size label="24, light bar">
+              <span style={{ display: 'grid', placeItems: 'center', padding: 8, borderRadius: 'var(--radius-sm)', background: 'var(--color-surface)', boxShadow: 'inset 0 0 0 1px var(--color-line)' }}>
+                <Mark size={24} color="var(--color-ink)" />
+              </span>
+            </Size>
+            <Size label="96">
+              <span style={{ display: 'grid', placeItems: 'center', padding: 12, borderRadius: 'var(--radius-md)', background: 'black' }}>
+                <Mark size={96} color="white" />
+              </span>
+            </Size>
           </>
         }
       />

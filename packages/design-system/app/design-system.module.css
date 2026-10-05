@@ -33,7 +33,7 @@
   padding: 16px 12px;
   background: var(--color-surface);
   border-radius: var(--radius-lg);
-  box-shadow: 0 4px 14px rgba(35, 42, 69, 0.07);
+  box-shadow: var(--elevation-raised);
 }
 
 .group {
@@ -55,7 +55,7 @@
   color: var(--color-muted);
   text-decoration: none;
 }
-.link:hover { background: rgba(35, 42, 69, 0.05); color: var(--color-ink); }
+.link:hover { background: var(--hover-neutral); color: var(--color-ink); }
 .active, .active:hover { background: var(--color-pink-tint); color: var(--color-pink-deep); font-weight: var(--font-weight-semibold); }
 
 /* How far below the top of the window a heading lands when its link is followed (headings use this variable). */
@@ -79,7 +79,7 @@
   color: var(--color-muted);
   text-decoration: none;
 }
-.sublink:hover { background: rgba(35, 42, 69, 0.05); color: var(--color-ink); }
+.sublink:hover { background: var(--hover-neutral); color: var(--color-ink); }
 .subactive, .subactive:hover { color: var(--color-pink-deep); font-weight: var(--font-weight-semibold); }
 
 
@@ -117,7 +117,7 @@
   border: none;
   border-radius: var(--radius-md);
   background: var(--color-surface);
-  box-shadow: 0 4px 14px rgba(35, 42, 69, 0.07);
+  box-shadow: var(--elevation-raised);
   font: inherit;
   text-align: left;
   cursor: pointer;
@@ -167,9 +167,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.mLink:hover { background: rgba(35, 42, 69, 0.05); color: var(--color-ink); }
+.mLink:hover { background: var(--hover-neutral); color: var(--color-ink); }
 .mActive, .mActive:hover { background: var(--color-pink-tint); color: var(--color-pink-deep); font-weight: var(--font-weight-semibold); }
-.mChips { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 4px 8px; border-bottom: 1px solid rgba(35, 42, 69, 0.08); }
+.mChips { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 4px 8px; border-bottom: 1px solid var(--color-line); }
 .mChip {
   padding: 6px 11px;
   border-radius: var(--radius-full);
