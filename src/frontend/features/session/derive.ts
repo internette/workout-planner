@@ -135,14 +135,14 @@ export function workoutStage(ctx: StatsCtx) {
   const baseName = (srcAct && srcAct.name) || '';
   const baseKey = (srcAct && srcAct.exKey) || '';
   const selName = creating ? st.newName || '' : (st.renames || {})[baseName] != null ? st.renames[baseName] : baseName;
-  const libraryFor = (name) => {
+  // Every exercise that could be added to the workout being edited: all of them, less what it already has. "Already
+  // has" is its list as the editor shows it (selList, below): its own exercises, plus added, less removed. Two of
+  // the same name can't both be in a workout, since its order, ticks and edits all go by name.
+  const libraryFor = () => {
     const have = {};
-    (EX[name] || [])
-      .concat((st.extra || {})[name] || [])
-      .filter((e) => ((st.removed || {})[name] || []).indexOf(e.name) === -1)
-      .forEach((e) => {
-        have[e.name] = 1;
-      });
+    selList.forEach((e) => {
+      have[e.name] = 1;
+    });
     const all: Exercise[] = [];
     const add = (e) => {
       if (!have[e.name] && !all.some((x) => x.name === e.name)) all.push(e);

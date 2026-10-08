@@ -188,7 +188,7 @@ export function editVals(ctx: Ctx) {
   const pickAreas = st.pickAreas || picked;
   const narrowToAreas = pickAreas.length > 0 && !st.pickAll;
   const PICK_LIMIT = 25;
-  const pickable = libraryFor(listKey)
+  const pickable = libraryFor()
     .filter((e) => !narrowToAreas || (e.areas || []).some((a) => pickAreas.includes(a)))
     .filter((e) => !pickQ || e.name.toLowerCase().includes(pickQ))
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -454,12 +454,15 @@ export function editVals(ctx: Ctx) {
       // An exercise only drafted in this visit has no saved page yet, so it can only be added.
       open: e.id ? () => logic.nav({ screen: 'exercise', exerciseId: e.id }) : null,
       // Adding keeps the list open for the next one; the added exercise leaves the list and joins the workout above.
-      add: () =>
+      add: () => {
+        // Once only: a second tap before the list updates mustn't add it twice.
+        if (selList.some((x) => x.name === e.name)) return;
         logic.s({
           extra: Object.assign({}, st.extra, { [listKey]: added.concat([e]) }),
           removed: Object.assign({}, st.removed, { [listKey]: gone.filter((n) => n !== e.name) }),
           announce: e.name + ' added.',
-        }),
+        });
+      },
     })),
     draftName: st.dName || '',
     draftSets: st.dSets || '',
