@@ -8,8 +8,9 @@ import type { Ctx } from '../planner/store/types';
 import { setsFor, setsIn } from '../session/sets';
 import { kindOf } from '@/frontend/components/KindTag';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
-import { areaToggles, plainExercise, DRAFT_CLEARED, draftClash, draftHint, draftItem, draftOpened, draftReady, equipmentKnown, equipmentToggles } from '@/frontend/shared/exerciseDraft';
+import { areaToggles, draftBand, plainExercise, DRAFT_CLEARED, draftClash, draftHint, draftItem, draftOpened, draftReady, equipmentKnown, equipmentToggles } from '@/frontend/shared/exerciseDraft';
 import { otherSide, splitSide, withSide } from '@/frontend/shared/sides';
+import { bandLevelOf, bandWeight, usesBand, type BandLevel } from '@/frontend/shared/bands';
 import type { BuiltinWorkout, WorkoutSummary } from '@/frontend/data/plannerData';
 
 // Create / edit workout screen: ride plan, exercise list, icons, date picker, save and delete.
@@ -518,6 +519,7 @@ export function editVals(ctx: Ctx) {
     setSets: (e) => logic.s({ dSets: digitsOnly(e.target.value) }),
     setReps: (e) => logic.s({ dReps: digitsOnly(e.target.value) }),
     setWeight: (e) => logic.s({ dWeight: numericOnly(e.target.value) }),
+    draftBand: draftBand(st, (patch) => logic.s(patch)),
     setRest: (e) => logic.s({ dRest: digitsOnly(e.target.value) }),
     draftAreas: areaToggles(st.dAreas || [], (dAreas) => logic.s({ dAreas })),
     // A new exercise's equipment: one row that opens to the picker, as in the exercise editor. Only once the database
@@ -739,7 +741,11 @@ export function editVals(ctx: Ctx) {
               .map((n) => byName(n))
               .filter((e) => e && e.id)
               .map((e) => e.id),
-            add: added.map(plainExercise),
+            // As the editor shows them: with any edits made after adding (sets, weight, a band level) and icon picked.
+            add: added.map((a) => {
+              const shown = selList.find((x) => x.name === a.name) || a;
+              return plainExercise(iconPick(shown.name) ? { ...shown, i: iconPick(shown.name) } : shown);
+            }),
             order: reordered ? selList.map((e) => e.name) : undefined,
           },
           repeatDates: st.repeat && !selAct.series ? repeatsAfter(baseName).map(isoOf) : [],
@@ -1081,6 +1087,10 @@ export function editVals(ctx: Ctx) {
         setSets: (ev) => setSets({ target: { value: joinSetsReps(digitsOnly(ev.target.value), setsParts.reps) } }),
         setReps: (ev) => setSets({ target: { value: joinSetsReps(setsParts.sets, digitsOnly(ev.target.value)) } }),
         setWeight: (ev) => setWeight({ target: { value: withLb(numericOnly(ev.target.value)) } }),
+        // Done with a band: its level instead of pounds.
+        band: usesBand(e)
+          ? { level: bandLevelOf(e.weight), onLevel: (l: BandLevel | null) => setWeight({ target: { value: l ? bandWeight(l) : '' } }) }
+          : null,
         setRest: (ev) => setRest({ target: { value: withSec(digitsOnly(ev.target.value)) } }),
         areas: areaToggles(exAreas, (value) => setAreas({ target: { value } })),
         icoSvg: iconSvg(cur),

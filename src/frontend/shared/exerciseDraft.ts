@@ -1,4 +1,5 @@
 import { EQUIPMENT, EQUIPMENT_GROUPS, TARGET_AREAS } from './constants';
+import { bandLevelOf, bandWeight, usesBand, type BandLevel } from '@/frontend/shared/bands';
 import { countsOk, joinSetsReps, withLb, withSec } from './helpers';
 
 // The new-exercise form, used by the editor's "Create new" and the Spellbook's "New exercise". Its fields live in
@@ -54,11 +55,18 @@ export const plainExercise = (e) => ({
   ...(e.equipment !== undefined ? { equipment: e.equipment } : {}),
 });
 
+// A new exercise done with a resistance band has a band level in place of a weight in pounds (shared/bands).
+const draftUsesBand = (st) => usesBand({ equipment: st.dEquip, weight: st.dWeight });
+export const draftBand = (st, set: (patch: Record<string, string>) => void) =>
+  draftUsesBand(st)
+    ? { level: bandLevelOf(st.dWeight), onLevel: (l: BandLevel | null) => set({ dWeight: l ? bandWeight(l) : '' }) }
+    : null;
+
 // The exercise the draft describes.
 export const draftItem = (st, model) => ({
   name: (st.dName || '').trim(),
   sets: joinSetsReps(st.dSets, st.dReps) || '3 × 10',
-  weight: withLb(st.dWeight) || '—',
+  weight: draftUsesBand(st) ? (bandLevelOf(st.dWeight) ? st.dWeight : '—') : withLb(st.dWeight) || '—',
   rest: withSec(st.dRest) || '60 sec',
   i: st.dIcon || 'h',
   areas: st.dAreas || [],
