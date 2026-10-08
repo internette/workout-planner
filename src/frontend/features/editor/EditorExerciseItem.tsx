@@ -8,6 +8,7 @@ import { AreaChoice } from '@/frontend/components/AreaChoice';
 import { DoneTick } from '@/frontend/components/DoneTick';
 import { SetsFields } from '@/frontend/components/SetsFields';
 import { IconPicker } from '@/frontend/components/IconPicker';
+import { ExerciseName } from '@/frontend/components/ExerciseName';
 import { t } from '@/frontend/features/planner/viewHelpers';
 
 /** An exercise in the editor’s list: its icon, sets and target areas when opened, its tick, and removing it. `handle` is the drag handle from ReorderableList. */
@@ -47,13 +48,7 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
         >
           {/* The name fills the row, so every chevron lines up in one column beside the tick and ✕. */}
           <span style={{ flex: '1', minWidth: '0' }}>
-            <Text
-          variant="subheading"
-          tone={exercise?.nameDone ? 'muted' : 'ink'}
-          style={{ display: 'block', textDecoration: exercise?.nameDone ? 'line-through' : undefined }}
-        >
-          {exercise?.name}
-        </Text>
+            <ExerciseName name={exercise?.name ?? ''} done={!!exercise?.nameDone} />
             {!exercise?.expanded ? (
               <Text variant="body" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
                 {exercise?.detail}

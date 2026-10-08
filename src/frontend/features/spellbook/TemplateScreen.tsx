@@ -14,6 +14,7 @@ import { StatRow } from '@/frontend/components/StatRow';
 import { NeedsLine } from '@/frontend/components/NeedsLine';
 import { NotesCard } from '@/frontend/components/NotesCard';
 import { PageTitle } from '@/frontend/components/PageTitle';
+import { ExerciseName } from '@/frontend/components/ExerciseName';
 import { ScheduleDialog } from '@/frontend/features/spellbook/ScheduleDialog';
 
 export function TemplateScreen({ v }: { v: PlannerVals }) {
@@ -82,9 +83,7 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
             <Card key={i} pad="sm" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
               <IconTile as="span" size="xs" variant="flat">{e?.svg}</IconTile>
               <span style={{ flex: '1', minWidth: '0' }}>
-                <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
-                  {e?.name}
-                </Text>
+                <ExerciseName name={e?.name ?? ''} />
                 <Text
                   variant="body"
                   tone="muted"

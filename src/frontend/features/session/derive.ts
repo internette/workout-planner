@@ -1,6 +1,7 @@
 import { idOf, longDay, monthPatch, splitMinutes, toMinutes } from '@/frontend/shared/helpers';
 import type { StatsCtx } from '../planner/store/types';
 import { colors } from '@moonshot/design-system/colors';
+import { splitSide } from '@/frontend/shared/sides';
 import type { Entry, Exercise } from '@/frontend/data/plannerData';
 
 // The selected workout: ride plan and actuals, exercise list, icons and completion state.
@@ -135,17 +136,18 @@ export function workoutStage(ctx: StatsCtx) {
   const baseName = (srcAct && srcAct.name) || '';
   const baseKey = (srcAct && srcAct.exKey) || '';
   const selName = creating ? st.newName || '' : (st.renames || {})[baseName] != null ? st.renames[baseName] : baseName;
-  const libraryFor = (name) => {
+  // Every exercise that could be added to the workout being edited: all of them, less what it already has on both
+  // sides. "Has" is its list as the editor shows it (selList, below). One it has once can be added again, for the
+  // other side (see shared/sides).
+  const libraryFor = () => {
     const have = {};
-    (EX[name] || [])
-      .concat((st.extra || {})[name] || [])
-      .filter((e) => ((st.removed || {})[name] || []).indexOf(e.name) === -1)
-      .forEach((e) => {
-        have[e.name] = 1;
-      });
+    selList.forEach((e) => {
+      const { base } = splitSide(e.name);
+      have[base] = (have[base] || 0) + 1;
+    });
     const all: Exercise[] = [];
     const add = (e) => {
-      if (!have[e.name] && !all.some((x) => x.name === e.name)) all.push(e);
+      if ((have[e.name] || 0) < 2 && !all.some((x) => x.name === e.name)) all.push(e);
     };
     Object.keys(EX).forEach((k) => EX[k].forEach(add));
     Object.keys(st.extra || {}).forEach((k) => (st.extra[k] || []).forEach(add));
@@ -173,7 +175,10 @@ export function workoutStage(ctx: StatsCtx) {
   // In the order they were dragged to (st.exOrder, by name); anything added since goes at the end.
   const exOrder = (st.exOrder || {})[listKey] || [];
   const orderRank = (e) => (exOrder.indexOf(e.name) === -1 ? exOrder.length : exOrder.indexOf(e.name));
-  const selList = (creating ? [] : EXV[baseKey] || [])
+  // Its saved exercises under any new names given in the editor (one labeled Left when its other side was added).
+  const renamed = (st.exRenames || {})[listKey] || {};
+  const owned = (creating ? [] : EXV[baseKey] || []).map((e) => (renamed[e.name] ? Object.assign({}, e, { name: renamed[e.name] }) : e));
+  const selList = owned
     .concat(added)
     .filter((e) => gone.indexOf(e.name) === -1)
     .map((e, ix) => ({ e, ix }))
@@ -222,6 +227,7 @@ export function workoutStage(ctx: StatsCtx) {
     picked,
     notesVal,
     libraryFor,
+    owned,
     added,
     gone,
     wIcon,

@@ -3,6 +3,7 @@ import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { DoneTick } from '@/frontend/components/DoneTick';
 import { SetPips } from '@/frontend/components/SetPips';
+import { ExerciseName } from '@/frontend/components/ExerciseName';
 
 /** An exercise on the session page, with its tick, and on today's session how far through its sets it is. */
 export function SessionExerciseRow({ exercise }: { exercise: any }) {
@@ -13,13 +14,7 @@ export function SessionExerciseRow({ exercise }: { exercise: any }) {
     >
       <IconTile as="span" size="xs" variant="flat">{exercise?.icoSvg}</IconTile>
       <span style={{ minWidth: '0', flex: '1 1 auto' }}>
-        <Text
-          variant="subheading"
-          tone={exercise?.nameDone ? 'muted' : 'ink'}
-          style={{ display: 'block', textDecoration: exercise?.nameDone ? 'line-through' : undefined }}
-        >
-          {exercise?.name}
-        </Text>
+        <ExerciseName name={exercise?.name ?? ''} done={!!exercise?.nameDone} />
         <Text
           variant="body"
           tone="muted"
