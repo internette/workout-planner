@@ -9,6 +9,7 @@ import { setsFor, setsIn } from '../session/sets';
 import { kindOf } from '@/frontend/components/KindTag';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import { areaToggles, plainExercise, DRAFT_CLEARED, draftClash, draftHint, draftItem, draftOpened, draftReady, equipmentKnown, equipmentToggles } from '@/frontend/shared/exerciseDraft';
+import { otherSide, splitSide, withSide } from '@/frontend/shared/sides';
 import type { BuiltinWorkout, WorkoutSummary } from '@/frontend/data/plannerData';
 
 // Create / edit workout screen: ride plan, exercise list, icons, date picker, save and delete.
@@ -36,6 +37,7 @@ export function editVals(ctx: Ctx) {
     notesVal,
     listKey,
     libraryFor,
+    owned,
     added,
     gone,
     wIcon,
@@ -142,7 +144,8 @@ export function editVals(ctx: Ctx) {
   const setDeltaMin = creating
     ? 0
     : (EXV[baseKey] || []).reduce((sum, orig) => {
-        const now = selList.find((e) => e.name === orig.name);
+        // By its row, so one renamed here (labeled Left) is still itself.
+        const now = selList.find((e) => (orig.id && e.id === orig.id) || e.name === orig.name);
         return now ? sum + ((setsOf(now) - setsOf(orig)) * (restOf(now) + 40)) / 60 : sum;
       }, 0);
   // What kind of workout it is (lifts only, once the migrations have added the kinds): a plain one, a stretch or yoga.
@@ -188,6 +191,27 @@ export function editVals(ctx: Ctx) {
   const pickAreas = st.pickAreas || picked;
   const narrowToAreas = pickAreas.length > 0 && !st.pickAll;
   const PICK_LIMIT = 25;
+  // Gives an exercise in the workout a new name, keeping everything the editor holds for it under its name: its
+  // edits, tick, icon and place. A saved one keeps its row (saved as a rename); one added in this visit is just renamed.
+  const relabel = (from: string, to: string): Record<string, any> => {
+    if (from === to) return {};
+    const move = (map, prefix = listKey + '|') =>
+      map && map[prefix + from] !== undefined
+        ? Object.fromEntries(Object.entries(map).map(([k, v]) => [k === prefix + from ? prefix + to : k, v]))
+        : map;
+    const saved = owned.find((x) => x.name === from && x.id);
+    const orig = saved ? (EXV[baseKey] || []).find((x) => x.id === saved.id)?.name ?? from : null;
+    return {
+      ...(saved
+        ? { exRenames: Object.assign({}, st.exRenames, { [listKey]: Object.assign({}, (st.exRenames || {})[listKey], { [orig as string]: to }) }) }
+        : { extra: Object.assign({}, st.extra, { [listKey]: added.map((x) => (x.name === from ? Object.assign({}, x, { name: to }) : x)) }) }),
+      fields: move(st.fields),
+      exIcons: move(st.exIcons),
+      exExpanded: move(st.exExpanded),
+      editDone: st.editDone ? st.editDone.map((n) => (n === from ? to : n)) : st.editDone,
+      exOpen: null,
+    };
+  };
   const pickable = libraryFor()
     .filter((e) => !narrowToAreas || (e.areas || []).some((a) => pickAreas.includes(a)))
     .filter((e) => !pickQ || e.name.toLowerCase().includes(pickQ))
@@ -449,19 +473,40 @@ export function editVals(ctx: Ctx) {
     libraryMore: pickable.length > PICK_LIMIT ? plural(pickable.length - PICK_LIMIT, 'more exercise') + ' — search to find one.' : '',
     library: pickable.slice(0, PICK_LIMIT).map((e) => ({
       name: e.name,
-      detail: exLine(e),
+      // One already in the workout once can be added again for its other side.
+      detail: selList.some((x) => splitSide(x.name).base === e.name) ? 'In this workout · add it again for the other side' : exLine(e),
       // Same as the Spellbook: the row opens the exercise, "+" adds it. Back returns here with this panel still open.
       // An exercise only drafted in this visit has no saved page yet, so it can only be added.
       open: e.id ? () => logic.nav({ screen: 'exercise', exerciseId: e.id }) : null,
       // Adding keeps the list open for the next one; the added exercise leaves the list and joins the workout above.
       add: () => {
-        // Once only: a second tap before the list updates mustn't add it twice.
-        if (selList.some((x) => x.name === e.name)) return;
-        logic.s({
-          extra: Object.assign({}, st.extra, { [listKey]: added.concat([e]) }),
-          removed: Object.assign({}, st.removed, { [listKey]: gone.filter((n) => n !== e.name) }),
-          announce: e.name + ' added.',
-        });
+        const same = selList.filter((x) => splitSide(x.name).base === e.name);
+        // Twice at most: once for each side. (A second tap before the list updates sets the same state again.)
+        if (same.length >= 2) return;
+        if (!same.length) {
+          return logic.s({
+            extra: Object.assign({}, st.extra, { [listKey]: added.concat([e]) }),
+            removed: Object.assign({}, st.removed, { [listKey]: gone.filter((n) => n !== e.name) }),
+            announce: e.name + ' added.',
+          });
+        }
+        // Already in it: this one is for the other side. The first is labeled Left if it has no side yet, and the new
+        // one goes right after it, with the same sets, weight and rest.
+        const first = same[0];
+        const firstSide = splitSide(first.name).side;
+        const firstName = firstSide ? first.name : withSide(e.name, 'Left');
+        const newName = withSide(e.name, firstSide ? otherSide(firstSide) : 'Right');
+        const relabeled = relabel(first.name, firstName);
+        const copy = Object.assign({}, first, { name: newName, id: undefined });
+        const order = selList.map((x) => (x.name === first.name ? firstName : x.name));
+        order.splice(order.indexOf(firstName) + 1, 0, newName);
+        logic.s(
+          Object.assign(relabeled, {
+            extra: Object.assign({}, st.extra, { [listKey]: (relabeled.extra?.[listKey] ?? added).concat([copy]) }),
+            exOrder: Object.assign({}, st.exOrder, { [listKey]: order }),
+            announce: e.name + ' added for the ' + splitSide(newName).side!.toLowerCase() + ' side.',
+          }),
+        );
       },
     })),
     draftName: st.dName || '',
@@ -619,7 +664,7 @@ export function editVals(ctx: Ctx) {
       if (saving) return;
       const cleared = EDIT_OVERLAYS;
       if (!creating) {
-        const owned = EXV[baseKey] || [];
+        // Its saved exercises, under any new names given here (owned, from derive).
         const byName = (n) => owned.find((e) => e.name === n);
         const prefix = listKey + '|';
         const update = Object.keys(st.fields || {})
@@ -634,6 +679,14 @@ export function editVals(ctx: Ctx) {
               iconPick(u.ex.name) ? { i: iconPick(u.ex.name) } : {},
             ),
           }));
+        // Renamed here (labeled Left when the other side was added): saved as a new name, unless it was taken out.
+        Object.entries((st.exRenames || {})[listKey] || {}).forEach(([, to]) => {
+          const ex = byName(to);
+          if (!ex || !ex.id || gone.indexOf(to) !== -1) return;
+          const u = update.find((x) => x.id === ex.id);
+          if (u) u.patch = Object.assign({}, u.patch, { name: to });
+          else update.push({ id: ex.id, patch: { name: to } });
+        });
         Object.keys(st.exIcons || {})
           .filter((k) => k.indexOf(prefix) === 0)
           .forEach((k) => {
@@ -660,7 +713,7 @@ export function editVals(ctx: Ctx) {
         // Dragged into a new order: the whole list's names go with the save, in that order.
         const reordered =
           selList.map((e) => e.name).join('\n') !==
-          (EXV[baseKey] || [])
+          owned
             .concat(added)
             .filter((e) => gone.indexOf(e.name) === -1)
             .map((e) => e.name)

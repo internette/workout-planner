@@ -152,6 +152,8 @@ export interface PlannerState {
   // The session page's Weekly series panel is open.
   seriesOpen?: boolean | null;
   exOrder?: Record<string, string[]> | null;
+  // Saved exercises given a new name in the editor, by workout: a first one labeled Left when its other side is added.
+  exRenames?: Record<string, Record<string, string>> | null;
   exExpanded?: Record<string, boolean>;
   exOpen?: string | null;
   editDone?: string[] | null;

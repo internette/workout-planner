@@ -6,6 +6,7 @@ import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { SessionProgress } from '@/frontend/components/SessionProgress';
+import { ExerciseName } from '@/frontend/components/ExerciseName';
 import { SetPips } from '@/frontend/components/SetPips';
 
 const divider: CSSProperties = { border: 0, borderTop: '1px solid var(--color-hairline)', margin: '16px 0' };
@@ -76,9 +77,7 @@ function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 12px', marginTop: '14px' }}>
       <span style={{ flex: '1 1 160px', minWidth: 0 }}>
-        <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
-          {now.name}
-        </Text>
+        <ExerciseName name={now.name} />
         <span style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
           <SetPips pips={now.pips} />
           <Text variant="body" tone="slate" style={{ fontVariantNumeric: 'tabular-nums' }}>
