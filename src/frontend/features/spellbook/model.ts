@@ -4,7 +4,8 @@ import { DEFAULT_WEEKS, dayNames, pickedDays, planDays, toggleDay } from '@/fron
 import * as db from '@/frontend/data/plannerData';
 import { countsOk, digitsOnly, editTemplatePatch, exerciseDraftDirty, exLine, isoOf, joinSetsReps, longDay, monthPatch, needsLine, newWorkoutPatch, noticePatch, numericOnly, plural, splitSetsReps, withLb, withSec } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
-import { areaToggles, plainExercise, DRAFT_CLEARED, draftClash, draftItem, draftOpened, draftReady, equipmentToggles } from '@/frontend/shared/exerciseDraft';
+import { areaToggles, draftBand, plainExercise, DRAFT_CLEARED, draftClash, draftItem, draftOpened, draftReady, equipmentToggles } from '@/frontend/shared/exerciseDraft';
+import { bandLevelOf, bandWeight, usesBand, type BandLevel } from '@/frontend/shared/bands';
 import type { BuiltinWorkout, Exercise, WorkoutSummary } from '@/frontend/data/plannerData';
 
 // Spellbook (the 'arsenal' screen): the exercise library, its search and the add-exercise form.
@@ -333,6 +334,10 @@ export function arsenalVals(ctx: Ctx) {
     setSets: (e) => logic.s({ exDraft: { ...exDraft, sets: digitsOnly(e.target.value) } }),
     setReps: (e) => logic.s({ exDraft: { ...exDraft, reps: digitsOnly(e.target.value) } }),
     setWeight: (e) => logic.s({ exDraft: { ...exDraft, weight: withLb(numericOnly(e.target.value)) } }),
+    // Done with a band: its level instead of pounds.
+    band: usesBand(exDraft)
+      ? { level: bandLevelOf(exDraft.weight), onLevel: (l: BandLevel | null) => logic.s({ exDraft: { ...exDraft, weight: l ? bandWeight(l) : '' } }) }
+      : null,
     setRest: (e) => logic.s({ exDraft: { ...exDraft, rest: withSec(digitsOnly(e.target.value)) } }),
     areas: areaToggles(exDraft.areas || [], (areas) => logic.s({ exDraft: { ...exDraft, areas } })),
     // Equipment is one row that opens to the picker: what's picked, or "Bodyweight", while it's closed.

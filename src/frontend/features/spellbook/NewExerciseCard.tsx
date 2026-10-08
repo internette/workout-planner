@@ -25,6 +25,7 @@ export function NewExerciseCard({ v }: { v: PlannerVals }) {
           onSets={v.setSets}
           onReps={v.setReps}
           onWeight={v.setWeight}
+          band={v.draftBand}
           onRest={v.setRest}
           areas={v.draftAreas ?? []}
           equipment={v.draftEquipment ? { id: 'new-exercise-equipment', open: v.draftEquipment.open, onToggle: v.draftEquipment.toggle, summary: v.draftEquipment.summary, groups: v.draftEquipment.groups } : null}
