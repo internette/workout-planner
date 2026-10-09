@@ -34,6 +34,7 @@ export interface ExerciseDraft {
   sets: string;
   reps: string;
   weight: string;
+  band?: string;
   rest: string;
   i: string;
   areas: string[];
@@ -183,6 +184,7 @@ export interface PlannerState {
   dSets?: string;
   dReps?: string;
   dWeight?: string;
+  dBand?: string;
   dRest?: string;
   dIcon?: string;
   dAreas?: string[];

@@ -31,9 +31,9 @@ export function ExerciseFields({ name, onName, nameError, onNameKeyDown, areas, 
         placeholder="e.g. Bulgarian Split Squat"
         error={nameError || undefined}
       />
+      {equipment ? <EquipmentPicker {...equipment} /> : null}
       <SetsFields {...sets} />
       <AreaChoice areas={areas} />
-      {equipment ? <EquipmentPicker {...equipment} /> : null}
       <Label style={{ margin: 'var(--space-4) 0 var(--space-2)' }}>Icon</Label>
       <IconChoiceGroup label="Icon" columns={4} {...icon} />
     </>

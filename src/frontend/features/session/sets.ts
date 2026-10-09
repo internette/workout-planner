@@ -42,7 +42,7 @@ export function setsFor(ctx: Ctx) {
     if (!e) return null;
     const of = setsIn(e);
     const set = Math.min(of, (sets[e.name] || 0) + 1);
-    return { e, set, of, line: [of > 1 ? 'Set ' + set + ' of ' + of : '', exLine({ weight: e.weight })].filter(Boolean).join(' · ') };
+    return { e, set, of, line: [of > 1 ? 'Set ' + set + ' of ' + of : '', exLine({ weight: e.weight, band: e.band })].filter(Boolean).join(' · ') };
   };
   const nextSet = (id: string, after?: string): NextSet | null => {
     const at = entry(id);

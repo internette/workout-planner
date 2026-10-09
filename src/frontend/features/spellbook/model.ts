@@ -5,7 +5,7 @@ import * as db from '@/frontend/data/plannerData';
 import { countsOk, digitsOnly, editTemplatePatch, exerciseDraftDirty, exLine, isoOf, joinSetsReps, longDay, monthPatch, needsLine, newWorkoutPatch, noticePatch, numericOnly, plural, splitSetsReps, withLb, withSec } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
 import { areaToggles, draftBand, plainExercise, DRAFT_CLEARED, draftClash, draftItem, draftOpened, draftReady, equipmentToggles } from '@/frontend/shared/exerciseDraft';
-import { bandLevelOf, bandWeight, usesBand, type BandLevel } from '@/frontend/shared/bands';
+import { bandLevelOf, bandWeight, takesWeight, usesBand, type BandLevel } from '@/frontend/shared/bands';
 import type { BuiltinWorkout, Exercise, WorkoutSummary } from '@/frontend/data/plannerData';
 
 // Spellbook (the 'arsenal' screen): the exercise library, its search and the add-exercise form.
@@ -180,6 +180,7 @@ export function arsenalVals(ctx: Ctx) {
     name,
     ...splitSetsReps(ex.sets),
     weight: ex.weight,
+    ...(ex.band !== undefined ? { band: ex.band } : {}),
     rest: ex.rest,
     i: ex.i,
     areas: ex.areas || [],
@@ -196,6 +197,7 @@ export function arsenalVals(ctx: Ctx) {
         svg: iconSvg(found.ex.i),
         sets: found.ex.sets,
         weight: found.ex.weight,
+        band: found.ex.band || '',
         rest: found.ex.rest,
         areas: found.ex.areas || [],
         // What it needs; none is bodyweight. Not shown until the database has equipment at all.
@@ -334,10 +336,11 @@ export function arsenalVals(ctx: Ctx) {
     setSets: (e) => logic.s({ exDraft: { ...exDraft, sets: digitsOnly(e.target.value) } }),
     setReps: (e) => logic.s({ exDraft: { ...exDraft, reps: digitsOnly(e.target.value) } }),
     setWeight: (e) => logic.s({ exDraft: { ...exDraft, weight: withLb(numericOnly(e.target.value)) } }),
-    // Done with a band: its level instead of pounds.
+    // Done with a band: its level. Pounds for anything done with other equipment (shared/bands).
     band: usesBand(exDraft)
-      ? { level: bandLevelOf(exDraft.weight), onLevel: (l: BandLevel | null) => logic.s({ exDraft: { ...exDraft, weight: l ? bandWeight(l) : '' } }) }
+      ? { level: bandLevelOf(exDraft.band), onLevel: (l: BandLevel | null) => logic.s({ exDraft: { ...exDraft, band: l ? bandWeight(l) : '' } }) }
       : null,
+    weighted: takesWeight(exDraft),
     setRest: (e) => logic.s({ exDraft: { ...exDraft, rest: withSec(digitsOnly(e.target.value)) } }),
     areas: areaToggles(exDraft.areas || [], (areas) => logic.s({ exDraft: { ...exDraft, areas } })),
     // Equipment is one row that opens to the picker: what's picked, or "Bodyweight", while it's closed.
@@ -384,7 +387,9 @@ export function arsenalVals(ctx: Ctx) {
       const patch = {
         name: exDraft.name.trim(),
         sets: joinSetsReps(exDraft.sets, exDraft.reps),
-        weight: exDraft.weight,
+        // What its equipment doesn't ask for is cleared: no pounds for bodyweight or a band alone, no level without a band.
+        weight: takesWeight(exDraft) ? exDraft.weight : '—',
+        ...(exDraft.band !== undefined ? { band: usesBand({ equipment: exDraft.equipment }) || exDraft.equipment === undefined ? exDraft.band : '' } : {}),
         rest: exDraft.rest,
         i: exDraft.i,
         areas: exDraft.areas || [],

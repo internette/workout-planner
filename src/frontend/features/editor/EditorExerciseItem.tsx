@@ -78,6 +78,7 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
         onWeight={exercise?.setWeight}
         onRest={exercise?.setRest}
         band={exercise?.band}
+        weighted={exercise?.weighted}
       />
       <AreaChoice areas={exercise?.areas ?? []} />
       </>
