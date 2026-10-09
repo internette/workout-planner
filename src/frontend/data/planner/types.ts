@@ -7,6 +7,9 @@ export interface Exercise {
   name: string;
   sets: string; // "4 × 8"
   weight: string; // "135 lb", "body", "—"
+  // Done with a resistance band: its level, "Medium band" ('' for none). Missing until the band_level migration has
+  // run, and then left out of every write.
+  band?: string;
   rest: string; // "90 sec"
   i: string; // icon key
   areas: string[]; // body regions this exercise targets

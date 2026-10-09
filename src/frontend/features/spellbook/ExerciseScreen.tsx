@@ -37,7 +37,9 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
           size="lg"
           stats={[
             { label: 'SETS × REPS', value: v.exercise.sets },
-            { label: 'Weight', value: v.exercise.weight },
+            // A band on its own has a level and no weight; a band with other equipment has both.
+            ...(v.exercise.band && v.exercise.weight === '—' ? [] : [{ label: 'Weight', value: v.exercise.weight }]),
+            ...(v.exercise.band ? [{ label: 'Band', value: v.exercise.band.replace(/ band$/, '') }] : []),
             { label: 'Rest', value: v.exercise.rest },
           ]}
         />

@@ -56,6 +56,8 @@ export async function addPlanDraft(draft: PlanDraft, model: Model) {
         i: hit?.i ?? 'h',
         areas: hit?.areas ?? [],
         ...(hit?.equipment !== undefined ? { equipment: hit.equipment } : {}),
+        // A band exercise from the catalog keeps its level.
+        ...(hit?.band ? { band: hit.band } : {}),
       };
     });
     const isRide = w.kind === 'ride';

@@ -22,6 +22,7 @@ export function ExerciseEditForm({ v }: { v: PlannerVals }) {
           onReps={v.exerciseEdit.setReps}
           onWeight={v.exerciseEdit.setWeight}
           band={v.exerciseEdit.band}
+          weighted={v.exerciseEdit.weighted}
           onRest={v.exerciseEdit.setRest}
           areas={v.exerciseEdit.areas ?? []}
           equipment={v.exerciseEdit.equipmentGroups ? { id: 'exercise-equipment', open: v.exerciseEdit.equipmentOpen, onToggle: v.exerciseEdit.toggleEquipment, summary: v.exerciseEdit.equipmentSummary, groups: v.exerciseEdit.equipmentGroups } : null}

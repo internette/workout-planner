@@ -73,12 +73,13 @@ export const formatElapsed = (totalSec: number) => {
   const pad2 = n => String(n).padStart(2, '0');
   return (h ? h + ':' + pad2(m) : String(m)) + ':' + pad2(s);
 };
-// An exercise in one line: "4 × 8 · 95 lb", "3 × 12 · bodyweight", or just "3 sets" when there's no weight to
-// show — never a dangling "· —". With rest: "… · 90 sec rest".
-export const exLine = (e: { sets?: string; weight?: string; rest?: string }, withRest = false): string =>
+// An exercise in one line: "4 × 8 · 95 lb", "3 × 12 · bodyweight", "3 × 12 · 20 lb · Medium band", or just "3 sets"
+// when there's no weight to show — never a dangling "· —". With rest: "… · 90 sec rest".
+export const exLine = (e: { sets?: string; weight?: string; band?: string; rest?: string }, withRest = false): string =>
   [
     e.sets && e.sets !== '—' ? e.sets : '',
     e.weight && e.weight !== '—' ? (e.weight === 'body' ? 'bodyweight' : e.weight) : '',
+    e.band || '',
     withRest && e.rest && e.rest !== '—' ? e.rest + ' rest' : '',
   ]
     .filter(Boolean)

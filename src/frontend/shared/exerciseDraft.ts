@@ -1,9 +1,9 @@
 import { EQUIPMENT, EQUIPMENT_GROUPS, TARGET_AREAS } from './constants';
-import { bandLevelOf, bandWeight, usesBand, type BandLevel } from '@/frontend/shared/bands';
+import { bandLevelOf, bandWeight, takesWeight, usesBand, type BandLevel } from '@/frontend/shared/bands';
 import { countsOk, joinSetsReps, withLb, withSec } from './helpers';
 
 // The new-exercise form, used by the editor's "Create new" and the Spellbook's "New exercise". Its fields live in
-// planner state as dName, dSets, dReps, dWeight, dRest, dIcon, dAreas, dEquip and dEquipOpen.
+// planner state as dName, dSets, dReps, dWeight, dBand, dRest, dIcon, dAreas, dEquip and dEquipOpen.
 
 // Opening the form: real values in its boxes (3 × 10, 60 sec rest), what it saves if left alone, rather than grey
 // examples that look like values. Weight starts empty: none is saved unless one is typed.
@@ -15,6 +15,7 @@ export const DRAFT_CLEARED = {
   dSets: '',
   dReps: '',
   dWeight: '',
+  dBand: '',
   dRest: '',
   dIcon: 'h',
   dAreas: [],
@@ -49,24 +50,29 @@ export const plainExercise = (e) => ({
   name: e.name,
   sets: e.sets,
   weight: e.weight,
+  ...(e.band !== undefined ? { band: e.band } : {}),
   rest: e.rest,
   i: e.i,
   areas: e.areas || [],
   ...(e.equipment !== undefined ? { equipment: e.equipment } : {}),
 });
 
-// A new exercise done with a resistance band has a band level in place of a weight in pounds (shared/bands).
-const draftUsesBand = (st) => usesBand({ equipment: st.dEquip, weight: st.dWeight });
-export const draftBand = (st, set: (patch: Record<string, string>) => void) =>
-  draftUsesBand(st)
-    ? { level: bandLevelOf(st.dWeight), onLevel: (l: BandLevel | null) => set({ dWeight: l ? bandWeight(l) : '' }) }
+// What a new exercise is done with decides what it asks for (shared/bands): a band level with a resistance band, a
+// weight in pounds with anything else, both with both, and neither for bodyweight. Before the database has equipment,
+// there's no picker, and it takes a weight.
+const draftKit = (st, model) => ({ equipment: equipmentKnown(model) ? st.dEquip || [] : null });
+export const draftBand = (st, model, set: (patch: Record<string, string>) => void) =>
+  usesBand(draftKit(st, model))
+    ? { level: bandLevelOf(st.dBand), onLevel: (l: BandLevel | null) => set({ dBand: l ? bandWeight(l) : '' }) }
     : null;
+export const draftWeighted = (st, model) => takesWeight(draftKit(st, model));
 
 // The exercise the draft describes.
 export const draftItem = (st, model) => ({
   name: (st.dName || '').trim(),
   sets: joinSetsReps(st.dSets, st.dReps) || '3 × 10',
-  weight: draftUsesBand(st) ? (bandLevelOf(st.dWeight) ? st.dWeight : '—') : withLb(st.dWeight) || '—',
+  weight: (draftWeighted(st, model) && withLb(st.dWeight)) || '—',
+  ...(usesBand(draftKit(st, model)) && bandLevelOf(st.dBand) ? { band: st.dBand } : {}),
   rest: withSec(st.dRest) || '60 sec',
   i: st.dIcon || 'h',
   areas: st.dAreas || [],

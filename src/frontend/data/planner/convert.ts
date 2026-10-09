@@ -5,7 +5,7 @@ import { DEFAULT_ZONE } from '@/shared/planDraft';
 import { LIFT_MINUTES, RIDE_MINUTES } from '@/frontend/shared/constants';
 import { minText } from '@/frontend/shared/helpers';
 import type { Exercise } from './types';
-import { BAND_LEVELS, bandLevelOf, bandWeight } from '@/frontend/shared/bands';
+import { bandOfLevel, levelOfBand } from '@/frontend/shared/bands';
 
 export const fmtSets = (sets: number | null, reps: number | null) =>
   sets && reps ? `${sets} × ${reps}` : sets ? `${sets} ${sets === 1 ? 'set' : 'sets'}` : '—';
@@ -18,16 +18,11 @@ export function parseSets(text: string): { sets: number | null; reps: number | n
 }
 
 export const fmtWeight = (value: number | null, unit: string | null) =>
-  unit === 'band' && value != null && BAND_LEVELS[value - 1]
-    ? bandWeight(BAND_LEVELS[value - 1])
-    : value != null ? `${value} ${unit || 'lb'}` : unit === 'body' ? 'body' : '—';
+  value != null ? `${value} ${unit || 'lb'}` : unit === 'body' ? 'body' : '—';
 
 export function parseWeight(text: string): { value: number | null; unit: string | null } {
   const t = text.trim().toLowerCase();
   if (t.startsWith('body')) return { value: null, unit: 'body' };
-  // A band's level, 1 to 4 ("Medium band" is 2).
-  const band = bandLevelOf(text);
-  if (band) return { value: BAND_LEVELS.indexOf(band) + 1, unit: 'band' };
   const m = t.match(/^(\d+(?:\.\d+)?)\s*(lbs?|kg)?/);
   return m
     ? { value: Number(m[1]), unit: m[2] ? m[2].replace('lbs', 'lb') : 'lb' }
@@ -45,7 +40,13 @@ export const toExercise = (r: any): Exercise => ({
   id: r.id,
   name: r.name,
   sets: fmtSets(r.sets, r.reps),
-  weight: fmtWeight(r.weight_value, r.weight_unit),
+  // A band's level was once saved as the weight (unit "band"); the band_level migration moves it to its own column.
+  weight: r.weight_unit === 'band' ? '—' : fmtWeight(r.weight_value, r.weight_unit),
+  ...(r.band_level !== undefined
+    ? { band: bandOfLevel(r.band_level) }
+    : r.weight_unit === 'band'
+      ? { band: bandOfLevel(r.weight_value) }
+      : {}),
   rest: fmtRest(r.rest_seconds),
   i: r.icon || 'h',
   areas: r.target_areas || [],
@@ -65,6 +66,7 @@ export function exerciseRow(e: Exercise) {
     icon: e.i || 'h',
     target_areas: e.areas || [],
     ...(e.equipment !== undefined ? { equipment: e.equipment } : {}),
+    ...(e.band !== undefined ? { band_level: levelOfBand(e.band) } : {}),
   };
 }
 
