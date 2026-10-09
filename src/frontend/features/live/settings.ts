@@ -50,3 +50,11 @@ export const canWake = () => {
   const homeScreen = typeof window !== 'undefined' && window.matchMedia?.('(display-mode: standalone)').matches;
   return !(ios && homeScreen && Number(ios[1]) * 100 + Number(ios[2]) < 1804);
 };
+
+/** Tells the phone how the page's sound sits with other apps' (Safari's Audio Session API, iOS 16.4 and later).
+ * "ambient": it has none of its own to speak of, so music from other apps plays on, neither paused nor turned down.
+ * "playback": the lock screen's player, which has to be what's playing. Elsewhere this does nothing. */
+export function setAudioSession(type: 'ambient' | 'playback') {
+  const session = typeof navigator !== 'undefined' ? (navigator as Navigator & { audioSession?: { type: string } }).audioSession : undefined;
+  if (session) session.type = type;
+}

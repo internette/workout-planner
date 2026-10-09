@@ -6,7 +6,7 @@ import type { PlannerLogic } from '@/frontend/features/planner/store/PlannerLogi
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { clockSeconds, type LiveActivity, type LiveDone } from './model';
 import { liveLook } from './look';
-import { canNotify, canPlayer, liveSettings, onLiveSettings, type LiveSettings } from './settings';
+import { canNotify, canPlayer, liveSettings, onLiveSettings, setAudioSession, type LiveSettings } from './settings';
 import type { WorkerIn, WorkerOut } from './timer.worker';
 
 // The web's stand-in for a Live Activity: the workout in progress, kept up to date outside the page.
@@ -272,9 +272,13 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
   });
 
   // ---- The lock-screen player ----
+  // The app has no sound of its own, so it says so: other apps' music plays on, at its own volume. Only the lock-screen
+  // player (off unless turned on) claims to be what's playing, while it's showing.
+  useEffect(() => setAudioSession('ambient'), []);
   const audio = useRef<HTMLAudioElement | null>(null);
   const startSilence = () => {
     if (!canPlayer()) return;
+    setAudioSession('playback');
     if (!audio.current) {
       audio.current = new Audio(silence());
       audio.current.loop = true;
@@ -291,6 +295,7 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
     if (!a) {
       if (metaKey.current) {
         audio.current?.pause();
+        setAudioSession('ambient');
         ms.metadata = null;
         ms.playbackState = 'none';
         (['play', 'pause', 'nexttrack'] as MediaSessionAction[]).forEach((h) => ms.setActionHandler(h, null));
