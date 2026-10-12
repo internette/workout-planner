@@ -230,16 +230,17 @@ export async function deleteProgram(program: Program, runIds: string[], todayIso
 }
 
 /**
- * A program made from workouts repeating on the calendar. Its blocks hold copies of them. Then either the sessions
- * already there become its run (`keep`: tagged with it, and those still ahead follow its copies from now on; done ones
- * keep their own history), or those still ahead come off and it starts afresh from `freshStart`. `endSeries` turns off
- * the weekly repeats of the workouts it was made from.
+ * A program made from what's left of the workouts repeating on the calendar. Its blocks hold copies of them. Then either
+ * the sessions left become its run from `start` (`keep`: tagged with it, following its copies from now on, and the days
+ * a workout ending sooner misses are added, unless `taken` has that workout on that day already), or they come off and
+ * it starts afresh from `freshStart`. `endSeries` turns off the weekly repeats of the workouts it was made from.
  */
 export async function programFromCalendar(o: {
   name: string;
   blocks: { name: string; weeks: number; workouts: { days: number[]; workout: WorkoutCopy }[] }[];
   start: string;
   sessions: { id: string; iso: string; name: string }[];
+  taken: string[];
   seriesWorkouts: string[];
   keep: boolean;
   freshStart: string;
@@ -282,5 +283,16 @@ export async function programFromCalendar(o: {
   for (const [workoutId, ids] of Object.entries(onto))
     await ok(supabase.from('plan_entries').update({ workout_id: workoutId, program_run_id: run.id }).in('id', ids));
   if (tagOnly.length) await ok(supabase.from('plan_entries').update({ program_run_id: run.id }).in('id', tagOnly));
-  return { programId, count: o.sessions.length, first: null as string | null };
+  // Every workout runs to the end: the days it has nothing on yet, from today on, are added.
+  const taken = new Set(o.taken);
+  const names: Record<string, string> = {};
+  copies.forEach((w) => (names[w.id] = w.name));
+  const missing = runSessions(blocks, o.start, 0).filter((s) => s.date >= o.todayIso && !taken.has(names[s.workoutId] + '|' + s.date));
+  if (missing.length)
+    await ok(
+      supabase
+        .from('plan_entries')
+        .insert(missing.map((s) => ({ workout_id: s.workoutId, scheduled_date: s.date, status: 'planned', program_run_id: run.id }))),
+    );
+  return { programId, count: o.sessions.length + missing.length, first: null as string | null };
 }
