@@ -7,7 +7,7 @@ import { Card } from '../src/card';
 import { Checkbox } from '../src/checkbox';
 import { Chip } from '../src/chip';
 import { colors } from '../src/colors';
-import { Bike, Calendar, Check, Dumbbell, ExerciseIcon, Gem, Sparkle } from '../src/icons';
+import { Bike, Calendar, Check, Dumbbell, DumbbellSmall, DumbbellUpright, Gem, Sparkle } from '../src/icons';
 import { IconChoiceGroup } from '../src/icon-choice-group';
 import { IconTile } from '../src/icon-tile';
 import { OptionCard, OptionGroup } from '../src/option-card';
@@ -193,7 +193,7 @@ export function Preview({ slug }: { slug: string }) {
             days={['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((letter, i) => ({
               letter,
               label: letter,
-              icon: i % 2 ? <ExerciseIcon name={i === 3 ? 'v' : 'h'} color="var(--color-pink)" size={14} /> : undefined,
+              icon: i % 2 ? (i === 3 ? <DumbbellUpright color="var(--color-pink)" size={14} /> : <Dumbbell color="var(--color-pink)" size={14} />) : undefined,
             }))}
           />
         </div>
@@ -216,7 +216,7 @@ export function Preview({ slug }: { slug: string }) {
       return (
         <>
           <IconTile>
-            <ExerciseIcon name="h" size={22} color="var(--color-pink)" />
+            <Dumbbell size={22} color="var(--color-pink)" />
           </IconTile>
           <IconTile size="sm">
             <Bike size={20} color="var(--color-pink)" />
@@ -252,10 +252,15 @@ export function Preview({ slug }: { slug: string }) {
             columns={4}
             value="h"
             onChange={noop}
-            options={(['h', 'v', 'd', 'bike'] as const).map((name) => ({
+            options={([
+              ['h', Dumbbell],
+              ['v', DumbbellUpright],
+              ['d', DumbbellSmall],
+              ['bike', Bike],
+            ] as const).map(([name, Glyph]) => ({
               value: name,
               label: name,
-              icon: <ExerciseIcon name={name} color="var(--color-pink)" />,
+              icon: <Glyph color="var(--color-pink)" />,
             }))}
           />
         </div>

@@ -6,7 +6,7 @@ import { Button } from '../../src/buttons';
 import { Card } from '../../src/card';
 import { Chip } from '../../src/chip';
 import { ACCENTS, type Accent } from '../../src/colors/themes';
-import { ExerciseIcon, Repeat } from '../../src/icons';
+import { Dumbbell, Repeat } from '../../src/icons';
 import { IconTile } from '../../src/icon-tile';
 import { ProgressBar } from '../../src/progress-bar';
 import { Select } from '../../src/select';
@@ -41,7 +41,7 @@ function Preview({ accent, dark }: { accent: string; dark: boolean }) {
       <Card pad="sm" style={{ marginTop: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <IconTile size="sm">
-            <ExerciseIcon name="h" color="var(--color-pink)" />
+            <Dumbbell color="var(--color-pink)" />
           </IconTile>
           <div style={{ minWidth: 0, flex: 1 }}>
             <Text variant="subheading" as="div" tone="ink">

@@ -2,7 +2,8 @@ import { DisclosureChevron } from '@moonshot/design-system/disclosure';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { IconTile } from '@moonshot/design-system/icon-tile';
-import { ChevronRight, Dumbbell, DumbbellSmall, ExerciseIcon } from '@moonshot/design-system/icons';
+import { ChevronRight, Dumbbell, DumbbellSmall } from '@moonshot/design-system/icons';
+import { WorkoutIcon } from '@/frontend/shared/icons';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import { StatRow } from '@/frontend/components/StatRow';
@@ -115,7 +116,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
                 {x?.isD ? (
                   <DumbbellSmall color="var(--color-pink)" size={20} />
                 ) : null}
-                {x?.otherIcon ? <ExerciseIcon name={x.otherIcon} color="var(--color-pink)" size={20} /> : null}
+                {x?.otherIcon ? <WorkoutIcon name={x.otherIcon} color="var(--color-pink)" size={20} /> : null}
                 <span style={css(x?.textStyle)}>{x?.text}</span>
               </div>
             ))}
