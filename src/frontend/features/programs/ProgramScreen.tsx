@@ -10,7 +10,8 @@ import { Text } from '@moonshot/design-system/typography';
 import { Calendar, ChevronDown, ChevronRight, Copy, Pencil, Repeat } from '@moonshot/design-system/icons';
 import { BackBar } from '@/frontend/components/BackBar';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
-import { BlockBar } from './BlockBar';
+import { BlockBar } from '@moonshot/design-system/block-bar';
+import { WeekStrip } from '@moonshot/design-system/week-strip';
 import { ShareProgramDialog } from './ShareProgramDialog';
 
 function StartDialog({ v }: { v: PlannerVals }) {
@@ -147,28 +148,7 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
             </button>
             {b.open ? (
               <>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))', gap: '6px', marginTop: '12px' }}>
-                  {b.strip.map((d, i) => (
-                    <div key={i} role="img" aria-label={d.day + ': ' + d.label} style={{ textAlign: 'center' }}>
-                      <Text variant="micro" tone="slate" as="div" aria-hidden="true">
-                        {d.letter}
-                      </Text>
-                      <div
-                        aria-hidden="true"
-                        style={{
-                          marginTop: '6px',
-                          height: '36px',
-                          borderRadius: 'var(--radius-md)',
-                          display: 'grid',
-                          placeItems: 'center',
-                          background: d.svg ? 'var(--color-pink-tint)' : 'color-mix(in srgb, var(--color-ink) 5%, transparent)',
-                        }}
-                      >
-                        {d.svg}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <WeekStrip days={b.strip.map((d) => ({ letter: d.letter, label: d.day + ': ' + d.label, icon: d.svg || undefined }))} style={{ marginTop: '12px' }} />
                 {b.empty ? (
                   <Text variant="body" tone="muted" as="p" style={{ margin: '12px 0 0' }}>
                     No workouts in this block yet.

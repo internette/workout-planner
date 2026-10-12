@@ -205,7 +205,11 @@ export function programVals(ctx: Ctx) {
               key: w.id,
               days: dayList(w.days),
               name: w.name,
-              meta: (w.ride ? '' : plural(w.count, 'exercise') + ' · ') + '~' + minText(w.minutes),
+              // Each part stays on one line ("6 exercises", "~1 h"); the line only breaks between them.
+              meta: [w.ride ? '' : plural(w.count, 'exercise'), '~' + minText(w.minutes)]
+                .filter(Boolean)
+                .map((part) => part.replace(/ /g, '\u00a0'))
+                .join(' · '),
               svg: iconSvg(w.icon || 'h', w.iconColor || undefined),
               // A program's own workout opens in the workout editor; a built-in one on its own page.
               open: shown.builtin

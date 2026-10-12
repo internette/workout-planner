@@ -11,7 +11,7 @@ import { Lockup } from '@moonshot/design-system/brand';
 import { Text } from '@moonshot/design-system/typography';
 import { Calendar, ChevronDown, Repeat } from '@moonshot/design-system/icons';
 import { ProviderButton } from '@/frontend/features/auth/ProviderButton';
-import { BlockBar } from '@/frontend/features/programs/BlockBar';
+import { BlockBar } from '@moonshot/design-system/block-bar';
 import { PROVIDER_NAME, type Provider } from '@/shared/auth';
 import { DOW3, DOWFULL } from '@/frontend/shared/constants';
 import { exLine, minText, plural } from '@/frontend/shared/helpers';

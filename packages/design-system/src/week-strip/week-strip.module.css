@@ -1,0 +1,22 @@
+/* A week as seven tiles, one per day: tinted with an icon on a day with something on it, faint on a rest day. Seven
+   across at any width; each shrinks rather than wrapping. */
+
+.strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+.day { text-align: center; }
+.tile {
+  margin-top: 6px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  background: var(--color-day-rest);
+}
+.on { background: var(--color-pink-tint); }
+
+@media (forced-colors: active) {
+  .tile { outline: 1px solid CanvasText; outline-offset: -1px; }
+}

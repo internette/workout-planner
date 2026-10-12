@@ -221,6 +221,17 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'block-bar',
+    title: 'Block bar',
+    category: 'components',
+    description: 'A program’s blocks as one bar, each as long as its weeks.',
+    anchors: [
+      { id: 'blocks', title: 'Blocks' },
+      { id: 'running', title: 'Running' },
+      { id: 'accessibility', title: 'Accessibility' },
+    ],
+  },
+  {
     slug: 'progress-bar',
     title: 'Progress bar',
     category: 'components',
@@ -229,6 +240,16 @@ export const sections: Section[] = [
       { id: 'tracks', title: 'Tracks' },
       { id: 'fills', title: 'Fills' },
       { id: 'filling', title: 'Filling' },
+      { id: 'accessibility', title: 'Accessibility' },
+    ],
+  },
+  {
+    slug: 'week-strip',
+    title: 'Week strip',
+    category: 'components',
+    description: 'A week at a glance: a tile per day, with an icon on the days that have something on them.',
+    anchors: [
+      { id: 'days', title: 'Days' },
       { id: 'accessibility', title: 'Accessibility' },
     ],
   },

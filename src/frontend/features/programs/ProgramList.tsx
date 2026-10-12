@@ -4,7 +4,7 @@ import { IconTile } from '@moonshot/design-system/icon-tile';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { ChevronRight } from '@moonshot/design-system/icons';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
-import { BlockBar } from './BlockBar';
+import { BlockBar } from '@moonshot/design-system/block-bar';
 
 function Row({ name, eyebrow, meta, icon, open, children }: { name: string; eyebrow?: string; meta?: string; icon?: React.ReactNode; open: () => void; children?: React.ReactNode }) {
   return (

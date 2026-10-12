@@ -12,6 +12,8 @@ import { IconChoiceGroup } from '../src/icon-choice-group';
 import { IconTile } from '../src/icon-tile';
 import { OptionCard, OptionGroup } from '../src/option-card';
 import { ProgressBar } from '../src/progress-bar';
+import { BlockBar } from '../src/block-bar';
+import { WeekStrip } from '../src/week-strip';
 import { StarRating } from '../src/rating';
 import { ReorderableList } from '../src/reorderable-list';
 import { SegmentedControl } from '../src/segmented-control';
@@ -177,6 +179,24 @@ export function Preview({ slug }: { slug: string }) {
           <span style={{ width: 40, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--hover-neutral)', boxShadow: 'inset 0 0 0 1px var(--color-hairline)' }} />
           <span style={{ width: 40, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--color-surface)', outline: 'var(--focus-ring)', outlineOffset: 'var(--focus-offset)' }} />
         </>
+      );
+    case 'block-bar':
+      return (
+        <div style={{ width: 210 }}>
+          <BlockBar blocks={[{ name: 'Build', weeks: 3 }, { name: 'Deload', weeks: 1 }, { name: 'Peak', weeks: 4 }]} at={1.5} />
+        </div>
+      );
+    case 'week-strip':
+      return (
+        <div style={{ width: 210 }}>
+          <WeekStrip
+            days={['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((letter, i) => ({
+              letter,
+              label: letter,
+              icon: i % 2 ? <ExerciseIcon name={i === 3 ? 'v' : 'h'} color="var(--color-pink)" size={14} /> : undefined,
+            }))}
+          />
+        </div>
       );
     case 'progress-bar':
       return (
