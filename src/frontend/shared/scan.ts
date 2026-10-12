@@ -1,6 +1,7 @@
-// Finding a program in the calendar: workouts repeating weekly that no program put there, read week by week. A week's
-// pattern is which workouts fall on which weekdays; weeks in a row with the same pattern are one block, and where the
-// pattern changes a new block starts. Weeks run Sunday to Saturday, as a program's do.
+// Finding a program in the calendar: workouts repeating weekly that no program put there, read week by week. A workout
+// repeats on a weekday when it falls on that weekday in two weeks or more, whether it was put there as a weekly series
+// or one week at a time. A week's pattern is which workouts fall on which weekdays; weeks in a row with the same pattern
+// are one block, and where the pattern changes a new block starts. Weeks run Sunday to Saturday, as a program's do.
 
 import { isoOf } from './helpers';
 
@@ -8,16 +9,16 @@ export interface ScanSession {
   id: string;
   iso: string;
   name: string; // the workout, by name: an edited one's earlier sessions (on an archived version) are still the same one
-  series: boolean; // part of a weekly series
   inProgram: boolean; // put there by a program's run, or a program's own workout
 }
 
-/** One workout repeating on one weekday, over a stretch of weeks (week numbers count Sundays). */
+/** One workout repeating on one weekday, over a stretch of weeks (week numbers count Sundays), and its sessions. */
 interface Lane {
   name: string;
   day: number;
   from: number;
   to: number;
+  ids: string[];
 }
 
 export interface ScanBlock {
@@ -32,9 +33,9 @@ export interface Scan {
   weeks: number;
   blocks: ScanBlock[];
   names: string[]; // every workout it found, in the order they first fall in a week
-  sessions: string[]; // the series sessions of the workouts kept, in its weeks: the ones that join the program
-  oneOffs: string[]; // sessions in its weeks outside any program and any series: left as they are
-  series: string[]; // every series session in its stretch, kept or not
+  sessions: string[]; // the repeating sessions of the workouts kept, in its weeks: the ones that join the program
+  oneOffs: string[]; // sessions in its weeks outside any program that don't repeat: left as they are
+  series: string[]; // every repeating session in its stretch, kept or not
 }
 
 const DAY = 86400000;
@@ -50,26 +51,35 @@ const sundayOf = (week: number) => {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate() + week * 7);
 };
 
-/** The weekly lanes in these sessions: a workout on a weekday, split where it skips more than a week. */
-function lanesOf(sessions: ScanSession[]): Lane[] {
-  const by: Record<string, string[]> = {};
+/**
+ * The weekly lanes in these sessions: a workout on a weekday, split where it skips more than two weeks. A stretch of
+ * just one week isn't a repeat: its sessions come back as one-offs.
+ */
+function lanesOf(sessions: ScanSession[]): { lanes: Lane[]; once: ScanSession[] } {
+  const by: Record<string, ScanSession[]> = {};
   sessions.forEach((s) => {
     const key = s.name + '\u0000' + fromIso(s.iso).getDay();
-    (by[key] = by[key] || []).push(s.iso);
+    (by[key] = by[key] || []).push(s);
   });
   const lanes: Lane[] = [];
-  Object.entries(by).forEach(([key, dates]) => {
+  const once: ScanSession[] = [];
+  Object.entries(by).forEach(([key, list]) => {
     const [name, day] = key.split('\u0000');
-    const weeks = Array.from(new Set(dates.map(weekOf))).sort((a, b) => a - b);
-    let from = weeks[0];
-    for (let i = 1; i <= weeks.length; i++) {
-      if (i === weeks.length || weeks[i] - weeks[i - 1] > 2) {
-        lanes.push({ name, day: Number(day), from, to: weeks[i - 1] });
-        from = weeks[i];
-      }
-    }
+    const sorted = [...list].sort((a, b) => weekOf(a.iso) - weekOf(b.iso));
+    let run: ScanSession[] = [];
+    const close = () => {
+      const weeks = new Set(run.map((s) => weekOf(s.iso)));
+      if (weeks.size >= 2) lanes.push({ name, day: Number(day), from: Math.min(...weeks), to: Math.max(...weeks), ids: run.map((s) => s.id) });
+      else once.push(...run);
+      run = [];
+    };
+    sorted.forEach((s) => {
+      if (run.length && weekOf(s.iso) - weekOf(run[run.length - 1].iso) > 2) close();
+      run.push(s);
+    });
+    close();
   });
-  return lanes;
+  return { lanes, once };
 }
 
 /**
@@ -78,8 +88,10 @@ function lanesOf(sessions: ScanSession[]): Lane[] {
  */
 export function scanCalendar(all: ScanSession[], keep: Set<string> | null = null): Scan[] {
   const outside = all.filter((s) => !s.inProgram);
-  const lanes = lanesOf(outside.filter((s) => s.series));
+  const { lanes, once } = lanesOf(outside);
   if (!lanes.length) return [];
+  const byId: Record<string, ScanSession> = {};
+  outside.forEach((s) => (byId[s.id] = s));
 
   // Stretches: lanes whose weeks touch or overlap, joined.
   const sorted = [...lanes].sort((a, b) => a.from - b.from);
@@ -97,7 +109,7 @@ export function scanCalendar(all: ScanSession[], keep: Set<string> | null = null
       // A series that starts partway through the first week (or stops partway through the last) didn't skip the days
       // before (or after): its lane counts from the stretch's first week (to its last) when its day there is outside
       // the dates the calendar has.
-      const inIt = outside.filter((s) => s.series && weekOf(s.iso) >= st.from && weekOf(s.iso) <= st.to);
+      const inIt = st.lanes.flatMap((l) => l.ids.map((id) => byId[id]));
       const first = inIt.reduce((m, s) => (s.iso < m ? s.iso : m), inIt[0].iso);
       const last = inIt.reduce((m, s) => (s.iso > m ? s.iso : m), inIt[0].iso);
       const firstDay = fromIso(first).getDay();
@@ -155,8 +167,8 @@ export function scanCalendar(all: ScanSession[], keep: Set<string> | null = null
         weeks: Math.max(0, to - from + 1),
         blocks,
         names,
-        sessions: outside.filter((s) => s.series && inWeeks(s) && (!keep || keep.has(s.name))).map((s) => s.id),
-        oneOffs: outside.filter((s) => !s.series && inWeeks(s)).map((s) => s.id),
+        sessions: inIt.filter((s) => inWeeks(s) && (!keep || keep.has(s.name))).map((s) => s.id),
+        oneOffs: once.filter(inWeeks).map((s) => s.id),
         series: inIt.map((s) => s.id),
         length: st.to - st.from + 1,
       };
