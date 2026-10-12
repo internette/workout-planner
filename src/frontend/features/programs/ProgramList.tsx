@@ -3,7 +3,7 @@ import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { IconTile } from '@moonshot/design-system/icon-tile';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
-import { ChevronRight, Sparkle } from '@moonshot/design-system/icons';
+import { ChevronRight, Gem } from '@moonshot/design-system/icons';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { BlockBar } from '@moonshot/design-system/block-bar';
 
@@ -46,7 +46,7 @@ export function ProgramList({ v }: { v: PlannerVals }) {
       {v.scanCard ? (
         <Card as="section" aria-labelledby="scan-card" style={{ background: 'var(--color-pink-tint)', boxShadow: 'none' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Sparkle size={18} />
+            <Gem size={24} style={{ flex: 'none' }} />
             <Text id="scan-card" variant="subheading" as="h2" style={{ margin: 0 }}>
               {v.scanCard.title}
             </Text>
