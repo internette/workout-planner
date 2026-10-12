@@ -8,8 +8,25 @@ import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import { StatRow } from '@/frontend/components/StatRow';
 import { css, t } from '@/frontend/features/planner/viewHelpers';
-import { KindTag, TagLabel, kindOf } from '@/frontend/components/KindTag';
+import { TagLabel } from '@/frontend/components/KindTag';
 import { StatusDot } from '@/frontend/components/StatusDot';
+
+/** Above a session's name, open or folded: the program it's part of, quietly, then what kind of workout it is. */
+function CardTags({ card }: { card: any }) {
+  return (
+    <>
+      {card?.programName ? (
+        <Text variant="micro" tone="muted" as="span" style={{ display: 'block', marginBottom: '3px' }}>
+          {card.programName}
+        </Text>
+      ) : null}
+      <TagLabel>{card?.typeLabel}</TagLabel>
+    </>
+  );
+}
+
+/** The line under a session's name, led by where it falls in its program ("Build, week 2 of 4"). */
+const placed = (card: any, meta: string) => (card?.programPlace ? card.programPlace + ' · ' : '') + meta;
 
 /** A session on the Day view: its exercises or ride, progress, and what to do next. Only one on the day is open at a
  * time; the others are folded to a row, which opens it. */
@@ -28,13 +45,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
           <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
           {/* Takes the rest of the row, so a long name wraps beside the icon rather than dropping below it. */}
           <div style={{ minWidth: '0', flex: '1 1 0' }}>
-            {/* The program it's part of, quietly; then what kind of workout it is, as every card says. */}
-            {card?.programName ? (
-              <Text variant="body" tone="muted" as="span" style={{ display: 'block', marginBottom: '2px' }}>
-                {card.programName}
-              </Text>
-            ) : null}
-            <TagLabel>{card?.typeLabel}</TagLabel>
+            <CardTags card={card} />
             <Text variant="heading" as="h2" style={{ margin: '0' }}>
               <button
                 onClick={card?.open}
@@ -60,7 +71,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
               </button>
             </Text>
             <Text variant="strong" as="p" tone="muted" style={{ margin: '4px 0 0' }}>
-              {(card?.programPlace ? card.programPlace + ' · ' : '') + (card?.openMeta || card?.meta)}
+              {placed(card, card?.openMeta || card?.meta)}
             </Text>
           </div>
         </div>
@@ -183,7 +194,7 @@ function FoldedCard({ card }: { card: any }) {
         type="button"
         onClick={card?.expand}
         aria-expanded={false}
-        aria-label={card?.expandLabel + ', ' + card?.meta}
+        aria-label={card?.expandLabel + ', ' + placed(card, card?.meta)}
         className="hv6"
         style={{
           display: 'flex',
@@ -202,12 +213,12 @@ function FoldedCard({ card }: { card: any }) {
       >
         <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
         <span style={{ flex: '1', minWidth: '0' }}>
-          <KindTag kind={kindOf(card)} />
+          <CardTags card={card} />
           <Text variant="subheading" as="span" style={{ display: 'block' }}>
             {t(card?.name)}
           </Text>
           <Text variant="body" as="span" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
-            {card?.meta}
+            {placed(card, card?.meta)}
           </Text>
         </span>
         <StatusDot status={card?.dot} size="md" />
