@@ -24,7 +24,7 @@ export default function BlockBarPage() {
       <p style={note}>
         The blocks are the theme color at rising strength, so they read as one climb: the first{' '}
         <code>--color-block-faint</code>, any between <code>--color-block-half</code>, the last the theme color itself.
-        Each has a thin <code>--color-block-edge</code> outline, so the faintest still shows on the page. With more than one
+        Each has a thin outline in <code>--color-block-half</code> too, so the faintest still shows on the page. With more than one
         block a key names them under the bar; a program of one block is a single bar with no key.
       </p>
       <Card pad="md">
