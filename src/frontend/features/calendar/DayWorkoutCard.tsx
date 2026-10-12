@@ -8,8 +8,7 @@ import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import { StatRow } from '@/frontend/components/StatRow';
 import { css, t } from '@/frontend/features/planner/viewHelpers';
-import { KindTag, kindOf } from '@/frontend/components/KindTag';
-import { ProgramTag } from '@/frontend/components/ProgramTag';
+import { KindTag, TagLabel, kindOf } from '@/frontend/components/KindTag';
 import { StatusDot } from '@/frontend/components/StatusDot';
 
 /** A session on the Day view: its exercises or ride, progress, and what to do next. Only one on the day is open at a
@@ -29,8 +28,13 @@ export function DayWorkoutCard({ card }: { card: any }) {
           <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
           {/* Takes the rest of the row, so a long name wraps beside the icon rather than dropping below it. */}
           <div style={{ minWidth: '0', flex: '1 1 0' }}>
-            <KindTag kind={kindOf(card)} />
-            <ProgramTag text={card?.program} />
+            {/* The program it's part of, quietly; then what kind of workout it is, as every card says. */}
+            {card?.programName ? (
+              <Text variant="body" tone="muted" as="span" style={{ display: 'block', marginBottom: '2px' }}>
+                {card.programName}
+              </Text>
+            ) : null}
+            <TagLabel>{card?.typeLabel}</TagLabel>
             <Text variant="heading" as="h2" style={{ margin: '0' }}>
               <button
                 onClick={card?.open}
@@ -56,7 +60,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
               </button>
             </Text>
             <Text variant="strong" as="p" tone="muted" style={{ margin: '4px 0 0' }}>
-              {card?.openMeta || card?.meta}
+              {(card?.programPlace ? card.programPlace + ' · ' : '') + (card?.openMeta || card?.meta)}
             </Text>
           </div>
         </div>
