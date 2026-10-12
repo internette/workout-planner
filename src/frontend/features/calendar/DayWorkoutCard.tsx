@@ -16,7 +16,7 @@ function CardTags({ card }: { card: any }) {
   return (
     <>
       {card?.programName ? (
-        <Text variant="body" tone="muted" as="span" style={{ display: 'block', marginBottom: '2px' }}>
+        <Text variant="micro" tone="muted" as="span" style={{ display: 'block', marginBottom: '3px' }}>
           {card.programName}
         </Text>
       ) : null}
