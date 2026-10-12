@@ -9,5 +9,5 @@ export { updateWorkoutTemplate } from './planner/workoutTemplate';
 export { deleteLibraryExercise, createLibraryExercise, updateLibraryExercise } from './planner/exercises';
 export { latestPlanDraft, discardPlanDraft, addPlanDraft } from './planner/drafts';
 export { estimateMinutes } from './planner/convert';
-export { programSnapshot, weekBlock, myShare, shareProgram, stopSharing, copySharedProgram, type MyShare } from './planner/share';
-export { createProgram, createProgramFrom, copyBuiltinProgram, builtinCopy, updateProgram, updateBlock, addBlock, deleteBlock, addWorkoutToDay, removeWorkoutFromDay, startProgram, endRun, deleteProgram, type WorkoutCopy } from './planner/programs';
+export { programSnapshot, entryCopy, weekBlock, myShare, shareProgram, stopSharing, copySharedProgram, type MyShare } from './planner/share';
+export { createProgram, createProgramFrom, copyBuiltinProgram, builtinCopy, updateProgram, updateBlock, addBlock, deleteBlock, addWorkoutToDay, removeWorkoutFromDay, startProgram, endRun, deleteProgram, programFromCalendar, type WorkoutCopy } from './planner/programs';

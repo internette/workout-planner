@@ -30,7 +30,6 @@ export function DayWorkoutCard({ card }: { card: any }) {
           {/* Takes the rest of the row, so a long name wraps beside the icon rather than dropping below it. */}
           <div style={{ minWidth: '0', flex: '1 1 0' }}>
             <KindTag kind={kindOf(card)} />
-          <ProgramTag text={card?.program} />
             <ProgramTag text={card?.program} />
             <Text variant="heading" as="h2" style={{ margin: '0' }}>
               <button

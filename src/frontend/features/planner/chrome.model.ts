@@ -267,6 +267,7 @@ export function chromeVals(ctx: Ctx) {
         exerciseEdit: ex ? ex.name : 'Exercise',
         program: prog ? prog.name : 'Program',
         programEdit: prog ? prog.name : 'Program',
+        programScan: 'What it found',
         edit: 'Editor',
         diary: 'Entry',
         diaryList: 'Chronicle',

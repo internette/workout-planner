@@ -23,7 +23,8 @@ export type Screen =
   | 'exercise'
   | 'exerciseEdit'
   | 'program'
-  | 'programEdit';
+  | 'programEdit'
+  | 'programScan';
 
 export type CalendarView = 'Day' | 'Week' | 'Month';
 
@@ -180,6 +181,20 @@ export interface PlannerState {
   programPick?: { blockId: string; day: number; q?: string } | null;
   programShareOpen?: boolean;
   programOpenBlocks?: Record<string, boolean>;
+  // Turning the calendar's weekly repeats into a program: which stretch of it, what it found ('none': nothing), the
+  // workouts left out, and the naming step's answers (null names: the ones it suggests).
+  programScan?: {
+    step: 'found' | 'name' | 'none';
+    id: string | null;
+    off: string[];
+    name: string | null;
+    blockNames: string[] | null;
+    keep: boolean;
+    endSeries: boolean;
+    date: string;
+  } | null;
+  // The Programs tab's card, put aside with Not now (for what it found then).
+  scanHidden?: string | null;
   pickM?: number | null;
   pickFocus?: number | null;
   // Adding exercises to it

@@ -1,8 +1,9 @@
 // The Spellbook's Programs tab: the programs running, then the person's own, then built-in ones.
+import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { IconTile } from '@moonshot/design-system/icon-tile';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
-import { ChevronRight } from '@moonshot/design-system/icons';
+import { ChevronRight, Sparkle } from '@moonshot/design-system/icons';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { BlockBar } from '@moonshot/design-system/block-bar';
 
@@ -41,6 +42,27 @@ export function ProgramList({ v }: { v: PlannerVals }) {
         <Text variant="body" as="p" tone="muted" style={{ margin: 0 }}>
           {l.noMatchNote}
         </Text>
+      ) : null}
+      {v.scanCard ? (
+        <Card as="section" aria-labelledby="scan-card" style={{ background: 'var(--color-pink-tint)', boxShadow: 'none' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Sparkle size={18} />
+            <Text id="scan-card" variant="subheading" as="h2" style={{ margin: 0 }}>
+              {v.scanCard.title}
+            </Text>
+          </div>
+          <Text variant="body" tone="slate" as="p" style={{ margin: '6px 0 0' }}>
+            {v.scanCard.body}
+          </Text>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px', marginTop: '14px' }}>
+            <Button type="primary" size="md" onClick={v.scanCard.go}>
+              Turn into a program
+            </Button>
+            <Button type="neutral" ghost size="md" onClick={v.scanCard.notNow}>
+              Not now
+            </Button>
+          </div>
+        </Card>
       ) : null}
       {l.running.length ? (
         <div>
