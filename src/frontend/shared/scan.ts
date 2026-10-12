@@ -138,6 +138,15 @@ export function scanCalendar(all: ScanSession[], keep: Set<string> | null = null
       let to = st.to;
       while (from <= to && !pattern(from)) from++;
       while (to >= from && !pattern(to)) to--;
+      // A lone first week with only some of the next week's workouts is a series starting partway in, not a block of
+      // its own: those workouts fill it too. The same for a lone last week with only some of the week before's.
+      const at = (w: number) => kept.filter((l) => l.from <= w && w <= l.to);
+      const within = (a: number, b: number) => {
+        const pb = pattern(b);
+        return pattern(a) !== pb && at(a).every((l) => l.from <= b && b <= l.to);
+      };
+      if (to > from && within(from, from + 1)) at(from + 1).forEach((l) => (l.from = Math.min(l.from, from)));
+      if (to > from && within(to, to - 1)) at(to - 1).forEach((l) => (l.to = Math.max(l.to, to)));
       const blocks: ScanBlock[] = [];
       let prev: string | null = null;
       for (let w = from; w <= to; w++) {
