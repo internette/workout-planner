@@ -1,7 +1,7 @@
 // Programs: making and changing them, their blocks and their own workouts, and running them on the calendar.
 
 import { supabase } from '../supabase';
-import { runSessions } from '@/frontend/shared/programs';
+import { runPlace, runSessions } from '@/frontend/shared/programs';
 import type { BuiltinProgram, BuiltinWorkout, Exercise, Program } from './types';
 import { freeName, nameKey, rideCols } from './convert';
 import { ok, insertExercises, isAhead, untouchedIds, SESSION_COLS } from './db';
@@ -188,8 +188,11 @@ export async function removeWorkoutFromDay(w: { id: string; days: number[] }, da
   else await archiveWorkouts([w.id]);
 }
 
+/** A program's blocks as starting it needs them: their weeks, and their workouts' weekdays. */
+type Runnable = { id: string; blocks: { name: string; weeks: number; workouts: { id: string; days: number[] }[] }[] };
+
 /** Starts a program: every block from `startBlock` on the calendar from `startIso`, leaving out days gone by. */
-export async function startProgram(program: Program, startIso: string, startBlock: number, todayIso: string) {
+export async function startProgram(program: Runnable, startIso: string, startBlock: number, todayIso: string) {
   const [run]: any[] = await ok(
     supabase.from('program_runs').insert({ program_id: program.id, start_date: startIso, start_block: startBlock }).select('id'),
   );
@@ -224,4 +227,60 @@ export async function deleteProgram(program: Program, runIds: string[], todayIso
   await ok(supabase.from('program_runs').delete().eq('program_id', program.id));
   await ok(supabase.from('program_blocks').delete().eq('program_id', program.id));
   await ok(supabase.from('programs').delete().eq('id', program.id));
+}
+
+/**
+ * A program made from workouts repeating on the calendar. Its blocks hold copies of them. Then either the sessions
+ * already there become its run (`keep`: tagged with it, and those still ahead follow its copies from now on; done ones
+ * keep their own history), or those still ahead come off and it starts afresh from `freshStart`. `endSeries` turns off
+ * the weekly repeats of the workouts it was made from.
+ */
+export async function programFromCalendar(o: {
+  name: string;
+  blocks: { name: string; weeks: number; workouts: { days: number[]; workout: WorkoutCopy }[] }[];
+  start: string;
+  sessions: { id: string; iso: string; name: string }[];
+  seriesWorkouts: string[];
+  keep: boolean;
+  freshStart: string;
+  endSeries: boolean;
+  todayIso: string;
+}) {
+  const programId = await createProgramFrom(o.name, '', o.blocks);
+  const blockRows: any[] = await ok(supabase.from('program_blocks').select('id, name, weeks, position').eq('program_id', programId));
+  blockRows.sort((a, b) => a.position - b.position);
+  const copies: any[] = blockRows.length
+    ? await ok(supabase.from('workouts').select('id, name, program_block_id, program_days').in('program_block_id', blockRows.map((b) => b.id)))
+    : [];
+  const blocks = blockRows.map((b) => ({
+    name: b.name || '',
+    weeks: Number(b.weeks) || 1,
+    workouts: copies.filter((w) => w.program_block_id === b.id).map((w) => ({ id: w.id as string, name: w.name as string, days: (w.program_days || []).map(Number) })),
+  }));
+
+  if (o.endSeries && o.seriesWorkouts.length) await ok(supabase.from('workouts').update({ repeat_enabled: false }).in('id', o.seriesWorkouts));
+
+  const rows: any[] = o.sessions.length ? await ok(supabase.from('plan_entries').select(SESSION_COLS).in('id', o.sessions.map((s) => s.id))) : [];
+  const free = new Set(await untouchedIds(rows.filter((r) => isAhead(r, o.todayIso))));
+
+  if (!o.keep) {
+    await deletePlanEntries([...free]);
+    const r = await startProgram({ id: programId, blocks }, o.freshStart, 0, o.todayIso);
+    return { programId, count: r.count, first: r.first };
+  }
+
+  const [run]: any[] = await ok(supabase.from('program_runs').insert({ program_id: programId, start_date: o.start, start_block: 0 }).select('id'));
+  // Those still ahead move onto the program's copy for their block; the rest are only tagged.
+  const onto: Record<string, string[]> = {};
+  const tagOnly: string[] = [];
+  o.sessions.forEach((s) => {
+    const at = runPlace(blocks, o.start, 0, s.iso);
+    const copy = at && blocks[at.block].workouts.find((w) => w.name === s.name);
+    if (copy && free.has(s.id)) (onto[copy.id] = onto[copy.id] || []).push(s.id);
+    else tagOnly.push(s.id);
+  });
+  for (const [workoutId, ids] of Object.entries(onto))
+    await ok(supabase.from('plan_entries').update({ workout_id: workoutId, program_run_id: run.id }).in('id', ids));
+  if (tagOnly.length) await ok(supabase.from('plan_entries').update({ program_run_id: run.id }).in('id', tagOnly));
+  return { programId, count: o.sessions.length, first: null as string | null };
 }

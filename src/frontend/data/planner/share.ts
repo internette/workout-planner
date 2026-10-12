@@ -3,7 +3,7 @@
 import { supabase } from '../supabase';
 import { isoOf } from '@/frontend/shared/helpers';
 import { newShareId, daysOf, blockWorkouts, SHARE_LIMITS, type SharedProgram, type SharedWorkout } from '@/frontend/shared/sharedProgram';
-import type { Exercise, Model, Program } from './types';
+import type { Entry, Exercise, Model, Program } from './types';
 import { ok, okOr } from './db';
 import { createProgramFrom, type WorkoutCopy } from './programs';
 
@@ -53,6 +53,24 @@ export function programSnapshot(program: Program, o: { notes: boolean; by: strin
   return { v: 2, by: o.by, workouts, blocks };
 }
 
+/** A session's workout as a copy for a program: its fields, and its exercises as they are now. */
+export function entryCopy(model: Model, av: Entry): WorkoutCopy {
+  const saved = model.workouts.find((w) => w.id === av.workoutId);
+  return {
+    name: av.name,
+    isRide: !!av.ride,
+    minutes: saved?.minutes ?? (av.ride ? Number(av.ride.hrs || 0) * 60 + Number(av.ride.mins || 0) : 45),
+    ride: av.ride ? { dist: av.ride.dist, elev: av.ride.elev, zone: av.ride.zone } : null,
+    icon: av.icon || (av.ride ? 'bike' : 'h'),
+    iconColor: av.iconColor,
+    notes: av.notes || '',
+    warmup: av.warmup,
+    stretch: av.stretch,
+    yoga: av.yoga,
+    exercises: av.ride ? [] : model.EXV[av.exKey] || [],
+  };
+}
+
 /** The week from `start` (a Sunday) as one block: every workout on its days, with its exercises as they are now. */
 export function weekBlock(model: Model, start: Date) {
   const workouts: { days: number[]; workout: WorkoutCopy }[] = [];
@@ -66,24 +84,8 @@ export function weekBlock(model: Model, start: Date) {
         // version) is its own.
         const key = av.exKey;
         if (at[key] == null) {
-          const saved = model.workouts.find((w) => w.id === av.workoutId);
           at[key] = workouts.length;
-          workouts.push({
-            days: [],
-            workout: {
-              name: av.name,
-              isRide: !!av.ride,
-              minutes: saved?.minutes ?? (av.ride ? Number(av.ride.hrs || 0) * 60 + Number(av.ride.mins || 0) : 45),
-              ride: av.ride ? { dist: av.ride.dist, elev: av.ride.elev, zone: av.ride.zone } : null,
-              icon: av.icon || (av.ride ? 'bike' : 'h'),
-              iconColor: av.iconColor,
-              notes: av.notes || '',
-              warmup: av.warmup,
-              stretch: av.stretch,
-              yoga: av.yoga,
-              exercises: av.ride ? [] : model.EXV[key] || [],
-            },
-          });
+          workouts.push({ days: [], workout: entryCopy(model, av) });
         }
         if (!workouts[at[key]].days.includes(d)) workouts[at[key]].days.push(d);
       });

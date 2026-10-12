@@ -13,7 +13,7 @@ export const TAB_PATHS = {
 export const SETTINGS_PATH = TAB_PATHS.profile + '/settings';
 
 const CALENDAR = ['day', 'rest', 'edit', 'detail'];
-const ARSENAL = ['arsenal', 'template', 'exercise', 'exerciseEdit', 'program', 'programEdit'];
+const ARSENAL = ['arsenal', 'template', 'exercise', 'exerciseEdit', 'program', 'programEdit', 'programScan'];
 
 /**
  * The address a screen belongs to, or null for screens inside a flow (the entry form, the picker) that keep the

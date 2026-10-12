@@ -60,9 +60,16 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
                   <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 12px' }}>
                     Ending it takes the repeats still ahead off the calendar.
                   </Text>
-                  <Button type="danger" size="sm" onClick={v.endSeries}>
-                    End series
-                  </Button>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
+                    {v.makeProgram ? (
+                      <Button type="secondary" size="sm" onClick={v.makeProgram} style={{ whiteSpace: 'nowrap' }}>
+                        Make this a program
+                      </Button>
+                    ) : null}
+                    <Button type="danger" size="sm" onClick={v.endSeries}>
+                      End series
+                    </Button>
+                  </div>
                 </>
               }
             >
