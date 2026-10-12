@@ -12,6 +12,7 @@ import { ActiveFilters, FilterButton } from '@/frontend/features/spellbook/Filte
 import { ExerciseRow } from '@/frontend/features/spellbook/ExerciseRow';
 import { NewExerciseCard } from '@/frontend/features/spellbook/NewExerciseCard';
 import { WorkoutRow } from '@/frontend/features/spellbook/WorkoutRow';
+import { ProgramList } from '@/frontend/features/programs/ProgramList';
 
 export function SpellbookScreen({ v }: { v: PlannerVals }) {
   return (
@@ -19,16 +20,16 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
       {/* "New" makes whichever kind the list is showing. */}
       <PageHeader
         title="Spellbook"
-        count={v.arsenalCount}
+        count={v.showArsenalPrograms ? v.programCount : v.arsenalCount}
         intro={v.arsenalIntro}
         action={
           <Button
             type="primary"
             size="sm"
-            onClick={v.showArsenalWorkouts ? v.goNewWorkoutFromArsenal : v.openArsenalAdd}
+            onClick={v.showArsenalPrograms ? v.newProgram : v.showArsenalWorkouts ? v.goNewWorkoutFromArsenal : v.openArsenalAdd}
             aria-label={v.arsenalNewName}
-            aria-expanded={v.showArsenalWorkouts ? undefined : !!v.arsenalAddOpen}
-            aria-controls={!v.showArsenalWorkouts && v.arsenalAddOpen ? 'new-exercise' : undefined}
+            aria-expanded={v.showArsenalWorkouts || v.showArsenalPrograms ? undefined : !!v.arsenalAddOpen}
+            aria-controls={v.showArsenalExercises && v.arsenalAddOpen ? 'new-exercise' : undefined}
             data-arsenal-new
             style={{ whiteSpace: 'nowrap' }}
           >
@@ -70,10 +71,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
         size="sm"
         fullWidth
         equalWidth
-        options={[
-          { value: 'workouts', label: 'Workouts' },
-          { value: 'exercises', label: 'Exercises' },
-        ]}
+        options={v.arsenalViews}
         value={v.arsenalView}
         onChange={v.setArsenalView}
         style={{ marginTop: '16px' }}
@@ -90,9 +88,10 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
             status={v.arsenalResults}
           />
         </div>
-        <FilterButton v={v} />
+        {v.showArsenalPrograms ? null : <FilterButton v={v} />}
       </div>
-      <ActiveFilters v={v} />
+      {v.showArsenalPrograms ? null : <ActiveFilters v={v} />}
+      {v.showArsenalPrograms ? <ProgramList v={v} /> : null}
       {v.showArsenalExercises ? (
         <>
           {v.noMatches ? (

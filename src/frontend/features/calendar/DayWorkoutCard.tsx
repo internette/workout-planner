@@ -8,6 +8,7 @@ import { Text } from '@moonshot/design-system/typography';
 import { StatRow } from '@/frontend/components/StatRow';
 import { css, t } from '@/frontend/features/planner/viewHelpers';
 import { KindTag, kindOf } from '@/frontend/components/KindTag';
+import { ProgramTag } from '@/frontend/components/ProgramTag';
 import { StatusDot } from '@/frontend/components/StatusDot';
 
 /** A session on the Day view: its exercises or ride, progress, and what to do next. Only one on the day is open at a
@@ -28,6 +29,8 @@ export function DayWorkoutCard({ card }: { card: any }) {
           {/* Takes the rest of the row, so a long name wraps beside the icon rather than dropping below it. */}
           <div style={{ minWidth: '0', flex: '1 1 0' }}>
             <KindTag kind={kindOf(card)} />
+          <ProgramTag text={card?.program} />
+            <ProgramTag text={card?.program} />
             <Text variant="heading" as="h2" style={{ margin: '0' }}>
               <button
                 onClick={card?.open}

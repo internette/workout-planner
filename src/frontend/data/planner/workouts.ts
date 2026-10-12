@@ -10,8 +10,8 @@ import { deletePlanEntries, scheduleWorkout, upcomingOfWorkout } from './session
 // A built-in workout as one of the person's own, for the calendar or to edit: the saved workout of theirs with its
 // name (ignoring case) if there is one, otherwise a new copy of it.
 export async function ownCopyOfBuiltin(w: BuiltinWorkout): Promise<{ workoutId: string; created: boolean }> {
-  const mine: any[] = await ok(supabase.from('workouts').select('id, name').eq('archived', false));
-  const have = mine.find((r) => nameKey(r.name) === nameKey(w.name));
+  const mine: any[] = await ok(supabase.from('workouts').select('*').eq('archived', false));
+  const have = mine.find((r) => !r.program_block_id && nameKey(r.name) === nameKey(w.name));
   if (have) return { workoutId: have.id, created: false };
   const { workoutId } = await createWorkout({
     name: w.name,

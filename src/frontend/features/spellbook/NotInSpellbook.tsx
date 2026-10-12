@@ -13,7 +13,9 @@ export function NotInSpellbook({ v }: { v: PlannerVals }) {
         Not in your Spellbook
       </Text>
       <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
-        {v.isTemplate
+        {v.isProgram || v.isProgramEdit
+          ? 'This program has been deleted, or the link is to someone else’s Spellbook.'
+          : v.isTemplate
           ? 'This workout has been deleted, or the link is to someone else’s Spellbook.'
           : 'This exercise has been deleted, or the link is to someone else’s Spellbook.'}
       </Text>

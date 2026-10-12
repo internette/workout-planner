@@ -1,23 +1,22 @@
 'use client';
-// "Share week": the week on screen as a program behind a link. One link per person: sharing again replaces what it
-// shows, and stopping turns it off. It keeps its own state (loading the link, creating it, copying it) rather than the
-// planner's, as nothing else needs it.
+// Sharing a program behind a link. One link per program: sharing again updates what it shows, and stopping turns it
+// off. It keeps its own state (loading the link, creating it, copying it) rather than the planner's, as nothing else
+// needs it.
 import { useEffect, useState } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
 import { Checkbox } from '@moonshot/design-system/checkbox';
 import { Dialog } from '@moonshot/design-system/dialog';
 import { TextField } from '@moonshot/design-system/text-field';
-import { SectionLabel, Text } from '@moonshot/design-system/typography';
+import { Text } from '@moonshot/design-system/typography';
 import { Check, Copy, Info } from '@moonshot/design-system/icons';
 import { Callout } from '@/frontend/components/Callout';
-import { DOW1, DOWFULL, MON3 } from '@/frontend/shared/constants';
-import { iconSvg } from '@/frontend/shared/icons';
+import { MON3 } from '@/frontend/shared/constants';
 import { plural } from '@/frontend/shared/helpers';
 import * as db from '@/frontend/data/plannerData';
-import { trainingDays } from '@/frontend/shared/sharedProgram';
+import { programWeeks } from '@/frontend/shared/sharedProgram';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
-type Share = NonNullable<PlannerVals['shareWeek']>;
+type Share = NonNullable<PlannerVals['programShare']>;
 type Mode = 'loading' | 'form' | 'link';
 
 const linkOf = (id: string) => (typeof window === 'undefined' ? '' : window.location.origin) + '/p/' + id;
@@ -26,7 +25,7 @@ const sharedOn = (iso: string) => {
   return MON3[d.getMonth()] + ' ' + d.getDate();
 };
 
-export function ShareWeekDialog({ s }: { s: Share }) {
+export function ShareProgramDialog({ s }: { s: Share }) {
   const [mode, setMode] = useState<Mode>('loading');
   const [share, setShare] = useState<db.MyShare | null>(null);
   const [justMade, setJustMade] = useState(false);
@@ -38,8 +37,7 @@ export function ShareWeekDialog({ s }: { s: Share }) {
   const [error, setError] = useState('');
   const [stopped, setStopped] = useState(false);
 
-  const program = s.program({ notes, showName });
-  const days = trainingDays(program);
+  const program = s.snapshot({ notes, showName });
 
   // Each time it opens: the link already shared, if any, else the form for a new one.
   useEffect(() => {
@@ -50,25 +48,26 @@ export function ShareWeekDialog({ s }: { s: Share }) {
     setCopied(false);
     setError('');
     setStopped(false);
-    db.myShare()
+    db.myShare(s.programId)
       .then((found) => {
         if (!live) return;
         setShare(found);
-        setName(found ? found.name : '');
+        setName(found ? found.name : s.name);
         setMode(found ? 'link' : 'form');
       })
       .catch((e) => live && (setError(String(e?.message || e)), setMode('form')));
     return () => {
       live = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [s.open]);
 
-  const fallbackName = days ? days + '-day week' : 'My week';
+  const fallbackName = s.name;
   const create = async () => {
     setBusy(true);
     setError('');
     try {
-      const made = await db.shareProgram(name.trim() || fallbackName, program, share?.id ?? null);
+      const made = await db.shareProgram(s.programId, name.trim() || fallbackName, program, share?.id ?? null);
       setShare(made);
       setName(made.name);
       setJustMade(true);
@@ -127,7 +126,7 @@ export function ShareWeekDialog({ s }: { s: Share }) {
     ) : null;
 
   return (
-    <Dialog open={s.open} onClose={s.close} title="Share your week" sheet actions={actions}>
+    <Dialog open={s.open} onClose={s.close} title={'Share ' + s.name} sheet actions={actions}>
       {mode === 'loading' ? (
         <Text variant="body" tone="muted" as="p" style={{ margin: '16px 0 0' }}>
           Loading…
@@ -142,43 +141,18 @@ export function ShareWeekDialog({ s }: { s: Share }) {
           ) : null}
           <Text variant="body" tone="muted" as="p" style={{ margin: 0 }}>
             {share
-              ? 'The link will show the week of ' + s.weekLabel + ' instead.'
-              : 'The workouts in the week of ' + s.weekLabel + ', by weekday. Your history, diary and moods stay private.'}
+              ? 'The link will show the program as it is now.'
+              : 'Its ' +
+                (program.blocks.length > 1 ? program.blocks.length + ' blocks, ' : '') +
+                programWeeks(program) +
+                ' weeks and their workouts, as they are now. Your history, diary and moods stay private.'}
           </Text>
-          <TextField label="Program name" value={name} onChange={(e) => setName(e.target.value)} placeholder={fallbackName} maxLength={80} />
-          <div>
-            <SectionLabel label="What’s in it" note={program.workouts.length ? plural(days, 'day') + ' a week' : undefined} />
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))', gap: '6px', marginTop: '8px' }}>
-              {program.days.map((list, d) => {
-                const w = program.workouts[list[0]];
-                return (
-                  <div key={d} style={{ textAlign: 'center' }} aria-label={DOWFULL[d] + ': ' + (list.length ? list.map((ix) => program.workouts[ix].name).join(', ') : 'rest')}>
-                    <Text variant="micro" tone="slate" as="div" aria-hidden="true">
-                      {DOW1[d]}
-                    </Text>
-                    <div
-                      aria-hidden="true"
-                      style={{
-                        marginTop: '6px',
-                        height: '40px',
-                        borderRadius: 'var(--radius-md)',
-                        display: 'grid',
-                        placeItems: 'center',
-                        background: w ? 'var(--color-pink-tint)' : 'color-mix(in srgb, var(--color-ink) 5%, transparent)',
-                      }}
-                    >
-                      {w ? iconSvg(w.icon, w.iconColor || undefined) : null}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            {!program.workouts.length ? (
-              <Text variant="body" tone="muted" as="p" style={{ margin: '10px 0 0' }}>
-                Nothing on this week yet. Pick a week with workouts in it.
-              </Text>
-            ) : null}
-          </div>
+          <TextField label="Name on the link" value={name} onChange={(e) => setName(e.target.value)} placeholder={fallbackName} maxLength={80} />
+          {!program.workouts.length ? (
+            <Text variant="body" tone="muted" as="p" style={{ margin: 0 }}>
+              It has no workouts yet. Add some first.
+            </Text>
+          ) : null}
           <Checkbox switch checked={notes} onChange={setNotes} description="Your notes on each workout, as you wrote them.">
             Include workout notes
           </Checkbox>
@@ -220,11 +194,11 @@ export function ShareWeekDialog({ s }: { s: Share }) {
             </Text>
           </div>
           <Text variant="body" tone="muted" as="p" style={{ margin: 0 }}>
-            It shows the week as it was when you shared it. Changing your workouts doesn’t change it.
+            It shows the program as it was when you shared it. Changing it doesn’t change the link until you update it.
           </Text>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
             <Button type="neutral" ghost size="sm" onClick={() => setMode('form')} disabled={busy}>
-              Update to this week
+              Update the link
             </Button>
             <Button type="danger" ghost size="sm" onClick={stop} disabled={busy} style={{ marginLeft: 'auto' }}>
               Stop sharing

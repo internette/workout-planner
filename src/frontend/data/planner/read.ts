@@ -2,13 +2,14 @@
 
 import { supabase } from '../supabase';
 import { isoMonthDay, isoOf, isoWeekday, seriesWeekdays, splitMinutes } from '@/frontend/shared/helpers';
-import type { Exercise, Entry, WorkoutSummary, BuiltinWorkout, Model } from './types';
+import type { Exercise, Entry, WorkoutSummary, BuiltinWorkout, BuiltinProgram, Model, Program, ProgramRun, ProgramWorkout } from './types';
+import { runEnd, runPlace } from '@/frontend/shared/programs';
 import { toExercise, areasOf, numStr, workoutView, estimateMinutes } from './convert';
 import { ok, okOr } from './db';
 import type { Mood } from '@moonshot/design-system/icons';
 
 export async function loadModel(today: Date): Promise<Model> {
-  const [workouts, exercises, plan, diary, library, builtins, builtinWorkoutRows, repeatDaysProbe] = await Promise.all([
+  const [workouts, exercises, plan, diary, library, builtins, builtinWorkoutRows, repeatDaysProbe, programRows, blockRows, runRows, builtinProgramRows] = await Promise.all([
     ok(supabase.from('workouts').select('*')),
     ok(supabase.from('workout_exercises').select('*').order('order_index')),
     ok(supabase.from('plan_entries').select('*').order('scheduled_date').order('id')),
@@ -19,6 +20,11 @@ export async function loadModel(today: Date): Promise<Model> {
     okOr<any[]>(supabase.from('builtin_workouts').select('*').order('sort_order'), []),
     // Whether a weekly series can keep its weekdays yet: asked of the column itself, as an account may have no workouts.
     supabase.from('workouts').select('repeat_days').limit(1),
+    // Programs, until their migration has run: none (and none can be made yet).
+    okOr<any[] | null>(supabase.from('programs').select('*').order('name'), null),
+    okOr<any[]>(supabase.from('program_blocks').select('*').order('position'), []),
+    okOr<any[]>(supabase.from('program_runs').select('*').order('created_at', { ascending: false }), []),
+    okOr<any[]>(supabase.from('builtin_programs').select('*').order('sort_order'), []),
   ]);
 
   const byId: Record<string, any> = {};
@@ -27,7 +33,9 @@ export async function loadModel(today: Date): Promise<Model> {
   // A workout that was edited leaves its old version behind as an archived snapshot, which the sessions
   // that predate the edit still point at. Snapshots are looked up by name#id so they never mix with the
   // current version, and stay out of the Arsenal.
-  const keyOf = (w: any) => (w.archived ? `${w.name}#${w.id}` : w.name);
+  // A program's own workouts are kept the same way: they can share a name with one in the Spellbook.
+  const inProgram = (w: any) => !!w.program_block_id;
+  const keyOf = (w: any) => (w.archived || inProgram(w) ? `${w.name}#${w.id}` : w.name);
   const EXV: Record<string, Exercise[]> = {};
   workouts.forEach((w: any) => (EXV[keyOf(w)] = []));
   exercises.forEach((e: any) => {
@@ -35,7 +43,59 @@ export async function loadModel(today: Date): Promise<Model> {
     if (w) EXV[keyOf(w)].push(toExercise(e));
   });
   const EX: Record<string, Exercise[]> = {};
-  workouts.filter((w: any) => !w.archived).forEach((w: any) => (EX[w.name] = EXV[w.name]));
+  workouts.filter((w: any) => !w.archived && !inProgram(w)).forEach((w: any) => (EX[w.name] = EXV[w.name]));
+
+  // Programs: each block's workouts (its own copies, not archived), and the runs that put them on the calendar.
+  const programs: Program[] = (programRows || []).map((p: any) => {
+    const blocks = blockRows
+      .filter((b: any) => b.program_id === p.id)
+      .map((b: any) => ({
+        id: b.id as string,
+        name: (b.name || '') as string,
+        weeks: Number(b.weeks) || 1,
+        position: Number(b.position) || 0,
+        workouts: workouts
+          .filter((w: any) => w.program_block_id === b.id && !w.archived)
+          .map((w: any): ProgramWorkout => {
+            const list = EXV[keyOf(w)] || [];
+            const { isRide, ...view } = workoutView(w, list);
+            return {
+              id: w.id,
+              ...view,
+              kind: isRide ? 'ride' : 'lift',
+              exercises: list.map((e) => e.name),
+              exKey: keyOf(w),
+              days: (w.program_days || []).map(Number).sort((a: number, c: number) => a - c),
+              list,
+            };
+          })
+          .sort((a, c) => (a.days[0] ?? 7) - (c.days[0] ?? 7) || a.name.localeCompare(c.name)),
+      }))
+      .sort((a, c) => a.position - c.position);
+    return { id: p.id, name: p.name, notes: p.notes || '', blocks, weeks: blocks.reduce((s, b) => s + b.weeks, 0) };
+  });
+  const programById: Record<string, Program> = {};
+  programs.forEach((p) => (programById[p.id] = p));
+  const programRuns: ProgramRun[] = runRows
+    .filter((r: any) => programById[r.program_id])
+    .map((r: any) => ({
+      id: r.id,
+      programId: r.program_id,
+      start: r.start_date,
+      startBlock: Number(r.start_block) || 0,
+      end: runEnd(programById[r.program_id].blocks, r.start_date, Number(r.start_block) || 0),
+      ended: !!r.ended_at,
+    }));
+  const runById: Record<string, ProgramRun> = {};
+  programRuns.forEach((r) => (runById[r.id] = r));
+  // "Build, week 2 of 3": where a run's session falls in its program.
+  const programTag = (p: any): Entry['program'] => {
+    const run = p.program_run_id ? runById[p.program_run_id] : null;
+    if (!run) return undefined;
+    const prog = programById[run.programId];
+    const at = runPlace(prog.blocks, run.start, run.startBlock, p.scheduled_date);
+    return at ? { runId: run.id, programId: prog.id, name: prog.name, block: at.name, week: at.week, weeks: at.weeks } : undefined;
+  };
 
   const todayIso = isoOf(today);
   const SEED: Model['SEED'] = {};
@@ -78,6 +138,7 @@ export async function loadModel(today: Date): Promise<Model> {
       warmup: view.warmup,
       stretch: view.stretch,
       yoga: view.yoga,
+      program: programTag(p),
       series: w.repeat_enabled && seriesDays[w.id].includes(isoWeekday(p.scheduled_date)) ? w.id : undefined,
       seriesDays: w.repeat_enabled ? seriesDays[w.id] : undefined,
       ride: view.ride && { ...view.ride, ...splitMinutes(view.minutes) },
@@ -122,7 +183,7 @@ export async function loadModel(today: Date): Promise<Model> {
   });
 
   const saved: WorkoutSummary[] = workouts
-    .filter((w: any) => !w.archived)
+    .filter((w: any) => !w.archived && !inProgram(w))
     .map((w: any) => {
       const { isRide, ...view } = workoutView(w, EXV[keyOf(w)] || []);
       return {
@@ -162,6 +223,15 @@ export async function loadModel(today: Date): Promise<Model> {
     };
   });
 
+  const builtinPrograms: BuiltinProgram[] = builtinProgramRows.map((r: any) => {
+    const blocks = (Array.isArray(r.blocks) ? r.blocks : []).map((b: any) => ({
+      name: String(b?.name || ''),
+      weeks: Math.max(1, Number(b?.weeks) || 1),
+      days: Array.from({ length: 7 }, (_, d) => (Array.isArray(b?.days?.[d]) ? b.days[d].filter((n: unknown) => typeof n === 'string') : [])),
+    }));
+    return { id: r.id, name: r.name, notes: r.notes || '', blocks, weeks: blocks.reduce((s: number, b: any) => s + b.weeks, 0) };
+  });
+
   return {
     EX,
     EXV,
@@ -179,5 +249,9 @@ export async function loadModel(today: Date): Promise<Model> {
     stretchReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_stretch' in r),
     yogaReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_yoga' in r),
     repeatDaysReady: !repeatDaysProbe.error,
+    programs,
+    programRuns,
+    builtinPrograms,
+    programsReady: programRows != null,
   };
 }

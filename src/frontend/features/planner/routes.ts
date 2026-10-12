@@ -13,7 +13,7 @@ export const TAB_PATHS = {
 export const SETTINGS_PATH = TAB_PATHS.profile + '/settings';
 
 const CALENDAR = ['day', 'rest', 'edit', 'detail'];
-const ARSENAL = ['arsenal', 'template', 'exercise', 'exerciseEdit'];
+const ARSENAL = ['arsenal', 'template', 'exercise', 'exerciseEdit', 'program', 'programEdit'];
 
 /**
  * The address a screen belongs to, or null for screens inside a flow (the entry form, the picker) that keep the
@@ -38,12 +38,14 @@ type RouteState = {
   editTemplate?: string | null;
   entryId?: string | null;
   editId?: string | null;
+  programId?: string | null;
 };
 
 // The Spellbook's own pages: a saved workout, and an exercise. Back and Forward step through them, and a reload or a
 // link opens the same one.
 const workoutPath = (id: string) => TAB_PATHS.arsenal + '/workouts/' + encodeURIComponent(id);
 const exercisePath = (id: string) => TAB_PATHS.arsenal + '/exercises/' + encodeURIComponent(id);
+const programPath = (id: string) => TAB_PATHS.arsenal + '/programs/' + encodeURIComponent(id);
 // A session on the calendar, and its editor. A reload of either reopens the session (an editor's draft doesn't survive).
 const sessionPath = (id: string) => TAB_PATHS.calendar + '/sessions/' + encodeURIComponent(id);
 
@@ -60,15 +62,19 @@ export function pathForState(state: RouteState): string | null {
   if (state.screen === 'template' && state.templateId) return workoutPath(state.templateId);
   if (state.screen === 'exercise' && state.exerciseId) return exercisePath(state.exerciseId);
   if (state.screen === 'exerciseEdit' && state.exerciseId) return exercisePath(state.exerciseId) + '/edit';
+  if (state.screen === 'program' && state.programId) return programPath(state.programId);
+  if (state.screen === 'programEdit' && state.programId) return programPath(state.programId) + '/edit';
   return pathForScreen(state.screen);
 }
 
 /** What an address opens: its screen, and for a session or a Spellbook page, which one. An editor's address opens the
  * page it edits, since a draft doesn't survive a reload. */
 export function stateForPath(path: string): Record<string, string> | null {
-  const m = /^\/spellbook\/(workouts|exercises)\/([^/]+)(\/edit)?\/?$/.exec(path);
+  const m = /^\/spellbook\/(workouts|exercises|programs)\/([^/]+)(\/edit)?\/?$/.exec(path);
   if (m) {
     const id = decodeURIComponent(m[2]);
+    // A program's editor keeps nothing unsaved (each change saves as it's made), so its address reopens it.
+    if (m[1] === 'programs') return m[3] ? { screen: 'programEdit', programId: id } : { screen: 'program', programId: id };
     return m[1] === 'workouts' ? { screen: 'template', templateId: id } : { screen: 'exercise', exerciseId: id };
   }
   const s = /^\/calendar\/sessions\/([^/]+)(\/edit)?\/?$/.exec(path);

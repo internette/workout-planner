@@ -247,6 +247,11 @@ export function chromeVals(ctx: Ctx) {
         st.templateId &&
         (logic.model.workouts.find((x) => x.id === st.templateId) ||
           (logic.model.builtinWorkouts || []).find((x) => x.id === st.templateId));
+      // A program, the person's own or built-in.
+      const prog =
+        st.programId &&
+        ((logic.model.programs || []).find((x) => x.id === st.programId) ||
+          (logic.model.builtinPrograms || []).find((x) => 'builtin:' + x.id === st.programId));
       // One of the person's own exercises, a built-in, or one inside a saved workout.
       const ex =
         st.exerciseId &&
@@ -260,6 +265,8 @@ export function chromeVals(ctx: Ctx) {
         template: w ? w.name : 'Workout',
         exercise: ex ? ex.name : 'Exercise',
         exerciseEdit: ex ? ex.name : 'Exercise',
+        program: prog ? prog.name : 'Program',
+        programEdit: prog ? prog.name : 'Program',
         edit: 'Editor',
         diary: 'Entry',
         diaryList: 'Chronicle',

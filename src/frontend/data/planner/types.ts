@@ -47,6 +47,8 @@ export interface Entry {
   warmup: boolean; // a warm-up: listed before the day's other workouts, and tagged WARM-UP
   stretch: boolean; // a stretch: listed after the day's other workouts (a cool-down), and tagged STRETCH
   yoga: boolean; // a yoga flow: tagged YOGA
+  // Put on the calendar by a program's run: which program, and where in it ("Build, week 2 of 3").
+  program?: { runId: string; programId: string; name: string; block: string; week: number; weeks: number };
 }
 
 export interface DiaryEntry {
@@ -74,6 +76,44 @@ export interface WorkoutSummary {
   warmup: boolean;
   stretch: boolean;
   yoga: boolean;
+}
+
+// A program: blocks of weeks run in order, each repeating one week of the program's own workouts.
+export interface ProgramWorkout extends WorkoutSummary {
+  exKey: string; // where its exercises live in Model.EXV
+  days: number[]; // the weekdays it falls on in its block (0 = Sunday)
+  list: Exercise[];
+}
+export interface ProgramBlock {
+  id: string;
+  name: string;
+  weeks: number;
+  position: number;
+  workouts: ProgramWorkout[];
+}
+export interface Program {
+  id: string;
+  name: string;
+  notes: string;
+  blocks: ProgramBlock[];
+  weeks: number; // all its blocks' weeks
+}
+// A program put on the calendar from `start`, beginning at block `startBlock`. `end` is its last day.
+export interface ProgramRun {
+  id: string;
+  programId: string;
+  start: string;
+  startBlock: number;
+  end: string;
+  ended: boolean;
+}
+// A ready-made program from the shared catalog: per block, the built-in workouts on each weekday (Sunday first).
+export interface BuiltinProgram {
+  id: string;
+  name: string;
+  notes: string;
+  blocks: { name: string; weeks: number; days: string[][] }[];
+  weeks: number;
 }
 
 // A ready-made workout from the shared catalog: read-only, listed with its group. Its exercises are built-in ones.
@@ -106,6 +146,11 @@ export interface Model {
   yogaReady: boolean;
   // Whether a weekly series can repeat on more than one weekday yet (the repeat-days migration has added the column).
   repeatDaysReady: boolean;
+  programs: Program[]; // the person's own, by name
+  programRuns: ProgramRun[]; // every run, newest first
+  builtinPrograms: BuiltinProgram[]; // the shared catalog, in catalog order
+  // Whether programs can be made yet (the programs migration has run).
+  programsReady: boolean;
 }
 
 export interface NewWorkout {

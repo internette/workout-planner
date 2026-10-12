@@ -10,6 +10,7 @@ import { kindOf } from '@/frontend/components/KindTag';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import { areaToggles, draftBand, draftWeighted, plainExercise, DRAFT_CLEARED, draftClash, draftHint, draftItem, draftOpened, draftReady, equipmentKnown, equipmentToggles } from '@/frontend/shared/exerciseDraft';
 import { otherSide, splitSide, withSide } from '@/frontend/shared/sides';
+import { programOfWorkout } from '@/frontend/shared/programs';
 import { bandLevelOf, bandWeight, takesWeight, usesBand, type BandLevel } from '@/frontend/shared/bands';
 import type { BuiltinWorkout, WorkoutSummary } from '@/frontend/data/plannerData';
 
@@ -794,9 +795,13 @@ export function editVals(ctx: Ctx) {
         if (tplMode) {
           const id = selAct.workoutId;
           const tplEdit = Object.assign({}, edit, { entryId: '', moveTo: undefined, actual: null, repeatDates: [] });
+          // A program's own workout goes back to its program's page instead.
+          const inProgram = programOfWorkout(logic.model, id);
+          const backScreen = inProgram ? ('program' as const) : ('template' as const);
           const back = Object.assign({}, cleared, {
-            screen: 'template' as const,
-            templateId: id,
+            screen: backScreen,
+            templateId: inProgram ? null : id,
+            programId: inProgram ? inProgram.program.id : st.programId,
             editTemplate: null,
             editing: false,
             tplConfirm: null,
@@ -824,8 +829,10 @@ export function editVals(ctx: Ctx) {
                   {},
                   back,
                   r && r.created
-                    ? { templateId: r.workoutId, ...noticePatch('“' + (name || copyName) + '” saved as a new workout.', 'template') }
-                    : noticePatch('“' + (edit.name || baseName) + '” saved.', 'template'),
+                    ? inProgram
+                      ? noticePatch('“' + (name || copyName) + '” saved as a new workout in your Spellbook.', backScreen)
+                      : { templateId: r.workoutId, ...noticePatch('“' + (name || copyName) + '” saved as a new workout.', 'template') }
+                    : noticePatch('“' + (edit.name || baseName) + '” saved.', backScreen),
                 ),
             );
           // Asked every time, so "Save as a new workout" is always there; the upcoming switch shows only when

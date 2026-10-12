@@ -96,6 +96,7 @@ export async function patchExercise(table: 'workout_exercises' | 'library_exerci
 
 // The names of the workouts in the Spellbook, as nameKeys.
 export async function takenWorkoutNames(): Promise<Set<string>> {
-  const rows: any[] = await ok(supabase.from('workouts').select('name').eq('archived', false));
-  return new Set(rows.map((r) => nameKey(r.name)));
+  // A program's own workouts don't count: they're kept apart from the Spellbook's and can share a name with one.
+  const rows: any[] = await ok(supabase.from('workouts').select('*').eq('archived', false));
+  return new Set(rows.filter((r) => !r.program_block_id).map((r) => nameKey(r.name)));
 }

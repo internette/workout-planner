@@ -92,7 +92,9 @@ export async function updateWorkoutTemplate(
   if (opts.mode === 'new') {
     // A name for the copy that no current workout uses: the edited name, else "<name> (copy)", "(copy 2)", ...
     const name = freeName((edit.name || '').trim() || old.name, await takenWorkoutNames(), 'copy');
-    const copy = await forkWorkout({ ...ownLineage, name, archived: false, repeat_enabled: false });
+    // A copy of a program's workout is the person's own, in the Spellbook, not another of the program's.
+    const ownProgram = 'program_block_id' in old ? { program_block_id: null, program_days: null } : {};
+    const copy = await forkWorkout({ ...ownLineage, ...ownProgram, name, archived: false, repeat_enabled: false });
     await updateWorkout(remapEdit(copiedIds(copy.exerciseIds), { workoutId: copy.id, name }));
     return { workoutId: copy.id, created: true };
   }

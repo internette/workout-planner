@@ -68,7 +68,8 @@ export function arsenalVals(ctx: Ctx) {
           : '';
 
   // ---- saved workouts
-  const view = st.arsenalView === 'workouts' ? 'workouts' : 'exercises';
+  // Programs only once the database has them.
+  const view = st.arsenalView === 'workouts' ? 'workouts' : st.arsenalView === 'programs' && logic.model.programsReady ? 'programs' : 'exercises';
   const q = (st.arsenalQ || '').trim().toLowerCase();
   // Target-area filter, shared by both tabs: keeps anything that targets at least one of the chosen areas.
   const areaFilter: string[] = st.arsenalAreas || [];
@@ -802,23 +803,34 @@ export function arsenalVals(ctx: Ctx) {
     showArsenalWorkouts: view === 'workouts',
     // The "New" button is at the end of the title's line. On a phone there's only room for "New", and the
     // Workouts/Exercises toggle below already says which kind; screen readers still get the whole name.
-    arsenalNewLabel: narrow ? 'New' : view === 'workouts' ? 'New workout' : 'New exercise',
-    arsenalNewName: view === 'workouts' ? 'New workout' : 'New exercise',
+    arsenalNewLabel: narrow ? 'New' : view === 'workouts' ? 'New workout' : view === 'programs' ? 'New program' : 'New exercise',
+    arsenalNewName: view === 'workouts' ? 'New workout' : view === 'programs' ? 'New program' : 'New exercise',
+    showArsenalPrograms: view === 'programs',
+    // The tabs: Programs once the database has them.
+    arsenalViews: [
+      { value: 'workouts', label: 'Workouts' },
+      { value: 'exercises', label: 'Exercises' },
+      ...(logic.model.programsReady ? [{ value: 'programs', label: 'Programs' }] : []),
+    ],
     showArsenalExercises: view === 'exercises',
     // While searching or filtering, how many of them are showing.
     arsenalCount:
-      view === 'workouts'
+      view === 'programs'
+        ? undefined
+        : view === 'workouts'
         ? (workoutFiltering ? hits.length + builtinHits.length + ' of ' : '') +
           plural(workouts.length + builtinWorkouts.length, 'workout')
         : (filtering ? moveGroups.reduce((n, g) => n + g.items.length, 0) + ' of ' : '') + exerciseCount,
     // One line: the group labels say the rest.
     arsenalIntro:
-      view === 'workouts'
+      view === 'programs'
+        ? 'Workouts planned in blocks of weeks.'
+        : view === 'workouts'
         ? builtinWorkouts.length
           ? 'Your workouts first, then built\u2011in ones.'
           : "Every workout you've written."
         : 'By the workout they’re in, then built\u2011in ones.',
-    arsenalSearchPlaceholder: view === 'workouts' ? 'Search workouts' : 'Search exercises',
+    arsenalSearchPlaceholder: view === 'workouts' ? 'Search workouts' : view === 'programs' ? 'Search programs' : 'Search exercises',
     workoutGroups,
     noSavedWorkouts: workouts.length + builtinWorkouts.length === 0,
     noWorkoutMatches:
@@ -847,7 +859,7 @@ export function arsenalVals(ctx: Ctx) {
     noMatches: filtering && moveGroups.length === 0,
     // Read out when a search or area filter changes what's listed (the list itself changes silently).
     arsenalResults:
-      !filtering
+      !filtering || view === 'programs'
         ? ''
         : view === 'workouts'
           ? hits.length + builtinHits.length
