@@ -309,8 +309,13 @@ export function workoutVals(ctx: Ctx) {
       warmup: !!av.warmup,
       stretch: !!av.stretch,
       yoga: !!av.yoga,
-      // Put there by a program: which, and where in it.
+      // Put there by a program: which, and where in it (folded, in one; open, the name above and where before the rest).
       program: av.program ? av.program.name + ' · ' + programPlace(av.program) : '',
+      programName: av.program ? av.program.name : '',
+      programPlace: av.program ? programPlace(av.program) : '',
+      // Open, what kind of workout it is, named as "What kind of workout?" names it: "Warm-up · Stretching".
+      typeLabel:
+        (av.warmup ? 'Warm-up · ' : '') + (ride ? 'Cycling' : av.stretch ? 'Stretching' : av.yoga ? 'Yoga' : 'Lifting'),
       meta: complete
         ? 'Completed · ' + (ride && distOf(av) ? distOf(av) + ' mi · ' : '') + ctx.doneTimeOf(av)
         : st.rest && st.rest.id === id && st.rest.endsAt > Date.now()
