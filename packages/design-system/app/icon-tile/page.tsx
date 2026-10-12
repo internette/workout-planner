@@ -1,5 +1,5 @@
 import { Card } from '../../src/card';
-import { ExerciseIcon, Bike } from '../../src/icons';
+import { Bike, Dumbbell, DumbbellSmall } from '../../src/icons';
 import { IconTile, IconTileButton } from '../../src/icon-tile';
 import { Text } from '../../src/typography';
 import { DocPage, h2, note } from '../docs';
@@ -26,7 +26,7 @@ export default function IconTilePage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
           <div style={row}>
             <IconTile>
-              <ExerciseIcon name="h" size={22} color="var(--color-pink)" />
+              <Dumbbell size={22} color="var(--color-pink)" />
             </IconTile>
             <div>
               <Text variant="micro" as="div" tone="slate">
@@ -62,7 +62,7 @@ export default function IconTilePage() {
       <Card>
         <div style={row}>
           <IconTile as="span" size="xs" variant="flat">
-            <ExerciseIcon name="h" size={19} color="var(--color-pink)" />
+            <Dumbbell size={19} color="var(--color-pink)" />
           </IconTile>
           <IconTile as="span" size="sm" variant="flat">
             <Bike size={20} color="var(--color-pink)" />
@@ -82,10 +82,10 @@ export default function IconTilePage() {
       <Card>
         <div style={row}>
           <IconTileButton aria-label="Choose workout icon">
-            <ExerciseIcon name="d" size={22} color="var(--color-pink)" />
+            <DumbbellSmall size={22} color="var(--color-pink)" />
           </IconTileButton>
           <IconTileButton size="sm" aria-label="Choose icon for Bench Press">
-            <ExerciseIcon name="h" size={19} color="var(--color-pink)" />
+            <Dumbbell size={19} color="var(--color-pink)" />
           </IconTileButton>
           <Text variant="body" tone="muted">
             Buttons open a picker in the app; here they do nothing.

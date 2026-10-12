@@ -1,5 +1,5 @@
 import * as glyphs from '../../src/icons/glyphs';
-import { ExerciseIcon, EXERCISE_ICON_NAMES, Gem, MoodFace, RatingStar, Sparkle, SparkleTrail } from '../../src/icons';
+import { Gem, MoodFace, RatingStar, Sparkle, SparkleTrail } from '../../src/icons';
 import { Mark } from '../../src/brand/Mark';
 import { colors } from '../../src/colors';
 import { DocPage } from '../docs';
@@ -48,17 +48,6 @@ export default function IconsPage() {
         {Object.entries(glyphs).map(([name, Glyph]) => (
           <Tile key={name} name={name}>
             <Glyph size={28} />
-          </Tile>
-        ))}
-      </div>
-
-      <h2 id="exercise-icons" style={{ scrollMarginTop: 'var(--ds-anchor-offset)', fontSize: 'var(--text-xl)', marginTop: 40 }}>
-        Exercise icons
-      </h2>
-      <div style={grid}>
-        {EXERCISE_ICON_NAMES.map((name) => (
-          <Tile key={name} name={`ExerciseIcon “${name}”`}>
-            <ExerciseIcon name={name} size={28} color="var(--color-pink)" />
           </Tile>
         ))}
       </div>

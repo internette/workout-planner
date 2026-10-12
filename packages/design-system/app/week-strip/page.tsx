@@ -1,4 +1,4 @@
-import { ExerciseIcon } from '../../src/icons';
+import { Dumbbell, DumbbellUpright } from '../../src/icons';
 import { Card } from '../../src/card';
 import { WeekStrip } from '../../src/week-strip';
 import { DocPage, h2, note } from '../docs';
@@ -7,7 +7,7 @@ export const metadata = { title: 'Week strip — Design system' };
 
 const NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const plan: (string | null)[] = [null, 'h', null, 'v', null, 'h', null];
-const icon = (name: string) => <ExerciseIcon name={name} color="var(--color-pink)" size={16} />;
+const icon = (name: string) => (name === 'v' ? <DumbbellUpright color="var(--color-pink)" size={16} /> : <Dumbbell color="var(--color-pink)" size={16} />);
 
 export default function WeekStripPage() {
   const days = plan.map((p, i) => ({ letter: NAMES[i][0], label: NAMES[i] + ': ' + (p ? 'a workout' : 'rest'), icon: p ? icon(p) : undefined }));

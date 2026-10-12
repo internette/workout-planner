@@ -2,7 +2,7 @@
 // exercises) as it was when they shared it. Kept as JSON behind a link (supabase/migrations/20261012000000_shared_programs.sql),
 // read by the public page and copied by whoever opens it. Both sides use this file: the planner writes one, the server reads it back.
 
-import { EXERCISE_ICON_NAMES } from '@moonshot/design-system/icons';
+import { ICON_KEYS } from './icons';
 import { EQUIPMENT, TARGET_AREAS } from './constants';
 import { DEFAULT_ZONE, RIDE_ZONES } from '@/shared/planDraft';
 
@@ -62,7 +62,7 @@ export const isShareId = (id: string) => /^[A-Za-z0-9]{10,32}$/.test(id);
 // to size, and anything that isn't one of the app's own values (icons, target areas, equipment) is left out.
 const str = (v: unknown, max = SHARE_LIMITS.text) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 const list = (v: unknown, known: readonly string[]) => (Array.isArray(v) ? v.filter((x) => known.includes(x)) : []);
-const icon = (v: unknown) => (typeof v === 'string' && (EXERCISE_ICON_NAMES as string[]).includes(v) ? v : 'h');
+const icon = (v: unknown) => (typeof v === 'string' && ICON_KEYS.includes(v) ? v : 'h');
 
 function readExercise(raw: any): SharedExercise | null {
   const name = str(raw?.name);

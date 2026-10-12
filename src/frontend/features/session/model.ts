@@ -250,7 +250,7 @@ export function workoutVals(ctx: Ctx) {
     isH: e.i === 'h',
     isV: e.i === 'v',
     isD: e.i === 'd',
-    // Any other exercise icon (the lotus flower, the lunge), drawn as it is.
+    // Any other workout icon (the lotus flower, the lunge), drawn as it is.
     otherIcon: e.i && !['h', 'v', 'd'].includes(e.i) ? e.i : null,
     textStyle:
       'flex:1;min-width:0;font-size:var(--text-lg);font-weight:var(--font-weight-medium);' +

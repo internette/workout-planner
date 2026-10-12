@@ -4,7 +4,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Dialog } from '@moonshot/design-system/dialog';
-import { ExerciseIcon, Sparkle } from '@moonshot/design-system/icons';
+import { Sparkle } from '@moonshot/design-system/icons';
+import { WorkoutIcon } from '@/frontend/shared/icons';
 import { IconTile } from '@moonshot/design-system/icon-tile';
 import { Text } from '@moonshot/design-system/typography';
 import { vars } from '@moonshot/design-system/colors';
@@ -197,7 +198,7 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
           {wk.list.map((w, j) => (
             <div key={w.date + w.name + j} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '9px 0', borderTop: j ? '1px solid var(--color-line)' : 'none' }}>
               <IconTile size="sm">
-                <ExerciseIcon name={w.kind === 'ride' ? 'bike' : w.stretch ? 'lunge' : w.yoga ? 'flower' : 'h'} color="var(--color-pink)" />
+                <WorkoutIcon name={w.kind === 'ride' ? 'bike' : w.stretch ? 'lunge' : w.yoga ? 'flower' : 'h'} color="var(--color-pink)" />
               </IconTile>
               <div style={{ minWidth: 0 }}>
                 <Text variant="subheading" as="div" tone="ink">

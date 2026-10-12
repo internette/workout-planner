@@ -4,21 +4,23 @@ import { useState } from 'react';
 import { Card } from '../../src/card';
 import { colors, themed } from '../../src/colors';
 import { ACCENTS } from '../../src/colors/themes';
-import { Dumbbell, EXERCISE_ICON_NAMES, ExerciseIcon, type ExerciseIconName } from '../../src/icons';
+import { Bike, Dumbbell, DumbbellSmall, DumbbellUpright, LotusFlower, Lunge } from '../../src/icons';
 import { IconChoiceGroup } from '../../src/icon-choice-group';
 import { IconTile } from '../../src/icon-tile';
 import { Label } from '../../src/text-field';
 import { Text } from '../../src/typography';
 import { DocPage, h2, note } from '../docs';
 
-const ICON_LABELS: Record<ExerciseIconName, string> = {
-  h: 'Dumbbell',
-  v: 'Upright dumbbell',
-  d: 'Small dumbbell',
-  bike: 'Bike',
-  flower: 'Lotus flower',
-  lunge: 'Lunge',
-};
+// The app's workout icons: the glyph for each key it stores, and its name.
+const WORKOUT_ICONS = [
+  { value: 'h', label: 'Dumbbell', Glyph: Dumbbell },
+  { value: 'v', label: 'Upright dumbbell', Glyph: DumbbellUpright },
+  { value: 'd', label: 'Small dumbbell', Glyph: DumbbellSmall },
+  { value: 'bike', label: 'Bike', Glyph: Bike },
+  { value: 'flower', label: 'Lotus flower', Glyph: LotusFlower },
+  { value: 'lunge', label: 'Lunge', Glyph: Lunge },
+];
+const glyphOf = (value: string) => (WORKOUT_ICONS.find((i) => i.value === value) || WORKOUT_ICONS[0]).Glyph;
 const SWATCHES = [
   { value: colors.pink, label: 'Pink' },
   { value: colors.periwinkle, label: 'Periwinkle' },
@@ -27,10 +29,10 @@ const SWATCHES = [
   { value: colors.peach, label: 'Peach' },
 ];
 const icons = (color?: string) =>
-  EXERCISE_ICON_NAMES.map((name) => ({
-    value: name,
-    label: ICON_LABELS[name] + ' icon',
-    icon: <ExerciseIcon name={name} color={themed(color) || 'var(--color-pink)'} />,
+  WORKOUT_ICONS.map(({ value, label, Glyph }) => ({
+    value,
+    label: label + ' icon',
+    icon: <Glyph color={themed(color) || 'var(--color-pink)'} />,
   }));
 const swatches = SWATCHES.map((s) => ({ ...s, color: themed(s.value) }));
 // The theme colors, as fixed colors: this setting picks the theme, so its swatches don't follow it.
@@ -43,6 +45,7 @@ const ACCENT_SWATCHES = ACCENTS.map((a) => ({
 export default function IconChoiceGroupPage() {
   const [icon, setIcon] = useState<string>('h');
   const [workoutIcon, setWorkoutIcon] = useState<string>('h');
+  const WorkoutGlyph = glyphOf(workoutIcon);
   const [color, setColor] = useState<string>(colors.teal);
   const [accent, setAccent] = useState<string>('pink');
 
@@ -75,7 +78,7 @@ export default function IconChoiceGroupPage() {
       <Card elevation="overlay" style={{ maxWidth: 320 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <IconTile>
-            <ExerciseIcon name={workoutIcon} color={themed(color)} />
+            <WorkoutGlyph color={themed(color)} />
           </IconTile>
           <Text variant="heading" as="div">
             Upper Push
@@ -132,7 +135,7 @@ export default function IconChoiceGroupPage() {
           options={[
             { value: 'h', label: 'Dumbbell icon', icon: <Dumbbell color="var(--color-pink)" size={20} /> },
             { value: 'v', label: 'Upright dumbbell icon', icon: <Dumbbell color="var(--color-pink)" size={20} style={{ transform: 'rotate(90deg)' }} /> },
-            { value: 'd', label: 'Small dumbbell icon', icon: <ExerciseIcon name="d" color="var(--color-pink)" /> },
+            { value: 'd', label: 'Small dumbbell icon', icon: <DumbbellSmall color="var(--color-pink)" /> },
           ]}
         />
       </Card>

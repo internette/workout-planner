@@ -2,17 +2,17 @@
 
 import { useState } from 'react';
 import { Card } from '../../src/card';
-import { ExerciseIcon } from '../../src/icons';
+import { Dumbbell, DumbbellSmall, DumbbellUpright } from '../../src/icons';
 import { IconTile } from '../../src/icon-tile';
 import { ReorderableList } from '../../src/reorderable-list';
 import { Text } from '../../src/typography';
 import { DocPage, h2, note } from '../docs';
 
 const START = [
-  { name: 'Bench Press', sets: '4 × 8', icon: 'h' },
-  { name: 'Overhead Press', sets: '3 × 10', icon: 'v' },
-  { name: 'Tricep Dip', sets: '3 × 12', icon: 'd' },
-  { name: 'Push-up', sets: '3 × 15', icon: 'h' },
+  { name: 'Bench Press', sets: '4 × 8', icon: Dumbbell },
+  { name: 'Overhead Press', sets: '3 × 10', icon: DumbbellUpright },
+  { name: 'Tricep Dip', sets: '3 × 12', icon: DumbbellSmall },
+  { name: 'Push-up', sets: '3 × 15', icon: Dumbbell },
 ];
 
 export default function ReorderableListPage() {
@@ -50,7 +50,7 @@ export default function ReorderableListPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 13 }}>
                 {handle}
                 <IconTile size="sm">
-                  <ExerciseIcon name={r.icon} color="var(--color-pink)" />
+                  <r.icon color="var(--color-pink)" />
                 </IconTile>
                 <div style={{ minWidth: 0 }}>
                   <Text variant="subheading" as="div">

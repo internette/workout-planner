@@ -10,7 +10,8 @@ import { Text } from '@moonshot/design-system/typography';
 import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { TextArea } from '@moonshot/design-system/text-field';
 import { Button } from '@moonshot/design-system/buttons';
-import { ChevronDown, Clock, ExerciseIcon, Plus, Repeat } from '@moonshot/design-system/icons';
+import { ChevronDown, Clock, Plus, Repeat } from '@moonshot/design-system/icons';
+import { WorkoutIcon } from '@/frontend/shared/icons';
 import { BackBar } from '@/frontend/components/BackBar';
 import { FormActions } from '@/frontend/components/FormActions';
 import { RepeatWeekly } from '@/frontend/components/RepeatWeekly';
@@ -43,7 +44,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
         {v.editType ? (
           // Goes back to "What kind of workout?" to change it.
           <Chip
-            icon={<ExerciseIcon name={v.editType.icon} color="var(--color-muted)" size={17} />}
+            icon={<WorkoutIcon name={v.editType.icon} color="var(--color-muted)" size={17} />}
             onClick={v.openRetype}
             trailing={<ChevronDown color="var(--color-muted)" strokeWidth={2.2} size={14} />}
             aria-label={'Type: ' + v.editType.label + '. Change it'}
