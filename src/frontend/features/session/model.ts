@@ -1,3 +1,4 @@
+import { programPlace } from '@/frontend/shared/programs';
 import { DOWFULL } from '@/frontend/shared/constants';
 import { dayShort, digitsOnly, exLine, formatElapsed, idOf, longDay, monDay, monthPatch, newWorkoutPatch, noticePatch, numericOnly, plural, questSeed, rollMinutes, toMinutes } from '@/frontend/shared/helpers';
 import { iconSvg } from '@/frontend/shared/icons';
@@ -308,6 +309,8 @@ export function workoutVals(ctx: Ctx) {
       warmup: !!av.warmup,
       stretch: !!av.stretch,
       yoga: !!av.yoga,
+      // Put there by a program: which, and where in it.
+      program: av.program ? av.program.name + ' · ' + programPlace(av.program) : '',
       meta: complete
         ? 'Completed · ' + (ride && distOf(av) ? distOf(av) + ' mi · ' : '') + ctx.doneTimeOf(av)
         : st.rest && st.rest.id === id && st.rest.endsAt > Date.now()

@@ -13,6 +13,7 @@
   ],
   "exports": {
     "./badge": "./src/badge/index.ts",
+    "./block-bar": "./src/block-bar/index.ts",
     "./base.css": "./src/base.css",
     "./brand": "./src/brand/index.ts",
     "./buttons": "./src/buttons/index.ts",
@@ -46,7 +47,8 @@
     "./theme": "./src/theme.ts",
     "./tokenVariables": "./src/tokenVariables.ts",
     "./typography": "./src/typography/index.ts",
-    "./useWindowEvent": "./src/useWindowEvent.ts"
+    "./useWindowEvent": "./src/useWindowEvent.ts",
+    "./week-strip": "./src/week-strip/index.ts"
   },
   "dependencies": {
     "next": "^14.2.35",

@@ -22,6 +22,8 @@ import { ExerciseScreen } from '@/frontend/features/spellbook/ExerciseScreen';
 import { NotInSpellbook } from '@/frontend/features/spellbook/NotInSpellbook';
 import { TemplateScreen } from '@/frontend/features/spellbook/TemplateScreen';
 import { ExerciseEditScreen } from '@/frontend/features/spellbook/ExerciseEditScreen';
+import { ProgramScreen } from '@/frontend/features/programs/ProgramScreen';
+import { ProgramEditScreen } from '@/frontend/features/programs/ProgramEditScreen';
 import { NewEntryScreen } from '@/frontend/features/chronicle/NewEntryScreen';
 import { ChronicleScreen } from '@/frontend/features/chronicle/ChronicleScreen';
 import { SessionScreen } from '@/frontend/features/session/SessionScreen';
@@ -66,6 +68,9 @@ export function PlannerView({ v }: { v: PlannerVals }) {
             {(v.isTemplate && !v.template) || (v.isExercise && !v.exercise) ? <NotInSpellbook v={v} /> : null}
             {v.isTemplate && v.template ? <TemplateScreen v={v} /> : null}
             {v.isExerciseEdit && v.exerciseEdit ? <ExerciseEditScreen v={v} /> : null}
+            {v.isProgram && v.program ? <ProgramScreen v={v} /> : null}
+            {v.isProgramEdit && v.programEdit ? <ProgramEditScreen v={v} /> : null}
+            {(v.isProgram && !v.program) || (v.isProgramEdit && !v.programEdit) ? <NotInSpellbook v={v} /> : null}
             {v.isNewEntry ? <NewEntryScreen v={v} /> : null}
             {v.isDiaryList ? <ChronicleScreen v={v} /> : null}
             {v.isDetail ? <SessionScreen v={v} /> : null}

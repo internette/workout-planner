@@ -13,6 +13,7 @@ import { workoutVals } from '@/frontend/features/session/model';
 import { editVals } from '@/frontend/features/editor/model';
 import { diaryVals } from '@/frontend/features/chronicle/model';
 import { arsenalVals } from '@/frontend/features/spellbook/model';
+import { programVals } from '@/frontend/features/programs/model';
 import { progressVals } from '@/frontend/features/progress/model';
 import { liveVals } from '@/frontend/features/live/model';
 import { restVals } from '@/frontend/features/session/sets';
@@ -67,7 +68,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
         try {
           const kept = JSON.parse(window.sessionStorage.getItem(NOTICE_KEY) || 'null');
           window.sessionStorage.removeItem(NOTICE_KEY);
-          if (kept && typeof kept.text === 'string' && (kept.screen === 'day' || kept.screen === 'arsenal'))
+          if (kept && typeof kept.text === 'string' && (kept.screen === 'day' || kept.screen === 'arsenal' || kept.screen === 'program'))
             Object.assign(opened, noticePatch(kept.text.slice(0, 300), kept.screen));
         } catch {
           // No storage: no notice.
@@ -216,6 +217,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
       ...editVals(ctx),
       ...diaryVals(ctx),
       ...arsenalVals(ctx),
+      ...programVals(ctx),
       ...progressVals(ctx),
       ...liveVals(ctx),
       ...restVals(ctx),

@@ -21,7 +21,9 @@ export type Screen =
   | 'arsenal'
   | 'template'
   | 'exercise'
-  | 'exerciseEdit';
+  | 'exerciseEdit'
+  | 'program'
+  | 'programEdit';
 
 export type CalendarView = 'Day' | 'Week' | 'Month';
 
@@ -171,8 +173,13 @@ export interface PlannerState {
   leaveOpen?: boolean;
   iconsOpen?: boolean;
   dateOpen?: boolean;
-  // The Week view's "Share week" sheet.
-  shareOpen?: boolean;
+  // Programs: the one whose page is open (a built-in one's id starts "builtin:"), the start sheet, the workout picker
+  // (the block and weekday it adds to), the share sheet, which blocks are open on the page.
+  programId?: string | null;
+  programStart?: { date: string; block: number } | null;
+  programPick?: { blockId: string; day: number; q?: string } | null;
+  programShareOpen?: boolean;
+  programOpenBlocks?: Record<string, boolean>;
   pickM?: number | null;
   pickFocus?: number | null;
   // Adding exercises to it
@@ -221,7 +228,7 @@ export interface PlannerState {
 
   // The Spellbook
   arsenalQ?: string;
-  arsenalView?: 'workouts' | 'exercises';
+  arsenalView?: 'workouts' | 'exercises' | 'programs';
   arsenalKind?: string;
   arsenalAreas?: string[];
   arsenalEquip?: string[];

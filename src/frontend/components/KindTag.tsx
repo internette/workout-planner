@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Text } from '@moonshot/design-system/typography';
 
 /** What kind of workout something is, when it isn't a plain one: a warm-up, a stretch or yoga. */
@@ -12,8 +13,8 @@ const LABEL: Record<WorkoutKind, string> = { warmup: 'Warm-up', stretch: 'Stretc
 
 // Marks a warm-up, a stretch or yoga ("Warm-up · Stretch" for both): a small label above its name, or beside it
 // (inline) where a row has no room above. Nothing for a plain workout.
-export function KindTag({ kind, inline }: { kind: WorkoutKind[] | null; inline?: boolean }) {
-  if (!kind || !kind.length) return null;
+/** The small label above (or beside) a workout's name, in the accent color: what KindTag and ProgramTag both draw. */
+export function TagLabel({ inline, children }: { inline?: boolean; children: ReactNode }) {
   return (
     <>
       {/* A real space, so it isn't read run together with the words before it. */}
@@ -28,8 +29,13 @@ export function KindTag({ kind, inline }: { kind: WorkoutKind[] | null; inline?:
             : { display: 'block', marginBottom: '3px' }
         }
       >
-        {kind.map((k) => LABEL[k]).join(' · ')}
+        {children}
       </Text>
     </>
   );
+}
+
+export function KindTag({ kind, inline }: { kind: WorkoutKind[] | null; inline?: boolean }) {
+  if (!kind || !kind.length) return null;
+  return <TagLabel inline={inline}>{kind.map((k) => LABEL[k]).join(' · ')}</TagLabel>;
 }

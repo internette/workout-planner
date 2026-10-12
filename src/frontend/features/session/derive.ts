@@ -2,6 +2,7 @@ import { idOf, longDay, monthPatch, splitMinutes, toMinutes } from '@/frontend/s
 import type { StatsCtx } from '../planner/store/types';
 import { colors } from '@moonshot/design-system/colors';
 import { splitSide } from '@/frontend/shared/sides';
+import { programOfWorkout } from '@/frontend/shared/programs';
 import type { Entry, Exercise } from '@/frontend/data/plannerData';
 
 // The selected workout: ride plan and actuals, exercise list, icons and completion state.
@@ -70,7 +71,10 @@ export function workoutStage(ctx: StatsCtx) {
   // date, nothing to tick off. Its edits are keyed "tpl:<id>" like a session's are keyed by its id.
   const tplWorkout =
     st.screen === 'edit' && !creating && st.editTemplate
-      ? logic.model.workouts.find((w) => w.id === st.editTemplate) || null
+      ? logic.model.workouts.find((w) => w.id === st.editTemplate) ||
+        // A program's own workout, edited from its program's page.
+        programOfWorkout(logic.model, st.editTemplate)?.workout ||
+        null
       : null;
   const tplMode = !!tplWorkout;
   const tplEntry: Entry | null = tplWorkout
@@ -78,7 +82,7 @@ export function workoutStage(ctx: StatsCtx) {
         id: 'tpl:' + tplWorkout.id,
         workoutId: tplWorkout.id,
         name: tplWorkout.name,
-        exKey: tplWorkout.name,
+        exKey: (tplWorkout as { exKey?: string }).exKey || tplWorkout.name,
         s: 'p',
         time: tplWorkout.time,
         icon: tplWorkout.icon,
