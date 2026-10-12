@@ -7,7 +7,7 @@
 }
 .block {
   border-radius: var(--radius-full);
-  box-shadow: inset 0 0 0 1px var(--color-block-edge);
+  box-shadow: inset 0 0 0 1px var(--color-block-half);
 }
 .faint { background: var(--color-block-faint); }
 .half { background: var(--color-block-half); }
@@ -44,7 +44,7 @@
   width: 10px;
   height: 10px;
   border-radius: var(--radius-full);
-  box-shadow: inset 0 0 0 1px var(--color-block-edge);
+  box-shadow: inset 0 0 0 1px var(--color-block-half);
 }
 
 @media (forced-colors: active) {

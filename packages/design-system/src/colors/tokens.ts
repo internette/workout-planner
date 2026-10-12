@@ -111,8 +111,7 @@ export const translucents = {
   scrim: { value: mix('ink', 35), use: 'The dimmed page behind a dialog' },
   dayRest: { value: mix('ink', 5), use: 'A day with nothing on it in a week strip (WeekStrip), on a card or the page' },
   blockFaint: { value: mix('pink', 25), use: 'The first block of a program in a block bar (BlockBar); the last is the theme color itself' },
-  blockHalf: { value: mix('pink', 55), use: 'A middle block of a program in a block bar (BlockBar)' },
-  blockEdge: { value: mix('pink', 45), use: 'The outline round each block in a block bar, so the faintest still shows on the page' },
+  blockHalf: { value: mix('pink', 55), use: 'A middle block of a program in a block bar (BlockBar), and the outline round every block, so the faintest still shows on the page' },
 } as const;
 
 /** Every see-through color and gradient as a CSS custom property name and value. */
