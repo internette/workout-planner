@@ -50,7 +50,6 @@ export function scanVals(ctx: Ctx) {
     id: av.id,
     iso,
     name: av.name,
-    series: !!av.series,
     inProgram: !!av.program || !!programOfWorkout(model, av.workoutId),
   }));
   const byId: Record<string, { iso: string; av: Entry }> = {};
