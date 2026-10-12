@@ -12,6 +12,8 @@ interface ProviderButtonProps {
   busy?: boolean;
   /** Some sign-in is in flight, so the others wait. */
   disabled?: boolean;
+  /** Where to come back to once signed in, when it isn't the planner. */
+  returnTo?: string;
   children: ReactNode;
 }
 
@@ -20,10 +22,10 @@ interface ProviderButtonProps {
  * Auth0, so it works before the page's scripts have loaded. It lives with the login, not in the design system,
  * because each provider sets its own rules for the button's look and label.
  */
-export function ProviderButton({ provider, onClick, busy, disabled, children }: ProviderButtonProps) {
+export function ProviderButton({ provider, onClick, busy, disabled, returnTo, children }: ProviderButtonProps) {
   return (
     <a
-      href={loginUrl(provider)}
+      href={loginUrl(provider, returnTo)}
       className={`${styles.provider} ${provider === 'apple' ? styles.apple : styles.google}`}
       onClick={(e) => {
         if (disabled) {

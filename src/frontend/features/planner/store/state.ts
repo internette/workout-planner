@@ -171,6 +171,8 @@ export interface PlannerState {
   leaveOpen?: boolean;
   iconsOpen?: boolean;
   dateOpen?: boolean;
+  // The Week view's "Share week" sheet.
+  shareOpen?: boolean;
   pickM?: number | null;
   pickFocus?: number | null;
   // Adding exercises to it

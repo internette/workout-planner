@@ -2,7 +2,7 @@ import { DCLogic } from './dcLogic';
 import * as db from '@/frontend/data/plannerData';
 import type { Model } from '@/frontend/data/plannerData';
 import { HOME_OF, MONTHS } from '@/frontend/shared/constants';
-import { monthPatch } from '@/frontend/shared/helpers';
+import { monthPatch, noticePatch } from '@/frontend/shared/helpers';
 import type { Viewport } from '../useViewport';
 import type { Account } from '@/shared/auth';
 import { buildContext } from './context';
@@ -17,7 +17,9 @@ import { progressVals } from '@/frontend/features/progress/model';
 import { liveVals } from '@/frontend/features/live/model';
 import { restVals } from '@/frontend/features/session/sets';
 
-export const CALENDAR_KEY = 'moonshot.calendar';
+import { CALENDAR_KEY, NOTICE_KEY } from '@/frontend/shared/handoff';
+
+export { CALENDAR_KEY };
 
 export class PlannerLogic extends DCLogic<PlannerState> {
   /** Which layout the window calls for. The host component keeps it current. */
@@ -58,6 +60,17 @@ export class PlannerLogic extends DCLogic<PlannerState> {
             Object.assign(opened, { seg: kept.seg, month: kept.month, yOff: Number(kept.yOff) || 0, day: Number(kept.day) || 1 });
         } catch {
           // Storage can be off (private windows, blocked site data): start on today, as before.
+        }
+      }
+      // A notice another page left for the planner (a shared program just copied), shown once.
+      if (first) {
+        try {
+          const kept = JSON.parse(window.sessionStorage.getItem(NOTICE_KEY) || 'null');
+          window.sessionStorage.removeItem(NOTICE_KEY);
+          if (kept && typeof kept.text === 'string' && (kept.screen === 'day' || kept.screen === 'arsenal'))
+            Object.assign(opened, noticePatch(kept.text.slice(0, 300), kept.screen));
+        } catch {
+          // No storage: no notice.
         }
       }
       // Sets done only for sessions still on the clock: a finished one's are done with.

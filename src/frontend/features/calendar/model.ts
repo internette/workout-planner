@@ -3,6 +3,7 @@ import { isoMonthDay, mod12, monDay, monthPatch, noticePatch, plural, shortDay }
 import * as db from '@/frontend/data/plannerData';
 import { shortDate, type PlanDraft } from '@/shared/planDraft';
 import type { Ctx } from '../planner/store/types';
+import { displayName } from '@/shared/auth';
 
 // Calendar screen: month picker, day strip, week list and month grid.
 export function calendarVals(ctx: Ctx) {
@@ -21,6 +22,7 @@ export function calendarVals(ctx: Ctx) {
     days,
     selDate,
     weekLabel,
+    weekStart,
     todayDate,
     TODAY_D,
     isCurMonth,
@@ -128,6 +130,17 @@ export function calendarVals(ctx: Ctx) {
     dayName: DOWFULL[selDate.getDay()],
     shortDate: monDay(selDate),
     weekLabel,
+    // Sharing the week on screen as a program (features/share): its workouts by weekday, as they are now.
+    shareWeek: {
+      open: !!st.shareOpen,
+      show: () => logic.s({ shareOpen: true }),
+      close: () => logic.s({ shareOpen: false }),
+      weekLabel,
+      program: (o: { notes: boolean; showName: boolean }) =>
+        db.weekProgram(logic.model, weekStart, { notes: o.notes, by: o.showName ? displayName(logic.auth.account) : null }),
+      // Their name is only offered once they're signed in: without an account there's none to show.
+      canShowName: !!logic.auth.account,
+    },
     hasRows: weekRows.some((r) => r.hasRow),
     noRows: !weekRows.some((r) => r.hasRow),
     // Only what's true: a day with a session gets a quest.
