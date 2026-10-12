@@ -77,7 +77,7 @@ function Found({ v }: { v: PlannerVals }) {
       </div>
       {s.bar.length ? (
         <div style={{ marginTop: '16px' }}>
-          <BlockBar blocks={s.bar} at={s.at} />
+          <BlockBar blocks={s.bar} />
         </div>
       ) : null}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '16px' }}>

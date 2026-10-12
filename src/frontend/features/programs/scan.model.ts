@@ -1,11 +1,11 @@
-// Turning the calendar's weekly repeats into a program: the Programs tab's card, what the scan found (its blocks, and
-// ticking workouts in or out), then naming it and choosing what happens to the sessions already there.
+// Turning what's left of the calendar's weekly repeats into a program: the Programs tab's card, what the scan found
+// (its weeks, and ticking workouts in or out), then naming it and choosing what happens to the sessions already there.
 import { DOW3, DOWFULL, MON3 } from '@/frontend/shared/constants';
 import { isoOf, noticePatch, plural } from '@/frontend/shared/helpers';
 import { iconSvg } from '@/frontend/shared/icons';
 import { programOfWorkout } from '@/frontend/shared/programs';
 import { dayNames } from '@/frontend/shared/schedule';
-import { pickScan, scanCalendar, scanKey, type Scan, type ScanSession } from '@/frontend/shared/scan';
+import { scanCalendar, scanKey, type Scan, type ScanSession } from '@/frontend/shared/scan';
 import * as db from '@/frontend/data/plannerData';
 import type { Entry } from '@/frontend/data/plannerData';
 import type { Ctx } from '../planner/store/types';
@@ -50,22 +50,23 @@ export function scanVals(ctx: Ctx) {
     id: av.id,
     iso,
     name: av.name,
+    series: !!av.series,
+    done: av.s === 'c',
     inProgram: !!av.program || !!programOfWorkout(model, av.workoutId),
   }));
   const byId: Record<string, { iso: string; av: Entry }> = {};
   model.entries.forEach((e) => (byId[e.av.id] = e));
 
-  const open = (sessionId: string | null) => {
-    const s = pickScan(scanCalendar(sessions), todayIso, sessionId);
+  const all = ready ? scanCalendar(sessions, todayIso) : null;
+  const open = () => {
     logic.nav({
       screen: 'programScan',
-      programScan: { step: s ? 'found' : 'none', id: s ? s.id : null, off: [], name: null, blockNames: null, keep: true, endSeries: true, date: isoOf(nextSunday(today)) },
+      programScan: { step: all ? 'found' : 'none', id: null, off: [], name: null, blockNames: null, keep: true, endSeries: true, date: isoOf(nextSunday(today)) },
     });
   };
 
-  // ---- The Programs tab's card: a stretch going on now (or still to come) that hasn't been put aside.
-  const current = ready ? pickScan(scanCalendar(sessions), todayIso) : null;
-  const offer = current && current.end >= todayIso ? current : null;
+  // ---- The Programs tab's card, unless it was put aside.
+  const offer = all;
   const hidden = offer && (st.scanHidden === scanKey(offer) || readDismissed() === scanKey(offer));
   const scanCard =
     offer && !hidden
@@ -74,12 +75,10 @@ export function scanVals(ctx: Ctx) {
           body:
             plural(offer.names.length, 'workout') +
             (offer.names.length === 1 ? ' repeats' : ' repeat') +
-            ' every week, ' +
-            shortDate(offer.start) +
-            ' – ' +
+            ' every week through ' +
             shortDate(offer.end) +
             ', outside any program. Turn them into one to see where you are, share it, or run it again.',
-          go: () => open(null),
+          go: open,
           notNow: () => {
             const key = scanKey(offer);
             try {
@@ -94,9 +93,8 @@ export function scanVals(ctx: Ctx) {
 
   // ---- The flow
   const f = st.programScan || null;
-  const all = f && f.id ? scanCalendar(sessions).find((s) => s.id === f.id) || null : null;
   const off = new Set(f?.off || []);
-  const scan = all ? scanCalendar(sessions, new Set(all.names.filter((n) => !off.has(n)))).find((s) => s.id === all.id) || null : null;
+  const scan = f && all ? scanCalendar(sessions, todayIso, new Set(all.names.filter((n) => !off.has(n)))) : null;
   const set = (patch: Partial<NonNullable<typeof f>>) => f && logic.s({ programScan: { ...f, ...patch } });
 
   // A workout as the scan shows it: from its latest session (the version the program copies).
@@ -120,8 +118,6 @@ export function scanVals(ctx: Ctx) {
   };
 
   const names = scan && f ? f.blockNames && f.blockNames.length === scan.blocks.length ? f.blockNames : blockNames(scan) : [];
-  const doneCount = scan ? scan.sessions.filter((id) => byId[id]?.av.s === 'c').length : 0;
-  const weeksIn = scan && todayIso >= scan.start && todayIso <= scan.end ? (fromIso(todayIso).getTime() - fromIso(scan.start).getTime()) / 86400000 / 7 : null;
 
   const found =
     f && f.step === 'found' && scan && all
@@ -170,12 +166,11 @@ export function scanVals(ctx: Ctx) {
           const oneOffs = scan.oneOffs.map((id) => byId[id]).filter(Boolean);
           const listed = oneOffs.slice(0, 3).map((e) => e.av.name + ' ' + shortDate(e.iso));
           return {
-            title: plural(scan.weeks, 'week') + ', ' + plural(scan.blocks.length, 'block'),
+            title: plural(scan.weeks, 'week') + (scan.blocks.length > 1 ? ', ' + plural(scan.blocks.length, 'block') : ''),
             meta: scan.weeks
-              ? shortDate(scan.start) + ' – ' + shortDate(scan.end) + ' · ' + plural(scan.sessions.length, 'session') + (doneCount ? ', ' + doneCount + ' done so far' : '')
+              ? 'This week to ' + shortDate(scan.end) + ' · ' + plural(scan.sessions.length, 'session') + ' left'
               : 'Nothing ticked',
             bar: scan.blocks.map((b, i) => ({ name: weeksLabel(scan.blocks.slice(0, i).reduce((s, x) => s + x.weeks, 0) + 1, b.weeks), weeks: b.weeks })),
-            at: weeksIn,
             blocks,
             leftOut: all.names.filter((n) => off.has(n)).map((n) => row(n, null)),
             oneOffs: oneOffs.length
@@ -211,10 +206,11 @@ export function scanVals(ctx: Ctx) {
           keep: f.keep,
           setKeep: (v: string) => set({ keep: v === 'keep' }),
           keepNote:
-            'Nothing moves. ' +
-            (scan.sessions.length === 1 ? 'It becomes' : 'All ' + scan.sessions.length + ' become') +
-            ' its run: tagged, and “End program” works on them. Done ones keep their history.',
-          freshNote: 'Its sessions still ahead come off, and the program starts from a date you pick. Done ones stay.',
+            (scan.sessions.length === 1 ? 'The session left becomes' : 'The ' + scan.sessions.length + ' sessions left become') +
+            ' its run, through ' +
+            shortDate(scan.end) +
+            ': tagged, and any workout ending sooner is added to the weeks it misses. Past ones stay as they are.',
+          freshNote: 'The sessions left come off, and the program starts from a date you pick. Past ones stay.',
           date: f.date < todayIso ? todayIso : f.date,
           min: todayIso,
           setDate: (e) => set({ date: e.target.value || todayIso }),
@@ -238,6 +234,7 @@ export function scanVals(ctx: Ctx) {
                   })),
                   start: scan.start,
                   sessions: scan.sessions.map((id) => ({ id, iso: byId[id].iso, name: byId[id].av.name })),
+                  taken: model.entries.map((e) => e.av.name + '|' + e.iso),
                   seriesWorkouts: seriesWorkouts(),
                   keep: f.keep,
                   freshStart: date,
@@ -256,7 +253,7 @@ export function scanVals(ctx: Ctx) {
                 ...(f.keep ? {} : { hist: [] }),
                 ...noticePatch(
                   f.keep
-                    ? 'Made “' + programName + '” from your calendar: ' + plural(r.count, 'session') + (r.count === 1 ? ' is' : ' are') + ' part of it now.'
+                    ? 'Made “' + programName + '” from your calendar: ' + plural(r.count, 'session') + ' through ' + shortDate(scan.end) + (r.count === 1 ? ' is' : ' are') + ' part of it now.'
                     : '“' + programName + '” made and started: ' + plural(r.count, 'session') + ' on your calendar from ' + shortDate(r.first || date) + '.',
                   'program',
                 ),
@@ -270,7 +267,7 @@ export function scanVals(ctx: Ctx) {
     f && (f.step === 'none' || !all)
       ? {
           title: 'No pattern to make a program from',
-          body: 'Your sessions outside programs are one-offs: nothing repeats on the same day week to week.',
+          body: 'Nothing left on your calendar outside a program repeats on the same day week to week.',
           saveWeek: () =>
             logic.s({
               screen: 'day',
@@ -287,7 +284,7 @@ export function scanVals(ctx: Ctx) {
     // A session in a weekly series that no program put there can start the scan from its page.
     makeProgram: (() => {
       const e = st.screen === 'detail' && st.entryId ? byId[st.entryId] : null;
-      return ready && e && e.av.series && !e.av.program && !programOfWorkout(model, e.av.workoutId) ? () => open(e.av.id) : null;
+      return ready && e && e.av.series && !e.av.program && !programOfWorkout(model, e.av.workoutId) ? open : null;
     })(),
     isProgramScan: st.screen === 'programScan',
     scanFound: found,
