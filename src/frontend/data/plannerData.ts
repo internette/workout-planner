@@ -9,3 +9,4 @@ export { updateWorkoutTemplate } from './planner/workoutTemplate';
 export { deleteLibraryExercise, createLibraryExercise, updateLibraryExercise } from './planner/exercises';
 export { latestPlanDraft, discardPlanDraft, addPlanDraft } from './planner/drafts';
 export { estimateMinutes } from './planner/convert';
+export { weekProgram, myShare, shareProgram, stopSharing, copyNames, copyProgram, type MyShare } from './planner/share';

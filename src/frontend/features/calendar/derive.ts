@@ -251,6 +251,7 @@ export function calendarStage(ctx: EntriesCtx) {
     pickYOff,
     days,
     selDate,
+    weekStart: wkStart,
     weekLabel,
     isCurMonth,
     shownYOff,

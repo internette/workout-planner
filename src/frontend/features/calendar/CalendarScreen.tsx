@@ -21,6 +21,7 @@ import { QuestCard } from '@/frontend/features/calendar/QuestCard';
 import { RestartDialog } from '@/frontend/features/calendar/RestartDialog';
 import { WeekRow } from '@/frontend/features/calendar/WeekRow';
 import { kindOf } from '@/frontend/components/KindTag';
+import { ShareWeekDialog } from '@/frontend/features/share/ShareWeekDialog';
 
 export function CalendarScreen({ v }: { v: PlannerVals }) {
   return (
@@ -180,7 +181,13 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               {v.weekLabel}
             </Text>
             <StepButton dir="next" unit="week" onClick={v.nextWeek} />
+            {v.hasRows ? (
+              <Button type="secondary" size="sm" onClick={v.shareWeek?.show} style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+                Share week
+              </Button>
+            ) : null}
           </div>
+          {v.shareWeek ? <ShareWeekDialog s={v.shareWeek} /> : null}
           <div
             style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '26px', paddingBottom: v.hasRows ? '8px' : 0 }}
           >

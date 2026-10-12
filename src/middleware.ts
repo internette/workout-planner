@@ -2,12 +2,14 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { connectionOn } from '@/shared/auth';
 import { getAuth0 } from '@/backend/auth0/client';
 
-// Public: the front door, the design-system site (another app, forwarded by next.config.js), the SDK's own routes
+// Public: the front door, a shared program's page, the design-system site (another app, forwarded by next.config.js), the SDK's own routes
 // (/auth/...), and the token route, which answers 401 itself when signed out, so the page's code can tell. The assistant
 // connector and its discovery document too: the connector checks its own bearer token (Claude has no session cookie)
 // and answers 401 itself.
 const isPublic = (path: string) =>
   path === '/welcome' ||
+  // A shared program's page: anyone with the link can see it. It only reads that one program (see app/p/[id]).
+  path.startsWith('/p/') ||
   path === '/api/token' ||
   path === '/api/mcp' ||
   path === '/api/oauth-protected-resource' ||
