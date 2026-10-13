@@ -15,6 +15,7 @@ import { InstallPrompt } from '../install/InstallPrompt';
 import { useInstallPrompt } from '../install/useInstallPrompt';
 import { useLiveActivity } from '../live/useLiveActivity';
 import { useWakeLock } from '../live/useWakeLock';
+import { leaveChoice } from '../live/settings';
 import { RankUp } from '@moonshot/design-system/rank-up';
 
 // How long the plan may take before the loading screen says so.
@@ -193,8 +194,11 @@ export default function Planner({ account = null }: { account?: Account | null }
       const dirtyWorkout = st.screen === 'edit' && workoutDraftDirty(st);
       const dirtyExercise = exerciseDraftDirty(st);
       const vals = logic.renderVals();
-      // Leaving a session with its clock running asks first, as the screen's own Back arrow does.
-      if (vals.timerRunningHere) {
+      // Leaving a session with its clock running asks first, as the screen's own Back arrow does, unless an answer was
+      // given once (session/leave): then it pauses or not, and goes back.
+      const choice = vals.timerRunningHere ? leaveChoice() : 'ask';
+      if (vals.timerRunningHere && choice === 'pause') vals.pauseClockHere();
+      if (vals.timerRunningHere && choice === 'ask') {
         const steps = cur - target;
         go(steps);
         logic.setState({

@@ -1,0 +1,54 @@
+/* Radios stacked in a list, drawn like Checkbox: the real input is invisible and covers the whole line, so a press
+   anywhere on it picks it. */
+
+.group { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.legend {
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  color: var(--color-ink);
+}
+
+.wrap {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  cursor: pointer;
+}
+.wrap.disabled { opacity: 0.5; cursor: not-allowed; }
+/* At least 44px tall to tap, however short the line is drawn. */
+.wrap::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, 44px); transform: translateY(-50%); }
+
+.input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
+
+.dot {
+  flex: none;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1.5px var(--color-outline);
+  transition: background-color var(--dur-state) var(--ease-standard), box-shadow var(--dur-state) var(--ease-standard);
+}
+.checked .dot { background: var(--color-pink); box-shadow: inset 0 0 0 2px var(--color-pink), inset 0 0 0 5px var(--color-surface); }
+.wrap:has(.input:focus-visible) .dot { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+
+.label {
+  min-width: 0;
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  color: var(--color-slate);
+  text-wrap: pretty;
+}
+
+/* Under the label, lined up with its text: past the 20 px dot and the gap. */
+.description {
+  margin: 4px 0 0;
+  padding-left: calc(20px + var(--space-3));
+  font-size: var(--text-base);
+  color: var(--color-muted);
+  text-wrap: pretty;
+}

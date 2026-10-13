@@ -7,6 +7,7 @@ import type { Ctx } from '../planner/store/types';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import type { Entry } from '@/frontend/data/plannerData';
 import { setsFor, setsIn } from './sets';
+import { leaveRunningWorkout, pausedClock } from './leave';
 import type { DayStatus } from '@/frontend/components/StatusDot';
 
 // The day card and the workout detail screen (today's quest, exercise preview, completion).
@@ -123,7 +124,7 @@ export function workoutVals(ctx: Ctx) {
   // silently keep it running unattended (or lose track of it). Both the nav guard (chrome.ts) and this
   // screen's own Back arrow route through the same prompt.
   const askThenGo = (proceed) => {
-    if (st.screen === 'detail' && timerRunning) return logic.s({ pausePrompt: { proceed } });
+    if (st.screen === 'detail' && timerRunning) return leaveRunningWorkout(ctx, proceed);
     proceed();
   };
   // Starting never touches what's already ticked: it only starts the clock (if it isn't going) and opens the workout.
@@ -294,7 +295,9 @@ export function workoutVals(ctx: Ctx) {
     const setsOf = (st.setsDone || {})[id] || {};
     const left = list.filter((e) => !doneNames.includes(e.name));
     const now = !complete && (timer || doneN > 0) ? left.find((e) => (setsOf[e.name] || 0) > 0) || left[0] : null;
-    const rows = list.map((e) => ({
+    // Under way, the ones still to do come first and the done ones drop to the bottom, so the next is on top.
+    const ordered = now ? [...left, ...list.filter((e) => doneNames.includes(e.name))] : list;
+    const rows = ordered.map((e) => ({
       ...exerciseRow(e, doneNames),
       setNow: now && e.name === now.name && setsIn(e) > 1 ? 'Set ' + Math.min(setsIn(e), (setsOf[e.name] || 0) + 1) + ' of ' + setsIn(e) : '',
     }));
@@ -466,6 +469,7 @@ export function workoutVals(ctx: Ctx) {
     saveFinish,
     // For the browser's Back, which asks the same way.
     timerRunningHere: st.screen === 'detail' && !!timerRunning,
+    pauseClockHere: () => logic.s(pausedClock(ctx)),
     pausePromptOpen: !!st.pausePrompt,
     keepGoing: () => logic.s({ pausePrompt: null }),
     // Leaving with the clock still going: it keeps counting (it's kept by the wall clock), and the day card shows it.
@@ -476,12 +480,7 @@ export function workoutVals(ctx: Ctx) {
     },
     confirmPause: () => {
       const pending = st.pausePrompt;
-      logic.s(
-        Object.assign(
-          { pausePrompt: null },
-          timerRunning ? { workoutTimer: Object.assign({}, st.workoutTimer, { [timerKey]: { elapsed: timerElapsedSec, runningSince: null } }) } : {},
-        ),
-      );
+      logic.s(Object.assign({ pausePrompt: null }, timerRunning ? pausedClock(ctx) : {}));
       if (pending && pending.proceed) pending.proceed();
     },
     goEdit: () =>

@@ -318,6 +318,17 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'radio',
+    title: 'Radio group',
+    category: 'components',
+    description: 'One choice from a short list, stacked.',
+    anchors: [
+      { id: 'radio-group', title: 'Radio group' },
+      { id: 'with-descriptions', title: 'With descriptions' },
+      { id: 'behaviour', title: 'Behaviour' },
+    ],
+  },
+  {
     slug: 'icon-choice-group',
     title: 'Icon choice group',
     category: 'components',
