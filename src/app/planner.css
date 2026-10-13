@@ -29,10 +29,3 @@ html { scroll-padding-top: 16px; scroll-padding-bottom: 104px; }
   /* The Month's streak and done, a line each: no rule between them. */
   .stats-rule { display: none; }
 }
-
-/* On phones, the page's root is the tab bar's color: Android colors the strip under the tab bar (its gesture bar) with
-   the page's background, so it reads as the bar's own edge, not a band of the page under it. The page itself stays
-   the canvas color: the body covers the screen (the planner is at least as tall as it). */
-@media (max-width: 719.98px) {
-  html:has(nav[data-tabbar]) { background: var(--color-surface); }
-}
