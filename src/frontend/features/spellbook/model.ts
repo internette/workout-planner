@@ -4,6 +4,7 @@ import { DEFAULT_WEEKS, dayNames, pickedDays, planDays, toggleDay } from '@/fron
 import * as db from '@/frontend/data/plannerData';
 import { countsOk, digitsOnly, editTemplatePatch, exerciseDraftDirty, exLine, isoOf, joinSetsReps, longDay, monthPatch, needsLine, newWorkoutPatch, noticePatch, numericOnly, plural, splitSetsReps, withLb, withSec } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
+import { kitOf } from '@/frontend/shared/equipment';
 import { areaToggles, draftBand, plainExercise, DRAFT_CLEARED, draftClash, draftItem, draftOpened, draftReady, equipmentToggles } from '@/frontend/shared/exerciseDraft';
 import { bandLevelOf, bandWeight, takesWeight, usesBand, type BandLevel } from '@/frontend/shared/bands';
 import type { BuiltinWorkout, Exercise, WorkoutSummary } from '@/frontend/data/plannerData';
@@ -77,7 +78,7 @@ export function arsenalVals(ctx: Ctx) {
   // Equipment filter, shared by both tabs: what the person has ticked, remembered in this browser. An exercise shows
   // when it needs nothing else (bodyweight ones always do); a workout shows when every one of its exercises does.
   const equipFilter: string[] = st.arsenalEquip !== undefined ? st.arsenalEquip : savedEquipment();
-  const canDo = (e) => !equipFilter.length || e.equipment === undefined || e.equipment.every((x) => equipFilter.includes(x));
+  const canDo = (e) => !equipFilter.length || e.equipment == null || e.equipment.every((x) => equipFilter.includes(x));
   // Anything narrowing the lists: a search, target areas, or equipment.
   const filtering = !!q || areaFilter.length > 0 || equipFilter.length > 0;
   const areaList = (list) =>
@@ -185,8 +186,9 @@ export function arsenalVals(ctx: Ctx) {
     rest: ex.rest,
     i: ex.i,
     areas: ex.areas || [],
-    // Left out until the database has equipment, and the editor then shows no picker for it.
-    ...(ex.equipment !== undefined ? { equipment: ex.equipment } : {}),
+    // Left out until the database has equipment, and the editor then shows no picker for it. Not set (null) when it isn't
+    // known: none, but done with pounds, isn't bodyweight (shared/equipment).
+    ...(ex.equipment !== undefined ? { equipment: kitOf(ex) } : {}),
   });
   const copiesIn =
     found && !found.workout && !found.ex.builtin
@@ -201,9 +203,8 @@ export function arsenalVals(ctx: Ctx) {
         band: found.ex.band || '',
         rest: found.ex.rest,
         areas: found.ex.areas || [],
-        // What it needs; none is bodyweight. Not shown until the database has equipment at all.
-        equipment:
-          found.ex.equipment === undefined ? null : found.ex.equipment.length ? found.ex.equipment : ['Bodyweight'],
+        // What it needs; none is bodyweight. Not shown while it isn't known.
+        equipment: ((kit) => (kit ? (kit.length ? kit : ['Bodyweight']) : null))(kitOf(found.ex)),
         builtin: !!found.ex.builtin,
         // One inside a workout belongs to that workout. One saved on its own is copied into a workout when it's
         // added, so it lists the workouts holding a copy (by name, which is how workouts keep their exercises).
@@ -344,16 +345,22 @@ export function arsenalVals(ctx: Ctx) {
     weighted: takesWeight(exDraft),
     setRest: (e) => logic.s({ exDraft: { ...exDraft, rest: withSec(digitsOnly(e.target.value)) } }),
     areas: areaToggles(exDraft.areas || [], (areas) => logic.s({ exDraft: { ...exDraft, areas } })),
-    // Equipment is one row that opens to the picker: what's picked, or "Bodyweight", while it's closed.
+    // Equipment is one row that opens to the picker: what's picked, "Bodyweight", or "Not set", while it's closed.
     equipmentOpen: !!st.exEquipOpen,
     toggleEquipment: () => logic.s({ exEquipOpen: !st.exEquipOpen }),
     equipmentSummary:
-      exDraft.equipment === undefined ? '' : exDraft.equipment.length ? exDraft.equipment.join(', ') : 'Bodyweight',
+      exDraft.equipment === undefined
+        ? ''
+        : exDraft.equipment === null
+          ? 'Not set'
+          : exDraft.equipment.length
+            ? exDraft.equipment.join(', ')
+            : 'Bodyweight',
     // What it needs, picked from the equipment list in its groups; none picked is bodyweight.
     equipmentGroups:
       exDraft.equipment === undefined
         ? null
-        : equipmentToggles(exDraft.equipment, (equipment) => logic.s({ exDraft: { ...exDraft, equipment } })),
+        : equipmentToggles(exDraft.equipment || [], (equipment) => logic.s({ exDraft: { ...exDraft, equipment } })),
     icons: {
       value: exDraft.i,
       onChange: (name) => logic.s({ exDraft: { ...exDraft, i: name } }),
@@ -394,7 +401,8 @@ export function arsenalVals(ctx: Ctx) {
         rest: exDraft.rest,
         i: exDraft.i,
         areas: exDraft.areas || [],
-        ...(exDraft.equipment !== undefined ? { equipment: exDraft.equipment } : {}),
+        // Still not set: left as it is, so a database from before not-set equipment keeps its column's none.
+        ...(exDraft.equipment != null ? { equipment: exDraft.equipment } : {}),
       };
       if (copying)
         return logic.saveOnce('exercise', () => db.createLibraryExercise(patch), (r) => ({

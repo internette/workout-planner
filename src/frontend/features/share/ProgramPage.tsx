@@ -18,6 +18,7 @@ import { DOW3, DOWFULL } from '@/frontend/shared/constants';
 import { exLine, minText, plural } from '@/frontend/shared/helpers';
 import { iconSvg } from '@/frontend/shared/icons';
 import { openProgram } from '@/frontend/shared/handoff';
+import { kitChip } from '@/frontend/shared/equipment';
 import { blockWorkouts, programEquipment, programWeeks, trainingDays, type SharedProgram, type SharedWorkout } from '@/frontend/shared/sharedProgram';
 
 export interface ProgramPageProps {
@@ -144,7 +145,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
       <ChipGroup style={{ marginTop: '14px' }}>
         <Chip icon={<Calendar color="var(--color-muted)" size={15} />}>{plural(weeks, 'week')}</Chip>
         <Chip icon={<Repeat color="var(--color-muted)" size={15} />}>{plural(trainingDays(program), 'day')} a week</Chip>
-        <Chip>{kit.length ? (kit.length <= 2 ? kit.join(', ') : kit.length + ' pieces of equipment') : 'No equipment'}</Chip>
+        {kitChip(kit) ? <Chip>{kitChip(kit)}</Chip> : null}
       </ChipGroup>
       <Button
         type="secondary"

@@ -131,7 +131,7 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
       <ChipGroup style={{ marginTop: '14px' }}>
         <Chip icon={<Calendar color="var(--color-muted)" size={15} />}>{p.chips[0]}</Chip>
         <Chip icon={<Repeat color="var(--color-muted)" size={15} />}>{p.chips[1]}</Chip>
-        <Chip>{p.equipment}</Chip>
+        {p.equipment ? <Chip>{p.equipment}</Chip> : null}
       </ChipGroup>
       {p.notes ? (
         <Text variant="body" tone="slate" as="p" style={{ margin: '14px 0 0', maxWidth: '560px', whiteSpace: 'pre-wrap' }}>
