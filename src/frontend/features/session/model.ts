@@ -1,3 +1,4 @@
+import { typeLabelOf } from '@/frontend/components/KindTag';
 import { programPlace } from '@/frontend/shared/programs';
 import { DOWFULL } from '@/frontend/shared/constants';
 import { dayShort, digitsOnly, exLine, formatElapsed, idOf, longDay, monDay, monthPatch, newWorkoutPatch, noticePatch, numericOnly, plural, questSeed, rollMinutes, toMinutes } from '@/frontend/shared/helpers';
@@ -314,8 +315,7 @@ export function workoutVals(ctx: Ctx) {
       programName: av.program ? av.program.name : '',
       programPlace: av.program ? programPlace(av.program) : '',
       // Open, what kind of workout it is, named as "What kind of workout?" names it: "Warm-up · Stretching".
-      typeLabel:
-        (av.warmup ? 'Warm-up · ' : '') + (ride ? 'Cycling' : av.stretch ? 'Stretching' : av.yoga ? 'Yoga' : 'Lifting'),
+      typeLabel: typeLabelOf({ ...av, ride }),
       meta: complete
         ? 'Completed · ' + (ride && distOf(av) ? distOf(av) + ' mi · ' : '') + ctx.doneTimeOf(av)
         : st.rest && st.rest.id === id && st.rest.endsAt > Date.now()

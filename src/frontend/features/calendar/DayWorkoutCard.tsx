@@ -8,22 +8,8 @@ import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import { StatRow } from '@/frontend/components/StatRow';
 import { css, t } from '@/frontend/features/planner/viewHelpers';
-import { TagLabel } from '@/frontend/components/KindTag';
+import { SessionTags } from '@/frontend/components/SessionTags';
 import { StatusDot } from '@/frontend/components/StatusDot';
-
-/** Above a session's name, open or folded: the program it's part of, quietly, then what kind of workout it is. */
-function CardTags({ card }: { card: any }) {
-  return (
-    <>
-      {card?.programName ? (
-        <Text variant="micro" tone="muted" as="span" style={{ display: 'block', marginBottom: '3px' }}>
-          {card.programName}
-        </Text>
-      ) : null}
-      <TagLabel>{card?.typeLabel}</TagLabel>
-    </>
-  );
-}
 
 /** The line under a session's name, led by where it falls in its program ("Build, week 2 of 4"). */
 const placed = (card: any, meta: string) => (card?.programPlace ? card.programPlace + ' · ' : '') + meta;
@@ -45,7 +31,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
           <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
           {/* Takes the rest of the row, so a long name wraps beside the icon rather than dropping below it. */}
           <div style={{ minWidth: '0', flex: '1 1 0' }}>
-            <CardTags card={card} />
+            <SessionTags program={card?.programName} type={card?.typeLabel} />
             <Text variant="heading" as="h2" style={{ margin: '0' }}>
               <button
                 onClick={card?.open}
@@ -213,7 +199,7 @@ function FoldedCard({ card }: { card: any }) {
       >
         <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
         <span style={{ flex: '1', minWidth: '0' }}>
-          <CardTags card={card} />
+          <SessionTags program={card?.programName} type={card?.typeLabel} />
           <Text variant="subheading" as="span" style={{ display: 'block' }}>
             {t(card?.name)}
           </Text>

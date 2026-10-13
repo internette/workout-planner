@@ -11,9 +11,14 @@ export const kindOf = (x?: { warmup?: boolean; stretch?: boolean; yoga?: boolean
 
 const LABEL: Record<WorkoutKind, string> = { warmup: 'Warm-up', stretch: 'Stretch', yoga: 'Yoga' };
 
+/** What kind of workout a session is, named as "What kind of workout?" names it, after "Warm-up · " when it's one:
+ * "Lifting", "Warm-up · Stretching". */
+export const typeLabelOf = (x: { warmup?: boolean; stretch?: boolean; yoga?: boolean; ride?: unknown }) =>
+  (x.warmup ? 'Warm-up · ' : '') + (x.ride ? 'Cycling' : x.stretch ? 'Stretching' : x.yoga ? 'Yoga' : 'Lifting');
+
 // Marks a warm-up, a stretch or yoga ("Warm-up · Stretch" for both): a small label above its name, or beside it
 // (inline) where a row has no room above. Nothing for a plain workout.
-/** The small label above (or beside) a workout's name, in the accent color: what KindTag and ProgramTag both draw. */
+/** The small label above (or beside) a workout's name, in the accent color: what KindTag and SessionTags both draw. */
 export function TagLabel({ inline, children }: { inline?: boolean; children: ReactNode }) {
   return (
     <>
