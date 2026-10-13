@@ -236,7 +236,6 @@ export function programVals(ctx: Ctx) {
                 logic.setState({
                   confirm: {
                     kind: 'endProgram',
-                    primary: true,
                     title: 'End “' + ownProgram.name + '”?',
                     body: 'Its sessions still ahead come off your calendar. Anything you’ve done, started or written about stays.',
                     label: 'End program',

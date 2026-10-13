@@ -55,8 +55,6 @@ export interface ConfirmState {
   cancelLabel?: string;
   /** The answer that keeps things as they are is the main button (leaving without saving is not a loss). */
   safe?: boolean;
-  /** Yes in the primary color rather than the danger red: for an ending that isn't a loss (ending a program). */
-  primary?: boolean;
   /** A switch in the dialog for part of what yes does, such as also removing a workout's upcoming sessions. */
   option?: { label: string; on: boolean };
   /** Its own action, run on yes, for a question that isn't one of the kinds the planner knows. */
