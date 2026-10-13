@@ -53,6 +53,38 @@ export function programSnapshot(program: Program, o: { notes: boolean; by: strin
   return { v: 2, by: o.by, workouts, blocks };
 }
 
+/** A program made of workout copies (one from the calendar, before it's saved), in the shared format: what a run keeps. */
+export function copiesSnapshot(blocks: { name: string; weeks: number; workouts: { days: number[]; workout: WorkoutCopy }[] }[]): SharedProgram {
+  const workouts: SharedWorkout[] = [];
+  return {
+    v: 2,
+    by: null,
+    workouts,
+    blocks: blocks.map((b) => {
+      const days: number[][] = Array.from({ length: 7 }, () => []);
+      b.workouts.forEach(({ days: on, workout: w }) => {
+        if (workouts.length >= SHARE_LIMITS.workouts) return;
+        const ix =
+          workouts.push({
+            name: w.name,
+            kind: w.isRide ? 'ride' : 'lift',
+            minutes: w.minutes,
+            icon: w.icon || (w.isRide ? 'bike' : 'h'),
+            iconColor: w.iconColor,
+            notes: w.notes || '',
+            warmup: !!w.warmup,
+            stretch: !!w.stretch,
+            yoga: !!w.yoga,
+            ride: w.ride,
+            exercises: w.isRide ? [] : w.exercises.slice(0, SHARE_LIMITS.exercises).map(plain),
+          }) - 1;
+        on.forEach((d) => days[d].push(ix));
+      });
+      return { name: b.name, weeks: b.weeks, days };
+    }),
+  };
+}
+
 /** A session's workout as a copy for a program: its fields, and its exercises as they are now. */
 export function entryCopy(model: Model, av: Entry): WorkoutCopy {
   const saved = model.workouts.find((w) => w.id === av.workoutId);
@@ -93,25 +125,28 @@ export function weekBlock(model: Model, start: Date) {
   return workouts;
 }
 
-/** The link a program is shared at, if any. Before the migrations have run, none. */
-export async function myShare(programId: string): Promise<MyShare | null> {
-  const rows = await okOr<any[]>(
-    supabase.from('shared_programs').select('id, name, opens, updated_at').eq('program_id', programId).limit(1),
-    [],
-  );
+/** What a link belongs to: one of the person's programs, or a run of one (the program as it was then). */
+export type ShareTarget = { programId: string } | { runId: string };
+const targetCol = (t: ShareTarget) => ('runId' in t ? { col: 'run_id', id: t.runId } : { col: 'program_id', id: t.programId });
+
+/** The link a program (or a run) is shared at, if any. Before the migrations have run, none. */
+export async function myShare(target: ShareTarget): Promise<MyShare | null> {
+  const { col, id } = targetCol(target);
+  const rows = await okOr<any[]>(supabase.from('shared_programs').select('id, name, opens, updated_at').eq(col, id).limit(1), []);
   const r = rows[0];
   return r ? { id: r.id, name: r.name, opens: r.opens, updatedAt: r.updated_at } : null;
 }
 
 /** Shares a program, or updates its link (the same link) to show it as it is now. */
-export async function shareProgram(programId: string, name: string, program: SharedProgram, existing: string | null): Promise<MyShare> {
+export async function shareProgram(target: ShareTarget, name: string, program: SharedProgram, existing: string | null): Promise<MyShare> {
+  const { col, id } = targetCol(target);
   const fields = { name: name.trim().slice(0, SHARE_LIMITS.name), program, updated_at: new Date().toISOString() };
   const [r]: any[] = existing
     ? await ok(supabase.from('shared_programs').update(fields).eq('id', existing).select('id, name, opens, updated_at'))
     : await ok(
         supabase
           .from('shared_programs')
-          .insert({ id: newShareId(), program_id: programId, ...fields })
+          .insert({ id: newShareId(), [col]: id, ...fields })
           .select('id, name, opens, updated_at'),
       );
   return { id: r.id, name: r.name, opens: r.opens, updatedAt: r.updated_at };

@@ -48,7 +48,7 @@ export function ShareProgramDialog({ s }: { s: Share }) {
     setCopied(false);
     setError('');
     setStopped(false);
-    db.myShare(s.programId)
+    db.myShare(s.target)
       .then((found) => {
         if (!live) return;
         setShare(found);
@@ -67,7 +67,7 @@ export function ShareProgramDialog({ s }: { s: Share }) {
     setBusy(true);
     setError('');
     try {
-      const made = await db.shareProgram(s.programId, name.trim() || fallbackName, program, share?.id ?? null);
+      const made = await db.shareProgram(s.target, name.trim() || fallbackName, program, share?.id ?? null);
       setShare(made);
       setName(made.name);
       setJustMade(true);
@@ -145,7 +145,7 @@ export function ShareProgramDialog({ s }: { s: Share }) {
               : 'Its ' +
                 (program.blocks.length > 1 ? program.blocks.length + ' blocks, ' : '') +
                 programWeeks(program) +
-                ' weeks and their workouts, as they are now. Your history, diary and moods stay private.'}
+                ' weeks and their workouts, ' + (s.asRan ? 'as you ran them' : 'as they are now') + '. Your history, diary and moods stay private.'}
           </Text>
           <TextField label="Name on the link" value={name} onChange={(e) => setName(e.target.value)} placeholder={fallbackName} maxLength={80} />
           {!program.workouts.length ? (

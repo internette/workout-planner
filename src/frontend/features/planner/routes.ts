@@ -11,6 +11,8 @@ export const TAB_PATHS = {
 
 // Settings is a page of Profile's, with its own address under it.
 export const SETTINGS_PATH = TAB_PATHS.profile + '/settings';
+// So is the list of every program run, with a page for each.
+export const RUNS_PATH = TAB_PATHS.profile + '/programs';
 
 const CALENDAR = ['day', 'rest', 'edit', 'detail'];
 const ARSENAL = ['arsenal', 'template', 'exercise', 'exerciseEdit', 'program', 'programEdit', 'programScan'];
@@ -26,6 +28,7 @@ export function pathForScreen(screen: string): string | null {
   if (screen === 'summary') return TAB_PATHS.progress;
   if (screen === 'profile') return TAB_PATHS.profile;
   if (screen === 'settings') return SETTINGS_PATH;
+  if (screen === 'programRuns') return RUNS_PATH;
   return null;
 }
 
@@ -39,6 +42,7 @@ type RouteState = {
   entryId?: string | null;
   editId?: string | null;
   programId?: string | null;
+  runId?: string | null;
 };
 
 // The Spellbook's own pages: a saved workout, and an exercise. Back and Forward step through them, and a reload or a
@@ -64,6 +68,7 @@ export function pathForState(state: RouteState): string | null {
   if (state.screen === 'exerciseEdit' && state.exerciseId) return exercisePath(state.exerciseId) + '/edit';
   if (state.screen === 'program' && state.programId) return programPath(state.programId);
   if (state.screen === 'programEdit' && state.programId) return programPath(state.programId) + '/edit';
+  if (state.screen === 'programRun' && state.runId) return RUNS_PATH + '/' + encodeURIComponent(state.runId);
   return pathForScreen(state.screen);
 }
 
@@ -77,6 +82,8 @@ export function stateForPath(path: string): Record<string, string> | null {
     if (m[1] === 'programs') return m[3] ? { screen: 'programEdit', programId: id } : { screen: 'program', programId: id };
     return m[1] === 'workouts' ? { screen: 'template', templateId: id } : { screen: 'exercise', exerciseId: id };
   }
+  const r = /^\/profile\/programs\/([^/]+)\/?$/.exec(path);
+  if (r) return { screen: 'programRun', runId: decodeURIComponent(r[1]) };
   const s = /^\/calendar\/sessions\/([^/]+)(\/edit)?\/?$/.exec(path);
   if (s) return { screen: 'detail', entryId: decodeURIComponent(s[1]), seg: 'Day' };
   const screen = screenForPath(path);
@@ -98,6 +105,8 @@ export function screenForPath(path: string): string | null {
       return 'profile';
     case SETTINGS_PATH:
       return 'settings';
+    case RUNS_PATH:
+      return 'programRuns';
     default:
       return null;
   }

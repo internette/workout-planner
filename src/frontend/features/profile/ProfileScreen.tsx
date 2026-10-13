@@ -8,6 +8,7 @@ import { Gear } from '@moonshot/design-system/icons';
 import { PageHeader } from '@/frontend/components/PageHeader';
 import { MoodSplitCard } from '@/frontend/features/profile/MoodSplitCard';
 import { ProfileHeaderCard } from '@/frontend/features/profile/ProfileHeaderCard';
+import { ProgramCard } from '@/frontend/features/profile/ProgramCard';
 import { QuestsClearedCard } from '@/frontend/features/profile/QuestsClearedCard';
 
 export function ProfileScreen({ v }: { v: PlannerVals }) {
@@ -24,6 +25,7 @@ export function ProfileScreen({ v }: { v: PlannerVals }) {
         style={{ marginBottom: '14px' }}
       />
       <ProfileHeaderCard v={v} />
+      <ProgramCard v={v} />
       <div id="profileStats" style={{ display: 'grid', gap: '12px', marginTop: '14px' }}>
         {(v.profileStats ?? []).map((s, i) => (
           <Card key={i} pad="sm">

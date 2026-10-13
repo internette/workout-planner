@@ -15,6 +15,7 @@ import { diaryVals } from '@/frontend/features/chronicle/model';
 import { arsenalVals } from '@/frontend/features/spellbook/model';
 import { programVals } from '@/frontend/features/programs/model';
 import { scanVals } from '@/frontend/features/programs/scan.model';
+import { historyVals } from '@/frontend/features/programs/history.model';
 import { progressVals } from '@/frontend/features/progress/model';
 import { liveVals } from '@/frontend/features/live/model';
 import { restVals } from '@/frontend/features/session/sets';
@@ -220,6 +221,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
       ...arsenalVals(ctx),
       ...programVals(ctx),
       ...scanVals(ctx),
+      ...historyVals(ctx),
       ...progressVals(ctx),
       ...liveVals(ctx),
       ...restVals(ctx),

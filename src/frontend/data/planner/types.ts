@@ -1,6 +1,7 @@
 // The shapes the planner's screens work with, as the data layer hands them over.
 
 import type { Mood } from '@moonshot/design-system/icons';
+import type { SharedProgram } from '@/frontend/shared/sharedProgram';
 
 export interface Exercise {
   id?: string;
@@ -48,7 +49,7 @@ export interface Entry {
   stretch: boolean; // a stretch: listed after the day's other workouts (a cool-down), and tagged STRETCH
   yoga: boolean; // a yoga flow: tagged YOGA
   // Put on the calendar by a program's run: which program, and where in it ("Build, week 2 of 3").
-  program?: { runId: string; programId: string; name: string; block: string; week: number; weeks: number };
+  program?: { runId: string; programId: string | null; name: string; block: string; week: number; weeks: number };
 }
 
 export interface DiaryEntry {
@@ -98,14 +99,18 @@ export interface Program {
   blocks: ProgramBlock[];
   weeks: number; // all its blocks' weeks
 }
-// A program put on the calendar from `start`, beginning at block `startBlock`. `end` is its last day.
+// A program put on the calendar from `start`, beginning at block `startBlock`. `end` is its last day. It keeps the
+// program as it was when it started (`name`, `snapshot`), and outlives it: a deleted program's runs have no programId.
 export interface ProgramRun {
   id: string;
-  programId: string;
+  programId: string | null;
+  name: string;
+  snapshot: SharedProgram | null;
   start: string;
   startBlock: number;
   end: string;
   ended: boolean;
+  endedOn: string | null; // the day "End program" was pressed
 }
 // A ready-made program from the shared catalog: per block, the built-in workouts on each weekday (Sunday first).
 export interface BuiltinProgram {

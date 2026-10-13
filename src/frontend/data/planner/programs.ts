@@ -3,6 +3,7 @@
 import { supabase } from '../supabase';
 import { runPlace, runSessions } from '@/frontend/shared/programs';
 import type { BuiltinProgram, BuiltinWorkout, Exercise, Program } from './types';
+import type { SharedProgram } from '@/frontend/shared/sharedProgram';
 import { freeName, nameKey, rideCols } from './convert';
 import { ok, insertExercises, isAhead, untouchedIds, SESSION_COLS } from './db';
 import { deletePlanEntries } from './sessions';
@@ -188,14 +189,32 @@ export async function removeWorkoutFromDay(w: { id: string; days: number[] }, da
   else await archiveWorkouts([w.id]);
 }
 
+/** What a run keeps of its program, as it was when it started: its name and a snapshot (see share.ts). */
+export type RunKeep = { name: string; snapshot: SharedProgram | null };
+
+/**
+ * A new run. What it keeps of its program goes with it once the program history migration has run; before then the
+ * columns aren't there, and it's made without them.
+ */
+async function insertRun(fields: Record<string, unknown>, keep: RunKeep | null): Promise<string> {
+  if (keep) {
+    const { data, error } = await supabase
+      .from('program_runs')
+      .insert({ ...fields, program_name: keep.name.slice(0, 80), snapshot: keep.snapshot })
+      .select('id');
+    if (!error) return (data as any[])[0].id;
+    if (error.code !== 'PGRST204' && error.code !== '42703') throw new Error(error.message);
+  }
+  const [run]: any[] = await ok(supabase.from('program_runs').insert(fields).select('id'));
+  return run.id;
+}
+
 /** A program's blocks as starting it needs them: their weeks, and their workouts' weekdays. */
 type Runnable = { id: string; blocks: { name: string; weeks: number; workouts: { id: string; days: number[] }[] }[] };
 
 /** Starts a program: every block from `startBlock` on the calendar from `startIso`, leaving out days gone by. */
-export async function startProgram(program: Runnable, startIso: string, startBlock: number, todayIso: string) {
-  const [run]: any[] = await ok(
-    supabase.from('program_runs').insert({ program_id: program.id, start_date: startIso, start_block: startBlock }).select('id'),
-  );
+export async function startProgram(program: Runnable, startIso: string, startBlock: number, todayIso: string, keep: RunKeep | null = null) {
+  const run = { id: await insertRun({ program_id: program.id, start_date: startIso, start_block: startBlock }, keep) };
   const sessions = runSessions(
     program.blocks.map((b) => ({ name: b.name, weeks: b.weeks, workouts: b.workouts.map((w) => ({ id: w.id, days: w.days })) })),
     startIso,
@@ -245,12 +264,18 @@ export async function endRun(runId: string, todayIso: string) {
   await ok(supabase.from('program_runs').update({ ended_at: new Date().toISOString() }).eq('id', runId));
 }
 
-/** Deletes a program: its runs end, its workouts are archived (history keeps them), and its link stops working. */
+/**
+ * Deletes a program: its runs end, its workouts are archived (history keeps them), and its link stops working. Runs
+ * that kept the program as it was stay, for the Profile's history (the database lets go of their program); one from
+ * before runs kept it has nothing to show without it, and goes.
+ */
 export async function deleteProgram(program: Program, runIds: string[], todayIso: string) {
   for (const id of runIds) await endRun(id, todayIso);
   await archiveWorkouts(program.blocks.flatMap((b) => b.workouts.map((w) => w.id)));
   await ok(supabase.from('shared_programs').delete().eq('program_id', program.id));
-  await ok(supabase.from('program_runs').delete().eq('program_id', program.id));
+  const runs: any[] = await ok(supabase.from('program_runs').select('*').eq('program_id', program.id));
+  const bare = runs.filter((r) => !r.snapshot).map((r) => r.id);
+  if (bare.length) await ok(supabase.from('program_runs').delete().in('id', bare));
   await ok(supabase.from('program_blocks').delete().eq('program_id', program.id));
   await ok(supabase.from('programs').delete().eq('id', program.id));
 }
@@ -272,6 +297,7 @@ export async function programFromCalendar(o: {
   freshStart: string;
   endSeries: boolean;
   todayIso: string;
+  snapshot: SharedProgram | null;
 }) {
   const programId = await createProgramFrom(o.name, '', o.blocks);
   const blockRows: any[] = await ok(supabase.from('program_blocks').select('id, name, weeks, position').eq('program_id', programId));
@@ -292,11 +318,11 @@ export async function programFromCalendar(o: {
 
   if (!o.keep) {
     await deletePlanEntries([...free]);
-    const r = await startProgram({ id: programId, blocks }, o.freshStart, 0, o.todayIso);
+    const r = await startProgram({ id: programId, blocks }, o.freshStart, 0, o.todayIso, { name: o.name, snapshot: o.snapshot });
     return { programId, count: r.count, first: r.first };
   }
 
-  const [run]: any[] = await ok(supabase.from('program_runs').insert({ program_id: programId, start_date: o.start, start_block: 0 }).select('id'));
+  const run = { id: await insertRun({ program_id: programId, start_date: o.start, start_block: 0 }, { name: o.name, snapshot: o.snapshot }) };
   // Those still ahead move onto the program's copy for their block; the rest are only tagged.
   const onto: Record<string, string[]> = {};
   const tagOnly: string[] = [];

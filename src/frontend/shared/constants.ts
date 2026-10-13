@@ -97,6 +97,8 @@ export const HOME_OF: Record<string, 'arsenal' | 'diaryList' | 'profile'> = {
   program: 'arsenal',
   programEdit: 'arsenal',
   programScan: 'arsenal',
+  programRuns: 'profile',
+  programRun: 'profile',
   diary: 'diaryList',
   newEntry: 'diaryList',
 };
