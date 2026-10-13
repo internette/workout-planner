@@ -8,7 +8,8 @@ import { Checkbox } from '@moonshot/design-system/checkbox';
 import { Dialog } from '@moonshot/design-system/dialog';
 import { TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
-import { Check, Copy, Info } from '@moonshot/design-system/icons';
+import { Check, Copy, Download, Info } from '@moonshot/design-system/icons';
+import { programPdf, pdfName } from '@/frontend/shared/programPdf';
 import { Callout } from '@/frontend/components/Callout';
 import { MON3 } from '@/frontend/shared/constants';
 import { plural } from '@/frontend/shared/helpers';
@@ -36,6 +37,7 @@ export function ShareProgramDialog({ s }: { s: Share }) {
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState('');
   const [stopped, setStopped] = useState(false);
+  const [pdfBusy, setPdfBusy] = useState(false);
 
   const program = s.snapshot({ notes, showName });
 
@@ -62,7 +64,49 @@ export function ShareProgramDialog({ s }: { s: Share }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [s.open]);
 
+  // Opened, the PDF maker loads in the background, so making one is quick enough to hand to the share sheet.
+  useEffect(() => {
+    if (s.open) import('pdf-lib').catch(() => undefined);
+  }, [s.open]);
+
   const fallbackName = s.name;
+  // The program as a PDF: to the phone's share sheet where it takes files, else downloaded.
+  const savePdf = async () => {
+    setPdfBusy(true);
+    setError('');
+    const title = name.trim() || fallbackName;
+    try {
+      const bytes = await programPdf(title, program);
+      const file = new File([bytes], pdfName(title), { type: 'application/pdf' });
+      if (typeof navigator.canShare === 'function' && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title });
+          return;
+        } catch (e: any) {
+          if (e?.name === 'AbortError') return;
+          // Refused (the tap was too long ago, say): download it instead.
+        }
+      }
+      const url = URL.createObjectURL(file);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = file.name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    } catch (e: any) {
+      setError('Couldn’t make the PDF: ' + String(e?.message || e));
+    } finally {
+      setPdfBusy(false);
+    }
+  };
+  const pdfButton = (
+    <Button type="secondary" size="md" onClick={savePdf} disabled={pdfBusy || !program.workouts.length} style={{ flex: '1 1 140px', whiteSpace: 'nowrap' }}>
+      <Download color="var(--color-pink-deep)" size={16} />
+      {pdfBusy ? 'Making PDF…' : 'Save as PDF'}
+    </Button>
+  );
   const create = async () => {
     setBusy(true);
     setError('');
@@ -161,6 +205,12 @@ export function ShareProgramDialog({ s }: { s: Share }) {
               Show my name
             </Checkbox>
           ) : null}
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 12px', paddingTop: '14px', borderTop: '1px solid var(--color-line)' }}>
+            <Text variant="body" tone="muted" as="p" style={{ margin: 0, flex: '1 1 100%' }}>
+              Or as a file, to print or send: every block and workout, with the name and notes above.
+            </Text>
+            {pdfButton}
+          </div>
           {error ? (
             <Text variant="body" tone="danger" as="p" role="alert" style={{ margin: 0 }}>
               {error}
@@ -182,10 +232,11 @@ export function ShareProgramDialog({ s }: { s: Share }) {
                 Share…
               </Button>
             ) : null}
-            <Button type="secondary" size="md" onClick={copy} style={{ flex: '1 1 140px' }}>
+            <Button type="secondary" size="md" onClick={copy} style={{ flex: '1 1 140px', whiteSpace: 'nowrap' }}>
               {copied ? <Check color="var(--color-pink-deep)" strokeWidth={2.4} size={16} /> : <Copy color="var(--color-pink-deep)" size={16} />}
               {copied ? 'Copied' : 'Copy link'}
             </Button>
+            {pdfButton}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Info color="var(--color-muted)" size={16} />
