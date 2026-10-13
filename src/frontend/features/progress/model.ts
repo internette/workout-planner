@@ -3,6 +3,7 @@ import { displayName } from '@/shared/auth';
 import { plural, questSeed } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
 import { MOOD_COLORS, MOODS } from '@moonshot/design-system/icons';
+import { iconSvg } from '@/frontend/shared/icons';
 import type { DayStatus } from '@/frontend/components/StatusDot';
 
 // Progress and profile: streaks, weekly chart, records, XP and the rank ladder.
@@ -326,6 +327,7 @@ export function progressVals(ctx: Ctx) {
     noNext: !nextUp,
     nextName: nextUp && nextUp.name,
     nextMeta: nextUp && nextUp.meta2,
+    nextSvg: nextUp ? iconSvg(nextUp.icon, nextUp.iconColor) : null,
     questsDoneLabel: (function () {
       let t = 0,
         d = 0;

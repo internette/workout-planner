@@ -16,7 +16,7 @@ export function statsStage(ctx: CalendarCtx) {
     const d = new Date(todayWkStart.getFullYear(), todayWkStart.getMonth(), todayWkStart.getDate() + i);
     weekAll.push(...listForDate(d));
   }
-  let nextUp: { name: string; m: number; d: number; id: string; meta2: string } | null = null;
+  let nextUp: { name: string; m: number; d: number; id: string; meta2: string; icon: string; iconColor?: string } | null = null;
   // The next session not yet done, today's included.
   const upcoming = logic.model.entries.find((x) => x.m * 100 + x.d >= TK && !isDoneEntry(x.av));
   if (upcoming) {
@@ -26,6 +26,8 @@ export function statsStage(ctx: CalendarCtx) {
       m: upcoming.m,
       d: upcoming.d,
       id: upcoming.av.id,
+      icon: upcoming.av.icon || (upcoming.av.ride ? 'bike' : 'h'),
+      iconColor: upcoming.av.iconColor || undefined,
       meta2: upcoming.m * 100 + upcoming.d === TK ? 'Today · ' + upcoming.av.time :
         shortDay(nd) + ' · ' + upcoming.av.time,
     };
