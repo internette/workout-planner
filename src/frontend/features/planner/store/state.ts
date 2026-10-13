@@ -43,7 +43,7 @@ export interface ExerciseDraft {
   rest: string;
   i: string;
   areas: string[];
-  equipment?: string[];
+  equipment?: string[] | null;
 }
 
 /** A question the planner asks before doing something (delete, end a series, discard changes...). */

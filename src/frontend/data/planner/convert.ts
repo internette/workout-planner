@@ -50,7 +50,7 @@ export const toExercise = (r: any): Exercise => ({
   rest: fmtRest(r.rest_seconds),
   i: r.icon || 'h',
   areas: r.target_areas || [],
-  equipment: Array.isArray(r.equipment) ? r.equipment : undefined,
+  equipment: Array.isArray(r.equipment) ? r.equipment : r.equipment === null ? null : undefined,
 });
 
 export function exerciseRow(e: Exercise) {

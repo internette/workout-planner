@@ -6,6 +6,7 @@ import { iconSvg } from '@/frontend/shared/icons';
 import { blockDays, runBlockDates, runPlace, runWeeks } from '@/frontend/shared/programs';
 import { displayName } from '@/shared/auth';
 import { EQUIPMENT } from '@/frontend/shared/constants';
+import { kitChip, kitOfAll } from '@/frontend/shared/equipment';
 import * as db from '@/frontend/data/plannerData';
 import type { BuiltinProgram, Program, ProgramRun } from '@/frontend/data/plannerData';
 import type { Ctx } from '../planner/store/types';
@@ -33,7 +34,7 @@ type Shown = {
     id: string;
     name: string;
     weeks: number;
-    workouts: { id: string; name: string; icon: string | null; iconColor: string | null; days: number[]; minutes: number; count: number; ride: boolean; equipment: string[] }[];
+    workouts: { id: string; name: string; icon: string | null; iconColor: string | null; days: number[]; minutes: number; count: number; ride: boolean; kit: { need: string[]; complete: boolean } }[];
   }[];
 };
 
@@ -57,7 +58,7 @@ function shownOwn(p: Program): Shown {
         minutes: w.minutes,
         count: w.list.length,
         ride: w.kind === 'ride',
-        equipment: w.list.flatMap((e) => e.equipment || []),
+        kit: kitOfAll(w.list),
       })),
     })),
   };
@@ -86,7 +87,7 @@ function shownBuiltin(p: BuiltinProgram, catalog: db.BuiltinWorkout[]): Shown {
           minutes: w.minutes,
           count: w.list.length,
           ride: false,
-          equipment: w.list.flatMap((e) => e.equipment || []),
+          kit: kitOfAll(w.list),
         })),
     })),
   };
@@ -98,8 +99,8 @@ const metaOf = (p: Shown) =>
     .filter(Boolean)
     .join(' · ');
 const equipmentOf = (p: Shown) => {
-  const need = new Set(p.blocks.flatMap((b) => b.workouts.flatMap((w) => w.equipment)));
-  return EQUIPMENT.filter((x) => need.has(x));
+  const kits = p.blocks.flatMap((b) => b.workouts.map((w) => w.kit));
+  return { need: EQUIPMENT.filter((x) => kits.some((k) => k.need.includes(x))), complete: kits.every((k) => k.complete) };
 };
 const blockLabel = (b: { name: string }, i: number) => b.name || 'Block ' + (i + 1);
 
@@ -179,10 +180,7 @@ export function programVals(ctx: Ctx) {
         eyebrow: shown.builtin ? 'Built-in program' : 'Program',
         notes: shown.notes,
         chips: [plural(shown.weeks, 'week'), plural(daysAWeek(shown), 'day') + ' a week'],
-        equipment: (() => {
-          const kit = equipmentOf(shown);
-          return kit.length ? (kit.length <= 2 ? kit.join(', ') : plural(kit.length, 'piece') + ' of equipment') : 'No equipment';
-        })(),
+        equipment: kitChip(equipmentOf(shown)),
         // While it runs: how far through it you are, by sessions done of all it puts on the calendar.
         progress: (() => {
           const r = ownProgram ? myRuns.filter(live).sort((a, c) => (a.start < c.start ? -1 : 1))[0] : null;

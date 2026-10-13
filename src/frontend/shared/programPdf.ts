@@ -88,7 +88,9 @@ export async function programPdf(name: string, program: SharedProgram): Promise<
   write(name, { font: bold, size: 24, gap: 4 });
   const kit = programEquipment(program);
   write(
-    [plural(programWeeks(program), 'week'), plural(trainingDays(program), 'day') + ' a week', kit.length ? kit.join(', ') : 'No equipment'].join('  ·  '),
+    [plural(programWeeks(program), 'week'), plural(trainingDays(program), 'day') + ' a week', kit.need.length ? kit.need.join(', ') : kit.complete ? 'No equipment' : '']
+      .filter(Boolean)
+      .join('  ·  '),
     { size: 11, color: muted, gap: program.by ? 2 : 14 },
   );
   if (program.by) write('Shared by ' + program.by, { size: 11, color: muted, gap: 14 });

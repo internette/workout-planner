@@ -14,9 +14,9 @@ export interface Exercise {
   rest: string; // "90 sec"
   i: string; // icon key
   areas: string[]; // body regions this exercise targets
-  // What it needs (from EQUIPMENT); empty is bodyweight. Missing until the equipment migration has run, and then left
-  // out of every write, so the app keeps working against a database without the column.
-  equipment?: string[];
+  // What it needs (from EQUIPMENT); empty is bodyweight, null is not set yet. Missing until the equipment migration has
+  // run, and then left out of every write, so the app keeps working against a database without the column.
+  equipment?: string[] | null;
   builtin?: boolean; // from the shared catalog: read-only, copy it to change it
 }
 

@@ -4,6 +4,7 @@
 
 import { ICON_KEYS } from './icons';
 import { EQUIPMENT, TARGET_AREAS } from './constants';
+import { kitOfAll } from './equipment';
 import { DEFAULT_ZONE, RIDE_ZONES } from '@/shared/planDraft';
 
 export interface SharedExercise {
@@ -14,7 +15,7 @@ export interface SharedExercise {
   rest: string; // "60 sec"
   i: string; // icon
   areas: string[];
-  equipment?: string[];
+  equipment?: string[] | null;
 }
 
 export interface SharedWorkout {
@@ -75,7 +76,7 @@ function readExercise(raw: any): SharedExercise | null {
     rest: str(raw.rest) || '—',
     i: icon(raw.i),
     areas: list(raw.areas, TARGET_AREAS),
-    ...(Array.isArray(raw.equipment) ? { equipment: list(raw.equipment, EQUIPMENT) } : {}),
+    ...(Array.isArray(raw.equipment) ? { equipment: list(raw.equipment, EQUIPMENT) } : raw.equipment === null ? { equipment: null } : {}),
   };
 }
 
@@ -150,8 +151,5 @@ export const programWeeks = (p: SharedProgram) => p.blocks.reduce((sum, b) => su
 /** How many days a week it has a workout on: the most of any block. */
 export const trainingDays = (p: SharedProgram) => Math.max(0, ...p.blocks.map((b) => b.days.filter((list) => list.length).length));
 
-/** Everything its exercises need, in the app's order. */
-export const programEquipment = (p: SharedProgram) => {
-  const need = new Set(p.workouts.flatMap((w) => w.exercises.flatMap((e) => e.equipment || [])));
-  return EQUIPMENT.filter((x) => need.has(x));
-};
+/** Everything its exercises need, in the app's order, and whether that's all of it (see shared/equipment). */
+export const programEquipment = (p: SharedProgram) => kitOfAll(p.workouts.flatMap((w) => w.exercises));

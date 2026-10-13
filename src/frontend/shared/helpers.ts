@@ -1,4 +1,5 @@
-import { DOW3, DOWFULL, EDIT_OVERLAYS, EQUIPMENT, MON3, MONTHS, QUESTS } from './constants';
+import { DOW3, DOWFULL, EDIT_OVERLAYS, MON3, MONTHS, QUESTS } from './constants';
+import { kitOfAll } from './equipment';
 import type { PlannerState, Screen } from '@/frontend/features/planner/store/state';
 
 // Months are counted from January of the current year and carry on past it: 12 is next January, -1 last December.
@@ -164,16 +165,9 @@ export const rollMinutes = (hrs: string | null | undefined, mins: string | null 
   return { hrs: String(Number(hrs || 0) + Math.floor(m / 60)), mins: String(m % 60) };
 };
 
-// Everything a list of exercises needs, once each, in the order the equipment list gives it.
-const equipmentOf = (list: { equipment?: string[] }[] | null | undefined) => {
-  const need = new Set((list || []).flatMap((e) => e.equipment || []));
-  return EQUIPMENT.filter((x) => need.has(x));
-};
-
-// "You'll need" for a workout or session: what its exercises need, or that it's bodyweight only. Null until the
-// database has equipment at all (no exercise knows its equipment yet), so nothing is shown rather than "bodyweight".
-export const needsLine = (list: { equipment?: string[] }[] | null | undefined) => {
-  if (!(list || []).some((e) => e.equipment !== undefined)) return null;
-  const need = equipmentOf(list);
-  return need.length ? need.join(' · ') : 'Nothing: it’s all bodyweight.';
+// "You'll need" for a workout or session: what its exercises need, or that it's bodyweight only. Bodyweight only when
+// every exercise is known to need nothing; with some unknown, what's known, and with nothing known, null (no line).
+export const needsLine = (list: { equipment?: string[] | null; weight?: string }[] | null | undefined) => {
+  const { need, complete } = kitOfAll(list || []);
+  return need.length ? need.join(' · ') : complete && (list || []).length ? 'Nothing: it’s all bodyweight.' : null;
 };
