@@ -65,6 +65,15 @@ export const Copy = strokeIcon(
     <path d="M5 15H4.5A1.5 1.5 0 0 1 3 13.5v-9A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V5" />
   </>,
 );
+// An arrow down into a tray: saving something as a file.
+export const Download = strokeIcon(
+  'Download',
+  <>
+    <line x1="12" y1="4" x2="12" y2="15" />
+    <polyline points="7 10 12 15 17 10" />
+    <path d="M4 16v2.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V16" />
+  </>,
+);
 export const Clock = strokeIcon(
   'Clock',
   <>
