@@ -301,7 +301,8 @@ export function workoutVals(ctx: Ctx) {
       // Open and under way (the clock going or something ticked, and not done yet): it says so above its name.
       inProgress: !complete && (!!timer || doneN > 0),
       // Open, a ride still to do says its effort under its name, its figures below (see ridePlan).
-      openMeta: ride && !rideIsDone && !timer ? ride.zone || DEFAULT_ZONE : '',
+      // A workout not started yet says only its time: its exercises are listed below.
+      openMeta: ride && !rideIsDone && !timer ? ride.zone || DEFAULT_ZONE : !ride && !complete && !timer && doneN === 0 ? av.time : '',
       // Folded: the whole row opens it (and folds the one that was open).
       expand: () => logic.s({ dayOpen: { day: dayKey, id } }),
       expandLabel: 'Show ' + nameOf(av.name),
@@ -334,14 +335,17 @@ export function workoutVals(ctx: Ctx) {
       open: run('goDetail'),
       isLift: !ride,
       isRide: !!ride,
+      // The bar shows once something's ticked: before that it would only count the list below it.
+      showProg: !ride && doneN > 0,
       progLabel: doneN + '/' + list.length,
       progPct: list.length ? Math.round((doneN / list.length) * 100) : 0,
       // A ride done is set against its plan, figure by figure. One still to do says its plan once: its effort under its
       // name (or the clock, while it's being timed) and its figures on the line below.
       rideStats: ride && rideIsDone ? rideStatsFor(av, rideIsDone) : [],
       ridePlan: ride && !rideIsDone ? rideFigures(av) : '',
-      preview: expanded ? rows : rows.slice(0, 3),
-      hasMore: rows.length > 3,
+      // Folded to three only when that hides two or more: a "+ 1 more" takes the room of the row it hides.
+      preview: expanded || rows.length <= 4 ? rows : rows.slice(0, 3),
+      hasMore: rows.length > 4,
       moreLabel: expanded ? 'Show less' : '+ ' + (rows.length - 3) + ' more',
       moreOpen: expanded,
       toggleMore: () => logic.s({ moreIds: Object.assign({}, st.moreIds, { [id]: !expanded }) }),
@@ -353,15 +357,12 @@ export function workoutVals(ctx: Ctx) {
         ? 'View Chronicle entry'
         : complete
           ? 'Write about it'
-          : isFutureDay
-            ? 'Do it today'
-            : isPastDay
+          : isPastDay || isFutureDay
               ? ride ? 'Open ride' : 'Open workout'
               : ride ? 'Start ride' : 'Start workout',
-      cta:
-        !logged && !complete && isFutureDay
-          ? () => doToday(av)
-          : run(logged || complete ? 'goDiary' : isPastDay ? 'goDetail' : 'startWorkout'),
+      cta: run(logged || complete ? 'goDiary' : isPastDay || isFutureDay ? 'goDetail' : 'startWorkout'),
+      // A day ahead opens its session; moving it to today is the smaller choice under that.
+      doToday: !logged && !complete && isFutureDay ? () => doToday(av) : null,
       // With the clock going it carries on; with only ticks, the clock starts from zero and the ticks stay.
       restartLabel: 'Start over',
       continueLabel: timed ? 'Continue' : 'Keep going',

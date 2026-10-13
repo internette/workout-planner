@@ -61,7 +61,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
             </Text>
           </div>
         </div>
-        {card?.isLift ? (
+        {card?.showProg ? (
           <div
             style={{
               display: 'flex',
@@ -168,6 +168,11 @@ export function DayWorkoutCard({ card }: { card: any }) {
             {card?.ctaLabel}
           </Button>
         )}
+        {card?.doToday ? (
+          <Button type="secondary" link size="sm" onClick={card.doToday} style={{ display: 'flex', margin: '6px auto 0', minHeight: '44px' }}>
+            Do it today instead
+          </Button>
+        ) : null}
       </Card>
   );
 }
