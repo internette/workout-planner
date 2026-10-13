@@ -224,6 +224,7 @@ export function programVals(ctx: Ctx) {
               key: r.id,
               label: 'Running · ' + where(ownProgram, r),
               dates: shortDate(fromIso(r.start)) + ' – ' + shortDate(fromIso(r.end)),
+              move: () => logic.s({ programMove: { runId: r.id, date: r.start } }),
               end: () =>
                 logic.setState({
                   confirm: {
@@ -293,6 +294,37 @@ export function programVals(ctx: Ctx) {
                   ...noticePatch('“' + ownProgram.name + '” started: ' + plural(r.count, 'session') + ' on your calendar from ' + shortDate(at) + '.', 'day'),
                 };
               }),
+          };
+        })()
+      : null;
+
+  // ---- Moving a run to start on another day
+  const moveSt = st.programMove || null;
+  const moving = ownProgram && moveSt ? myRuns.find((r) => r.id === moveSt.runId) || null : null;
+  const programMove =
+    ownProgram && moveSt && moving
+      ? (() => {
+          const date = moveSt.date || moving.start;
+          const lands = runBlockDates(ownProgram.blocks, date, moving.startBlock);
+          const end = isoOf(lands.length ? lands[lands.length - 1].to : fromIso(date));
+          return {
+            open: true,
+            title: 'Change when it starts',
+            date,
+            setDate: (e) => logic.s({ programMove: { ...moveSt, date: e.target.value || moving.start } }),
+            summary: shortDate(fromIso(date)) + ' – ' + shortDate(fromIso(end)) + ' · ' + plural(runWeeks(ownProgram.blocks, moving.startBlock), 'week'),
+            lands: lands.length > 1 ? lands.map((l) => l.name + ' ' + shortDate(l.from) + ' – ' + shortDate(l.to)).join(' · ') : '',
+            changed: date !== moving.start,
+            busy: logic.busy('moveRun'),
+            cancel: () => logic.s({ programMove: null }),
+            save: () =>
+              logic.saveOnce('moveRun', () => db.moveRun(ownProgram, moving, date, todayIso), (r: { first: string | null }) => ({
+                programMove: null,
+                ...noticePatch(
+                  '“' + ownProgram.name + '” starts ' + shortDate(fromIso(date)) + ' now' + (r.first ? ': its next session is ' + shortDate(fromIso(r.first)) + '.' : '.'),
+                  'program',
+                ),
+              })),
           };
         })()
       : null;
@@ -448,6 +480,7 @@ export function programVals(ctx: Ctx) {
     isProgram: st.screen === 'program',
     program,
     programStart,
+    programMove,
     isProgramEdit: st.screen === 'programEdit',
     programEdit,
     programPicker,

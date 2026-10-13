@@ -178,6 +178,8 @@ export interface PlannerState {
   // (the block and weekday it adds to), the share sheet, which blocks are open on the page.
   programId?: string | null;
   programStart?: { date: string; block: number } | null;
+  // Moving a running program to start on another day: which run, and the day picked.
+  programMove?: { runId: string; date: string } | null;
   programPick?: { blockId: string; day: number; q?: string } | null;
   programShareOpen?: boolean;
   programOpenBlocks?: Record<string, boolean>;
