@@ -10,7 +10,7 @@ import { Text } from '@moonshot/design-system/typography';
 import { Calendar, ChevronDown, ChevronRight, Copy, Pencil, Repeat } from '@moonshot/design-system/icons';
 import { BackBar } from '@/frontend/components/BackBar';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
-import { BlockBar } from '@moonshot/design-system/block-bar';
+import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { WeekStrip } from '@moonshot/design-system/week-strip';
 import { ShareProgramDialog } from './ShareProgramDialog';
 
@@ -138,9 +138,19 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
           {p.notes}
         </Text>
       ) : null}
-      <div style={{ marginTop: '18px' }}>
-        <BlockBar blocks={p.bar} />
-      </div>
+      {p.progress ? (
+        <div style={{ marginTop: '18px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <ProgressBar value={p.progress.pct} track="tint" label="Sessions done" valueText={p.progress.valueText} style={{ flex: 1 }} />
+            <Text variant="figure" style={{ flex: 'none' }}>
+              {p.progress.figure}
+            </Text>
+          </div>
+          <Text variant="body" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
+            Sessions done
+          </Text>
+        </div>
+      ) : null}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '18px' }}>
         <Button type="primary" size="lg" onClick={p.start} disabled={p.busy} style={{ flex: '1 1 200px' }}>
           <Calendar color="var(--color-surface)" size={17} />

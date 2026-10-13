@@ -185,7 +185,14 @@ export function programVals(ctx: Ctx) {
           const kit = equipmentOf(shown);
           return kit.length ? (kit.length <= 2 ? kit.join(', ') : plural(kit.length, 'piece') + ' of equipment') : 'No equipment';
         })(),
-        bar: bar(shown),
+        // While it runs: how far through it you are, by sessions done of all it puts on the calendar.
+        progress: (() => {
+          const r = ownProgram ? myRuns.filter(live).sort((a, c) => (a.start < c.start ? -1 : 1))[0] : null;
+          if (!ownProgram || !r) return null;
+          const total = ownProgram.blocks.slice(r.startBlock).reduce((n, b) => n + b.weeks * b.workouts.reduce((k, w) => k + w.days.length, 0), 0);
+          const done = model.entries.filter((e) => e.av.program?.runId === r.id && e.av.s === 'c').length;
+          return { pct: total ? Math.round((done / total) * 100) : 0, figure: done + '/' + total, valueText: done + ' of ' + total + ' sessions done' };
+        })(),
         blocks: shown.blocks.map((b, i) => {
           const before = shown.blocks.slice(0, i).reduce((s, x) => s + x.weeks, 0);
           const isOpen = openBlocks[b.id] ?? i === 0;
