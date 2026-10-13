@@ -11,6 +11,7 @@ import { Bike, Calendar, Check, Dumbbell, DumbbellSmall, DumbbellUpright, Gem, S
 import { IconChoiceGroup } from '../src/icon-choice-group';
 import { IconTile } from '../src/icon-tile';
 import { OptionCard, OptionGroup } from '../src/option-card';
+import { RadioGroup } from '../src/radio';
 import { ProgressBar } from '../src/progress-bar';
 import { BlockBar } from '../src/block-bar';
 import { WeekStrip } from '../src/week-strip';
@@ -294,6 +295,20 @@ export function Preview({ slug }: { slug: string }) {
             <OptionCard name="preview" value="a" checked onChange={noop} title="Update this workout" />
             <OptionCard name="preview" value="b" checked={false} onChange={noop} title="Save as a new workout" />
           </OptionGroup>
+        </div>
+      );
+    case 'radio':
+      return (
+        <div style={{ width: 200 }}>
+          <RadioGroup
+            label="When you leave"
+            value="run"
+            onChange={noop}
+            options={[
+              { value: 'ask', label: 'Ask me' },
+              { value: 'run', label: 'Keep running' },
+            ]}
+          />
         </div>
       );
     case 'dialog':

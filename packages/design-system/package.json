@@ -19,6 +19,7 @@
     "./buttons": "./src/buttons/index.ts",
     "./card": "./src/card/index.ts",
     "./checkbox": "./src/checkbox/index.ts",
+    "./radio": "./src/radio/index.ts",
     "./chip": "./src/chip/index.ts",
     "./colors": "./src/colors/index.ts",
     "./dialog": "./src/dialog/index.ts",

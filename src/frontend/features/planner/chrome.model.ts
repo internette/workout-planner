@@ -5,6 +5,7 @@ import { NAV_IDS, type NavId } from './navIds';
 import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from './store/types';
 import type { ConfirmState, Screen } from './store/state';
+import { leaveRunningWorkout } from '../session/leave';
 
 // Shell: sidebar, tab bar, screen flags, navigation shortcuts, confirm dialog and error banner.
 export function chromeVals(ctx: Ctx) {
@@ -123,7 +124,7 @@ export function chromeVals(ctx: Ctx) {
         logic.s({ ...endPick, creating: false });
       }
       // Leaving the workout detail screen while its stopwatch is running asks first, same as its own Back arrow.
-      if (st.screen === 'detail' && timerRunning) return logic.s({ pausePrompt: { proceed: go } });
+      if (st.screen === 'detail' && timerRunning) return leaveRunningWorkout(ctx, go);
       go();
     },
     // Signing out asks first. Once confirmed the page is on its way to the server, so the dialog stays up, inert,

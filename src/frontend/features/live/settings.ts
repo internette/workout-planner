@@ -1,12 +1,35 @@
 // During a workout: whether the screen stays on (on unless turned off), and whether the session in progress shows
 // outside the page: as a notification (on unless turned off; the browser asks the first time a workout starts), and as
 // the lock screen's player (off unless turned on: it plays silent audio, which stops other music). All are chosen in
-// Profile → Settings and kept in this browser.
+// Profile → Settings and kept in this browser. So is what leaving a workout's page does with its running clock: ask
+// each time (unless told otherwise), keep it running, or pause it.
 
 export type LiveSettings = { awake: boolean; notify: boolean; player: boolean };
 
 const KEYS = { awake: 'moonshot.live.awake', notify: 'moonshot.live.notify', player: 'moonshot.live.player' } as const;
 const EVENT = 'moonshot-live-settings';
+
+export type LeaveChoice = 'ask' | 'run' | 'pause';
+const LEAVE_KEY = 'moonshot.live.leave';
+
+/** What leaving a workout with its clock running does: ask, or the answer given once ("Don't ask again", or Settings). */
+export function leaveChoice(): LeaveChoice {
+  try {
+    const v = localStorage.getItem(LEAVE_KEY);
+    return v === 'run' || v === 'pause' ? v : 'ask';
+  } catch {
+    return 'ask';
+  }
+}
+
+export function setLeaveChoice(choice: LeaveChoice) {
+  try {
+    localStorage.setItem(LEAVE_KEY, choice);
+  } catch {
+    // Storage blocked: it asks again next time.
+  }
+  window.dispatchEvent(new CustomEvent(EVENT, { detail: { leave: choice } }));
+}
 
 export function liveSettings(): LiveSettings {
   try {
@@ -30,8 +53,8 @@ export function setLiveSetting(key: keyof LiveSettings, on: boolean) {
 }
 
 /** Calls back whenever a setting changes on this page. */
-export function onLiveSettings(fn: (s: Partial<LiveSettings>) => void) {
-  const handler = (e: Event) => fn((e as CustomEvent<Partial<LiveSettings>>).detail);
+export function onLiveSettings(fn: (s: Partial<LiveSettings> & { leave?: LeaveChoice }) => void) {
+  const handler = (e: Event) => fn((e as CustomEvent<Partial<LiveSettings> & { leave?: LeaveChoice }>).detail);
   window.addEventListener(EVENT, handler);
   return () => window.removeEventListener(EVENT, handler);
 }
