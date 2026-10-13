@@ -1,3 +1,4 @@
+import { typeLabelOf } from '@/frontend/components/KindTag';
 import { DOW1, DOW3, MON3, MONTHS, ACCENT } from '@/frontend/shared/constants';
 import { longDay, mod12, monthPatch } from '@/frontend/shared/helpers';
 import { iconSvg } from '@/frontend/shared/icons';
@@ -150,6 +151,7 @@ export function calendarStage(ctx: EntriesCtx) {
       done: isDoneEntry(a),
       // Put there by a program: its name above, and where in it before the rest.
       program: a.program ? a.program.name : '',
+      typeLabel: typeLabelOf(a),
       meta: (a.program ? programPlace(a.program) + ' · ' : '') + metaFor(a),
       // The icon and color chosen for the workout, as on the Day view's cards.
       icoSvg: iconSvg(a.icon || (a.ride ? 'bike' : 'h'), a.iconColor || undefined),
