@@ -56,7 +56,7 @@ export function progressVals(ctx: Ctx) {
   // The next rank by its full name, as the ladder writes it ("Novice guardian"); past the top, the next season.
   const nextRankName = RANKS[derivedRank + 1] ? RANKS[derivedRank + 1].name : RANKS[derivedRank].next;
   const xpLeft = Math.max(0, rankCeil - xpTotal);
-  const xpToGo = xpLeft ? xpLeft + ' more to reach ' + nextRankName + '.' : 'The top rank.';
+  const xpToGo = xpLeft ? xpLeft.toLocaleString('en-US') + ' more to reach ' + nextRankName + '.' : 'The top rank.';
   const statusOf = (x) => (x.done ? 'Done' : ctx.sessionStatus(relM(x.date), x.date.getDate(), x.av));
   return {
     // Empty states: say what will show up, instead of "0 of 0" or a bare heading.
@@ -77,11 +77,11 @@ export function progressVals(ctx: Ctx) {
     rankNext: nextRankName,
     rankGemFill: derivedRank === RANKS.length - 1 ? 'var(--gradient-gem)' : RANKS[derivedRank].gem,
     rankStepLabel: 'Rank ' + (derivedRank + 1) + ' of ' + RANKS.length,
-    ranksAside: 'Rank ' + (derivedRank + 1) + ' of ' + RANKS.length + ' · ' + xpTotal + ' XP',
+    ranksAside: 'Rank ' + (derivedRank + 1) + ' of ' + RANKS.length + ' · ' + xpTotal.toLocaleString('en-US') + ' XP',
     xpInfoOpen: !!st.xpInfo,
     toggleXpInfo: () => logic.s({ xpInfo: !st.xpInfo }),
     // Says how far is left, which matches the bar's "N% to …" (both count from this rank, not from zero).
-    xpLine: xpTotal + ' XP so far. ' + xpToGo,
+    xpLine: xpTotal.toLocaleString('en-US') + ' XP so far. ' + xpToGo,
     ranksOpen: !!st.ranksOpen,
     openRanks: () => logic.s({ ranksOpen: true }),
     closeRanks: () => logic.s({ ranksOpen: false }),
@@ -90,7 +90,7 @@ export function progressVals(ctx: Ctx) {
       const reached = ix < derivedRank;
       return {
         label: r.name,
-        req: ix === 0 ? 'Start' : XP_STEPS[ix - 1] + ' XP',
+        req: ix === 0 ? 'Start' : XP_STEPS[ix - 1].toLocaleString('en-US') + ' XP',
         row:
           'display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius-md);' +
           (cur

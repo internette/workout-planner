@@ -53,7 +53,13 @@ export const ICON_NAMES: Record<string, string> = {
   flower: 'Lotus flower',
   lunge: 'Lunge',
 };
-export const RANK_STEPS = [3,6,10,15,21,28,36,45,55,66,78,91,105,120,136,153,171,190,210,240];
+// The XP each rank after the first is reached at, the last being the top rank's own bar. Each step costs a fixed share
+// more than the one before (exponential): the first 300 XP (about three sessions), each next one RANK_GROWTH times
+// the last, rounded to 50.
+export const RANK_GROWTH = 1.2;
+export const RANK_XP = Array.from({ length: 20 }, (_, i) =>
+  Math.round(Array.from({ length: i + 1 }, (_, k) => 300 * RANK_GROWTH ** k).reduce((a, b) => a + b, 0) / 50) * 50,
+);
 export const RANKS = [
   { name:'First spark', next:'Novice', pill:'background:var(--color-pink-tint);color:var(--color-pink-deep)', gem:'var(--color-pink)' },
   { name:'Novice guardian', next:'Moonlit', pill:'background:var(--color-pink-tint);color:var(--color-pink-deep)', gem:'var(--color-pink)' },

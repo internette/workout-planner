@@ -1,4 +1,4 @@
-import { MON3, RANK_STEPS } from '@/frontend/shared/constants';
+import { MON3, RANK_XP } from '@/frontend/shared/constants';
 import { idOf, numericOnly, questSeed, shortDay } from '@/frontend/shared/helpers';
 import type { CalendarCtx } from '../types';
 import type { Entry } from '@/frontend/data/plannerData';
@@ -146,7 +146,7 @@ export function statsStage(ctx: CalendarCtx) {
     (sum, x) => sum + (x.av.ride ? 0 : doneCountAt(x.av) * 10) + (isDoneEntry(x.av) ? 50 : 0),
     0,
   );
-  const XP_STEPS = RANK_STEPS.map((s) => s * 100);
+  const XP_STEPS = RANK_XP;
   let derivedRank = 0;
   while (derivedRank < XP_STEPS.length - 1 && xpTotal >= XP_STEPS[derivedRank]) derivedRank++;
   const rankFloor = derivedRank === 0 ? 0 : XP_STEPS[derivedRank - 1];

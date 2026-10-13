@@ -7,7 +7,7 @@ import { Card } from '@moonshot/design-system/card';
 import { Book, Calendar, Check, ChevronRight, Gem, SparkleTrail } from '@moonshot/design-system/icons';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
-import { RANKS, RANK_STEPS } from '@/frontend/shared/constants';
+import { RANKS, RANK_XP } from '@/frontend/shared/constants';
 import { PROVIDER_NAME, PROVIDERS, type Provider } from '@/shared/auth';
 import { Callout } from '@/frontend/components/Callout';
 import { ProviderButton } from './ProviderButton';
@@ -102,7 +102,7 @@ const STEPS = [
 const LADDER = RANKS.slice(0, 3).map((r, i) => ({
   name: r.name,
   gem: r.gem,
-  need: i === 0 ? 'Start' : RANK_STEPS[i - 1] * 100 + ' XP',
+  need: i === 0 ? 'Start' : RANK_XP[i - 1].toLocaleString('en-US') + ' XP',
 }));
 
 const Section = ({ children, last }: { children: React.ReactNode; last?: boolean }) => (
