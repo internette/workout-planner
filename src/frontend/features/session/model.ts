@@ -361,7 +361,8 @@ export function workoutVals(ctx: Ctx) {
       doToday: !logged && !complete && isFutureDay ? () => doToday(av) : null,
       // With the clock going it carries on; with only ticks, the clock starts from zero and the ticks stay.
       restartLabel: 'Start over',
-      continueLabel: timed ? 'Continue' : 'Keep going',
+      // Paused, carrying on starts the clock again, so it says so.
+      continueLabel: timed ? (timer.runningSince ? 'Continue' : 'Resume') : 'Keep going',
       restart: run('restartWorkout'),
       continue: run('continueWorkout'),
     };

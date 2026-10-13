@@ -141,24 +141,15 @@ export function DayWorkoutCard({ card }: { card: any }) {
           </Button>
         ) : null}
         {card?.ctaTwoButtons ? (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '20px' }}>
-            <Button
-              type="secondary"
-              size="lg"
-              style={{ flex: '1 1 120px', minWidth: '0', whiteSpace: 'nowrap' }}
-              onClick={card?.restart}
-            >
-              {card?.restartLabel}
-            </Button>
-            <Button
-              type="primary"
-              size="lg"
-              style={{ flex: '1 1 120px', minWidth: '0', whiteSpace: 'nowrap' }}
-              onClick={card?.continue}
-            >
+          // Carrying on is the one big button; starting over (which wipes the clock and ticks) is a quiet link under it.
+          <>
+            <Button type="primary" size="lg" fullWidth onClick={card?.continue} style={{ marginTop: '20px' }}>
               {card?.continueLabel}
             </Button>
-          </div>
+            <Button type="neutral" link size="sm" onClick={card?.restart} style={{ display: 'flex', margin: '6px auto 0', minHeight: '44px' }}>
+              {card?.restartLabel}
+            </Button>
+          </>
         ) : (
           <Button
             type="primary"
