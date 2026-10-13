@@ -17,11 +17,6 @@ export function DayWorkoutCard({ card }: { card: any }) {
   if (!card?.isOpen) return <FoldedCard card={card} />;
   return (
     <Card pad="lg" className="day-card">
-        {card?.inProgress ? (
-          <Text variant="micro" as="div" tone="slate" style={{ marginBottom: '8px' }}>
-            In progress
-          </Text>
-        ) : null}
         <div
           style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}
         >
@@ -53,7 +48,14 @@ export function DayWorkoutCard({ card }: { card: any }) {
                 <ChevronRight color="var(--color-muted)" size={17} />
               </button>
             </Text>
-            <Text variant="strong" as="p" tone="muted" style={{ margin: '4px 0 0' }}>
+            {/* Under way, its status and time in pink, with a dot that pulses while the clock runs. */}
+            <Text
+              variant="strong"
+              as="p"
+              tone={card?.live && card.live !== 'paused' ? 'accent' : 'muted'}
+              style={{ margin: '4px 0 0', display: 'flex', alignItems: 'center', gap: '7px' }}
+            >
+              {card?.live ? <span aria-hidden="true" className={card.live === 'paused' ? undefined : 'live-dot'} style={{ width: '8px', height: '8px', flex: 'none', borderRadius: 'var(--radius-full)', background: card.live === 'paused' ? 'var(--color-muted)' : 'var(--color-pink)' }} /> : null}
               {card?.openMeta || card?.meta}
             </Text>
           </div>
@@ -119,6 +121,11 @@ export function DayWorkoutCard({ card }: { card: any }) {
                   <Text variant="body" tone="muted" style={{ display: 'block', marginTop: '1px' }}>
                     {x?.exDetail}
                   </Text>
+                  {x?.setNow ? (
+                    <Text variant="small" tone="accent" weight="semibold" style={{ display: 'block', marginTop: '2px' }}>
+                      {x.setNow}
+                    </Text>
+                  ) : null}
                 </span>
               </div>
             ))}
@@ -141,24 +148,15 @@ export function DayWorkoutCard({ card }: { card: any }) {
           </Button>
         ) : null}
         {card?.ctaTwoButtons ? (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '20px' }}>
-            <Button
-              type="secondary"
-              size="lg"
-              style={{ flex: '1 1 120px', minWidth: '0', whiteSpace: 'nowrap' }}
-              onClick={card?.restart}
-            >
-              {card?.restartLabel}
-            </Button>
-            <Button
-              type="primary"
-              size="lg"
-              style={{ flex: '1 1 120px', minWidth: '0', whiteSpace: 'nowrap' }}
-              onClick={card?.continue}
-            >
+          // Carrying on is the one big button; starting over (which wipes the clock and ticks) is a quiet link under it.
+          <>
+            <Button type="primary" size="lg" fullWidth onClick={card?.continue} style={{ marginTop: '20px' }}>
               {card?.continueLabel}
             </Button>
-          </div>
+            <Button type="neutral" link size="sm" onClick={card?.restart} style={{ display: 'flex', margin: '6px auto 0', minHeight: '44px' }}>
+              {card?.restartLabel}
+            </Button>
+          </>
         ) : (
           <Button
             type="primary"

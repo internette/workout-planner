@@ -6,7 +6,7 @@ import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from '../planner/store/types';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import type { Entry } from '@/frontend/data/plannerData';
-import { setsFor } from './sets';
+import { setsFor, setsIn } from './sets';
 import type { DayStatus } from '@/frontend/components/StatusDot';
 
 // The day card and the workout detail screen (today's quest, exercise preview, completion).
@@ -290,14 +290,23 @@ export function workoutVals(ctx: Ctx) {
     const timerSec = timer
       ? timer.elapsed + (timer.runningSince ? Math.floor((Date.now() - timer.runningSince) / 1000) : 0)
       : 0;
-    const rows = list.map((e) => exerciseRow(e, doneNames));
+    // Under way, the exercise being done says which set is next: one already started, else the first still to do.
+    const setsOf = (st.setsDone || {})[id] || {};
+    const left = list.filter((e) => !doneNames.includes(e.name));
+    const now = !complete && (timer || doneN > 0) ? left.find((e) => (setsOf[e.name] || 0) > 0) || left[0] : null;
+    const rows = list.map((e) => ({
+      ...exerciseRow(e, doneNames),
+      setNow: now && e.name === now.name && setsIn(e) > 1 ? 'Set ' + Math.min(setsIn(e), (setsOf[e.name] || 0) + 1) + ' of ' + setsIn(e) : '',
+    }));
+    const resting = !!(st.rest && st.rest.id === id && st.rest.endsAt > Date.now());
     const expanded = !!(st.moreIds || {})[id];
     const open = id === openId;
     return {
       key: id,
       isOpen: open,
-      // Open and under way (the clock going or something ticked, and not done yet): it says so above its name.
-      inProgress: !complete && (!!timer || doneN > 0),
+      // Under way (the clock going or something ticked, and not done yet): the line under the name is pink with a dot
+      // that pulses while the clock runs or a rest counts down, and grey with a still dot while paused.
+      live: complete ? '' : resting ? 'resting' : timer ? (timer.runningSince ? 'running' : 'paused') : doneN > 0 ? 'paused' : '',
       // Open, a ride still to do says its effort under its name, its figures below (see ridePlan).
       // A workout not started yet says only its time: its exercises are listed below.
       openMeta: ride && !rideIsDone && !timer ? ride.zone || DEFAULT_ZONE : !ride && !complete && !timer && doneN === 0 ? av.time : '',
@@ -315,8 +324,8 @@ export function workoutVals(ctx: Ctx) {
       typeLabel: typeLabelOf({ ...av, ride }),
       meta: complete
         ? 'Completed · ' + (ride && distOf(av) ? distOf(av) + ' mi · ' : '') + ctx.doneTimeOf(av)
-        : st.rest && st.rest.id === id && st.rest.endsAt > Date.now()
-          ? 'Resting · ' + formatElapsed(Math.ceil((st.rest.endsAt - Date.now()) / 1000))
+        : resting
+          ? 'Resting ' + formatElapsed(Math.ceil((st.rest.endsAt - Date.now()) / 1000)) + (timer ? ' · ' + formatElapsed(timerSec) + ' total' : '')
           : timer
           ? (timer.runningSince ? 'In progress · ' : 'Paused · ') + formatElapsed(timerSec)
           : ride
@@ -361,7 +370,8 @@ export function workoutVals(ctx: Ctx) {
       doToday: !logged && !complete && isFutureDay ? () => doToday(av) : null,
       // With the clock going it carries on; with only ticks, the clock starts from zero and the ticks stay.
       restartLabel: 'Start over',
-      continueLabel: timed ? 'Continue' : 'Keep going',
+      // Paused, carrying on starts the clock again, so it says so.
+      continueLabel: timed ? (timer.runningSince ? 'Continue' : 'Resume') : 'Keep going',
       restart: run('restartWorkout'),
       continue: run('continueWorkout'),
     };
