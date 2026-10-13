@@ -13,7 +13,9 @@ export const metadata: Metadata = {
   description: 'Plan workouts, log how they felt, and rank up.',
 };
 
-export const viewport: Viewport = { themeColor: colors.canvas };
+// Cover: the page reaches the screen's edges on a phone with a home indicator, so the tab bar's own background fills
+// the strip under it (its padding takes env(safe-area-inset-bottom)) rather than the page's color showing there.
+export const viewport: Viewport = { themeColor: colors.canvas, viewportFit: 'cover' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
