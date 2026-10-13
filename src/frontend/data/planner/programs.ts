@@ -210,6 +210,32 @@ export async function startProgram(program: Runnable, startIso: string, startBlo
   return { runId: run.id as string, first: sessions[0]?.date ?? null, count: sessions.length };
 }
 
+/**
+ * Moves a run to start on another day: its sessions still ahead come off and go back on from the new start, leaving
+ * out days gone by and any day it already has a session it keeps (done, started or written about), which stay put.
+ */
+export async function moveRun(program: Runnable, run: { id: string; startBlock: number }, startIso: string, todayIso: string) {
+  const rows: any[] = await ok(
+    supabase.from('plan_entries').select(SESSION_COLS + ', workout_id').eq('program_run_id', run.id).gte('scheduled_date', todayIso),
+  );
+  const free = new Set(await untouchedIds(rows.filter((r) => isAhead(r, todayIso))));
+  await deletePlanEntries([...free]);
+  const kept = new Set(rows.filter((r) => !free.has(r.id)).map((r) => r.workout_id + '|' + r.scheduled_date));
+  await ok(supabase.from('program_runs').update({ start_date: startIso }).eq('id', run.id));
+  const sessions = runSessions(
+    program.blocks.map((b) => ({ name: b.name, weeks: b.weeks, workouts: b.workouts.map((w) => ({ id: w.id, days: w.days })) })),
+    startIso,
+    run.startBlock,
+  ).filter((s) => s.date >= todayIso && !kept.has(s.workoutId + '|' + s.date));
+  if (sessions.length)
+    await ok(
+      supabase
+        .from('plan_entries')
+        .insert(sessions.map((s) => ({ workout_id: s.workoutId, scheduled_date: s.date, status: 'planned', program_run_id: run.id }))),
+    );
+  return { first: sessions[0]?.date ?? null, count: sessions.length };
+}
+
 /** Ends a run: its sessions still ahead come off the calendar; anything done, started or written about stays. */
 export async function endRun(runId: string, todayIso: string) {
   const rows: any[] = await ok(

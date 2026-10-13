@@ -69,6 +69,46 @@ function StartDialog({ v }: { v: PlannerVals }) {
   );
 }
 
+function MoveDialog({ v }: { v: PlannerVals }) {
+  const m = v.programMove;
+  if (!m) return null;
+  return (
+    <Dialog
+      open={m.open}
+      onClose={m.cancel}
+      title={m.title}
+      sheet
+      actions={
+        <>
+          <Button type="neutral" ghost size="md" onClick={m.cancel}>
+            Cancel
+          </Button>
+          <Button type="primary" size="md" onClick={m.save} disabled={!m.changed || m.busy}>
+            {m.busy ? 'Moving…' : 'Move it'}
+          </Button>
+        </>
+      }
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '14px' }}>
+        <TextField label="Starts" type="date" value={m.date} onChange={m.setDate} />
+        <Card pad="sm" style={{ background: 'var(--color-canvas)', boxShadow: 'none' }}>
+          <Text variant="body" weight="semibold" as="p" style={{ margin: 0 }}>
+            {m.summary}
+          </Text>
+          {m.lands ? (
+            <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+              {m.lands}
+            </Text>
+          ) : null}
+          <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+            Its sessions still ahead move to match. Ones you’ve done, started or written about stay where they are.
+          </Text>
+        </Card>
+      </div>
+    </Dialog>
+  );
+}
+
 export function ProgramScreen({ v }: { v: PlannerVals }) {
   const p = v.program;
   if (!p) return null;
@@ -122,9 +162,14 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
               {r.dates}
             </Text>
           </span>
-          <Button type="danger" ghost size="sm" onClick={r.end}>
-            End program
-          </Button>
+          <span style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+            <Button type="neutral" ghost size="sm" onClick={r.move}>
+              Change start
+            </Button>
+            <Button type="danger" ghost size="sm" onClick={r.end}>
+              End program
+            </Button>
+          </span>
         </Card>
       ))}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '18px' }}>
@@ -184,6 +229,7 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
         ))}
       </div>
       <StartDialog v={v} />
+      <MoveDialog v={v} />
       {v.programShare ? <ShareProgramDialog s={v.programShare} /> : null}
     </div>
   );
