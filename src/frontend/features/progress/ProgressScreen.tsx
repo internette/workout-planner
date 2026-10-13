@@ -2,6 +2,7 @@
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { PageHeader } from '@/frontend/components/PageHeader';
+import { AllTimeCard } from '@/frontend/features/progress/AllTimeCard';
 import { CountCard } from '@/frontend/features/progress/CountCard';
 import { NextUpCard } from '@/frontend/features/progress/NextUpCard';
 import { StreakBanner } from '@/frontend/features/progress/StreakBanner';
@@ -19,6 +20,7 @@ export function ProgressScreen({ v }: { v: PlannerVals }) {
         <ThisWeekCard v={v} />
       </div>
       <SessionsPerWeekCard v={v} />
+      <AllTimeCard v={v} />
       <div style={{ display: 'flex', marginTop: '14px' }}>
         <NextUpCard v={v} />
       </div>

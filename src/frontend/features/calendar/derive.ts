@@ -107,7 +107,7 @@ export function calendarStage(ctx: EntriesCtx) {
     };
   });
   // One row per workout. A day with several shows its date once, above the first.
-  const weekRows = cells.flatMap((d) => {
+  const dayRows = cells.flatMap<any>((d) => {
     const list = listForDate(d);
     if (!list.length) {
       const today0 = relM(d) === TODAY_M && d.getDate() === TODAY_D;
@@ -125,10 +125,22 @@ export function calendarStage(ctx: EntriesCtx) {
         // The day's label above it, as an eyebrow: pink on today.
         showLabel: true,
         labelTone: today0 ? 'accent' : 'muted',
+        today: today0,
+        dayLabel: DOW3[d.getDay()] + ' ' + d.getDate(),
       }];
     }
     return list.map((a, ix) => weekRow(d, a, ix));
   });
+  // Rest days back to back share one line ("THU 15 – SAT 17"); today stays its own.
+  const weekRows = dayRows.reduce<any[]>((rows, r) => {
+    const last = rows[rows.length - 1];
+    if (r.isRest && !r.today && last?.isRest && !last.today) {
+      last.label = (last.first ?? last.label) + ' – ' + r.dayLabel;
+      last.first = last.first ?? last.dayLabel;
+      last.days = (last.days ?? 1) + 1;
+    } else rows.push({ ...r });
+    return rows;
+  }, []);
   function weekRow(d, a, ix) {
     // By the date, not the session's status: a finished session today is still today's.
     const today = relM(d) === TODAY_M && d.getDate() === TODAY_D;

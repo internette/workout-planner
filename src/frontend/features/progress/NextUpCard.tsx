@@ -1,3 +1,4 @@
+import { IconTile } from '@moonshot/design-system/icon-tile';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { OpensChevron, progCard } from './progCard';
@@ -18,20 +19,20 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
         Next call
       </Text>
       {v.hasNext ? (
-        <>
-          <Text variant="subheading" tone="ink" style={{ display: 'block', margin: '9px 0 0' }}>
-            {v.nextName}
-          </Text>
-          <Text
-            variant="strong"
-            as="span"
-            tone="muted"
-           
-            style={{ display: 'block', margin: '3px 0 0' }}
-          >
-            {v.nextMeta}
-          </Text>
-        </>
+        // The session's icon beside its name and when, as on the calendar's rows.
+        <span style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '10px' }}>
+          <IconTile as="span" size="xs" variant="flat" aria-hidden>
+            {v.nextSvg}
+          </IconTile>
+          <span style={{ flex: '1', minWidth: '0' }}>
+            <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
+              {v.nextName}
+            </Text>
+            <Text variant="strong" as="span" tone="muted" style={{ display: 'block', margin: '3px 0 0' }}>
+              {v.nextMeta}
+            </Text>
+          </span>
+        </span>
       ) : null}
       {v.noNext ? (
         <Text

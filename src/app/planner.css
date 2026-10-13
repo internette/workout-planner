@@ -7,11 +7,6 @@ html { scroll-padding-top: 16px; scroll-padding-bottom: 104px; }
 /* Phone tab bar labels: 12 px. */
 .mlabel { font-size: var(--text-sm); }
 
-#profileStats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-@media (max-width: 820px) {
-  #profileStats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
 /* A screen's top bar with two actions (an exercise's Edit and Add): on the narrowest phones the actions drop their
    icons and some padding, so Back keeps room to say where it goes. */
 @media (max-width: 359px) {
@@ -26,6 +21,4 @@ html { scroll-padding-top: 16px; scroll-padding-bottom: 104px; }
    the title more room. (The padding is set inline, hence !important.) */
 @media (max-width: 359px) {
   .day-card { padding: var(--space-5) !important; }
-  /* The Month's streak and done, a line each: no rule between them. */
-  .stats-rule { display: none; }
 }

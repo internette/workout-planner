@@ -239,6 +239,7 @@ export function diaryVals(ctx: Ctx) {
     setDiaryScope: (scope) => scopeHandlers[scope](),
     rangeShown: dScope === 'range',
     diaryEmpty: diaryDays.length === 0,
+    diaryBlank: Object.keys(ENTRIES).length === 0,
     diaryEmptyNote:
       dScope === 'week'
         ? 'Nothing written this week yet.'

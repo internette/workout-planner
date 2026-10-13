@@ -3,6 +3,7 @@ import { displayName } from '@/shared/auth';
 import { plural, questSeed } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
 import { MOOD_COLORS, MOODS } from '@moonshot/design-system/icons';
+import { iconSvg } from '@/frontend/shared/icons';
 import type { DayStatus } from '@/frontend/components/StatusDot';
 
 // Progress and profile: streaks, weekly chart, records, XP and the rank ladder.
@@ -36,6 +37,7 @@ export function progressVals(ctx: Ctx) {
     longest,
     weeklyAvg,
     weeklyAvgSpan,
+    allTimeAvg,
     moodCounts,
     moodTotal,
     bestByEx,
@@ -185,7 +187,8 @@ export function progressVals(ctx: Ctx) {
         open: () =>
           logic.openSession(relM(x.date), x.date.getDate(), x.av.id),
       })),
-    chartCaption:
+    // This week's numbers are on the card above, so the caption only names a week picked on the chart.
+    chartCaption: barSel === thisWeekIx ? '' :
       (barSel >= thisWeekIx - 1 ? weekName(barSel) + ' · ' + weekRange(selWeek) : weekName(barSel)) +
       ' · ' +
       (selWeek.planned ? selWeek.done + ' of ' + plural(selWeek.planned, 'session') + ' done' : 'nothing planned'),
@@ -213,22 +216,11 @@ export function progressVals(ctx: Ctx) {
           'display:flex;align-items:center;gap:12px;padding:10px 0' +
           (ix === arr.length - 1 ? '' : ';border-bottom:1px solid var(--color-line)'),
       })),
-    // Each stat says what it covers. Totals and streaks are all time, up to today; the average says which weeks.
-    profileStats: [
-      {
-        label: 'Sessions done',
-        value: String(completedSessions),
-        unit: totalSessions ? 'of ' + totalSessions : 'none planned yet',
-        span: totalSessions ? 'Up to today' : '',
-      },
-      { label: 'Current streak', value: String(streak), unit: streak === 1 ? 'day' : 'days', span: 'Training days' },
-      { label: 'Longest streak', value: String(longest), unit: longest === 1 ? 'day' : 'days', span: 'All time' },
-      {
-        label: 'Weekly average',
-        value: completedSessions ? weeklyAvg : '—',
-        unit: completedSessions ? 'a week' : 'no sessions yet',
-        span: completedSessions ? weeklyAvgSpan : '',
-      },
+    // All time, up to today: sessions still ahead don't count yet.
+    allTimeStats: [
+      { label: 'Sessions', value: String(completedSessions), unit: 'done' },
+      { label: 'Longest streak', value: String(longest), unit: longest === 1 ? 'day' : 'days' },
+      { label: 'Average', value: completedSessions ? allTimeAvg : '—', unit: 'a week' },
     ],
     allTimeLabel: 'All time',
     weeklyBars: weekBuckets
@@ -326,6 +318,7 @@ export function progressVals(ctx: Ctx) {
     noNext: !nextUp,
     nextName: nextUp && nextUp.name,
     nextMeta: nextUp && nextUp.meta2,
+    nextSvg: nextUp ? iconSvg(nextUp.icon, nextUp.iconColor) : null,
     questsDoneLabel: (function () {
       let t = 0,
         d = 0;

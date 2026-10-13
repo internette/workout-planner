@@ -100,17 +100,23 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
             </Text>
           ) : null}
           {v.arsenalAddOpen ? <NewExerciseCard v={v} /> : null}
+          <Text variant="body" as="p" tone="muted" style={{ margin: '16px 0 0' }}>
+            Tap an exercise to see it, or{' '}
+            <Plus color="var(--color-pink-deep)" strokeWidth={2.6} size={14} style={{ verticalAlign: '-2px' }} /> to add it to a workout.
+          </Text>
           <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: '22px' }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: '18px' }}
           >
             {(v.moveGroups ?? []).map((g, i) => (
               <div key={i}>
                 <SectionLabel list label={g?.label} note={g?.count} />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <Card pad="none" style={{ padding: '0 16px' }}>
                   {(g?.items ?? []).map((m, i) => (
-                    <ExerciseRow key={i} exercise={m} />
+                    <div key={i} style={i ? { borderTop: '1px solid var(--color-line)' } : undefined}>
+                      <ExerciseRow exercise={m} />
+                    </div>
                   ))}
-                </div>
+                </Card>
               </div>
             ))}
           </div>

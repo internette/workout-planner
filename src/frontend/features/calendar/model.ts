@@ -40,7 +40,8 @@ export function calendarVals(ctx: Ctx) {
   const firstRun = logic.model.workouts.length === 0 && logic.model.entries.length === 0;
   const shownMonth = logic.model.entries.filter((x) => x.m === mi).map((x) => x.av);
   return {
-    weekRows,
+    // A week with nothing planned shows its empty state alone, without a line of rest days above it.
+    weekRows: weekRows.some((r) => r.hasRow) ? weekRows : [],
     monthCells,
     // Full width on narrow screens, where the toggle gets its own row
     segLayout: narrow ? { flex: '1 1 100%', width: '100%' } : { flex: 'none' },
@@ -55,7 +56,7 @@ export function calendarVals(ctx: Ctx) {
     monthDoneUnit: monthDays.length ? 'of ' + monthDays.length + ' done' : 'nothing planned yet',
     // The Month view's tile counts the month on screen (the values above are always this month, for Progress).
     shownMonthDone: shownMonth.length ? String(shownMonth.filter(isDoneEntry).length) : '—',
-    shownMonthDoneUnit: shownMonth.length ? 'of ' + shownMonth.length + ' done' : 'nothing planned yet',
+    shownMonthDoneUnit: shownMonth.length ? 'of ' + shownMonth.length + ' done in ' + MONTHS[mod12(mi)] : 'nothing planned yet',
     dowLabels: DOW1,
     showDay: st.seg === 'Day',
     showWeek: st.seg === 'Week',

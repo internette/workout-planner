@@ -218,17 +218,18 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             {v.saveHint}
           </Text>
         ) : null}
-        {v.canDeleteSession ? (
-          <Button type="danger" ghost size="lg" onClick={v.deleteSession} style={{ marginRight: 'auto' }}>
-            Delete
-          </Button>
-        ) : null}
-        <Button type="neutral" ghost size="lg" onClick={v.footerSecondary}>
+        {/* Cancel and save side by side; Delete apart, under them, so it isn't next to the button you mean. */}
+        <Button type="neutral" ghost size="lg" onClick={v.footerSecondary} style={{ flex: 'none' }}>
           Cancel
         </Button>
-        <Button type="primary" size="lg" onClick={v.saveWorkout} disabled={!!v.saveBlocked}>
+        <Button type="primary" size="lg" onClick={v.saveWorkout} disabled={!!v.saveBlocked} style={{ flex: '1 1 auto' }}>
           {v.eSaveLabel}
         </Button>
+        {v.canDeleteSession ? (
+          <Button type="danger" ghost size="md" onClick={v.deleteSession} style={{ flex: '1 1 100%', marginTop: '14px' }}>
+            Delete this session
+          </Button>
+        ) : null}
       </FormActions>
     </div>
   );
