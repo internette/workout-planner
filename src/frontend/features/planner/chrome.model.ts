@@ -153,7 +153,7 @@ export function chromeVals(ctx: Ctx) {
     confirmBody: st.confirm?.body,
     confirmLabel: st.confirm?.label,
     confirmCancelLabel: st.confirm?.cancelLabel || 'Keep it',
-    confirmSafe: !!st.confirm?.safe,
+    confirmSafe: !!st.confirm?.safe || !!st.confirm?.primary,
     confirmOption: st.confirm?.option
       ? {
           label: st.confirm.option.label,
