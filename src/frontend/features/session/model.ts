@@ -1,5 +1,4 @@
 import { typeLabelOf } from '@/frontend/components/KindTag';
-import { programPlace } from '@/frontend/shared/programs';
 import { DOWFULL } from '@/frontend/shared/constants';
 import { dayShort, digitsOnly, exLine, formatElapsed, idOf, longDay, monDay, monthPatch, newWorkoutPatch, noticePatch, numericOnly, plural, questSeed, rollMinutes, toMinutes } from '@/frontend/shared/helpers';
 import { iconSvg } from '@/frontend/shared/icons';
@@ -247,15 +246,14 @@ export function workoutVals(ctx: Ctx) {
   // Day view shows a card for every workout on the day. A card's buttons pick its session first, then do what
   // the same button does for the session on screen, so the detail, timer and diary all follow that session.
   const exerciseRow = (e, doneNames) => ({
-    text: e.name + ' — ' + exLine(e),
+    exName: e.name,
+    exDetail: exLine(e),
+    exDone: doneNames.includes(e.name),
     isH: e.i === 'h',
     isV: e.i === 'v',
     isD: e.i === 'd',
     // Any other workout icon (the lotus flower, the lunge), drawn as it is.
     otherIcon: e.i && !['h', 'v', 'd'].includes(e.i) ? e.i : null,
-    textStyle:
-      'flex:1;min-width:0;font-size:var(--text-lg);font-weight:var(--font-weight-medium);' +
-      (doneNames.includes(e.name) ? 'color:var(--color-muted);text-decoration:line-through' : 'color:var(--color-ink)'),
   });
   // Where a session on the day stands: its exercises and ticks, and whether it's done or under way.
   const progressOf = (av: Entry) => {
@@ -311,10 +309,8 @@ export function workoutVals(ctx: Ctx) {
       warmup: !!av.warmup,
       stretch: !!av.stretch,
       yoga: !!av.yoga,
-      // Put there by a program: which, and where in it (folded, in one; open, the name above and where before the rest).
-      program: av.program ? av.program.name + ' · ' + programPlace(av.program) : '',
+      // Put there by a program: its name, above the session's.
       programName: av.program ? av.program.name : '',
-      programPlace: av.program ? programPlace(av.program) : '',
       // Open, what kind of workout it is, named as "What kind of workout?" names it: "Warm-up · Stretching".
       typeLabel: typeLabelOf({ ...av, ride }),
       meta: complete

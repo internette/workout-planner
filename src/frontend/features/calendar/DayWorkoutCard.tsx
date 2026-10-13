@@ -7,12 +7,9 @@ import { WorkoutIcon } from '@/frontend/shared/icons';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import { StatRow } from '@/frontend/components/StatRow';
-import { css, t } from '@/frontend/features/planner/viewHelpers';
+import { t } from '@/frontend/features/planner/viewHelpers';
 import { SessionTags } from '@/frontend/components/SessionTags';
 import { StatusDot } from '@/frontend/components/StatusDot';
-
-/** The line under a session's name, led by where it falls in its program ("Build, week 2 of 4"). */
-const placed = (card: any, meta: string) => (card?.programPlace ? card.programPlace + ' · ' : '') + meta;
 
 /** A session on the Day view: its exercises or ride, progress, and what to do next. Only one on the day is open at a
  * time; the others are folded to a row, which opens it. */
@@ -26,7 +23,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
           </Text>
         ) : null}
         <div
-          style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
+          style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}
         >
           <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
           {/* Takes the rest of the row, so a long name wraps beside the icon rather than dropping below it. */}
@@ -57,7 +54,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
               </button>
             </Text>
             <Text variant="strong" as="p" tone="muted" style={{ margin: '4px 0 0' }}>
-              {placed(card, card?.openMeta || card?.meta)}
+              {card?.openMeta || card?.meta}
             </Text>
           </div>
         </div>
@@ -97,27 +94,32 @@ export function DayWorkoutCard({ card }: { card: any }) {
               <div key={i}
                 style={{
                   display: 'flex',
-                  alignItems: 'center',
-                  gap: '11px',
-                  padding: '9px 0',
+                  alignItems: 'flex-start',
+                  gap: '12px',
+                  padding: '10px 0',
                   borderBottom: '1px solid var(--color-line)',
                 }}
               >
-                {x?.isH ? (
-                  <Dumbbell color="var(--color-pink)" size={20} />
-                ) : null}
-                {x?.isV ? (
-                  <Dumbbell
-                    color="var(--color-pink)"
-                    size={17}
-                    style={{ transform: 'rotate(90deg)' }}
-                  />
-                ) : null}
-                {x?.isD ? (
-                  <DumbbellSmall color="var(--color-pink)" size={20} />
-                ) : null}
-                {x?.otherIcon ? <WorkoutIcon name={x.otherIcon} color="var(--color-pink)" size={20} /> : null}
-                <span style={css(x?.textStyle)}>{x?.text}</span>
+                {/* The icon sits by the name's line; the details go under the name, so they never break mid-figure. */}
+                <span aria-hidden="true" style={{ flex: 'none', width: '20px', height: '24px', display: 'grid', placeItems: 'center' }}>
+                  {x?.isH ? <Dumbbell color="var(--color-pink)" size={20} /> : null}
+                  {x?.isV ? <Dumbbell color="var(--color-pink)" size={17} style={{ transform: 'rotate(90deg)' }} /> : null}
+                  {x?.isD ? <DumbbellSmall color="var(--color-pink)" size={20} /> : null}
+                  {x?.otherIcon ? <WorkoutIcon name={x.otherIcon} color="var(--color-pink)" size={20} /> : null}
+                </span>
+                <span style={{ flex: '1', minWidth: '0' }}>
+                  <Text
+                    variant="strong"
+                    weight="semibold"
+                    tone={x?.exDone ? 'muted' : 'ink'}
+                    style={{ display: 'block', textDecoration: x?.exDone ? 'line-through' : undefined }}
+                  >
+                    {x?.exName}
+                  </Text>
+                  <Text variant="body" tone="muted" style={{ display: 'block', marginTop: '1px' }}>
+                    {x?.exDetail}
+                  </Text>
+                </span>
               </div>
             ))}
           </div>
@@ -185,7 +187,7 @@ function FoldedCard({ card }: { card: any }) {
         type="button"
         onClick={card?.expand}
         aria-expanded={false}
-        aria-label={card?.expandLabel + ', ' + placed(card, card?.meta)}
+        aria-label={card?.expandLabel + ', ' + card?.meta}
         className="hv6"
         style={{
           display: 'flex',
@@ -209,7 +211,7 @@ function FoldedCard({ card }: { card: any }) {
             {t(card?.name)}
           </Text>
           <Text variant="body" as="span" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
-            {placed(card, card?.meta)}
+            {card?.meta}
           </Text>
         </span>
         <StatusDot status={card?.dot} size="md" />
