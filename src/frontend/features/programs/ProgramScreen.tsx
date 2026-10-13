@@ -154,7 +154,7 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
       {/* Running, it can be ended; otherwise started. Starting it again while it runs would double its sessions up. */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '18px' }}>
         {p.runs.length ? (
-          <Button type="danger" size="lg" onClick={p.runs[0].end} style={{ flex: '1 1 200px' }}>
+          <Button type="primary" size="lg" onClick={p.runs[0].end} style={{ flex: '1 1 200px' }}>
             End program
           </Button>
         ) : (
