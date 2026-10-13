@@ -160,4 +160,30 @@ export async function programPdf(name: string, program: SharedProgram): Promise<
 }
 
 /** A file name for it: "Fall routine.pdf", with characters file systems refuse taken out. */
-export const pdfName = (name: string) => (name.replace(/[\\/:*?"<>|]+/g, ' ').trim() || 'Program') + '.pdf';
+export const pdfName = (name: string) => (name.replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim() || 'Program') + '.pdf';
+
+/**
+ * Makes the PDF and hands it over: to the phone's share sheet where it takes files (to send, or save to Files), else
+ * downloaded. Resolves once it's out, or the share sheet was closed.
+ */
+export async function savePdf(name: string, program: SharedProgram) {
+  const bytes = await programPdf(name, program);
+  const file = new File([bytes], pdfName(name), { type: 'application/pdf' });
+  if (typeof navigator.canShare === 'function' && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: name });
+      return;
+    } catch (e: any) {
+      if (e?.name === 'AbortError') return;
+      // Refused (the tap was too long ago, say): download it instead.
+    }
+  }
+  const url = URL.createObjectURL(file);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = file.name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}

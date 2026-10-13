@@ -1,7 +1,7 @@
 'use client';
 // A shared program's public page: the program someone shared, read-only, for anyone with the link. Signed in, it can
 // be copied into their own programs, to start from there. Nothing is copied until they choose to.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Chip, ChipGroup } from '@moonshot/design-system/chip';
@@ -9,7 +9,8 @@ import { Dialog } from '@moonshot/design-system/dialog';
 import { IconTile } from '@moonshot/design-system/icon-tile';
 import { Lockup } from '@moonshot/design-system/brand';
 import { Text } from '@moonshot/design-system/typography';
-import { Calendar, ChevronDown, Repeat } from '@moonshot/design-system/icons';
+import { Calendar, ChevronDown, Download, Repeat } from '@moonshot/design-system/icons';
+import { savePdf } from '@/frontend/shared/programPdf';
 import { ProviderButton } from '@/frontend/features/auth/ProviderButton';
 import { BlockBar } from '@moonshot/design-system/block-bar';
 import { PROVIDER_NAME, type Provider } from '@/shared/auth';
@@ -85,6 +86,12 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
   const [copyOpen, setCopyOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [pdfBusy, setPdfBusy] = useState(false);
+  const [pdfError, setPdfError] = useState('');
+  // The PDF maker loads in the background, so making one is quick enough to hand to the share sheet.
+  useEffect(() => {
+    if (program) import('pdf-lib').catch(() => undefined);
+  }, [program]);
 
   if (!program || !name) {
     return (
@@ -139,6 +146,31 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
         <Chip icon={<Repeat color="var(--color-muted)" size={15} />}>{plural(trainingDays(program), 'day')} a week</Chip>
         <Chip>{kit.length ? (kit.length <= 2 ? kit.join(', ') : kit.length + ' pieces of equipment') : 'No equipment'}</Chip>
       </ChipGroup>
+      <Button
+        type="secondary"
+        size="sm"
+        disabled={pdfBusy}
+        onClick={async () => {
+          setPdfBusy(true);
+          setPdfError('');
+          try {
+            await savePdf(name, program);
+          } catch (e: any) {
+            setPdfError('Couldn’t make the PDF: ' + String(e?.message || e));
+          } finally {
+            setPdfBusy(false);
+          }
+        }}
+        style={{ marginTop: '14px', whiteSpace: 'nowrap' }}
+      >
+        <Download color="var(--color-pink-deep)" size={16} />
+        {pdfBusy ? 'Making PDF…' : 'Save as PDF'}
+      </Button>
+      {pdfError ? (
+        <Text variant="body" tone="danger" as="p" role="alert" style={{ margin: '8px 0 0' }}>
+          {pdfError}
+        </Text>
+      ) : null}
       {several ? (
         <div style={{ marginTop: '18px' }}>
           <BlockBar blocks={program.blocks.map((b, i) => ({ name: blockName(b, i), weeks: b.weeks }))} />

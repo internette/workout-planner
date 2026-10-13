@@ -9,7 +9,7 @@ import { Dialog } from '@moonshot/design-system/dialog';
 import { TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
 import { Check, Copy, Download, Info } from '@moonshot/design-system/icons';
-import { programPdf, pdfName } from '@/frontend/shared/programPdf';
+import { savePdf } from '@/frontend/shared/programPdf';
 import { Callout } from '@/frontend/components/Callout';
 import { MON3 } from '@/frontend/shared/constants';
 import { plural } from '@/frontend/shared/helpers';
@@ -70,31 +70,11 @@ export function ShareProgramDialog({ s }: { s: Share }) {
   }, [s.open]);
 
   const fallbackName = s.name;
-  // The program as a PDF: to the phone's share sheet where it takes files, else downloaded.
-  const savePdf = async () => {
+  const makePdf = async () => {
     setPdfBusy(true);
     setError('');
-    const title = name.trim() || fallbackName;
     try {
-      const bytes = await programPdf(title, program);
-      const file = new File([bytes], pdfName(title), { type: 'application/pdf' });
-      if (typeof navigator.canShare === 'function' && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({ files: [file], title });
-          return;
-        } catch (e: any) {
-          if (e?.name === 'AbortError') return;
-          // Refused (the tap was too long ago, say): download it instead.
-        }
-      }
-      const url = URL.createObjectURL(file);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = file.name;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      await savePdf(name.trim() || fallbackName, program);
     } catch (e: any) {
       setError('Couldn’t make the PDF: ' + String(e?.message || e));
     } finally {
@@ -102,7 +82,7 @@ export function ShareProgramDialog({ s }: { s: Share }) {
     }
   };
   const pdfButton = (
-    <Button type="secondary" size="md" onClick={savePdf} disabled={pdfBusy || !program.workouts.length} style={{ flex: '1 1 140px', whiteSpace: 'nowrap' }}>
+    <Button type="secondary" size="md" onClick={makePdf} disabled={pdfBusy || !program.workouts.length} style={{ flex: '1 1 140px', whiteSpace: 'nowrap' }}>
       <Download color="var(--color-pink-deep)" size={16} />
       {pdfBusy ? 'Making PDF…' : 'Save as PDF'}
     </Button>
