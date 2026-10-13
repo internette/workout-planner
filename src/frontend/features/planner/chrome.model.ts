@@ -43,7 +43,7 @@ export function chromeVals(ctx: Ctx) {
     arsenal: arsenalActive,
     summary: st.screen === 'summary',
     // Settings is Profile's page: Profile stays lit while it's open.
-    profile: st.screen === 'profile' || st.screen === 'settings',
+    profile: st.screen === 'profile' || st.screen === 'settings' || st.screen === 'programRuns' || st.screen === 'programRun',
   };
   const navGoTo: Record<NavId, () => void> = { day: goDay, diaryList: goDiaryList, arsenal: goArsenal, summary: goSummary, profile: goProfile };
   return {
@@ -275,6 +275,8 @@ export function chromeVals(ctx: Ctx) {
         summary: 'Progress',
         profile: 'Profile',
         settings: 'Settings',
+        programRuns: 'Your programs',
+        programRun: 'Program',
       };
       return names[prev.screen] || 'Back';
     })(),

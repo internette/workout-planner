@@ -281,7 +281,7 @@ export function programVals(ctx: Ctx) {
             busy: logic.busy('startProgram'),
             cancel: () => logic.s({ programStart: null }),
             start: () =>
-              logic.saveOnce('startProgram', () => db.startProgram(ownProgram, date, block, todayIso), (r: { first: string | null; count: number }) => {
+              logic.saveOnce('startProgram', () => db.startProgram(ownProgram, date, block, todayIso, { name: ownProgram.name, snapshot: db.programSnapshot(ownProgram, { notes: true, by: null }) }), (r: { first: string | null; count: number }) => {
                 const at = r.first ? fromIso(r.first) : fromIso(date);
                 return {
                   programStart: null,
@@ -464,7 +464,8 @@ export function programVals(ctx: Ctx) {
       ? {
           open: !!st.programShareOpen,
           close: () => logic.s({ programShareOpen: false }),
-          programId: ownProgram.id,
+          target: { programId: ownProgram.id } as db.ShareTarget,
+          asRan: false,
           name: ownProgram.name,
           snapshot: (o: { notes: boolean; showName: boolean }) =>
             db.programSnapshot(ownProgram, { notes: o.notes, by: o.showName ? displayName(logic.auth.account) : null }),

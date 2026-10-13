@@ -224,14 +224,16 @@ export function scanVals(ctx: Ctx) {
             const programName = name.trim();
             logic.saveOnce(
               'scanProgram',
-              () =>
-                db.programFromCalendar({
+              () => {
+                const blocks = scan.blocks.map((b, i) => ({
+                  name: (names[i] || '').trim(),
+                  weeks: b.weeks,
+                  workouts: b.workouts.map((w) => ({ days: w.days, workout: db.entryCopy(model, latest(w.name)!.av) })),
+                }));
+                return db.programFromCalendar({
                   name: programName,
-                  blocks: scan.blocks.map((b, i) => ({
-                    name: (names[i] || '').trim(),
-                    weeks: b.weeks,
-                    workouts: b.workouts.map((w) => ({ days: w.days, workout: db.entryCopy(model, latest(w.name)!.av) })),
-                  })),
+                  blocks,
+                  snapshot: db.copiesSnapshot(blocks),
                   start: scan.start,
                   sessions: scan.sessions.map((id) => ({ id, iso: byId[id].iso, name: byId[id].av.name })),
                   taken: model.entries.map((e) => e.av.name + '|' + e.iso),
@@ -240,7 +242,8 @@ export function scanVals(ctx: Ctx) {
                   freshStart: date,
                   endSeries: f.endSeries,
                   todayIso,
-                }),
+                });
+              },
               (r: { programId: string; count: number; first: string | null }) => ({
                 screen: 'program',
                 programId: r.programId,

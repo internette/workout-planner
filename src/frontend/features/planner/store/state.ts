@@ -24,7 +24,9 @@ export type Screen =
   | 'exerciseEdit'
   | 'program'
   | 'programEdit'
-  | 'programScan';
+  | 'programScan'
+  | 'programRuns'
+  | 'programRun';
 
 export type CalendarView = 'Day' | 'Week' | 'Month';
 
@@ -195,6 +197,10 @@ export interface PlannerState {
     endSeries: boolean;
     date: string;
   } | null;
+  // A program run, on its page from the Profile's list of every program run.
+  runId?: string | null;
+  runShareOpen?: boolean;
+  runOpen?: Record<string, boolean>;
   // The Programs tab's card, put aside with Not now (for what it found then).
   scanHidden?: string | null;
   pickM?: number | null;

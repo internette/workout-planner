@@ -4,6 +4,7 @@ import { supabase } from '../supabase';
 import { isoMonthDay, isoOf, isoWeekday, seriesWeekdays, splitMinutes } from '@/frontend/shared/helpers';
 import type { Exercise, Entry, WorkoutSummary, BuiltinWorkout, BuiltinProgram, Model, Program, ProgramRun, ProgramWorkout } from './types';
 import { runEnd, runPlace } from '@/frontend/shared/programs';
+import { readProgram } from '@/frontend/shared/sharedProgram';
 import { toExercise, areasOf, numStr, workoutView, estimateMinutes } from './convert';
 import { ok, okOr } from './db';
 import type { Mood } from '@moonshot/design-system/icons';
@@ -76,25 +77,38 @@ export async function loadModel(today: Date): Promise<Model> {
   });
   const programById: Record<string, Program> = {};
   programs.forEach((p) => (programById[p.id] = p));
+  // Runs, with the program as it was when each started. One from before those were kept, whose program is gone, has
+  // nothing left to show and is left out.
   const programRuns: ProgramRun[] = runRows
-    .filter((r: any) => programById[r.program_id])
-    .map((r: any) => ({
-      id: r.id,
-      programId: r.program_id,
-      start: r.start_date,
-      startBlock: Number(r.start_block) || 0,
-      end: runEnd(programById[r.program_id].blocks, r.start_date, Number(r.start_block) || 0),
-      ended: !!r.ended_at,
-    }));
+    .map((r: any): ProgramRun | null => {
+      const prog = r.program_id ? programById[r.program_id] : undefined;
+      const snapshot = r.snapshot ? readProgram(r.snapshot) : null;
+      const blocks = prog ? prog.blocks : snapshot ? snapshot.blocks : null;
+      if (!blocks) return null;
+      const startBlock = Number(r.start_block) || 0;
+      return {
+        id: r.id,
+        programId: prog ? prog.id : null,
+        name: r.program_name || (prog ? prog.name : 'Program'),
+        snapshot,
+        start: r.start_date,
+        startBlock,
+        end: runEnd(blocks, r.start_date, startBlock),
+        ended: !!r.ended_at,
+        endedOn: r.ended_at ? isoOf(new Date(r.ended_at)) : null,
+      };
+    })
+    .filter((r: ProgramRun | null): r is ProgramRun => !!r);
   const runById: Record<string, ProgramRun> = {};
   programRuns.forEach((r) => (runById[r.id] = r));
   // "Build, week 2 of 3": where a run's session falls in its program.
   const programTag = (p: any): Entry['program'] => {
     const run = p.program_run_id ? runById[p.program_run_id] : null;
     if (!run) return undefined;
-    const prog = programById[run.programId];
-    const at = runPlace(prog.blocks, run.start, run.startBlock, p.scheduled_date);
-    return at ? { runId: run.id, programId: prog.id, name: prog.name, block: at.name, week: at.week, weeks: at.weeks } : undefined;
+    const prog = run.programId ? programById[run.programId] : null;
+    const blocks = prog ? prog.blocks : run.snapshot ? run.snapshot.blocks : [];
+    const at = runPlace(blocks, run.start, run.startBlock, p.scheduled_date);
+    return at ? { runId: run.id, programId: run.programId, name: prog ? prog.name : run.name, block: at.name, week: at.week, weeks: at.weeks } : undefined;
   };
 
   const todayIso = isoOf(today);
