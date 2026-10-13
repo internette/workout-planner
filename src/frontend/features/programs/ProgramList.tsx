@@ -5,7 +5,7 @@ import { IconTile } from '@moonshot/design-system/icon-tile';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { ChevronRight, Gem } from '@moonshot/design-system/icons';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
-import { BlockBar } from '@moonshot/design-system/block-bar';
+import { ProgressBar } from '@moonshot/design-system/progress-bar';
 
 function Row({ name, eyebrow, meta, icon, open, children }: { name: string; eyebrow?: string; meta?: string; icon?: React.ReactNode; open: () => void; children?: React.ReactNode }) {
   return (
@@ -70,28 +70,34 @@ export function ProgramList({ v }: { v: PlannerVals }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {l.running.map((r) => (
               <Row key={r.key} name={r.name} eyebrow={r.place} open={r.open}>
-                <span style={{ display: 'block', marginTop: '12px' }}>
-                  <BlockBar blocks={r.bar} at={r.at} />
+                <span style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '12px' }}>
+                  <ProgressBar value={r.pct} track="tint" label="Sessions done" valueText={r.valueText} style={{ flex: 1 }} />
+                  <Text variant="figure" as="span" style={{ flex: 'none' }}>
+                    {r.figure}
+                  </Text>
                 </span>
               </Row>
             ))}
           </div>
         </div>
       ) : null}
-      <div>
-        <SectionLabel list label="Yours" note={l.mine.length ? String(l.mine.length) : undefined} />
-        {l.mine.length ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {l.mine.map((p) => (
-              <Row key={p.key} name={p.name} meta={p.meta} icon={p.icon} open={p.open} />
-            ))}
-          </div>
-        ) : (
-          <Text variant="body" as="p" tone="muted" style={{ margin: 0 }}>
-            None yet. Start one with New, copy a built-in one, or save a week from the calendar as one.
-          </Text>
-        )}
-      </div>
+      {/* With only a running one, it's above: no Yours with nothing in it. */}
+      {l.mine.length || !l.running.length ? (
+        <div>
+          <SectionLabel list label="Yours" note={l.mine.length ? String(l.mine.length) : undefined} />
+          {l.mine.length ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {l.mine.map((p) => (
+                <Row key={p.key} name={p.name} meta={p.meta} icon={p.icon} open={p.open} />
+              ))}
+            </div>
+          ) : (
+            <Text variant="body" as="p" tone="muted" style={{ margin: 0 }}>
+              None yet. Start one with New, copy a built-in one, or save a week from the calendar as one.
+            </Text>
+          )}
+        </div>
+      ) : null}
       {l.builtin.length ? (
         <div>
           <SectionLabel list label="Built-in" note={String(l.builtin.length)} />

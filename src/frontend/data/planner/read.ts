@@ -108,7 +108,9 @@ export async function loadModel(today: Date): Promise<Model> {
     const prog = run.programId ? programById[run.programId] : null;
     const blocks = prog ? prog.blocks : run.snapshot ? run.snapshot.blocks : [];
     const at = runPlace(blocks, run.start, run.startBlock, p.scheduled_date);
-    return at ? { runId: run.id, programId: run.programId, name: prog ? prog.name : run.name, block: at.name, week: at.week, weeks: at.weeks } : undefined;
+    // One block: no block's name to give, only the week.
+    const block = blocks.length > 1 ? at?.name || '' : '';
+    return at ? { runId: run.id, programId: run.programId, name: prog ? prog.name : run.name, block, week: at.week, weeks: at.weeks } : undefined;
   };
 
   const todayIso = isoOf(today);

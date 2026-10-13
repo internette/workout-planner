@@ -49,11 +49,6 @@ export function historyVals(ctx: Ctx) {
     if (!at) return '';
     return (p.blocks.length > 1 ? blockLabel(p.blocks[at.block], at.block) + ' · ' : '') + 'week ' + at.week + ' of ' + at.weeks;
   };
-  const weeksIn = (r: ProgramRun, p: SharedProgram) => {
-    if (r.start > todayIso) return null;
-    const before = p.blocks.slice(0, r.startBlock).reduce((s, b) => s + b.weeks, 0);
-    return before + Math.min((fromIso(todayIso).getTime() - fromIso(r.start).getTime()) / DAY / 7, runWeeks(p.blocks, r.startBlock));
-  };
   // Weeks it lasted: to its end, or to the day it was ended early.
   const weeksRun = (r: ProgramRun, p: SharedProgram) => {
     const all = runWeeks(p.blocks, r.startBlock);
@@ -96,8 +91,6 @@ export function historyVals(ctx: Ctx) {
           name: r.name,
           place: where(r, shown),
           open: openRun(r),
-          bar: shown.blocks.map((b, i) => ({ name: blockLabel(b, i), weeks: b.weeks })),
-          at: weeksIn(r, shown),
           done,
           total,
           pct: total ? Math.round((done / total) * 100) : 0,

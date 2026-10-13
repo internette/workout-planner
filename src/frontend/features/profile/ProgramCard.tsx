@@ -1,6 +1,5 @@
 // The Profile's program card: the one running (where you are in it, sessions done, what's next), or with none running
 // the last one run, to run again. Either way, the way to every program run. Not shown before any has been.
-import { BlockBar } from '@moonshot/design-system/block-bar';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
@@ -66,10 +65,7 @@ export function ProgramCard({ v }: { v: PlannerVals }) {
         </Text>
         <ChevronRight color="var(--color-muted)" size={17} />
       </button>
-      <div style={{ marginTop: '10px' }}>
-        <BlockBar blocks={p.bar} at={p.at} />
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '14px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
         <ProgressBar value={p.pct} track="tint" style={{ flex: 1 }} label="Sessions done" valueText={p.done + ' of ' + p.total} />
         <Text variant="figure" style={{ flex: 'none' }}>
           {p.done}/{p.total}

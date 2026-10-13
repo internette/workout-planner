@@ -174,7 +174,8 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
       ) : null}
       {v.showWeek ? (
         <div style={{ marginTop: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {/* On a narrow phone, Save as program drops to the line under the week rather than past the edge. */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 6px' }}>
             <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
             <Text variant="subheading" as="h1" style={{ flex: 'none', whiteSpace: 'nowrap', margin: 0 }}>
               {v.weekLabel}
