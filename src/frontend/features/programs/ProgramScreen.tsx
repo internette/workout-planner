@@ -151,11 +151,18 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
           </Text>
         </div>
       ) : null}
+      {/* Running, it can be ended; otherwise started. Starting it again while it runs would double its sessions up. */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '18px' }}>
-        <Button type="primary" size="lg" onClick={p.start} disabled={p.busy} style={{ flex: '1 1 200px' }}>
-          <Calendar color="var(--color-surface)" size={17} />
-          Start program
-        </Button>
+        {p.runs.length ? (
+          <Button type="danger" size="lg" onClick={p.runs[0].end} style={{ flex: '1 1 200px' }}>
+            End program
+          </Button>
+        ) : (
+          <Button type="primary" size="lg" onClick={p.start} disabled={p.busy} style={{ flex: '1 1 200px' }}>
+            <Calendar color="var(--color-surface)" size={17} />
+            Start program
+          </Button>
+        )}
         {p.share ? (
           <Button type="secondary" size="lg" onClick={p.share} style={{ flex: '0 1 auto' }}>
             Share
@@ -176,9 +183,12 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
             <Button type="neutral" ghost size="sm" onClick={r.move}>
               Change start
             </Button>
-            <Button type="danger" ghost size="sm" onClick={r.end}>
-              End program
-            </Button>
+            {/* Two running at once: each can be ended on its own; with one, it's the button above. */}
+            {p.runs.length > 1 ? (
+              <Button type="danger" ghost size="sm" onClick={r.end}>
+                End program
+              </Button>
+            ) : null}
           </span>
         </Card>
       ))}
