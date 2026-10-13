@@ -1,6 +1,6 @@
 import { DisclosureChevron } from '@moonshot/design-system/disclosure';
 import { type ReactNode } from 'react';
-import { IconButton } from '@moonshot/design-system/buttons';
+import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Close } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
@@ -17,15 +17,6 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
     <Card pad="sm">
       <div style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
         {handle}
-        <IconPicker
-          size="sm"
-          open={!!exercise?.open}
-          onToggle={exercise?.toggle}
-          onClose={exercise?.close}
-          current={t(exercise?.icoSvg)}
-          label={exercise?.iconAria ?? ''}
-          icons={exercise?.icons}
-        />
         <button
           type="button"
           onClick={exercise?.toggleExpand}
@@ -59,12 +50,7 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
         </button>
         {exercise?.showTick ? (
           <DoneTick done={!!exercise?.isDone} onToggle={exercise?.toggleDone} label={exercise?.doneAria ?? ''} />
-        ) : (
-          <span style={{ marginLeft: 'auto' }} />
-        )}
-        <IconButton label={exercise?.removeAria} size="md" onClick={exercise?.remove}>
-          <Close color="var(--color-muted)" size={19} />
-        </IconButton>
+        ) : null}
       </div>
       {exercise?.expanded ? (
       <>
@@ -81,6 +67,23 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
         weighted={exercise?.weighted}
       />
       <AreaChoice areas={exercise?.areas ?? []} />
+      {/* Its icon and removing it, with the rest of its settings: the closed row keeps its room for the details. */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '14px', paddingTop: '12px', borderTop: '1px solid var(--color-line)' }}>
+        <IconPicker
+            size="sm"
+            open={!!exercise?.open}
+            onToggle={exercise?.toggle}
+            onClose={exercise?.close}
+            current={t(exercise?.icoSvg)}
+            label={exercise?.iconAria ?? ''}
+            icons={exercise?.icons}
+          />
+        <Text variant="body" tone="muted">Icon</Text>
+        <Button type="danger" ghost size="sm" onClick={exercise?.remove} aria-label={exercise?.removeAria} style={{ marginLeft: 'auto' }}>
+          <Close color="var(--color-danger)" size={16} />
+          Remove
+        </Button>
+      </div>
       </>
       ) : null}
     </Card>

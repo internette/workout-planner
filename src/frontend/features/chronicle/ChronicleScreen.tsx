@@ -5,7 +5,8 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { TextField } from '@moonshot/design-system/text-field';
 import { Button } from '@moonshot/design-system/buttons';
-import { Calendar } from '@moonshot/design-system/icons';
+import { Calendar, Quill } from '@moonshot/design-system/icons';
+import { EmptyState } from '@moonshot/design-system/empty-state';
 import { PageHeader } from '@/frontend/components/PageHeader';
 import { ChronicleRow } from '@/frontend/features/chronicle/ChronicleRow';
 import { plural } from '@/frontend/shared/helpers';
@@ -38,9 +39,24 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
             New entry
           </Button>
         }
-        intro="Newest first."
+        intro={v.diaryBlank ? undefined : 'Newest first.'}
       />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
+      {/* Nothing written yet: what it's for and where to start, in place of filters with nothing to filter. */}
+      {v.diaryBlank ? (
+        <EmptyState
+          style={{ marginTop: '48px' }}
+          medallion="gem"
+          icon={<Quill color="var(--color-pink-deep)" size={34} />}
+          title="Your story starts here"
+          description="After a session, write how it went: how it felt, how hard it was, what to remember. Your moods gather on your Profile."
+          actions={
+            <Button type="primary" size="lg" glow onClick={v.openNewEntry}>
+              Write your first entry
+            </Button>
+          }
+        />
+      ) : null}
+      {v.diaryBlank ? null : <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
         <span className="sr-only" role="status">
           {v.diaryResults}
         </span>
@@ -99,7 +115,7 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
             />
           </div>
         ) : null}
-      </div>
+      </div>}
       {monthsOf(v.diaryList ?? []).map((g) => (
         <section key={g.label} aria-label={g.label.charAt(0) + g.label.slice(1).toLowerCase()}>
           <SectionLabel label={g.label} note={plural(g.entries.length, 'entry', 'entries')} style={{ margin: '20px 0 8px' }} />
@@ -110,7 +126,7 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
           </div>
         </section>
       ))}
-      {v.diaryEmpty ? (
+      {v.diaryEmpty && !v.diaryBlank ? (
         <Text variant="body" as="p" tone="muted" style={{ margin: '24px 0 0' }}>
           {v.diaryEmptyNote}
         </Text>

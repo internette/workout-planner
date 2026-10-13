@@ -1,21 +1,11 @@
 import { IconTile } from '@moonshot/design-system/icon-tile';
-import { Button } from '@moonshot/design-system/buttons';
-import { Card } from '@moonshot/design-system/card';
-import { ChevronRight, Plus } from '@moonshot/design-system/icons';
+import { Plus } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
 
 /** An exercise in the Spellbook’s list: open it, or add it to the workout being built. */
 export function ExerciseRow({ exercise }: { exercise: any }) {
   return (
-    <Card
-      pad="sm"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-        width: '100%',
-      }}
-    >
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '12px 0' }}>
       <button
         type="button"
         onClick={exercise?.open}
@@ -50,7 +40,6 @@ export function ExerciseRow({ exercise }: { exercise: any }) {
             {exercise?.detail}
           </Text>
         </span>
-        <ChevronRight color="var(--color-muted)" strokeWidth={2.2} size={16} />
       </button>
       {exercise?.inWorkout ? (
         <Text
@@ -63,11 +52,18 @@ export function ExerciseRow({ exercise }: { exercise: any }) {
         </Text>
       ) : (
         // Said in words, not just +: it adds the exercise to a workout (the one being built, or one to choose).
-        <Button type="secondary" size="sm" onClick={exercise?.add} aria-label={'Add ' + exercise?.name + ' to a workout'} style={{ flex: 'none' }}>
-          <Plus color="var(--color-pink-deep)" strokeWidth={2.4} size={15} />
-          Add
-        </Button>
+        <button
+          type="button"
+          onClick={exercise?.add}
+          aria-label={'Add ' + exercise?.name + ' to a workout'}
+          className="hv1"
+          style={{ flex: 'none', width: '44px', height: '44px', margin: '-4px -6px -4px 0', display: 'grid', placeItems: 'center', border: 'none', background: 'none', cursor: 'pointer', borderRadius: 'var(--radius-full)' }}
+        >
+          <span style={{ width: '32px', height: '32px', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)', background: 'var(--color-pink-tint)' }}>
+            <Plus color="var(--color-pink-deep)" strokeWidth={2.6} size={16} />
+          </span>
+        </button>
       )}
-    </Card>
+    </div>
   );
 }

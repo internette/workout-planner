@@ -291,15 +291,6 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 18px', marginTop: '16px', padding: '12px 18px' }}
             >
               <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Gem size={18} />
-                <Text variant="subheading">{v.streakCount}</Text>
-                <Text variant="small" tone="muted">
-                  day streak
-                </Text>
-              </span>
-              {/* A rule between the two, except on the narrowest phones, where they're on a line each. */}
-              <span aria-hidden="true" className="stats-rule" style={{ width: '1px', alignSelf: 'stretch', background: 'var(--color-line)' }} />
-              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span
                   style={{
                     width: '20px',

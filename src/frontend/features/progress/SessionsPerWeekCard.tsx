@@ -10,16 +10,19 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: '14px' }}>
       <SectionLabel as="span" label="Sessions per week" aside={v.chartRangeLabel} />
-      <Text variant="body" as="p" tone="muted" style={{ margin: '8px 0 0' }}>
-        {v.chartCaption}
-      </Text>
+      {v.chartCaption ? (
+        <Text variant="body" as="p" tone="muted" style={{ margin: '8px 0 0' }}>
+          {v.chartCaption}
+        </Text>
+      ) : null}
       <div
         style={{
           display: 'flex',
           alignItems: 'flex-end',
           // No gap: each week's column is tappable edge to edge (the space between bars is inside each column).
           height: '132px',
-          marginTop: '14px',
+          // Room for the tallest bar's count under the label when there's no caption.
+          marginTop: v.chartCaption ? '14px' : '30px',
         }}
       >
         {(v.weeklyBars ?? []).map((b, i) => (

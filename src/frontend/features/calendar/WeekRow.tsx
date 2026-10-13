@@ -8,27 +8,22 @@ import { SessionTags } from '@/frontend/components/SessionTags';
 export function WeekRow({ row }: { row: any }) {
   return (
     <div>
-      {row?.showLabel ? (
+      {row?.isRest ? (
+        // A rest day is one quiet line, its date and "Rest": the week's sessions get the room.
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '10px 0 2px', minHeight: '28px' }}>
+          <Text variant="micro" tone={row?.labelTone} style={{ flex: 'none' }}>
+            {row?.label}
+          </Text>
+          <span aria-hidden="true" style={{ flex: '1', height: '1px', background: 'var(--color-line)' }} />
+          <Text variant="small" tone="muted" style={{ flex: 'none' }}>
+            {row?.days > 1 ? 'Rest days' : 'Rest day'}
+          </Text>
+        </div>
+      ) : null}
+      {row?.showLabel && !row?.isRest ? (
         <Text variant="micro" as="div" tone={row?.labelTone} style={{ margin: '14px 0 9px' }}>
           {row?.label}
         </Text>
-      ) : null}
-      {row?.isRest ? (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            padding: '15px 20px',
-            borderRadius: 'var(--radius-lg)',
-            background: 'var(--color-surface-rest)',
-          }}
-        >
-          <StatusDot status="rest" size="md" />
-          <Text variant="strong" tone="muted">
-            Rest day
-          </Text>
-        </div>
       ) : null}
       {row?.hasRow ? (
         <Card

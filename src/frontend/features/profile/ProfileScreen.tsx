@@ -1,8 +1,6 @@
 // The profile: who you are and your stats. Settings are a page of their own, opened from the gear by the title.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
-import { Card } from '@moonshot/design-system/card';
-import { Stat } from '@moonshot/design-system/stat';
 import { IconTileButton } from '@moonshot/design-system/icon-tile';
 import { Gear } from '@moonshot/design-system/icons';
 import { PageHeader } from '@/frontend/components/PageHeader';
@@ -26,13 +24,6 @@ export function ProfileScreen({ v }: { v: PlannerVals }) {
       />
       <ProfileHeaderCard v={v} />
       <ProgramCard v={v} />
-      <div id="profileStats" style={{ display: 'grid', gap: '12px', marginTop: '14px' }}>
-        {(v.profileStats ?? []).map((s, i) => (
-          <Card key={i} pad="sm">
-            <Stat size="xl" label={s?.label} value={s?.value} unit={s?.unit ?? ''} note={s?.span} />
-          </Card>
-        ))}
-      </div>
       <QuestsClearedCard v={v} />
       <div
         style={{
