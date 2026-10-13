@@ -22,7 +22,9 @@ self.addEventListener('message', (event) => {
       self.registration.showNotification(m.title, {
         tag: LIVE_TAG,
         body: m.body,
-        icon: '/icons/icon-192.png',
+        // The picture on its right: the crescent in its gradient, on transparent so the notification shows through
+        // in light and dark.
+        icon: '/icons/notification-mark.png',
         // The small icon in the status bar. Android keeps only its shape (the alpha) and tints it, so it is the
         // crescent in white on transparent (the design system's brand/moonshot-badge.svg); the app icon here showed as a
         // filled square.

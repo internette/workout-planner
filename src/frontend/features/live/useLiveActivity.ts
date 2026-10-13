@@ -21,15 +21,22 @@ import type { WorkerIn, WorkerOut } from './timer.worker';
 type Action = 'open' | 'set' | 'tick' | 'more' | 'skip' | 'finish' | 'pause' | 'resume' | 'write';
 type Shown = { title: string; body: string; actions: { action: Action; title: string }[] };
 
-const minutes = (sec: number) => (sec < 60 ? 'just started' : Math.floor(sec / 60) + ' min');
 const clockTime = (at: number) => new Date(at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+// A running clock: 4:05, 12:36, 1:02:09.
+const clock = (sec: number) => {
+  const s = Math.floor(sec);
+  const mm = Math.floor((s % 3600) / 60);
+  const ss = String(s % 60).padStart(2, '0');
+  return s >= 3600 ? Math.floor(s / 3600) + ':' + String(mm).padStart(2, '0') + ':' + ss : mm + ':' + ss;
+};
 
-// What the notification says about a session in progress.
+// What the notification says about a session in progress. The clock leads the title, and is sent again each second
+// while it runs (a notification can't count by itself), so it ticks.
 function liveNotice(a: LiveActivity, now: number): Shown {
-  // Resting: when it's over (a notification can't count down), and what's next.
+  // Resting: how long is left, and what's next.
   if (a.rest)
     return {
-      title: 'Rest · until ' + clockTime(a.rest.endsAt),
+      title: 'Rest · ' + clock(Math.max(0, Math.ceil((a.rest.endsAt - now) / 1000))) + ' left',
       body: a.rest.next ? 'Up next: ' + a.rest.next.name + (a.rest.next.line ? ' · ' + a.rest.next.line : '') : '',
       actions: [
         { action: 'more', title: '+30 sec' },
@@ -38,18 +45,24 @@ function liveNotice(a: LiveActivity, now: number): Shown {
     };
   const sec = clockSeconds(a.clock, now);
   const paused = !a.clock.runningSince;
-  const title = a.name + ' · ' + (paused ? 'Paused at ' + Math.floor(sec / 60) + ' min' : minutes(sec));
+  // Lifting, the title is what's being done now; the session's name moves to the body.
+  const what = a.kind === 'lift' && a.now ? a.now.name + (a.now.of > 1 ? ', set ' + a.now.set + ' of ' + a.now.of : '') : a.name;
+  const title = (paused ? 'Paused at ' : '') + clock(sec) + ' · ' + what;
   const body =
     a.kind === 'ride'
       ? [a.ride?.zone, a.ride?.dist ? a.ride.dist + ' mi planned' : a.ride?.planned, a.ride?.climb ? a.ride.climb + ' ft climb' : '']
           .filter(Boolean)
           .join(' · ')
-      : a.done + ' of ' + a.total + ' done' + (a.now ? '\nNow: ' + a.now.name + (a.now.line ? ' · ' + a.now.line : '') : '');
+      : a.now
+        ? (a.now.line ? a.now.line + '\n' : '') + a.name + ' · ' + a.done + ' of ' + a.total + ' done'
+        : a.name + ' · ' + a.done + ' of ' + a.total + ' done';
   const finish = { action: 'finish' as const, title: a.kind === 'ride' ? 'Finish ride' : 'Finish' };
+  const pause = { action: 'pause' as const, title: 'Pause' };
+  // Lifting, the set and Pause; paused, Resume and Finish; riding, Pause and Finish.
   const actions =
     a.kind === 'lift' && a.now && !paused
-      ? [{ action: 'set' as const, title: a.now.of > 1 ? 'Done: set ' + a.now.set + ' of ' + a.now.of : 'Tick off ' + a.now.name }, finish]
-      : [paused ? { action: 'resume' as const, title: 'Resume' } : { action: 'pause' as const, title: 'Pause' }, finish];
+      ? [{ action: 'set' as const, title: a.now.of > 1 ? 'Done: set ' + a.now.set + ' of ' + a.now.of : 'Tick off ' + a.now.name }, pause]
+      : [paused ? { action: 'resume' as const, title: 'Resume' } : pause, finish];
   return { title, body, actions };
 }
 
@@ -217,7 +230,7 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
     ended.current = null;
     const shown = liveNotice(activity, now);
     const key = JSON.stringify(shown);
-    // Swiped away: gone until something besides the minutes changes.
+    // Swiped away: gone until something besides the clock changes.
     const content = JSON.stringify({ ...shown, title: activity.name, paused: !activity.clock.runningSince });
     if (key === shownKey.current || content === dismissed.current) return;
     dismissed.current = '';
