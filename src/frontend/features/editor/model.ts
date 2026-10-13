@@ -1,3 +1,4 @@
+import { programPlace } from '@/frontend/shared/programs';
 import { DOWFULL, EDIT_OVERLAYS, ICON_COLOR_NAMES, ICON_COLORS, LIFT_MINUTES, MONTHS, NEW_WORKOUT_CLEARED, RIDE_MINUTES } from '@/frontend/shared/constants';
 import { digitsOnly, exLine, idOf, isoOf, joinSetsReps, longDay, minText, mod12, monDay, monthPatch, needsLine, noticePatch, numericOnly, plural, rollMinutes, isHold, setsRepsOk, shortDay, splitSetsReps, toMinutes, withLb, withSec, workoutDraftDirty } from '@/frontend/shared/helpers';
 import { iconOptions, iconSvg } from '@/frontend/shared/icons';
@@ -570,7 +571,21 @@ export function editVals(ctx: Ctx) {
     areaPills: selRide ? [selRide.zone || DEFAULT_ZONE] : picked,
     needs: selRide ? null : needsLine(selList),
     inSeries: !!(selAct && selAct.series),
-    canRepeat: !tplMode && !(selAct && selAct.series),
+    // A program's session repeats as the program does: a weekly series on top would double it up.
+    canRepeat: !tplMode && !(selAct && (selAct.series || selAct.program)),
+    // The program a session is part of, and where in it, opening the program.
+    eProgram:
+      !creating && selAct && selAct.program
+        ? {
+            label: selAct.program.name + ' · ' + programPlace(selAct.program),
+            open: selAct.program.programId
+              ? (() => {
+                  const id = selAct.program.programId;
+                  return () => logic.nav({ screen: 'program', programId: id, programOpenBlocks: {}, programStart: null, programShareOpen: false });
+                })()
+              : null,
+          }
+        : null,
     // The series' own day, not this session's date (which may have just been moved in this editor).
     seriesNote:
       'Part of a weekly series: it repeats every ' +

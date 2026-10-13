@@ -6,7 +6,7 @@ import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { Button } from '@moonshot/design-system/buttons';
-import { ChevronDown, Clock, Pencil, Repeat } from '@moonshot/design-system/icons';
+import { ChevronDown, ChevronRight, Clock, Pencil, Repeat } from '@moonshot/design-system/icons';
 import { Popover } from '@moonshot/design-system/popover';
 import { BackBar } from '@/frontend/components/BackBar';
 import { FormActions } from '@/frontend/components/FormActions';
@@ -32,6 +32,24 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
         </Button>
       </BackBar>
       <PageTitle icon={v.dayIcoSvg} eyebrow={<>{v.eDate}<KindTag inline kind={v.eKind ?? null} /></>} title={v.eName} />
+      {v.eProgram ? (
+        v.eProgram.open ? (
+          <button
+            type="button"
+            onClick={v.eProgram.open}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', minHeight: '44px', marginTop: '4px', padding: 0, border: 'none', background: 'none', font: 'inherit', cursor: 'pointer', textAlign: 'left' }}
+          >
+            <Text variant="body" weight="semibold" tone="accent">
+              {v.eProgram.label}
+            </Text>
+            <ChevronRight color="var(--color-pink-deep)" size={15} />
+          </button>
+        ) : (
+          <Text variant="body" weight="semibold" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+            {v.eProgram.label}
+          </Text>
+        )
+      ) : null}
       <ChipGroup style={{ marginTop: '20px' }}>
         <Chip
           icon={<Clock color="var(--color-muted)" size={15} />}

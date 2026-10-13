@@ -82,6 +82,6 @@ export function programOfWorkout<M extends ModelLike>(model: M, id: string) {
   return null;
 }
 
-/** Where a program's session is: "Build, week 2 of 3". */
+/** Where a program's session is: "Build, week 2 of 3", or in a program of one block "Week 2 of 8". */
 export const programPlace = (p: { block: string; week: number; weeks: number }) =>
-  (p.block ? p.block + ', ' : '') + 'week ' + p.week + ' of ' + p.weeks;
+  p.block ? p.block + ', week ' + p.week + ' of ' + p.weeks : 'Week ' + p.week + ' of ' + p.weeks;

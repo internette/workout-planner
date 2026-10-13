@@ -122,14 +122,6 @@ export function programVals(ctx: Ctx) {
     if (!at) return '';
     return (p.blocks.length > 1 ? blockLabel(p.blocks[at.block], at.block) + ' · ' : '') + 'week ' + at.week + ' of ' + at.weeks;
   };
-  // How far through it a run is, in weeks of the whole program (for the bar's marker).
-  const weeksIn = (p: Program, r: ProgramRun) => {
-    if (r.start > todayIso) return null;
-    const before = p.blocks.slice(0, r.startBlock).reduce((s, b) => s + b.weeks, 0);
-    const days = Math.round((fromIso(todayIso).getTime() - fromIso(r.start).getTime()) / 86400000);
-    return before + Math.min(days / 7, runWeeks(p.blocks, r.startBlock));
-  };
-  const bar = (p: Shown) => p.blocks.map((b, i) => ({ name: blockLabel(b, i), weeks: b.weeks }));
 
   const open = (id: string) => () => logic.nav({ screen: 'program', programId: id, programOpenBlocks: {}, programStart: null, programShareOpen: false });
 
@@ -140,12 +132,18 @@ export function programVals(ctx: Ctx) {
     runsOf(p.id)
       .filter(live)
       .filter(() => hit(shownOwn(p)))
-      .map((r) => ({ key: r.id, name: p.name, place: where(p, r), bar: bar(shownOwn(p)), at: weeksIn(p, r), open: open(p.id) })),
+      .map((r) => {
+        const total = p.blocks.slice(r.startBlock).reduce((n, b) => n + b.weeks * b.workouts.reduce((k, w) => k + w.days.length, 0), 0);
+        const done = model.entries.filter((e) => e.av.program?.runId === r.id && e.av.s === 'c').length;
+        return { key: r.id, name: p.name, place: where(p, r), pct: total ? Math.round((done / total) * 100) : 0, figure: done + '/' + total, valueText: done + ' of ' + total + ' sessions done', open: open(p.id) };
+      }),
   );
+  const isRunning = (id: string) => runsOf(id).some(live);
   const card = (p: Shown) => ({ key: p.id, name: p.name, meta: metaOf(p), icon: iconSvg(p.blocks[0]?.workouts[0]?.icon || 'h'), open: open(p.id) });
   const programList = {
     running,
-    mine: own.filter(hit).map(card),
+    // A running one is listed under Running, not again here.
+    mine: own.filter((p) => !isRunning(p.id)).filter(hit).map(card),
     builtin: builtins.filter(hit).map(card),
     none: own.length + builtins.length === 0,
     noMatch: !!q && own.length + builtins.length > 0 && !own.some(hit) && !builtins.some(hit),
