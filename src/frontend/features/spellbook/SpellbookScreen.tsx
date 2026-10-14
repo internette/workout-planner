@@ -46,7 +46,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
             position: 'sticky',
             top: '0',
             zIndex: 5,
-            margin: '4px -4px 0',
+            margin: 'var(--space-1) calc(-1 * var(--space-1)) 0',
             padding: 'var(--space-3) var(--space-1) var(--space-1)',
             background: 'var(--color-canvas)',
           }}
@@ -77,7 +77,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
         style={{ marginTop: 'var(--space-4)' }}
       />
       {/* The search, and beside it everything else that narrows the list, in one sheet. */}
-      <div style={{ display: 'flex', alignItems: 'stretch', gap: 'var(--space-2h)', marginTop: 'var(--space-3)' }}>
+      <div style={{ display: 'flex', alignItems: 'stretch', gap: 'var(--space-2)', marginTop: 'var(--space-3)' }}>
         <div style={{ flex: '1', minWidth: '0' }}>
           <SearchBar
             value={v.arsenalQuery ?? ''}
@@ -105,7 +105,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
             <Plus color="var(--color-pink-deep)" strokeWidth={2.6} size={14} style={{ verticalAlign: '-2px' }} /> to add it to a workout.
           </Text>
           <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: 'var(--space-4h)' }}
+            style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)', marginTop: 'var(--space-5)' }}
           >
             {(v.moveGroups ?? []).map((g, i) => (
               <div key={i}>
@@ -135,7 +135,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
             </Text>
           ) : null}
           {/* Grouped like the Exercises tab: the person's own, then the built-in ones by group. */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: 'var(--space-4h)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)', marginTop: 'var(--space-5)' }}>
             {(v.workoutGroups ?? []).map((g, gi) => (
               <div key={gi}>
                 {g?.label ? (

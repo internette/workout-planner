@@ -10,7 +10,7 @@ export function WeekRow({ row }: { row: any }) {
     <div>
       {row?.isRest ? (
         // A rest day is one quiet line, its date and "Rest": the week's sessions get the room.
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', margin: 'var(--space-2h) 0 var(--space-0h)', minHeight: '28px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', margin: 'var(--space-3) 0 var(--space-1)', minHeight: '28px' }}>
           <Text variant="micro" tone={row?.labelTone} style={{ flex: 'none' }}>
             {row?.label}
           </Text>
@@ -21,7 +21,7 @@ export function WeekRow({ row }: { row: any }) {
         </div>
       ) : null}
       {row?.showLabel && !row?.isRest ? (
-        <Text variant="micro" as="div" tone={row?.labelTone} style={{ margin: '14px 0 9px' }}>
+        <Text variant="micro" as="div" tone={row?.labelTone} style={{ margin: 'var(--space-4) 0 var(--space-2)' }}>
           {row?.label}
         </Text>
       ) : null}
@@ -36,7 +36,7 @@ export function WeekRow({ row }: { row: any }) {
             width: '100%',
             display: 'flex',
             alignItems: 'center',
-            gap: '13px',
+            gap: 'var(--space-3)',
           }}
         >
           <IconTile as="span" size="xs" variant="flat" aria-hidden>{row?.icoSvg}</IconTile>
@@ -49,7 +49,7 @@ export function WeekRow({ row }: { row: any }) {
               variant="body"
               as="div"
               tone="muted"
-              style={{ marginTop: '3px' }}
+              style={{ marginTop: 'var(--space-1)' }}
             >
               {row?.meta}
             </Text>

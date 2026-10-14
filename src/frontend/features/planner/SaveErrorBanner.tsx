@@ -17,7 +17,7 @@ export function SaveErrorBanner({ v }: { v: PlannerVals }) {
       style={{ marginBottom: 'var(--space-4)' }}
     >
       Couldn&apos;t save that. Check your connection and try again.
-      <Text variant="small" as="span" style={{ display: 'block', marginTop: 'var(--space-0h)', opacity: 0.8 }}>
+      <Text variant="small" as="span" style={{ display: 'block', marginTop: 'var(--space-1)', opacity: 0.8 }}>
         {v.saveError}
       </Text>
     </Callout>

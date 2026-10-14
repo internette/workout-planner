@@ -20,7 +20,7 @@ export function ProfileScreen({ v }: { v: PlannerVals }) {
             <Gear color="var(--color-pink)" size={20} />
           </IconTileButton>
         }
-        style={{ marginBottom: 'var(--space-3h)' }}
+        style={{ marginBottom: 'var(--space-4)' }}
       />
       <ProfileHeaderCard v={v} />
       <ProgramCard v={v} />
@@ -30,7 +30,7 @@ export function ProfileScreen({ v }: { v: PlannerVals }) {
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))',
           gap: 'var(--space-3)',
-          marginTop: 'var(--space-3h)',
+          marginTop: 'var(--space-4)',
         }}
       >
         <MoodSplitCard v={v} />

@@ -13,7 +13,7 @@ export function RanksDialog({ v }: { v: PlannerVals }) {
       size="md"
       description="Earned with experience — 10 XP per exercise completed, 50 XP per workout finished."
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1h)', marginTop: 'var(--space-4h)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', marginTop: 'var(--space-5)' }}>
         {(v.rankLadder ?? []).map((r, i) => (
           <div
             key={i}
@@ -21,7 +21,7 @@ export function RanksDialog({ v }: { v: PlannerVals }) {
               display: 'flex',
               alignItems: 'center',
               gap: 'var(--space-3)',
-              padding: '11px 14px',
+              padding: 'var(--space-3) var(--space-3)',
               borderRadius: 'var(--radius-md)',
               // The current rank in its tier's colors, the ones reached on canvas, the rest to come quiet.
               ...(r?.cur ? r.pill : r?.reached ? { background: 'var(--color-canvas)', color: 'var(--color-slate)' } : { background: 'none', color: 'var(--color-muted)' }),

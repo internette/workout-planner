@@ -7,7 +7,7 @@ import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { Text } from '@moonshot/design-system/typography';
 import { savedAccent, savedTheme, setAccent, setTheme, type Accent, type Theme } from '@moonshot/design-system/theme';
 
-const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-3h)' };
+const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-4)' };
 
 /** Settings → Appearance: the color and light or dark. Saved in this browser and applied at once (its card says so). */
 export function AppearanceSetting() {
@@ -34,7 +34,7 @@ export function AppearanceSetting() {
             Color
           </Text>
           {/* The chosen one's name: the swatches alone only say it on hover. */}
-          <Text variant="body" as="div" tone="muted" style={{ marginTop: 'var(--space-0h)' }}>
+          <Text variant="body" as="div" tone="muted" style={{ marginTop: 'var(--space-1)' }}>
             {(ACCENTS.find((a) => a.name === accent) || ACCENTS[0]).label}
           </Text>
         </div>
@@ -42,7 +42,7 @@ export function AppearanceSetting() {
           labelledBy="color-label"
           kind="swatch"
           shape="round"
-          style={{ flexWrap: 'nowrap', gap: 'var(--space-1h)' }}
+          style={{ flexWrap: 'nowrap', gap: 'var(--space-1)' }}
           options={ACCENTS.map((a) => ({
             value: a.name,
             label: a.label,

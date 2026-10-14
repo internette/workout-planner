@@ -16,17 +16,17 @@ export function ProgressScreen({ v }: { v: PlannerVals }) {
     <div>
       <PageHeader title="Progress" intro={v.summarySub} />
       <StreakBanner v={v} />
-      <div style={{ display: 'flex', marginTop: '26px' }}>
+      <div style={{ display: 'flex', marginTop: 'var(--space-7)' }}>
         <ThisWeekCard v={v} />
       </div>
       <SessionsPerWeekCard v={v} />
       <AllTimeCard v={v} />
-      <div style={{ display: 'flex', marginTop: 'var(--space-3h)' }}>
+      <div style={{ display: 'flex', marginTop: 'var(--space-4)' }}>
         <NextUpCard v={v} />
       </div>
       <WeekQuestsCard v={v} />
-      <PersonalBestsCard v={v} style={{ marginTop: 'var(--space-3h)' }} />
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3h)', marginTop: 'var(--space-3h)' }}>
+      <PersonalBestsCard v={v} style={{ marginTop: 'var(--space-4)' }} />
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
         <CountCard label="Chronicle" count={v.loggedCount} unit={v.loggedUnit} onClick={v.openChronicle} />
         <CountCard label={v.monthLabel} count={v.monthDone} unit={v.monthDoneUnit} onClick={v.openMonth} />
       </div>

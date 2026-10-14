@@ -12,9 +12,9 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
   return (
     <>
       {/* Centred on a phone; beside the sidebar it sits in the page's column, like a saved entry. */}
-      <div style={{ marginTop: '34px', textAlign: v.entryLeft ? 'left' : 'center' }}>
+      <div style={{ marginTop: 'var(--space-7)', textAlign: v.entryLeft ? 'left' : 'center' }}>
         {v.writeEyebrow ? (
-          <Text variant="micro" as="div" tone="slate" style={{ marginBottom: 'var(--space-1h)' }}>
+          <Text variant="micro" as="div" tone="slate" style={{ marginBottom: 'var(--space-2)' }}>
             {v.writeEyebrow}
           </Text>
         ) : null}
@@ -29,7 +29,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
         </Text>
         <p
           style={{
-            margin: '9px 0 0',
+            margin: 'var(--space-2) 0 0',
             fontSize: 'var(--text-lg)',
             fontWeight: 'var(--font-weight-medium)',
             color: 'var(--color-muted)',
@@ -61,7 +61,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
             value={v.rpe}
             onChange={v.pickRpe}
             words={v.rpeWords}
-            style={{ marginLeft: '-6px' }}
+            style={{ marginLeft: 'calc(-1 * var(--space-1))' }}
           />
           {v.rpeLabel ? (
             <span
@@ -76,7 +76,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
             </span>
           ) : null}
         </div>
-        <Text variant="strong" weight="semibold" tone="slate" as="p" style={{ margin: 'var(--space-7) 0 var(--space-2h)' }}>
+        <Text variant="strong" weight="semibold" tone="slate" as="p" style={{ margin: 'var(--space-7) 0 var(--space-3)' }}>
           Notes (optional)
         </Text>
         <TextArea
@@ -87,14 +87,14 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
           placeholder="Energy, soreness, what worked, what didn't…"
         />
         {v.showMarkDone ? (
-          <div style={{ marginTop: 'var(--space-4h)' }}>
+          <div style={{ marginTop: 'var(--space-5)' }}>
             <Checkbox switch checked={!!v.markDoneOn} onChange={v.setMarkDone}>
               {v.markDoneLabel}
             </Checkbox>
           </div>
         ) : null}
         {v.saveEntryHint ? (
-          <Text id="save-entry-hint" variant="body" tone="muted" as="p" style={{ margin: 'var(--space-4h) 0 0', textAlign: 'center' }}>
+          <Text id="save-entry-hint" variant="body" tone="muted" as="p" style={{ margin: 'var(--space-5) 0 0', textAlign: 'center' }}>
             {v.saveEntryHint}
           </Text>
         ) : null}

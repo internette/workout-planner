@@ -1,7 +1,7 @@
 /** One dot a set, filled once done. Hidden from screen readers: the words beside it say the same. */
 export function SetPips({ pips }: { pips: boolean[] }) {
   return (
-    <span aria-hidden="true" style={{ display: 'flex', gap: '5px', flex: 'none' }}>
+    <span aria-hidden="true" style={{ display: 'flex', gap: 'var(--space-1)', flex: 'none' }}>
       {pips.map((on, i) => (
         <span
           key={i}

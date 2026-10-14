@@ -14,13 +14,13 @@ export interface PageTitleProps {
 /** An inner page's heading, with its icon: the exercise, saved workout and session pages. */
 export function PageTitle({ icon, eyebrow, title }: PageTitleProps) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3h)', marginTop: 'var(--space-4h)' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-5)' }}>
       <IconTile as="span">{icon}</IconTile>
       <div style={{ minWidth: 0 }}>
         <Text variant="micro" as="div" tone="slate">
           {eyebrow}
         </Text>
-        <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
+        <Text variant="title" as="h1" style={{ margin: 'var(--space-1) 0 0' }}>
           {title}
         </Text>
       </div>

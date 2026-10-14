@@ -12,11 +12,11 @@ export function TypePickerScreen({ v }: { v: PlannerVals }) {
   return (
     <div style={{ maxWidth: '560px' }}>
       {v.retyping ? <BackBar label="Back" onBack={v.closeRetype} /> : <BackBar label={v.backLabel} onBack={v.backToDay} />}
-      <div style={{ marginTop: 'var(--space-4h)' }}>
+      <div style={{ marginTop: 'var(--space-5)' }}>
         <Text variant="micro" as="div" tone="slate">
           {v.retyping ? v.eEyebrow : 'New workout'}
         </Text>
-        <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
+        <Text variant="title" as="h1" style={{ margin: 'var(--space-1) 0 0' }}>
           What kind of workout?
         </Text>
       </div>

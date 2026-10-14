@@ -15,7 +15,7 @@ export function FormActions({ children, compact = false }: FormActionsProps) {
         flexWrap: 'wrap',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        gap: 'var(--space-2h)',
+        gap: 'var(--space-2)',
         marginTop: compact ? 'var(--space-5)' : 'var(--space-6)',
         paddingTop: compact ? 'var(--space-4)' : 'var(--space-5)',
         borderTop: '1px solid var(--color-line)',

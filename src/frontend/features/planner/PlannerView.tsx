@@ -46,7 +46,7 @@ export function PlannerView({ v }: { v: PlannerVals }) {
       <AddToDayDialog v={v} />
       {/* The page never scrolls sideways: a 44px tap area reaching past a control at the screen edge stays an invisible
           extra instead of widening the page. (clip, unlike hidden, keeps sticky bands working.) */}
-      <div style={{ minHeight: '100vh', overflowX: 'clip', padding: '0 0 ' + (v.layout === 'narrow' ? '108px' : '64px') }}>
+      <div style={{ minHeight: '100vh', overflowX: 'clip', paddingBottom: v.layout === 'narrow' ? 'calc(4 * var(--space-7))' : 'calc(2 * var(--space-7))' }}>
         <div
           style={{
             maxWidth: '1180px',

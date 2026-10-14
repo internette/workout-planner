@@ -58,7 +58,7 @@ export function QuestCard({ v }: { v: PlannerVals }) {
           variant="subheading"
           as="div"
           tone={v.questCleared ? 'muted' : 'ink'}
-          style={{ marginTop: 'var(--space-0h)', textDecoration: v.questCleared ? 'line-through' : undefined }}
+          style={{ marginTop: 'var(--space-1)', textDecoration: v.questCleared ? 'line-through' : undefined }}
         >
           {v.questTitle}
         </Text>
@@ -67,7 +67,7 @@ export function QuestCard({ v }: { v: PlannerVals }) {
           as="div"
           tone="slateDeep"
           style={{
-            marginTop: 'var(--space-0h)',
+            marginTop: 'var(--space-1)',
             textWrap: 'pretty',
           }}
         >

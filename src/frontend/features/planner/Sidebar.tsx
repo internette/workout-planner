@@ -5,7 +5,7 @@ import { NAV } from './nav';
 // The card the places sit in: down the side on a wide screen, a row across the top on a tablet.
 const SIDEBAR: Record<'tablet' | 'wide', CSSProperties> = {
   tablet: { flex: '1 1 100%', width: '100%', position: 'relative', background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-2)', boxShadow: 'var(--elevation-raised)' },
-  wide: { flex: '0 1 208px', minWidth: '180px', position: 'relative', background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-4h) var(--space-3h)', boxShadow: 'var(--elevation-raised)' },
+  wide: { flex: '0 1 208px', minWidth: '180px', position: 'relative', background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-4) var(--space-3)', boxShadow: 'var(--elevation-raised)' },
 };
 
 // A place: lit in the accent tint where the person is.

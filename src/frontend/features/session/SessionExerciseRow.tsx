@@ -10,7 +10,7 @@ export function SessionExerciseRow({ exercise }: { exercise: any }) {
   return (
     <Card
       pad="sm"
-      style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '13px' }}
+      style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-3)' }}
     >
       <IconTile as="span" size="xs" variant="flat">{exercise?.icoSvg}</IconTile>
       <span style={{ minWidth: '0', flex: '1 1 auto' }}>
@@ -18,7 +18,7 @@ export function SessionExerciseRow({ exercise }: { exercise: any }) {
         <Text
           variant="body"
           tone="muted"
-          style={{ display: 'block', marginTop: '3px' }}
+          style={{ display: 'block', marginTop: 'var(--space-1)' }}
         >
           {exercise?.detail}
         </Text>
@@ -27,7 +27,7 @@ export function SessionExerciseRow({ exercise }: { exercise: any }) {
         <DoneTick done={!!exercise?.isDone} onToggle={exercise?.toggleDone} label={exercise?.doneAria ?? ''} />
       ) : null}
       {exercise?.showSets ? (
-        <div style={{ flex: '1 1 100%', display: 'flex', alignItems: 'center', gap: 'var(--space-3)', paddingLeft: 'calc(34px + 13px)' }}>
+        <div style={{ flex: '1 1 100%', display: 'flex', alignItems: 'center', gap: 'var(--space-3)', paddingLeft: 'calc(34px + var(--space-3))' }}>
           <SetPips pips={exercise.setPips as boolean[]} />
           <Text variant="body" tone="slate" style={{ flex: '1 1 auto', fontVariantNumeric: 'tabular-nums' }}>
             {exercise.setsLabel}

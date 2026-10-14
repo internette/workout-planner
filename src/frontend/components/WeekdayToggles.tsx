@@ -16,7 +16,7 @@ export function WeekdayToggles({ label, days, onToggle }: WeekdayTogglesProps) {
       role="group"
       aria-label={label}
       // Seven across at any width: each shrinks on a narrow card rather than wrapping the week onto two lines.
-      style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 40px))', gap: 'var(--space-1h)' }}
+      style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 40px))', gap: 'var(--space-1)' }}
     >
       {DOW1.map((letter, day) => {
         const on = days.includes(day);

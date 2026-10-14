@@ -17,13 +17,13 @@ function PickerDialog({ v }: { v: PlannerVals }) {
   if (!p) return null;
   return (
     <Dialog open={p.open} onClose={p.cancel} title={p.title} variant="sheet">
-      <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-1h) 0 0' }}>
+      <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
         The program gets its own copy: changes to it stay in the program.
       </Text>
       <div style={{ marginTop: 'var(--space-3)' }}>
         <SearchBar value={p.q} onChange={p.setQ} placeholder="Search workouts" label="Search workouts" onClear={p.clearQ} status="" />
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', marginTop: 'var(--space-3h)', maxHeight: '50vh', overflowY: 'auto' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', marginTop: 'var(--space-4)', maxHeight: '50vh', overflowY: 'auto' }}>
         {p.groups.map((g) => (
           <div key={g.label}>
             <SectionLabel list label={g.label} />
@@ -71,12 +71,12 @@ export function ProgramEditScreen({ v }: { v: PlannerVals }) {
           Done
         </Button>
       </BackBar>
-      <Text variant="micro" tone="slate" as="div" style={{ marginTop: 'var(--space-4h)' }}>
+      <Text variant="micro" tone="slate" as="div" style={{ marginTop: 'var(--space-5)' }}>
         Editing program
       </Text>
       {/* Saved when the field is left, so each letter typed isn't a save. Keyed by the saved value, so a change saved
           elsewhere shows. */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-2h)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-3)' }}>
         <TextField key={'n' + e.name} label="Program name" defaultValue={e.name} onBlur={e.rename} maxLength={80} />
         <TextField key={'t' + e.notes} label="Notes" labelNote="Optional" defaultValue={e.notes} onBlur={e.setNotes} placeholder="What it's for, how to run it" />
       </div>
@@ -85,13 +85,13 @@ export function ProgramEditScreen({ v }: { v: PlannerVals }) {
           {e.runningNote}
         </Text>
       ) : null}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3h)', marginTop: 'var(--space-4h)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-5)' }}>
         {e.blocks.map((b) => (
           <Card key={b.key}>
             <Text variant="micro" tone="slate" as="div">
               {b.heading}
             </Text>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', alignItems: 'flex-end', marginTop: 'var(--space-2h)' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', alignItems: 'flex-end', marginTop: 'var(--space-3)' }}>
               <TextField key={'b' + b.name} label="Block name" defaultValue={b.name} onBlur={b.rename} maxLength={40} containerStyle={{ flex: '1 1 160px' }} />
               <div>
                 <Text variant="micro" tone="slate" as="div" style={{ marginBottom: 'var(--space-2)' }}>
@@ -114,13 +114,13 @@ export function ProgramEditScreen({ v }: { v: PlannerVals }) {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
               {b.days.map((d) => (
-                <div key={d.key} style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-2h)' }}>
-                  <Text variant="micro" tone="slate" style={{ width: '88px', flex: 'none', paddingTop: 'var(--space-3h)' }}>
+                <div key={d.key} style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-2)' }}>
+                  <Text variant="micro" tone="slate" style={{ width: '88px', flex: 'none', paddingTop: 'var(--space-3)' }}>
                     {d.day}
                   </Text>
-                  <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-1h)' }}>
+                  <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
                     {d.workouts.map((w) => (
-                      <div key={w.key} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', padding: 'var(--space-1) var(--space-1) var(--space-1) var(--space-3h)', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)' }}>
+                      <div key={w.key} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', padding: 'var(--space-1) var(--space-1) var(--space-1) var(--space-3)', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)' }}>
                         <Pressable
                           onClick={w.open}
                           aria-label={'Edit ' + w.name}
@@ -147,7 +147,7 @@ export function ProgramEditScreen({ v }: { v: PlannerVals }) {
                 </div>
               ))}
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', marginTop: 'var(--space-3h)' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
               <Button type="secondary" ghost size="sm" onClick={b.copyNext}>
                 <Copy color="var(--color-pink-deep)" size={14} />
                 Copy as next block
@@ -162,7 +162,7 @@ export function ProgramEditScreen({ v }: { v: PlannerVals }) {
           </Card>
         ))}
       </div>
-      <Button type="dashed" size="md" onClick={e.addEmpty} style={{ width: '100%', marginTop: 'var(--space-3h)' }}>
+      <Button type="dashed" size="md" onClick={e.addEmpty} style={{ width: '100%', marginTop: 'var(--space-4)' }}>
         <Plus color="var(--color-pink-deep)" size={16} />
         Empty block
       </Button>

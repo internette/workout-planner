@@ -34,7 +34,7 @@ function TypeChoiceCard({
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 'var(--space-3h)',
+        gap: 'var(--space-3)',
         textAlign: 'left',
         opacity: disabled ? 0.55 : 1,
         boxShadow: selected ? 'var(--ring-accent)' : undefined,
@@ -54,7 +54,7 @@ function TypeChoiceCard({
       >
         {icon}
       </span>
-      <span style={{ minWidth: 0, flex: '1 1 auto', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+      <span style={{ minWidth: 0, flex: '1 1 auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
         <Text variant="heading" tone="ink" style={{ display: 'block' }}>
           {title}
         </Text>
@@ -98,7 +98,7 @@ export function TypeChoiceCards({ v }: { v: PlannerVals }) {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))',
         gap: 'var(--space-3)',
-        marginTop: '22px',
+        marginTop: 'var(--space-6)',
       }}
     >
       <TypeChoiceCard

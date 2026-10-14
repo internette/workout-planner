@@ -8,7 +8,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 /** A ride against its plan: what was actually ridden. */
 export function RideActualCard({ v }: { v: PlannerVals }) {
   return (
-    <Card style={{ marginTop: 'var(--space-3h)' }}>
+    <Card style={{ marginTop: 'var(--space-4)' }}>
       <div
         style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 'var(--space-2)' }}
       >
@@ -20,7 +20,7 @@ export function RideActualCard({ v }: { v: PlannerVals }) {
         </Text>
       </div>
       <ProgressBar value={v.rideBarPct ?? 0} track="mist" style={{ marginTop: 'var(--space-3)' }} />
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', marginTop: 'var(--space-4h)' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', marginTop: 'var(--space-5)' }}>
         <TextField
           label="Distance"
           labelNote="(miles)"
@@ -52,13 +52,13 @@ export function RideActualCard({ v }: { v: PlannerVals }) {
             placeholders={['0', '0']}
             name="Actual duration"
           />
-          <Text variant="small" tone="muted" as="span" style={{ display: 'block', marginTop: 'var(--space-1h)' }}>
+          <Text variant="small" tone="muted" as="span" style={{ display: 'block', marginTop: 'var(--space-2)' }}>
             {v.plannedDur}
           </Text>
         </div>
       </div>
       {/* Plan met: said in the accent. */}
-      <p style={{ margin: 'var(--space-3h) 0 0', fontSize: 'var(--text-base)', fontWeight: v.rideMet ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)', color: v.rideMet ? 'var(--color-pink-deep)' : 'var(--color-muted)' }}>
+      <p style={{ margin: 'var(--space-4) 0 0', fontSize: 'var(--text-base)', fontWeight: v.rideMet ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)', color: v.rideMet ? 'var(--color-pink-deep)' : 'var(--color-muted)' }}>
         {v.rideNote}
       </p>
     </Card>

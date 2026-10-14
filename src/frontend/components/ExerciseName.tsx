@@ -16,7 +16,7 @@ export function ExerciseName({ name, done = false }: { name: string; done?: bool
         {base}
       </Text>
       {side ? (
-        <Badge tone="soft" style={{ marginTop: 'var(--space-1)', padding: 'var(--space-0h) var(--space-2)' }}>
+        <Badge tone="soft" style={{ marginTop: 'var(--space-1)', padding: 'var(--space-1) var(--space-2)' }}>
           {side}
         </Badge>
       ) : null}

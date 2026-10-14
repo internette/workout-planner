@@ -8,7 +8,7 @@ export function SettingsCard({ title, note, danger, children }: { title: string;
     <Card
       as="section"
       aria-label={title.charAt(0) + title.slice(1).toLowerCase()}
-      style={{ marginTop: 'var(--space-3h)', ...(danger ? { boxShadow: 'var(--ring-danger)' } : {}) }}
+      style={{ marginTop: 'var(--space-4)', ...(danger ? { boxShadow: 'var(--ring-danger)' } : {}) }}
     >
       <Text variant="micro" as="h2" tone={danger ? 'danger' : 'slate'} style={{ margin: 0 }}>
         {title}

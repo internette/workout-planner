@@ -48,7 +48,7 @@ export const STOPS: Stop[] = [
 const SCRIM = 'color-mix(in srgb, var(--color-ink) 58%, transparent)';
 const CARD: CSSProperties = {
   position: 'relative',
-  padding: 'var(--space-4h) var(--space-4h) var(--space-4)',
+  padding: 'var(--space-4) var(--space-4) var(--space-4)',
   borderRadius: 'var(--radius-lg)',
   background: 'var(--color-surface)',
   boxShadow: 'var(--elevation-overlay)',
@@ -114,14 +114,14 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
             <span style={{ width: 72, height: 72, margin: '0 auto', borderRadius: 'var(--radius-full)', background: 'var(--gradient-gem-tint)', display: 'grid', placeItems: 'center' }}>
               <Gem size={34} />
             </span>
-            <Text variant="micro" tone="accent" as="div" style={{ marginTop: 'var(--space-3h)' }}>
+            <Text variant="micro" tone="accent" as="div" style={{ marginTop: 'var(--space-4)' }}>
               {name ? 'Welcome, ' + name : 'Welcome'}
             </Text>
-            <Text variant="heading" as="h2" id="tour-title" style={{ margin: 'var(--space-1h) 0 0' }}>
+            <Text variant="heading" as="h2" id="tour-title" style={{ margin: 'var(--space-2) 0 0' }}>
               How would you like to begin?
             </Text>
           </div>
-          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-4h)' }}>
+          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-5)' }}>
             <LinkRow
               leading={<IconTile as="span" size="sm"><Sliders color="var(--color-pink-deep)" size={18} /></IconTile>}
               title="Customize your experience"
@@ -156,10 +156,10 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
           <span style={{ width: 72, height: 72, margin: '0 auto', borderRadius: 'var(--radius-full)', background: 'var(--gradient-gem-tint)', display: 'grid', placeItems: 'center' }}>
             <Gem size={34} />
           </span>
-          <Text variant="micro" tone="accent" as="div" style={{ marginTop: 'var(--space-3h)' }}>
+          <Text variant="micro" tone="accent" as="div" style={{ marginTop: 'var(--space-4)' }}>
             You’re ready
           </Text>
-          <Text variant="heading" as="h2" id="tour-title" style={{ margin: 'var(--space-1h) 0 0' }}>
+          <Text variant="heading" as="h2" id="tour-title" style={{ margin: 'var(--space-2) 0 0' }}>
             The call is yours to answer
           </Text>
           <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
@@ -167,15 +167,15 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
           </Text>
           {fresh ? (
             <>
-              <Button type="primary" size="lg" fullWidth glow onClick={onPlan} style={{ marginTop: 'var(--space-4h)' }}>
+              <Button type="primary" size="lg" fullWidth glow onClick={onPlan} style={{ marginTop: 'var(--space-5)' }}>
                 Plan your first workout
               </Button>
-              <Button type="neutral" link size="sm" onClick={onEnd} style={{ display: 'flex', margin: '6px auto 0', minHeight: 44 }}>
+              <Button type="neutral" link size="sm" onClick={onEnd} style={{ display: 'flex', margin: 'var(--space-2) auto 0', minHeight: 44 }}>
                 Done
               </Button>
             </>
           ) : (
-            <Button type="primary" size="lg" fullWidth glow onClick={onEnd} style={{ marginTop: 'var(--space-4h)' }}>
+            <Button type="primary" size="lg" fullWidth glow onClick={onEnd} style={{ marginTop: 'var(--space-5)' }}>
               Done
             </Button>
           )}
@@ -246,13 +246,13 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
               ))}
             </span>
           </div>
-          <Text variant="subheading" as="h2" id="tour-stop" style={{ margin: 'var(--space-1h) 0 0' }}>
+          <Text variant="subheading" as="h2" id="tour-stop" style={{ margin: 'var(--space-2) 0 0' }}>
             {stop!.title}
           </Text>
           <Text variant="body" tone="slate" as="p" id="tour-body" style={{ margin: 'var(--space-1) 0 0' }}>
             {stop!.body}
           </Text>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-3h)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
             <Button type="neutral" link size="sm" onClick={onEnd} style={{ marginRight: 'auto', minHeight: 44 }}>
               Skip tour
             </Button>

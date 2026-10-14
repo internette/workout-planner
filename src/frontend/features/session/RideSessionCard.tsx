@@ -8,7 +8,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 /** A ride session: its stats and marking it done. */
 export function RideSessionCard({ v }: { v: PlannerVals }) {
   return (
-    <Card style={{ marginTop: 'var(--space-4h)' }}>
+    <Card style={{ marginTop: 'var(--space-5)' }}>
       <StatRow stats={v.rideStats ?? []} />
       {/* Once its clock has started, Finish (by the clock) is how a ride is done; marking it is for one not timed. */}
       {!v.isFuture && !v.timerStarted ? (
