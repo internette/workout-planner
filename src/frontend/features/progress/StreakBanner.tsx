@@ -42,7 +42,7 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
             variant="strong"
             as="p"
            
-            tone="slateDeep"
+            tone="slate"
             style={{ margin: 'var(--space-2) 0 0' }}
           >
             {v.streakNote}
@@ -50,11 +50,11 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
         </div>
       </div>
       <div style={{ flex: '1 1 180px', minWidth: '0' }}>
-        <Text variant="micro" as="div" tone="slateDeep">
+        <Text variant="micro" as="div" tone="slate">
           {v.ticksLabel}
         </Text>
         {v.ticksEmpty ? (
-          <Text variant="strong" as="p" tone="slateDeep" style={{ margin: 'var(--space-2) 0 0' }}>
+          <Text variant="strong" as="p" tone="slate" style={{ margin: 'var(--space-2) 0 0' }}>
             Clear a day and it lights up here.
           </Text>
         ) : null}
@@ -95,7 +95,7 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
         {shown.length ? (
           <div aria-hidden="true" style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-1) var(--space-3)', marginTop: 'var(--space-3)' }}>
             {shown.map(([status, name]) => (
-              <Text key={status} variant="small" tone="slateDeep" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)' }}>
+              <Text key={status} variant="small" tone="slate" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)' }}>
                 <StatusDot status={status} />
                 {name}
               </Text>

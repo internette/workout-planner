@@ -115,7 +115,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
             <Text variant="subheading" as="div" tone="ink">
               {senderName(waiting.source)} sent you a new arc
             </Text>
-            <Text variant="body" as="div" tone="slateDeep">
+            <Text variant="body" as="div" tone="slate">
               {waiting.title} · {countLabel(waiting.plan.workouts.length)}
             </Text>
           </div>

@@ -65,7 +65,7 @@ export function QuestCard({ v }: { v: PlannerVals }) {
         <Text
           variant="body"
           as="div"
-          tone="slateDeep"
+          tone="slate"
           style={{
             marginTop: 'var(--space-1)',
             textWrap: 'pretty',

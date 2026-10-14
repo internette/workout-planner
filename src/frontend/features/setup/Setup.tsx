@@ -195,7 +195,7 @@ export function Setup({ s }: { s: S | null }) {
         <Label>About how long</Label>
         <ChoiceChips label="About how long" surface="page" options={s.minuteOptions} value={s.minutes} onChange={s.setMinutes} />
         <Card pad="sm" style={{ marginTop: 'var(--space-6)', background: 'var(--gradient-gem-tint)', boxShadow: 'none' }}>
-          <Text variant="body" tone="slateDeep" as="p" style={{ margin: 0 }}>
+          <Text variant="body" tone="slate" as="p" style={{ margin: 0 }}>
             {s.rhythm}
           </Text>
         </Card>
@@ -288,7 +288,7 @@ export function Setup({ s }: { s: S | null }) {
             <Text variant="subheading" as="div" style={{ marginTop: 'var(--space-1)' }}>
               {s.firstQuest.title}
             </Text>
-            <Text variant="body" tone="slateDeep" as="div" style={{ marginTop: 'var(--space-1)' }}>
+            <Text variant="body" tone="slate" as="div" style={{ marginTop: 'var(--space-1)' }}>
               {s.firstQuest.line}
             </Text>
           </span>

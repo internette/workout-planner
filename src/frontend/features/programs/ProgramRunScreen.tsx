@@ -48,7 +48,7 @@ export function ProgramRunScreen({ v }: { v: PlannerVals }) {
             <Text variant="micro" tone="accent" as="div">
               Arc complete
             </Text>
-            <Text variant="body" tone="slateDeep" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
+            <Text variant="body" tone="slate" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
               {p.complete}
             </Text>
           </span>

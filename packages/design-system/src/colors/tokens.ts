@@ -6,13 +6,11 @@
 export const colorGroups = {
   Text: {
     ink: { hex: '#232A45', use: 'Primary text and dark buttons' },
-    slate: { hex: '#5C6684', use: 'Secondary text, completed states' },
-    slateDeep: { hex: '#4A5268', use: 'Text on the tinted gradient cards and grey badges, where slate would fall short of 4.5:1' },
+    slate: { hex: '#5C6684', use: 'Secondary text, completed states, and text on tinted cards and grey badges (4.5:1 or more on every tint)' },
     muted: { hex: '#6E6881', use: 'Tertiary text, inactive controls (4.5:1 or more on canvas, mist and the pink tint)' },
   },
   'Lines and controls': {
-    outline: { hex: '#8A859A', use: 'Empty controls you can still use: unticked boxes, unrated stars (3:1 or more on canvas and white)' },
-    hairline: { hex: '#C7C4D0', use: 'Disabled and empty states, switch tracks, rest-day dashes' },
+    outline: { hex: '#8A859A', use: 'Empty controls you can still use (unticked boxes, unrated stars), a sheet’s handle, a rest day’s dash: 3:1 or more on canvas and white' },
   },
   Surfaces: {
     canvas: { hex: '#FBF1F3', use: 'Page background, input fills' },

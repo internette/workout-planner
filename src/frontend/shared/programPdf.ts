@@ -24,11 +24,13 @@ const dayName = (d: number) => DOW3[d].charAt(0) + DOW3[d].slice(1).toLowerCase(
 /** The PDF's bytes, for a program called `name`. */
 export async function programPdf(name: string, program: SharedProgram): Promise<Uint8Array> {
   const { PDFDocument, StandardFonts, rgb } = await import('pdf-lib');
-  const hex = (h: string) => rgb(parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255);
+  // A palette hex as a PDF color; `over` lays it on white at that strength, since a PDF has no see-through colors.
+  const hex = (h: string, over = 1) => rgb(...([1, 3, 5].map((i) => 1 - (1 - parseInt(h.slice(i, i + 2), 16) / 255) * over) as [number, number, number]));
   const ink = hex(colors.ink);
   const muted = hex(colors.muted);
   const pink = hex(colors.pinkDeep);
-  const rule = hex(colors.hairline);
+  // The lines between rows: the app's line color, ink at 7%.
+  const rule = hex(colors.ink, 0.07);
   const tint = hex(colors.pinkTint);
   const mist = hex(colors.mist);
 

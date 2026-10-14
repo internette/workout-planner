@@ -9,7 +9,7 @@ import { SessionProgress } from '@/frontend/components/SessionProgress';
 import { ExerciseName } from '@/frontend/components/ExerciseName';
 import { SetPips } from '@/frontend/components/SetPips';
 
-const divider: CSSProperties = { border: 0, borderTop: '1px solid var(--color-hairline)', margin: 'var(--space-4) 0' };
+const divider: CSSProperties = { border: 0, borderTop: '1px solid var(--color-line)', margin: 'var(--space-4) 0' };
 
 /**
  * The session being done, in one card: its clock (start, pause, finish), then for a lift how far through it is, with

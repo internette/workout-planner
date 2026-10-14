@@ -35,7 +35,7 @@ export function StatusDot({ status, size = 'sm', selected = false }: StatusDotPr
                 width: s.rest[0],
                 height: s.rest[1],
                 borderRadius: 'var(--radius-full)',
-                background: selected ? ink : 'var(--color-hairline)',
+                background: selected ? ink : 'var(--color-outline)',
               };
   return <span aria-hidden="true" style={{ flex: 'none', display: 'block', ...style }} />;
 }

@@ -50,7 +50,7 @@ function Piece({ sizes, used, code, file }: { sizes: ReactNode; used: ReactNode;
   return (
     <Card>
       <div style={stage}>{sizes}</div>
-      <Text variant="body" tone="slateDeep" as="p" style={{ margin: '14px 0 0' }}>
+      <Text variant="body" tone="slate" as="p" style={{ margin: '14px 0 0' }}>
         {used}
       </Text>
       {code ? (

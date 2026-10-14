@@ -129,7 +129,7 @@ export function TypeChoiceCards({ v }: { v: PlannerVals }) {
         <TypeChoiceCard
           // Slate, the palette's fourth color after pink, periwinkle and teal: its deep shade on its tint, as the
           // rank badges have it.
-          icon={<LotusFlower color="var(--color-slate-deep)" size={22} />}
+          icon={<LotusFlower color="var(--color-slate)" size={22} />}
           tint="var(--color-slate-tint)"
           title="Yoga"
           note="A flow of poses, each held for a few breaths."

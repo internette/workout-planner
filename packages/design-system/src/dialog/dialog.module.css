@@ -43,7 +43,7 @@
 
 /* A sheet: along the bottom of a phone's screen, full width, its buttons stretched across it, rising from the edge. */
 @media (max-width: 599px) {
-  .sheet .handle { display: block; width: 36px; height: 4px; margin: -8px auto 12px; border-radius: 2px; background: var(--color-hairline); }
+  .sheet .handle { display: block; width: 36px; height: 4px; margin: -8px auto 12px; border-radius: 2px; background: var(--color-outline); }
   .sheet {
     animation: rise var(--dur-bar) var(--ease-soft);
     width: 100%;

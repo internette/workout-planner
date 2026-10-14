@@ -167,7 +167,7 @@ export function Preview({ slug }: { slug: string }) {
     case 'interaction':
       return (
         <>
-          <span style={{ width: 40, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--hover-neutral)', boxShadow: 'inset 0 0 0 1px var(--color-hairline)' }} />
+          <span style={{ width: 40, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--hover-neutral)', boxShadow: 'inset 0 0 0 1px var(--color-outline)' }} />
           <span style={{ width: 40, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--color-surface)', outline: 'var(--focus-ring)', outlineOffset: 'var(--focus-offset)' }} />
         </>
       );
