@@ -16,3 +16,10 @@ export function splitSide(name: string): { base: string; side: Side | null } {
 export const withSide = (base: string, side: Side) => base + SEP + side;
 
 export const otherSide = (side: Side): Side => (side === 'Left' ? 'Right' : 'Left');
+
+// Exercises done one side at a time, going by the name: one-arm and single-leg moves, lunges, kickbacks and the like.
+// Only these offer a second copy for the other side once they're in a workout; a Push-up is in it once.
+const ONE_SIDED = /\b(single|one)[- ](arm|leg)\b|\blunges?\b|kickbacks?\b|abductions?\b|\bstep-?ups?\b|split squat|bulgarian|pistol|side plank|suitcase|unilateral/i;
+
+/** Whether an exercise is done a side at a time: already labeled with a side, or named like it. */
+export const oneSided = (name: string) => !!splitSide(name).side || ONE_SIDED.test(name);

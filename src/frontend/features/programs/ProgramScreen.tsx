@@ -151,6 +151,17 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
           </Text>
         </div>
       ) : null}
+      {/* One run: its dates under the bar, with changing its start as a link, rather than a card of its own. */}
+      {p.runs.length === 1 ? (
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0 6px', marginTop: p.progress ? '2px' : '18px' }}>
+          <Text variant="body" tone="muted">
+            {p.runs[0].label} · {p.runs[0].dates}
+          </Text>
+          <Button type="secondary" link size="sm" onClick={p.runs[0].move} style={{ minHeight: '44px' }}>
+            Change start
+          </Button>
+        </div>
+      ) : null}
       {/* Running, it can be ended; otherwise started. Starting it again while it runs would double its sessions up. */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '18px' }}>
         {p.runs.length ? (
@@ -169,7 +180,7 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
           </Button>
         ) : null}
       </div>
-      {p.runs.map((r) => (
+      {(p.runs.length > 1 ? p.runs : []).map((r) => (
         <Card key={r.key} pad="sm" style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 12px' }}>
           <span style={{ flex: '1 1 200px', minWidth: 0 }}>
             <Text variant="body" weight="semibold" as="span" style={{ display: 'block' }}>

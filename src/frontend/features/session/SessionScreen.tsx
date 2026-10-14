@@ -6,8 +6,10 @@ import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { Button } from '@moonshot/design-system/buttons';
-import { ChevronDown, ChevronRight, Clock, Pencil, Repeat } from '@moonshot/design-system/icons';
+import { Calendar, ChevronDown, ChevronRight, Clock, Pencil, Repeat } from '@moonshot/design-system/icons';
 import { Popover } from '@moonshot/design-system/popover';
+import { Dialog } from '@moonshot/design-system/dialog';
+import { TextField } from '@moonshot/design-system/text-field';
 import { BackBar } from '@/frontend/components/BackBar';
 import { FormActions } from '@/frontend/components/FormActions';
 import { NeedsLine } from '@/frontend/components/NeedsLine';
@@ -51,6 +53,16 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
         )
       ) : null}
       <ChipGroup style={{ marginTop: '20px' }}>
+        {/* Not done or started yet: its day is a chip that moves it to another day. */}
+        {v.moveDay ? (
+          <Chip
+            icon={<Calendar color="var(--color-muted)" size={15} />}
+            onClick={v.moveDay.open}
+            trailing={<ChevronDown color="var(--color-muted)" strokeWidth={2.2} size={14} />}
+          >
+            {v.moveDay.label}
+          </Chip>
+        ) : null}
         <Chip
           icon={<Clock color="var(--color-muted)" size={15} />}
           onClick={v.editTook}
@@ -126,6 +138,30 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
       {/* The clock, and for a lift its progress, sets and rest (nothing to tick off before its day). */}
       <WorkoutCard v={v} />
       <RestartDialog v={v} />
+      {v.moveDay ? (
+        <Dialog
+          open={v.moveDay.isOpen}
+          onClose={v.moveDay.cancel}
+          title={v.moveDay.title}
+          actions={
+            <>
+              <Button type="neutral" ghost size="md" onClick={v.moveDay.cancel}>
+                Cancel
+              </Button>
+              <Button type="primary" size="md" onClick={v.moveDay.save} disabled={!v.moveDay.canSave}>
+                Move it
+              </Button>
+            </>
+          }
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
+            <TextField label="Day" type="date" value={v.moveDay.date} onChange={v.moveDay.setDate} />
+            <Text variant="body" tone="muted" as="p" style={{ margin: 0 }}>
+              {v.moveDay.note}
+            </Text>
+          </div>
+        </Dialog>
+      ) : null}
       {v.dayIsRide ? <RideSessionCard v={v} /> : null}
       {v.dayIsLift ? (
         <div
@@ -137,7 +173,7 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
         </div>
       ) : null}
       {/* Edit is in the top bar; down here, only writing about it. */}
-      {!v.isFuture ? (
+      {!v.isFuture && v.showCta && !v.writeInCard ? (
         <FormActions>
           <Button type="primary" size="lg" onClick={v.goDiary}>
             {v.ctaLabel}

@@ -10,7 +10,8 @@ export function RideSessionCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: '18px' }}>
       <StatRow stats={v.rideStats ?? []} />
-      {!v.isFuture ? (
+      {/* Once its clock has started, Finish (by the clock) is how a ride is done; marking it is for one not timed. */}
+      {!v.isFuture && !v.timerStarted ? (
         <Button
           type={v.rideDoneType}
           size="md"

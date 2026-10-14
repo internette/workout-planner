@@ -215,14 +215,16 @@ export function diaryVals(ctx: Ctx) {
     unloggedGroups: (() => {
       const lastWkStart = new Date(todayWkStart.getFullYear(), todayWkStart.getMonth(), todayWkStart.getDate() - 7);
       const groups: { label: string; items: ReturnType<typeof unloggedItem>[] }[] = [];
-      unloggedDays.forEach((x) => {
+      // Sessions done come before ones only planned (today's, still to do), newest first within each.
+      [...unloggedDays.filter((x) => x.done), ...unloggedDays.filter((x) => !x.done)].forEach((x) => {
         const d = new Date(Y, x.m, x.d);
         const label = d >= todayWkStart ? 'This week' : d >= lastWkStart ? 'Last week' : 'Earlier';
         let g = groups.find((y) => y.label === label);
         if (!g) groups.push((g = { label, items: [] }));
         g.items.push(unloggedItem(x));
       });
-      return groups;
+      const order = ['This week', 'Last week', 'Earlier'];
+      return groups.sort((a, b) => order.indexOf(a.label) - order.indexOf(b.label));
     })(),
     rangeFrom: st.rFrom || '',
     rangeTo: st.rTo || '',

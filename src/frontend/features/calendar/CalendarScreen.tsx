@@ -127,15 +127,15 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
           medallion="gem"
           icon={<Gem size={40} />}
           title="The call is coming"
-          description="Put your first lift or ride on the calendar. That day gets a quest, and every exercise you clear starts your climb from First spark."
+          description="Put your first lift or ride on the calendar, or start a ready-made program. That day gets a quest, and every exercise you clear starts your climb from First spark."
           actions={
             <>
               <Button type="primary" size="lg" glow onClick={v.goNewWorkout}>
                 <Plus color="var(--color-surface)" size={16} />
                 Plan your first workout
               </Button>
-              <Button type="neutral" ghost size="md" onClick={v.goArsenal}>
-                Browse the Spellbook
+              <Button type="secondary" size="md" onClick={v.goPrograms}>
+                Start a program
               </Button>
             </>
           }

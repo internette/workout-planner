@@ -182,6 +182,8 @@ export interface PlannerState {
   programStart?: { date: string; block: number } | null;
   // Moving a running program to start on another day: which run, and the day picked.
   programMove?: { runId: string; date: string } | null;
+  // Moving the session on screen to another day: the day picked so far.
+  sessionMove?: { date: string } | null;
   programPick?: { blockId: string; day: number; q?: string } | null;
   programShareOpen?: boolean;
   programOpenBlocks?: Record<string, boolean>;

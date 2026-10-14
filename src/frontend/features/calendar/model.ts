@@ -58,6 +58,8 @@ export function calendarVals(ctx: Ctx) {
     shownMonthDone: shownMonth.length ? String(shownMonth.filter(isDoneEntry).length) : '—',
     shownMonthDoneUnit: shownMonth.length ? 'of ' + shownMonth.length + ' done in ' + MONTHS[mod12(mi)] : 'nothing planned yet',
     dowLabels: DOW1,
+    // A new account can start from a built-in program instead of building a first workout.
+    goPrograms: () => logic.nav({ screen: 'arsenal', arsenalView: 'programs', monthOpen: false }),
     showDay: st.seg === 'Day',
     showWeek: st.seg === 'Week',
     showMonth: st.seg === 'Month',
