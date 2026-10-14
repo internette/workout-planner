@@ -137,7 +137,7 @@ export function historyVals(ctx: Ctx) {
     return {
       key: r.id,
       name: r.name,
-      status: status === 'running' ? where(r, shown) : status === 'ended' ? 'Ended early' : 'Finished',
+      status: status === 'running' ? where(r, shown) : status === 'ended' ? 'Left unfinished' : 'Arc complete',
       statusTone: (status === 'running' ? 'accent' : 'muted') as 'accent' | 'muted',
       dates:
         shortDate(r.start) +
@@ -160,7 +160,7 @@ export function historyVals(ctx: Ctx) {
   const finished = runs.filter(({ r }) => statusOf(r) === 'finished').length;
   const sessionsDone = runs.reduce((n, { r }) => n + doneOf(r.id), 0);
   const programRuns = {
-    summary: [plural(runs.length, 'program') + ' run', finished ? finished + ' finished' : '', plural(sessionsDone, 'session') + ' done'].filter(Boolean).join(' · '),
+    summary: [plural(runs.length, 'program') + ' run', finished ? plural(finished, 'arc') + ' complete' : '', plural(sessionsDone, 'session') + ' done'].filter(Boolean).join(' · '),
     running: runningRows,
     done: doneRows,
     empty: !runs.length,
@@ -178,8 +178,11 @@ export function historyVals(ctx: Ctx) {
         const total = totalOf(r, shown);
         let before = 0;
         return {
-          eyebrow: (status === 'running' ? 'Running' : status === 'ended' ? 'Ended early' : 'Finished') + ' · ' + shortDate(r.start) + ' – ' + shortDate(endOf(r)),
+          // Finished, the card under the name says so: the eyebrow keeps to the dates.
+          eyebrow: (status === 'running' ? 'Running · ' : status === 'ended' ? 'Left unfinished · ' : '') + shortDate(r.start) + ' – ' + shortDate(endOf(r)),
           name: r.name,
+          // Finished: its moment, said on its page.
+          complete: status === 'finished' ? '“' + r.name + '” is done: ' + done + ' of ' + total + ' sessions. Every one of them is in you now.' : '',
           chips: [plural(programWeeks(shown), 'week'), plural(trainingDays(shown), 'day') + ' a week', done + ' of ' + total + ' done'],
           bar: shown.blocks.map((b, i) => ({ name: blockLabel(b, i), weeks: b.weeks })),
           note: 'As it was when you ran it. Adding it makes a copy you can change and start again.',

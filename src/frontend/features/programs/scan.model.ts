@@ -257,7 +257,7 @@ export function scanVals(ctx: Ctx) {
                 ...noticePatch(
                   f.keep
                     ? 'Made “' + programName + '” from your calendar: ' + plural(r.count, 'session') + ' through ' + shortDate(scan.end) + (r.count === 1 ? ' is' : ' are') + ' part of it now.'
-                    : '“' + programName + '” made and started: ' + plural(r.count, 'session') + ' on your calendar from ' + shortDate(r.first || date) + '.',
+                    : '“' + programName + '” begins: ' + plural(r.count, 'session') + ' on your calendar from ' + shortDate(r.first || date) + '.',
                   'program',
                 ),
               }),
