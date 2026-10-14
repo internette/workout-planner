@@ -370,6 +370,8 @@ export const sections: Section[] = [
       { id: 'confirm', title: 'Confirm' },
       { id: 'with-content', title: 'With content' },
       { id: 'reference-panel', title: 'Reference panel' },
+      { id: 'variants', title: 'Sheet and full screen' },
+      { id: 'no-title', title: 'Without a title' },
       { id: 'behaviour', title: 'Behaviour' },
     ],
   },

@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import { Button } from '../../src/buttons';
 import { Dialog } from '../../src/dialog';
+import { Mark } from '../../src/brand';
+import { Text } from '../../src/typography';
 import { DocPage, h2, note } from '../docs';
 
 const row: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, padding: '18px 20px', background: 'var(--color-canvas)', borderRadius: 'var(--radius-lg)', boxShadow: 'inset 0 0 0 1px var(--color-line)' };
 
-type Which = null | 'confirm' | 'question' | 'info';
+type Which = null | 'confirm' | 'question' | 'info' | 'sheet' | 'fullscreen' | 'plain';
 
 export default function DialogPage() {
   const [open, setOpen] = useState<Which>(null);
@@ -100,6 +102,83 @@ export default function DialogPage() {
         description="Earned with experience — 10 XP per exercise completed, 50 XP per workout finished."
       />
 
+      <h2 id="variants" style={h2}>Sheet and full screen</h2>
+      <p style={note}>
+        <code>variant=&quot;sheet&quot;</code> puts it along the bottom of a phone&apos;s screen, rising from the edge
+        with a handle, its buttons stretched across it: choices to pick from while the page stays in view above. Wider
+        screens show it in the middle. <code>icon</code> puts something before the title, such as the app&apos;s mark.{' '}
+        <code>variant=&quot;fullscreen&quot;</code> takes the whole screen on the page color, for a flow of its own
+        (customizing, say); the content lays itself out and scrolls inside.
+      </p>
+      <div style={row}>
+        <Button type="neutral" size="md" onClick={() => setOpen('sheet')}>
+          Install…
+        </Button>
+        <Button type="neutral" size="md" onClick={() => setOpen('fullscreen')}>
+          Full screen…
+        </Button>
+      </div>
+      <Dialog
+        open={open === 'sheet'}
+        onClose={close}
+        variant="sheet"
+        closeButton={false}
+        icon={<Mark size={36} />}
+        title="Install Moonshot"
+        description="Open it like an app: full screen, no browser bar, one tap away."
+        actions={
+          <>
+            <Button type="neutral" ghost size="md" onClick={close}>
+              Not now
+            </Button>
+            <Button type="primary" size="md" onClick={close}>
+              Install
+            </Button>
+          </>
+        }
+      />
+      <Dialog open={open === 'fullscreen'} onClose={close} variant="fullscreen" closeButton={false} labelledBy="ds-fullscreen-title">
+        <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', padding: '20px 20px 28px', maxWidth: 520, margin: '0 auto' }}>
+          <Text variant="micro" tone="accent" as="div">
+            A flow of its own
+          </Text>
+          <Text variant="title" as="h1" id="ds-fullscreen-title" style={{ margin: '6px 0 0' }}>
+            Who answers the call?
+          </Text>
+          <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0', flex: 1 }}>
+            The content draws its own heading, named with <code>labelledBy</code>, so no header is drawn. Escape calls{' '}
+            <code>onClose</code>, as always.
+          </Text>
+          <Button type="primary" size="lg" fullWidth glow onClick={close}>
+            Done
+          </Button>
+        </div>
+      </Dialog>
+
+      <h2 id="no-title" style={h2}>Without a title</h2>
+      <p style={note}>
+        A card whose content is its own heading (a welcome, a send-off) leaves <code>title</code> out and names the
+        heading with <code>labelledBy</code>: no header is drawn, and the content fills the card.
+      </p>
+      <div style={row}>
+        <Button type="neutral" size="md" onClick={() => setOpen('plain')}>
+          Welcome…
+        </Button>
+      </div>
+      <Dialog open={open === 'plain'} onClose={close} closeButton={false} labelledBy="ds-plain-title">
+        <div style={{ textAlign: 'center' }}>
+          <Text variant="micro" tone="accent" as="div">
+            Welcome
+          </Text>
+          <Text variant="heading" as="h2" id="ds-plain-title" style={{ margin: '6px 0 0' }}>
+            How would you like to begin?
+          </Text>
+          <Button type="primary" size="lg" fullWidth glow onClick={close} style={{ marginTop: 18 }}>
+            Show me around
+          </Button>
+        </div>
+      </Dialog>
+
       <h2 id="behaviour" style={h2}>Behaviour</h2>
       <ul style={{ ...note, paddingLeft: 20 }}>
         <li>
@@ -115,7 +194,7 @@ export default function DialogPage() {
           opened it once it closes.
         </li>
         <li>
-          It is labelled by its title. Pressing the dimmed area around it does the same as Escape: <code>onClose</code> is
+          It is labelled by its title, or by <code>labelledBy</code> when it has none. Pressing the dimmed area around it does the same as Escape: <code>onClose</code> is
           called. This is always on, so a dialog has to be safe to walk away from: closing it must never do the
           destructive thing.
         </li>

@@ -22,7 +22,7 @@ function StartDialog({ v }: { v: PlannerVals }) {
       open={s.open}
       onClose={s.cancel}
       title={s.title}
-      sheet
+      variant="sheet"
       actions={
         <>
           <Button type="neutral" ghost size="md" onClick={s.cancel}>
@@ -77,7 +77,7 @@ function MoveDialog({ v }: { v: PlannerVals }) {
       open={m.open}
       onClose={m.cancel}
       title={m.title}
-      sheet
+      variant="sheet"
       actions={
         <>
           <Button type="neutral" ghost size="md" onClick={m.cancel}>

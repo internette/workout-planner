@@ -150,7 +150,7 @@ export function ShareProgramDialog({ s }: { s: Share }) {
     ) : null;
 
   return (
-    <Dialog open={s.open} onClose={s.close} title={'Share ' + s.name} sheet actions={actions}>
+    <Dialog open={s.open} onClose={s.close} title={'Share ' + s.name} variant="sheet" actions={actions}>
       {mode === 'loading' ? (
         <Text variant="body" tone="muted" as="p" style={{ margin: '16px 0 0' }}>
           Loading…

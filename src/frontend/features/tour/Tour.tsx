@@ -5,6 +5,7 @@
 // calendar that already has workouts has no "Plan your first workout") is passed over.
 import { useEffect, useState, type CSSProperties } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
+import { Dialog } from '@moonshot/design-system/dialog';
 import { Calendar, Gem, Sliders, Sparkle } from '@moonshot/design-system/icons';
 import { IconTile } from '@moonshot/design-system/icon-tile';
 import { LinkRow } from '@/frontend/components/LinkRow';
@@ -107,8 +108,7 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
 
   if (step === 0)
     return (
-      <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: SCRIM, display: 'grid', placeItems: 'center', padding: 20 }}>
-        <div role="dialog" aria-modal="true" aria-labelledby="tour-title" style={{ ...CARD, width: '100%', maxWidth: 400, padding: '26px 18px 18px' }}>
+      <Dialog open size="md" closeButton={false} labelledBy="tour-title" onClose={onEnd}>
           <Twinkles />
           <div style={{ textAlign: 'center' }}>
             <span style={{ width: 72, height: 72, margin: '0 auto', borderRadius: 'var(--radius-full)', background: 'var(--gradient-gem-tint)', display: 'grid', placeItems: 'center' }}>
@@ -144,15 +144,14 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
           <Text variant="small" tone="muted" as="p" style={{ position: 'relative', margin: '12px 0 0', textAlign: 'center' }}>
             Both of these are in Settings later.
           </Text>
-        </div>
-      </div>
+      </Dialog>
     );
 
   // The send-off.
   if (step > total)
     return (
-      <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: SCRIM, display: 'grid', placeItems: 'center', padding: 20 }}>
-        <div role="dialog" aria-modal="true" aria-labelledby="tour-title" style={{ ...CARD, width: '100%', maxWidth: 360, padding: '26px 22px 20px', textAlign: 'center' }}>
+      <Dialog open closeButton={false} labelledBy="tour-title" onClose={onEnd}>
+        <div style={{ textAlign: 'center' }}>
           <Twinkles />
           <span style={{ width: 72, height: 72, margin: '0 auto', borderRadius: 'var(--radius-full)', background: 'var(--gradient-gem-tint)', display: 'grid', placeItems: 'center' }}>
             <Gem size={34} />
@@ -181,7 +180,7 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
             </Button>
           )}
         </div>
-      </div>
+      </Dialog>
     );
 
   // A stop: the bubble goes below its thing in the top half of the screen, above it in the bottom half.
