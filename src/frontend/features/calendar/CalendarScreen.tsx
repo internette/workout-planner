@@ -83,14 +83,16 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               marginTop: 'var(--space-5)',
             }}
           >
-            <Text variant="title" as="h1" style={{ margin: '0' }}>
+            {/* The date is part of the heading, so "Wednesday" says which one. */}
+            <Text variant="title" as="h1" style={{ margin: '0', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)' }}>
               {v.dayName}
-            </Text>
-            <Text variant="strong" tone="muted">
-              {v.shortDate}
+              <Text variant="strong" tone="muted" as="span">
+                {v.shortDate}
+              </Text>
             </Text>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', marginTop: 'var(--space-5)' }}>
+          {/* No wider than a form: on a wide screen the days stay close to each other and to their arrows. */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', marginTop: 'var(--space-5)', maxWidth: 'var(--layout-form-max)' }}>
             <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
             <div style={{ flex: '1', display: 'flex' }}>
               {(v.days ?? []).map((d, i) => (
@@ -139,6 +141,16 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             </div>
             <StepButton dir="next" unit="week" onClick={v.nextWeek} />
           </div>
+          {v.weekKey?.length ? (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-1) var(--space-3)', marginTop: 'var(--space-2)', paddingLeft: 'var(--space-3)' }}>
+              {v.weekKey.map(([status, name]) => (
+                <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)' }}>
+                  <StatusDot status={status} />
+                  {name}
+                </Text>
+              ))}
+            </div>
+          ) : null}
         </>
       ) : null}
       {v.showQuest ? (
@@ -153,7 +165,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               {g.program ? <SectionLabel list label={g.program} note={g.place} /> : null}
               {g.cards.map((c, i) => (
                 <div key={c?.key} style={{ marginTop: i ? 'var(--space-3)' : '0' }}>
-                  <DayWorkoutCard card={g.program ? { ...c, programName: '' } : c} />
+                  <DayWorkoutCard card={g.program ? { ...c, programName: '' } : c} headingAs={g.program ? 'h3' : 'h2'} />
                 </div>
               ))}
             </section>
