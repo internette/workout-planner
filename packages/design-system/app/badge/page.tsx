@@ -28,7 +28,7 @@ export default function BadgePage() {
           <Badge tone="accent">Done</Badge>
           <Badge tone="soft">Done</Badge>
           <Badge tone="neutral">Partly done</Badge>
-          <Badge tone="quiet" style={{ boxShadow: 'inset 0 0 0 1px var(--color-hairline)' }}>
+          <Badge tone="quiet" style={{ boxShadow: 'inset 0 0 0 1px var(--color-line)' }}>
             Planned
           </Badge>
         </div>

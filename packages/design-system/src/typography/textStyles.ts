@@ -63,7 +63,6 @@ export type TextVariant = keyof typeof textStyles;
 export const textTones = {
   ink: 'var(--color-ink)',
   slate: 'var(--color-slate)',
-  slateDeep: 'var(--color-slate-deep)',
   muted: 'var(--color-muted)',
   accent: 'var(--color-pink-deep)',
   danger: 'var(--color-danger)',

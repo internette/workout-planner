@@ -48,7 +48,7 @@
 .google { background: var(--color-surface); color: var(--color-ink); box-shadow: var(--ring-outline); }
 .google:hover:not([aria-disabled='true']) { background: var(--color-canvas); }
 .apple { background: var(--color-ink); color: var(--color-surface); }
-.apple:hover:not([aria-disabled='true']) { background: var(--color-slate-deep); }
+.apple:hover:not([aria-disabled='true']) { background: var(--color-slate); }
 .provider[aria-busy='true'] { opacity: 0.75; }
 
 /* ---- sections ---- */

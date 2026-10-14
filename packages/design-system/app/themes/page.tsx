@@ -31,7 +31,7 @@ function Preview({ accent, dark }: { accent: string; dark: boolean }) {
       }}
     >
       <div style={{ padding: '12px 14px', borderRadius: 'var(--radius-md)', background: 'var(--gradient-gem-tint)' }}>
-        <Text variant="micro" as="div" tone="slateDeep">
+        <Text variant="micro" as="div" tone="slate">
           TODAY&apos;S QUEST
         </Text>
         <Text variant="subheading" as="div" tone="ink" style={{ marginTop: 3 }}>

@@ -161,9 +161,8 @@ export default function TypographyPage() {
 
       <h2 id="color" style={h2}>Color</h2>
       <p style={note}>
-        Set with <code>tone</code>, by role; without it the text takes its parent&apos;s color. slateDeep is for text
-        on the tinted gradient cards and grey badges, where slate would fall short of 4.5:1. inverse is for text on the
-        accent color.
+        Set with <code>tone</code>, by role; without it the text takes its parent&apos;s color. slate is secondary text,
+        and the text on tinted cards and grey badges, where it keeps 4.5:1. inverse is for text on the accent color.
       </p>
       <div
         style={{ display: 'flex', flexWrap: 'wrap', gap: 20, background: 'var(--color-surface)', padding: 16, borderRadius: 'var(--radius-md)' }}

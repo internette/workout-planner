@@ -25,7 +25,7 @@
 /* soft: pale pink, for done among other rows on white */
 .soft { background: var(--color-pink-tint); color: var(--color-pink-deep); }
 /* neutral: grey, for anything not done: in progress, partly done, missed */
-.neutral { background: var(--color-mist); color: var(--color-slate-deep); }
+.neutral { background: var(--color-mist); color: var(--color-slate); }
 /* quiet: white, for planned on a tinted surface */
 .quiet { background: var(--color-surface); color: var(--color-muted); }
 

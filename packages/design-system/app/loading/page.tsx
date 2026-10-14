@@ -92,7 +92,7 @@ export default function LoadingPage() {
             <Text variant="subheading" tone="ink" style={{ flex: '0 0 140px' }}>
               {name}
             </Text>
-            <Text variant="body" tone="slateDeep" style={{ flex: '1 1 260px' }}>
+            <Text variant="body" tone="slate" style={{ flex: '1 1 260px' }}>
               {value}
             </Text>
           </div>

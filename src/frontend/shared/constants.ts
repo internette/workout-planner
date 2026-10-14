@@ -76,10 +76,10 @@ export const RANKS = [
   { name:'Mirrorheart warden', next:'Nightbloom', pill:{ background:'var(--color-teal-tint)', color:'var(--color-teal-deep)' }, gem:'var(--color-teal)' },
   { name:'Nightbloom warden', next:'Cometfall', pill:{ background:'var(--color-teal-tint)', color:'var(--color-teal-deep)' }, gem:'var(--color-teal)' },
   { name:'Cometfall warden', next:'Eclipse', pill:{ background:'var(--color-teal-tint)', color:'var(--color-teal-deep)' }, gem:'var(--color-teal)' },
-  { name:'Eclipse paragon', next:'Halcyon', pill:{ background:'var(--color-slate-tint)', color:'var(--color-slate-deep)' }, gem:'var(--color-slate)' },
-  { name:'Halcyon paragon', next:'Radiant', pill:{ background:'var(--color-slate-tint)', color:'var(--color-slate-deep)' }, gem:'var(--color-slate)' },
-  { name:'Radiant paragon', next:'Celestial', pill:{ background:'var(--color-slate-tint)', color:'var(--color-slate-deep)' }, gem:'var(--color-slate)' },
-  { name:'Celestial champion', next:'Eternal', pill:{ background:'var(--color-slate-tint)', color:'var(--color-slate-deep)' }, gem:'var(--color-slate)' },
+  { name:'Eclipse paragon', next:'Halcyon', pill:{ background:'var(--color-slate-tint)', color:'var(--color-slate)' }, gem:'var(--color-slate)' },
+  { name:'Halcyon paragon', next:'Radiant', pill:{ background:'var(--color-slate-tint)', color:'var(--color-slate)' }, gem:'var(--color-slate)' },
+  { name:'Radiant paragon', next:'Celestial', pill:{ background:'var(--color-slate-tint)', color:'var(--color-slate)' }, gem:'var(--color-slate)' },
+  { name:'Celestial champion', next:'Eternal', pill:{ background:'var(--color-slate-tint)', color:'var(--color-slate)' }, gem:'var(--color-slate)' },
   { name:'Eternal sovereign', next:'the next season', pill:{ background:'var(--gradient-gem)', color:'var(--color-surface)', boxShadow:'0 2px 8px color-mix(in srgb, var(--color-pink) 35%, transparent)' }, gem:'white' },
 ];
 

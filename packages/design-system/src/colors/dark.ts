@@ -9,11 +9,9 @@ export const darkColors: Partial<Record<ColorName, string>> = {
   // Text
   ink: '#F1E9EF',
   slate: '#C9BCCB',
-  slateDeep: '#D8CCD9',
   muted: '#B3A3B3',
   // Lines and controls
   outline: '#8E7F93',
-  hairline: '#54445A',
   // Surfaces
   canvas: '#1B1320',
   surface: '#281D2F',
