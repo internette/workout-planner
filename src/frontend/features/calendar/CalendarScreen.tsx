@@ -318,7 +318,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                   onClick={v.goNewWorkout}
                 >
                   <Plus color="var(--color-surface)" size={16} />
-                  Add workout
+                  {'Add workout on ' + v.dayName.slice(0, 3) + ' ' + v.shortDate.split(' ')[1]}
                 </Button>
               }
               decoration={
