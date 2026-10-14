@@ -409,11 +409,7 @@ export function editVals(ctx: Ctx) {
         : ridePct >= 100
           ? 'Full route ridden. Plan met.'
           : ridePct + '% of the planned distance. The rest stays on the plan.',
-    rideNoteStyle:
-      'margin:var(--space-3h) 0 0;font-size:var(--text-base);font-weight:' +
-      (ridePct != null && ridePct >= 100
-        ? 'var(--font-weight-semibold);color:var(--color-pink-deep)'
-        : 'var(--font-weight-regular);color:var(--color-muted)'),
+    rideMet: ridePct != null && ridePct >= 100,
     setHours: (e) => logic.s({ rHrs: digitsOnly(e.target.value).slice(0, 2) }),
     setMins: (e) => {
       const v = digitsOnly(e.target.value).slice(0, 2);

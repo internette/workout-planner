@@ -1,6 +1,5 @@
 import { EX_DRAFT_CLEARED, HOME_OF } from '@/frontend/shared/constants';
 import { exerciseDraftDirty, idOf, isoOf, monDay, monthPatch, noticePatch, workoutDraftDirty } from '@/frontend/shared/helpers';
-import { mLabel, mTab, navItem } from './styles';
 import { NAV_IDS, type NavId } from './navIds';
 import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from './store/types';
@@ -16,7 +15,6 @@ export function chromeVals(ctx: Ctx) {
     narrow,
     tablet,
     st,
-    navExtra,
     calActive,
     inChronicle,
     Y,
@@ -58,26 +56,10 @@ export function chromeVals(ctx: Ctx) {
       id,
       current: navOn[id] ? ('page' as const) : false,
       go: navGoTo[id],
-      item: navItem(navOn[id], navExtra),
-      itemInk: navOn[id] ? 'var(--color-pink)' : 'var(--color-muted)',
-      tab: mTab(navOn[id]),
-      tabInk: navOn[id] ? 'var(--color-pink-deep)' : 'var(--color-muted)',
-      tabLabel: mLabel(navOn[id]),
+      on: navOn[id],
     })),
-    sidebarStyle: narrow
-      ? 'display:none'
-      : tablet
-        ? 'flex:1 1 100%;width:100%;position:relative;background:var(--color-surface);border-radius:var(--radius-lg);padding:var(--space-2);box-shadow:var(--elevation-raised)'
-        : 'flex:0 1 208px;min-width:180px;position:relative;background:var(--color-surface);border-radius:var(--radius-lg);padding:var(--space-4h) var(--space-3h);box-shadow:var(--elevation-raised)',
-    navListStyle: tablet
-      ? 'display:flex;flex-direction:row;gap:var(--space-1)'
-      : 'display:flex;flex-direction:column;gap:var(--space-1)',
-    // The page never scrolls sideways: a 44px tap area reaching past a control at the screen edge stays an invisible
-    // extra instead of widening the page. (clip, unlike hidden, keeps sticky bands working.)
-    pageStyle: 'min-height:100vh;overflow-x:clip;padding:0 0 ' + (narrow ? '108px' : '64px'),
-    tabbarStyle: narrow
-      ? 'position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;gap:var(--space-0h);padding:8px 6px calc(8px + env(safe-area-inset-bottom));background:var(--color-surface-bar);backdrop-filter:blur(14px);border-top:1px solid var(--color-line);box-shadow:0 -4px 14px var(--color-line)'
-      : 'display:none',
+    // The sidebar on wide screens (a row of places on a tablet), the tab bar on a phone.
+    layout: narrow ? ('narrow' as const) : tablet ? ('tablet' as const) : ('wide' as const),
     isDiaryList: st.screen === 'diaryList',
     isProfile: st.screen === 'profile',
     isSettings: st.screen === 'settings',

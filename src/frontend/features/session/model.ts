@@ -528,11 +528,6 @@ export function workoutVals(ctx: Ctx) {
     questDone: dayCleared,
     questOpen: !dayCleared,
     questEyebrow: dayCleared ? (finale ? 'Finale cleared' : 'Quest cleared') : finale ? 'Finale' : mi === TODAY_M && selDay === TODAY_D ? "Today's quest" : 'Quest',
-    questIconWrap:
-      'width:32px;height:32px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;' +
-      (dayCleared
-        ? 'background:var(--gradient-gem)'
-        : 'background:var(--color-surface);box-shadow:var(--elevation-hairline)'),
     // Cleared: the quest's title is struck through and muted.
     questCleared: dayCleared,
     dayIsRide: !!selRide,
@@ -553,9 +548,7 @@ export function workoutVals(ctx: Ctx) {
     },
     rideDoneLabel: rideDone ? 'Ride completed' : 'Mark ride complete',
     rideDoneType: rideDone ? ('secondary' as const) : ('neutral' as const),
-    rideDoneMark:
-      'width:24px;height:24px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;' +
-      (rideDone ? 'background:var(--color-pink)' : 'border:1.5px solid var(--color-outline)'),
+    rideIsDone: rideDone,
     rideDoneStroke: rideDone ? 'var(--color-surface)' : 'var(--color-outline)',
     dayIcoSvg: iconSvg(
       (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (selRide ? 'bike' : 'h'),

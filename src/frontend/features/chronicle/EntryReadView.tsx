@@ -4,7 +4,6 @@ import { ChevronRight } from '@moonshot/design-system/icons';
 import { StarRating } from '@moonshot/design-system/rating';
 import { Stat } from '@moonshot/design-system/stat';
 import { Text } from '@moonshot/design-system/typography';
-import { css } from '@/frontend/features/planner/viewHelpers';
 import { DeleteSection } from '@/frontend/components/DeleteSection';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { NotesCard } from '@/frontend/components/NotesCard';
@@ -38,7 +37,9 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
           pad="sm"
           style={{ flex: '1 1 200px', display: 'flex', alignItems: 'center', gap: 'var(--space-3h)' }}
         >
-          <span className="fc-keep" style={css(v.readMoodFace)}>{v.readMoodSvg}</span>
+          <span className="fc-keep" style={{ width: '44px', height: '44px', flex: 'none', borderRadius: 'var(--radius-full)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: v.readMoodColor }}>
+            {v.readMoodSvg}
+          </span>
           <Stat label="Mood" value={v.readMood} style={{ minWidth: '0' }} />
         </Card>
         <Card pad="sm" style={{ flex: '1 1 200px' }}>

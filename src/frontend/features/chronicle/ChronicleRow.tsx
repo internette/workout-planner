@@ -1,7 +1,6 @@
 import { Card } from '@moonshot/design-system/card';
 import { ChevronRight, MoodFace } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
-import { css } from '@/frontend/features/planner/viewHelpers';
 import { KindTag, kindOf } from '@/frontend/components/KindTag';
 
 /** An entry in the Chronicle’s list, a card of its own: how it felt beside its day, session and the start of its note. Opening it
@@ -23,7 +22,7 @@ export function ChronicleRow({ entry }: { entry: any }) {
         textAlign: 'left',
       }}
     >
-      <span className="fc-keep" style={css(entry?.faceWrap)}>
+      <span className="fc-keep" style={{ width: '40px', height: '40px', flex: 'none', borderRadius: 'var(--radius-full)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: entry?.faceBg }}>
         {entry?.mood ? <MoodFace mood={entry.mood} size={24} /> : null}
       </span>
       <span style={{ flex: '1', minWidth: '0' }}>

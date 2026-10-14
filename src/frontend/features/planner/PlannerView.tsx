@@ -1,7 +1,6 @@
 // The planner's frame: the dialogs, the sidebar and tab bar, the banners, and whichever screen is open. Each screen is
 // its own component in its feature's folder; all of them read the `v` object built in Planner.tsx.
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
-import { css } from './viewHelpers';
 import { AddToDayDialog } from '@/frontend/features/calendar/AddToDayDialog';
 import { ConfirmDialog } from '@/frontend/features/planner/ConfirmDialog';
 import { NoticeBanner } from '@/frontend/features/planner/NoticeBanner';
@@ -45,7 +44,9 @@ export function PlannerView({ v }: { v: PlannerVals }) {
       <ConfirmDialog v={v} />
       <SaveScopeDialog v={v} />
       <AddToDayDialog v={v} />
-      <div style={css(v.pageStyle)}>
+      {/* The page never scrolls sideways: a 44px tap area reaching past a control at the screen edge stays an invisible
+          extra instead of widening the page. (clip, unlike hidden, keeps sticky bands working.) */}
+      <div style={{ minHeight: '100vh', overflowX: 'clip', padding: '0 0 ' + (v.layout === 'narrow' ? '108px' : '64px') }}>
         <div
           style={{
             maxWidth: '1180px',

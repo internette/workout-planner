@@ -1,7 +1,6 @@
 // The calendar: the Day, Week and Month views and the month picker.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
-import { css } from '@/frontend/features/planner/viewHelpers';
 import { Card } from '@moonshot/design-system/card';
 import { EmptyState } from '@moonshot/design-system/empty-state';
 import { SUMMON_ON, SummonPlan } from '@/frontend/features/summon/SummonPlan';
@@ -84,16 +83,45 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
             <div style={{ flex: '1', display: 'flex' }}>
               {(v.days ?? []).map((d, i) => (
-                <Pressable key={i}
+                <Pressable
+                  key={i}
                   onClick={d?.pick}
                   aria-label={d?.aria}
                   aria-current={d?.isToday}
                   aria-pressed={!!d?.selected}
-                  style={css(d?.wrapStyle)}
+                  style={{
+                    position: 'relative',
+                    flex: 1,
+                    minWidth: 0,
+                    padding: 'var(--space-2) var(--space-0h) var(--space-2h)',
+                    borderRadius: 'var(--radius-md)',
+                    background: d?.selected ? 'var(--color-pink)' : 'none',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '3px',
+                  }}
                 >
-                  <span style={css(d?.letterStyle)}>{d?.letter}</span>
-                  <span style={css(d?.monStyle)}>{d?.mon}</span>
-                  <span style={css(d?.numStyle)}>{d?.num}</span>
+                  <span style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-semibold)', color: d?.selected ? 'var(--color-surface)' : 'var(--color-muted)' }}>
+                    {d?.letter}
+                  </span>
+                  {/* A week across two months says the new one once, above its 1st. */}
+                  {d?.showMon ? (
+                    <span style={{ position: 'absolute', left: 0, right: 0, top: '-14px', textAlign: 'center', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--tracking-loose)', color: 'var(--color-pink-deep)' }}>
+                      {d?.mon}
+                    </span>
+                  ) : null}
+                  {/* Another month's dates are dimmer than this month's, but still readable (muted meets 4.5:1). */}
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'var(--text-lg)',
+                      fontWeight: d?.selected ? 'var(--font-weight-bold)' : 'var(--font-weight-semibold)',
+                      color: d?.selected ? 'var(--color-surface)' : d?.inMonth ? 'var(--color-ink)' : 'var(--color-muted)',
+                    }}
+                  >
+                    {d?.num}
+                  </span>
                   <StatusDot status={d?.dot} selected={!!d?.selected} />
                 </Pressable>
               ))}

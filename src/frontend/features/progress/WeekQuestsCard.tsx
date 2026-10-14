@@ -2,7 +2,6 @@ import { Pressable } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Check, ChevronRight } from '@moonshot/design-system/icons';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
-import { css } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** Progress: this week’s quests, each opening its session. */
@@ -17,8 +16,14 @@ export function WeekQuestsCard({ v }: { v: PlannerVals }) {
       ) : null}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-0h)', marginTop: 'var(--space-3h)' }}>
         {(v.weekQuests ?? []).map((q, i) => (
-          <Pressable key={i} onClick={q?.open} aria-label={q?.aria} style={css(q?.row)}>
-            <span style={css(q?.mark)}>
+          <Pressable
+            key={i}
+            onClick={q?.open}
+            aria-label={q?.aria}
+            style={{ display: 'flex', alignItems: 'center', gap: '11px', width: '100%', minHeight: '44px', padding: 'var(--space-2h) 0', borderBottom: q?.last ? undefined : '1px solid var(--color-line)' }}
+          >
+            {/* Cleared: a filled mark with a tick. */}
+            <span style={{ width: '18px', height: '18px', flex: 'none', borderRadius: 'var(--radius-full)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: q?.done ? 'var(--color-pink)' : 'transparent' }}>
               {q?.done ? (
                 <Check color="var(--color-surface)" strokeWidth={3} size={10} />
               ) : null}
@@ -26,7 +31,7 @@ export function WeekQuestsCard({ v }: { v: PlannerVals }) {
             <Text variant="micro" tone="muted" style={{ flex: 'none', width: '44px' }}>
               {q?.day}
             </Text>
-            <span style={css(q?.title)}>{q?.name}</span>
+            <span style={{ flex: 1, minWidth: 0, fontSize: 'var(--text-base)', fontWeight: 'var(--font-weight-medium)', color: q?.done ? 'var(--color-pink-deep)' : 'var(--color-ink)' }}>{q?.name}</span>
             {/* It opens its day on the calendar. */}
             <ChevronRight color="var(--color-muted)" size={15} style={{ flex: 'none', marginLeft: 'auto' }} />
           </Pressable>

@@ -1,7 +1,7 @@
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Check } from '@moonshot/design-system/icons';
-import { css, t } from '@/frontend/features/planner/viewHelpers';
+import { t } from '@/frontend/features/planner/viewHelpers';
 import { StatRow } from '@/frontend/components/StatRow';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
@@ -18,7 +18,18 @@ export function RideSessionCard({ v }: { v: PlannerVals }) {
           onClick={v.toggleRideDone}
           style={{ marginTop: 'var(--space-5)' }}
         >
-          <span style={css(v.rideDoneMark)}>
+          <span
+            style={{
+              width: '24px',
+              height: '24px',
+              flex: 'none',
+              borderRadius: 'var(--radius-full)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              ...(v.rideIsDone ? { background: 'var(--color-pink)' } : { border: '1.5px solid var(--color-outline)' }),
+            }}
+          >
             <Check color={v.rideDoneStroke} strokeWidth={2.8} size={13} />
           </span>
           {t(v.rideDoneLabel)}

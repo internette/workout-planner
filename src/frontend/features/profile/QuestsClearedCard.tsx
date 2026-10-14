@@ -1,7 +1,6 @@
 import { Card } from '@moonshot/design-system/card';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
-import { css } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { RankGem } from '@/frontend/components/RankGem';
 
@@ -24,7 +23,7 @@ export function QuestsClearedCard({ v }: { v: PlannerVals }) {
       ) : null}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-0h)', marginTop: 'var(--space-4)' }}>
         {(v.questStats ?? []).map((q, i) => (
-          <div key={i} style={css(q?.row)}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-2h) 0', borderBottom: q?.last ? undefined : '1px solid var(--color-line)' }}>
             <RankGem fill={q?.color} />
             <Text variant="strong" tone="ink" style={{ flex: '1', minWidth: '0' }}>
               {q?.name}
