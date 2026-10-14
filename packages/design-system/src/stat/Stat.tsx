@@ -3,9 +3,9 @@ import { Text, type TextTone } from '../typography';
 
 // The value's text style for each size, the gap between the label and it, and the gap above a note.
 const sizes = {
-  md: { variant: 'subheading', gap: 4, noteGap: 2 },
-  lg: { variant: 'heading', gap: 4, noteGap: 2 },
-  xl: { variant: 'title', gap: 6, noteGap: 4 },
+  md: { variant: 'subheading', gap: 'var(--space-1)', noteGap: 'var(--space-1)' },
+  lg: { variant: 'heading', gap: 'var(--space-1)', noteGap: 'var(--space-1)' },
+  xl: { variant: 'title', gap: 'var(--space-2)', noteGap: 'var(--space-1)' },
 } as const;
 
 export interface StatProps {
@@ -35,7 +35,7 @@ export function Stat({ label, value, unit, note, size = 'md', labelTone = 'muted
         {label}
       </Text>
       {unit !== undefined ? (
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '5px', marginTop: gap + 'px' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-1)', marginTop: gap }}>
           <Text variant={variant} tone="ink">
             {value}
           </Text>
@@ -44,12 +44,12 @@ export function Stat({ label, value, unit, note, size = 'md', labelTone = 'muted
           </Text>
         </div>
       ) : (
-        <Text variant={variant} as="div" tone="ink" style={{ marginTop: gap + 'px' }}>
+        <Text variant={variant} as="div" tone="ink" style={{ marginTop: gap }}>
           {value}
         </Text>
       )}
       {note ? (
-        <Text variant="body" as="div" tone="muted" style={{ marginTop: noteGap + 'px' }}>
+        <Text variant="body" as="div" tone="muted" style={{ marginTop: noteGap }}>
           {note}
         </Text>
       ) : null}

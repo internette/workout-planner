@@ -4,7 +4,7 @@
 
 .caption {
   display: block;
-  margin-bottom: 7px;
+  margin-bottom: var(--space-2);
   font-size: var(--text-sm);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--tracking-loose);
@@ -20,7 +20,7 @@
   gap: var(--space-2);
   width: 100%;
   box-sizing: border-box;
-  padding: 12px 14px;
+  padding: var(--space-3) var(--space-3);
   /* The outline shows where the field is on a white card (the fill alone is 1.1:1); 3:1 or more on both. */
   border: 1px solid var(--color-outline);
   border-radius: var(--radius-sm);
@@ -49,7 +49,7 @@
 .bare-sm {
   flex: 1;
   min-height: 36px;
-  padding: 8px 0;
+  padding: var(--space-2) 0;
   font-size: var(--text-base);
   font-weight: var(--font-weight-semibold);
   color: var(--color-slate);
@@ -59,9 +59,9 @@
 .title {
   width: 100%;
   box-sizing: border-box;
-  margin: 3px 0 0;
+  margin: var(--space-1) 0 0;
   min-height: 44px;
-  padding: 5px 0;
+  padding: var(--space-1) 0;
   border-bottom: 1.5px dashed color-mix(in srgb, var(--color-ink) 30%, transparent);
   font-family: var(--font-heading);
   font-size: var(--text-xl);
@@ -73,7 +73,7 @@
   display: block;
   width: 100%;
   box-sizing: border-box;
-  padding: 18px;
+  padding: var(--space-4);
   border: none;
   border-radius: var(--radius-lg);
   background: var(--color-surface);
@@ -86,8 +86,8 @@
 }
 .textarea.invalid { outline: 2px solid var(--color-danger); }
 
-.hint { display: block; margin-top: 6px; font-size: var(--text-sm); font-weight: var(--font-weight-regular); color: var(--color-muted); }
-.error { margin-top: 6px; font-size: var(--text-sm); color: var(--color-danger); }
+.hint { display: block; margin-top: var(--space-2); font-size: var(--text-sm); font-weight: var(--font-weight-regular); color: var(--color-muted); }
+.error { margin-top: var(--space-2); font-size: var(--text-sm); color: var(--color-danger); }
 .disabled { opacity: 0.5; }
 
 /* Placeholders at 4.5:1 or more on the field fills (the browser's default grey is 4.2:1 on canvas). */

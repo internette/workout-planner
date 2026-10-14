@@ -45,8 +45,8 @@ export function EmptyState({
 }: EmptyStateProps) {
   const s = sizes[size];
   const box: CSSProperties = panel
-    ? { position: 'relative', padding: '34px 24px 30px', borderRadius: 'var(--radius-xl)', background: 'var(--gradient-gem-tint)', textAlign: 'center', overflow: 'hidden' }
-    : { position: 'relative', padding: '0 20px 80px', textAlign: 'center' };
+    ? { position: 'relative', padding: 'var(--space-7) var(--space-6) var(--space-7)', borderRadius: 'var(--radius-xl)', background: 'var(--gradient-gem-tint)', textAlign: 'center', overflow: 'hidden' }
+    : { position: 'relative', padding: '0 var(--space-5) calc(2 * var(--space-7))', textAlign: 'center' };
   return (
     <div className={className} style={{ ...box, ...style }}>
       {decoration ? <span aria-hidden="true">{decoration}</span> : null}
@@ -73,7 +73,7 @@ export function EmptyState({
         size === 'lg' ? (
           <p
             style={{
-              margin: '10px auto 0',
+              margin: 'var(--space-3) auto 0',
               maxWidth: s.maxWidth + 'px',
               fontSize: 'var(--text-lg)',
               fontWeight: 'var(--font-weight-medium)',
@@ -84,13 +84,13 @@ export function EmptyState({
             {description}
           </p>
         ) : (
-          <Text variant="body" as="p" tone="slate" style={{ margin: '10px auto 0', maxWidth: s.maxWidth + 'px', textWrap: 'pretty' }}>
+          <Text variant="body" as="p" tone="slate" style={{ margin: 'var(--space-3) auto 0', maxWidth: s.maxWidth + 'px', textWrap: 'pretty' }}>
             {description}
           </Text>
         )
       ) : null}
       {actions ? (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', marginTop: size === 'lg' ? '24px' : '22px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-6)' }}>
           {actions}
         </div>
       ) : null}

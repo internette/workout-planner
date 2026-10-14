@@ -12,14 +12,14 @@
 .sm { max-width: 400px; }
 .md { max-width: 440px; }
 
-.header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
+.header { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2); }
 .title { margin: 0; }
 /* Scoped to the panel so it outranks the button's own `position: relative`, whichever stylesheet the build loads last. */
 .panel .close { position: absolute; top: 14px; right: 14px; }
 /* Keep a long title clear of the X in the corner. */
-.withClose { padding-right: 34px; }
-.description { margin: 10px 0 0; text-wrap: pretty; }
-.actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 22px; }
+.withClose { padding-right: var(--space-7); }
+.description { margin: var(--space-3) 0 0; text-wrap: pretty; }
+.actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: var(--space-2); margin-top: var(--space-6); }
 
 /* An icon before the title: the app's mark on a tile. */
 .icon { width: 56px; height: 56px; flex: none; display: grid; place-items: center; border-radius: 22%; background: var(--color-canvas); box-shadow: var(--elevation-hairline); }
@@ -43,7 +43,7 @@
 
 /* A sheet: along the bottom of a phone's screen, full width, its buttons stretched across it, rising from the edge. */
 @media (max-width: 599px) {
-  .sheet .handle { display: block; width: 36px; height: 4px; margin: -8px auto 12px; border-radius: 2px; background: var(--color-outline); }
+  .sheet .handle { display: block; width: 36px; height: 4px; margin: calc(-1 * var(--space-2)) auto var(--space-3); border-radius: 2px; background: var(--color-outline); }
   .sheet {
     animation: rise var(--dur-bar) var(--ease-soft);
     width: 100%;
