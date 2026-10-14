@@ -16,7 +16,7 @@ export function Gem({ size, style, className }: Pick<IconProps, 'size' | 'style'
       <path d="M12 2 L20 8 L17 14 L12 22 L7 14 L4 8 Z" fill={`url(#${id})`} />
       <path
         d="M12 2 L12 22 M4 8 L20 8 M4 8 L12 22 M20 8 L12 22"
-        stroke="rgba(255,255,255,0.45)"
+        stroke="color-mix(in srgb, white 45%, transparent)"
         strokeWidth="0.6"
         fill="none"
       />
