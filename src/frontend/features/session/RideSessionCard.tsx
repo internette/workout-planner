@@ -16,7 +16,7 @@ export function RideSessionCard({ v }: { v: PlannerVals }) {
           type={v.rideDoneType}
           size="md"
           onClick={v.toggleRideDone}
-          style={{ marginTop: '20px' }}
+          style={{ marginTop: 'var(--space-5)' }}
         >
           <span style={css(v.rideDoneMark)}>
             <Check color={v.rideDoneStroke} strokeWidth={2.8} size={13} />

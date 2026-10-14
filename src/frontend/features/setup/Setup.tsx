@@ -3,7 +3,7 @@
 // handlers come from setup/model.
 import { useEffect, useRef, type ReactNode } from 'react';
 import { ACCENTS, paletteFor } from '@moonshot/design-system/colors';
-import { Button } from '@moonshot/design-system/buttons';
+import { Button, Pressable } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Dialog } from '@moonshot/design-system/dialog';
 import { Chip, ChipGroup, ChoiceChips } from '@moonshot/design-system/chip';
@@ -38,7 +38,7 @@ const Eyebrow = ({ children }: { children: ReactNode }) => (
   </Text>
 );
 const Lead = ({ children }: { children: ReactNode }) => (
-  <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+  <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
     {children}
   </Text>
 );
@@ -51,8 +51,7 @@ const Label = ({ children, id }: { children: ReactNode; id?: string }) => (
 /** A tile ticked on and off: an icon, a name and a line, with a tick when it's on. */
 function Toggle({ on, onClick, icon, title, line }: { on: boolean; onClick: () => void; icon: ReactNode; title: string; line: string }) {
   return (
-    <button
-      type="button"
+    <Pressable
       aria-pressed={on}
       onClick={onClick}
       style={{
@@ -61,13 +60,9 @@ function Toggle({ on, onClick, icon, title, line }: { on: boolean; onClick: () =
         gap: 14,
         width: '100%',
         padding: '14px 16px',
-        border: 'none',
         borderRadius: 'var(--radius-lg)',
         background: on ? 'var(--color-pink-tint)' : 'var(--color-surface)',
         boxShadow: on ? 'inset 0 0 0 2px var(--color-pink)' : 'var(--elevation-hairline)',
-        textAlign: 'left',
-        cursor: 'pointer',
-        font: 'inherit',
       }}
     >
       <span style={{ width: 44, height: 44, flex: 'none', borderRadius: 'var(--radius-md)', background: on ? 'var(--color-surface)' : 'var(--color-pink-tint)', display: 'grid', placeItems: 'center' }}>{icon}</span>
@@ -82,7 +77,7 @@ function Toggle({ on, onClick, icon, title, line }: { on: boolean; onClick: () =
       <span style={{ width: 24, height: 24, flex: 'none', borderRadius: 'var(--radius-full)', display: 'grid', placeItems: 'center', background: on ? 'var(--color-pink)' : 'transparent', boxShadow: on ? 'none' : 'inset 0 0 0 1.5px var(--color-outline)' }}>
         {on ? <Check color="var(--color-surface)" strokeWidth={3} size={13} /> : null}
       </span>
-    </button>
+    </Pressable>
   );
 }
 
@@ -99,7 +94,7 @@ export function Setup({ s }: { s: S | null }) {
 
   const page = (body: ReactNode, foot: ReactNode) => (
     <Dialog open variant="fullscreen" closeButton={false} labelledBy="setup-title" onClose={s.step < s.steps ? s.useDefaults : s.toCalendar}>
-      <div ref={top} style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', padding: '20px 20px 28px', maxWidth: 520, margin: '0 auto' }}>
+      <div ref={top} style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', padding: 'var(--space-5) var(--space-5) var(--space-7)', maxWidth: 520, margin: '0 auto' }}>
         {body}
         {foot}
       </div>
@@ -135,7 +130,7 @@ export function Setup({ s }: { s: S | null }) {
         <div style={{ flex: 1, marginTop: 18 }}>{body}</div>
       </>,
       foot ?? (
-        <Button type="primary" size="lg" fullWidth glow onClick={s.next} disabled={!canNext} style={{ marginTop: 24 }}>
+        <Button type="primary" size="lg" fullWidth glow onClick={s.next} disabled={!canNext} style={{ marginTop: 'var(--space-6)' }}>
           Next
         </Button>
       ),
@@ -153,7 +148,7 @@ export function Setup({ s }: { s: S | null }) {
           <Text variant="heading" as="div" style={{ marginTop: 6 }}>
             {s.name.trim() || 'You'}
           </Text>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 6, padding: '4px 12px', borderRadius: 'var(--radius-full)', background: 'var(--color-pink-tint)' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 6, padding: 'var(--space-1) var(--space-3)', borderRadius: 'var(--radius-full)', background: 'var(--color-pink-tint)' }}>
             <RankGem fill="var(--color-pink)" />
             <Text variant="strong" tone="accent">
               {s.rankName}
@@ -183,7 +178,7 @@ export function Setup({ s }: { s: S | null }) {
         <Eyebrow>Your magic</Eyebrow>
         {heading('What will you train?')}
         <Lead>Pick all that fit. You can do any of them later too.</Lead>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 'var(--space-5)' }}>
           {s.trains.map((t) => {
             const Icon = TRAIN_ICON[t.value];
             return <Toggle key={t.value} on={t.on} onClick={t.toggle} icon={<Icon color="var(--color-pink-deep)" size={22} />} title={t.title} line={t.line} />;
@@ -199,7 +194,7 @@ export function Setup({ s }: { s: S | null }) {
         <Eyebrow>Your tools</Eyebrow>
         {heading('What do you have to hand?')}
         <Lead>So the program Moonshot suggests is one you can actually do.</Lead>
-        <ChipGroup label="What you have" style={{ marginTop: 20 }}>
+        <ChipGroup label="What you have" style={{ marginTop: 'var(--space-5)' }}>
           {s.kit.map((k) => (
             <Chip key={k.label} tone="choice" size="md" surface="page" selected={k.on} aria-pressed={k.on} onClick={k.toggle} icon={k.on ? <Check strokeWidth={3} size={13} /> : undefined}>
               {k.label}
@@ -237,11 +232,11 @@ export function Setup({ s }: { s: S | null }) {
           <Eyebrow>Your first arc</Eyebrow>
           {heading('Here’s where to begin')}
           <Lead>Picked for what you have and your week. It goes on your calendar from the day you choose.</Lead>
-          <Card style={{ marginTop: 20 }}>
+          <Card style={{ marginTop: 'var(--space-5)' }}>
             <Text variant="micro" tone="slate" as="div">
               Built-in program
             </Text>
-            <Text variant="heading" as="div" style={{ marginTop: 4 }}>
+            <Text variant="heading" as="div" style={{ marginTop: 'var(--space-1)' }}>
               {g.name}
             </Text>
             <Text variant="body" tone="muted" as="div" style={{ marginTop: 2 }}>
@@ -269,11 +264,11 @@ export function Setup({ s }: { s: S | null }) {
         </>
       ),
       true,
-      <div style={{ marginTop: 24 }}>
+      <div style={{ marginTop: 'var(--space-6)' }}>
         <Button type="primary" size="lg" fullWidth glow onClick={g ? s.startProgram : s.planOne} disabled={s.busy}>
           {g ? 'Start this arc' : 'Plan your first workout'}
         </Button>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginTop: 8 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginTop: 'var(--space-2)' }}>
           {g ? (
             <Button type="secondary" link size="sm" onClick={s.planOne} disabled={s.busy} style={{ minHeight: 44 }}>
               Plan one workout instead
@@ -295,7 +290,7 @@ export function Setup({ s }: { s: S | null }) {
         <Sparkle size={14} color="var(--color-pink)" glow={0.6} />
       </span>
       <Medallion size={104} />
-      <div style={{ marginTop: 8 }}>
+      <div style={{ marginTop: 'var(--space-2)' }}>
         <Eyebrow>Transformation begins</Eyebrow>
       </div>
       {heading(s.finaleName)}
@@ -303,7 +298,7 @@ export function Setup({ s }: { s: S | null }) {
         {s.finaleLine}
       </Text>
       {s.firstQuest ? (
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', gap: 12, marginTop: 24, padding: '14px 16px', borderRadius: 'var(--radius-lg)', background: 'var(--gradient-gem-tint)', textAlign: 'left' }}>
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)', marginTop: 'var(--space-6)', padding: '14px 16px', borderRadius: 'var(--radius-lg)', background: 'var(--gradient-gem-tint)', textAlign: 'left' }}>
           <span style={{ width: 32, height: 32, flex: 'none', borderRadius: 'var(--radius-sm)', background: 'var(--color-surface)', boxShadow: 'var(--elevation-hairline)', display: 'grid', placeItems: 'center' }}>
             <Sparkle size={16} color="var(--color-pink)" />
           </span>
@@ -322,7 +317,7 @@ export function Setup({ s }: { s: S | null }) {
       ) : null}
     </div>,
     <>
-      <Button type="primary" size="lg" fullWidth glow onClick={s.takeTour} style={{ marginTop: 24 }}>
+      <Button type="primary" size="lg" fullWidth glow onClick={s.takeTour} style={{ marginTop: 'var(--space-6)' }}>
         Take the tour
       </Button>
       <Button type="neutral" link size="sm" onClick={s.toCalendar} style={{ display: 'flex', margin: '6px auto 0', minHeight: 44 }}>

@@ -20,9 +20,9 @@ export function QuestsClearedCard({ v }: { v: PlannerVals }) {
         </Text>
       ) : null}
       {v.questsHas ? (
-        <ProgressBar value={v.questsClearedPct ?? 0} track="mist" style={{ marginTop: '12px' }} />
+        <ProgressBar value={v.questsClearedPct ?? 0} track="mist" style={{ marginTop: 'var(--space-3)' }} />
       ) : null}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: 'var(--space-4)' }}>
         {(v.questStats ?? []).map((q, i) => (
           <div key={i} style={css(q?.row)}>
             <RankGem fill={q?.color} />

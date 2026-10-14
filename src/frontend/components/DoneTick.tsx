@@ -1,3 +1,4 @@
+import { Pressable } from '@moonshot/design-system/buttons';
 import { Check } from '@moonshot/design-system/icons';
 
 export interface DoneTickProps {
@@ -11,11 +12,11 @@ export interface DoneTickProps {
  * at the end of the exercise's row. */
 export function DoneTick({ done, onToggle, label }: DoneTickProps) {
   return (
-    <button
+    <Pressable
       onClick={onToggle}
       aria-pressed={done}
       aria-label={label}
-      className="hit"
+      hit
       style={{
         marginLeft: 'auto',
         display: 'flex',
@@ -25,12 +26,11 @@ export function DoneTick({ done, onToggle, label }: DoneTickProps) {
         height: '34px',
         flex: 'none',
         borderRadius: 'var(--radius-sm)',
-        cursor: 'pointer',
         border: done ? 'none' : '1.5px solid var(--color-outline)',
         background: done ? 'var(--color-pink)' : 'none',
       }}
     >
       <Check color={done ? 'var(--color-surface)' : 'var(--color-outline)'} strokeWidth={2.6} size={15} />
-    </button>
+    </Pressable>
   );
 }

@@ -1,3 +1,4 @@
+import { Pressable } from '@moonshot/design-system/buttons';
 import { Text } from '@moonshot/design-system/typography';
 import { css } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
@@ -29,14 +30,14 @@ export function MonthGrid({ v }: { v: PlannerVals }) {
             position: 'relative',
             display: 'grid',
             gridTemplateColumns: 'repeat(7,minmax(0,1fr))',
-            gap: '4px',
+            gap: 'var(--space-1)',
           }}
         >
           {(v.monthCells ?? []).map((c, i) =>
             c?.blank ? (
               <div key={i} aria-hidden="true" style={css(c?.wrap)}></div>
             ) : (
-              <button
+              <Pressable
                 key={i}
                 onClick={c?.pick}
                 tabIndex={c?.tabStop}
@@ -48,7 +49,7 @@ export function MonthGrid({ v }: { v: PlannerVals }) {
               >
                 <span style={css(c?.num)}>{c?.label}</span>
                 <StatusDot status={c?.dot} selected={!!c?.selected} />
-              </button>
+              </Pressable>
             ),
           )}
         </div>

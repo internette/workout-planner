@@ -97,7 +97,7 @@ export function TypeChoiceCards({ v }: { v: PlannerVals }) {
       style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))',
-        gap: '12px',
+        gap: 'var(--space-3)',
         marginTop: '22px',
       }}
     >

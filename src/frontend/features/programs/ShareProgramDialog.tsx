@@ -152,12 +152,12 @@ export function ShareProgramDialog({ s }: { s: Share }) {
   return (
     <Dialog open={s.open} onClose={s.close} title={'Share ' + s.name} variant="sheet" actions={actions}>
       {mode === 'loading' ? (
-        <Text variant="body" tone="muted" as="p" style={{ margin: '16px 0 0' }}>
+        <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-4) 0 0' }}>
           Loading…
         </Text>
       ) : null}
       {mode === 'form' ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', marginTop: 'var(--space-4)' }}>
           {stopped ? (
             <Callout tone="success" icon={<Check color="var(--color-pink-deep)" strokeWidth={2.4} size={16} />}>
               Sharing stopped. That link doesn’t open anything now.
@@ -185,7 +185,7 @@ export function ShareProgramDialog({ s }: { s: Share }) {
               Show my name
             </Checkbox>
           ) : null}
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 12px', paddingTop: '14px', borderTop: '1px solid var(--color-line)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-3)', paddingTop: '14px', borderTop: '1px solid var(--color-line)' }}>
             <Text variant="body" tone="muted" as="p" style={{ margin: 0, flex: '1 1 100%' }}>
               Or as a file, to print or send: every block and workout, with the name and notes above.
             </Text>
@@ -199,7 +199,7 @@ export function ShareProgramDialog({ s }: { s: Share }) {
         </div>
       ) : null}
       {mode === 'link' && share ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: 'var(--space-4)' }}>
           {justMade ? (
             <Callout tone="success" icon={<Check color="var(--color-pink-deep)" strokeWidth={2.4} size={16} />}>
               Link ready. Anyone with it can see “{share.name}”.
@@ -218,7 +218,7 @@ export function ShareProgramDialog({ s }: { s: Share }) {
             </Button>
             {pdfButton}
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
             <Info color="var(--color-muted)" size={16} />
             <Text variant="body" tone="muted" style={{ flex: 1 }}>
               {'“' + share.name + '”, shared ' + sharedOn(share.updatedAt) + ' · opened ' + plural(share.opens, 'time')}

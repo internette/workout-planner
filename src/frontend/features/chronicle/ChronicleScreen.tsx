@@ -56,7 +56,7 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
           }
         />
       ) : null}
-      {v.diaryBlank ? null : <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
+      {v.diaryBlank ? null : <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-5)' }}>
         <span className="sr-only" role="status">
           {v.diaryResults}
         </span>
@@ -118,7 +118,7 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
       </div>}
       {monthsOf(v.diaryList ?? []).map((g) => (
         <section key={g.label} aria-label={g.label.charAt(0) + g.label.slice(1).toLowerCase()}>
-          <SectionLabel label={g.label} note={plural(g.entries.length, 'entry', 'entries')} style={{ margin: '20px 0 8px' }} />
+          <SectionLabel label={g.label} note={plural(g.entries.length, 'entry', 'entries')} style={{ margin: 'var(--space-5) 0 var(--space-2)' }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {g.entries.map((e, i) => (
               <ChronicleRow key={i} entry={e} />
@@ -127,7 +127,7 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
         </section>
       ))}
       {v.diaryEmpty && !v.diaryBlank ? (
-        <Text variant="body" as="p" tone="muted" style={{ margin: '24px 0 0' }}>
+        <Text variant="body" as="p" tone="muted" style={{ margin: 'var(--space-6) 0 0' }}>
           {v.diaryEmptyNote}
         </Text>
       ) : null}

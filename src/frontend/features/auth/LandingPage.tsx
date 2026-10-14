@@ -42,10 +42,10 @@ function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.R
         <Text variant="micro" tone="accent" as="div">
           {signingUp ? 'First transformation' : 'Welcome back'}
         </Text>
-        <Text variant="heading" as="h2" className={styles.authTitle} style={{ margin: '8px 0 0' }}>
+        <Text variant="heading" as="h2" className={styles.authTitle} style={{ margin: 'var(--space-2) 0 0' }}>
           {signingUp ? 'Begin your ritual' : 'Step back through'}
         </Text>
-        <Text variant="body" tone="muted" as="p" className={styles.authNote} style={{ margin: '8px 0 0' }}>
+        <Text variant="body" tone="muted" as="p" className={styles.authNote} style={{ margin: 'var(--space-2) 0 0' }}>
           {signingUp ? 'Two taps, and your first quest is one planned session away.' : 'Your plan and your Chronicle are right where you left them.'}
         </Text>
 
@@ -160,7 +160,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
           </Text>
           <div className={styles.steps}>
             {STEPS.map(({ icon: Icon, title, body }) => (
-              <Card key={title} pad="lg" className={styles.step} style={{ padding: 24 }}>
+              <Card key={title} pad="lg" className={styles.step} style={{ padding: 'var(--space-6)' }}>
                 <span className={styles.stepIcon}>
                   <Icon size={21} color="var(--color-pink)" />
                 </span>
@@ -196,7 +196,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                   <Text variant="micro" tone="accent" as="div">
                     Quest cleared
                   </Text>
-                  <Text variant="subheading" as="div" style={{ marginTop: 4 }}>
+                  <Text variant="subheading" as="div" style={{ marginTop: 'var(--space-1)' }}>
                     Break the illusion
                   </Text>
                   <Text variant="body" tone="muted" as="div" style={{ marginTop: 3 }}>

@@ -17,7 +17,7 @@ export function AddToDayDialog({ v }: { v: PlannerVals }) {
         </Button>
       }
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
         {(v.addToDialog?.options ?? []).map((o, i) => (
           <LinkRow key={i} title={o?.name} detail={o?.meta} disabled={o?.disabled} onClick={o?.pick} />
         ))}

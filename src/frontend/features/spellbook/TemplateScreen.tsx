@@ -52,7 +52,7 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
       </ChipGroup>
       <NeedsLine text={v.template.needs} />
       {v.template.notes ? (
-        <NotesCard style={{ marginTop: '12px' }}>{v.template.notes}</NotesCard>
+        <NotesCard style={{ marginTop: 'var(--space-3)' }}>{v.template.notes}</NotesCard>
       ) : null}
       <Button type="primary" size="lg" fullWidth onClick={v.template.schedule} style={{ marginTop: '18px' }}>
         <Calendar color="var(--color-surface)" size={17} />
@@ -67,7 +67,7 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
               View day
             </Button>
           }
-          style={{ marginTop: '12px' }}
+          style={{ marginTop: 'var(--space-3)' }}
         >
           {v.scheduleCalendar.done}
         </Callout>
@@ -78,7 +78,7 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
           <StatRow size="lg" stats={v.template.rideStats ?? []} />
         </Card>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '18px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: '18px' }}>
           {(v.template.exercises ?? []).map((e, i) => (
             <Card key={i} pad="sm" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
               <IconTile as="span" size="xs" variant="flat">{e?.svg}</IconTile>
@@ -95,14 +95,14 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
             </Card>
           ))}
           {(v.template.exercises ?? []).length === 0 ? (
-            <Text variant="body" as="p" tone="muted" style={{ margin: '4px 0 0' }}>
+            <Text variant="body" as="p" tone="muted" style={{ margin: 'var(--space-1) 0 0' }}>
               No exercises in this workout yet.
             </Text>
           ) : null}
         </div>
       )}
       {v.template.builtin ? (
-        <Text variant="body" as="p" tone="slate" style={{ margin: '28px 0 0', maxWidth: '520px' }}>
+        <Text variant="body" as="p" tone="slate" style={{ margin: 'var(--space-7) 0 0', maxWidth: '520px' }}>
           {v.template.builtinNote}
         </Text>
       ) : (

@@ -94,7 +94,7 @@ export function progressVals(ctx: Ctx) {
         label: r.name,
         req: ix === 0 ? 'Start' : XP_STEPS[ix - 1].toLocaleString('en-US') + ' XP',
         row:
-          'display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius-md);' +
+          'display:flex;align-items:center;gap:var(--space-3);padding:11px 14px;border-radius:var(--radius-md);' +
           (cur
             ? r.pill
             : reached
@@ -120,7 +120,7 @@ export function progressVals(ctx: Ctx) {
       return isNaN(created.getTime()) ? '' : 'Training since ' + MONTHS[created.getMonth()] + ' ' + created.getFullYear();
     })(),
     rankPillBtn:
-      'display:inline-flex;align-items:center;gap:8px;margin-top:9px;min-height:36px;padding:8px 15px 8px 14px;border-radius:var(--radius-full);font-size:var(--text-base);font-weight:var(--font-weight-bold);' +
+      'display:inline-flex;align-items:center;gap:var(--space-2);margin-top:9px;min-height:36px;padding:8px 15px 8px 14px;border-radius:var(--radius-full);font-size:var(--text-base);font-weight:var(--font-weight-bold);' +
       RANKS[derivedRank].pill,
     rankGemColor: RANKS[derivedRank].gem,
     rankBarPct: rankPct,
@@ -213,7 +213,7 @@ export function progressVals(ctx: Ctx) {
         count,
         color,
         row:
-          'display:flex;align-items:center;gap:12px;padding:10px 0' +
+          'display:flex;align-items:center;gap:var(--space-3);padding:10px 0' +
           (ix === arr.length - 1 ? '' : ';border-bottom:1px solid var(--color-line)'),
       })),
     // All time, up to today: sessions still ahead don't count yet.
@@ -275,7 +275,7 @@ export function progressVals(ctx: Ctx) {
         value,
         delta,
         rowStyle:
-          'display:flex;align-items:center;gap:12px;padding:11px 0;' +
+          'display:flex;align-items:center;gap:var(--space-3);padding:11px 0;' +
           (ix === arr.length - 1 ? '' : 'border-bottom:1px solid var(--color-line)'),
         deltaStyle:
           'flex:none;width:44px;text-align:right;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:var(--color-pink-deep)',

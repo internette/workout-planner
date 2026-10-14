@@ -25,7 +25,7 @@ export function SaveScopeDialog({ v }: { v: PlannerVals }) {
         </>
       }
     >
-      <div style={{ marginTop: '16px' }}>
+      <div style={{ marginTop: 'var(--space-4)' }}>
         <OptionGroup label="How to save your changes">
           {(v.tplConfirmOptions ?? []).map((o) => (
             <OptionCard

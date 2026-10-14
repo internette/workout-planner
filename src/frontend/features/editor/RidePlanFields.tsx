@@ -9,11 +9,11 @@ import { RIDE_ZONES } from '@/shared/planDraft';
 /** A ride’s plan: distance, elevation, duration and effort zone. */
 export function RidePlanFields({ v }: { v: PlannerVals }) {
   return (
-    <Card style={{ marginTop: '16px' }}>
+    <Card style={{ marginTop: 'var(--space-4)' }}>
       <Text variant="micro" as="div" tone="slate">
         Ride plan
       </Text>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
         <TextField
           label="Distance"
           labelNote="(miles)"

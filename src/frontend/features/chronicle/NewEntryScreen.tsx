@@ -21,7 +21,7 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
       <div style={{ marginTop: '26px', maxWidth: '620px' }}>
         {/* One card per group (this week, last week, earlier), its sessions as rows. Back leaves. */}
         {(v.unloggedGroups ?? []).map((g) => (
-          <div key={g.label} style={{ marginBottom: '16px' }}>
+          <div key={g.label} style={{ marginBottom: 'var(--space-4)' }}>
             <SectionLabel list label={g.label} />
             <Card pad="none" style={{ overflow: 'hidden' }}>
               {g.items.map((u, i) => (
@@ -60,7 +60,7 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
           </div>
         ))}
         {v.noUnlogged ? (
-          <Text variant="body" as="p" tone="muted" style={{ margin: '16px 0 0' }}>
+          <Text variant="body" as="p" tone="muted" style={{ margin: 'var(--space-4) 0 0' }}>
             {v.noUnloggedNote}
           </Text>
         ) : null}

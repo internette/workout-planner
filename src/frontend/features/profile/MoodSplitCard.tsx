@@ -15,10 +15,10 @@ export function MoodSplitCard({ v }: { v: PlannerVals }) {
         </Text>
       ) : null}
       <div
-        style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '18px' }}
+        style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: '18px' }}
       >
         {(v.moodSplit ?? []).map((m, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
             <span style={css(m?.swatch)}></span>
             <Text variant="strong" tone="ink" style={{ flex: 'none', width: '66px' }}>
               {m?.name}

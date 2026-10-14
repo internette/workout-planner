@@ -50,10 +50,10 @@ export function PlannerView({ v }: { v: PlannerVals }) {
           style={{
             maxWidth: '1180px',
             margin: '0 auto',
-            padding: '28px 28px 0',
+            padding: 'var(--space-7) var(--space-7) 0',
             display: 'flex',
             flexWrap: 'wrap',
-            gap: '28px',
+            gap: 'var(--space-7)',
             alignItems: 'flex-start',
           }}
         >

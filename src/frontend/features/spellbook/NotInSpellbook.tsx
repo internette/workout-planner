@@ -12,7 +12,7 @@ export function NotInSpellbook({ v }: { v: PlannerVals }) {
       <Text variant="title" as="h1" style={{ margin: '14px 0 0' }}>
         Not in your Spellbook
       </Text>
-      <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+      <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
         {v.isProgram || v.isProgramEdit
           ? 'This program has been deleted, or the link is to someone else’s Spellbook.'
           : v.isTemplate

@@ -1,6 +1,6 @@
 import { DisclosureChevron } from '@moonshot/design-system/disclosure';
 import { type ReactNode } from 'react';
-import { Button } from '@moonshot/design-system/buttons';
+import { Button, Pressable } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Close } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
@@ -17,24 +17,16 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
     <Card pad="sm">
       <div style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
         {handle}
-        <button
-          type="button"
+        <Pressable
           onClick={exercise?.toggleExpand}
           aria-expanded={!!exercise?.expanded}
-          className="hit"
+          hit
           style={{
             flex: '1',
             minWidth: '0',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
-            border: 'none',
-            background: 'none',
-            padding: '0',
-            textAlign: 'left',
-            font: 'inherit',
-            color: 'inherit',
-            cursor: 'pointer',
+            gap: 'var(--space-2)',
           }}
         >
           {/* The name fills the row, so every chevron lines up in one column beside the tick and ✕. */}
@@ -47,7 +39,7 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
             ) : null}
           </span>
           <DisclosureChevron open={!!exercise?.expanded} />
-        </button>
+        </Pressable>
         {exercise?.showTick ? (
           <DoneTick done={!!exercise?.isDone} onToggle={exercise?.toggleDone} label={exercise?.doneAria ?? ''} />
         ) : null}
@@ -68,7 +60,7 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
       />
       <AreaChoice areas={exercise?.areas ?? []} />
       {/* Its icon and removing it, with the rest of its settings: the closed row keeps its room for the details. */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '14px', paddingTop: '12px', borderTop: '1px solid var(--color-line)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: '14px', paddingTop: 'var(--space-3)', borderTop: '1px solid var(--color-line)' }}>
         <IconPicker
             size="sm"
             open={!!exercise?.open}

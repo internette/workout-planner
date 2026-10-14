@@ -21,7 +21,7 @@ type Row = { key: string; name: string; meta: string; svg: React.ReactNode; on: 
 function FoundRow({ r }: { r: Row }) {
   const metaId = useId();
   return (
-    <label style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '12px', minHeight: '52px', padding: '4px 0', cursor: 'pointer' }}>
+    <label style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 'var(--space-3)', minHeight: '52px', padding: 'var(--space-1) 0', cursor: 'pointer' }}>
       <input
         type="checkbox"
         checked={r.on}
@@ -71,29 +71,29 @@ function Found({ v }: { v: PlannerVals }) {
         <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
           {s.title}
         </Text>
-        <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+        <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
           {s.meta}
         </Text>
       </div>
       {s.bar.length ? (
-        <div style={{ marginTop: '16px' }}>
+        <div style={{ marginTop: 'var(--space-4)' }}>
           <BlockBar blocks={s.bar} />
         </div>
       ) : null}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: 'var(--space-4)' }}>
         {s.blocks.map((b) => (
           <Card key={b.key} pad="sm" as="section" aria-label={b.title}>
             <Text variant="subheading" as="h2" style={{ margin: 0 }}>
               {b.title}
             </Text>
-            <WeekStrip days={b.strip} style={{ marginTop: '12px' }} />
+            <WeekStrip days={b.strip} style={{ marginTop: 'var(--space-3)' }} />
             {b.change ? (
               <Text variant="body" tone="muted" as="p" style={{ margin: '10px 0 0' }}>
                 {b.change}
               </Text>
             ) : null}
             {b.workouts.length ? (
-              <div style={{ display: 'flex', flexDirection: 'column', marginTop: '8px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', marginTop: 'var(--space-2)' }}>
                 {b.workouts.map((r) => (
                   <FoundRow key={r.key} r={r} />
                 ))}
@@ -108,7 +108,7 @@ function Found({ v }: { v: PlannerVals }) {
                 <Text variant="micro" tone="slate" as="h2" style={{ margin: 0 }}>
                   Left out
                 </Text>
-                <div style={{ display: 'flex', flexDirection: 'column', marginTop: '4px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', marginTop: 'var(--space-1)' }}>
                   {s.leftOut.map((r) => (
                     <FoundRow key={r.key} r={r} />
                   ))}
@@ -123,7 +123,7 @@ function Found({ v }: { v: PlannerVals }) {
           </Card>
         ) : null}
       </div>
-      <Button type="primary" size="lg" fullWidth onClick={s.next} disabled={!s.canNext} style={{ marginTop: '20px' }}>
+      <Button type="primary" size="lg" fullWidth onClick={s.next} disabled={!s.canNext} style={{ marginTop: 'var(--space-5)' }}>
         Next
       </Button>
     </div>
@@ -138,7 +138,7 @@ function Naming({ v }: { v: PlannerVals }) {
       <Text variant="title" as="h1" style={{ margin: '18px 0 0' }}>
         Make it a program
       </Text>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px', maxWidth: '560px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-4)', maxWidth: '560px' }}>
         <TextField label="Program name" value={n.name} onChange={n.setName} maxLength={80} />
         {n.blocks.length ? (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -149,7 +149,7 @@ function Naming({ v }: { v: PlannerVals }) {
         ) : null}
       </div>
       <SectionLabel label="The sessions on your calendar" style={{ marginTop: '22px' }} />
-      <div role="radiogroup" aria-label="The sessions on your calendar" style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px', maxWidth: '560px' }}>
+      <div role="radiogroup" aria-label="The sessions on your calendar" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-2)', maxWidth: '560px' }}>
         <OptionCard name="scan-sessions" value="keep" checked={n.keep} onChange={n.setKeep} title="Keep them, as this program" description={n.keepNote} />
         <OptionCard name="scan-sessions" value="fresh" checked={!n.keep} onChange={n.setKeep} title="Start it fresh instead" description={n.freshNote} />
       </div>
@@ -158,7 +158,7 @@ function Naming({ v }: { v: PlannerVals }) {
           <TextField label="Starting" type="date" value={n.date} min={n.min} onChange={n.setDate} />
         </div>
       ) : null}
-      <div style={{ marginTop: '16px', maxWidth: '560px' }}>
+      <div style={{ marginTop: 'var(--space-4)', maxWidth: '560px' }}>
         <Checkbox switch checked={n.endSeries} onChange={n.setEndSeries} description="Their weekly repeats are now the program’s, so nothing doubles up.">
           End the weekly series
         </Checkbox>

@@ -29,7 +29,7 @@ export function ProfileScreen({ v }: { v: PlannerVals }) {
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))',
-          gap: '12px',
+          gap: 'var(--space-3)',
           marginTop: '14px',
         }}
       >

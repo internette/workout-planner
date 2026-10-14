@@ -27,7 +27,7 @@ export function FinishDialog({ v }: { v: PlannerVals }) {
         </>
       }
     >
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
         {v.finishIsRide ? (
           <TextField
             label="Distance"

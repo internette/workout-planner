@@ -9,7 +9,7 @@ export function AccountCard({ v }: { v: PlannerVals }) {
   return (
     <SettingsCard title="Account">
       <div
-        style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', marginTop: '12px' }}
+        style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-3)' }}
       >
         <Text variant="body" as="p" tone="muted" style={{ flex: '1 1 180px', minWidth: '0', margin: '0' }}>
           {v.accountProvider ? 'Signed in with ' + v.accountProvider : 'Signed in'}

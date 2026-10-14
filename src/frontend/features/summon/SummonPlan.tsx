@@ -156,7 +156,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
         >
           <Weeks workouts={draft.plan.workouts} />
           {problem ? (
-            <Text variant="body" as="p" tone="danger" role="alert" style={{ margin: '12px 0 0' }}>
+            <Text variant="body" as="p" tone="danger" role="alert" style={{ margin: 'var(--space-3) 0 0' }}>
               {problem}
             </Text>
           ) : null}
@@ -196,7 +196,7 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
             Week {i + 1} · from {shortDate(wk.start)}
           </Text>
           {wk.list.map((w, j) => (
-            <div key={w.date + w.name + j} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '9px 0', borderTop: j ? '1px solid var(--color-line)' : 'none' }}>
+            <div key={w.date + w.name + j} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: '9px 0', borderTop: j ? '1px solid var(--color-line)' : 'none' }}>
               <IconTile size="sm">
                 <WorkoutIcon name={w.kind === 'ride' ? 'bike' : w.stretch ? 'lunge' : w.yoga ? 'flower' : 'h'} color="var(--color-pink)" />
               </IconTile>

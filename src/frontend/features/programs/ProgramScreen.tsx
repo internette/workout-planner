@@ -1,5 +1,5 @@
 // A program's page: its blocks as one bar, each block's week and workouts, and starting, sharing and editing it.
-import { Button } from '@moonshot/design-system/buttons';
+import { Button, Pressable } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { Dialog } from '@moonshot/design-system/dialog';
@@ -38,7 +38,7 @@ function StartDialog({ v }: { v: PlannerVals }) {
         <TextField label="Starting" type="date" value={s.date} min={s.min} onChange={s.setDate} />
         {s.blocks ? (
           <div>
-            <Text variant="micro" tone="slate" as="div" aria-hidden="true" style={{ marginBottom: '8px' }}>
+            <Text variant="micro" tone="slate" as="div" aria-hidden="true" style={{ marginBottom: 'var(--space-2)' }}>
               Start at
             </Text>
             <SegmentedControl label="Start at" options={s.blocks} value={s.block} onChange={s.setBlock} fullWidth equalWidth wrap />
@@ -49,17 +49,17 @@ function StartDialog({ v }: { v: PlannerVals }) {
             {s.summary}
           </Text>
           {s.lands ? (
-            <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+            <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
               {s.lands}
             </Text>
           ) : null}
           {s.overlap ? (
-            <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+            <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
               {s.overlap}
             </Text>
           ) : null}
           {s.emptyNote ? (
-            <Text variant="body" tone="danger" as="p" style={{ margin: '8px 0 0' }}>
+            <Text variant="body" tone="danger" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
               {s.emptyNote}
             </Text>
           ) : null}
@@ -96,11 +96,11 @@ function MoveDialog({ v }: { v: PlannerVals }) {
             {m.summary}
           </Text>
           {m.lands ? (
-            <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+            <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
               {m.lands}
             </Text>
           ) : null}
-          <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
             Its sessions still ahead move to match. Ones you’ve done, started or written about stay where they are.
           </Text>
         </Card>
@@ -140,7 +140,7 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
       ) : null}
       {p.progress ? (
         <div style={{ marginTop: '18px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
             <ProgressBar value={p.progress.pct} track="tint" label="Sessions done" valueText={p.progress.valueText} style={{ flex: 1 }} />
             <Text variant="figure" style={{ flex: 'none' }}>
               {p.progress.figure}
@@ -181,7 +181,7 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
         ) : null}
       </div>
       {(p.runs.length > 1 ? p.runs : []).map((r) => (
-        <Card key={r.key} pad="sm" style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 12px' }}>
+        <Card key={r.key} pad="sm" style={{ marginTop: 'var(--space-3)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-3)' }}>
           <span style={{ flex: '1 1 200px', minWidth: 0 }}>
             <Text variant="body" weight="semibold" as="span" style={{ display: 'block' }}>
               {r.label}
@@ -190,7 +190,7 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
               {r.dates}
             </Text>
           </span>
-          <span style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+          <span style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-1)' }}>
             <Button type="neutral" ghost size="sm" onClick={r.move}>
               Change start
             </Button>
@@ -206,11 +206,10 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '18px' }}>
         {p.blocks.map((b) => (
           <Card key={b.key} pad="sm">
-            <button
-              type="button"
+            <Pressable
               aria-expanded={b.open}
               onClick={b.toggle}
-              style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', minHeight: '44px', padding: 0, border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', font: 'inherit' }}
+              style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', minHeight: '44px'}}
             >
               <span style={{ flex: 1, minWidth: 0 }}>
                 <Text variant="subheading" as="span" style={{ display: 'block' }}>
@@ -221,22 +220,21 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
                 </Text>
               </span>
               <ChevronDown color="var(--color-muted)" size={16} style={{ transform: b.open ? 'rotate(180deg)' : undefined }} />
-            </button>
+            </Pressable>
             {b.open ? (
               <>
-                <WeekStrip days={b.strip.map((d) => ({ letter: d.letter, label: d.day + ': ' + d.label, icon: d.svg || undefined }))} style={{ marginTop: '12px' }} />
+                <WeekStrip days={b.strip.map((d) => ({ letter: d.letter, label: d.day + ': ' + d.label, icon: d.svg || undefined }))} style={{ marginTop: 'var(--space-3)' }} />
                 {b.empty ? (
-                  <Text variant="body" tone="muted" as="p" style={{ margin: '12px 0 0' }}>
+                  <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-3) 0 0' }}>
                     No workouts in this block yet.
                   </Text>
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '12px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', marginTop: 'var(--space-3)' }}>
                     {b.workouts.map((w) => (
-                      <button
+                      <Pressable
                         key={w.key}
-                        type="button"
                         onClick={w.open}
-                        style={{ display: 'flex', alignItems: 'center', gap: '12px', minHeight: '52px', padding: '4px 0', border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', font: 'inherit' }}
+                        style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', minHeight: '52px', padding: 'var(--space-1) 0'}}
                       >
                         <IconTile as="span" size="xs" variant="flat">
                           {w.svg}
@@ -250,7 +248,7 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
                           </Text>
                         </span>
                         <ChevronRight color="var(--color-muted)" size={14} />
-                      </button>
+                      </Pressable>
                     ))}
                   </div>
                 )}

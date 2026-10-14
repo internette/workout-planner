@@ -1,7 +1,7 @@
 // A program run's page: the program as it was when it ran, read-only, with how it went. It can be added to the
 // person's programs again (a copy to change and start) or shared behind a link.
 import { BlockBar } from '@moonshot/design-system/block-bar';
-import { Button } from '@moonshot/design-system/buttons';
+import { Button, Pressable } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { IconTile } from '@moonshot/design-system/icon-tile';
@@ -22,7 +22,7 @@ export function ProgramRunScreen({ v }: { v: PlannerVals }) {
         <Text variant="title" as="h1" style={{ margin: '18px 0 0' }}>
           Not in your programs
         </Text>
-        <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+        <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
           This link is to a program someone else ran, or one that’s no longer kept.
         </Text>
       </div>
@@ -40,7 +40,7 @@ export function ProgramRunScreen({ v }: { v: PlannerVals }) {
       </div>
       {/* Finished: its moment, before the details. */}
       {p.complete ? (
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', gap: '12px', marginTop: '16px', padding: '14px 16px', borderRadius: 'var(--radius-lg)', background: 'var(--gradient-gem-tint)', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)', marginTop: 'var(--space-4)', padding: '14px 16px', borderRadius: 'var(--radius-lg)', background: 'var(--gradient-gem-tint)', overflow: 'hidden' }}>
           <span style={{ width: '32px', height: '32px', flex: 'none', borderRadius: 'var(--radius-sm)', background: 'var(--gradient-gem)', display: 'grid', placeItems: 'center' }}>
             <Check color="var(--color-surface)" strokeWidth={2.6} size={16} />
           </span>
@@ -73,7 +73,7 @@ export function ProgramRunScreen({ v }: { v: PlannerVals }) {
       <Text variant="body" tone="muted" as="p" style={{ margin: '10px 0 0' }}>
         {p.note}
       </Text>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: 'var(--space-4)' }}>
         {p.blocks.map((b) => (
           <Card key={b.key} pad="sm" as="section" aria-label={b.name}>
             <Text variant="subheading" as="h2" style={{ margin: 0 }}>
@@ -82,15 +82,14 @@ export function ProgramRunScreen({ v }: { v: PlannerVals }) {
             <Text variant="body" tone="muted" as="div">
               {b.range}
             </Text>
-            <WeekStrip days={b.strip} style={{ marginTop: '12px' }} />
-            <div style={{ display: 'flex', flexDirection: 'column', marginTop: '8px' }}>
+            <WeekStrip days={b.strip} style={{ marginTop: 'var(--space-3)' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', marginTop: 'var(--space-2)' }}>
               {b.workouts.map((w) => (
                 <div key={w.key}>
-                  <button
-                    type="button"
+                  <Pressable
                     aria-expanded={w.open}
                     onClick={w.toggle}
-                    style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%', minHeight: '52px', padding: '4px 0', border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', font: 'inherit' }}
+                    style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', width: '100%', minHeight: '52px', padding: 'var(--space-1) 0'}}
                   >
                     <IconTile as="span" size="xs" variant="flat">
                       {w.svg}
@@ -104,7 +103,7 @@ export function ProgramRunScreen({ v }: { v: PlannerVals }) {
                       </Text>
                     </span>
                     <ChevronDown color="var(--color-muted)" size={16} style={{ flex: 'none', transform: w.open ? 'rotate(180deg)' : undefined }} />
-                  </button>
+                  </Pressable>
                   {w.open ? (
                     <div style={{ margin: '2px 0 10px 50px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                       {w.lines.map((line, i) => (

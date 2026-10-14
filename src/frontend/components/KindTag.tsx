@@ -30,7 +30,7 @@ export function TagLabel({ inline, children }: { inline?: boolean; children: Rea
         tone="accent"
         style={
           inline
-            ? { display: 'inline-block', marginLeft: '4px', verticalAlign: 'middle' }
+            ? { display: 'inline-block', marginLeft: 'var(--space-1)', verticalAlign: 'middle' }
             : { display: 'block', marginBottom: '3px' }
         }
       >

@@ -31,7 +31,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       <LeaveEditorDialog v={v} />
       <BackBar label={v.backLabel} onBack={v.tryLeave} />
       <EditorHeader v={v} />
-      <ChipGroup style={{ marginTop: '20px' }}>
+      <ChipGroup style={{ marginTop: 'var(--space-5)' }}>
         {v.showDate ? (
         <DatePicker v={v} />
         ) : null}
@@ -54,18 +54,18 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
         ) : null}
       </ChipGroup>
       {v.canUseSaved ? (
-        <Button type="secondary" size="md" onClick={v.useSaved} style={{ marginTop: '12px' }}>
+        <Button type="secondary" size="md" onClick={v.useSaved} style={{ marginTop: 'var(--space-3)' }}>
           {v.useSavedLabel}
         </Button>
       ) : null}
       {v.isCreating ? (
-        <Card pad="sm" style={{ marginTop: '16px' }}>
+        <Card pad="sm" style={{ marginTop: 'var(--space-4)' }}>
           <Checkbox switch checked={!!v.scheduleOn} onChange={v.setSchedule} description={v.scheduleNote}>
             Add to calendar
           </Checkbox>
           {v.showRepeatDays ? <RepeatDays v={v} /> : null}
           {v.daysNote ? (
-            <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+            <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
               {v.daysNote}
             </Text>
           ) : null}
@@ -97,14 +97,14 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       ) : (
         <>
           {v.inSeries ? (
-            <Card pad="sm" style={{ marginTop: '16px' }}>
+            <Card pad="sm" style={{ marginTop: 'var(--space-4)' }}>
               <Text variant="body" tone="muted" as="p" style={{ margin: 0 }}>
                 {v.seriesNote}
               </Text>
             </Card>
           ) : null}
           {v.canRepeat ? (
-            <Card pad="sm" style={{ marginTop: '16px' }}>
+            <Card pad="sm" style={{ marginTop: 'var(--space-4)' }}>
               <RepeatWeekly
                 on={!!v.repeatOn}
                 onChange={v.setRepeat}
@@ -120,11 +120,11 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       )}
       {/* Whether it's a warm-up, whatever its kind: a workout, a stretch or yoga can each be one. */}
       {v.warmupShown ? (
-        <Card pad="sm" style={{ marginTop: '16px' }}>
+        <Card pad="sm" style={{ marginTop: 'var(--space-4)' }}>
           <Checkbox switch checked={!!v.warmupOn} onChange={v.setWarmup}>
             Warm-up
           </Checkbox>
-          <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
             Listed before the other workouts on its day, and tagged as a warm-up.
           </Text>
         </Card>
@@ -132,7 +132,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       {v.ridePlanStatic ? (
         <div style={{ marginTop: '18px' }}>
           <div
-            style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
+            style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 'var(--space-2)' }}
           >
             <Text variant="micro" tone="slate">
               Ride plan
@@ -141,7 +141,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
               {v.rideLockNote}
             </Text>
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '22px', marginTop: '12px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '22px', marginTop: 'var(--space-3)' }}>
             <Stat label="Distance" value={v.planDistText} />
             <Stat label="Duration" value={v.planDurText} />
             <Stat label="Elevation" value={v.planElevText} />
@@ -152,7 +152,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       {v.ridePlanEdit ? <RidePlanFields v={v} /> : null}
       {v.ridePlanStatic ? <RideActualCard v={v} /> : null}
       {v.isLift ? (
-        <Card style={{ marginTop: '16px' }}>
+        <Card style={{ marginTop: 'var(--space-4)' }}>
           <Text variant="micro" as="div" tone="slate">
             Target areas
           </Text>
@@ -178,7 +178,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
           getKey={(ex, i) => ex?.name ?? String(i)}
           handleLabel={(ex) => ex?.moveAria ?? ''}
           onMove={(from, to) => v.exercises?.[from]?.moveTo(to)}
-          style={{ marginTop: '16px' }}
+          style={{ marginTop: 'var(--space-4)' }}
           renderItem={(ex, _, handle) => (
               <EditorExerciseItem exercise={ex} handle={handle} />
           )}
@@ -193,14 +193,14 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
           aria-expanded={!!v.addOpen}
           aria-controls={v.addOpen ? 'add-exercise' : undefined}
           data-add-exercise
-          style={{ marginTop: '16px' }}
+          style={{ marginTop: 'var(--space-4)' }}
         >
           <Plus color="var(--color-pink)" size={19} />
           Add exercise
         </Button>
       ) : null}
       {v.addOpen ? <AddExercisePanel v={v} /> : null}
-      <div style={{ marginTop: '24px' }}>
+      <div style={{ marginTop: 'var(--space-6)' }}>
         <Text variant="micro" tone="muted" style={{ display: 'block', marginBottom: '10px' }}>
           Workout notes
         </Text>
@@ -239,7 +239,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
 function RepeatDays({ v }: { v: PlannerVals }) {
   return (
     <div style={{ marginTop: '14px' }}>
-      <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: '8px' }}>
+      <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: 'var(--space-2)' }}>
         On
       </Text>
       <WeekdayToggles label="Days it goes on" days={v.repeatDays ?? []} onToggle={v.toggleRepeatDay} />

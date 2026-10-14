@@ -12,7 +12,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
     <Card style={{ marginTop: '14px' }}>
       <SectionLabel as="span" label="Sessions per week" aside={v.chartRangeLabel} />
       {v.chartCaption ? (
-        <Text variant="body" as="p" tone="muted" style={{ margin: '8px 0 0' }}>
+        <Text variant="body" as="p" tone="muted" style={{ margin: 'var(--space-2) 0 0' }}>
           {v.chartCaption}
         </Text>
       ) : null}
@@ -27,7 +27,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
         }}
       >
         {(v.weeklyBars ?? []).map((b, i) => (
-          <button key={i}
+          <Pressable key={i}
             onClick={b?.pick}
             aria-label={b?.aria}
             aria-pressed={b?.on}
@@ -35,8 +35,6 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
               flex: '1',
               minWidth: '0',
               minHeight: '44px',
-              border: 'none',
-              background: 'none',
               // The 4 px between bars, inside each column's tap area rather than between them.
               padding: '0 2px',
               display: 'flex',
@@ -44,14 +42,13 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
               justifyContent: 'flex-end',
               alignItems: 'center',
               gap: '6px',
-              cursor: 'pointer',
             }}
             title={b?.tip}
           >
             <span style={css(b?.value)}>{b?.count}</span>
             <div style={css(b?.bar)}></div>
             <span style={css(b?.label)}>{b?.week}</span>
-          </button>
+          </Pressable>
         ))}
       </div>
       {v.barPicked ? (
@@ -59,9 +56,9 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '8px',
+            gap: 'var(--space-2)',
             marginTop: '18px',
-            paddingTop: '16px',
+            paddingTop: 'var(--space-4)',
             borderTop: '1px solid var(--color-line)',
           }}
         >
@@ -74,7 +71,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
                 display: 'flex',
                 flexWrap: 'wrap',
                 alignItems: 'center',
-                gap: '12px',
+                gap: 'var(--space-3)',
                 padding: '12px 14px',
                 borderRadius: 'var(--radius-md)',
                 background: 'var(--color-canvas)',

@@ -39,7 +39,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
               variant="strong"
               as="p"
               tone={card?.live && card.live !== 'paused' ? 'accent' : 'muted'}
-              style={{ margin: '4px 0 0', display: 'flex', alignItems: 'center', gap: '7px' }}
+              style={{ margin: 'var(--space-1) 0 0', display: 'flex', alignItems: 'center', gap: '7px' }}
             >
               {card?.live ? <span aria-hidden="true" className={card.live === 'paused' ? undefined : 'live-dot'} style={{ width: '8px', height: '8px', flex: 'none', borderRadius: 'var(--radius-full)', background: card.live === 'paused' ? 'var(--color-muted)' : 'var(--color-pink)' }} /> : null}
               {card?.openMeta || card?.meta}
@@ -51,8 +51,8 @@ export function DayWorkoutCard({ card }: { card: any }) {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '12px',
-              marginTop: '20px',
+              gap: 'var(--space-3)',
+              marginTop: 'var(--space-5)',
             }}
           >
             <ProgressBar value={card?.progPct ?? 0} track="tint" style={{ flex: '1' }} />
@@ -67,7 +67,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
           </Text>
         ) : null}
         {card?.rideStats?.length ? (
-          <StatRow stats={card?.rideStats ?? []} style={{ marginTop: '20px', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }} />
+          <StatRow stats={card?.rideStats ?? []} style={{ marginTop: 'var(--space-5)', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }} />
         ) : null}
         {card?.isLift ? (
           <div
@@ -75,7 +75,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
               display: 'flex',
               flexDirection: 'column',
               gap: '2px',
-              marginTop: '16px',
+              marginTop: 'var(--space-4)',
             }}
           >
             {(card?.preview ?? []).map((x, i) => (
@@ -83,7 +83,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
                 style={{
                   display: 'flex',
                   alignItems: 'flex-start',
-                  gap: '12px',
+                  gap: 'var(--space-3)',
                   padding: '10px 0',
                   borderBottom: '1px solid var(--color-line)',
                 }}
@@ -136,7 +136,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
         {card?.ctaTwoButtons ? (
           // Carrying on is the one big button; starting over (which wipes the clock and ticks) is a quiet link under it.
           <>
-            <Button type="primary" size="lg" fullWidth onClick={card?.continue} style={{ marginTop: '20px' }}>
+            <Button type="primary" size="lg" fullWidth onClick={card?.continue} style={{ marginTop: 'var(--space-5)' }}>
               {card?.continueLabel}
             </Button>
             <Button type="neutral" link size="sm" onClick={card?.restart} style={{ display: 'flex', margin: '6px auto 0', minHeight: '44px' }}>
@@ -149,7 +149,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
             size="lg"
             fullWidth
             onClick={card?.cta}
-            style={{ marginTop: '20px' }}
+            style={{ marginTop: 'var(--space-5)' }}
           >
             {card?.ctaLabel}
           </Button>

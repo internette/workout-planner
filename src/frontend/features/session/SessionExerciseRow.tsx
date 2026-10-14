@@ -27,7 +27,7 @@ export function SessionExerciseRow({ exercise }: { exercise: any }) {
         <DoneTick done={!!exercise?.isDone} onToggle={exercise?.toggleDone} label={exercise?.doneAria ?? ''} />
       ) : null}
       {exercise?.showSets ? (
-        <div style={{ flex: '1 1 100%', display: 'flex', alignItems: 'center', gap: '12px', paddingLeft: 'calc(34px + 13px)' }}>
+        <div style={{ flex: '1 1 100%', display: 'flex', alignItems: 'center', gap: 'var(--space-3)', paddingLeft: 'calc(34px + 13px)' }}>
           <SetPips pips={exercise.setPips as boolean[]} />
           <Text variant="body" tone="slate" style={{ flex: '1 1 auto', fontVariantNumeric: 'tabular-nums' }}>
             {exercise.setsLabel}

@@ -1,3 +1,4 @@
+import { Pressable } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Check, ChevronRight } from '@moonshot/design-system/icons';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
@@ -16,7 +17,7 @@ export function WeekQuestsCard({ v }: { v: PlannerVals }) {
       ) : null}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '14px' }}>
         {(v.weekQuests ?? []).map((q, i) => (
-          <button key={i} type="button" onClick={q?.open} aria-label={q?.aria} style={css(q?.row)}>
+          <Pressable key={i} onClick={q?.open} aria-label={q?.aria} style={css(q?.row)}>
             <span style={css(q?.mark)}>
               {q?.done ? (
                 <Check color="var(--color-surface)" strokeWidth={3} size={10} />
@@ -28,7 +29,7 @@ export function WeekQuestsCard({ v }: { v: PlannerVals }) {
             <span style={css(q?.title)}>{q?.name}</span>
             {/* It opens its day on the calendar. */}
             <ChevronRight color="var(--color-muted)" size={15} style={{ flex: 'none', marginLeft: 'auto' }} />
-          </button>
+          </Pressable>
         ))}
       </div>
     </Card>

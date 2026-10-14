@@ -45,7 +45,7 @@ export function ProgramList({ v }: { v: PlannerVals }) {
       ) : null}
       {v.scanCard ? (
         <Card as="section" aria-labelledby="scan-card" style={{ background: 'var(--color-pink-tint)', boxShadow: 'none' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
             <Gem size={24} style={{ flex: 'none' }} />
             <Text id="scan-card" variant="subheading" as="h2" style={{ margin: 0 }}>
               {v.scanCard.title}
@@ -54,7 +54,7 @@ export function ProgramList({ v }: { v: PlannerVals }) {
           <Text variant="body" tone="slate" as="p" style={{ margin: '6px 0 0' }}>
             {v.scanCard.body}
           </Text>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px', marginTop: '14px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)', marginTop: '14px' }}>
             <Button type="primary" size="md" onClick={v.scanCard.go}>
               Turn into a program
             </Button>
@@ -67,10 +67,10 @@ export function ProgramList({ v }: { v: PlannerVals }) {
       {l.running.length ? (
         <div>
           <SectionLabel list label="Running" note={String(l.running.length)} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
             {l.running.map((r) => (
               <Row key={r.key} name={r.name} eyebrow={r.place} open={r.open}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '12px' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: 'var(--space-3)' }}>
                   <ProgressBar value={r.pct} track="tint" label="Sessions done" valueText={r.valueText} style={{ flex: 1 }} />
                   <Text variant="figure" as="span" style={{ flex: 'none' }}>
                     {r.figure}
@@ -86,7 +86,7 @@ export function ProgramList({ v }: { v: PlannerVals }) {
         <div>
           <SectionLabel list label="Yours" note={l.mine.length ? String(l.mine.length) : undefined} />
           {l.mine.length ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
               {l.mine.map((p) => (
                 <Row key={p.key} name={p.name} meta={p.meta} icon={p.icon} open={p.open} />
               ))}
@@ -101,7 +101,7 @@ export function ProgramList({ v }: { v: PlannerVals }) {
       {l.builtin.length ? (
         <div>
           <SectionLabel list label="Built-in" note={String(l.builtin.length)} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
             {l.builtin.map((p) => (
               <Row key={p.key} name={p.name} meta={p.meta} icon={p.icon} open={p.open} />
             ))}

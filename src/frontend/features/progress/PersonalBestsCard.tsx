@@ -15,7 +15,7 @@ export function PersonalBestsCard({ v, style }: { v: PlannerVals; style?: CSSPro
         </Text>
       ) : null}
       <div
-        style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '12px' }}
+        style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: 'var(--space-3)' }}
       >
         {(v.records ?? []).map((r, i) => (
           <div key={i} style={css(r?.rowStyle)}>

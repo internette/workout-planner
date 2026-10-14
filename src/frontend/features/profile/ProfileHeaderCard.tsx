@@ -139,7 +139,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
                 Each exercise you complete earns 10 XP, and finishing a whole workout earns 50
                 XP on top. Ranks unlock at fixed XP totals.
               </Text>
-              <Text variant="figure" tone="accent" style={{ display: 'block', marginTop: '12px' }}>
+              <Text variant="figure" tone="accent" style={{ display: 'block', marginTop: 'var(--space-3)' }}>
                 {v.xpLine}
               </Text>
             </>

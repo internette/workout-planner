@@ -2,7 +2,7 @@
 // A shared program's public page: the program someone shared, read-only, for anyone with the link. Signed in, it can
 // be copied into their own programs, to start from there. Nothing is copied until they choose to.
 import { useEffect, useState } from 'react';
-import { Button } from '@moonshot/design-system/buttons';
+import { Button, Pressable } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { Dialog } from '@moonshot/design-system/dialog';
@@ -38,11 +38,10 @@ function WorkoutCard({ w, open, onToggle }: { w: SharedWorkout; open: boolean; o
       : plural(w.exercises.length, 'exercise') + ' · ~' + minText(w.minutes);
   return (
     <Card pad="sm">
-      <button
-        type="button"
+      <Pressable
         aria-expanded={open}
         onClick={onToggle}
-        style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%', minHeight: '44px', padding: 0, border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', font: 'inherit' }}
+        style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', width: '100%', minHeight: '44px'}}
       >
         <IconTile as="span" size="xs" variant="flat">
           {iconSvg(w.icon, w.iconColor || undefined)}
@@ -56,7 +55,7 @@ function WorkoutCard({ w, open, onToggle }: { w: SharedWorkout; open: boolean; o
           </Text>
         </span>
         <ChevronDown color="var(--color-muted)" size={16} style={{ flex: 'none', transform: open ? 'rotate(180deg)' : undefined }} />
-      </button>
+      </Pressable>
       {open ? (
         <div style={{ margin: '10px 0 4px 50px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {w.exercises.map((e, i) => (
@@ -101,10 +100,10 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
         <Text variant="title" as="h1" style={{ margin: '32px 0 0' }}>
           This link doesn’t open anything
         </Text>
-        <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+        <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
           Whoever shared it may have stopped sharing, or the link may be missing a letter. Ask them for it again.
         </Text>
-        <Button type="secondary" size="md" onClick={() => window.location.assign('/calendar')} style={{ marginTop: '20px' }}>
+        <Button type="secondary" size="md" onClick={() => window.location.assign('/calendar')} style={{ marginTop: 'var(--space-5)' }}>
           Open Moonshot
         </Button>
       </main>
@@ -134,11 +133,11 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
       <a href={signedIn ? '/calendar' : '/welcome'} aria-label="Moonshot" style={{ display: 'inline-flex', textDecoration: 'none' }}>
         <Lockup />
       </a>
-      <div style={{ marginTop: '24px' }}>
+      <div style={{ marginTop: 'var(--space-6)' }}>
         <Text variant="micro" tone="slate" as="div">
           {program.by ? 'Shared by ' + program.by : 'Shared program'}
         </Text>
-        <Text variant="title" as="h1" style={{ margin: '4px 0 0' }}>
+        <Text variant="title" as="h1" style={{ margin: 'var(--space-1) 0 0' }}>
           {name}
         </Text>
       </div>
@@ -168,7 +167,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
         {pdfBusy ? 'Making PDF…' : 'Save as PDF'}
       </Button>
       {pdfError ? (
-        <Text variant="body" tone="danger" as="p" role="alert" style={{ margin: '8px 0 0' }}>
+        <Text variant="body" tone="danger" as="p" role="alert" style={{ margin: 'var(--space-2) 0 0' }}>
           {pdfError}
         </Text>
       ) : null}
@@ -182,7 +181,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
         return (
           <section key={bi} aria-label={several ? blockName(b, bi) : 'The week'} style={{ marginTop: '22px' }}>
             {several || b.weeks > 1 ? (
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '6px' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-2)', marginBottom: '6px' }}>
                 <Text variant="subheading" as="h2" style={{ margin: 0, flex: 1 }}>
                   {several ? blockName(b, bi) : 'Every week'}
                 </Text>
@@ -191,11 +190,11 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
                 </Text>
               </div>
             ) : null}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
               {b.days.map((list, d) =>
                 list.length ? (
-                  <div key={d} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <Text variant="micro" tone="slate" as="h3" style={{ margin: '8px 0 0' }}>
+                  <div key={d} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                    <Text variant="micro" tone="slate" as="h3" style={{ margin: 'var(--space-2) 0 0' }}>
                       {DOWFULL[d]}
                     </Text>
                     {list.map((ix) => {
@@ -204,7 +203,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
                     })}
                   </div>
                 ) : (
-                  <div key={d} style={{ display: 'flex', alignItems: 'baseline', gap: '12px', padding: '4px 0' }}>
+                  <div key={d} style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-3)', padding: 'var(--space-1) 0' }}>
                     <Text variant="micro" tone="muted" as="h3" style={{ margin: 0, width: '40px' }}>
                       {DOW3[d]}
                     </Text>
@@ -240,7 +239,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
               <Button type="primary" size="lg" fullWidth onClick={() => setSignIn(true)}>
                 Sign in to copy it
               </Button>
-              <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0', textAlign: 'center' }}>
+              <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0', textAlign: 'center' }}>
                 New to Moonshot? Signing in makes your account.
               </Text>
             </>
@@ -249,10 +248,10 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
       </div>
 
       <Dialog open={signIn} onClose={() => setSignIn(false)} title="Sign in to copy it" variant="sheet">
-        <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+        <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
           You’ll come back here, and nothing is copied until you choose to.
         </Text>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: 'var(--space-4)' }}>
           {providers.length ? (
             providers.map((p) => (
               <ProviderButton key={p} provider={p} returnTo={'/p/' + id} onClick={() => setBusyProvider(p)} busy={busyProvider === p} disabled={!!busyProvider}>
@@ -283,12 +282,12 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
           </>
         }
       >
-        <Text variant="body" tone="muted" as="p" style={{ margin: '12px 0 0' }}>
+        <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-3) 0 0' }}>
           Adds it to your programs ({plural(weeks, 'week')}
           {several ? ', ' + plural(program.blocks.length, 'block') : ''}, {plural(new Set(program.blocks.flatMap((b) => blockWorkouts(b))).size, 'workout')}), as yours to change. Start it from there to put it on your calendar.
         </Text>
         {error ? (
-          <Text variant="body" tone="danger" as="p" role="alert" style={{ margin: '12px 0 0' }}>
+          <Text variant="body" tone="danger" as="p" role="alert" style={{ margin: 'var(--space-3) 0 0' }}>
             {error}
           </Text>
         ) : null}

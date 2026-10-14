@@ -25,11 +25,11 @@ export function SessionProgress({ label, pct, allDone, note, bare, children }: S
   const body = (
     <>
       <SectionLabel as="span" label="Progress" value={label} />
-      <ProgressBar value={pct} track="tint" style={{ marginTop: '12px' }} />
+      <ProgressBar value={pct} track="tint" style={{ marginTop: 'var(--space-3)' }} />
       {children}
       <p
         style={{
-          margin: '12px 0 0',
+          margin: 'var(--space-3) 0 0',
           display: 'flex',
           alignItems: 'center',
           gap: '7px',
@@ -47,5 +47,5 @@ export function SessionProgress({ label, pct, allDone, note, bare, children }: S
       </p>
     </>
   );
-  return bare ? body : <Card style={{ marginTop: '16px' }}>{body}</Card>;
+  return bare ? body : <Card style={{ marginTop: 'var(--space-4)' }}>{body}</Card>;
 }
