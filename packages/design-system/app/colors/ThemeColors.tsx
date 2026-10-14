@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ACCENTS, cssVarName, paletteFor, type Accent, type ColorName } from '../../src/colors';
 import { SegmentedControl } from '../../src/segmented-control';
+import { Dot } from './Dot';
 import { Swatch } from './Swatch';
 
 // The roles a color theme fills, and the variable each is written as.
@@ -39,10 +40,6 @@ function Halves({ accent, token }: { accent: Accent; token: ColorName }) {
     </div>
   );
 }
-
-const Dot = ({ color, size = 18 }: { color: string; size?: number }) => (
-  <span aria-hidden style={{ width: size, height: size, flex: 'none', borderRadius: 'var(--radius-full)', background: color, boxShadow: 'inset 0 0 0 1px var(--color-line)' }} />
-);
 
 export function ThemeColors() {
   const [accent, setAccent] = useState<Accent>('pink');
