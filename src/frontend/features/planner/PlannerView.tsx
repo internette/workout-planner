@@ -49,7 +49,7 @@ export function PlannerView({ v }: { v: PlannerVals }) {
       <div style={{ minHeight: '100vh', overflowX: 'clip', paddingBottom: v.layout === 'narrow' ? 'calc(4 * var(--space-7))' : 'calc(2 * var(--space-7))' }}>
         <div
           style={{
-            maxWidth: '1180px',
+            maxWidth: 'var(--layout-shell-max)',
             margin: '0 auto',
             padding: 'var(--space-7) var(--space-7) 0',
             display: 'flex',

@@ -10,7 +10,7 @@ import { TypeChoiceCards } from '@/frontend/features/editor/TypeChoiceCards';
 
 export function TypePickerScreen({ v }: { v: PlannerVals }) {
   return (
-    <div style={{ maxWidth: '560px' }}>
+    <div style={{ maxWidth: 'var(--layout-form-max)' }}>
       {v.retyping ? <BackBar label="Back" onBack={v.closeRetype} /> : <BackBar label={v.backLabel} onBack={v.backToDay} />}
       <div style={{ marginTop: 'var(--space-5)' }}>
         <Text variant="micro" as="div" tone="slate">

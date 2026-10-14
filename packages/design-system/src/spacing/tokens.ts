@@ -17,6 +17,7 @@ export const space = {
 export const layout = {
   shellMax: { value: '1180px', use: 'Widest the app shell grows' },
   proseMax: { value: '620px', use: 'Widest a paragraph of body text runs' },
+  formMax: { value: '560px', use: 'Widest a form, a column of choices or a shared page runs' },
   sidebarW: { value: '208px', use: 'The sidebar on wide screens' },
 } as const satisfies Record<string, Token>;
 

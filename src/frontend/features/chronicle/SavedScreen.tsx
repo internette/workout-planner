@@ -12,7 +12,7 @@ export function SavedScreen({ v }: { v: PlannerVals }) {
     <div
       style={{
         position: 'relative',
-        maxWidth: '520px',
+        maxWidth: 'var(--layout-form-max)',
         margin: '0 auto',
         padding: 'calc(2 * var(--space-5)) var(--space-5) calc(2 * var(--space-7))',
         textAlign: 'center',
