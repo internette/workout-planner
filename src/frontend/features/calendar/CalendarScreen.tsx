@@ -4,7 +4,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Card } from '@moonshot/design-system/card';
 import { EmptyState } from '@moonshot/design-system/empty-state';
 import { SUMMON_ON, SummonPlan } from '@/frontend/features/summon/SummonPlan';
-import { Text } from '@moonshot/design-system/typography';
+import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { Button, Pressable } from '@moonshot/design-system/buttons';
 import { Check, ChevronLeft, ChevronRight, Gem, Moon, Plus, Sparkle } from '@moonshot/design-system/icons';
@@ -20,6 +20,17 @@ import { QuestCard } from '@/frontend/features/calendar/QuestCard';
 import { RestartDialog } from '@/frontend/features/calendar/RestartDialog';
 import { WeekRow } from '@/frontend/features/calendar/WeekRow';
 import { kindOf } from '@/frontend/components/KindTag';
+
+/** The day's cards in groups: each program's together, in the order they come, then the ones on their own. */
+function groupByProgram(cards: any[]) {
+  const groups: { program: string; place: string; cards: any[] }[] = [];
+  cards.forEach((c) => {
+    const g = groups.find((x) => x.program === (c?.programName || ''));
+    if (g) g.cards.push(c);
+    else groups.push({ program: c?.programName || '', place: c?.programPlace || '', cards: [c] });
+  });
+  return [...groups.filter((g) => g.program), ...groups.filter((g) => !g.program)];
+}
 
 export function CalendarScreen({ v }: { v: PlannerVals }) {
   return (
@@ -136,10 +147,16 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
       <RestartDialog v={v} />
       {v.hasWorkout ? (
         <div style={{ marginTop: 'var(--space-4)' }}>
-          {(v.dayCards ?? []).map((c, i) => (
-            <div key={c?.key} style={{ marginTop: i ? '12px' : '0' }}>
-              <DayWorkoutCard card={c} />
-            </div>
+          {/* A program's sessions sit together under its name, with where the day falls in it; one-offs come after. */}
+          {groupByProgram(v.dayCards ?? []).map((g, gi) => (
+            <section key={g.program || 'own'} aria-label={g.program || undefined} style={{ marginTop: gi ? 'var(--space-5)' : 0 }}>
+              {g.program ? <SectionLabel list label={g.program} note={g.place} /> : null}
+              {g.cards.map((c, i) => (
+                <div key={c?.key} style={{ marginTop: i ? 'var(--space-3)' : '0' }}>
+                  <DayWorkoutCard card={g.program ? { ...c, programName: '' } : c} />
+                </div>
+              ))}
+            </section>
           ))}
           <aside style={{ display: 'flex', marginTop: 'var(--space-4)' }}>
             <Button type="dashed" size="md" onClick={v.goNewWorkout} style={{ flex: '1' }}>
