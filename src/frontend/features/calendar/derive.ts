@@ -145,14 +145,16 @@ export function calendarStage(ctx: EntriesCtx) {
       icoSvg: iconSvg(a.icon || (a.ride ? 'bike' : 'h'), a.iconColor || undefined),
       open: () =>
         logic.openSession(relM(d), d.getDate(), a.id),
-      aria:
-        label.replace(' · ', ', ') +
-        ': ' +
-        a.name +
-        ', ' +
-        metaFor(a) +
-        ', ' +
-        (isDoneEntry(a) ? 'completed' : part ? 'partly done' : past ? 'missed' : 'planned'),
+      // Its name says everything the row shows: the program and where in it, the kind, the meta line and the status.
+      aria: [
+        label.replace(' · ', ', ') + ': ' + a.name,
+        a.program ? a.program.name + ', ' + programPlace(a.program) : '',
+        typeLabelOf(a),
+        metaFor(a),
+        isDoneEntry(a) ? 'completed' : part ? 'partly done' : past ? 'missed' : 'planned',
+      ]
+        .filter(Boolean)
+        .join(', '),
       dot: (isDoneEntry(a) ? 'done' : part ? 'partly' : past ? 'missed' : 'planned') as DayStatus,
       // Only the day's first row carries its label.
       showLabel: ix === 0,

@@ -6,6 +6,14 @@ import { shortDate, type PlanDraft } from '@/shared/planDraft';
 import type { Ctx } from '../planner/store/types';
 
 // Calendar screen: month picker, day strip, week list and month grid.
+/** A week's range as its heading says it, for the week holding `d`: "Oct 4 – 10", or "Sep 28 – Oct 4" across months. */
+const weekOf = (d: Date) => {
+  const start = new Date(d.getFullYear(), d.getMonth(), d.getDate() - d.getDay());
+  const end = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 6);
+  const stamp = (x: Date) => MON3[x.getMonth()] + ' ' + x.getDate();
+  return start.getMonth() === end.getMonth() ? stamp(start) + ' – ' + end.getDate() : stamp(start) + ' – ' + stamp(end);
+};
+
 export function calendarVals(ctx: Ctx) {
   const {
     logic,
@@ -109,15 +117,20 @@ export function calendarVals(ctx: Ctx) {
       logic.s({ ...monthPatch(relM(to)), day: to.getDate() });
       requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-month-day="' + to.getDate() + '"]')?.focus());
     },
-    // A step says where it landed, since the whole view changes under a screen reader.
+    // A step says where it landed, since the whole view changes under a screen reader: the day on the Day view, the
+    // week on the Week view.
     prevWeek: () => {
       const d = new Date(Y, mi, selDay - 7);
-      logic.s({ ...monthPatch(relM(d)), day: d.getDate(), announce: longDay(d) });
+      logic.s({ ...monthPatch(relM(d)), day: d.getDate(), announce: st.seg === 'Week' ? 'Week of ' + weekOf(d) : longDay(d) });
     },
     nextWeek: () => {
       const d = new Date(Y, mi, selDay + 7);
-      logic.s({ ...monthPatch(relM(d)), day: d.getDate(), announce: longDay(d) });
+      logic.s({ ...monthPatch(relM(d)), day: d.getDate(), announce: st.seg === 'Week' ? 'Week of ' + weekOf(d) : longDay(d) });
     },
+    // The key under the week's heading names only the dots on its rows.
+    weekRowsKey: (['done', 'partly', 'missed', 'planned'] as DayStatus[])
+      .filter((s) => weekRows.some((r) => r.hasRow && r.dot === s))
+      .map((s) => STATUS_NAMES.find(([x]) => x === s)!),
     // The key under the week strip names only the dots in it, in the order a day goes.
     weekKey: (['done', 'partly', 'missed', 'planned'] as DayStatus[])
       .filter((s) => days.some((d) => d.dot === s))
@@ -149,10 +162,7 @@ export function calendarVals(ctx: Ctx) {
     // Only what's true: a day with a session gets a quest.
     emptyWeekNote: 'No sessions scheduled this week. Add one and that day gets a quest.',
     weekAllDone: weekRows.some((r) => r.hasRow) && weekRows.filter((r) => r.hasRow).every((r) => r.done),
-    weekDoneNote:
-      'All ' +
-      weekRows.filter((r) => r.hasRow).length +
-      ' sessions done. Every quest this week is cleared.',
+    weekDoneNote: (weekRows.filter((r) => r.hasRow).length === 1 ? 'Its one session done.' : 'All ' + weekRows.filter((r) => r.hasRow).length + ' sessions done.') + ' Every quest this week is cleared.',
     todayLabel: 'TODAY · ' + DOW3[todayDate.getDay()] + ' ' + TODAY_D,
     hasToday: isCurMonth && todayActs.length > 0,
     todayCards: todayActs.map((a) => ({
