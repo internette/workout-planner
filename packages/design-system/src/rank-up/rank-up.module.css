@@ -27,7 +27,7 @@
 .night {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 42%, #3b416f 0%, var(--color-ink) 55%, #141830 100%);
+  background: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--color-periwinkle) 28%, var(--color-ink)) 0%, var(--color-ink) 55%, color-mix(in srgb, var(--color-ink) 60%, black) 100%);
   animation: nightFall 0.45s ease-out both;
 }
 
@@ -84,7 +84,7 @@
   position: absolute;
   inset: -70px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, color-mix(in srgb, var(--color-pink) 35%, transparent) 30%, transparent 65%);
+  background: radial-gradient(circle, color-mix(in srgb, white 55%, transparent) 0%, color-mix(in srgb, var(--color-pink) 35%, transparent) 30%, transparent 65%);
   opacity: 0;
   animation: haloPulse 2.4s ease-in-out 1.6s infinite both;
 }
@@ -101,14 +101,14 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.1) 34%, transparent 35%),
-    linear-gradient(20deg, transparent 55%, rgba(35, 42, 69, 0.22) 56%);
+    linear-gradient(160deg, color-mix(in srgb, white 55%, transparent) 0%, color-mix(in srgb, white 10%, transparent) 34%, transparent 35%),
+    linear-gradient(20deg, transparent 55%, color-mix(in srgb, var(--color-ink) 22%, transparent) 56%);
 }
 
 .flash {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 42%, white 0%, rgba(255, 255, 255, 0.9) 18%, rgba(255, 255, 255, 0) 62%);
+  background: radial-gradient(circle at 50% 42%, white 0%, color-mix(in srgb, white 90%, transparent) 18%, transparent 62%);
   opacity: 0;
   animation: flash 0.55s ease-out 1.55s both;
 }
@@ -135,7 +135,7 @@
   font-size: var(--text-sm);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--tracking-loose);
-  color: rgba(255, 255, 255, 0.72);
+  color: color-mix(in srgb, white 72%, transparent);
   animation: rise 0.6s ease-out 1.8s both;
 }
 .name {
@@ -149,7 +149,7 @@
 .sub {
   margin: 0;
   font-size: var(--text-base);
-  color: rgba(255, 255, 255, 0.75);
+  color: color-mix(in srgb, white 75%, transparent);
   animation: rise 0.7s ease-out 2.05s both;
 }
 .action {

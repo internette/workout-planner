@@ -3,6 +3,7 @@
 // A page in the background has its timers slowed to about once a minute; a worker's keep time. So the page asks this
 // worker to tick while a session's clock is running, and redraws (and updates the notification) on each tick.
 // The artwork is drawn here too, on an OffscreenCanvas, so drawing it never holds up the page.
+import { MARK_FACETS } from '@moonshot/design-system/brand';
 import type { LiveActivity } from './model';
 import type { LiveLook } from './look';
 
@@ -65,22 +66,14 @@ function roundRect(g: OffscreenCanvasRenderingContext2D, x: number, y: number, w
 const FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
 const PAD = 40;
 
-// Moonshot's mark (the crescent), in its own colors, from its 64-unit drawing.
-const MARK: [string, string][] = [
-  ['M24.9 9.1 L22.1 18.1 L10.8 20.7 Z', '#D53181'],
-  ['M10.8 20.7 L22.1 18.1 L23.3 27.5 L9.1 39 Z', '#BE5D99'],
-  ['M9.1 39 L23.3 27.5 L28.4 35.6 L20.7 53.2 Z', '#A279B1'],
-  ['M20.7 53.2 L28.4 35.6 L36.5 40.7 L39 54.9 Z', '#7C8FC9'],
-  ['M39 54.9 L36.5 40.7 L45.9 41.9 L53.2 43.3 Z', '#6DA9CF'],
-  ['M53.2 43.3 L45.9 41.9 L54.9 39.1 Z', '#5EC4D6'],
-];
+// Moonshot's mark (the crescent), from the brand's own 64-unit drawing.
 function mark(g: OffscreenCanvasRenderingContext2D, x: number, y: number, size: number) {
   g.save();
   g.translate(x, y);
   g.scale(size / 64, size / 64);
-  MARK.forEach(([d, fill]) => {
-    g.fillStyle = fill;
-    g.fill(new Path2D(d));
+  MARK_FACETS.forEach((f) => {
+    g.fillStyle = f.fill;
+    g.fill(new Path2D(f.d));
   });
   g.restore();
 }
