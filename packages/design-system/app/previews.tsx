@@ -3,6 +3,7 @@
 import { Badge } from '../src/badge';
 import { EmptyState } from '../src/empty-state';
 import { Button } from '../src/buttons';
+import { Callout } from '../src/callout';
 import { Card } from '../src/card';
 import { Checkbox } from '../src/checkbox';
 import { Chip } from '../src/chip';
@@ -224,6 +225,14 @@ export function Preview({ slug }: { slug: string }) {
       return (
         <div style={{ width: 210, transform: 'scale(.8)', transformOrigin: 'top center', marginBottom: -30 }}>
           <EmptyState size="md" panel icon={<Gem size={32} />} title="Still charging" />
+        </div>
+      );
+    case 'callout':
+      return (
+        <div style={{ width: 210 }}>
+          <Callout tone="success" icon={<Check color="var(--color-pink-deep)" strokeWidth={2.4} size={14} />}>
+            Plan added.
+          </Callout>
         </div>
       );
     case 'checkbox':

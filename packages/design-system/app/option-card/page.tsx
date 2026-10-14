@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { OptionCard, OptionGroup } from '../../src/option-card';
+import { CheckCard, CheckGroup, OptionCard, OptionGroup } from '../../src/option-card';
+import { Bike, Dumbbell, Lunge } from '../../src/icons';
+import { IconTile } from '../../src/icon-tile';
 import { DocPage, h2, note } from '../docs';
 
 const panel: React.CSSProperties = { padding: 20, background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', boxShadow: '0 4px 14px var(--color-line)', maxWidth: 440 };
@@ -10,6 +12,8 @@ export default function OptionCardPage() {
   const [save, setSave] = useState('update');
   const [pace, setPace] = useState('steady');
   const [also, setAlso] = useState(true);
+  const [trains, setTrains] = useState<string[]>(['lift', 'stretch']);
+  const toggle = (k: string) => (on: boolean) => setTrains(on ? [...trains, k] : trains.filter((x) => x !== k));
 
   return (
     <DocPage title="Option card">
@@ -89,6 +93,21 @@ export default function OptionCardPage() {
             description="The original and its sessions stay as they are."
           />
         </OptionGroup>
+      </div>
+
+      <h2 id="multiple-choice" style={h2}>Multiple choice</h2>
+      <p style={note}>
+        When several answers can each be on or off, use <code>CheckCard</code>s in a <code>CheckGroup</code>: the same
+        card, laid out as a row with its tick at the end, and a native checkbox underneath. An <code>icon</code> (an
+        IconTile, say) goes before the text. On the page itself rather than in a card, pass{' '}
+        <code>surface=&quot;page&quot;</code>: the card is white with a hairline, so it doesn&apos;t vanish into the page.
+      </p>
+      <div style={panel}>
+        <CheckGroup label="What you train">
+          <CheckCard checked={trains.includes('lift')} onChange={toggle('lift')} icon={<IconTile as="span" size="xs" variant="flat"><Dumbbell color="var(--color-pink)" size={18} /></IconTile>} title="Lifting" description="Sets, reps and weight." />
+          <CheckCard checked={trains.includes('ride')} onChange={toggle('ride')} icon={<IconTile as="span" size="xs" variant="flat"><Bike color="var(--color-pink)" size={18} /></IconTile>} title="Cycling" description="Distance, time and effort." />
+          <CheckCard checked={trains.includes('stretch')} onChange={toggle('stretch')} icon={<IconTile as="span" size="xs" variant="flat"><Lunge color="var(--color-pink)" size={18} /></IconTile>} title="Stretching" description="Warm-ups and mobility." />
+        </CheckGroup>
       </div>
 
       <h2 id="behaviour" style={h2}>Behaviour</h2>

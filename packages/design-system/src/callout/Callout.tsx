@@ -18,7 +18,8 @@ const TONES = {
   danger: { background: 'var(--color-danger-tint)', color: 'var(--color-danger)' },
 };
 
-/** A tinted strip with a message: news after something happened, or a failure to act on. */
+/** A tinted strip with a message: news after something happened, or a failure to act on. Import it from
+ * @moonshot/design-system/callout. */
 export function Callout({ tone, icon, action, role = 'status', style, children }: CalloutProps) {
   return (
     <div

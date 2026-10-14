@@ -8,7 +8,7 @@ import { Button } from '@moonshot/design-system/buttons';
 import { ChevronRight, Copy, Pencil, Plus } from '@moonshot/design-system/icons';
 import { BackBar } from '@/frontend/components/BackBar';
 import { DeleteSection } from '@/frontend/components/DeleteSection';
-import { StatRow } from '@/frontend/components/StatRow';
+import { StatRow } from '@moonshot/design-system/stat';
 import { PageTitle } from '@/frontend/components/PageTitle';
 
 export function ExerciseScreen({ v }: { v: PlannerVals }) {

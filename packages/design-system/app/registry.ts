@@ -83,6 +83,7 @@ export const sections: Section[] = [
       { id: 'headings', title: 'Headings' },
       { id: 'text', title: 'Text' },
       { id: 'labels-and-numbers', title: 'Labels and numbers' },
+      { id: 'eyebrow', title: 'Eyebrow' },
       { id: 'marketing', title: 'Marketing' },
       { id: 'color', title: 'Color' },
       { id: 'emphasis', title: 'Emphasis' },
@@ -252,6 +253,7 @@ export const sections: Section[] = [
     anchors: [
       { id: 'sizes', title: 'Sizes' },
       { id: 'units-and-notes', title: 'Units and notes' },
+      { id: 'in-a-row', title: 'In a row' },
     ],
   },
   {
@@ -287,6 +289,17 @@ export const sections: Section[] = [
     ],
   },
   {
+    slug: 'callout',
+    title: 'Callout',
+    category: 'components',
+    description: 'A tinted strip with a message: news, or a failure to act on.',
+    anchors: [
+      { id: 'tones', title: 'Tones' },
+      { id: 'with-an-action', title: 'With an action' },
+      { id: 'behaviour', title: 'Behaviour' },
+    ],
+  },
+  {
     slug: 'checkbox',
     title: 'Checkbox',
     category: 'components',
@@ -294,6 +307,7 @@ export const sections: Section[] = [
     anchors: [
       { id: 'checkbox', title: 'Checkbox' },
       { id: 'switch', title: 'As a switch' },
+      { id: 'tick', title: 'The tick on its own' },
       { id: 'behaviour', title: 'Behaviour' },
     ],
   },
@@ -306,6 +320,7 @@ export const sections: Section[] = [
       { id: 'single-choice', title: 'Single choice' },
       { id: 'states', title: 'States' },
       { id: 'with-extra-controls', title: 'With extra controls' },
+      { id: 'multiple-choice', title: 'Multiple choice' },
       { id: 'behaviour', title: 'Behaviour' },
     ],
   },

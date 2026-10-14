@@ -6,7 +6,7 @@ import { ChevronRight, Dumbbell, DumbbellSmall } from '@moonshot/design-system/i
 import { WorkoutIcon } from '@/frontend/shared/icons';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
-import { StatRow } from '@/frontend/components/StatRow';
+import { StatRow } from '@moonshot/design-system/stat';
 import { t } from '@/frontend/features/planner/viewHelpers';
 import { SessionTags } from '@/frontend/components/SessionTags';
 import { StatusDot } from '@/frontend/components/StatusDot';

@@ -1,5 +1,4 @@
-import type { ReactNode } from 'react';
-import { Text } from '@moonshot/design-system/typography';
+import { Eyebrow } from '@moonshot/design-system/typography';
 
 /** What kind of workout something is, when it isn't a plain one: a warm-up, a stretch or yoga. */
 export type WorkoutKind = 'warmup' | 'stretch' | 'yoga';
@@ -16,31 +15,9 @@ const LABEL: Record<WorkoutKind, string> = { warmup: 'Warm-up', stretch: 'Stretc
 export const typeLabelOf = (x: { warmup?: boolean; stretch?: boolean; yoga?: boolean; ride?: unknown }) =>
   (x.warmup ? 'Warm-up · ' : '') + (x.ride ? 'Cycling' : x.stretch ? 'Stretching' : x.yoga ? 'Yoga' : 'Lifting');
 
-// Marks a warm-up, a stretch or yoga ("Warm-up · Stretch" for both): a small label above its name, or beside it
+// Marks a warm-up, a stretch or yoga ("Warm-up · Stretch" for both): an eyebrow above its name, or beside it
 // (inline) where a row has no room above. Nothing for a plain workout.
-/** The small label above (or beside) a workout's name, in the accent color: what KindTag and SessionTags both draw. */
-export function TagLabel({ inline, children }: { inline?: boolean; children: ReactNode }) {
-  return (
-    <>
-      {/* A real space, so it isn't read run together with the words before it. */}
-      {inline ? ' ' : null}
-      <Text
-        variant="micro"
-        as="span"
-        tone="accent"
-        style={
-          inline
-            ? { display: 'inline-block', marginLeft: 'var(--space-1)', verticalAlign: 'middle' }
-            : { display: 'block', marginBottom: 'var(--space-1)' }
-        }
-      >
-        {children}
-      </Text>
-    </>
-  );
-}
-
 export function KindTag({ kind, inline }: { kind: WorkoutKind[] | null; inline?: boolean }) {
   if (!kind || !kind.length) return null;
-  return <TagLabel inline={inline}>{kind.map((k) => LABEL[k]).join(' · ')}</TagLabel>;
+  return <Eyebrow inline={inline}>{kind.map((k) => LABEL[k]).join(' · ')}</Eyebrow>;
 }

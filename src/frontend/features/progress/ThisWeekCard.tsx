@@ -41,7 +41,7 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
             style={{
               display: 'flex',
               height: '7px',
-              borderRadius: '4px',
+              borderRadius: 'var(--radius-full)',
               background: 'var(--color-pink-tint)',
               marginTop: 'var(--space-4)',
               overflow: 'hidden',

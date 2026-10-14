@@ -1,15 +1,4 @@
-import {
-  SectionLabel,
-  Text,
-  displaySizes,
-  fontFamilies,
-  fontSizes,
-  fontWeights,
-  leading,
-  textStyles,
-  textTones,
-  tracking,
-} from '../../src/typography';
+import { SectionLabel, Text, displaySizes, fontFamilies, fontSizes, fontWeights, leading, textStyles, textTones, tracking, Eyebrow } from '../../src/typography';
 import { DocPage, h2 } from '../docs';
 
 export const metadata = { title: 'Typography — Design system' };
@@ -155,6 +144,20 @@ export default function TypographyPage() {
           ) : null}
         </section>
       ))}
+
+      <h2 id="eyebrow" style={h2}>Eyebrow</h2>
+      <p style={{ fontSize: 'var(--text-base)', color: 'var(--color-slate)', lineHeight: 'var(--leading-base)', margin: '0 0 12px' }}>
+        An <code>Eyebrow</code> is a micro label above a name (or, with <code>inline</code>, beside it): what kind of
+        thing it is in the accent, or where it belongs in muted. The calendar&apos;s sessions wear two.
+      </p>
+      <div style={{ padding: 20, background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', boxShadow: '0 4px 14px var(--color-line)', maxWidth: 360 }}>
+        <Eyebrow tone="muted">Fall routine</Eyebrow>
+        <Eyebrow>Warm-up · Lifting</Eyebrow>
+        <Text variant="heading" as="div">Climbing warmup</Text>
+        <Text variant="body" tone="muted" as="div" style={{ marginTop: 12 }}>
+          Morning Mobility<Eyebrow inline>Stretch</Eyebrow>
+        </Text>
+      </div>
 
       <h2 id="color" style={h2}>Color</h2>
       <p style={note}>

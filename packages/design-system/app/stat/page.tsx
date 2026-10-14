@@ -1,5 +1,5 @@
 import { Card } from '../../src/card';
-import { Stat } from '../../src/stat';
+import { Stat, StatRow } from '../../src/stat';
 import { DocPage, h2, note } from '../docs';
 
 export const metadata = { title: 'Stat — Design system' };
@@ -55,6 +55,16 @@ export default function StatPage() {
           <Stat label="DISTANCE" value="12.5 mi" note="of 14 mi planned" />
         </Card>
       </div>
+
+      <h2 id="in-a-row" style={h2}>In a row</h2>
+      <p style={note}>
+        <code>StatRow</code> lays several side by side, wrapping on a narrow screen: a ride&apos;s distance, time,
+        elevation and effort, or an exercise&apos;s sets, weight and rest. <code>size=&quot;lg&quot;</code> on a saved
+        workout&apos;s or exercise&apos;s own page.
+      </p>
+      <Card pad="sm">
+        <StatRow stats={[{ label: 'DISTANCE', value: '12.5 mi', note: 'of 14 mi planned' }, { label: 'TIME', value: '1 h 02' }, { label: 'ELEVATION', value: '600 ft' }, { label: 'EFFORT', value: 'Endurance' }]} />
+      </Card>
     </DocPage>
   );
 }

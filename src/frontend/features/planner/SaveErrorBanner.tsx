@@ -1,6 +1,6 @@
 import { Text } from '@moonshot/design-system/typography';
 import { Button } from '@moonshot/design-system/buttons';
-import { Callout } from '@/frontend/components/Callout';
+import { Callout } from '@moonshot/design-system/callout';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** Says a save didn’t go through, until it’s dismissed. */
