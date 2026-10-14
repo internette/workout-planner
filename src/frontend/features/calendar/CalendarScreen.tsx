@@ -244,6 +244,16 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               </Button>
             ) : null}
           </div>
+          {v.weekRowsKey?.length ? (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-1) var(--space-3)', marginTop: 'var(--space-3)' }}>
+              {v.weekRowsKey.map(([status, name]) => (
+                <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)' }}>
+                  <StatusDot status={status} />
+                  {name}
+                </Text>
+              ))}
+            </div>
+          ) : null}
           <div
             style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-7)', paddingBottom: v.hasRows ? 'var(--space-2)' : 0 }}
           >
@@ -280,7 +290,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               >
                 <Check color="var(--color-surface)" strokeWidth={2.6} size={26} />
               </div>
-              <Text variant="heading" as="h3" style={{ margin: 'var(--space-4) 0 0' }}>
+              <Text variant="heading" as="h2" style={{ margin: 'var(--space-4) 0 0' }}>
                 Week sealed
               </Text>
               <Text
@@ -297,7 +307,6 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             <EmptyState
               size="md"
               panel
-              titleAs="h3"
               style={{ margin: 'var(--space-7) 0 0' }}
               icon={<Gem size={32} />}
               title="Your wand&apos;s still charging"

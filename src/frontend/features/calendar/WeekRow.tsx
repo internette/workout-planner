@@ -11,7 +11,7 @@ export function WeekRow({ row }: { row: any }) {
       {row?.isRest ? (
         // A rest day is one quiet line, its date and "Rest": the week's sessions get the room.
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', margin: 'var(--space-3) 0 var(--space-1)', minHeight: '28px' }}>
-          <Text variant="micro" tone={row?.labelTone} style={{ flex: 'none' }}>
+          <Text variant="micro" as="h2" tone={row?.labelTone} style={{ flex: 'none', margin: 0 }}>
             {row?.label}
           </Text>
           <span aria-hidden="true" style={{ flex: '1', height: '1px', background: 'var(--color-line)' }} />
@@ -21,7 +21,7 @@ export function WeekRow({ row }: { row: any }) {
         </div>
       ) : null}
       {row?.showLabel && !row?.isRest ? (
-        <Text variant="micro" as="div" tone={row?.labelTone} style={{ margin: 'var(--space-4) 0 var(--space-2)' }}>
+        <Text variant="micro" as="h2" tone={row?.labelTone} style={{ margin: 'var(--space-4) 0 var(--space-2)' }}>
           {row?.label}
         </Text>
       ) : null}
