@@ -2,7 +2,7 @@ import { Button, IconButton } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { ChevronRight, Plus } from '@moonshot/design-system/icons';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
-import { Text } from '@moonshot/design-system/typography';
+import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { FormActions } from '@/frontend/components/FormActions';
 import { ExerciseFields } from '@/frontend/components/ExerciseFields';
 import { SearchBar } from '@/frontend/components/SearchBar';
@@ -69,66 +69,48 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
             marginTop: '18px',
           }}
         >
-          {(v.library ?? []).map((l, i) => (
-            <div key={i}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '6px 6px 6px 16px',
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--color-canvas)',
-              }}
-            >
-              <button
-                type="button"
-                onClick={l?.open ?? undefined}
-                disabled={!l?.open}
-                aria-label={'View details for ' + l?.name}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  flex: '1',
-                  minWidth: '0',
-                  minHeight: '44px',
-                  padding: '4px 0',
-                  border: 'none',
-                  background: 'none',
-                  textAlign: 'left',
-                  cursor: l?.open ? 'pointer' : 'default',
-                  fontFamily: 'inherit',
-                }}
-              >
-                {/* The detail goes under the name: side by side, a narrow screen squeezed the name to a sliver. */}
-                <span style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: '1', minWidth: '0' }}>
-                  <span
-                    style={{
-                      fontSize: 'var(--text-lg)',
-                      fontWeight: 'var(--font-weight-semibold)',
-                      color: 'var(--color-ink)',
-                    }}
-                  >
-                    {l?.name}
-                  </span>
-                  <Text variant="body" tone="muted">
-                    {l?.detail}
-                  </Text>
-                </span>
-                {l?.open ? (
-                  <ChevronRight color="var(--color-muted)" strokeWidth={2.2} size={16} />
-                ) : null}
-              </button>
-              <IconButton
-                label={'Add ' + l?.name + ' to workout'}
-                size="lg"
-                onClick={l?.add}
-                style={{ background: 'var(--color-surface)' }}
-              >
-                <Plus color="var(--color-pink-deep)" strokeWidth={2.4} size={18} />
-              </IconButton>
-            </div>
-          ))}
+          {/* Your own exercises first, then the built-in ones, each a list of compact rows: the row opens the exercise,
+              the round + adds it. */}
+          {[
+            { label: 'Your exercises', items: (v.library ?? []).filter((l) => !l.builtin) },
+            { label: 'Built-in', items: (v.library ?? []).filter((l) => l.builtin) },
+          ]
+            .filter((g) => g.items.length)
+            .map((g) => (
+              <div key={g.label}>
+                <SectionLabel list label={g.label} note={String(g.items.length)} />
+                <div style={{ borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)', padding: '0 6px 0 14px' }}>
+                  {g.items.map((l, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', borderTop: i ? '1px solid var(--color-line)' : 'none' }}>
+                      <button
+                        type="button"
+                        onClick={l?.open ?? undefined}
+                        disabled={!l?.open}
+                        aria-label={'View details for ' + l?.name}
+                        style={{ flex: '1', minWidth: '0', minHeight: '52px', padding: '8px 0', border: 'none', background: 'none', textAlign: 'left', cursor: l?.open ? 'pointer' : 'default', fontFamily: 'inherit' }}
+                      >
+                        <Text variant="strong" weight="semibold" tone="ink" style={{ display: 'block' }}>
+                          {l?.name}
+                        </Text>
+                        <Text variant="body" tone="muted" style={{ display: 'block' }}>
+                          {l?.detail}
+                        </Text>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={l?.add}
+                        aria-label={'Add ' + l?.name + ' to workout'}
+                        style={{ flex: 'none', width: '44px', height: '44px', display: 'grid', placeItems: 'center', border: 'none', background: 'none', cursor: 'pointer', borderRadius: 'var(--radius-full)' }}
+                      >
+                        <span style={{ width: '32px', height: '32px', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)', background: 'var(--color-pink-tint)' }}>
+                          <Plus color="var(--color-pink-deep)" strokeWidth={2.6} size={16} />
+                        </span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           {v.libraryEmpty ? (
             <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
               {v.libraryEmptyNote}

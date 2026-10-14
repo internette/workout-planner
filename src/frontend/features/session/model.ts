@@ -1,6 +1,6 @@
 import { typeLabelOf } from '@/frontend/components/KindTag';
 import { DOWFULL } from '@/frontend/shared/constants';
-import { dayShort, digitsOnly, exLine, formatElapsed, idOf, longDay, monDay, monthPatch, newWorkoutPatch, noticePatch, numericOnly, plural, questSeed, rollMinutes, toMinutes } from '@/frontend/shared/helpers';
+import { dayShort, digitsOnly, shortDay, exLine, isoMonthDay, isoOf, formatElapsed, idOf, longDay, monDay, monthPatch, newWorkoutPatch, noticePatch, numericOnly, plural, questSeed, rollMinutes, toMinutes } from '@/frontend/shared/helpers';
 import { iconSvg } from '@/frontend/shared/icons';
 import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from '../planner/store/types';
@@ -545,6 +545,61 @@ export function workoutVals(ctx: Ctx) {
     ),
     rideStats: !selRide || !selAct ? [] : rideStatsFor(selAct, rideDone),
     ctaLabel: hasEntry ? 'View Chronicle entry' : 'Write about it',
+    // Every exercise done with the clock still going: finishing is the next step, as the card's one big button.
+    finishNow: !!selAct && !selRide && !!timerState && !finished && selList.length > 0 && doneCount === selList.length ? openFinish : null,
+    // Writing about it comes once it's finished (or a day gone by, or already written): in the card for a finished
+    // workout, at the foot of the page otherwise.
+    timerStarted: !!timerState,
+    // Not done or started yet: its day is a chip that moves it to another, without opening the editor.
+    moveDay: !!selAct && !finished && !timerState && !hasProgress
+      ? (() => {
+          const at = (st.sessionMove && st.sessionMove.date) || isoOf(selDate);
+          const to = (() => {
+            const [y, mo, d] = at.split('-').map(Number);
+            return new Date(y, mo - 1, d);
+          })();
+          const same = at === isoOf(selDate);
+          const twice = !same && logic.model.entries.some((x) => { const w = isoMonthDay(at, Y); return x.m === w.m && x.d === w.d && x.av.name === selAct.name; });
+          return {
+            label: shortDay(selDate),
+            open: () => logic.s({ sessionMove: { date: isoOf(selDate) } }),
+            isOpen: !!st.sessionMove,
+            title: 'Move “' + nameOf(selAct.name) + '”',
+            date: at,
+            setDate: (e) => logic.s({ sessionMove: { date: e.target.value || isoOf(selDate) } }),
+            note: same
+              ? 'Pick the day it moves to.'
+              : 'From ' + longDay(selDate) + ' to ' + longDay(to) + '.' +
+                (twice ? ' It’s already on that day, so it would be there twice.' : '') +
+                (selAct.program ? ' It stays part of ' + selAct.program.name + '.' : ''),
+            canSave: !same && !logic.busy('move'),
+            cancel: () => logic.s({ sessionMove: null }),
+            save: () => {
+              const w = isoMonthDay(at, Y);
+              logic.saveOnce(
+                'move',
+                () =>
+                  db.updateWorkout({
+                    entryId: idOf(selAct),
+                    workoutId: selAct.workoutId,
+                    moveTo: at,
+                    exercises: { update: [], removeIds: [], add: [] },
+                    repeatDates: [],
+                  }),
+                {
+                  sessionMove: null,
+                  ...monthPatch(w.m),
+                  day: w.d,
+                  entryId: idOf(selAct),
+                  ...noticePatch('“' + nameOf(selAct.name) + '” moved to ' + shortDay(to) + '.', 'detail'),
+                },
+              );
+            },
+          };
+        })()
+      : null,
+    writeInCard: !!selAct && !selRide && finished && !isPastDay,
+    showCta: !!selAct && (hasEntry || finished || isPastDay || (selRide ? rideDone : false)),
     startWorkout,
     restartWorkout,
     continueWorkout,
@@ -586,9 +641,11 @@ export function workoutVals(ctx: Ctx) {
             ? ''
             : 'Mark each exercise as you clear it.'
           : doneCount === selList.length
-            ? hasEntry
+            ? hasEntry || (finished && !isPastDay)
               ? 'Transformation complete.'
-              : 'Transformation complete. Write down how it felt while it\'s fresh.'
+              : timerState && !finished
+                ? 'Every exercise done. Finish to record your time.'
+                : 'Transformation complete. Write down how it felt while it\'s fresh.'
             : selList.length - doneCount + ' left to go.',
   };
 }

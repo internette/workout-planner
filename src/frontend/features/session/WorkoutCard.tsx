@@ -25,6 +25,15 @@ export function WorkoutCard({ v }: { v: PlannerVals }) {
       {progress ? (
         <SessionProgress bare label={v.progLabel} pct={v.progPct ?? 0} allDone={!!v.allDone} note={v.progNote ?? ''}>
           {v.restShown ? <RestSection v={v} /> : v.setNow ? <NextSet now={v.setNow} /> : null}
+          {v.finishNow ? (
+            <Button type="primary" size="lg" fullWidth onClick={v.finishNow} style={{ marginTop: '14px' }}>
+              Finish workout
+            </Button>
+          ) : v.writeInCard ? (
+            <Button type="primary" size="lg" fullWidth onClick={v.goDiary} style={{ marginTop: '14px' }}>
+              {v.ctaLabel}
+            </Button>
+          ) : null}
         </SessionProgress>
       ) : null}
     </Card>
@@ -61,7 +70,8 @@ function TimerSection({ v }: { v: PlannerVals }) {
           >
             {v.timerButtonLabel}
           </Button>
-          {v.canFinish ? (
+          {/* With everything done, the big Finish workout below takes over. */}
+          {v.canFinish && !v.finishNow ? (
             <Button type="primary" size="md" onClick={v.openFinish}>
               Finish
             </Button>

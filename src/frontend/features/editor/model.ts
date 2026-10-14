@@ -484,6 +484,7 @@ export function editVals(ctx: Ctx) {
     libraryMore: pickable.length > PICK_LIMIT ? plural(pickable.length - PICK_LIMIT, 'more exercise') + ' — search to find one.' : '',
     library: pickable.slice(0, PICK_LIMIT).map((e) => ({
       name: e.name,
+      builtin: !!e.builtin,
       // One done a side at a time, already in the workout once, can be added again for its other side.
       detail: selList.some((x) => splitSide(x.name).base === e.name) ? 'In this workout · add it again for the other side' : exLine(e),
       // Same as the Spellbook: the row opens the exercise, "+" adds it. Back returns here with this panel still open.
