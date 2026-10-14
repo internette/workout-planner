@@ -4,7 +4,7 @@ import { Chip } from '@moonshot/design-system/chip';
 import { Calendar, ChevronDown } from '@moonshot/design-system/icons';
 import { Popover } from '@moonshot/design-system/popover';
 import { Text } from '@moonshot/design-system/typography';
-import { css, t } from '@/frontend/features/planner/viewHelpers';
+import { t } from '@/frontend/features/planner/viewHelpers';
 import { StepButton } from '@/frontend/components/StepButton';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
@@ -42,7 +42,7 @@ export function DatePicker({ v }: { v: PlannerVals }) {
             {(v.pickerCells ?? []).map((p, i) => (
               <Fragment key={i}>
                 {p?.blank ? (
-                  <span aria-hidden="true" style={css(p?.style)} />
+                  <span aria-hidden="true" style={{ height: '34px' }} />
                 ) : (
                   <Pressable
                     onClick={p?.pick}
@@ -52,7 +52,16 @@ export function DatePicker({ v }: { v: PlannerVals }) {
                     aria-label={p?.aria}
                     aria-current={p?.today}
                     aria-pressed={!!p?.selected}
-                    style={css(p?.style)}
+                    style={{
+                      height: '34px',
+                      borderRadius: 'var(--radius-sm)',
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'var(--text-base)',
+                      textAlign: 'center',
+                      ...(p?.selected
+                        ? { fontWeight: 'var(--font-weight-bold)', background: 'var(--color-pink)', color: 'var(--color-surface)' }
+                        : { fontWeight: 'var(--font-weight-medium)', color: 'var(--color-ink)' }),
+                    }}
                   >
                     {p?.label}
                   </Pressable>

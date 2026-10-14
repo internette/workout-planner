@@ -1,7 +1,6 @@
 import type { CSSProperties } from 'react';
 import { Card } from '@moonshot/design-system/card';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
-import { css } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** Progress: personal bests, all time. */
@@ -18,14 +17,16 @@ export function PersonalBestsCard({ v, style }: { v: PlannerVals; style?: CSSPro
         style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-0h)', marginTop: 'var(--space-3)' }}
       >
         {(v.records ?? []).map((r, i) => (
-          <div key={i} style={css(r?.rowStyle)}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: '11px 0', borderBottom: r?.last ? undefined : '1px solid var(--color-line)' }}>
             <Text variant="strong" tone="ink" style={{ flex: '1', minWidth: '0' }}>
               {r?.name}
             </Text>
             <Text variant="figure" tone="ink" style={{ flex: 'none' }}>
               {r?.value}
             </Text>
-            {r?.delta ? <span style={css(r?.deltaStyle)}>{r?.delta}</span> : null}
+            {r?.delta ? (
+              <span style={{ flex: 'none', width: '44px', textAlign: 'right', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-pink-deep)' }}>{r?.delta}</span>
+            ) : null}
           </div>
         ))}
       </div>

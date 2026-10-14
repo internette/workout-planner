@@ -57,30 +57,13 @@ export function calendarStage(ctx: EntriesCtx) {
       // A week across two months says the new one once, above its 1st, rather than a month under every day. It sits
       // above the strip, so it takes no row of its own.
       mon: spansMonths && num === 1 ? MON3[mod12(cellMonth)].toUpperCase() : '',
-      monStyle:
-        spansMonths && num === 1
-          ? 'position:absolute;left:0;right:0;top:-14px;text-align:center;font-size:var(--text-sm);font-weight:var(--font-weight-bold);letter-spacing:var(--tracking-loose);color:var(--color-pink-deep)'
-          : 'display:none',
+      showMon: spansMonths && num === 1,
       aria:
         longDay(new Date(Y, cellMonth, num)) +
         ' — ' +
         (!dot ? 'rest day' : workoutsWord(list) + (done ? 'completed' : part ? 'partly done, ' + partText(list) : miss ? 'missed' : 'planned')),
       isToday: cellMonth === TODAY_M && num === TODAY_D ? ('date' as const) : false,
-      wrapStyle:
-        'position:relative;flex:1;min-width:0;padding:var(--space-2) var(--space-0h) var(--space-2h);border:none;border-radius:var(--radius-md);background:' +
-        (on ? ACCENT : 'none') +
-        ';display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer',
-      letterStyle:
-        "font-family:var(--font-heading);" +
-        'font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:' +
-        (on ? 'var(--color-surface)' : 'var(--color-muted)'),
-      numStyle:
-        "font-family:var(--font-heading);" +
-        'font-size:var(--text-lg);font-weight:' +
-        (on ? 'var(--font-weight-bold)' : 'var(--font-weight-semibold)') +
-        ';color:' +
-        // Another month's dates are dimmer than this month's, but still readable (muted meets 4.5:1).
-        (on ? 'var(--color-surface)' : same ? 'var(--color-ink)' : 'var(--color-muted)'),
+      inMonth: same,
       dot: (!dot ? 'rest' : done ? 'done' : part ? 'partly' : miss ? 'missed' : 'planned') as DayStatus,
     };
   });
@@ -96,14 +79,7 @@ export function calendarStage(ctx: EntriesCtx) {
       current,
       short: MON3[k],
       pick: () => logic.s({ month: name, yOff: pickYOff, pickYOff: null, monthOpen: false, day: now ? TODAY_D : 1 }),
-      style:
-        "font-family:var(--font-heading);" +
-        'padding:11px 6px;border-radius:var(--radius-sm);font-size:var(--text-base);border:none;cursor:pointer;' +
-        (current
-          ? 'background:' + ACCENT + ';color:var(--color-surface);font-weight:var(--font-weight-bold)'
-          : now
-            ? 'box-shadow:var(--ring-accent);color:var(--color-pink-deep);font-weight:var(--font-weight-bold)'
-            : 'color:var(--color-ink);font-weight:var(--font-weight-medium)'),
+      now,
     };
   });
   // One row per workout. A day with several shows its date once, above the first.
@@ -188,21 +164,23 @@ export function calendarStage(ctx: EntriesCtx) {
   const monthCells: {
     blank?: boolean;
     label: string;
-    wrap: string;
     day?: number;
     tabStop?: number;
     selected?: boolean;
     pick?: () => void;
     aria?: string;
     isToday?: 'date' | false;
-    num?: string;
+    // How the day is drawn: selected, missed, planned (something on it), or a rest day; and today's ring.
+    tone?: 'selected' | 'missed' | 'planned' | 'rest';
+    today?: boolean;
+    has?: boolean;
     dot?: DayStatus;
   }[] = [];
   for (let i = 0; i < rows * 7; i++) {
     const d = i - lead + 1;
     if (d < 1 || d > dim) {
       // Padding before the 1st and after the last day: shown as empty space, not as a control.
-      monthCells.push({ blank: true, label: '', wrap: 'height:50px' });
+      monthCells.push({ blank: true, label: '' });
       continue;
     }
     const list = entriesAt(mi, d);
@@ -230,16 +208,9 @@ export function calendarStage(ctx: EntriesCtx) {
           h.focus();
         });
       },
-      wrap:
-        'height:50px;border:none;border-radius:var(--radius-md);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-1);' +
-        (sel
-          ? 'background:var(--color-pink)'
-          : missed
-            ? 'background:var(--color-surface-rest)'
-            : a
-              ? 'background:var(--color-surface);box-shadow:var(--elevation-hairline)'
-              : 'background:none') +
-        (today && !sel ? ';box-shadow:var(--ring-accent-soft)' : ''),
+      tone: sel ? 'selected' : missed ? 'missed' : a ? 'planned' : 'rest',
+      today,
+      has: !!a,
       aria: d
         ? longDay(new Date(Y, mi, d)) +
           ' — ' +
@@ -248,11 +219,6 @@ export function calendarStage(ctx: EntriesCtx) {
           (today ? ', today' : '')
         : '',
       isToday: today ? ('date' as const) : false,
-      num:
-        "font-family:var(--font-heading);font-size:var(--text-base);font-weight:" +
-        (a ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)') +
-        ';color:' +
-        (sel ? 'var(--color-surface)' : missed ? 'var(--color-muted)' : a ? 'var(--color-ink)' : 'var(--color-muted)'),
       dot: (part ? 'partly' : a === 'c' ? 'done' : missed ? 'missed' : a ? 'planned' : 'rest') as DayStatus,
     });
   }

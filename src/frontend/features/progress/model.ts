@@ -93,20 +93,11 @@ export function progressVals(ctx: Ctx) {
       return {
         label: r.name,
         req: ix === 0 ? 'Start' : XP_STEPS[ix - 1].toLocaleString('en-US') + ' XP',
-        row:
-          'display:flex;align-items:center;gap:var(--space-3);padding:11px 14px;border-radius:var(--radius-md);' +
-          (cur
-            ? r.pill
-            : reached
-              ? 'background:var(--color-canvas);color:var(--color-slate)'
-              : 'background:none;color:var(--color-muted)'),
+        cur,
+        reached,
+        pill: r.pill,
         gemFill: ix === RANKS.length - 1 ? 'var(--gradient-gem)' : r.gem,
         gemFaded: !(cur || reached),
-        name:
-          'flex:1;min-width:0;font-size:var(--text-base);font-weight:' +
-          (cur ? 'var(--font-weight-bold)' : 'var(--font-weight-medium)'),
-        // Full strength: faded to 80% it fell under 4.5:1 on both the white and the pink rows.
-        xp: 'flex:none;font-family:var(--font-heading);font-size:var(--text-sm);font-weight:var(--font-weight-semibold)',
       };
     }),
     profileName: displayName(logic.auth.account, logic.model.profile?.name),
@@ -119,9 +110,7 @@ export function progressVals(ctx: Ctx) {
       const created = new Date(logic.auth.account?.createdAt ?? '');
       return isNaN(created.getTime()) ? '' : 'Training since ' + MONTHS[created.getMonth()] + ' ' + created.getFullYear();
     })(),
-    rankPillBtn:
-      'display:inline-flex;align-items:center;gap:var(--space-2);margin-top:9px;min-height:36px;padding:8px 15px 8px 14px;border-radius:var(--radius-full);font-size:var(--text-base);font-weight:var(--font-weight-bold);' +
-      RANKS[derivedRank].pill,
+    rankPill: RANKS[derivedRank].pill,
     rankGemColor: RANKS[derivedRank].gem,
     rankBarPct: rankPct,
     rankProgress:
@@ -212,9 +201,7 @@ export function progressVals(ctx: Ctx) {
         name,
         count,
         color,
-        row:
-          'display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2h) 0' +
-          (ix === arr.length - 1 ? '' : ';border-bottom:1px solid var(--color-line)'),
+        last: ix === arr.length - 1,
       })),
     // All time, up to today: sessions still ahead don't count yet.
     allTimeStats: [
@@ -234,26 +221,13 @@ export function progressVals(ctx: Ctx) {
         pick: () => logic.s({ barSel: ix }),
         on: ix === barSel,
         aria: (ix >= thisWeekIx - 1 ? weekName(ix) + ', ' + weekRange(weekBuckets[ix]) : weekName(ix)) + ': ' + plural(n, 'session') + ' done',
-        value:
-          'font-family:var(--font-heading);font-size:var(--text-sm);font-weight:var(--font-weight-bold);color:' +
-          (ix === barSel ? 'var(--color-pink-deep)' : 'var(--color-muted)'),
-        bar:
-          'width:100%;border-radius:6px 6px 3px 3px;transition:background .2s;height:' +
-          Math.max(
+        // The bar's height, out of 96 px for the busiest week (at least a sliver).
+        height: Math.max(
             4,
             Math.round(
               (n / Math.max(1, Math.max.apply(null, weekBuckets.map((b) => b.done).concat([1])))) * 96,
             ),
-          ) +
-          'px;background:' +
-          (ix === barSel
-            ? 'linear-gradient(180deg,var(--color-pink) 0%,var(--color-periwinkle) 100%)'
-            : 'color-mix(in srgb, var(--color-pink) 30%, transparent)'),
-        label:
-          'white-space:pre-line;text-align:center;line-height:var(--leading-tight);height:2.4em;font-size:var(--text-sm);font-weight:' +
-          (ix === barSel
-            ? 'var(--font-weight-bold);color:var(--color-pink-deep)'
-            : 'var(--font-weight-medium);color:var(--color-muted)'),
+          ),
       })),
     // No entries yet: no bars at 0%, the card says what will show up instead.
     moodSplit: (Object.keys(moodCounts).length ? MOODS
@@ -261,7 +235,6 @@ export function progressVals(ctx: Ctx) {
       .map(({ name, color, pct }) => ({
         name,
         pct: pct + '%',
-        swatch: 'width:10px;height:10px;flex:none;border-radius:var(--radius-full);background:' + color,
         barPct: pct,
         color,
       })) : []),
@@ -274,11 +247,7 @@ export function progressVals(ctx: Ctx) {
         name,
         value,
         delta,
-        rowStyle:
-          'display:flex;align-items:center;gap:var(--space-3);padding:11px 0;' +
-          (ix === arr.length - 1 ? '' : 'border-bottom:1px solid var(--color-line)'),
-        deltaStyle:
-          'flex:none;width:44px;text-align:right;font-size:var(--text-sm);font-weight:var(--font-weight-semibold);color:var(--color-pink-deep)',
+        last: ix === arr.length - 1,
       })),
     // This week in one line: done, partly done and missed (days gone by), and to go (today on), with a bar of the same.
     ...(() => {
@@ -339,9 +308,7 @@ export function progressVals(ctx: Ctx) {
         done: boolean;
         open: () => void;
         aria: string;
-        row: string;
-        mark: string;
-        title: string;
+        last?: boolean;
       }[] = [];
       for (let i = 0; i < 7; i++) {
         const d = new Date(Y, TODAY_M, TODAY_D - todayDate.getDay() + i);
@@ -358,20 +325,10 @@ export function progressVals(ctx: Ctx) {
           done: isDone,
           open: () => logic.openDay(relM(d), dm),
           aria: DOWFULL[d.getDay()] + ': ' + q.title + (isDone ? ', cleared' : ''),
-          row:
-            'display:flex;align-items:center;gap:11px;width:100%;min-height:44px;padding:var(--space-2h) 0;border:none;background:none;text-align:left;font-family:inherit;cursor:pointer;border-bottom:1px solid var(--color-line)',
-          mark:
-            'width:18px;height:18px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;' +
-            (isDone ? 'background:var(--color-pink)' : 'background:transparent'),
-          title:
-            'flex:1;min-width:0;font-size:var(--text-base);' +
-            (isDone
-              ? 'font-weight:var(--font-weight-medium);color:var(--color-pink-deep)'
-              : 'font-weight:var(--font-weight-medium);color:var(--color-ink)'),
         });
       }
       // A line between quests, not under the last one (days without a quest are skipped, so it isn't always Saturday).
-      if (out.length) out[out.length - 1].row = out[out.length - 1].row.replace(/;border-bottom:[^;]*/, '');
+      if (out.length) out[out.length - 1].last = true;
       return out;
     })(),
     // The date. The week's own card says how it's going.

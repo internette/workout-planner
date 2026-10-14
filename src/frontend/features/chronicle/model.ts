@@ -296,9 +296,7 @@ export function diaryVals(ctx: Ctx) {
               diaryFrom: 'list',
               diaryEdit: false,
             }),
-          faceWrap:
-            'width:40px;height:40px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
-            bg,
+          faceBg: bg,
           mood: en.mood,
           rpe: en.rpe,
         };
@@ -321,9 +319,7 @@ export function diaryVals(ctx: Ctx) {
       }),
     readMood: st.mood,
     readNote: ENTRIES[entryKey]?.note || 'No notes for this one.',
-    readMoodFace:
-      'width:44px;height:44px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;background:' +
-      (MOOD_COLORS[st.mood] || 'var(--color-danger)'),
+    readMoodColor: MOOD_COLORS[st.mood] || 'var(--color-danger)',
     readMoodSvg: moodSvg(st.mood),
     // Entry saved: to the calendar, on the day of the workout just written about (not back one screen).
     backToCalendar: () => logic.s({ screen: 'day', seg: 'Day', monthOpen: false, hist: [] }),

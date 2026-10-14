@@ -1,7 +1,6 @@
 import { vars } from '@moonshot/design-system/colors';
 import { Check, Sparkle } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
-import { css } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** The Day view’s quest for the day: all of it, kept compact so the workouts start close under it. */
@@ -31,7 +30,18 @@ export function QuestCard({ v }: { v: PlannerVals }) {
       >
         <Sparkle size={10} color={vars.teal} glow={0.55} />
       </span>
-      <span style={css(v.questIconWrap)}>
+      <span
+        style={{
+          width: '32px',
+          height: '32px',
+          flex: 'none',
+          borderRadius: 'var(--radius-sm)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          ...(v.questDone ? { background: 'var(--gradient-gem)' } : { background: 'var(--color-surface)', boxShadow: 'var(--elevation-hairline)' }),
+        }}
+      >
         {v.questDone ? (
           <Check color="var(--color-surface)" strokeWidth={2.6} size={16} />
         ) : null}

@@ -1,7 +1,6 @@
 import { Card } from '@moonshot/design-system/card';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
-import { css } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** Profile: how sessions felt, all time. */
@@ -19,7 +18,7 @@ export function MoodSplitCard({ v }: { v: PlannerVals }) {
       >
         {(v.moodSplit ?? []).map((m, i) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-            <span style={css(m?.swatch)}></span>
+            <span style={{ width: '10px', height: '10px', flex: 'none', borderRadius: 'var(--radius-full)', background: m?.color }}></span>
             <Text variant="strong" tone="ink" style={{ flex: 'none', width: '66px' }}>
               {m?.name}
             </Text>

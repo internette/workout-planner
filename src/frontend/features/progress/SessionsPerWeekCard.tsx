@@ -2,7 +2,6 @@ import { Pressable } from '@moonshot/design-system/buttons';
 import { Badge } from '@moonshot/design-system/badge';
 import { Card } from '@moonshot/design-system/card';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
-import { css } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { KindTag, kindOf } from '@/frontend/components/KindTag';
 
@@ -45,9 +44,29 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
             }}
             title={b?.tip}
           >
-            <span style={css(b?.value)}>{b?.count}</span>
-            <div style={css(b?.bar)}></div>
-            <span style={css(b?.label)}>{b?.week}</span>
+            <span style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-bold)', color: b?.on ? 'var(--color-pink-deep)' : 'var(--color-muted)' }}>{b?.count}</span>
+            <div
+              style={{
+                width: '100%',
+                height: b?.height + 'px',
+                borderRadius: '6px 6px 3px 3px',
+                transition: 'background .2s',
+                background: b?.on ? 'linear-gradient(180deg,var(--color-pink) 0%,var(--color-periwinkle) 100%)' : 'color-mix(in srgb, var(--color-pink) 30%, transparent)',
+              }}
+            ></div>
+            <span
+              style={{
+                whiteSpace: 'pre-line',
+                textAlign: 'center',
+                lineHeight: 'var(--leading-tight)',
+                height: '2.4em',
+                fontSize: 'var(--text-sm)',
+                fontWeight: b?.on ? 'var(--font-weight-bold)' : 'var(--font-weight-medium)',
+                color: b?.on ? 'var(--color-pink-deep)' : 'var(--color-muted)',
+              }}
+            >
+              {b?.week}
+            </span>
           </Pressable>
         ))}
       </div>

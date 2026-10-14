@@ -3,7 +3,6 @@ import { vars } from '@moonshot/design-system/colors';
 import { ChevronDown, Sparkle } from '@moonshot/design-system/icons';
 import { Popover } from '@moonshot/design-system/popover';
 import { Text } from '@moonshot/design-system/typography';
-import { css } from '@/frontend/features/planner/viewHelpers';
 import { StepButton } from '@/frontend/components/StepButton';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
@@ -40,11 +39,24 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             }}
           >
             {(v.months ?? []).map((m, i) => (
-              <Pressable key={i}
+              <Pressable
+                key={i}
                 onClick={m?.pick}
                 aria-label={m?.name}
                 aria-current={m?.current ? 'date' : undefined}
-                style={css(m?.style)}
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  padding: '11px 6px',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: 'var(--text-base)',
+                  textAlign: 'center',
+                  // The month shown is filled; the one with today in it is ringed, so it can be found from anywhere.
+                  ...(m?.current
+                    ? { background: 'var(--color-pink)', color: 'var(--color-surface)', fontWeight: 'var(--font-weight-bold)' }
+                    : m?.now
+                      ? { boxShadow: 'var(--ring-accent)', color: 'var(--color-pink-deep)', fontWeight: 'var(--font-weight-bold)' }
+                      : { color: 'var(--color-ink)', fontWeight: 'var(--font-weight-medium)' }),
+                }}
               >
                 {m?.short}
               </Pressable>
@@ -66,7 +78,12 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
         </>
       }
     >
-      <Pressable onClick={v.toggleMonth} aria-expanded={!!v.monthOpen} aria-haspopup="true" style={css(v.monthBtn)}>
+      <Pressable
+        onClick={v.toggleMonth}
+        aria-expanded={!!v.monthOpen}
+        aria-haspopup="true"
+        style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', marginLeft: '-10px', minHeight: '44px', padding: 'var(--space-2) var(--space-2h)', borderRadius: 'var(--radius-md)', background: v.monthOpen ? 'var(--hover-neutral)' : undefined }}
+      >
         <Text variant="heading" tone="ink">
           {v.monthName}
         </Text>

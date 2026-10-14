@@ -5,7 +5,7 @@ import { ChevronRight, Info, Sparkle } from '@moonshot/design-system/icons';
 import { Popover } from '@moonshot/design-system/popover';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
-import { css, t } from '@/frontend/features/planner/viewHelpers';
+import { t } from '@/frontend/features/planner/viewHelpers';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { RankGem } from '@/frontend/components/RankGem';
 
@@ -112,7 +112,18 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
           title="See all 20 ranks"
           aria-label={v.rankName + ' — see all 20 ranks'}
           aria-haspopup="dialog"
-          style={css(v.rankPillBtn)}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 'var(--space-2)',
+            marginTop: '9px',
+            minHeight: '36px',
+            padding: '8px 15px 8px 14px',
+            borderRadius: 'var(--radius-full)',
+            fontSize: 'var(--text-base)',
+            fontWeight: 'var(--font-weight-bold)',
+            ...v.rankPill,
+          }}
           hit
         >
           <RankGem fill={v.rankGemColor} />

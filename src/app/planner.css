@@ -5,7 +5,6 @@
 html { scroll-padding-top: 16px; scroll-padding-bottom: 104px; }
 
 /* Phone tab bar labels: 12 px. */
-.mlabel { font-size: var(--text-sm); }
 
 /* A screen's top bar with two actions (an exercise's Edit and Add): on the narrowest phones the actions drop their
    icons and some padding, so Back keeps room to say where it goes. */

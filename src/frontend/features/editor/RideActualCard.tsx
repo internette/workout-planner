@@ -2,7 +2,6 @@ import { Card } from '@moonshot/design-system/card';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Label, TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
-import { css } from '@/frontend/features/planner/viewHelpers';
 import { DurationFields } from '@/frontend/components/DurationFields';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
@@ -58,7 +57,10 @@ export function RideActualCard({ v }: { v: PlannerVals }) {
           </Text>
         </div>
       </div>
-      <p style={css(v.rideNoteStyle)}>{v.rideNote}</p>
+      {/* Plan met: said in the accent. */}
+      <p style={{ margin: 'var(--space-3h) 0 0', fontSize: 'var(--text-base)', fontWeight: v.rideMet ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)', color: v.rideMet ? 'var(--color-pink-deep)' : 'var(--color-muted)' }}>
+        {v.rideNote}
+      </p>
     </Card>
   );
 }

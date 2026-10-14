@@ -24,7 +24,6 @@ export function workoutStage(ctx: StatsCtx) {
   const pickerCells: {
     blank?: boolean;
     label: string;
-    style: string;
     day?: number;
     aria?: string;
     today?: 'date';
@@ -36,7 +35,7 @@ export function workoutStage(ctx: StatsCtx) {
   for (let i = 0; i < pickRows * 7; i++) {
     const pd = i - pickLead + 1;
     if (pd < 1 || pd > pickDim) {
-      pickerCells.push({ blank: true, label: '', style: 'height:34px' });
+      pickerCells.push({ blank: true, label: '' });
       continue;
     }
     const date = new Date(Y, pickM, pd);
@@ -62,9 +61,6 @@ export function workoutStage(ctx: StatsCtx) {
       },
       pick: () => logic.s({ ...monthPatch(pickM), day: pd, dateOpen: false, pickM: null, pickFocus: null }),
       selected: pickM === mi && pd === selDay,
-      style:
-        "height:34px;border:none;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-heading);font-size:var(--text-base);font-weight:" +
-        (pickM === mi && pd === selDay ? 'var(--font-weight-bold);background:var(--color-pink);color:var(--color-surface)' : 'var(--font-weight-medium);background:none;color:var(--color-ink)'),
     });
   }
   // Editing a saved workout from the Spellbook uses this same editor, with the workout standing in for a session: no
