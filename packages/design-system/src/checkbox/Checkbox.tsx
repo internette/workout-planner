@@ -1,5 +1,5 @@
 import { useId, type ReactNode } from 'react';
-import { Check } from '../icons';
+import { Tick } from './Tick';
 import styles from './checkbox.module.css';
 import { cx } from '../utils/cx';
 
@@ -33,9 +33,7 @@ export function Checkbox({ checked, onChange, children, switch: asSwitch, disabl
         aria-describedby={description ? descId : undefined}
         onChange={(e) => onChange(e.target.checked)}
       />
-      <span className={styles.box} aria-hidden="true">
-        {checked ? <Check color="var(--color-surface)" strokeWidth={3} size={13} /> : null}
-      </span>
+      <Tick on={checked} />
       <span className={styles.label}>{children}</span>
     </label>
   );

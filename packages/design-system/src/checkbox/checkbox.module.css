@@ -16,9 +16,6 @@
 .box {
   flex: none;
   box-sizing: border-box;
-  width: 20px;
-  height: 20px;
-  margin-top: 1px;
   border-radius: var(--radius-xs);
   display: flex;
   align-items: center;
@@ -27,7 +24,12 @@
   box-shadow: var(--ring-outline);
   transition: background-color var(--dur-state) var(--ease-standard), box-shadow var(--dur-state) var(--ease-standard);
 }
-.checked .box { background: var(--color-pink); box-shadow: none; }
+/* Three sizes: in a Checkbox (with the 1px that lines it up with the first line of its label), at the end of a
+   CheckCard, and as a tick button of its own. */
+.box-sm { width: 20px; height: 20px; margin-top: 1px; }
+.box-md { width: 24px; height: 24px; }
+.box-lg { width: 34px; height: 34px; border-radius: var(--radius-sm); }
+.box.on { background: var(--color-pink); box-shadow: none; }
 .wrap:has(.input:focus-visible) .box { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
 
 .label {

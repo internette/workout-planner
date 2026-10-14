@@ -49,7 +49,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
               style={{
                 width: '100%',
                 height: b?.height + 'px',
-                borderRadius: '6px 6px 3px 3px',
+                borderRadius: 'var(--radius-xs)',
                 transition: 'background .2s',
                 background: b?.on ? 'linear-gradient(180deg,var(--color-pink) 0%,var(--color-periwinkle) 100%)' : 'color-mix(in srgb, var(--color-pink) 30%, transparent)',
               }}

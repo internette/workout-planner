@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { Stat } from '@moonshot/design-system/stat';
+import { Stat } from './Stat';
 
 export interface StatItem {
   label: string;

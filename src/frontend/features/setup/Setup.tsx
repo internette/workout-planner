@@ -9,6 +9,8 @@ import { Dialog } from '@moonshot/design-system/dialog';
 import { Chip, ChipGroup, ChoiceChips } from '@moonshot/design-system/chip';
 import { IconChoiceGroup } from '@moonshot/design-system/icon-choice-group';
 import { Bike, Check, ChevronLeft, Dumbbell, Gem, LotusFlower, Lunge, Sparkle } from '@moonshot/design-system/icons';
+import { IconTile } from '@moonshot/design-system/icon-tile';
+import { CheckCard, CheckGroup } from '@moonshot/design-system/option-card';
 import { TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
 import { WeekStrip } from '@moonshot/design-system/week-strip';
@@ -47,39 +49,6 @@ const Label = ({ children, id }: { children: ReactNode; id?: string }) => (
     {children}
   </Text>
 );
-
-/** A tile ticked on and off: an icon, a name and a line, with a tick when it's on. */
-function Toggle({ on, onClick, icon, title, line }: { on: boolean; onClick: () => void; icon: ReactNode; title: string; line: string }) {
-  return (
-    <Pressable
-      aria-pressed={on}
-      onClick={onClick}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--space-3)',
-        width: '100%',
-        padding: 'var(--space-3) var(--space-4)',
-        borderRadius: 'var(--radius-lg)',
-        background: on ? 'var(--color-pink-tint)' : 'var(--color-surface)',
-        boxShadow: on ? 'var(--ring-accent)' : 'var(--elevation-hairline)',
-      }}
-    >
-      <span style={{ width: 44, height: 44, flex: 'none', borderRadius: 'var(--radius-md)', background: on ? 'var(--color-surface)' : 'var(--color-pink-tint)', display: 'grid', placeItems: 'center' }}>{icon}</span>
-      <span style={{ flex: 1, minWidth: 0 }}>
-        <Text variant="subheading" as="span" style={{ display: 'block' }}>
-          {title}
-        </Text>
-        <Text variant="body" tone="muted" as="span" style={{ display: 'block' }}>
-          {line}
-        </Text>
-      </span>
-      <span style={{ width: 24, height: 24, flex: 'none', borderRadius: 'var(--radius-full)', display: 'grid', placeItems: 'center', background: on ? 'var(--color-pink)' : 'transparent', boxShadow: on ? 'none' : 'var(--ring-outline)' }}>
-        {on ? <Check color="var(--color-surface)" strokeWidth={3} size={13} /> : null}
-      </span>
-    </Pressable>
-  );
-}
 
 export function Setup({ s }: { s: S | null }) {
   const top = useRef<HTMLDivElement>(null);
@@ -178,12 +147,22 @@ export function Setup({ s }: { s: S | null }) {
         <Eyebrow>Your magic</Eyebrow>
         {heading('What will you train?')}
         <Lead>Pick all that fit. You can do any of them later too.</Lead>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-5)' }}>
+        <CheckGroup label="What you train">
           {s.trains.map((t) => {
             const Icon = TRAIN_ICON[t.value];
-            return <Toggle key={t.value} on={t.on} onClick={t.toggle} icon={<Icon color="var(--color-pink-deep)" size={22} />} title={t.title} line={t.line} />;
+            return (
+              <CheckCard
+                key={t.value}
+                surface="page"
+                checked={t.on}
+                onChange={t.toggle}
+                icon={<IconTile as="span" size="md"><Icon color="var(--color-pink-deep)" size={22} /></IconTile>}
+                title={t.title}
+                description={t.line}
+              />
+            );
           })}
-        </div>
+        </CheckGroup>
       </>,
       s.canTrainsNext,
     );

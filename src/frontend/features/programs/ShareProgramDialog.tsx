@@ -10,7 +10,7 @@ import { TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
 import { Check, Copy, Download, Info } from '@moonshot/design-system/icons';
 import { savePdf } from '@/frontend/shared/programPdf';
-import { Callout } from '@/frontend/components/Callout';
+import { Callout } from '@moonshot/design-system/callout';
 import { MON3 } from '@/frontend/shared/constants';
 import { plural } from '@/frontend/shared/helpers';
 import * as db from '@/frontend/data/plannerData';

@@ -9,7 +9,7 @@ import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import { RANKS, RANK_XP } from '@/frontend/shared/constants';
 import { PROVIDER_NAME, PROVIDERS, type Provider } from '@/shared/auth';
-import { Callout } from '@/frontend/components/Callout';
+import { Callout } from '@moonshot/design-system/callout';
 import { ProviderButton } from './ProviderButton';
 import styles from './landing.module.css';
 import { RankGem } from '@/frontend/components/RankGem';

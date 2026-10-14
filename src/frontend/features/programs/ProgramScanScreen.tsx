@@ -1,63 +1,20 @@
 // Turning the calendar's weekly repeats into a program: what the scan found, then naming it. Or, with nothing
 // repeating, why not.
-import { useId } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
 import { BlockBar } from '@moonshot/design-system/block-bar';
 import { Card } from '@moonshot/design-system/card';
 import { Checkbox } from '@moonshot/design-system/checkbox';
 import { EmptyState } from '@moonshot/design-system/empty-state';
 import { IconTile } from '@moonshot/design-system/icon-tile';
-import { OptionCard } from '@moonshot/design-system/option-card';
+import { CheckCard, CheckGroup, OptionCard } from '@moonshot/design-system/option-card';
 import { TextField } from '@moonshot/design-system/text-field';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { WeekStrip } from '@moonshot/design-system/week-strip';
-import { Check, Search } from '@moonshot/design-system/icons';
+import { Search } from '@moonshot/design-system/icons';
 import { BackBar } from '@/frontend/components/BackBar';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 type Row = { key: string; name: string; meta: string; svg: React.ReactNode; on: boolean; toggle: () => void };
-
-/** A workout it found, ticked in or out: the whole row toggles it. */
-function FoundRow({ r }: { r: Row }) {
-  const metaId = useId();
-  return (
-    <label style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 'var(--space-3)', minHeight: '52px', padding: 'var(--space-1) 0', cursor: 'pointer' }}>
-      <input
-        type="checkbox"
-        checked={r.on}
-        onChange={r.toggle}
-        aria-describedby={metaId}
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', margin: 0, opacity: 0, cursor: 'inherit' }}
-      />
-      <IconTile as="span" size="xs" variant="flat">
-        {r.svg}
-      </IconTile>
-      <span style={{ flex: 1, minWidth: 0 }}>
-        <Text variant="body" weight="semibold" tone={r.on ? 'ink' : 'muted'} as="span" style={{ display: 'block' }}>
-          {r.name}
-        </Text>
-        <Text id={metaId} variant="body" tone="muted" as="span" style={{ display: 'block' }}>
-          {r.meta}
-        </Text>
-      </span>
-      <span
-        aria-hidden="true"
-        style={{
-          flex: 'none',
-          width: '24px',
-          height: '24px',
-          borderRadius: 'var(--radius-xs)',
-          display: 'grid',
-          placeItems: 'center',
-          background: r.on ? 'var(--color-pink)' : 'var(--color-surface)',
-          boxShadow: r.on ? 'none' : 'var(--ring-outline)',
-        }}
-      >
-        {r.on ? <Check color="var(--color-surface)" strokeWidth={3} size={14} /> : null}
-      </span>
-    </label>
-  );
-}
 
 function Found({ v }: { v: PlannerVals }) {
   const s = v.scanFound!;
@@ -93,10 +50,20 @@ function Found({ v }: { v: PlannerVals }) {
               </Text>
             ) : null}
             {b.workouts.length ? (
-              <div style={{ display: 'flex', flexDirection: 'column', marginTop: 'var(--space-2)' }}>
-                {b.workouts.map((r) => (
-                  <FoundRow key={r.key} r={r} />
-                ))}
+              <div style={{ marginTop: 'var(--space-3)' }}>
+                {/* Each workout it found, ticked in or out. */}
+                <CheckGroup label={'Workouts in ' + b.title}>
+                  {b.workouts.map((r: Row) => (
+                    <CheckCard
+                      key={r.key}
+                      checked={r.on}
+                      onChange={r.toggle}
+                      icon={<IconTile as="span" size="xs" variant="flat">{r.svg}</IconTile>}
+                      title={r.name}
+                      description={r.meta}
+                    />
+                  ))}
+                </CheckGroup>
               </div>
             ) : null}
           </Card>
@@ -108,10 +75,19 @@ function Found({ v }: { v: PlannerVals }) {
                 <Text variant="micro" tone="slate" as="h2" style={{ margin: 0 }}>
                   Left out
                 </Text>
-                <div style={{ display: 'flex', flexDirection: 'column', marginTop: 'var(--space-1)' }}>
-                  {s.leftOut.map((r) => (
-                    <FoundRow key={r.key} r={r} />
-                  ))}
+                <div style={{ marginTop: 'var(--space-2)' }}>
+                  <CheckGroup label="Left out">
+                    {s.leftOut.map((r: Row) => (
+                      <CheckCard
+                        key={r.key}
+                        checked={r.on}
+                        onChange={r.toggle}
+                        icon={<IconTile as="span" size="xs" variant="flat">{r.svg}</IconTile>}
+                        title={r.name}
+                        description={r.meta}
+                      />
+                    ))}
+                  </CheckGroup>
                 </div>
               </>
             ) : null}

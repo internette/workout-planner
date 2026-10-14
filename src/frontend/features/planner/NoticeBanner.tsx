@@ -1,6 +1,6 @@
 import { IconButton } from '@moonshot/design-system/buttons';
 import { Check, Close } from '@moonshot/design-system/icons';
-import { Callout } from '@/frontend/components/Callout';
+import { Callout } from '@moonshot/design-system/callout';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** A notice after something happened elsewhere, e.g. a plan added to the calendar. */

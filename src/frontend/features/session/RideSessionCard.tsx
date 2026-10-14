@@ -2,7 +2,7 @@ import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Check } from '@moonshot/design-system/icons';
 import { t } from '@/frontend/features/planner/viewHelpers';
-import { StatRow } from '@/frontend/components/StatRow';
+import { StatRow } from '@moonshot/design-system/stat';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 /** A ride session: its stats and marking it done. */

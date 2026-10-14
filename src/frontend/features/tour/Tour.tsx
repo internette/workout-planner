@@ -231,7 +231,7 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
               height: 16,
               background: 'var(--color-surface)',
               transform: 'rotate(45deg)',
-              borderRadius: 3,
+              borderRadius: 'var(--radius-xs)',
             }}
           />
         ) : null}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Checkbox } from '../../src/checkbox';
+import { Checkbox, Tick } from '../../src/checkbox';
 import { DocPage, h2, note } from '../docs';
 
 const panel: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 18, padding: 22, background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elevation-raised)', maxWidth: 460 };
@@ -48,6 +48,16 @@ export default function CheckboxPage() {
         <Checkbox switch checked={follow} onChange={setFollow} description="From Start until you finish, paused or not.">
           Keep the screen on during a workout
         </Checkbox>
+      </div>
+
+      <h2 id="tick" style={h2}>The tick on its own</h2>
+      <p style={note}>
+        <code>Tick</code> is the box itself, drawn only: sm (20px) is the Checkbox&apos;s, md (24px) sits at the end of
+        a CheckCard, and lg (34px) makes a tick button of its own, such as ticking an exercise off in a session (give
+        the button <code>aria-pressed</code>).
+      </p>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <Tick on={false} /> <Tick on /> <Tick on={false} size="md" /> <Tick on size="md" /> <Tick on={false} size="lg" /> <Tick on size="lg" />
       </div>
 
       <h2 id="behaviour" style={h2}>Behaviour</h2>

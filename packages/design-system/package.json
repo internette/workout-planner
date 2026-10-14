@@ -17,6 +17,7 @@
     "./base.css": "./src/base.css",
     "./brand": "./src/brand/index.ts",
     "./buttons": "./src/buttons/index.ts",
+    "./callout": "./src/callout/index.ts",
     "./card": "./src/card/index.ts",
     "./checkbox": "./src/checkbox/index.ts",
     "./radio": "./src/radio/index.ts",

@@ -38,3 +38,13 @@
 
 .text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .title, .description { margin: 0; text-wrap: pretty; }
+
+/* A CheckCard: the same card, laid out as a row with its tick at the end. The real checkbox covers the whole card. */
+.check { position: relative; display: flex; align-items: center; gap: var(--space-3); }
+.check .text { flex: 1; }
+.icon { flex: none; display: flex; }
+/* On the page itself: white with a hairline, so it doesn't vanish into the page color. */
+.onPage { background: var(--color-surface); box-shadow: var(--elevation-hairline); }
+.onPage:hover { background: var(--color-surface); filter: brightness(0.97); }
+.onPage.checked { background: var(--color-pink-tint); box-shadow: var(--ring-accent); filter: none; }
+.check:has(.input:focus-visible) { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
