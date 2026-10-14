@@ -11,7 +11,7 @@
 .fullWidth { display: flex; width: 100%; }
 
 .tray-sm { padding: var(--space-1); border-radius: var(--radius-md); }
-.tray-md { padding: 5px; border-radius: var(--radius-md); }
+.tray-md { padding: var(--space-1); border-radius: var(--radius-md); }
 
 /* brand: a white tray with the selected option in pink. quiet: a canvas tray for use inside cards. */
 .tone-brand { background: var(--color-surface); box-shadow: var(--elevation-raised); }
@@ -34,8 +34,8 @@
 /* Segments are drawn 33–40 px tall; the tap area is 44 (the shared .hit in base.css). */
 .segment { composes: hit from global; }
 
-.segment-sm { padding: 9px 16px; border-radius: var(--radius-sm); font-size: var(--text-base); }
-.segment-md { padding: 12px 20px; border-radius: var(--radius-sm); font-size: var(--text-base); }
+.segment-sm { padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); font-size: var(--text-base); }
+.segment-md { padding: var(--space-3) var(--space-5); border-radius: var(--radius-sm); font-size: var(--text-base); }
 
 .tone-brand .selected { background: var(--color-pink); color: var(--color-surface); }
 .tone-quiet .selected {
@@ -44,4 +44,4 @@
   box-shadow: var(--elevation-hairline);
 }
 
-.compact { padding-left: 10px; padding-right: 10px; }
+.compact { padding-left: var(--space-2); padding-right: var(--space-2); }

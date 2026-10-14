@@ -36,7 +36,7 @@ export function SectionLabel({ label, note, aside, value, as = 'h2', tone = 'sla
         flexWrap: 'wrap',
         alignItems: 'baseline',
         gap: 'var(--space-2)',
-        ...(list ? { padding: '0 2px', marginBottom: 'var(--space-2)' } : null),
+        ...(list ? { padding: '0 var(--space-1)', marginBottom: 'var(--space-2)' } : null),
         ...style,
       }}
     >

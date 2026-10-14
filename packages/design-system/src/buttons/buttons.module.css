@@ -22,11 +22,11 @@
 }
 
 /* ---- Button sizes */
-.xs { min-height: 30px; padding: 0 12px; border-radius: var(--radius-xs); font-size: var(--text-base); gap: 5px; }
-.sm { min-height: 44px; padding: 0 20px; border-radius: var(--radius-md); font-size: var(--text-base); }
+.xs { min-height: 30px; padding: 0 var(--space-3); border-radius: var(--radius-xs); font-size: var(--text-base); gap: var(--space-1); }
+.sm { min-height: 44px; padding: 0 var(--space-5); border-radius: var(--radius-md); font-size: var(--text-base); }
 /* Two heights: 44 for actions in cards, dialogs and bars (sm, md), 52 for a screen's main action (lg). */
-.md { min-height: 44px; padding: 0 22px; border-radius: var(--radius-md); font-size: var(--text-lg); }
-.lg { min-height: 52px; padding: 0 28px; border-radius: var(--radius-md); font-size: var(--text-lg); }
+.md { min-height: 44px; padding: 0 var(--space-5); border-radius: var(--radius-md); font-size: var(--text-lg); }
+.lg { min-height: 52px; padding: 0 var(--space-7); border-radius: var(--radius-md); font-size: var(--text-lg); }
 
 .fullWidth { display: flex; width: 100%; }
 

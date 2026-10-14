@@ -2,7 +2,7 @@
 
 .bar {
   display: flex;
-  gap: 3px;
+  gap: var(--space-1);
   height: 10px;
 }
 .block {
@@ -31,14 +31,14 @@
 .key {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1) 14px;
+  gap: var(--space-1) var(--space-3);
   margin-top: var(--space-2);
 }
-.marker + .key { margin-top: 2px; }
+.marker + .key { margin-top: var(--space-1); }
 .keyItem {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-1);
 }
 .dot {
   width: 10px;

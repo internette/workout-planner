@@ -4,11 +4,11 @@
 .strip {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 6px;
+  gap: var(--space-1);
 }
 .day { text-align: center; }
 .tile {
-  margin-top: 6px;
+  margin-top: var(--space-2);
   height: 36px;
   border-radius: var(--radius-md);
   display: grid;
