@@ -1,10 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import '@moonshot/design-system/base.css';
 import './planner.css';
-import { ColorVariables, colors } from '@moonshot/design-system/colors';
-import { TypographyVariables } from '@moonshot/design-system/typography';
-import { ElevationVariables } from '@moonshot/design-system/elevation';
-import { StructureVariables } from '@moonshot/design-system/StructureVariables';
+import { colors } from '@moonshot/design-system/colors';
+import { DesignTokens } from '@moonshot/design-system/tokens';
 import { RegisterServiceWorker } from '@/frontend/features/install/RegisterServiceWorker';
 import { themeScript } from '@moonshot/design-system/theme';
 
@@ -23,10 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <ColorVariables />
-        <TypographyVariables />
-        <ElevationVariables />
-        <StructureVariables />
+        <DesignTokens />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* The root layout is the one place every page shares. The rule below is written for the Pages Router,

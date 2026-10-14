@@ -1,3 +1,4 @@
+import { Pressable } from '@moonshot/design-system/buttons';
 import { IconTile } from '@moonshot/design-system/icon-tile';
 import { Plus } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
@@ -6,26 +7,10 @@ import { Text } from '@moonshot/design-system/typography';
 export function ExerciseRow({ exercise }: { exercise: any }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '12px 0' }}>
-      <button
-        type="button"
+      <Pressable
         onClick={exercise?.open}
         aria-label={'View details for ' + exercise?.name}
-        className="hv1"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '14px',
-          flex: '1 1 200px',
-          minWidth: '0',
-          margin: '-6px',
-          padding: '6px',
-          border: 'none',
-          borderRadius: 'var(--radius-sm)',
-          background: 'none',
-          textAlign: 'left',
-          cursor: 'pointer',
-          fontFamily: 'inherit',
-        }}
+        style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: '1 1 200px', minWidth: '0', margin: '-6px', padding: '6px', borderRadius: 'var(--radius-sm)' }}
       >
         <IconTile as="span" size="xs" variant="flat">{exercise?.svg}</IconTile>
         <span style={{ flex: '1', minWidth: '0' }}>
@@ -40,7 +25,7 @@ export function ExerciseRow({ exercise }: { exercise: any }) {
             {exercise?.detail}
           </Text>
         </span>
-      </button>
+      </Pressable>
       {exercise?.inWorkout ? (
         <Text
           variant="small"
@@ -52,17 +37,15 @@ export function ExerciseRow({ exercise }: { exercise: any }) {
         </Text>
       ) : (
         // Said in words, not just +: it adds the exercise to a workout (the one being built, or one to choose).
-        <button
-          type="button"
+        <Pressable
           onClick={exercise?.add}
           aria-label={'Add ' + exercise?.name + ' to a workout'}
-          className="hv1"
-          style={{ flex: 'none', width: '44px', height: '44px', margin: '-4px -6px -4px 0', display: 'grid', placeItems: 'center', border: 'none', background: 'none', cursor: 'pointer', borderRadius: 'var(--radius-full)' }}
+          style={{ flex: 'none', width: '44px', height: '44px', margin: '-4px -6px -4px 0', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)' }}
         >
           <span style={{ width: '32px', height: '32px', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)', background: 'var(--color-pink-tint)' }}>
             <Plus color="var(--color-pink-deep)" strokeWidth={2.6} size={16} />
           </span>
-        </button>
+        </Pressable>
       )}
     </div>
   );

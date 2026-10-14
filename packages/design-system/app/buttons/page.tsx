@@ -1,4 +1,4 @@
-import { Button, IconButton } from '../../src/buttons';
+import { Button, IconButton, Pressable } from '../../src/buttons';
 import { ChevronDown, ChevronLeft, ChevronRight, Close, Info, Pencil, Plus } from '../../src/icons';
 import { DocPage, h2, note } from '../docs';
 import { ButtonTypes } from './ButtonTypes';
@@ -162,6 +162,19 @@ export default function ButtonsPage() {
         </IconButton>
       </div>
 
+      <h2 id="pressable" style={h2}>Pressable</h2>
+      <p style={note}>
+        A button that looks like whatever is inside it: a row of a list card, a name that opens something, a pill. It
+        resets the native look, keeps the text and font around it, and lays a wash over itself on hover and keyboard
+        focus, above its own background. <code>wash=&quot;accent&quot;</code> gives it the pink tint instead, for a row
+        that opens something of the person&apos;s own; <code>hit</code> gives one drawn under 44px its tap area.
+      </p>
+      <div style={row}>
+        <Pressable style={{ padding: '8px 14px', borderRadius: 'var(--radius-md)', fontWeight: 600 }}>A quiet action</Pressable>
+        <Pressable wash="accent" style={{ padding: '8px 14px', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)', fontWeight: 600 }}>
+          A row on canvas
+        </Pressable>
+      </div>
     </DocPage>
   );
 }

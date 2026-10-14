@@ -3,6 +3,7 @@
 import { useRef, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
 import { Check } from '../icons';
 import styles from './icon-choice-group.module.css';
+import { cx } from '../utils/cx';
 
 export interface IconChoiceOption<T extends string> {
   value: T;
@@ -89,7 +90,7 @@ export function IconChoiceGroup<T extends string>({
       aria-label={labelledBy ? undefined : label}
       aria-labelledby={labelledBy}
       onKeyDown={onKeyDown}
-      className={[isGrid ? styles.grid : styles.row, className].filter(Boolean).join(' ')}
+      className={cx(isGrid ? styles.grid : styles.row, className)}
       style={isGrid ? { gridTemplateColumns: `repeat(${columns},minmax(0,1fr))`, ...style } : style}
     >
       {options.map((option, i) => {

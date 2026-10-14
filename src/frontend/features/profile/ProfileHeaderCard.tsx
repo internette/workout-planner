@@ -1,4 +1,4 @@
-import { IconButton } from '@moonshot/design-system/buttons';
+import { IconButton, Pressable } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { vars } from '@moonshot/design-system/colors';
 import { ChevronRight, Info, Sparkle } from '@moonshot/design-system/icons';
@@ -107,18 +107,18 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
             {v.profileSince}
           </Text>
         ) : null}
-        <button
+        <Pressable
           onClick={v.openRanks}
           title="See all 20 ranks"
           aria-label={v.rankName + ' — see all 20 ranks'}
           aria-haspopup="dialog"
           style={css(v.rankPillBtn)}
-          className="hv6 hit"
+          hit
         >
           <RankGem fill={v.rankGemColor} />
           {t(v.rankName)}
           <ChevronRight strokeWidth={2.4} size={12} style={{ opacity: '.7' }} />
-        </button>
+        </Pressable>
         <Popover
           open={!!v.xpInfoOpen}
           onClose={v.closeXp}

@@ -39,16 +39,14 @@
     "./rating": "./src/rating/index.ts",
     "./reorderable-list": "./src/reorderable-list/index.ts",
     "./segmented-control": "./src/segmented-control/index.ts",
-    "./select": "./src/select/index.ts",
     "./spacing": "./src/spacing/index.ts",
     "./stat": "./src/stat/index.ts",
     "./status-screen": "./src/status-screen/index.ts",
-    "./StructureVariables": "./src/StructureVariables.tsx",
     "./text-field": "./src/text-field/index.ts",
     "./theme": "./src/theme.ts",
-    "./tokenVariables": "./src/tokenVariables.ts",
+    "./tokens": "./src/tokens/index.ts",
     "./typography": "./src/typography/index.ts",
-    "./useWindowEvent": "./src/useWindowEvent.ts",
+    "./utils": "./src/utils/index.ts",
     "./week-strip": "./src/week-strip/index.ts"
   },
   "dependencies": {

@@ -1,6 +1,6 @@
 // The spacing the interface uses: seven steps on an even 4px grid. Step n is n × 4px, so `--space-5` is 20px. Write
 // `padding: var(--space-6)`, not 24px. `layout` holds the measures of the page itself.
-import { toVariables, type Token } from '../tokenVariables';
+import { toVariables, type Token } from '../tokens/variables';
 
 export const space = {
   '1': { value: '4px', use: 'The tightest gap: between segments in a tray' },

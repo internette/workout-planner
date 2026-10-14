@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import styles from './progress-bar.module.css';
+import { cx } from '../utils/cx';
 
 export interface ProgressBarProps {
   /** How full it is, from 0 to 100. Anything outside is clamped. */
@@ -24,12 +25,12 @@ export function ProgressBar({ value, track = 'mist', fill = 'gem', label, valueT
     : { 'aria-hidden': true };
   return (
     <span
-      className={[styles.track, styles[track], className].filter(Boolean).join(' ')}
+      className={cx(styles.track, styles[track], className)}
       style={style}
       {...semantics}
     >
       <span
-        className={[styles.fill, fill === 'gem' ? styles.gem : ''].filter(Boolean).join(' ')}
+        className={cx(styles.fill, fill === 'gem' ? styles.gem : '')}
         style={{ width: pct + '%', ...(fill === 'gem' ? {} : { background: fill }) }}
       />
     </span>

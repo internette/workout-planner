@@ -37,13 +37,3 @@ export const darkColors: Partial<Record<ColorName, string>> = {
   dangerTint: '#3E1D26',
 };
 
-/** The dark theme's see-through colors, where they differ from the light formula: light lines and rows on a dark
- * page, black shadows, and a stronger accent wash. The rest follow their tokens. */
-const mix = (token: string, pct: number) => `color-mix(in srgb, var(--color-${token}) ${pct}%, transparent)`;
-export const darkTranslucents: Record<string, string> = {
-  line: 'color-mix(in srgb, white 8%, transparent)',
-  surfaceRest: 'color-mix(in srgb, white 4%, transparent)',
-  accentWash: mix('pink-tint', 60),
-  shadow: 'rgba(0, 0, 0, 0.5)',
-  scrim: 'rgba(0, 0, 0, 0.55)',
-};

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '../../src/buttons';
-import { Select } from '../../src/select';
+import { SegmentedControl } from '../../src/segmented-control';
 
 // Each type, and whether it has a ghost version (dashed is already unfilled).
 const TYPES = [
@@ -24,13 +24,7 @@ export function ButtonTypes({ rowStyle }: { rowStyle: React.CSSProperties }) {
   const versions = hasGhost ? [false, true] : [false];
   return (
     <>
-      <Select<Type>
-        label="Type"
-        options={TYPES.map(([t]) => ({ value: t, label: t }))}
-        value={type}
-        onChange={setType}
-        style={{ maxWidth: 280, marginBottom: 12 }}
-      />
+      <SegmentedControl<Type> label="Type" semantics="options" wrap options={TYPES.map(([t]) => ({ value: t, label: t }))} value={type} onChange={setType} style={{ marginBottom: 12 }} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {versions.map((ghost) => (
           <div key={String(ghost)} style={rowStyle}>

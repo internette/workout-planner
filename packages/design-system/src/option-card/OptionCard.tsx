@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Text } from '../typography';
 import styles from './option-card.module.css';
+import { cx } from '../utils/cx';
 
 export interface OptionGroupProps {
   /** What the choice is about, for screen readers. */
@@ -34,7 +35,7 @@ export interface OptionCardProps {
 
 /** One answer to a question, as a card. A radio underneath, so arrow keys move between the cards in a group. */
 export function OptionCard({ name, value, checked, onChange, title, description, disabled, children }: OptionCardProps) {
-  const classes = [styles.card, checked && styles.checked, disabled && styles.disabled].filter(Boolean).join(' ');
+  const classes = cx(styles.card, checked && styles.checked, disabled && styles.disabled);
   return (
     <div className={classes}>
       {/* The label, and the radio inside it, cover only this head, so controls in `children` stay clickable. */}

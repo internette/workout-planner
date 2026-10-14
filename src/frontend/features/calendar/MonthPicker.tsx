@@ -1,4 +1,4 @@
-import { Button } from '@moonshot/design-system/buttons';
+import { Button, Pressable } from '@moonshot/design-system/buttons';
 import { vars } from '@moonshot/design-system/colors';
 import { ChevronDown, Sparkle } from '@moonshot/design-system/icons';
 import { Popover } from '@moonshot/design-system/popover';
@@ -66,13 +66,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
         </>
       }
     >
-      <button
-        onClick={v.toggleMonth}
-        aria-expanded={!!v.monthOpen}
-        aria-haspopup="true"
-        style={css(v.monthBtn)}
-        className="hv1"
-      >
+      <Pressable onClick={v.toggleMonth} aria-expanded={!!v.monthOpen} aria-haspopup="true" style={css(v.monthBtn)}>
         <Text variant="heading" tone="ink">
           {v.monthName}
         </Text>
@@ -169,7 +163,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             />
           </span>
         </span>
-      </button>
+      </Pressable>
     </Popover>
   );
 }

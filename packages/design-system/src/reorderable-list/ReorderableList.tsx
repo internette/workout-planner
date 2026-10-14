@@ -3,6 +3,7 @@
 import { useId, useRef, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
 import { Grip } from '../icons';
 import styles from './reorderable-list.module.css';
+import { cx } from '../utils/cx';
 
 export interface ReorderableListProps<T> {
   items: T[];
@@ -45,7 +46,7 @@ export function ReorderableList<T>({
       <p id={hintId} className="sr-only">
         {hint}
       </p>
-      <div ref={list} className={[styles.list, className].filter(Boolean).join(' ')} style={{ gap, ...style }}>
+      <div ref={list} className={cx(styles.list, className)} style={{ gap, ...style }}>
         {items.map((item, i) => (
           <div key={getKey(item, i)}>
             {renderItem(

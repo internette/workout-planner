@@ -1,7 +1,7 @@
 // The corner radii the interface uses: five sizes on an even 4px step, and one for anything round. Write
 // `border-radius: var(--radius-lg)`, not 20px. A smaller control takes a smaller radius, so a control's corners stay in
 // proportion to its size. Everything uses these; the only other corners are on marks a few px across, like chart bars.
-import { toVariables, type Token } from '../tokenVariables';
+import { toVariables, type Token } from '../tokens/variables';
 
 export const radii = {
   xs: { value: '8px', use: 'The smallest controls: Button xs, IconButton xs and the Checkbox box' },

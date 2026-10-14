@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useWindowEvent } from '@moonshot/design-system/useWindowEvent';
+import { useWindowEvent } from '@moonshot/design-system/utils';
 import { openInstallDialog, setInstallOffer } from './installOffer';
 
 const KEY = 'moonshot.install-prompt';

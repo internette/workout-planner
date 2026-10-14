@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button } from '../../src/buttons';
+import { Button, Pressable } from '../../src/buttons';
 import { Card } from '../../src/card';
 import { Chip } from '../../src/chip';
 import { Text } from '../../src/typography';
@@ -94,7 +94,7 @@ export default function CardPage() {
         Rows that each go somewhere share one card instead of one card each. Use <code>pad=&quot;none&quot;</code>{' '}
         with <code>overflow: hidden</code>, so the rows run edge to edge and their hover stays inside the corners. Each
         row is a full-width button at least 60px tall, with 12px 18px padding, a 1px{' '}
-        <code>var(--color-line)</code> line above every row but the first, and the <code>hv7</code> hover wash.
+        <code>var(--color-line)</code> line above every row but the first, as a <code>Pressable</code> with the accent wash.
         Related lists are grouped, each card under a micro heading.
       </p>
       <div style={{ maxWidth: 620 }}>
@@ -105,12 +105,7 @@ export default function CardPage() {
             </Text>
             <Card pad="none" style={{ overflow: 'hidden' }}>
               {g.rows.map((r, i) => (
-                <button
-                  key={r.name}
-                  type="button"
-                  className="hv7"
-                  style={{ ...row, borderTop: i ? '1px solid var(--color-line)' : 'none' }}
-                >
+                <Pressable key={r.name} wash="accent" style={{ ...row, borderTop: i ? '1px solid var(--color-line)' : 'none' }}>
                   <Text variant="micro" as="span" tone="slate" style={{ flex: 'none', width: 52, lineHeight: 1.35 }}>
                     {r.day[0]}
                     <br />
@@ -125,7 +120,7 @@ export default function CardPage() {
                     </Text>
                   </span>
                   <Chip tone={r.status === 'Done' ? 'accent' : 'info'}>{r.status}</Chip>
-                </button>
+                </Pressable>
               ))}
             </Card>
           </div>

@@ -9,7 +9,7 @@ import { ACCENTS, type Accent } from '../../src/colors/themes';
 import { Dumbbell, Repeat } from '../../src/icons';
 import { IconTile } from '../../src/icon-tile';
 import { ProgressBar } from '../../src/progress-bar';
-import { Select } from '../../src/select';
+import { SegmentedControl } from '../../src/segmented-control';
 import { StarRating } from '../../src/rating';
 import { Text } from '../../src/typography';
 import { DocPage, h2, note } from '../docs';
@@ -110,12 +110,14 @@ export default function ThemesPage() {
         its own surfaces and text, tinted toward it (pink&apos;s is Plum dusk); the color is lighter, and text on it is
         the dark surface color.
       </p>
-      <Select<Accent>
+      <SegmentedControl<Accent>
         label="Color"
-        options={ACCENTS.map((a) => ({ value: a.name, label: a.label, icon: <Dot color={a.swatch} /> }))}
+        semantics="options"
+        wrap
+        options={ACCENTS.map((a) => ({ value: a.name, label: <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Dot color={a.swatch} />{a.label}</span> }))}
         value={accent}
         onChange={setAccent}
-        style={{ maxWidth: 280, marginBottom: 16 }}
+        style={{ marginBottom: 16 }}
       />
       <div style={grid}>
         {[false, true].map((dark) => (

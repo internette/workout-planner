@@ -3,6 +3,7 @@
 import { useRef, type CSSProperties, type KeyboardEvent } from 'react';
 import { MOOD_COLORS, MOODS, MoodFace, RatingStar, type Mood } from '../icons';
 import styles from './rating.module.css';
+import { cx } from '../utils/cx';
 
 // Both ratings are radio groups: one Tab stop (the picked option, or the first before anything is picked), and the
 // arrow keys, Home and End move the pick and the focus.
@@ -42,7 +43,7 @@ export function StarRating({ label, value, onChange, words, readOnly, size = rea
   const stars = [1, 2, 3, 4, 5];
   if (readOnly)
     return (
-      <span className={[styles.shown, className].filter(Boolean).join(' ')} style={style}>
+      <span className={cx(styles.shown, className)} style={style}>
         {stars.map((n) => (
           <span key={n} className="fc-star" data-on={n <= value ? '' : undefined} style={{ display: 'inline-flex' }}>
             <RatingStar on={n <= value} size={size} />
@@ -56,7 +57,7 @@ export function StarRating({ label, value, onChange, words, readOnly, size = rea
       role="radiogroup"
       aria-label={label}
       onKeyDown={onKeyDown}
-      className={[styles.stars, className].filter(Boolean).join(' ')}
+      className={cx(styles.stars, className)}
       style={style}
     >
       {stars.map((n) => (
@@ -98,7 +99,7 @@ export function MoodRating({ label, value, onChange, style, className }: MoodRat
       role="radiogroup"
       aria-label={label}
       onKeyDown={onKeyDown}
-      className={[styles.moods, className].filter(Boolean).join(' ')}
+      className={cx(styles.moods, className)}
       style={style}
     >
       {MOODS.map((mood, i) => {
@@ -112,7 +113,7 @@ export function MoodRating({ label, value, onChange, style, className }: MoodRat
             tabIndex={on || (current < 0 && i === 0) ? 0 : -1}
             data-mood={i}
             onClick={() => onChange(mood)}
-            className={[styles.mood, on && styles.picked, current >= 0 && !on && styles.passed].filter(Boolean).join(' ')}
+            className={cx(styles.mood, on && styles.picked, current >= 0 && !on && styles.passed)}
             style={{ '--mood': MOOD_COLORS[mood] } as CSSProperties}
           >
             <span className={['fc-keep', styles.face].join(' ')}>

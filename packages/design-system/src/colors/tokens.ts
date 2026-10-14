@@ -100,7 +100,7 @@ export const gradients = {
 } as const;
 
 /** See-through colors, written as CSS variables like the others, e.g. `var(--color-line)`. Most are a token at a set
- * strength, written with color-mix so they follow the theme; the dark theme overrides the few that aren't. */
+ * strength, written with color-mix so they follow the theme; the dark theme overrides the few that aren't (tokens/dark). */
 const mix = (token: string, pct: number) => `color-mix(in srgb, var(--color-${token}) ${pct}%, transparent)`;
 export const translucents = {
   line: { value: mix('ink', 7), use: 'Every divider line: between rows, around cards, under a popover’s header. One strength everywhere.' },

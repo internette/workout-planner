@@ -1,5 +1,6 @@
 import type { HTMLAttributes } from 'react';
 import styles from './badge.module.css';
+import { cx } from '../utils/cx';
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   /** accent (solid pink) and soft (pale pink) for done; neutral (grey) for in progress, partly done or missed;
@@ -11,5 +12,5 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 
 /** A small status pill: what state something is in. For a fact or a choice, use Chip. */
 export function Badge({ tone = 'neutral', size = 'md', className, ...rest }: BadgeProps) {
-  return <span className={[styles.badge, size === 'sm' && styles.sm, styles[tone], className].filter(Boolean).join(' ')} {...rest} />;
+  return <span className={cx(styles.badge, size === 'sm' && styles.sm, styles[tone], className)} {...rest} />;
 }

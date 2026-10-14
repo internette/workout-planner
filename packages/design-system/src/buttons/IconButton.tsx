@@ -1,6 +1,6 @@
 import { forwardRef, type ButtonHTMLAttributes } from 'react';
 import styles from './buttons.module.css';
-import { cx } from './cx';
+import { cx } from '../utils/cx';
 
 export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label'> {
   /** What the button does: its name for screen readers. Pass `title` as well for a tooltip. */

@@ -1,3 +1,4 @@
+import { Pressable } from '@moonshot/design-system/buttons';
 import { Badge } from '@moonshot/design-system/badge';
 import { Card } from '@moonshot/design-system/card';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
@@ -65,22 +66,20 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
           }}
         >
           {(v.weekSessions ?? []).map((w, i) => (
-            <button key={i}
+            <Pressable
+              key={i}
               onClick={w?.open}
+              wash="accent"
               style={{
                 display: 'flex',
                 flexWrap: 'wrap',
                 alignItems: 'center',
                 gap: '12px',
                 padding: '12px 14px',
-                border: 'none',
                 borderRadius: 'var(--radius-md)',
                 background: 'var(--color-canvas)',
-                textAlign: 'left',
-                cursor: 'pointer',
                 width: '100%',
               }}
-              className="hv7"
             >
               <Text variant="micro" tone="muted" style={{ flex: 'none', width: '56px' }}>
                 {w?.day}
@@ -98,7 +97,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
                 <KindTag inline kind={kindOf(w)} />
               </span>
               <Badge tone={w?.statusTone}>{w?.statusLabel}</Badge>
-            </button>
+            </Pressable>
           ))}
           {v.weekEmpty ? (
             <Text variant="body" as="p" tone="muted" style={{ margin: '0' }}>

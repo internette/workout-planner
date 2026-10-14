@@ -132,14 +132,6 @@ export const Book = strokeIcon(
     <path d="M5 17h14" />
   </>,
 );
-export const Notebook = strokeIcon(
-  'Notebook',
-  <>
-    <path d="M5 4h11a3 3 0 0 1 3 3v13H7a2 2 0 0 1-2-2z" />
-    <line x1="9" y1="9" x2="15" y2="9" />
-    <line x1="9" y1="13" x2="14" y2="13" />
-  </>,
-);
 // The Chronicle: a quill with a star, writing down how it felt.
 export const Quill = strokeIcon(
   'Quill',
@@ -263,22 +255,3 @@ export const Lunge = strokeIcon(
     <path d="M11 9l4.5 2.5" />
   </>,
 );
-export const Waves = strokeIcon(
-  'Waves',
-  <>
-    <path d="M2 10c2.2-2 4.4-2 6.6 0s4.4 2 6.6 0 4.4-2 6.6 0" />
-    <path d="M2 15c2.2-2 4.4-2 6.6 0s4.4 2 6.6 0 4.4-2 6.6 0" />
-  </>,
-);
-export const Swirl = strokeIcon(
-  'Swirl',
-  <>
-    <path d="M3 8c4-3 8-1 8 2s-3 4-6 2" />
-    <path d="M3 15c5-2 11 0 15 3s6-1 5-5" />
-  </>,
-);
-export const Flame = solidIcon(
-  'Flame',
-  'M12.5 2c1.2 3.4 3.5 5.6 3.5 9.2a4.5 4.5 0 1 1-9 0c0-2.6 1.2-4 1.9-5.6.4 1.6 1.3 2.2 1.6 3.4.5-1.3.6-3.5 2-7z',
-);
-export const Mountain = solidIcon('Mountain', 'M2 20 L9 8 L13 14 L17 6 L22 20 Z');
