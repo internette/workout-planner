@@ -38,7 +38,7 @@ export function LiveSetting() {
     <SettingsCard title="During a workout">
       {/* What leaving a workout's page does with its clock: ask each time, or the answer given once. A rule sets the
           choice apart from the switches under it. */}
-      <div style={{ marginTop: '12px', paddingBottom: '16px', marginBottom: '4px', borderBottom: '1px solid var(--color-line)' }}>
+      <div style={{ marginTop: 'var(--space-3)', paddingBottom: 'var(--space-4)', marginBottom: 'var(--space-1)', borderBottom: '1px solid var(--color-line)' }}>
         <RadioGroup<LeaveChoice>
           label="When you leave a workout"
           options={[
@@ -52,12 +52,12 @@ export function LiveSetting() {
       </div>
       {/* The switches under their own heading, styled as the leave choice's. */}
       {can.awake || can.notify || can.player ? (
-        <Text variant="body" as="div" tone="ink" style={{ marginTop: '12px' }}>
+        <Text variant="body" as="div" tone="ink" style={{ marginTop: 'var(--space-3)' }}>
           Screen and notifications
         </Text>
       ) : null}
       {can.awake ? (
-        <div style={{ marginTop: '12px' }}>
+        <div style={{ marginTop: 'var(--space-3)' }}>
           <Checkbox
             switch
             checked={s.awake}

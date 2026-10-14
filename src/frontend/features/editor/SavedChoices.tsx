@@ -10,12 +10,12 @@ import { kindOf } from '@/frontend/components/KindTag';
 export function SavedChoices({ v }: { v: PlannerVals }) {
   return (
     <>
-      <SectionLabel label="Or one from your Spellbook" style={{ margin: '28px 0 4px' }} />
-      <Text variant="body" tone="muted" as="p" style={{ margin: '0 0 12px' }}>
+      <SectionLabel label="Or one from your Spellbook" style={{ margin: 'var(--space-7) 0 var(--space-1)' }} />
+      <Text variant="body" tone="muted" as="p" style={{ margin: '0 0 var(--space-3)' }}>
         {v.savedChoicesNote}
       </Text>
       {v.showLogDone ? (
-        <Card pad="sm" style={{ margin: '0 0 12px' }}>
+        <Card pad="sm" style={{ margin: '0 0 var(--space-3)' }}>
           <Checkbox switch checked={!!v.logDoneOn} onChange={v.setLogDone}>
             Log it as done
           </Checkbox>
@@ -28,7 +28,7 @@ export function SavedChoices({ v }: { v: PlannerVals }) {
             {g?.label ? (
               <SectionLabel list label={g?.label} as="h3" />
             ) : null}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
               {(g?.items ?? []).map((w, i) => (
                 <LinkRow key={i} leading={<IconTile as="span" size="xs" variant="flat">{w?.svg}</IconTile>} title={w?.name} detail={w?.meta} kind={kindOf(w)} action="add" onClick={w?.pick} />
               ))}

@@ -18,7 +18,7 @@ export function ChronicleRow({ entry }: { entry: any }) {
         width: '100%',
         display: 'flex',
         alignItems: 'flex-start',
-        gap: '12px',
+        gap: 'var(--space-3)',
         padding: '14px 16px',
         textAlign: 'left',
       }}
@@ -40,7 +40,7 @@ export function ChronicleRow({ entry }: { entry: any }) {
             variant="body"
             tone="muted"
             // One line; a longer note ends in "…", and reads in full on the entry.
-            style={{ display: 'block', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+            style={{ display: 'block', marginTop: 'var(--space-1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
           >
             {entry.note}
           </Text>

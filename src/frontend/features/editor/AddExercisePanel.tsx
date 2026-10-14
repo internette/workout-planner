@@ -1,4 +1,4 @@
-import { Button, IconButton } from '@moonshot/design-system/buttons';
+import { Button, IconButton, Pressable } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { ChevronRight, Plus } from '@moonshot/design-system/icons';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
@@ -12,7 +12,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 export function AddExercisePanel({ v }: { v: PlannerVals }) {
   return (
     <Card elevation="overlay" id="add-exercise" data-add-exercise-panel style={{ marginTop: '14px' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-3)' }}>
         <Text variant="subheading">Add exercise</Text>
         <SegmentedControl
           label="Add exercise from"
@@ -30,7 +30,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
       </div>
       {v.addLib ? (
         <>
-          <div style={{ marginTop: '16px' }}>
+          <div style={{ marginTop: 'var(--space-4)' }}>
             <SearchBar
               inset
               value={v.pickQuery ?? ''}
@@ -41,7 +41,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
             />
           </div>
           {v.libraryFilterNote || v.libraryCanNarrow ? (
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px 8px', marginTop: '8px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-1) var(--space-2)', marginTop: 'var(--space-2)' }}>
               {v.libraryFilterNote ? (
                 <>
                   <Text variant="body" tone="muted">
@@ -81,13 +81,12 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
                 <SectionLabel list label={g.label} note={String(g.items.length)} />
                 <div style={{ borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)', padding: '0 6px 0 14px' }}>
                   {g.items.map((l, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', borderTop: i ? '1px solid var(--color-line)' : 'none' }}>
-                      <button
-                        type="button"
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', borderTop: i ? '1px solid var(--color-line)' : 'none' }}>
+                      <Pressable
                         onClick={l?.open ?? undefined}
                         disabled={!l?.open}
                         aria-label={'View details for ' + l?.name}
-                        style={{ flex: '1', minWidth: '0', minHeight: '52px', padding: '8px 0', border: 'none', background: 'none', textAlign: 'left', cursor: l?.open ? 'pointer' : 'default', fontFamily: 'inherit' }}
+                        style={{ flex: '1', minWidth: '0', minHeight: '52px', padding: 'var(--space-2) 0', cursor: l?.open ? 'pointer' : 'default'}}
                       >
                         <Text variant="strong" weight="semibold" tone="ink" style={{ display: 'block' }}>
                           {l?.name}
@@ -95,35 +94,34 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
                         <Text variant="body" tone="muted" style={{ display: 'block' }}>
                           {l?.detail}
                         </Text>
-                      </button>
-                      <button
-                        type="button"
+                      </Pressable>
+                      <Pressable
                         onClick={l?.add}
                         aria-label={'Add ' + l?.name + ' to workout'}
-                        style={{ flex: 'none', width: '44px', height: '44px', display: 'grid', placeItems: 'center', border: 'none', background: 'none', cursor: 'pointer', borderRadius: 'var(--radius-full)' }}
+                        style={{ flex: 'none', width: '44px', height: '44px', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)' }}
                       >
                         <span style={{ width: '32px', height: '32px', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)', background: 'var(--color-pink-tint)' }}>
                           <Plus color="var(--color-pink-deep)" strokeWidth={2.6} size={16} />
                         </span>
-                      </button>
+                      </Pressable>
                     </div>
                   ))}
                 </div>
               </div>
             ))}
           {v.libraryEmpty ? (
-            <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+            <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
               {v.libraryEmptyNote}
             </Text>
           ) : null}
           {v.createFromSearch ? (
-            <Button type="secondary" size="md" onClick={v.createFromSearch.go} style={{ alignSelf: 'flex-start', marginTop: '4px' }}>
+            <Button type="secondary" size="md" onClick={v.createFromSearch.go} style={{ alignSelf: 'flex-start', marginTop: 'var(--space-1)' }}>
               <Plus color="var(--color-pink-deep)" strokeWidth={2.4} size={16} />
               {v.createFromSearch.label}
             </Button>
           ) : null}
           {v.libraryMore ? (
-            <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+            <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
               {v.libraryMore}
             </Text>
           ) : null}
@@ -132,7 +130,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
             ghost
             size="sm"
             onClick={v.browseArsenal}
-            style={{ marginTop: '4px' }}
+            style={{ marginTop: 'var(--space-1)' }}
           >
             Browse the full Spellbook
             <ChevronRight color="var(--color-pink-deep)" strokeWidth={2.2} size={14} />

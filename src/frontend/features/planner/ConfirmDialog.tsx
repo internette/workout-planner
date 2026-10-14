@@ -23,7 +23,7 @@ export function ConfirmDialog({ v }: { v: PlannerVals }) {
       }
     >
       {v.confirmOption ? (
-        <div style={{ marginTop: '16px' }}>
+        <div style={{ marginTop: 'var(--space-4)' }}>
           <Checkbox switch checked={v.confirmOption.on} onChange={v.confirmOption.set}>
             {v.confirmOption.label}
           </Checkbox>

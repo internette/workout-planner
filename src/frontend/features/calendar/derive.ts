@@ -231,7 +231,7 @@ export function calendarStage(ctx: EntriesCtx) {
         });
       },
       wrap:
-        'height:50px;border:none;border-radius:var(--radius-md);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;' +
+        'height:50px;border:none;border-radius:var(--radius-md);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-1);' +
         (sel
           ? 'background:var(--color-pink)'
           : missed

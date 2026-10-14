@@ -121,7 +121,7 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
               How would you like to begin?
             </Text>
           </div>
-          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 8, marginTop: 18 }}>
+          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 18 }}>
             <LinkRow
               leading={<IconTile as="span" size="sm"><Sliders color="var(--color-pink-deep)" size={18} /></IconTile>}
               title="Customize your experience"
@@ -141,7 +141,7 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
               onClick={onEnd}
             />
           </div>
-          <Text variant="small" tone="muted" as="p" style={{ position: 'relative', margin: '12px 0 0', textAlign: 'center' }}>
+          <Text variant="small" tone="muted" as="p" style={{ position: 'relative', margin: 'var(--space-3) 0 0', textAlign: 'center' }}>
             Both of these are in Settings later.
           </Text>
       </Dialog>
@@ -162,7 +162,7 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
           <Text variant="heading" as="h2" id="tour-title" style={{ margin: '6px 0 0' }}>
             The call is yours to answer
           </Text>
-          <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
             {fresh ? 'Plan your first workout and that day gets a quest. ' : ''}You can take this tour again from Settings.
           </Text>
           {fresh ? (
@@ -240,7 +240,7 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
             <Text variant="micro" tone="accent">
               {stop!.eyebrow}
             </Text>
-            <span role="img" aria-label={'Stop ' + step + ' of ' + total} style={{ display: 'flex', gap: 4 }}>
+            <span role="img" aria-label={'Stop ' + step + ' of ' + total} style={{ display: 'flex', gap: 'var(--space-1)' }}>
               {STOPS.map((_, i) => (
                 <RankGem key={i} fill={i < step ? 'var(--gradient-gem)' : 'var(--color-line)'} />
               ))}
@@ -249,10 +249,10 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
           <Text variant="subheading" as="h2" id="tour-stop" style={{ margin: '6px 0 0' }}>
             {stop!.title}
           </Text>
-          <Text variant="body" tone="slate" as="p" id="tour-body" style={{ margin: '4px 0 0' }}>
+          <Text variant="body" tone="slate" as="p" id="tour-body" style={{ margin: 'var(--space-1) 0 0' }}>
             {stop!.body}
           </Text>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginTop: 14 }}>
             <Button type="neutral" link size="sm" onClick={onEnd} style={{ marginRight: 'auto', minHeight: 44 }}>
               Skip tour
             </Button>

@@ -17,9 +17,9 @@ export function AllTimeCard({ v }: { v: PlannerVals }) {
           gridTemplateColumns: 'repeat(' + stats.length + ', minmax(0, 1fr))',
           gridTemplateRows: 'auto auto',
           gridAutoFlow: 'column',
-          columnGap: '12px',
+          columnGap: 'var(--space-3)',
           rowGap: '6px',
-          margin: '12px 0 0',
+          margin: 'var(--space-3) 0 0',
         }}
       >
         {stats.map((s) => [

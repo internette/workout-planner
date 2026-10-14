@@ -26,7 +26,7 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
           'var(--gradient-gem-tint)',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: '0 1 auto', minWidth: '0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', flex: '0 1 auto', minWidth: '0' }}>
         <Gem size={30} />
         <div style={{ minWidth: '0' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '7px' }}>
@@ -85,7 +85,7 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
               >
                 {x.num}
               </span>
-              <span style={{ marginTop: '4px' }}>
+              <span style={{ marginTop: 'var(--space-1)' }}>
                 <StatusDot status={x.dot} />
               </span>
               <span className="sr-only">{x.aria}</span>
@@ -93,7 +93,7 @@ export function StreakBanner({ v }: { v: PlannerVals }) {
           ))}
         </ul>
         {shown.length ? (
-          <div aria-hidden="true" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 12px', marginTop: '10px' }}>
+          <div aria-hidden="true" style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-1) var(--space-3)', marginTop: '10px' }}>
             {shown.map(([status, name]) => (
               <Text key={status} variant="small" tone="slateDeep" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 <StatusDot status={status} />

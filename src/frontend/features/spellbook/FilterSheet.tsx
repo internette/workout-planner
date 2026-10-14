@@ -1,6 +1,6 @@
 import { Badge } from '@moonshot/design-system/badge';
 import { DisclosureRow } from '@moonshot/design-system/disclosure';
-import { Button } from '@moonshot/design-system/buttons';
+import { Button, Pressable } from '@moonshot/design-system/buttons';
 import { Checkbox } from '@moonshot/design-system/checkbox';
 import { Chip, ChipGroup, ChoiceChips } from '@moonshot/design-system/chip';
 import { Dialog } from '@moonshot/design-system/dialog';
@@ -13,26 +13,22 @@ export function FilterButton({ v }: { v: PlannerVals }) {
   const n = v.activeFilters?.length ?? 0;
   return (
     <>
-      <button
-        type="button"
+      <Pressable
         onClick={v.openFilter}
         aria-haspopup="dialog"
         aria-label={n ? 'Filter, ' + n + ' on' : 'Filter'}
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '8px',
+          gap: 'var(--space-2)',
           flex: 'none',
-          padding: '0 16px',
+          padding: '0 var(--space-4)',
           background: 'var(--color-surface)',
-          border: 'none',
           borderRadius: 'var(--radius-md)',
           boxShadow: 'var(--elevation-hairline)',
-          fontFamily: 'inherit',
           fontSize: 'var(--text-base)',
           fontWeight: 'var(--font-weight-bold)',
           color: 'var(--color-ink)',
-          cursor: 'pointer',
         }}
       >
         <Sliders color="var(--color-muted)" size={18} />
@@ -43,7 +39,7 @@ export function FilterButton({ v }: { v: PlannerVals }) {
             {n}
           </Badge>
         ) : null}
-      </button>
+      </Pressable>
       <FilterSheet v={v} />
     </>
   );
@@ -76,7 +72,7 @@ export function ActiveFilters({ v }: { v: PlannerVals }) {
   );
 }
 
-const section = { marginTop: '20px' };
+const section = { marginTop: 'var(--space-5)' };
 const heading = { marginBottom: '10px' };
 
 /** The filters themselves: the kind (workouts only), target areas, and the equipment you have. A sheet on a phone. */
@@ -125,7 +121,7 @@ function FilterSheet({ v }: { v: PlannerVals }) {
           <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: '2px' }}>
             Equipment you have
           </Text>
-          <Text variant="body" tone="muted" as="p" style={{ margin: '0 0 4px' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: '0 0 var(--space-1)' }}>
             Shows what you can do with what you tick. Bodyweight exercises always show. Kept on this device.
           </Text>
           <EquipmentGroups v={v} />
@@ -160,7 +156,7 @@ function EquipmentGroups({ v }: { v: PlannerVals }) {
               id={'equip-filter-' + gi}
               role="group"
               aria-label={g.label}
-              style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(130px,1fr))', gap: '10px 12px', padding: '12px 0 8px' }}
+              style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(130px,1fr))', gap: '10px 12px', padding: 'var(--space-3) 0 var(--space-2)' }}
             >
               {g.items.map((o) => (
                 <Checkbox key={o.name} checked={o.on} onChange={o.set}>

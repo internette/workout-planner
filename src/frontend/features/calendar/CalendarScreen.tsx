@@ -7,7 +7,7 @@ import { EmptyState } from '@moonshot/design-system/empty-state';
 import { SUMMON_ON, SummonPlan } from '@/frontend/features/summon/SummonPlan';
 import { Text } from '@moonshot/design-system/typography';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
-import { Button } from '@moonshot/design-system/buttons';
+import { Button, Pressable } from '@moonshot/design-system/buttons';
 import { Check, ChevronLeft, ChevronRight, Gem, Moon, Plus, Sparkle } from '@moonshot/design-system/icons';
 import { vars } from '@moonshot/design-system/colors';
 import { LinkRow } from '@/frontend/components/LinkRow';
@@ -31,7 +31,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '12px',
+          gap: 'var(--space-3)',
         }}
       >
         {/* Takes the room left on the row, so Today stays on it beside a long month name on a narrow phone. */}
@@ -70,7 +70,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               flexWrap: 'wrap',
               alignItems: 'center',
               gap: '10px',
-              marginTop: '20px',
+              marginTop: 'var(--space-5)',
             }}
           >
             <Text variant="title" as="h1" style={{ margin: '0' }}>
@@ -80,11 +80,11 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               {v.shortDate}
             </Text>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: 'var(--space-5)' }}>
             <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
             <div style={{ flex: '1', display: 'flex' }}>
               {(v.days ?? []).map((d, i) => (
-                <button key={i}
+                <Pressable key={i}
                   onClick={d?.pick}
                   aria-label={d?.aria}
                   aria-current={d?.isToday}
@@ -95,7 +95,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                   <span style={css(d?.monStyle)}>{d?.mon}</span>
                   <span style={css(d?.numStyle)}>{d?.num}</span>
                   <StatusDot status={d?.dot} selected={!!d?.selected} />
-                </button>
+                </Pressable>
               ))}
             </div>
             <StepButton dir="next" unit="week" onClick={v.nextWeek} />
@@ -173,7 +173,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
         />
       ) : null}
       {v.showWeek ? (
-        <div style={{ marginTop: '20px' }}>
+        <div style={{ marginTop: 'var(--space-5)' }}>
           {/* On a narrow phone, Save as program drops to the line under the week rather than past the edge. */}
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 6px' }}>
             <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
@@ -188,7 +188,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             ) : null}
           </div>
           <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '26px', paddingBottom: v.hasRows ? '8px' : 0 }}
+            style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: '26px', paddingBottom: v.hasRows ? '8px' : 0 }}
           >
             {(v.weekRows ?? []).map((w, i) => (
               <WeekRow key={i} row={w} />
@@ -198,7 +198,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             <div
               style={{
                 position: 'relative',
-                marginTop: '16px',
+                marginTop: 'var(--space-4)',
                 padding: '26px 24px',
                 borderRadius: 'var(--radius-lg)',
                 background:
@@ -223,7 +223,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               >
                 <Check color="var(--color-surface)" strokeWidth={2.6} size={26} />
               </div>
-              <Text variant="heading" as="h3" style={{ margin: '16px 0 0' }}>
+              <Text variant="heading" as="h3" style={{ margin: 'var(--space-4) 0 0' }}>
                 Week sealed
               </Text>
               <Text
@@ -265,7 +265,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
       {v.showMonth ? (
         <>
           <h1 className="sr-only">{v.monthName}</h1>
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '8px', marginTop: '14px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 'var(--space-2)', marginTop: '14px' }}>
             <Button type="neutral" ghost size="sm" onClick={v.prevMonth} aria-label={'Previous month, ' + v.prevMonthName}>
               <ChevronLeft color="var(--color-muted)" size={16} />
               {v.prevMonthShort}
@@ -277,7 +277,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
           </div>
           <div style={{ marginTop: '10px' }}>
             <MonthGrid v={v} />
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 14px', marginTop: '16px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 14px', marginTop: 'var(--space-4)' }}>
               {STATUS_NAMES.map(([status, name]) => (
                 <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <StatusDot status={status} />
@@ -288,9 +288,9 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             {/* The month in two numbers, under its grid: the grid comes straight after the month's arrows. */}
             <Card
               pad="none"
-              style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 18px', marginTop: '16px', padding: '12px 18px' }}
+              style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 18px', marginTop: 'var(--space-4)', padding: '12px 18px' }}
             >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
                 <span
                   style={{
                     width: '20px',
@@ -316,7 +316,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                 <Text variant="micro" as="div" tone="muted">
                   {v.todayLabel}
                 </Text>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: '12px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-3)' }}>
                   {(v.todayCards ?? []).map((c, i) => (
                     <LinkRow key={i} title={c?.name} detail={c?.meta} kind={kindOf(c)} onClick={c?.open} />
                   ))}

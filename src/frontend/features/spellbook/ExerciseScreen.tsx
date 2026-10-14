@@ -52,7 +52,7 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
         ) : null}
         {v.exercise.equipment ? (
           <>
-            <SectionLabel label="Equipment" style={{ margin: '16px 0 8px' }} />
+            <SectionLabel label="Equipment" style={{ margin: 'var(--space-4) 0 var(--space-2)' }} />
             <ChipGroup>
               {v.exercise.equipment.map((a, i) => (
                 <Chip key={i}>{a}</Chip>

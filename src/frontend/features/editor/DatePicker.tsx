@@ -1,3 +1,4 @@
+import { Pressable } from '@moonshot/design-system/buttons';
 import { Fragment } from 'react';
 import { Chip } from '@moonshot/design-system/chip';
 import { Calendar, ChevronDown } from '@moonshot/design-system/icons';
@@ -18,7 +19,7 @@ export function DatePicker({ v }: { v: PlannerVals }) {
       as="span"
       content={
         <>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
             <StepButton dir="prev" unit="month" onClick={v.pickPrevMonth} />
             <Text variant="subheading" style={{ flex: '1', textAlign: 'center' }}>
               {v.pickMonthName}
@@ -34,7 +35,7 @@ export function DatePicker({ v }: { v: PlannerVals }) {
             }}
           >
             {(v.dowLabels ?? []).map((l, i) => (
-              <Text key={i} variant="small" weight="bold" tone="muted" aria-hidden="true" style={{ textAlign: 'center', paddingBottom: '4px' }}>
+              <Text key={i} variant="small" weight="bold" tone="muted" aria-hidden="true" style={{ textAlign: 'center', paddingBottom: 'var(--space-1)' }}>
                 {l}
               </Text>
             ))}
@@ -43,7 +44,7 @@ export function DatePicker({ v }: { v: PlannerVals }) {
                 {p?.blank ? (
                   <span aria-hidden="true" style={css(p?.style)} />
                 ) : (
-                  <button
+                  <Pressable
                     onClick={p?.pick}
                     onKeyDown={p?.keys}
                     tabIndex={p?.tab}
@@ -54,7 +55,7 @@ export function DatePicker({ v }: { v: PlannerVals }) {
                     style={css(p?.style)}
                   >
                     {p?.label}
-                  </button>
+                  </Pressable>
                 )}
               </Fragment>
             ))}

@@ -47,14 +47,14 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
             top: '0',
             zIndex: 5,
             margin: '4px -4px 0',
-            padding: '12px 4px 4px',
+            padding: 'var(--space-3) var(--space-1) var(--space-1)',
             background: 'var(--color-canvas)',
           }}
         >
           <Card
             pad="xs"
             elevation="overlay"
-            style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 12px' }}
+            style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-3)' }}
           >
             <Text variant="body" tone="ink" style={{ flex: '1 1 200px', minWidth: '0' }}>
               Adding to <strong>{v.arsenalPickTitle}</strong>
@@ -74,10 +74,10 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
         options={v.arsenalViews}
         value={v.arsenalView}
         onChange={v.setArsenalView}
-        style={{ marginTop: '16px' }}
+        style={{ marginTop: 'var(--space-4)' }}
       />
       {/* The search, and beside it everything else that narrows the list, in one sheet. */}
-      <div style={{ display: 'flex', alignItems: 'stretch', gap: '10px', marginTop: '12px' }}>
+      <div style={{ display: 'flex', alignItems: 'stretch', gap: '10px', marginTop: 'var(--space-3)' }}>
         <div style={{ flex: '1', minWidth: '0' }}>
           <SearchBar
             value={v.arsenalQuery ?? ''}
@@ -95,12 +95,12 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
       {v.showArsenalExercises ? (
         <>
           {v.noMatches ? (
-            <Text variant="body" as="p" tone="muted" style={{ margin: '20px 0 0' }}>
+            <Text variant="body" as="p" tone="muted" style={{ margin: 'var(--space-5) 0 0' }}>
               {v.noMatchNote}
             </Text>
           ) : null}
           {v.arsenalAddOpen ? <NewExerciseCard v={v} /> : null}
-          <Text variant="body" as="p" tone="muted" style={{ margin: '16px 0 0' }}>
+          <Text variant="body" as="p" tone="muted" style={{ margin: 'var(--space-4) 0 0' }}>
             Tap an exercise to see it, or{' '}
             <Plus color="var(--color-pink-deep)" strokeWidth={2.6} size={14} style={{ verticalAlign: '-2px' }} /> to add it to a workout.
           </Text>
@@ -110,7 +110,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
             {(v.moveGroups ?? []).map((g, i) => (
               <div key={i}>
                 <SectionLabel list label={g?.label} note={g?.count} />
-                <Card pad="none" style={{ padding: '0 16px' }}>
+                <Card pad="none" style={{ padding: '0 var(--space-4)' }}>
                   {(g?.items ?? []).map((m, i) => (
                     <div key={i} style={i ? { borderTop: '1px solid var(--color-line)' } : undefined}>
                       <ExerciseRow exercise={m} />
@@ -125,12 +125,12 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
       {v.showArsenalWorkouts ? (
         <>
           {v.noSavedWorkouts ? (
-            <Text variant="body" as="p" tone="muted" style={{ margin: '20px 0 0' }}>
+            <Text variant="body" as="p" tone="muted" style={{ margin: 'var(--space-5) 0 0' }}>
               Your Spellbook is empty. Write your first workout with New.
             </Text>
           ) : null}
           {v.noWorkoutMatches ? (
-            <Text variant="body" as="p" tone="muted" style={{ margin: '20px 0 0' }}>
+            <Text variant="body" as="p" tone="muted" style={{ margin: 'var(--space-5) 0 0' }}>
               {v.noWorkoutMatchNote}
             </Text>
           ) : null}
@@ -141,7 +141,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
                 {g?.label ? (
                   <SectionLabel list label={g?.label} note={g?.count} />
                 ) : null}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
                   {(g?.items ?? []).map((w, i) => (
                       <WorkoutRow key={i}  workout={w} />
                   ))}

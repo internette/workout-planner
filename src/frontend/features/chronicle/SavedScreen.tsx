@@ -79,7 +79,7 @@ export function SavedScreen({ v }: { v: PlannerVals }) {
         <LinkRow title={v.savedNextTitle} detail={v.savedNextMeta} onClick={v.goNextUp} />
         <LinkRow title="See your progress" detail="Streak, week and month totals" onClick={v.goSummary} />
       </div>
-      <Button type="neutral" ghost size="md" onClick={v.backToCalendar} style={{ marginTop: '20px' }}>
+      <Button type="neutral" ghost size="md" onClick={v.backToCalendar} style={{ marginTop: 'var(--space-5)' }}>
         Back to calendar
       </Button>
     </div>

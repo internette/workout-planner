@@ -1,3 +1,4 @@
+import { Pressable } from '@moonshot/design-system/buttons';
 import { DOW1, DOWFULL } from '@/frontend/shared/constants';
 
 export interface WeekdayTogglesProps {
@@ -20,29 +21,25 @@ export function WeekdayToggles({ label, days, onToggle }: WeekdayTogglesProps) {
       {DOW1.map((letter, day) => {
         const on = days.includes(day);
         return (
-          <button
+          <Pressable
             key={day}
-            type="button"
             aria-pressed={on}
             aria-label={DOWFULL[day]}
             onClick={() => onToggle(day)}
             style={{
               width: '100%',
               aspectRatio: '1',
-              border: 'none',
               borderRadius: 'var(--radius-full)',
               background: on ? 'var(--color-pink)' : 'var(--color-canvas)',
               color: on ? 'var(--color-surface)' : 'var(--color-muted)',
-              font: 'inherit',
+              textAlign: 'center',
               fontSize: 'var(--text-base)',
               fontWeight: 'var(--font-weight-bold)',
-              cursor: 'pointer',
-              padding: 0,
               transition: 'background-color var(--dur-state) var(--ease-standard), color var(--dur-state) var(--ease-standard)',
             }}
           >
             {letter}
-          </button>
+          </Pressable>
         );
       })}
     </div>

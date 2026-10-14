@@ -22,7 +22,7 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
           flexWrap: 'wrap',
           alignItems: 'baseline',
           gap: '10px',
-          marginTop: '8px',
+          marginTop: 'var(--space-2)',
         }}
       >
         <Text variant="title" as="h1" style={{ margin: '0' }}>
@@ -33,7 +33,7 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
           <ChevronRight color="var(--color-pink-deep)" strokeWidth={2.2} size={15} />
         </Button>
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '22px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', marginTop: '22px' }}>
         <Card
           pad="sm"
           style={{ flex: '1 1 200px', display: 'flex', alignItems: 'center', gap: '14px' }}
@@ -55,7 +55,7 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
           </div>
         </Card>
       </div>
-      <NotesCard lead style={{ marginTop: '12px' }}>
+      <NotesCard lead style={{ marginTop: 'var(--space-3)' }}>
         {v.readNote}
       </NotesCard>
       <DeleteSection label="Delete entry" onClick={v.deleteEntry} />

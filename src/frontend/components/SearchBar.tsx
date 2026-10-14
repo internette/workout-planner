@@ -28,7 +28,7 @@ export function SearchBar({ value, onChange, placeholder, label, onClear, status
         width: '100%',
         ...(inset
           ? { padding: '0 13px', background: 'var(--color-canvas)', border: '1px solid var(--color-outline)', borderRadius: 'var(--radius-md)' }
-          : { padding: '12px 16px', background: 'var(--color-surface)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--elevation-hairline)' }),
+          : { padding: 'var(--space-3) var(--space-4)', background: 'var(--color-surface)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--elevation-hairline)' }),
       }}
     >
       <Search color="var(--color-muted)" size={inset ? 16 : 17} />

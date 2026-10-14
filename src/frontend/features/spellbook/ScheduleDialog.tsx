@@ -25,7 +25,7 @@ export function ScheduleDialog({ v }: { v: PlannerVals }) {
         </>
       }
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: 'var(--space-4)' }}>
         <TextField
           label="Starting"
           type="date"
@@ -34,7 +34,7 @@ export function ScheduleDialog({ v }: { v: PlannerVals }) {
         />
         {v.scheduleCalendar?.showDays ? (
           <div>
-            <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: '8px' }}>
+            <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: 'var(--space-2)' }}>
               On
             </Text>
             <WeekdayToggles

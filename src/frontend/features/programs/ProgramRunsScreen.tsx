@@ -31,7 +31,7 @@ function RunRow({ r }: { r: Row }) {
         </span>
         <ChevronRight color="var(--color-muted)" size={16} />
       </span>
-      <span style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '12px' }}>
+      <span style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: 'var(--space-3)' }}>
         <ProgressBar value={r.pct} track="tint" style={{ flex: 1 }} />
         <Text variant="body" tone="muted" style={{ flex: 'none' }}>
           {r.done} of {r.total}
@@ -54,19 +54,19 @@ export function ProgramRunsScreen({ v }: { v: PlannerVals }) {
           <Text variant="body" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
             None run yet. Start one from the Spellbook and it shows here, and stays here once it’s done.
           </Text>
-          <Button type="secondary" size="md" onClick={l.find} style={{ marginTop: '16px' }}>
+          <Button type="secondary" size="md" onClick={l.find} style={{ marginTop: 'var(--space-4)' }}>
             Find a program
           </Button>
         </>
       ) : (
         <>
-          <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
             {l.summary}
           </Text>
           {l.running.length ? (
-            <div style={{ marginTop: '20px' }}>
+            <div style={{ marginTop: 'var(--space-5)' }}>
               <SectionLabel list label="Running" note={l.running.length > 1 ? String(l.running.length) : undefined} />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
                 {l.running.map((r) => (
                   <RunRow key={r.key} r={r} />
                 ))}
@@ -74,9 +74,9 @@ export function ProgramRunsScreen({ v }: { v: PlannerVals }) {
             </div>
           ) : null}
           {l.done.length ? (
-            <div style={{ marginTop: '20px' }}>
+            <div style={{ marginTop: 'var(--space-5)' }}>
               <SectionLabel list label="Done" note={String(l.done.length)} />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
                 {l.done.map((r) => (
                   <RunRow key={r.key} r={r} />
                 ))}

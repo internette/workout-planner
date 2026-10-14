@@ -29,7 +29,7 @@ export function RepeatWeekly({ on, onChange, note, weeks, onWeeks, children }: R
       </Checkbox>
       {on ? children : null}
       {on && weeks && onWeeks ? (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: 'var(--space-3)' }}>
           <Text variant="body" tone="muted" aria-hidden="true">
             For
           </Text>
@@ -47,7 +47,7 @@ export function RepeatWeekly({ on, onChange, note, weeks, onWeeks, children }: R
         </div>
       ) : null}
       {on ? (
-        <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+        <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
           {note}
         </Text>
       ) : null}

@@ -23,7 +23,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              paddingBottom: '12px',
+              paddingBottom: 'var(--space-3)',
               borderBottom: '1px solid var(--color-line)',
             }}
           >
@@ -35,19 +35,19 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(3,minmax(0,1fr))',
-              gap: '4px',
+              gap: 'var(--space-1)',
               marginTop: '10px',
             }}
           >
             {(v.months ?? []).map((m, i) => (
-              <button key={i}
+              <Pressable key={i}
                 onClick={m?.pick}
                 aria-label={m?.name}
                 aria-current={m?.current ? 'date' : undefined}
                 style={css(m?.style)}
               >
                 {m?.short}
-              </button>
+              </Pressable>
             ))}
           </div>
           <div
@@ -75,7 +75,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '4px',
+            gap: 'var(--space-1)',
             flex: 'none',
             marginLeft: '9px',
             pointerEvents: 'none',

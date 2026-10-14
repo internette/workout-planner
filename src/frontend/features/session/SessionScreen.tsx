@@ -5,7 +5,7 @@ import { t } from '@/frontend/features/planner/viewHelpers';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
 import { Chip, ChipGroup } from '@moonshot/design-system/chip';
-import { Button } from '@moonshot/design-system/buttons';
+import { Button, Pressable } from '@moonshot/design-system/buttons';
 import { Calendar, ChevronDown, ChevronRight, Clock, Pencil, Repeat } from '@moonshot/design-system/icons';
 import { Popover } from '@moonshot/design-system/popover';
 import { Dialog } from '@moonshot/design-system/dialog';
@@ -36,23 +36,22 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
       <PageTitle icon={v.dayIcoSvg} eyebrow={<>{v.eDate}<KindTag inline kind={v.eKind ?? null} /></>} title={v.eName} />
       {v.eProgram ? (
         v.eProgram.open ? (
-          <button
-            type="button"
+          <Pressable
             onClick={v.eProgram.open}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', minHeight: '44px', marginTop: '4px', padding: 0, border: 'none', background: 'none', font: 'inherit', cursor: 'pointer', textAlign: 'left' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)', minHeight: '44px', marginTop: 'var(--space-1)'}}
           >
             <Text variant="body" weight="semibold" tone="accent">
               {v.eProgram.label}
             </Text>
             <ChevronRight color="var(--color-pink-deep)" size={15} />
-          </button>
+          </Pressable>
         ) : (
-          <Text variant="body" weight="semibold" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+          <Text variant="body" weight="semibold" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
             {v.eProgram.label}
           </Text>
         )
       ) : null}
-      <ChipGroup style={{ marginTop: '20px' }}>
+      <ChipGroup style={{ marginTop: 'var(--space-5)' }}>
         {/* Not done or started yet: its day is a chip that moves it to another day. */}
         {v.moveDay ? (
           <Chip
@@ -87,10 +86,10 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
                   <Text variant="body" tone="ink" as="p" style={{ margin: 0 }}>
                     {v.seriesRepeats}
                   </Text>
-                  <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 12px' }}>
+                  <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-1) 0 var(--space-3)' }}>
                     Ending it takes the repeats still ahead off the calendar.
                   </Text>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 'var(--space-2)' }}>
                     {v.makeProgram ? (
                       <Button type="secondary" size="sm" onClick={v.makeProgram} style={{ whiteSpace: 'nowrap' }}>
                         Make this a program
@@ -121,12 +120,12 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
       </ChipGroup>
       <NeedsLine text={v.needs} />
       {v.isFuture ? (
-        <Card style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+        <Card style={{ marginTop: 'var(--space-4)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-3)' }}>
           <div style={{ flex: '1 1 180px', minWidth: 0 }}>
             <Text variant="micro" tone="slate" as="div">
               Coming up
             </Text>
-            <Text variant="body" tone="ink" as="p" style={{ margin: '4px 0 0' }}>
+            <Text variant="body" tone="ink" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
               {v.futureNote} Doing it now? Move it to today.
             </Text>
           </div>
@@ -154,7 +153,7 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
             </>
           }
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
             <TextField label="Day" type="date" value={v.moveDay.date} onChange={v.moveDay.setDate} />
             <Text variant="body" tone="muted" as="p" style={{ margin: 0 }}>
               {v.moveDay.note}
@@ -165,7 +164,7 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
       {v.dayIsRide ? <RideSessionCard v={v} /> : null}
       {v.dayIsLift ? (
         <div
-          style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}
+          style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}
         >
           {(v.exercises ?? []).map((ex, i) => (
             <SessionExerciseRow key={i} exercise={ex} />

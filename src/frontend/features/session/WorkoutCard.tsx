@@ -9,7 +9,7 @@ import { SessionProgress } from '@/frontend/components/SessionProgress';
 import { ExerciseName } from '@/frontend/components/ExerciseName';
 import { SetPips } from '@/frontend/components/SetPips';
 
-const divider: CSSProperties = { border: 0, borderTop: '1px solid var(--color-hairline)', margin: '16px 0' };
+const divider: CSSProperties = { border: 0, borderTop: '1px solid var(--color-hairline)', margin: 'var(--space-4) 0' };
 
 /**
  * The session being done, in one card: its clock (start, pause, finish), then for a lift how far through it is, with
@@ -19,7 +19,7 @@ export function WorkoutCard({ v }: { v: PlannerVals }) {
   const progress = v.dayIsLift && !v.isFuture;
   if (!v.showTimer && !progress) return null;
   return (
-    <Card style={{ marginTop: '16px' }}>
+    <Card style={{ marginTop: 'var(--space-4)' }}>
       {v.showTimer ? <TimerSection v={v} /> : null}
       {v.showTimer && progress ? <hr style={divider} /> : null}
       {progress ? (
@@ -44,7 +44,7 @@ export function WorkoutCard({ v }: { v: PlannerVals }) {
 function TimerSection({ v }: { v: PlannerVals }) {
   return (
     <>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', minHeight: '32px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-3)', minHeight: '32px' }}>
         <Text variant="micro" tone="slate">
           Workout timer
         </Text>
@@ -56,13 +56,13 @@ function TimerSection({ v }: { v: PlannerVals }) {
           </Button>
         ) : null}
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-3)' }}>
         <div>
           <Text variant="title" as="div" style={{ margin: '0', fontVariantNumeric: 'tabular-nums' }}>
             {v.timerLabel}
           </Text>
         </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
           <Button
             type={v.canFinish || v.timerButtonLabel === 'Pause' ? 'secondary' : 'primary'}
             size="md"
@@ -85,10 +85,10 @@ function TimerSection({ v }: { v: PlannerVals }) {
 /** The set up next: which exercise, how far through its sets, and "Done set" while the workout is going. */
 function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 12px', marginTop: '14px' }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-3)', marginTop: '14px' }}>
       <span style={{ flex: '1 1 160px', minWidth: 0 }}>
         <ExerciseName name={now.name} />
-        <span style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-1)' }}>
           <SetPips pips={now.pips} />
           <Text variant="body" tone="slate" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {now.label}
@@ -112,13 +112,13 @@ function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
 function RestSection({ v }: { v: PlannerVals }) {
   return (
     <section aria-label="Rest" style={{ marginTop: '14px' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: '12px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: 'var(--space-3)' }}>
         <div>
           <Text variant="micro" tone="slate" as="div">
             Rest
           </Text>
           {/* Read out once a second would be too much; the rest's end is announced instead. */}
-          <Text variant="title" as="div" aria-hidden="true" style={{ margin: '4px 0 0', fontVariantNumeric: 'tabular-nums' }}>
+          <Text variant="title" as="div" aria-hidden="true" style={{ margin: 'var(--space-1) 0 0', fontVariantNumeric: 'tabular-nums' }}>
             {v.restLabel}
           </Text>
         </div>
@@ -127,7 +127,7 @@ function RestSection({ v }: { v: PlannerVals }) {
             <Text variant="micro" tone="slate" as="div">
               Up next
             </Text>
-            <Text variant="subheading" as="div" style={{ marginTop: '4px' }}>
+            <Text variant="subheading" as="div" style={{ marginTop: 'var(--space-1)' }}>
               {v.restNextName}
             </Text>
             <Text variant="body" tone="muted" as="div" style={{ marginTop: '2px' }}>
@@ -136,8 +136,8 @@ function RestSection({ v }: { v: PlannerVals }) {
           </div>
         ) : null}
       </div>
-      <ProgressBar value={v.restPct} style={{ marginTop: '12px' }} />
-      <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+      <ProgressBar value={v.restPct} style={{ marginTop: 'var(--space-3)' }} />
+      <div style={{ display: 'flex', gap: 'var(--space-2)', marginTop: 'var(--space-3)' }}>
         <Button type="secondary" size="sm" onClick={v.restMore}>
           +30 sec
         </Button>

@@ -12,9 +12,9 @@ export function QuestCard({ v }: { v: PlannerVals }) {
         position: 'relative',
         display: 'flex',
         alignItems: 'flex-start',
-        gap: '12px',
-        marginTop: '16px',
-        padding: '12px 16px',
+        gap: 'var(--space-3)',
+        marginTop: 'var(--space-4)',
+        padding: 'var(--space-3) var(--space-4)',
         borderRadius: 'var(--radius-lg)',
         background:
           'var(--gradient-gem-tint)',

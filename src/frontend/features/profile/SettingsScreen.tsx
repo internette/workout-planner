@@ -16,17 +16,17 @@ export function SettingsScreen({ v }: { v: PlannerVals }) {
   return (
     <div>
       <BackBar label={v.backLabel} onBack={v.goBack} />
-      <PageHeader title="Settings" style={{ marginTop: '8px' }} />
+      <PageHeader title="Settings" style={{ marginTop: 'var(--space-2)' }} />
       <SettingsCard title="Appearance" note="on this device">
         <AppearanceSetting />
       </SettingsCard>
       <LiveSetting />
       <InstallSetting />
       <SettingsCard title="Getting started">
-        <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+        <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
           Your name, color, what you train and when, and a program to begin with. Or a minute around the app.
         </Text>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '12px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', marginTop: 'var(--space-3)' }}>
           <Button type="secondary" size="md" onClick={v.startSetup}>
             Customize your experience
           </Button>

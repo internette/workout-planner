@@ -67,11 +67,11 @@ export function chromeVals(ctx: Ctx) {
     sidebarStyle: narrow
       ? 'display:none'
       : tablet
-        ? 'flex:1 1 100%;width:100%;position:relative;background:var(--color-surface);border-radius:var(--radius-lg);padding:8px;box-shadow:var(--elevation-raised)'
+        ? 'flex:1 1 100%;width:100%;position:relative;background:var(--color-surface);border-radius:var(--radius-lg);padding:var(--space-2);box-shadow:var(--elevation-raised)'
         : 'flex:0 1 208px;min-width:180px;position:relative;background:var(--color-surface);border-radius:var(--radius-lg);padding:18px 14px;box-shadow:var(--elevation-raised)',
     navListStyle: tablet
-      ? 'display:flex;flex-direction:row;gap:4px'
-      : 'display:flex;flex-direction:column;gap:4px',
+      ? 'display:flex;flex-direction:row;gap:var(--space-1)'
+      : 'display:flex;flex-direction:column;gap:var(--space-1)',
     // The page never scrolls sideways: a 44px tap area reaching past a control at the screen edge stays an invisible
     // extra instead of widening the page. (clip, unlike hidden, keeps sticky bands working.)
     pageStyle: 'min-height:100vh;overflow-x:clip;padding:0 0 ' + (narrow ? '108px' : '64px'),

@@ -43,7 +43,7 @@ export function WorkoutRow({ workout }: { workout: any }) {
           </Text>
         ) : null}
         {(workout?.areas ?? []).length ? (
-          <ChipGroup as="span" style={{ marginTop: '8px' }}>
+          <ChipGroup as="span" style={{ marginTop: 'var(--space-2)' }}>
             {(workout?.areas ?? []).map((a, k) => (
               <Chip key={k}>{a}</Chip>
             ))}

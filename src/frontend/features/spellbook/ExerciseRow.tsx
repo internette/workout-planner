@@ -6,7 +6,7 @@ import { Text } from '@moonshot/design-system/typography';
 /** An exercise in the Spellbook’s list: open it, or add it to the workout being built. */
 export function ExerciseRow({ exercise }: { exercise: any }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '12px 0' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: 'var(--space-3) 0' }}>
       <Pressable
         onClick={exercise?.open}
         aria-label={'View details for ' + exercise?.name}

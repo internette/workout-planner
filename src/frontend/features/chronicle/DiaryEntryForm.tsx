@@ -48,14 +48,14 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
       />
       <div style={{ maxWidth: '560px', margin: v.entryLeft ? '40px 0 0' : '40px auto 0' }}>
         <div
-          style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '8px' }}
+          style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 'var(--space-2)' }}
         >
           <Text variant="strong" weight="semibold" tone="slate" as="p" style={{ margin: '0' }}>
             How hard did it feel?
           </Text>
         </div>
         {/* The effort word right after the stars, as a saved entry shows it: "★★★★☆ Hard". */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', marginTop: '8px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', marginTop: 'var(--space-2)' }}>
           <StarRating
             label="How hard did it feel?"
             value={v.rpe}
@@ -66,7 +66,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
           {v.rpeLabel ? (
             <span
               style={{
-                marginLeft: '8px',
+                marginLeft: 'var(--space-2)',
                 fontSize: 'var(--text-lg)',
                 fontWeight: 'var(--font-weight-semibold)',
                 color: 'var(--color-pink-deep)',
