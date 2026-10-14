@@ -325,8 +325,12 @@ export function workoutVals(ctx: Ctx) {
       // Open, a ride still to do says its effort under its name, its figures below (see ridePlan).
       // A workout not started yet says only its time: its exercises are listed below.
       openMeta: ride && !rideIsDone && !timer ? ride.zone || DEFAULT_ZONE : !ride && !complete && !timer && doneN === 0 ? av.time : '',
-      // Folded: the whole row opens it (and folds the one that was open).
-      expand: () => logic.s({ dayOpen: { day: dayKey, id } }),
+      // Folded: the whole row opens it (and folds the one that was open). The row goes away, so focus moves to the
+      // opened card's name, where a keyboard would carry on from.
+      expand: () => {
+        logic.s({ dayOpen: { day: dayKey, id } });
+        requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-day-card="' + id + '"] [data-day-name]')?.focus());
+      },
       expandLabel: 'Show ' + nameOf(av.name),
       dot: (complete ? 'done' : timer || doneN > 0 ? 'partly' : isPastDay ? 'missed' : 'planned') as DayStatus,
       name: nameOf(av.name),
