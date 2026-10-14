@@ -114,6 +114,8 @@ export function workoutVals(ctx: Ctx) {
     );
     return ending ? ending.program!.name : '';
   })();
+  // More than one of the program's sessions on its last day: the quest speaks of them all.
+  const finaleMany = !!finale && dayEntries.filter((a) => a.program?.name === finale).length > 1;
   const setTimer = (patch) =>
     logic.s({ workoutTimer: Object.assign({}, st.workoutTimer, { [timerKey]: patch }) });
   const startTimer = () => setTimer({ elapsed: 0, runningSince: Date.now() });
@@ -247,11 +249,12 @@ export function workoutVals(ctx: Ctx) {
       { label: 'Effort', value: r.zone || DEFAULT_ZONE, note: '' },
     ];
   };
-  // A ride's plan in a line. Folded to a row, all of it: "14 mi · 1 h · 600 ft · Endurance". Open, the effort is under
-  // its name and the figures on a line of their own: "14 mi · 1 h · 600 ft climb".
+  // A ride's plan in a line. Folded to a row, its figures: "14 mi · 1 h · 600 ft" (the effort shows once it's open, so
+  // the row stays one line on a narrow phone). Open, the effort is under its name and the figures on a line of their
+  // own: "14 mi · 1 h · 600 ft climb".
   const rideLine = (av: Entry) => {
     const r = av.ride;
-    return [r.dist ? r.dist + ' mi' : '', av.time, r.elev ? r.elev + ' ft' : '', r.zone || DEFAULT_ZONE].filter(Boolean).join(' · ');
+    return [r.dist ? r.dist + ' mi' : '', av.time, r.elev ? r.elev + ' ft' : ''].filter(Boolean).join(' · ');
   };
   const rideFigures = (av: Entry) => {
     const r = av.ride;
@@ -528,7 +531,9 @@ export function workoutVals(ctx: Ctx) {
     questNote: finale
       ? dayCleared
         ? '“' + finale + '” is complete. Every session of it is in you now.'
-        : 'The last session of “' + finale + '”. Clear it and the arc is complete.'
+        : finaleMany
+          ? 'The last sessions of “' + finale + '”. Clear them and the arc is complete.'
+          : 'The last session of “' + finale + '”. Clear it and the arc is complete.'
       : dayCleared
         ? questSeed(selDay, mi).done
         : questSeed(selDay, mi).note,

@@ -13,8 +13,8 @@ import { StatusDot } from '@/frontend/components/StatusDot';
 
 /** A session on the Day view: its exercises or ride, progress, and what to do next. Only one on the day is open at a
  * time; the others are folded to a row, which opens it. */
-export function DayWorkoutCard({ card }: { card: any }) {
-  if (!card?.isOpen) return <FoldedCard card={card} />;
+export function DayWorkoutCard({ card, headingAs = 'h2' }: { card: any; headingAs?: 'h2' | 'h3' }) {
+  if (!card?.isOpen) return <FoldedCard card={card} headingAs={headingAs} />;
   return (
     <Card pad="lg" className="day-card" data-day-card={card?.key}>
         <div
@@ -24,7 +24,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
           {/* Takes the rest of the row, so a long name wraps beside the icon rather than dropping below it. */}
           <div style={{ minWidth: '0', flex: '1 1 0' }}>
             <SessionTags program={card?.programName} type={card?.typeLabel} />
-            <Text variant="heading" as="h2" style={{ margin: '0' }}>
+            <Text variant="heading" as={headingAs} style={{ margin: '0' }}>
               <Pressable
                 onClick={card?.open}
                 hit
@@ -169,9 +169,12 @@ const DOT_WORDS: Record<string, string> = { done: 'completed', partly: 'under wa
 
 /** A session folded to a row: its icon, name, where it stands, and its status dot. The whole row opens it. Its name
  * says everything the row shows: the program, the kind, the status the dot stands for, and the meta line. */
-function FoldedCard({ card }: { card: any }) {
+function FoldedCard({ card, headingAs }: { card: any; headingAs: 'h2' | 'h3' }) {
+  // A heading round the row, so the session is found by heading like the open one; it reads as the button does.
+  const H = headingAs;
   return (
     <Card pad="none">
+      <H style={{ margin: 0, font: 'inherit' }}>
       <Pressable
         onClick={card?.expand}
         aria-expanded={false}
@@ -190,6 +193,7 @@ function FoldedCard({ card }: { card: any }) {
         </span>
         <StatusDot status={card?.dot} size="md" />
       </Pressable>
+      </H>
     </Card>
   );
 }

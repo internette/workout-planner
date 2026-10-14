@@ -23,8 +23,8 @@ export function QuestCard({ v }: { v: PlannerVals }) {
       <span
         style={{
           position: 'absolute',
-          right: '16%',
-          top: '12px',
+          right: 'var(--space-5)',
+          top: 'var(--space-3)',
           animation: 'twinkle 4.6s ease-in-out infinite',
         }}
       >
@@ -56,9 +56,9 @@ export function QuestCard({ v }: { v: PlannerVals }) {
         </Text>
         <Text
           variant="subheading"
-          as="div"
+          as="h2"
           tone={v.questCleared ? 'muted' : 'ink'}
-          style={{ marginTop: 'var(--space-1)', textDecoration: v.questCleared ? 'line-through' : undefined }}
+          style={{ margin: 'var(--space-1) 0 0', textDecoration: v.questCleared ? 'line-through' : undefined }}
         >
           {v.questTitle}
         </Text>

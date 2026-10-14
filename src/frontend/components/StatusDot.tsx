@@ -11,8 +11,8 @@ export interface StatusDotProps {
   selected?: boolean;
 }
 
-// Done is a filled dot, planned a ring, missed a fainter and slightly larger ring, partly done a half-filled one, and
-// a rest day a short dash. The words are always beside it or in the control's name; this only shows it.
+// Done is a filled dot, planned a ring, missed a hollow diamond (a shape of its own, not only a greyer ring), partly done
+// a half-filled dot, and a rest day a short dash. The words are always beside it or in the control's name; this only shows it.
 const SIZES = {
   sm: { dot: 6, partly: 8, missed: 7, rest: [8, 2] },
   md: { dot: 8, partly: 8, missed: 9, rest: [14, 2] },
@@ -28,7 +28,7 @@ export function StatusDot({ status, size = 'sm', selected = false }: StatusDotPr
       : status === 'partly'
         ? round(s.partly, { boxShadow: `inset 0 0 0 1.5px ${ink}`, background: `linear-gradient(90deg,${ink} 50%,transparent 50%)` })
         : status === 'missed'
-          ? round(s.missed, { boxShadow: `inset 0 0 0 1.5px ${selected ? ink : 'var(--color-muted)'}` })
+          ? { width: s.missed, height: s.missed, boxShadow: `inset 0 0 0 1.5px ${selected ? ink : 'var(--color-muted)'}`, transform: 'rotate(45deg) scale(0.86)' }
           : status === 'planned'
             ? round(s.dot, { boxShadow: `inset 0 0 0 1.5px ${selected ? ink : 'var(--color-teal)'}` })
             : {

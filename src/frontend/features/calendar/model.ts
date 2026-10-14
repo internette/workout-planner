@@ -1,5 +1,6 @@
+import { STATUS_NAMES, type DayStatus } from '@/frontend/components/StatusDot';
 import { DOW1, DOW3, DOWFULL, MON3, MONTHS } from '@/frontend/shared/constants';
-import { isoMonthDay, mod12, monDay, monthPatch, noticePatch, plural, shortDay } from '@/frontend/shared/helpers';
+import { isoMonthDay, mod12, monDay, monthPatch, noticePatch, plural, shortDay, longDay } from '@/frontend/shared/helpers';
 import * as db from '@/frontend/data/plannerData';
 import { shortDate, type PlanDraft } from '@/shared/planDraft';
 import type { Ctx } from '../planner/store/types';
@@ -108,14 +109,19 @@ export function calendarVals(ctx: Ctx) {
       logic.s({ ...monthPatch(relM(to)), day: to.getDate() });
       requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-month-day="' + to.getDate() + '"]')?.focus());
     },
+    // A step says where it landed, since the whole view changes under a screen reader.
     prevWeek: () => {
       const d = new Date(Y, mi, selDay - 7);
-      logic.s({ ...monthPatch(relM(d)), day: d.getDate() });
+      logic.s({ ...monthPatch(relM(d)), day: d.getDate(), announce: longDay(d) });
     },
     nextWeek: () => {
       const d = new Date(Y, mi, selDay + 7);
-      logic.s({ ...monthPatch(relM(d)), day: d.getDate() });
+      logic.s({ ...monthPatch(relM(d)), day: d.getDate(), announce: longDay(d) });
     },
+    // The key under the week strip names only the dots in it, in the order a day goes.
+    weekKey: (['done', 'partly', 'missed', 'planned'] as DayStatus[])
+      .filter((s) => days.some((d) => d.dot === s))
+      .map((s) => STATUS_NAMES.find(([x]) => x === s)!),
     // Month view's arrows are named for where they go ("Aug", "Oct"), with the year when it changes.
     prevMonthShort: MON3[mod12(mi - 1)] + (Math.floor((mi - 1) / 12) !== shownYOff ? ' ' + (Y + Math.floor((mi - 1) / 12)) : ''),
     nextMonthShort: MON3[mod12(mi + 1)] + (Math.floor((mi + 1) / 12) !== shownYOff ? ' ' + (Y + Math.floor((mi + 1) / 12)) : ''),
