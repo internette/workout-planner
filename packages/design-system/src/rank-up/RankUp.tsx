@@ -76,7 +76,7 @@ function RankUpPanel({ name, step, next, gem, onClose }: RankUpProps) {
             className={styles.spark}
             style={{ '--a': a + 'deg', animationDelay: 0.1 + (i % 4) * 0.08 + 's' } as CSSProperties}
           >
-            <Sparkle size={18} color={SPARK_COLORS[i % SPARK_COLORS.length]} glow={0.8} glowBlur={6} />
+            <Sparkle size={18} color={SPARK_COLORS[i % SPARK_COLORS.length]} glow={7} glowBlur={6} />
           </span>
         ))}
         <div className={styles.gemWrap}>
@@ -86,7 +86,7 @@ function RankUpPanel({ name, step, next, gem, onClose }: RankUpProps) {
         <div className={styles.flash} />
         {TWINKLES.map((s, i) => (
           <span key={i} className={styles.twinkle} style={{ left: s.left, top: s.top, animationDelay: s.delay }}>
-            <Sparkle size={s.size} color="white" glow={0.7} />
+            <Sparkle size={s.size} color="white" glow={6} />
           </span>
         ))}
       </div>

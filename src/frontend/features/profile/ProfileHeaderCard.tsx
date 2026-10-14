@@ -44,7 +44,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
             // A wash of the ink color over the gradient keeps the initial readable (3:1) on its palest part: a
             // little darker in light mode, where the initial is white, a little lighter in dark, where it's dark.
             background:
-              'linear-gradient(color-mix(in srgb, var(--color-ink) 16%, transparent), color-mix(in srgb, var(--color-ink) 16%, transparent)), var(--gradient-gem)',
+              'linear-gradient(color-mix(in srgb, var(--color-ink) var(--alpha-2), transparent), color-mix(in srgb, var(--color-ink) var(--alpha-2), transparent)), var(--gradient-gem)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -77,7 +77,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
           ) : null}
         </div>
         <span style={{ position: 'absolute', top: '0', right: '-3px' }}>
-          <Sparkle size={16} color={vars.gold} glow={0.6} />
+          <Sparkle size={16} color={vars.gold} glow={5} />
         </span>
         <span
           aria-hidden="true"
@@ -128,7 +128,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
         >
           <RankGem fill={v.rankGemColor} />
           {t(v.rankName)}
-          <ChevronRight strokeWidth={2.4} size={12} style={{ opacity: '.7' }} />
+          <ChevronRight strokeWidth={2.4} size={12} style={{ opacity: 'var(--alpha-6)' }} />
         </Pressable>
         <Popover
           open={!!v.xpInfoOpen}

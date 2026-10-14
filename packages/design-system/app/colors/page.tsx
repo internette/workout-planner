@@ -1,4 +1,4 @@
-import { colorGroups, colors, cssVarName, gradients, translucents, type ColorName } from '../../src/colors';
+import { alpha, colorGroups, colors, cssVarName, gradients, translucents, type ColorName } from '../../src/colors';
 import { DocPage } from '../docs';
 import { Swatch } from './Swatch';
 import { ThemeColors } from './ThemeColors';
@@ -54,6 +54,26 @@ export default function ColorsPage() {
           )}
         </section>
       ))}
+      <section style={{ marginBottom: 36 }}>
+        <h2 id="strength" style={sectionTitle}>Strength</h2>
+        <p style={intro}>
+          How see-through a color is: seven rungs, nothing in between. In CSS, write{' '}
+          <code>color-mix(in srgb, var(--color-ink) var(--alpha-3), transparent)</code> or <code>opacity: var(--alpha-5)</code>;
+          in a component, <code>translucent(&apos;ink&apos;, 3)</code> writes the color-mix. A sparkle&apos;s <code>glow</code> is a
+          rung too. The swatches show the ink at each rung over the page.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12 }}>
+          {Object.entries(alpha).map(([step, { value, use }]) => (
+            <Swatch
+              key={step}
+              name={step}
+              swatch={`linear-gradient(0deg, color-mix(in srgb, var(--color-ink) var(--alpha-${step}), transparent), color-mix(in srgb, var(--color-ink) var(--alpha-${step}), transparent)), var(--color-canvas)`}
+              lines={[`var(--alpha-${step})`, value]}
+              use={use}
+            />
+          ))}
+        </div>
+      </section>
       <section style={{ marginBottom: 36 }}>
         <h2 id="effects" style={sectionTitle}>Effects</h2>
         <p style={intro}>

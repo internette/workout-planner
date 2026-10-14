@@ -3,6 +3,8 @@
 // only where a real hex string is needed (computed alphas, values saved to the database).
 // Each hex is written once. What must stay white in every theme (the rank-up ceremony) writes CSS's own `white`.
 
+import { toVariables, type Token } from '../tokens/variables';
+
 export const colorGroups = {
   Text: {
     ink: { hex: '#232A45', use: 'Primary text and dark buttons' },
@@ -92,28 +94,46 @@ export const gradients = {
     use: 'The crystal: progress fills, the avatar and the top ranks',
   },
   'gem-tint': {
-    value: 'linear-gradient(135deg, color-mix(in srgb, var(--color-pink) 16%, transparent) 0%, color-mix(in srgb, var(--color-periwinkle) 16%, transparent) 50%, color-mix(in srgb, var(--color-teal) 16%, transparent) 100%)',
+    value: 'linear-gradient(135deg, color-mix(in srgb, var(--color-pink) var(--alpha-2), transparent) 0%, color-mix(in srgb, var(--color-periwinkle) var(--alpha-2), transparent) 50%, color-mix(in srgb, var(--color-teal) var(--alpha-2), transparent) 100%)',
     use: 'A ceremonial panel: the quest and streak banners. Use it once per screen',
   },
 } as const;
 
-/** See-through colors, written as CSS variables like the others, e.g. `var(--color-line)`. Most are a token at a set
- * strength, written with color-mix so they follow the theme; the dark theme overrides the few that aren't (tokens/dark). */
-const mix = (token: string, pct: number) => `color-mix(in srgb, var(--color-${token}) ${pct}%, transparent)`;
+/** How see-through a color is: seven rungs, as percentages, e.g. `var(--alpha-3)`. Nothing in between: a strength
+ * takes its nearest rung. They go into color-mix (`translucent` writes that) and into `opacity`. */
+export const alpha = {
+  '1': { value: '6%', use: 'A line, a hover wash, the faintest shadow' },
+  '2': { value: '15%', use: 'A tint laid over something: the gem tint, a missed day' },
+  '3': { value: '25%', use: 'A dashed outline, the faintest block, the edge of a glow' },
+  '4': { value: '40%', use: 'A ring, a scrim, a sparkle’s glow, what has stepped back' },
+  '5': { value: '55%', use: 'A half-strength fill, a dimmed page, what is disabled' },
+  '6': { value: '70%', use: 'Text on a ceremony’s night sky, a strong glow' },
+  '7': { value: '85%', use: 'Nearly solid: the tab bar over the page' },
+} as const satisfies Record<string, Token>;
+export type AlphaStep = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+/** A color at a rung of the ladder: `translucent('ink', 3)` is the ink at 25%, over whatever is behind it, or over
+ * `into` (a color) where one is given. Works for a palette name, `white` or `black`. */
+export const translucent = (color: ColorName | 'white' | 'black', step: AlphaStep, into = 'transparent') =>
+  `color-mix(in srgb, ${color === 'white' || color === 'black' ? color : `var(${cssVarName(color)})`} var(--alpha-${step}), ${into})`;
+
+/** See-through colors, written as CSS variables like the others, e.g. `var(--color-line)`. Each is a token at a rung
+ * of the ladder, written with color-mix so it follows the theme; the dark theme overrides the few that don't (tokens/dark). */
 export const translucents = {
-  line: { value: mix('ink', 7), use: 'Every divider line: between rows, around cards, under a popover’s header. One strength everywhere.' },
-  surfaceRest: { value: mix('surface', 50), use: 'A quiet row on the page: rest days, a day gone by' },
-  surfaceBar: { value: mix('surface', 94), use: 'The phone tab bar, over the page as it scrolls' },
-  accentWash: { value: mix('pink-tint', 50), use: 'A see-through accent fill: the dashed "add" button' },
-  shadow: { value: mix('ink', 14), use: 'The shadow under something lifted off the page, such as a row being dragged' },
-  scrim: { value: mix('ink', 35), use: 'The dimmed page behind a dialog' },
-  dayRest: { value: mix('ink', 5), use: 'A day with nothing on it in a week strip (WeekStrip), on a card or the page' },
-  blockFaint: { value: mix('pink', 25), use: 'The first block of a program in a block bar (BlockBar); the last is the theme color itself' },
-  blockHalf: { value: mix('pink', 55), use: 'A middle block of a program in a block bar (BlockBar), and the outline round every block, so the faintest still shows on the page' },
+  line: { value: translucent('ink', 1), use: 'Every divider line: between rows, around cards, under a popover’s header. One strength everywhere.' },
+  surfaceRest: { value: translucent('surface', 5), use: 'A quiet row on the page: rest days, a day gone by' },
+  surfaceBar: { value: translucent('surface', 7), use: 'The phone tab bar, over the page as it scrolls' },
+  accentWash: { value: translucent('pinkTint', 5), use: 'A see-through accent fill: the dashed "add" button' },
+  shadow: { value: translucent('ink', 2), use: 'The shadow under something lifted off the page, such as a row being dragged' },
+  scrim: { value: translucent('ink', 4), use: 'The dimmed page behind a dialog' },
+  dayRest: { value: translucent('ink', 1), use: 'A day with nothing on it in a week strip (WeekStrip), on a card or the page' },
+  blockFaint: { value: translucent('pink', 3), use: 'The first block of a program in a block bar (BlockBar); the last is the theme color itself' },
+  blockHalf: { value: translucent('pink', 5), use: 'A middle block of a program in a block bar (BlockBar), and the outline round every block, so the faintest still shows on the page' },
 } as const;
 
 /** Every see-through color and gradient as a CSS custom property name and value. */
 export const compositeVariables: Record<string, string> = {
+  ...toVariables('alpha', alpha),
   ...Object.fromEntries(Object.entries(translucents).map(([k, v]) => [cssVarName(k), v.value])),
   ...Object.fromEntries(Object.entries(gradients).map(([k, v]) => [`--gradient-${k}`, v.value])),
 };

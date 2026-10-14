@@ -28,7 +28,7 @@ export function QuestCard({ v }: { v: PlannerVals }) {
           animation: 'twinkle 4.6s ease-in-out infinite',
         }}
       >
-        <Sparkle size={10} color={vars.teal} glow={0.55} />
+        <Sparkle size={10} color={vars.teal} glow={5} />
       </span>
       <span
         style={{

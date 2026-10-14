@@ -24,4 +24,4 @@ html { scroll-padding-top: 16px; scroll-padding-bottom: 104px; }
 
 /* The Day card's dot while a workout's clock runs: a slow pulse (reduced motion stops it, in base.css). */
 .live-dot { animation: live-pulse 1.6s ease-in-out infinite; }
-@keyframes live-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+@keyframes live-pulse { 0%, 100% { opacity: 1; } 50% { opacity: var(--alpha-4); } }

@@ -31,7 +31,7 @@ export function SparkleTrail({ count = 7, animate = true, className, style }: Sp
             color={COLORS[i % COLORS.length]}
             style={{
               flex: 'none',
-              ...(animate ? { animation: `twinkle ${3.4 + i * 0.4}s ease-in-out ${i * 0.25}s infinite` } : { opacity: 0.6 }),
+              ...(animate ? { animation: `twinkle ${3.4 + i * 0.4}s ease-in-out ${i * 0.25}s infinite` } : { opacity: 'var(--alpha-5)' }),
             }}
           />
         </span>

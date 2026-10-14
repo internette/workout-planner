@@ -195,7 +195,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
           }
           decoration={
             <span style={{ position: 'absolute', left: '14%', bottom: '120px', animation: 'twinkle 4s ease-in-out infinite' }}>
-              <Sparkle size={13} color={vars.periwinkle} glow={0.5} />
+              <Sparkle size={13} color={vars.periwinkle} glow={5} />
             </span>
           }
         />

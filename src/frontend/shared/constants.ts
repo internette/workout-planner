@@ -80,7 +80,7 @@ export const RANKS = [
   { name:'Halcyon paragon', next:'Radiant', pill:{ background:'var(--color-slate-tint)', color:'var(--color-slate)' }, gem:'var(--color-slate)' },
   { name:'Radiant paragon', next:'Celestial', pill:{ background:'var(--color-slate-tint)', color:'var(--color-slate)' }, gem:'var(--color-slate)' },
   { name:'Celestial champion', next:'Eternal', pill:{ background:'var(--color-slate-tint)', color:'var(--color-slate)' }, gem:'var(--color-slate)' },
-  { name:'Eternal sovereign', next:'the next season', pill:{ background:'var(--gradient-gem)', color:'var(--color-surface)', boxShadow:'0 2px 8px color-mix(in srgb, var(--color-pink) 35%, transparent)' }, gem:'white' },
+  { name:'Eternal sovereign', next:'the next season', pill:{ background:'var(--gradient-gem)', color:'var(--color-surface)', boxShadow:'0 2px 8px color-mix(in srgb, var(--color-pink) var(--alpha-4), transparent)' }, gem:'white' },
 ];
 
 // Overlay state the edit screens accumulate; once a save lands in the database it is dropped.

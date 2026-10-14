@@ -16,7 +16,7 @@
   gap: var(--space-3);
   cursor: pointer;
 }
-.wrap.disabled { opacity: 0.5; cursor: not-allowed; }
+.wrap.disabled { opacity: var(--alpha-5); cursor: not-allowed; }
 /* At least 44px tall to tap, however short the line is drawn. */
 .wrap::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, 44px); transform: translateY(-50%); }
 

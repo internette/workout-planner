@@ -3,7 +3,7 @@
 // link shows it), so a program, a run's snapshot and a shared one all print the same way. pdf-lib loads only when one is
 // made.
 
-import { colors } from '@moonshot/design-system/colors';
+import { alpha, colors } from '@moonshot/design-system/colors';
 import { DOW3 } from './constants';
 import { exLine, minText, plural } from './helpers';
 import { blockWorkouts, daysOf, programEquipment, programWeeks, trainingDays, type SharedProgram, type SharedWorkout } from './sharedProgram';
@@ -29,8 +29,8 @@ export async function programPdf(name: string, program: SharedProgram): Promise<
   const ink = hex(colors.ink);
   const muted = hex(colors.muted);
   const pink = hex(colors.pinkDeep);
-  // The lines between rows: the app's line color, ink at 7%.
-  const rule = hex(colors.ink, 0.07);
+  // The lines between rows: the app's line color, ink at the ladder's first rung.
+  const rule = hex(colors.ink, parseFloat(alpha[1].value) / 100);
   const tint = hex(colors.pinkTint);
   const mist = hex(colors.mist);
 

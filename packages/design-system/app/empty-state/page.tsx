@@ -89,10 +89,10 @@ export default function EmptyStatePage() {
           decoration={
             <>
               <span style={{ position: 'absolute', left: '11%', top: 18, animation: 'twinkle 3.4s ease-in-out infinite' }}>
-                <Sparkle size={13} color={vars.periwinkle} glow={0.5} />
+                <Sparkle size={13} color={vars.periwinkle} glow={5} />
               </span>
               <span style={{ position: 'absolute', right: '13%', top: 40, animation: 'twinkle 4.6s ease-in-out infinite' }}>
-                <Sparkle size={10} color={vars.teal} glow={0.55} />
+                <Sparkle size={10} color={vars.teal} glow={5} />
               </span>
             </>
           }

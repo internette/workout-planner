@@ -60,7 +60,7 @@ export default function IconsPage() {
           <Sparkle size={28} color={colors.pink} />
         </Tile>
         <Tile name="Sparkle glow">
-          <Sparkle size={28} color={colors.periwinkle} glow={0.5} />
+          <Sparkle size={28} color={colors.periwinkle} glow={5} />
         </Tile>
         <Tile name="Sparkle outline">
           <Sparkle size={28} color={colors.gold} outline strokeWidth={2.2} />
