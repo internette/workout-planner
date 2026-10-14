@@ -11,7 +11,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 /** Adding an exercise to the workout: one from the Spellbook, or a new one. */
 export function AddExercisePanel({ v }: { v: PlannerVals }) {
   return (
-    <Card elevation="overlay" id="add-exercise" data-add-exercise-panel style={{ marginTop: '14px' }}>
+    <Card elevation="overlay" id="add-exercise" data-add-exercise-panel style={{ marginTop: 'var(--space-3h)' }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-3)' }}>
         <Text variant="subheading">Add exercise</Text>
         <SegmentedControl
@@ -66,7 +66,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
             display: 'flex',
             flexDirection: 'column',
             gap: '7px',
-            marginTop: '18px',
+            marginTop: 'var(--space-4h)',
           }}
         >
           {/* Your own exercises first, then the built-in ones, each a list of compact rows: the row opens the exercise,
@@ -79,7 +79,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
             .map((g) => (
               <div key={g.label}>
                 <SectionLabel list label={g.label} note={String(g.items.length)} />
-                <div style={{ borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)', padding: '0 6px 0 14px' }}>
+                <div style={{ borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)', padding: '0 var(--space-1h) 0 var(--space-3h)' }}>
                   {g.items.map((l, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', borderTop: i ? '1px solid var(--color-line)' : 'none' }}>
                       <Pressable
@@ -138,7 +138,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
         </div>
       ) : null}
       {v.addNew ? (
-        <div style={{ marginTop: '18px' }}>
+        <div style={{ marginTop: 'var(--space-4h)' }}>
           <ExerciseFields
             name={v.draftName ?? ''}
             onName={v.setName}

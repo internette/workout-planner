@@ -30,7 +30,7 @@
   margin-top: 1px;
   border-radius: var(--radius-full);
   background: var(--color-surface);
-  box-shadow: inset 0 0 0 1.5px var(--color-outline);
+  box-shadow: var(--ring-outline);
   transition: background-color var(--dur-state) var(--ease-standard), box-shadow var(--dur-state) var(--ease-standard);
 }
 .checked .dot { background: var(--color-pink); box-shadow: inset 0 0 0 2px var(--color-pink), inset 0 0 0 5px var(--color-surface); }

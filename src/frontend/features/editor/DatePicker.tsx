@@ -30,8 +30,8 @@ export function DatePicker({ v }: { v: PlannerVals }) {
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(7,minmax(0,1fr))',
-              gap: '2px',
-              marginTop: '10px',
+              gap: 'var(--space-0h)',
+              marginTop: 'var(--space-2h)',
             }}
           >
             {(v.dowLabels ?? []).map((l, i) => (

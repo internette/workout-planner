@@ -6,11 +6,11 @@ import { Text } from '@moonshot/design-system/typography';
 /** An exercise in the Spellbook’s list: open it, or add it to the workout being built. */
 export function ExerciseRow({ exercise }: { exercise: any }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: 'var(--space-3) 0' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2h)', width: '100%', padding: 'var(--space-3) 0' }}>
       <Pressable
         onClick={exercise?.open}
         aria-label={'View details for ' + exercise?.name}
-        style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: '1 1 200px', minWidth: '0', margin: '-6px', padding: '6px', borderRadius: 'var(--radius-sm)' }}
+        style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3h)', flex: '1 1 200px', minWidth: '0', margin: '-6px', padding: 'var(--space-1h)', borderRadius: 'var(--radius-sm)' }}
       >
         <IconTile as="span" size="xs" variant="flat">{exercise?.svg}</IconTile>
         <span style={{ flex: '1', minWidth: '0' }}>

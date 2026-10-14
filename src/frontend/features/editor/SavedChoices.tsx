@@ -22,7 +22,7 @@ export function SavedChoices({ v }: { v: PlannerVals }) {
         </Card>
       ) : null}
       {/* The person's own, then the built-in ones by group, as the Spellbook lists them. */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4h)' }}>
         {(v.savedChoiceGroups ?? []).map((g, gi) => (
           <div key={gi}>
             {g?.label ? (

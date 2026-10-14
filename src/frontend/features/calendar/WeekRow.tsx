@@ -10,7 +10,7 @@ export function WeekRow({ row }: { row: any }) {
     <div>
       {row?.isRest ? (
         // A rest day is one quiet line, its date and "Rest": the week's sessions get the room.
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', margin: '10px 0 2px', minHeight: '28px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', margin: 'var(--space-2h) 0 var(--space-0h)', minHeight: '28px' }}>
           <Text variant="micro" tone={row?.labelTone} style={{ flex: 'none' }}>
             {row?.label}
           </Text>

@@ -10,12 +10,12 @@ export function PersonalBestsCard({ v, style }: { v: PlannerVals; style?: CSSPro
     <Card style={style}>
       <SectionLabel as="span" label="Personal bests" aside={v.allTimeLabel} />
       {v.recordsEmpty ? (
-        <Text variant="strong" as="p" tone="muted" style={{ margin: '10px 0 0' }}>
+        <Text variant="strong" as="p" tone="muted" style={{ margin: 'var(--space-2h) 0 0' }}>
           Tick off an exercise with a weight, or finish a ride, and your bests show up here.
         </Text>
       ) : null}
       <div
-        style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: 'var(--space-3)' }}
+        style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-0h)', marginTop: 'var(--space-3)' }}
       >
         {(v.records ?? []).map((r, i) => (
           <div key={i} style={css(r?.rowStyle)}>

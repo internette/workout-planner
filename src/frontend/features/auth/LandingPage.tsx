@@ -139,7 +139,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                 </Text>
                 <SparkleTrail className={styles.trail} />
               </span>
-              <Text variant="hero" as="h1" style={{ margin: '14px 0 0', textWrap: 'balance' }}>
+              <Text variant="hero" as="h1" style={{ margin: 'var(--space-3h) 0 0', textWrap: 'balance' }}>
                 Answer the call.
                 <br />
                 Then do the sets.
@@ -204,7 +204,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                   </Text>
                 </div>
               </div>
-              <ProgressBar value={100} style={{ marginTop: 18 }} />
+              <ProgressBar value={100} style={{ marginTop: 'var(--space-4h)' }} />
               <div className={styles.progressRow}>
                 <Text variant="body" tone="accent" weight="semibold">
                   5 of 5 done

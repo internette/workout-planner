@@ -69,7 +69,7 @@ export function SavedScreen({ v }: { v: PlannerVals }) {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '10px',
+          gap: 'var(--space-2h)',
           marginTop: '30px',
           textAlign: 'left',
         }}

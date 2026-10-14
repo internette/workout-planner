@@ -31,7 +31,7 @@ export function LeaveWorkoutDialog({ v }: { v: PlannerVals }) {
         </>
       }
     >
-      <div style={{ marginTop: '14px' }}>
+      <div style={{ marginTop: 'var(--space-3h)' }}>
         <Checkbox checked={remember} onChange={setRemember} description="Change it in Settings, under During a workout.">
           Don’t ask again
         </Checkbox>

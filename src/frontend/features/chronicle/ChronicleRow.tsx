@@ -19,7 +19,7 @@ export function ChronicleRow({ entry }: { entry: any }) {
         display: 'flex',
         alignItems: 'flex-start',
         gap: 'var(--space-3)',
-        padding: '14px 16px',
+        padding: 'var(--space-3h) var(--space-4)',
         textAlign: 'left',
       }}
     >
@@ -30,7 +30,7 @@ export function ChronicleRow({ entry }: { entry: any }) {
         <Text variant="micro" tone="muted" style={{ display: 'block' }}>
           {entry?.date}
         </Text>
-        <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px 6px', marginTop: '2px' }}>
+        <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-1) var(--space-1h)', marginTop: 'var(--space-0h)' }}>
           <Text variant="subheading">{entry?.name}</Text>
           <KindTag inline kind={kindOf(entry)} />
           <ChevronRight color="var(--color-muted)" strokeWidth={2.2} size={16} />

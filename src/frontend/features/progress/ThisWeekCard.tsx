@@ -20,13 +20,13 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
         {v.wkHas ? v.wkEyebrow : 'This week'}
       </Text>
       {v.wkEmpty ? (
-        <Text variant="strong" as="span" tone="muted" style={{ display: 'block', margin: '6px 0 0' }}>
+        <Text variant="strong" as="span" tone="muted" style={{ display: 'block', margin: 'var(--space-1h) 0 0' }}>
           Nothing planned this week yet.
         </Text>
       ) : null}
       {v.wkHas ? (
         <>
-          <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '2px 14px', marginTop: '6px' }}>
+          <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 'var(--space-0h) var(--space-3h)', marginTop: 'var(--space-1h)' }}>
             {(v.wkParts ?? []).map((p) => (
               <span key={p.label} style={{ display: 'inline-flex', alignItems: 'baseline', gap: '5px' }}>
                 <Text variant="heading">{p.n}</Text>
@@ -43,7 +43,7 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
               height: '7px',
               borderRadius: '4px',
               background: 'var(--color-pink-tint)',
-              marginTop: '14px',
+              marginTop: 'var(--space-3h)',
               overflow: 'hidden',
             }}
           >

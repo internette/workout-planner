@@ -77,7 +77,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
         style={{ marginTop: 'var(--space-4)' }}
       />
       {/* The search, and beside it everything else that narrows the list, in one sheet. */}
-      <div style={{ display: 'flex', alignItems: 'stretch', gap: '10px', marginTop: 'var(--space-3)' }}>
+      <div style={{ display: 'flex', alignItems: 'stretch', gap: 'var(--space-2h)', marginTop: 'var(--space-3)' }}>
         <div style={{ flex: '1', minWidth: '0' }}>
           <SearchBar
             value={v.arsenalQuery ?? ''}
@@ -105,7 +105,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
             <Plus color="var(--color-pink-deep)" strokeWidth={2.6} size={14} style={{ verticalAlign: '-2px' }} /> to add it to a workout.
           </Text>
           <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: '18px' }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: 'var(--space-4h)' }}
           >
             {(v.moveGroups ?? []).map((g, i) => (
               <div key={i}>
@@ -135,7 +135,7 @@ export function SpellbookScreen({ v }: { v: PlannerVals }) {
             </Text>
           ) : null}
           {/* Grouped like the Exercises tab: the person's own, then the built-in ones by group. */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: '18px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: 'var(--space-4h)' }}>
             {(v.workoutGroups ?? []).map((g, gi) => (
               <div key={gi}>
                 {g?.label ? (

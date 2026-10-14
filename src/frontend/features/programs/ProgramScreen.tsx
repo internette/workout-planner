@@ -34,7 +34,7 @@ function StartDialog({ v }: { v: PlannerVals }) {
         </>
       }
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '14px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3h)', marginTop: 'var(--space-3h)' }}>
         <TextField label="Starting" type="date" value={s.date} min={s.min} onChange={s.setDate} />
         {s.blocks ? (
           <div>
@@ -89,7 +89,7 @@ function MoveDialog({ v }: { v: PlannerVals }) {
         </>
       }
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '14px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3h)', marginTop: 'var(--space-3h)' }}>
         <TextField label="Starts" type="date" value={m.date} onChange={m.setDate} />
         <Card pad="sm" style={{ background: 'var(--color-canvas)', boxShadow: 'none' }}>
           <Text variant="body" weight="semibold" as="p" style={{ margin: 0 }}>
@@ -120,7 +120,7 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
           {p.editLabel}
         </Button>
       </BackBar>
-      <div style={{ marginTop: '18px' }}>
+      <div style={{ marginTop: 'var(--space-4h)' }}>
         <Text variant="micro" as="div" tone="slate">
           {p.eyebrow}
         </Text>
@@ -128,32 +128,32 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
           {p.name}
         </Text>
       </div>
-      <ChipGroup style={{ marginTop: '14px' }}>
+      <ChipGroup style={{ marginTop: 'var(--space-3h)' }}>
         <Chip icon={<Calendar color="var(--color-muted)" size={15} />}>{p.chips[0]}</Chip>
         <Chip icon={<Repeat color="var(--color-muted)" size={15} />}>{p.chips[1]}</Chip>
         {p.equipment ? <Chip>{p.equipment}</Chip> : null}
       </ChipGroup>
       {p.notes ? (
-        <Text variant="body" tone="slate" as="p" style={{ margin: '14px 0 0', maxWidth: '560px', whiteSpace: 'pre-wrap' }}>
+        <Text variant="body" tone="slate" as="p" style={{ margin: 'var(--space-3h) 0 0', maxWidth: '560px', whiteSpace: 'pre-wrap' }}>
           {p.notes}
         </Text>
       ) : null}
       {p.progress ? (
-        <div style={{ marginTop: '18px' }}>
+        <div style={{ marginTop: 'var(--space-4h)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
             <ProgressBar value={p.progress.pct} track="tint" label="Sessions done" valueText={p.progress.valueText} style={{ flex: 1 }} />
             <Text variant="figure" style={{ flex: 'none' }}>
               {p.progress.figure}
             </Text>
           </div>
-          <Text variant="body" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-1h) 0 0' }}>
             Sessions done
           </Text>
         </div>
       ) : null}
       {/* One run: its dates under the bar, with changing its start as a link, rather than a card of its own. */}
       {p.runs.length === 1 ? (
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0 6px', marginTop: p.progress ? '2px' : '18px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0 var(--space-1h)', marginTop: p.progress ? '2px' : '18px' }}>
           <Text variant="body" tone="muted">
             {p.runs[0].label} · {p.runs[0].dates}
           </Text>
@@ -163,7 +163,7 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
         </div>
       ) : null}
       {/* Running, it can be ended; otherwise started. Starting it again while it runs would double its sessions up. */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '18px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2h)', marginTop: 'var(--space-4h)' }}>
         {p.runs.length ? (
           <Button type="primary" size="lg" onClick={p.runs[0].end} style={{ flex: '1 1 200px' }}>
             End program
@@ -203,13 +203,13 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
           </span>
         </Card>
       ))}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '18px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2h)', marginTop: 'var(--space-4h)' }}>
         {p.blocks.map((b) => (
           <Card key={b.key} pad="sm">
             <Pressable
               aria-expanded={b.open}
               onClick={b.toggle}
-              style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', minHeight: '44px'}}
+              style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2h)', width: '100%', minHeight: '44px'}}
             >
               <span style={{ flex: 1, minWidth: 0 }}>
                 <Text variant="subheading" as="span" style={{ display: 'block' }}>

@@ -21,7 +21,7 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'baseline',
-          gap: '10px',
+          gap: 'var(--space-2h)',
           marginTop: 'var(--space-2)',
         }}
       >
@@ -36,7 +36,7 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', marginTop: '22px' }}>
         <Card
           pad="sm"
-          style={{ flex: '1 1 200px', display: 'flex', alignItems: 'center', gap: '14px' }}
+          style={{ flex: '1 1 200px', display: 'flex', alignItems: 'center', gap: 'var(--space-3h)' }}
         >
           <span className="fc-keep" style={css(v.readMoodFace)}>{v.readMoodSvg}</span>
           <Stat label="Mood" value={v.readMood} style={{ minWidth: '0' }} />
@@ -46,7 +46,7 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
             Effort
           </Text>
           <div
-            style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '5px' }}
+            style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2h)', marginTop: '5px' }}
           >
             <Text variant="subheading" tone="ink">
               {v.rpeLabel}

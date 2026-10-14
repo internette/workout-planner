@@ -32,10 +32,10 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '14px',
+                    gap: 'var(--space-3h)',
                     width: '100%',
                     minHeight: '60px',
-                    padding: '12px 18px',
+                    padding: 'var(--space-3) var(--space-4h)',
                     borderTop: i ? '1px solid var(--color-line)' : 'none',
                   }}
                 >

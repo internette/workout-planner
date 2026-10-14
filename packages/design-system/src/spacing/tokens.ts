@@ -2,11 +2,18 @@
 // `padding: var(--space-6)`, not 24px. `layout` holds the measures of the page itself.
 import { toVariables, type Token } from '../tokens/variables';
 
+// Seven steps of 4px, and the half step above each of the first five (h), which is where the app's rows and cards
+// mostly sit: 10px between a row's icon and its text, 14px under a heading, 18px between a card's title and its body.
 export const space = {
+  '0h': { value: '2px', use: 'A hairline’s worth: between pips, under a label' },
   '1': { value: '4px', use: 'The tightest gap: between segments in a tray' },
+  '1h': { value: '6px', use: 'Between a title and the line under it' },
   '2': { value: '8px', use: 'Between a button’s icon and label, a chip’s icon and label, and stacked list rows' },
+  '2h': { value: '10px', use: 'Between a row’s icon and its text, and between chips' },
   '3': { value: '12px', use: 'Between a checkbox or radio dot and its text' },
+  '3h': { value: '14px', use: 'Under a heading, and between a card and the next' },
   '4': { value: '16px', use: 'Card padding xs' },
+  '4h': { value: '18px', use: 'Between a card’s title and its body' },
   '5': { value: '20px', use: 'Card padding sm' },
   '6': { value: '24px', use: 'Card padding md' },
   '7': { value: '28px', use: 'Card padding lg, and the page gutter' },

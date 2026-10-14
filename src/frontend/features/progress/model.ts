@@ -213,7 +213,7 @@ export function progressVals(ctx: Ctx) {
         count,
         color,
         row:
-          'display:flex;align-items:center;gap:var(--space-3);padding:10px 0' +
+          'display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2h) 0' +
           (ix === arr.length - 1 ? '' : ';border-bottom:1px solid var(--color-line)'),
       })),
     // All time, up to today: sessions still ahead don't count yet.
@@ -359,7 +359,7 @@ export function progressVals(ctx: Ctx) {
           open: () => logic.openDay(relM(d), dm),
           aria: DOWFULL[d.getDay()] + ': ' + q.title + (isDone ? ', cleared' : ''),
           row:
-            'display:flex;align-items:center;gap:11px;width:100%;min-height:44px;padding:10px 0;border:none;background:none;text-align:left;font-family:inherit;cursor:pointer;border-bottom:1px solid var(--color-line)',
+            'display:flex;align-items:center;gap:11px;width:100%;min-height:44px;padding:var(--space-2h) 0;border:none;background:none;text-align:left;font-family:inherit;cursor:pointer;border-bottom:1px solid var(--color-line)',
           mark:
             'width:18px;height:18px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;' +
             (isDone ? 'background:var(--color-pink)' : 'background:transparent'),

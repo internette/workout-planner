@@ -26,11 +26,11 @@ export function WorkoutCard({ v }: { v: PlannerVals }) {
         <SessionProgress bare label={v.progLabel} pct={v.progPct ?? 0} allDone={!!v.allDone} note={v.progNote ?? ''}>
           {v.restShown ? <RestSection v={v} /> : v.setNow ? <NextSet now={v.setNow} /> : null}
           {v.finishNow ? (
-            <Button type="primary" size="lg" fullWidth onClick={v.finishNow} style={{ marginTop: '14px' }}>
+            <Button type="primary" size="lg" fullWidth onClick={v.finishNow} style={{ marginTop: 'var(--space-3h)' }}>
               Finish workout
             </Button>
           ) : v.writeInCard ? (
-            <Button type="primary" size="lg" fullWidth onClick={v.goDiary} style={{ marginTop: '14px' }}>
+            <Button type="primary" size="lg" fullWidth onClick={v.goDiary} style={{ marginTop: 'var(--space-3h)' }}>
               {v.ctaLabel}
             </Button>
           ) : null}
@@ -85,7 +85,7 @@ function TimerSection({ v }: { v: PlannerVals }) {
 /** The set up next: which exercise, how far through its sets, and "Done set" while the workout is going. */
 function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-3)', marginTop: '14px' }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-3)', marginTop: 'var(--space-3h)' }}>
       <span style={{ flex: '1 1 160px', minWidth: 0 }}>
         <ExerciseName name={now.name} />
         <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-1)' }}>
@@ -111,7 +111,7 @@ function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
 /** The rest between sets, counting down, with what's up next. */
 function RestSection({ v }: { v: PlannerVals }) {
   return (
-    <section aria-label="Rest" style={{ marginTop: '14px' }}>
+    <section aria-label="Rest" style={{ marginTop: 'var(--space-3h)' }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: 'var(--space-3)' }}>
         <div>
           <Text variant="micro" tone="slate" as="div">
@@ -130,7 +130,7 @@ function RestSection({ v }: { v: PlannerVals }) {
             <Text variant="subheading" as="div" style={{ marginTop: 'var(--space-1)' }}>
               {v.restNextName}
             </Text>
-            <Text variant="body" tone="muted" as="div" style={{ marginTop: '2px' }}>
+            <Text variant="body" tone="muted" as="div" style={{ marginTop: 'var(--space-0h)' }}>
               {v.restNextLine}
             </Text>
           </div>

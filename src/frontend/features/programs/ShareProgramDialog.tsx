@@ -185,7 +185,7 @@ export function ShareProgramDialog({ s }: { s: Share }) {
               Show my name
             </Checkbox>
           ) : null}
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-3)', paddingTop: '14px', borderTop: '1px solid var(--color-line)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-3)', paddingTop: 'var(--space-3h)', borderTop: '1px solid var(--color-line)' }}>
             <Text variant="body" tone="muted" as="p" style={{ margin: 0, flex: '1 1 100%' }}>
               Or as a file, to print or send: every block and workout, with the name and notes above.
             </Text>
@@ -199,14 +199,14 @@ export function ShareProgramDialog({ s }: { s: Share }) {
         </div>
       ) : null}
       {mode === 'link' && share ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: 'var(--space-4)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3h)', marginTop: 'var(--space-4)' }}>
           {justMade ? (
             <Callout tone="success" icon={<Check color="var(--color-pink-deep)" strokeWidth={2.4} size={16} />}>
               Link ready. Anyone with it can see “{share.name}”.
             </Callout>
           ) : null}
           <TextField label="Link" value={linkOf(share.id)} readOnly data-share-link onFocus={(e) => e.currentTarget.select()} />
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2h)' }}>
             {canNativeShare ? (
               <Button type="primary" size="md" onClick={nativeShare} style={{ flex: '1 1 140px' }}>
                 Share…
@@ -227,7 +227,7 @@ export function ShareProgramDialog({ s }: { s: Share }) {
           <Text variant="body" tone="muted" as="p" style={{ margin: 0 }}>
             It shows the program as it was when you shared it. Changing it doesn’t change the link until you update it.
           </Text>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2h)' }}>
             <Button type="neutral" ghost size="sm" onClick={() => setMode('form')} disabled={busy}>
               Update the link
             </Button>

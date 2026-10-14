@@ -60,7 +60,7 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
       />
       <AreaChoice areas={exercise?.areas ?? []} />
       {/* Its icon and removing it, with the rest of its settings: the closed row keeps its room for the details. */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: '14px', paddingTop: 'var(--space-3)', borderTop: '1px solid var(--color-line)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-3h)', paddingTop: 'var(--space-3)', borderTop: '1px solid var(--color-line)' }}>
         <IconPicker
             size="sm"
             open={!!exercise?.open}
