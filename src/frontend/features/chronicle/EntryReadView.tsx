@@ -11,7 +11,7 @@ import { NotesCard } from '@/frontend/components/NotesCard';
 /** Reading a Chronicle entry. */
 export function EntryReadView({ v }: { v: PlannerVals }) {
   return (
-    <div style={{ marginTop: '30px' }}>
+    <div style={{ marginTop: 'var(--space-7)' }}>
       <Text variant="micro" as="div" tone="muted">
         {v.longDate}
       </Text>
@@ -20,7 +20,7 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'baseline',
-          gap: 'var(--space-2h)',
+          gap: 'var(--space-2)',
           marginTop: 'var(--space-2)',
         }}
       >
@@ -32,10 +32,10 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
           <ChevronRight color="var(--color-pink-deep)" strokeWidth={2.2} size={15} />
         </Button>
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', marginTop: '22px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', marginTop: 'var(--space-6)' }}>
         <Card
           pad="sm"
-          style={{ flex: '1 1 200px', display: 'flex', alignItems: 'center', gap: 'var(--space-3h)' }}
+          style={{ flex: '1 1 200px', display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}
         >
           <span className="fc-keep" style={{ width: '44px', height: '44px', flex: 'none', borderRadius: 'var(--radius-full)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: v.readMoodColor }}>
             {v.readMoodSvg}
@@ -47,7 +47,7 @@ export function EntryReadView({ v }: { v: PlannerVals }) {
             Effort
           </Text>
           <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2h)', marginTop: '5px' }}
+            style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-1)' }}
           >
             <Text variant="subheading" tone="ink">
               {v.rpeLabel}

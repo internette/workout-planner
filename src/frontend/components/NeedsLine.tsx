@@ -4,11 +4,11 @@ import { Text } from '@moonshot/design-system/typography';
 export function NeedsLine({ text }: { text?: string | null }) {
   if (!text) return null;
   return (
-    <p style={{ margin: 'var(--space-3h) 0 0' }}>
+    <p style={{ margin: 'var(--space-4) 0 0' }}>
       <Text variant="micro" as="span" tone="slate" style={{ display: 'block' }}>
         You&apos;ll need
       </Text>
-      <Text variant="body" as="span" tone="ink" style={{ display: 'block', marginTop: 'var(--space-0h)' }}>
+      <Text variant="body" as="span" tone="ink" style={{ display: 'block', marginTop: 'var(--space-1)' }}>
         {text}
       </Text>
     </p>

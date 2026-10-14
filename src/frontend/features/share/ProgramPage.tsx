@@ -57,7 +57,7 @@ function WorkoutCard({ w, open, onToggle }: { w: SharedWorkout; open: boolean; o
         <ChevronDown color="var(--color-muted)" size={16} style={{ flex: 'none', transform: open ? 'rotate(180deg)' : undefined }} />
       </Pressable>
       {open ? (
-        <div style={{ margin: '10px 0 4px 50px', display: 'flex', flexDirection: 'column', gap: 'var(--space-2h)' }}>
+        <div style={{ margin: 'var(--space-3) 0 var(--space-1) 50px', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
           {w.exercises.map((e, i) => (
             <div key={i}>
               <Text variant="body" as="div">
@@ -95,9 +95,9 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
 
   if (!program || !name) {
     return (
-      <main style={{ maxWidth: '560px', margin: '0 auto', padding: '24px 16px 48px' }}>
+      <main style={{ maxWidth: '560px', margin: '0 auto', padding: 'var(--space-6) var(--space-4) calc(2 * var(--space-6))' }}>
         <Lockup />
-        <Text variant="title" as="h1" style={{ margin: '32px 0 0' }}>
+        <Text variant="title" as="h1" style={{ margin: 'var(--space-7) 0 0' }}>
           This link doesn’t open anything
         </Text>
         <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
@@ -129,7 +129,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
   };
 
   return (
-    <main style={{ maxWidth: '560px', margin: '0 auto', padding: '24px 16px 160px' }}>
+    <main style={{ maxWidth: '560px', margin: '0 auto', padding: 'var(--space-6) var(--space-4) 160px' }}>
       <a href={signedIn ? '/calendar' : '/welcome'} aria-label="Moonshot" style={{ display: 'inline-flex', textDecoration: 'none' }}>
         <Lockup />
       </a>
@@ -141,7 +141,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
           {name}
         </Text>
       </div>
-      <ChipGroup style={{ marginTop: 'var(--space-3h)' }}>
+      <ChipGroup style={{ marginTop: 'var(--space-4)' }}>
         <Chip icon={<Calendar color="var(--color-muted)" size={15} />}>{plural(weeks, 'week')}</Chip>
         <Chip icon={<Repeat color="var(--color-muted)" size={15} />}>{plural(trainingDays(program), 'day')} a week</Chip>
         {kitChip(kit) ? <Chip>{kitChip(kit)}</Chip> : null}
@@ -161,7 +161,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
             setPdfBusy(false);
           }
         }}
-        style={{ marginTop: 'var(--space-3h)', whiteSpace: 'nowrap' }}
+        style={{ marginTop: 'var(--space-4)', whiteSpace: 'nowrap' }}
       >
         <Download color="var(--color-pink-deep)" size={16} />
         {pdfBusy ? 'Making PDF…' : 'Save as PDF'}
@@ -172,16 +172,16 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
         </Text>
       ) : null}
       {several ? (
-        <div style={{ marginTop: 'var(--space-4h)' }}>
+        <div style={{ marginTop: 'var(--space-5)' }}>
           <BlockBar blocks={program.blocks.map((b, i) => ({ name: blockName(b, i), weeks: b.weeks }))} />
         </div>
       ) : null}
       {program.blocks.map((b, bi) => {
         const before = program.blocks.slice(0, bi).reduce((s, x) => s + x.weeks, 0);
         return (
-          <section key={bi} aria-label={several ? blockName(b, bi) : 'The week'} style={{ marginTop: '22px' }}>
+          <section key={bi} aria-label={several ? blockName(b, bi) : 'The week'} style={{ marginTop: 'var(--space-6)' }}>
             {several || b.weeks > 1 ? (
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-2)', marginBottom: 'var(--space-1h)' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-2)', marginBottom: 'var(--space-2)' }}>
                 <Text variant="subheading" as="h2" style={{ margin: 0, flex: 1 }}>
                   {several ? blockName(b, bi) : 'Every week'}
                 </Text>
@@ -224,7 +224,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
           left: 0,
           right: 0,
           bottom: 0,
-          padding: '14px 16px calc(16px + env(safe-area-inset-bottom))',
+          padding: 'var(--space-3) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom))',
           background: 'var(--color-surface)',
           boxShadow: '0 -1px 0 color-mix(in srgb, var(--color-ink) 10%, transparent)',
         }}
@@ -251,7 +251,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
         <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
           You’ll come back here, and nothing is copied until you choose to.
         </Text>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2h)', marginTop: 'var(--space-4)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
           {providers.length ? (
             providers.map((p) => (
               <ProviderButton key={p} provider={p} returnTo={'/p/' + id} onClick={() => setBusyProvider(p)} busy={busyProvider === p} disabled={!!busyProvider}>

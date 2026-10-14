@@ -44,7 +44,7 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
         )}
       </BackBar>
       <PageTitle icon={v.template.svg} eyebrow={v.template.eyebrow} title={v.template.name} />
-      <ChipGroup style={{ marginTop: 'var(--space-4h)' }}>
+      <ChipGroup style={{ marginTop: 'var(--space-5)' }}>
         <Chip icon={<Clock color="var(--color-muted)" size={15} />}>{v.template.time}</Chip>
         {(v.template.areas ?? []).map((a, i) => (
           <Chip key={i}>{a}</Chip>
@@ -54,7 +54,7 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
       {v.template.notes ? (
         <NotesCard style={{ marginTop: 'var(--space-3)' }}>{v.template.notes}</NotesCard>
       ) : null}
-      <Button type="primary" size="lg" fullWidth onClick={v.template.schedule} style={{ marginTop: 'var(--space-4h)' }}>
+      <Button type="primary" size="lg" fullWidth onClick={v.template.schedule} style={{ marginTop: 'var(--space-5)' }}>
         <Calendar color="var(--color-surface)" size={17} />
         Add to calendar
       </Button>
@@ -74,20 +74,20 @@ export function TemplateScreen({ v }: { v: PlannerVals }) {
       ) : null}
       <ScheduleDialog v={v} />
       {v.template.isRide ? (
-        <Card style={{ marginTop: 'var(--space-4h)' }}>
+        <Card style={{ marginTop: 'var(--space-5)' }}>
           <StatRow size="lg" stats={v.template.rideStats ?? []} />
         </Card>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-4h)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-5)' }}>
           {(v.template.exercises ?? []).map((e, i) => (
-            <Card key={i} pad="sm" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3h)' }}>
+            <Card key={i} pad="sm" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
               <IconTile as="span" size="xs" variant="flat">{e?.svg}</IconTile>
               <span style={{ flex: '1', minWidth: '0' }}>
                 <ExerciseName name={e?.name ?? ''} />
                 <Text
                   variant="body"
                   tone="muted"
-                  style={{ display: 'block', marginTop: '3px' }}
+                  style={{ display: 'block', marginTop: 'var(--space-1)' }}
                 >
                   {e?.detail}
                 </Text>

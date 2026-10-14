@@ -18,7 +18,7 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
         intro={<>Pick a session from the last 60 days. Ones you&apos;ve already written about aren&apos;t listed.</>}
         style={{ marginTop: 'var(--space-6)' }}
       />
-      <div style={{ marginTop: '26px', maxWidth: '620px' }}>
+      <div style={{ marginTop: 'var(--space-7)', maxWidth: '620px' }}>
         {/* One card per group (this week, last week, earlier), its sessions as rows. Back leaves. */}
         {(v.unloggedGroups ?? []).map((g) => (
           <div key={g.label} style={{ marginBottom: 'var(--space-4)' }}>
@@ -32,10 +32,10 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 'var(--space-3h)',
+                    gap: 'var(--space-3)',
                     width: '100%',
                     minHeight: '60px',
-                    padding: 'var(--space-3) var(--space-4h)',
+                    padding: 'var(--space-3) var(--space-4)',
                     borderTop: i ? '1px solid var(--color-line)' : 'none',
                   }}
                 >
@@ -49,7 +49,7 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
                     <Text variant="subheading" as="span" tone="ink" style={{ display: 'block' }}>
                       {u.name}
                     </Text>
-                    <Text variant="body" as="span" tone="muted" style={{ display: 'block', marginTop: '1px' }}>
+                    <Text variant="body" as="span" tone="muted" style={{ display: 'block', marginTop: 'var(--space-1)' }}>
                       {u.meta}
                     </Text>
                   </span>

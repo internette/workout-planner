@@ -51,7 +51,7 @@ export function ActiveFilters({ v }: { v: PlannerVals }) {
   const list = v.activeFilters ?? [];
   if (!list.length) return null;
   return (
-    <ChipGroup label="Filters on" style={{ marginTop: 'var(--space-2h)' }}>
+    <ChipGroup label="Filters on" style={{ marginTop: 'var(--space-3)' }}>
       {list.map((f) => (
         <Chip
           key={f.label}
@@ -73,7 +73,7 @@ export function ActiveFilters({ v }: { v: PlannerVals }) {
 }
 
 const section = { marginTop: 'var(--space-5)' };
-const heading = { marginBottom: 'var(--space-2h)' };
+const heading = { marginBottom: 'var(--space-3)' };
 
 /** The filters themselves: the kind (workouts only), target areas, and the equipment you have. A sheet on a phone. */
 function FilterSheet({ v }: { v: PlannerVals }) {
@@ -118,7 +118,7 @@ function FilterSheet({ v }: { v: PlannerVals }) {
       </div>
       {v.equipFilterShown ? (
         <div style={section}>
-          <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: 'var(--space-0h)' }}>
+          <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: 'var(--space-1)' }}>
             Equipment you have
           </Text>
           <Text variant="body" tone="muted" as="p" style={{ margin: '0 0 var(--space-1)' }}>
@@ -156,7 +156,7 @@ function EquipmentGroups({ v }: { v: PlannerVals }) {
               id={'equip-filter-' + gi}
               role="group"
               aria-label={g.label}
-              style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(130px,1fr))', gap: 'var(--space-2h) var(--space-3)', padding: 'var(--space-3) 0 var(--space-2)' }}
+              style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(130px,1fr))', gap: 'var(--space-2) var(--space-3)', padding: 'var(--space-3) 0 var(--space-2)' }}
             >
               {g.items.map((o) => (
                 <Checkbox key={o.name} checked={o.on} onChange={o.set}>

@@ -7,23 +7,23 @@ import { RankGem } from '@/frontend/components/RankGem';
 /** Profile: quests cleared, all time. */
 export function QuestsClearedCard({ v }: { v: PlannerVals }) {
   return (
-    <Card style={{ marginTop: 'var(--space-3h)' }}>
+    <Card style={{ marginTop: 'var(--space-4)' }}>
       <SectionLabel
         as="span"
         label="Quests cleared"
         {...(v.questsHas ? { note: v.allTimeLabel, value: v.questsClearedLabel } : { aside: v.allTimeLabel })}
       />
       {v.questsNone ? (
-        <Text variant="strong" as="p" tone="muted" style={{ margin: 'var(--space-2h) 0 0' }}>
+        <Text variant="strong" as="p" tone="muted" style={{ margin: 'var(--space-3) 0 0' }}>
           Every day with a session gets a quest. The ones you clear gather here.
         </Text>
       ) : null}
       {v.questsHas ? (
         <ProgressBar value={v.questsClearedPct ?? 0} track="mist" style={{ marginTop: 'var(--space-3)' }} />
       ) : null}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-0h)', marginTop: 'var(--space-4)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', marginTop: 'var(--space-4)' }}>
         {(v.questStats ?? []).map((q, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-2h) 0', borderBottom: q?.last ? undefined : '1px solid var(--color-line)' }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-2) 0', borderBottom: q?.last ? undefined : '1px solid var(--color-line)' }}>
             <RankGem fill={q?.color} />
             <Text variant="strong" tone="ink" style={{ flex: '1', minWidth: '0' }}>
               {q?.name}

@@ -20,19 +20,19 @@ export function EquipmentPicker({ id, open, onToggle, summary, groups }: Equipme
           <Text variant="micro" as="span" tone="slate" style={{ display: 'block' }}>
             Equipment
           </Text>
-          <Text variant="body" as="span" tone="ink" weight="semibold" style={{ display: 'block', marginTop: 'var(--space-0h)' }}>
+          <Text variant="body" as="span" tone="ink" weight="semibold" style={{ display: 'block', marginTop: 'var(--space-1)' }}>
             {summary}
           </Text>
         </span>
       </DisclosureRow>
       {open ? (
-        <div id={id} role="group" aria-label="Equipment" style={{ padding: 'var(--space-1) var(--space-0h) 0' }}>
+        <div id={id} role="group" aria-label="Equipment" style={{ padding: 'var(--space-1) var(--space-1) 0' }}>
           <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
             Leave it empty for a bodyweight exercise.
           </Text>
           {groups.map((g) => (
             <div key={g.label} role="group" aria-label={g.label}>
-              <Text variant="micro" as="div" tone="muted" style={{ margin: 'var(--space-2h) 0 var(--space-1h)' }}>
+              <Text variant="micro" as="div" tone="muted" style={{ margin: 'var(--space-3) 0 var(--space-2)' }}>
                 {g.label}
               </Text>
               <ChipGroup>

@@ -43,7 +43,7 @@ const Lead = ({ children }: { children: ReactNode }) => (
   </Text>
 );
 const Label = ({ children, id }: { children: ReactNode; id?: string }) => (
-  <Text variant="micro" tone="slate" as="div" id={id} style={{ marginTop: 22, marginBottom: 'var(--space-2h)' }}>
+  <Text variant="micro" tone="slate" as="div" id={id} style={{ marginTop: 'var(--space-6)', marginBottom: 'var(--space-3)' }}>
     {children}
   </Text>
 );
@@ -57,9 +57,9 @@ function Toggle({ on, onClick, icon, title, line }: { on: boolean; onClick: () =
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 'var(--space-3h)',
+        gap: 'var(--space-3)',
         width: '100%',
-        padding: 'var(--space-3h) var(--space-4)',
+        padding: 'var(--space-3) var(--space-4)',
         borderRadius: 'var(--radius-lg)',
         background: on ? 'var(--color-pink-tint)' : 'var(--color-surface)',
         boxShadow: on ? 'var(--ring-accent)' : 'var(--elevation-hairline)',
@@ -101,7 +101,7 @@ export function Setup({ s }: { s: S | null }) {
     </Dialog>
   );
   const heading = (text: string) => (
-    <Text variant="title" as="h1" id="setup-title" tabIndex={-1} style={{ margin: 'var(--space-1h) 0 0', outline: 'none' }}>
+    <Text variant="title" as="h1" id="setup-title" tabIndex={-1} style={{ margin: 'var(--space-2) 0 0', outline: 'none' }}>
       {text}
     </Text>
   );
@@ -118,7 +118,7 @@ export function Setup({ s }: { s: S | null }) {
           ) : (
             <span style={{ width: 64 }} />
           )}
-          <span role="img" aria-label={'Step ' + (s.step + 1) + ' of ' + s.steps} style={{ display: 'flex', gap: 'var(--space-1h)' }}>
+          <span role="img" aria-label={'Step ' + (s.step + 1) + ' of ' + s.steps} style={{ display: 'flex', gap: 'var(--space-1)' }}>
             {Array.from({ length: s.steps }, (_, i) => (
               <RankGem key={i} fill={i <= s.step ? 'var(--gradient-gem)' : 'var(--color-line)'} />
             ))}
@@ -127,7 +127,7 @@ export function Setup({ s }: { s: S | null }) {
             Use defaults
           </Button>
         </div>
-        <div style={{ flex: 1, marginTop: 'var(--space-4h)' }}>{body}</div>
+        <div style={{ flex: 1, marginTop: 'var(--space-5)' }}>{body}</div>
       </>,
       foot ?? (
         <Button type="primary" size="lg" fullWidth glow onClick={s.next} disabled={!canNext} style={{ marginTop: 'var(--space-6)' }}>
@@ -142,20 +142,20 @@ export function Setup({ s }: { s: S | null }) {
         <Eyebrow>First transformation</Eyebrow>
         {heading('Who answers the call?')}
         <Lead>Your name goes on your rank and your Chronicle. Your color is the one your magic shows in.</Lead>
-        <div style={{ position: 'relative', marginTop: 22, padding: '22px 16px', borderRadius: 'var(--radius-xl)', background: 'var(--color-surface)', boxShadow: 'var(--elevation-raised)', textAlign: 'center', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', marginTop: 'var(--space-6)', padding: 'var(--space-5) var(--space-4)', borderRadius: 'var(--radius-xl)', background: 'var(--color-surface)', boxShadow: 'var(--elevation-raised)', textAlign: 'center', overflow: 'hidden' }}>
           <Twinkles />
           <Medallion size={76} />
-          <Text variant="heading" as="div" style={{ marginTop: 'var(--space-1h)' }}>
+          <Text variant="heading" as="div" style={{ marginTop: 'var(--space-2)' }}>
             {s.name.trim() || 'You'}
           </Text>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1h)', marginTop: 'var(--space-1h)', padding: 'var(--space-1) var(--space-3)', borderRadius: 'var(--radius-full)', background: 'var(--color-pink-tint)' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)', marginTop: 'var(--space-2)', padding: 'var(--space-1) var(--space-3)', borderRadius: 'var(--radius-full)', background: 'var(--color-pink-tint)' }}>
             <RankGem fill="var(--color-pink)" />
             <Text variant="strong" tone="accent">
               {s.rankName}
             </Text>
           </span>
         </div>
-        <div style={{ marginTop: 22 }}>
+        <div style={{ marginTop: 'var(--space-6)' }}>
           <TextField label="Your name" value={s.name} onChange={s.setName} maxLength={40} autoComplete="given-name" />
         </div>
         <Label id="setup-color">Your color</Label>
@@ -163,7 +163,7 @@ export function Setup({ s }: { s: S | null }) {
           labelledBy="setup-color"
           kind="swatch"
           shape="round"
-          style={{ gap: 'var(--space-2h)' }}
+          style={{ gap: 'var(--space-2)' }}
           options={ACCENTS.map((a) => ({ value: a.name, label: a.label, color: a.swatch, checkColor: paletteFor('light', a.name).surface }))}
           value={s.accent}
           onChange={s.setAccent}
@@ -178,7 +178,7 @@ export function Setup({ s }: { s: S | null }) {
         <Eyebrow>Your magic</Eyebrow>
         {heading('What will you train?')}
         <Lead>Pick all that fit. You can do any of them later too.</Lead>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2h)', marginTop: 'var(--space-5)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-5)' }}>
           {s.trains.map((t) => {
             const Icon = TRAIN_ICON[t.value];
             return <Toggle key={t.value} on={t.on} onClick={t.toggle} icon={<Icon color="var(--color-pink-deep)" size={22} />} title={t.title} line={t.line} />;
@@ -215,7 +215,7 @@ export function Setup({ s }: { s: S | null }) {
         <WeekdayToggles label="Training days" days={s.days} onToggle={s.toggleDay} />
         <Label>About how long</Label>
         <ChoiceChips label="About how long" surface="page" options={s.minuteOptions} value={s.minutes} onChange={s.setMinutes} />
-        <Card pad="sm" style={{ marginTop: 22, background: 'var(--gradient-gem-tint)', boxShadow: 'none' }}>
+        <Card pad="sm" style={{ marginTop: 'var(--space-6)', background: 'var(--gradient-gem-tint)', boxShadow: 'none' }}>
           <Text variant="body" tone="slateDeep" as="p" style={{ margin: 0 }}>
             {s.rhythm}
           </Text>
@@ -239,19 +239,19 @@ export function Setup({ s }: { s: S | null }) {
             <Text variant="heading" as="div" style={{ marginTop: 'var(--space-1)' }}>
               {g.name}
             </Text>
-            <Text variant="body" tone="muted" as="div" style={{ marginTop: 'var(--space-0h)' }}>
+            <Text variant="body" tone="muted" as="div" style={{ marginTop: 'var(--space-1)' }}>
               {g.meta}
             </Text>
             {g.kit ? (
-              <Text variant="body" tone="muted" as="div" style={{ marginTop: 'var(--space-0h)' }}>
+              <Text variant="body" tone="muted" as="div" style={{ marginTop: 'var(--space-1)' }}>
                 {g.kit}
               </Text>
             ) : null}
             <WeekStrip
-              style={{ marginTop: 'var(--space-3h)' }}
+              style={{ marginTop: 'var(--space-4)' }}
               days={g.strip.map((d) => ({ letter: d.letter, label: d.label, icon: d.svg || undefined }))}
             />
-            <div style={{ marginTop: 'var(--space-3h)' }}>
+            <div style={{ marginTop: 'var(--space-4)' }}>
               <TextField label="Starting" type="date" value={g.start} min={g.min} onChange={g.setStart} />
             </div>
           </Card>
@@ -268,7 +268,7 @@ export function Setup({ s }: { s: S | null }) {
         <Button type="primary" size="lg" fullWidth glow onClick={g ? s.startProgram : s.planOne} disabled={s.busy}>
           {g ? 'Start this arc' : 'Plan your first workout'}
         </Button>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-0h)', marginTop: 'var(--space-2)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-1)', marginTop: 'var(--space-2)' }}>
           {g ? (
             <Button type="secondary" link size="sm" onClick={s.planOne} disabled={s.busy} style={{ minHeight: 44 }}>
               Plan one workout instead
@@ -294,11 +294,11 @@ export function Setup({ s }: { s: S | null }) {
         <Eyebrow>Transformation begins</Eyebrow>
       </div>
       {heading(s.finaleName)}
-      <Text variant="body" tone="muted" as="p" style={{ margin: '8px auto 0', maxWidth: 320 }}>
+      <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) auto 0', maxWidth: 320 }}>
         {s.finaleLine}
       </Text>
       {s.firstQuest ? (
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)', marginTop: 'var(--space-6)', padding: 'var(--space-3h) var(--space-4)', borderRadius: 'var(--radius-lg)', background: 'var(--gradient-gem-tint)', textAlign: 'left' }}>
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)', marginTop: 'var(--space-6)', padding: 'var(--space-3) var(--space-4)', borderRadius: 'var(--radius-lg)', background: 'var(--gradient-gem-tint)', textAlign: 'left' }}>
           <span style={{ width: 32, height: 32, flex: 'none', borderRadius: 'var(--radius-sm)', background: 'var(--color-surface)', boxShadow: 'var(--elevation-hairline)', display: 'grid', placeItems: 'center' }}>
             <Sparkle size={16} color="var(--color-pink)" />
           </span>
@@ -306,10 +306,10 @@ export function Setup({ s }: { s: S | null }) {
             <Text variant="micro" tone="accent" as="div">
               {s.firstQuest.when}
             </Text>
-            <Text variant="subheading" as="div" style={{ marginTop: 'var(--space-0h)' }}>
+            <Text variant="subheading" as="div" style={{ marginTop: 'var(--space-1)' }}>
               {s.firstQuest.title}
             </Text>
-            <Text variant="body" tone="slateDeep" as="div" style={{ marginTop: 'var(--space-0h)' }}>
+            <Text variant="body" tone="slateDeep" as="div" style={{ marginTop: 'var(--space-1)' }}>
               {s.firstQuest.line}
             </Text>
           </span>
@@ -320,7 +320,7 @@ export function Setup({ s }: { s: S | null }) {
       <Button type="primary" size="lg" fullWidth glow onClick={s.takeTour} style={{ marginTop: 'var(--space-6)' }}>
         Take the tour
       </Button>
-      <Button type="neutral" link size="sm" onClick={s.toCalendar} style={{ display: 'flex', margin: '6px auto 0', minHeight: 44 }}>
+      <Button type="neutral" link size="sm" onClick={s.toCalendar} style={{ display: 'flex', margin: 'var(--space-2) auto 0', minHeight: 44 }}>
         Go to my calendar
       </Button>
     </>,

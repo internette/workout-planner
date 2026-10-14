@@ -16,7 +16,7 @@ export function WorkoutRow({ workout }: { workout: any }) {
         display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
-        gap: 'var(--space-3h)',
+        gap: 'var(--space-3)',
         width: '100%',
       }}
     >
@@ -29,7 +29,7 @@ export function WorkoutRow({ workout }: { workout: any }) {
         <Text
           variant="body"
           tone="muted"
-          style={{ display: 'block', marginTop: '3px' }}
+          style={{ display: 'block', marginTop: 'var(--space-1)' }}
         >
           {workout?.meta}
         </Text>
@@ -37,7 +37,7 @@ export function WorkoutRow({ workout }: { workout: any }) {
           <Text
             variant="small"
             tone="muted"
-            style={{ display: 'block', marginTop: '3px' }}
+            style={{ display: 'block', marginTop: 'var(--space-1)' }}
           >
             {workout?.exercises}
           </Text>

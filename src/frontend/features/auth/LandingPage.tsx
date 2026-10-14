@@ -106,7 +106,7 @@ const LADDER = RANKS.slice(0, 3).map((r, i) => ({
 }));
 
 const Section = ({ children, last }: { children: React.ReactNode; last?: boolean }) => (
-  <section className={`${styles.band} ${styles.sectionGap}`} style={last ? { paddingBottom: 64 } : undefined}>
+  <section className={`${styles.band} ${styles.sectionGap}`} style={last ? { paddingBottom: 'calc(2 * var(--space-7))' } : undefined}>
     <div className={styles.inner}>{children}</div>
   </section>
 );
@@ -139,7 +139,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                 </Text>
                 <SparkleTrail className={styles.trail} />
               </span>
-              <Text variant="hero" as="h1" style={{ margin: 'var(--space-3h) 0 0', textWrap: 'balance' }}>
+              <Text variant="hero" as="h1" style={{ margin: 'var(--space-4) 0 0', textWrap: 'balance' }}>
                 Answer the call.
                 <br />
                 Then do the sets.
@@ -189,7 +189,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                 Every day with a session on your plan gets a quest, and it resolves in its own words once that day is clear. On a rest day it says so and leaves you alone.
               </Text>
             </div>
-            <Card pad="md" className={styles.col} style={{ padding: 22 }}>
+            <Card pad="md" className={styles.col} style={{ padding: 'var(--space-5)' }}>
               <div className={styles.cleared}>
                 <Gem size={22} />
                 <div style={{ minWidth: 0 }}>
@@ -199,12 +199,12 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
                   <Text variant="subheading" as="div" style={{ marginTop: 'var(--space-1)' }}>
                     Break the illusion
                   </Text>
-                  <Text variant="body" tone="muted" as="div" style={{ marginTop: 3 }}>
+                  <Text variant="body" tone="muted" as="div" style={{ marginTop: 'var(--space-1)' }}>
                     The illusion broke. It was never impossible.
                   </Text>
                 </div>
               </div>
-              <ProgressBar value={100} style={{ marginTop: 'var(--space-4h)' }} />
+              <ProgressBar value={100} style={{ marginTop: 'var(--space-5)' }} />
               <div className={styles.progressRow}>
                 <Text variant="body" tone="accent" weight="semibold">
                   5 of 5 done
@@ -250,7 +250,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
         </Section>
 
         <Section last>
-          <Card pad="lg" className={styles.closing} style={{ borderRadius: 'var(--radius-xl)', padding: '44px 24px' }}>
+          <Card pad="lg" className={styles.closing} style={{ borderRadius: 'var(--radius-xl)', padding: 'calc(2 * var(--space-5)) var(--space-6)' }}>
             <Text variant="headline" as="h2" style={{ margin: 0, textWrap: 'balance' }}>
               The city is quiet. That never lasts.
             </Text>

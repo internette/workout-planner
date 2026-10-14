@@ -20,11 +20,11 @@ export function MonthGrid({ v }: { v: PlannerVals }) {
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(7,minmax(0,1fr))',
-          marginTop: '26px',
+          marginTop: 'var(--space-7)',
         }}
       >
         {(v.dowLabels ?? []).map((l, i) => (
-          <Text key={i} variant="figure" tone="muted" as="div" style={{ textAlign: 'center', paddingBottom: 'var(--space-2h)' }}>
+          <Text key={i} variant="figure" tone="muted" as="div" style={{ textAlign: 'center', paddingBottom: 'var(--space-2)' }}>
             {l}
           </Text>
         ))}

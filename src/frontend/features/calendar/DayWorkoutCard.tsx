@@ -18,7 +18,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
   return (
     <Card pad="lg" className="day-card">
         <div
-          style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3h)' }}
+          style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)' }}
         >
           <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
           {/* Takes the rest of the row, so a long name wraps beside the icon rather than dropping below it. */}
@@ -28,7 +28,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
               <Pressable
                 onClick={card?.open}
                 hit
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', margin: '-6px -10px', padding: 'var(--space-1h) var(--space-2h)', minHeight: '36px', borderRadius: 'var(--radius-sm)' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)', margin: 'calc(-1 * var(--space-1)) calc(-1 * var(--space-2))', padding: 'var(--space-1) var(--space-2)', minHeight: '36px', borderRadius: 'var(--radius-sm)' }}
               >
                 {t(card?.name)}
                 <ChevronRight color="var(--color-muted)" size={17} />
@@ -39,7 +39,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
               variant="strong"
               as="p"
               tone={card?.live && card.live !== 'paused' ? 'accent' : 'muted'}
-              style={{ margin: 'var(--space-1) 0 0', display: 'flex', alignItems: 'center', gap: '7px' }}
+              style={{ margin: 'var(--space-1) 0 0', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}
             >
               {card?.live ? <span aria-hidden="true" className={card.live === 'paused' ? undefined : 'live-dot'} style={{ width: '8px', height: '8px', flex: 'none', borderRadius: 'var(--radius-full)', background: card.live === 'paused' ? 'var(--color-muted)' : 'var(--color-pink)' }} /> : null}
               {card?.openMeta || card?.meta}
@@ -62,19 +62,19 @@ export function DayWorkoutCard({ card }: { card: any }) {
           </div>
         ) : null}
         {card?.ridePlan ? (
-          <Text variant="strong" as="p" tone="ink" weight="semibold" style={{ margin: 'var(--space-3h) 0 0' }}>
+          <Text variant="strong" as="p" tone="ink" weight="semibold" style={{ margin: 'var(--space-4) 0 0' }}>
             {card.ridePlan}
           </Text>
         ) : null}
         {card?.rideStats?.length ? (
-          <StatRow stats={card?.rideStats ?? []} style={{ marginTop: 'var(--space-5)', paddingTop: 'var(--space-4h)', borderTop: '1px solid var(--color-line)' }} />
+          <StatRow stats={card?.rideStats ?? []} style={{ marginTop: 'var(--space-5)', paddingTop: 'var(--space-4)', borderTop: '1px solid var(--color-line)' }} />
         ) : null}
         {card?.isLift ? (
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: 'var(--space-0h)',
+              gap: 'var(--space-1)',
               marginTop: 'var(--space-4)',
             }}
           >
@@ -84,7 +84,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
                   display: 'flex',
                   alignItems: 'flex-start',
                   gap: 'var(--space-3)',
-                  padding: 'var(--space-2h) 0',
+                  padding: 'var(--space-2) 0',
                   borderBottom: '1px solid var(--color-line)',
                 }}
               >
@@ -104,11 +104,11 @@ export function DayWorkoutCard({ card }: { card: any }) {
                   >
                     {x?.exName}
                   </Text>
-                  <Text variant="body" tone="muted" style={{ display: 'block', marginTop: '1px' }}>
+                  <Text variant="body" tone="muted" style={{ display: 'block', marginTop: 'var(--space-1)' }}>
                     {x?.exDetail}
                   </Text>
                   {x?.setNow ? (
-                    <Text variant="small" tone="accent" weight="semibold" style={{ display: 'block', marginTop: 'var(--space-0h)' }}>
+                    <Text variant="small" tone="accent" weight="semibold" style={{ display: 'block', marginTop: 'var(--space-1)' }}>
                       {x.setNow}
                     </Text>
                   ) : null}
@@ -125,9 +125,9 @@ export function DayWorkoutCard({ card }: { card: any }) {
             aria-expanded={!!card?.moreOpen}
             onClick={card?.toggleMore}
             // On a line of its own, so it keeps the row height of the buttons below it.
-            style={{ marginTop: 'var(--space-2h)', minHeight: '44px' }}
+            style={{ marginTop: 'var(--space-3)', minHeight: '44px' }}
           >
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1h)' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)' }}>
               {t(card?.moreLabel)}
               <DisclosureChevron open={!!card?.moreOpen} />
             </span>
@@ -139,7 +139,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
             <Button type="primary" size="lg" fullWidth onClick={card?.continue} style={{ marginTop: 'var(--space-5)' }}>
               {card?.continueLabel}
             </Button>
-            <Button type="neutral" link size="sm" onClick={card?.restart} style={{ display: 'flex', margin: '6px auto 0', minHeight: '44px' }}>
+            <Button type="neutral" link size="sm" onClick={card?.restart} style={{ display: 'flex', margin: 'var(--space-2) auto 0', minHeight: '44px' }}>
               {card?.restartLabel}
             </Button>
           </>
@@ -155,7 +155,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
           </Button>
         )}
         {card?.doToday ? (
-          <Button type="secondary" link size="sm" onClick={card.doToday} style={{ display: 'flex', margin: '6px auto 0', minHeight: '44px' }}>
+          <Button type="secondary" link size="sm" onClick={card.doToday} style={{ display: 'flex', margin: 'var(--space-2) auto 0', minHeight: '44px' }}>
             Do it today instead
           </Button>
         ) : null}
@@ -171,7 +171,7 @@ function FoldedCard({ card }: { card: any }) {
         onClick={card?.expand}
         aria-expanded={false}
         aria-label={card?.expandLabel + ', ' + card?.meta}
-        style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3h)', width: '100%', padding: 'var(--space-3h) var(--space-5)', borderRadius: 'inherit' }}
+        style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', width: '100%', padding: 'var(--space-3) var(--space-5)', borderRadius: 'inherit' }}
       >
         <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
         <span style={{ flex: '1', minWidth: '0' }}>
@@ -179,7 +179,7 @@ function FoldedCard({ card }: { card: any }) {
           <Text variant="subheading" as="span" style={{ display: 'block' }}>
             {t(card?.name)}
           </Text>
-          <Text variant="body" as="span" tone="muted" style={{ display: 'block', marginTop: 'var(--space-0h)' }}>
+          <Text variant="body" as="span" tone="muted" style={{ display: 'block', marginTop: 'var(--space-1)' }}>
             {card?.meta}
           </Text>
         </span>

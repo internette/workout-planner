@@ -109,7 +109,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
   return (
     <>
       {waiting && !draft ? (
-        <Card pad="sm" style={{ marginTop: 'var(--space-3h)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2h) var(--space-3h)', background: 'var(--gradient-gem-tint)' }}>
+        <Card pad="sm" style={{ marginTop: 'var(--space-4)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-3)', background: 'var(--gradient-gem-tint)' }}>
           <Sparkle size={16} color={vars.pink} glow={0.5} />
           <div style={{ flex: '1 1 180px', minWidth: 0 }}>
             <Text variant="subheading" as="div" tone="ink">
@@ -189,21 +189,21 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
     else weeks.push({ start, list: [w] });
   }
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2h)', marginTop: 'var(--space-4h)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-5)' }}>
       {weeks.map((wk, i) => (
-        <section key={wk.start} aria-label={`Week ${i + 1}`} style={{ padding: 'var(--space-3) var(--space-3h)', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)' }}>
+        <section key={wk.start} aria-label={`Week ${i + 1}`} style={{ padding: 'var(--space-3) var(--space-3)', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)' }}>
           <Text variant="micro" as="h3" tone="muted" style={{ margin: 0 }}>
             Week {i + 1} · from {shortDate(wk.start)}
           </Text>
           {wk.list.map((w, j) => (
-            <div key={w.date + w.name + j} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: '9px 0', borderTop: j ? '1px solid var(--color-line)' : 'none' }}>
+            <div key={w.date + w.name + j} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-2) 0', borderTop: j ? '1px solid var(--color-line)' : 'none' }}>
               <IconTile size="sm">
                 <WorkoutIcon name={w.kind === 'ride' ? 'bike' : w.stretch ? 'lunge' : w.yoga ? 'flower' : 'h'} color="var(--color-pink)" />
               </IconTile>
               <div style={{ minWidth: 0 }}>
                 <Text variant="subheading" as="div" tone="ink">
                   {w.warmup || w.stretch || w.yoga ? (
-                    <Text variant="micro" tone="accent" style={{ marginRight: 'var(--space-1h)' }}>
+                    <Text variant="micro" tone="accent" style={{ marginRight: 'var(--space-2)' }}>
                       {w.warmup ? 'Warm-up' : w.stretch ? 'Stretch' : 'Yoga'}
                     </Text>
                   ) : null}

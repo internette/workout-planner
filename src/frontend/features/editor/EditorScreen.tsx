@@ -70,7 +70,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             </Text>
           ) : null}
           {v.showLogDone ? (
-            <div style={{ marginTop: 'var(--space-3h)', paddingTop: 'var(--space-3h)', borderTop: '1px solid var(--color-line)' }}>
+            <div style={{ marginTop: 'var(--space-4)', paddingTop: 'var(--space-3)', borderTop: '1px solid var(--color-line)' }}>
               <Checkbox switch checked={!!v.logDoneOn} onChange={v.setLogDone}>
                 Log it as done
               </Checkbox>
@@ -79,8 +79,8 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
           {v.scheduleOn ? (
             <div
               style={{
-                marginTop: 'var(--space-3h)',
-                paddingTop: 'var(--space-3h)',
+                marginTop: 'var(--space-4)',
+                paddingTop: 'var(--space-3)',
                 borderTop: '1px solid var(--color-line)',
               }}
             >
@@ -130,7 +130,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
         </Card>
       ) : null}
       {v.ridePlanStatic ? (
-        <div style={{ marginTop: 'var(--space-4h)' }}>
+        <div style={{ marginTop: 'var(--space-5)' }}>
           <div
             style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 'var(--space-2)' }}
           >
@@ -141,7 +141,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
               {v.rideLockNote}
             </Text>
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '22px', marginTop: 'var(--space-3)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-5)', marginTop: 'var(--space-3)' }}>
             <Stat label="Distance" value={v.planDistText} />
             <Stat label="Duration" value={v.planDurText} />
             <Stat label="Elevation" value={v.planElevText} />
@@ -157,13 +157,13 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             Target areas
           </Text>
           {v.hasTargetAreas ? (
-            <ChipGroup style={{ marginTop: 'var(--space-3h)' }}>
+            <ChipGroup style={{ marginTop: 'var(--space-4)' }}>
               {(v.targetAreaPills ?? []).map((name, i) => (
                 <Chip key={i} size="md">{name}</Chip>
               ))}
             </ChipGroup>
           ) : (
-            <Text variant="body" tone="muted" style={{ display: 'block', marginTop: 'var(--space-2h)' }}>
+            <Text variant="body" tone="muted" style={{ display: 'block', marginTop: 'var(--space-3)' }}>
               Give an exercise below a target area to see it here.
             </Text>
           )}
@@ -201,7 +201,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       ) : null}
       {v.addOpen ? <AddExercisePanel v={v} /> : null}
       <div style={{ marginTop: 'var(--space-6)' }}>
-        <Text variant="micro" tone="muted" style={{ display: 'block', marginBottom: 'var(--space-2h)' }}>
+        <Text variant="micro" tone="muted" style={{ display: 'block', marginBottom: 'var(--space-3)' }}>
           Workout notes
         </Text>
         <TextArea
@@ -226,7 +226,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
           {v.eSaveLabel}
         </Button>
         {v.canDeleteSession ? (
-          <Button type="danger" ghost size="md" onClick={v.deleteSession} style={{ flex: '1 1 100%', marginTop: 'var(--space-3h)' }}>
+          <Button type="danger" ghost size="md" onClick={v.deleteSession} style={{ flex: '1 1 100%', marginTop: 'var(--space-4)' }}>
             Delete this session
           </Button>
         ) : null}
@@ -238,7 +238,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
 /** "On" and the week's days to pick from, under "Add to calendar" or a session's "Repeat weekly". */
 function RepeatDays({ v }: { v: PlannerVals }) {
   return (
-    <div style={{ marginTop: 'var(--space-3h)' }}>
+    <div style={{ marginTop: 'var(--space-4)' }}>
       <Text variant="micro" as="div" tone="slate" aria-hidden="true" style={{ marginBottom: 'var(--space-2)' }}>
         On
       </Text>

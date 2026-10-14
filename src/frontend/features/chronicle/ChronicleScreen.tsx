@@ -44,7 +44,7 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
       {/* Nothing written yet: what it's for and where to start, in place of filters with nothing to filter. */}
       {v.diaryBlank ? (
         <EmptyState
-          style={{ marginTop: '48px' }}
+          style={{ marginTop: 'calc(2 * var(--space-6))' }}
           medallion="gem"
           icon={<Quill color="var(--color-pink-deep)" size={34} />}
           title="Your story starts here"
@@ -75,9 +75,9 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '9px',
+              gap: 'var(--space-2)',
               width: '100%',
-              padding: 'var(--space-1) var(--space-0h)',
+              padding: 'var(--space-1) var(--space-1)',
               borderBottom: '1.5px dashed color-mix(in srgb, var(--color-ink) 22%, transparent)',
             }}
           >
@@ -119,7 +119,7 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
       {monthsOf(v.diaryList ?? []).map((g) => (
         <section key={g.label} aria-label={g.label.charAt(0) + g.label.slice(1).toLowerCase()}>
           <SectionLabel label={g.label} note={plural(g.entries.length, 'entry', 'entries')} style={{ margin: 'var(--space-5) 0 var(--space-2)' }} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2h)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
             {g.entries.map((e, i) => (
               <ChronicleRow key={i} entry={e} />
             ))}

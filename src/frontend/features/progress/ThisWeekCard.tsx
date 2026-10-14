@@ -20,15 +20,15 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
         {v.wkHas ? v.wkEyebrow : 'This week'}
       </Text>
       {v.wkEmpty ? (
-        <Text variant="strong" as="span" tone="muted" style={{ display: 'block', margin: 'var(--space-1h) 0 0' }}>
+        <Text variant="strong" as="span" tone="muted" style={{ display: 'block', margin: 'var(--space-2) 0 0' }}>
           Nothing planned this week yet.
         </Text>
       ) : null}
       {v.wkHas ? (
         <>
-          <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 'var(--space-0h) var(--space-3h)', marginTop: 'var(--space-1h)' }}>
+          <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 'var(--space-1) var(--space-3)', marginTop: 'var(--space-2)' }}>
             {(v.wkParts ?? []).map((p) => (
-              <span key={p.label} style={{ display: 'inline-flex', alignItems: 'baseline', gap: '5px' }}>
+              <span key={p.label} style={{ display: 'inline-flex', alignItems: 'baseline', gap: 'var(--space-1)' }}>
                 <Text variant="heading">{p.n}</Text>
                 <Text variant="strong" tone="muted">
                   {p.label}
@@ -43,7 +43,7 @@ export function ThisWeekCard({ v }: { v: PlannerVals }) {
               height: '7px',
               borderRadius: '4px',
               background: 'var(--color-pink-tint)',
-              marginTop: 'var(--space-3h)',
+              marginTop: 'var(--space-4)',
               overflow: 'hidden',
             }}
           >

@@ -7,7 +7,7 @@ export function SessionTags({ program, type }: { program?: string | null; type: 
   return (
     <>
       {program ? (
-        <Text variant="micro" tone="muted" as="span" style={{ display: 'block', marginBottom: '3px' }}>
+        <Text variant="micro" tone="muted" as="span" style={{ display: 'block', marginBottom: 'var(--space-1)' }}>
           {program}
         </Text>
       ) : null}

@@ -14,7 +14,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
   return (
     <Card
       pad="lg"
-      style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-4h)' }}
+      style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-4)' }}
     >
       {/* The gem ring: the brand gradient, a white gap, then the photo (or the initial). The badge
           carries the gem of the current rank. */}
@@ -103,7 +103,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
           {v.profileName}
         </Text>
         {v.profileSince ? (
-          <Text variant="body" as="p" tone="muted" style={{ margin: '5px 0 0' }}>
+          <Text variant="body" as="p" tone="muted" style={{ margin: 'var(--space-1) 0 0' }}>
             {v.profileSince}
           </Text>
         ) : null}
@@ -116,9 +116,9 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 'var(--space-2)',
-            marginTop: '9px',
+            marginTop: 'var(--space-2)',
             minHeight: '36px',
-            padding: '8px 15px 8px 14px',
+            padding: 'var(--space-2) var(--space-4) var(--space-2) var(--space-3)',
             borderRadius: 'var(--radius-full)',
             fontSize: 'var(--text-base)',
             fontWeight: 'var(--font-weight-bold)',
@@ -136,7 +136,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
           width={280}
           top={34}
           pad="sm"
-          style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2h)', marginTop: 'var(--space-3h)' }}
+          style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}
           content={
             <>
               <Text variant="micro" tone="slate" style={{ display: 'block' }}>
@@ -145,7 +145,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
               <Text
                 variant="body"
                 tone="ink"
-                style={{ display: 'block', marginTop: '9px', textWrap: 'pretty' }}
+                style={{ display: 'block', marginTop: 'var(--space-2)', textWrap: 'pretty' }}
               >
                 Each exercise you complete earns 10 XP, and finishing a whole workout earns 50
                 XP on top. Ranks unlock at fixed XP totals.
@@ -173,7 +173,7 @@ export function ProfileHeaderCard({ v }: { v: PlannerVals }) {
             aria-expanded={!!v.xpInfoOpen}
             onClick={v.toggleXpInfo}
             title="How XP works"
-            style={{ margin: '-6px' }}
+            style={{ margin: 'calc(-1 * var(--space-1))' }}
           >
             <Info color="var(--color-muted)" size={16} />
           </IconButton>

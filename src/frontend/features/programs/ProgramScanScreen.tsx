@@ -64,11 +64,11 @@ function Found({ v }: { v: PlannerVals }) {
   return (
     <div>
       <BackBar label={v.backLabel} onBack={v.goBack} />
-      <div style={{ marginTop: 'var(--space-4h)' }}>
+      <div style={{ marginTop: 'var(--space-5)' }}>
         <Text variant="micro" tone="slate" as="div">
           From your calendar
         </Text>
-        <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
+        <Text variant="title" as="h1" style={{ margin: 'var(--space-1) 0 0' }}>
           {s.title}
         </Text>
         <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
@@ -80,7 +80,7 @@ function Found({ v }: { v: PlannerVals }) {
           <BlockBar blocks={s.bar} />
         </div>
       ) : null}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2h)', marginTop: 'var(--space-4)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
         {s.blocks.map((b) => (
           <Card key={b.key} pad="sm" as="section" aria-label={b.title}>
             <Text variant="subheading" as="h2" style={{ margin: 0 }}>
@@ -88,7 +88,7 @@ function Found({ v }: { v: PlannerVals }) {
             </Text>
             <WeekStrip days={b.strip} style={{ marginTop: 'var(--space-3)' }} />
             {b.change ? (
-              <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2h) 0 0' }}>
+              <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-3) 0 0' }}>
                 {b.change}
               </Text>
             ) : null}
@@ -135,26 +135,26 @@ function Naming({ v }: { v: PlannerVals }) {
   return (
     <div>
       <BackBar label="What it found" onBack={n.back} />
-      <Text variant="title" as="h1" style={{ margin: 'var(--space-4h) 0 0' }}>
+      <Text variant="title" as="h1" style={{ margin: 'var(--space-5) 0 0' }}>
         Make it a program
       </Text>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-4)', maxWidth: '560px' }}>
         <TextField label="Program name" value={n.name} onChange={n.setName} maxLength={80} />
         {n.blocks.length ? (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2h)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
             {n.blocks.map((b) => (
               <TextField key={b.key} label={b.label} value={b.value} onChange={b.set} maxLength={40} containerStyle={{ flex: '1 1 140px' }} />
             ))}
           </div>
         ) : null}
       </div>
-      <SectionLabel label="The sessions on your calendar" style={{ marginTop: '22px' }} />
+      <SectionLabel label="The sessions on your calendar" style={{ marginTop: 'var(--space-6)' }} />
       <div role="radiogroup" aria-label="The sessions on your calendar" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-2)', maxWidth: '560px' }}>
         <OptionCard name="scan-sessions" value="keep" checked={n.keep} onChange={n.setKeep} title="Keep them, as this program" description={n.keepNote} />
         <OptionCard name="scan-sessions" value="fresh" checked={!n.keep} onChange={n.setKeep} title="Start it fresh instead" description={n.freshNote} />
       </div>
       {!n.keep ? (
-        <div style={{ marginTop: 'var(--space-3h)', maxWidth: '560px' }}>
+        <div style={{ marginTop: 'var(--space-4)', maxWidth: '560px' }}>
           <TextField label="Starting" type="date" value={n.date} min={n.min} onChange={n.setDate} />
         </div>
       ) : null}
@@ -163,7 +163,7 @@ function Naming({ v }: { v: PlannerVals }) {
           End the weekly series
         </Checkbox>
       </div>
-      <Button type="primary" size="lg" fullWidth onClick={n.make} disabled={!n.canMake || n.busy} style={{ marginTop: '22px' }}>
+      <Button type="primary" size="lg" fullWidth onClick={n.make} disabled={!n.canMake || n.busy} style={{ marginTop: 'var(--space-6)' }}>
         {n.busy ? 'Making it…' : 'Make program'}
       </Button>
     </div>
@@ -186,7 +186,7 @@ function Nothing({ v }: { v: PlannerVals }) {
             Save a week as a program
           </Button>
         }
-        style={{ marginTop: '64px' }}
+        style={{ marginTop: 'calc(2 * var(--space-7))' }}
       />
     </div>
   );

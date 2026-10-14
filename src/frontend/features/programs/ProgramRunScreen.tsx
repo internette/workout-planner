@@ -19,7 +19,7 @@ export function ProgramRunScreen({ v }: { v: PlannerVals }) {
     return (
       <div>
         <BackBar label={v.backLabel} onBack={v.goBack} />
-        <Text variant="title" as="h1" style={{ margin: 'var(--space-4h) 0 0' }}>
+        <Text variant="title" as="h1" style={{ margin: 'var(--space-5) 0 0' }}>
           Not in your programs
         </Text>
         <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
@@ -30,17 +30,17 @@ export function ProgramRunScreen({ v }: { v: PlannerVals }) {
   return (
     <div>
       <BackBar label={v.backLabel} onBack={v.goBack} />
-      <div style={{ marginTop: 'var(--space-4h)' }}>
+      <div style={{ marginTop: 'var(--space-5)' }}>
         <Text variant="micro" tone="slate" as="div">
           {p.eyebrow}
         </Text>
-        <Text variant="title" as="h1" style={{ margin: '3px 0 0' }}>
+        <Text variant="title" as="h1" style={{ margin: 'var(--space-1) 0 0' }}>
           {p.name}
         </Text>
       </div>
       {/* Finished: its moment, before the details. */}
       {p.complete ? (
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)', marginTop: 'var(--space-4)', padding: 'var(--space-3h) var(--space-4)', borderRadius: 'var(--radius-lg)', background: 'var(--gradient-gem-tint)', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)', marginTop: 'var(--space-4)', padding: 'var(--space-3) var(--space-4)', borderRadius: 'var(--radius-lg)', background: 'var(--gradient-gem-tint)', overflow: 'hidden' }}>
           <span style={{ width: '32px', height: '32px', flex: 'none', borderRadius: 'var(--radius-sm)', background: 'var(--gradient-gem)', display: 'grid', placeItems: 'center' }}>
             <Check color="var(--color-surface)" strokeWidth={2.6} size={16} />
           </span>
@@ -48,21 +48,21 @@ export function ProgramRunScreen({ v }: { v: PlannerVals }) {
             <Text variant="micro" tone="accent" as="div">
               Arc complete
             </Text>
-            <Text variant="body" tone="slateDeep" as="p" style={{ margin: 'var(--space-0h) 0 0' }}>
+            <Text variant="body" tone="slateDeep" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
               {p.complete}
             </Text>
           </span>
         </div>
       ) : null}
-      <ChipGroup style={{ marginTop: 'var(--space-3h)' }}>
+      <ChipGroup style={{ marginTop: 'var(--space-4)' }}>
         <Chip icon={<Calendar color="var(--color-muted)" size={15} />}>{p.chips[0]}</Chip>
         <Chip icon={<Repeat color="var(--color-muted)" size={15} />}>{p.chips[1]}</Chip>
         <Chip>{p.chips[2]}</Chip>
       </ChipGroup>
-      <div style={{ marginTop: 'var(--space-4h)' }}>
+      <div style={{ marginTop: 'var(--space-5)' }}>
         <BlockBar blocks={p.bar} />
       </div>
-      <div style={{ display: 'flex', gap: 'var(--space-2h)', marginTop: 'var(--space-4h)' }}>
+      <div style={{ display: 'flex', gap: 'var(--space-2)', marginTop: 'var(--space-5)' }}>
         <Button type="primary" size="lg" onClick={p.add} disabled={p.adding} style={{ flex: '1 1 0', minWidth: 0, whiteSpace: 'nowrap' }}>
           {p.adding ? 'Adding…' : 'Add to my programs'}
         </Button>
@@ -70,10 +70,10 @@ export function ProgramRunScreen({ v }: { v: PlannerVals }) {
           Share
         </Button>
       </div>
-      <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2h) 0 0' }}>
+      <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-3) 0 0' }}>
         {p.note}
       </Text>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2h)', marginTop: 'var(--space-4)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
         {p.blocks.map((b) => (
           <Card key={b.key} pad="sm" as="section" aria-label={b.name}>
             <Text variant="subheading" as="h2" style={{ margin: 0 }}>
@@ -105,7 +105,7 @@ export function ProgramRunScreen({ v }: { v: PlannerVals }) {
                     <ChevronDown color="var(--color-muted)" size={16} style={{ flex: 'none', transform: w.open ? 'rotate(180deg)' : undefined }} />
                   </Pressable>
                   {w.open ? (
-                    <div style={{ margin: '2px 0 10px 50px', display: 'flex', flexDirection: 'column', gap: 'var(--space-1h)' }}>
+                    <div style={{ margin: 'var(--space-1) 0 var(--space-3) 50px', display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
                       {w.lines.map((line, i) => (
                         <Text key={i} variant="body" as="div">
                           {line}

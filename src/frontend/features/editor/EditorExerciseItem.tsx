@@ -15,7 +15,7 @@ import { t } from '@/frontend/features/planner/viewHelpers';
 export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle: ReactNode }) {
   return (
     <Card pad="sm">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
         {handle}
         <Pressable
           onClick={exercise?.toggleExpand}
@@ -33,7 +33,7 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
           <span style={{ flex: '1', minWidth: '0' }}>
             <ExerciseName name={exercise?.name ?? ''} done={!!exercise?.nameDone} />
             {!exercise?.expanded ? (
-              <Text variant="body" tone="muted" style={{ display: 'block', marginTop: '3px' }}>
+              <Text variant="body" tone="muted" style={{ display: 'block', marginTop: 'var(--space-1)' }}>
                 {exercise?.detail}
               </Text>
             ) : null}
@@ -60,7 +60,7 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
       />
       <AreaChoice areas={exercise?.areas ?? []} />
       {/* Its icon and removing it, with the rest of its settings: the closed row keeps its room for the details. */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-3h)', paddingTop: 'var(--space-3)', borderTop: '1px solid var(--color-line)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-4)', paddingTop: 'var(--space-3)', borderTop: '1px solid var(--color-line)' }}>
         <IconPicker
             size="sm"
             open={!!exercise?.open}

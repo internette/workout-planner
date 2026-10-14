@@ -31,7 +31,7 @@ export function TagLabel({ inline, children }: { inline?: boolean; children: Rea
         style={
           inline
             ? { display: 'inline-block', marginLeft: 'var(--space-1)', verticalAlign: 'middle' }
-            : { display: 'block', marginBottom: '3px' }
+            : { display: 'block', marginBottom: 'var(--space-1)' }
         }
       >
         {children}

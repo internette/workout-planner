@@ -14,7 +14,7 @@ export function SavedScreen({ v }: { v: PlannerVals }) {
         position: 'relative',
         maxWidth: '520px',
         margin: '0 auto',
-        padding: '44px 20px 60px',
+        padding: 'calc(2 * var(--space-5)) var(--space-5) calc(2 * var(--space-7))',
         textAlign: 'center',
         overflow: 'hidden',
       }}
@@ -54,14 +54,14 @@ export function SavedScreen({ v }: { v: PlannerVals }) {
           />
         </div>
       </div>
-      <Text variant="title" as="h1" style={{ margin: '22px 0 0' }}>
+      <Text variant="title" as="h1" style={{ margin: 'var(--space-6) 0 0' }}>
         Written into your Chronicle
       </Text>
       <Text
         variant="body"
         as="p"
         tone="muted"
-        style={{ margin: '10px auto 0', maxWidth: '340px', textWrap: 'pretty' }}
+        style={{ margin: 'var(--space-3) auto 0', maxWidth: '340px', textWrap: 'pretty' }}
       >
         {v.savedLine}
       </Text>
@@ -69,8 +69,8 @@ export function SavedScreen({ v }: { v: PlannerVals }) {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 'var(--space-2h)',
-          marginTop: '30px',
+          gap: 'var(--space-2)',
+          marginTop: 'var(--space-7)',
           textAlign: 'left',
         }}
       >

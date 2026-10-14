@@ -11,7 +11,7 @@ export function BackLink({ label, onClick }: { label: string; onClick: () => voi
       onClick={onClick}
       data-back
       aria-label={'Back to ' + label}
-      style={{ marginLeft: '-10px', minWidth: 0, maxWidth: '60%', flex: '0 1 auto' }}
+      style={{ marginLeft: 'calc(-1 * var(--space-2))', minWidth: 0, maxWidth: '60%', flex: '0 1 auto' }}
     >
       <ChevronLeft color="var(--color-slate)" strokeWidth={2.2} size={17} />
       <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{label}</span>

@@ -35,7 +35,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
               display: 'grid',
               gridTemplateColumns: 'repeat(3,minmax(0,1fr))',
               gap: 'var(--space-1)',
-              marginTop: 'var(--space-2h)',
+              marginTop: 'var(--space-3)',
             }}
           >
             {(v.months ?? []).map((m, i) => (
@@ -46,7 +46,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
                 aria-current={m?.current ? 'date' : undefined}
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  padding: '11px 6px',
+                  padding: 'var(--space-3) var(--space-1)',
                   borderRadius: 'var(--radius-sm)',
                   fontSize: 'var(--text-base)',
                   textAlign: 'center',
@@ -66,8 +66,8 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             style={{
               display: 'flex',
               justifyContent: 'center',
-              marginTop: 'var(--space-2h)',
-              paddingTop: 'var(--space-2h)',
+              marginTop: 'var(--space-3)',
+              paddingTop: 'var(--space-2)',
               borderTop: '1px solid var(--color-line)',
             }}
           >
@@ -82,7 +82,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
         onClick={v.toggleMonth}
         aria-expanded={!!v.monthOpen}
         aria-haspopup="true"
-        style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', marginLeft: '-10px', minHeight: '44px', padding: 'var(--space-2) var(--space-2h)', borderRadius: 'var(--radius-md)', background: v.monthOpen ? 'var(--hover-neutral)' : undefined }}
+        style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)', marginLeft: 'calc(-1 * var(--space-2))', minHeight: '44px', padding: 'var(--space-2) var(--space-2)', borderRadius: 'var(--radius-md)', background: v.monthOpen ? 'var(--hover-neutral)' : undefined }}
       >
         <Text variant="heading" tone="ink">
           {v.monthName}
@@ -94,7 +94,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             alignItems: 'center',
             gap: 'var(--space-1)',
             flex: 'none',
-            marginLeft: '9px',
+            marginLeft: 'var(--space-2)',
             pointerEvents: 'none',
           }}
         >

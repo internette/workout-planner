@@ -6,11 +6,11 @@ import { Text } from '@moonshot/design-system/typography';
 /** An exercise in the Spellbook’s list: open it, or add it to the workout being built. */
 export function ExerciseRow({ exercise }: { exercise: any }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2h)', width: '100%', padding: 'var(--space-3) 0' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', width: '100%', padding: 'var(--space-3) 0' }}>
       <Pressable
         onClick={exercise?.open}
         aria-label={'View details for ' + exercise?.name}
-        style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3h)', flex: '1 1 200px', minWidth: '0', margin: '-6px', padding: 'var(--space-1h)', borderRadius: 'var(--radius-sm)' }}
+        style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', flex: '1 1 200px', minWidth: '0', margin: 'calc(-1 * var(--space-1))', padding: 'var(--space-1)', borderRadius: 'var(--radius-sm)' }}
       >
         <IconTile as="span" size="xs" variant="flat">{exercise?.svg}</IconTile>
         <span style={{ flex: '1', minWidth: '0' }}>
@@ -20,7 +20,7 @@ export function ExerciseRow({ exercise }: { exercise: any }) {
           <Text
             variant="body"
             tone="muted"
-            style={{ display: 'block', marginTop: '3px' }}
+            style={{ display: 'block', marginTop: 'var(--space-1)' }}
           >
             {exercise?.detail}
           </Text>
@@ -40,7 +40,7 @@ export function ExerciseRow({ exercise }: { exercise: any }) {
         <Pressable
           onClick={exercise?.add}
           aria-label={'Add ' + exercise?.name + ' to a workout'}
-          style={{ flex: 'none', width: '44px', height: '44px', margin: '-4px -6px -4px 0', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)' }}
+          style={{ flex: 'none', width: '44px', height: '44px', margin: 'calc(-1 * var(--space-1)) calc(-1 * var(--space-1)) calc(-1 * var(--space-1)) 0', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)' }}
         >
           <span style={{ width: '32px', height: '32px', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)', background: 'var(--color-pink-tint)' }}>
             <Plus color="var(--color-pink-deep)" strokeWidth={2.6} size={16} />

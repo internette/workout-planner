@@ -24,10 +24,10 @@ export function SearchBar({ value, onChange, placeholder, label, onClear, status
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 'var(--space-2h)',
+        gap: 'var(--space-2)',
         width: '100%',
         ...(inset
-          ? { padding: '0 13px', background: 'var(--color-canvas)', border: '1px solid var(--color-outline)', borderRadius: 'var(--radius-md)' }
+          ? { padding: '0 var(--space-3)', background: 'var(--color-canvas)', border: '1px solid var(--color-outline)', borderRadius: 'var(--radius-md)' }
           : { padding: 'var(--space-3) var(--space-4)', background: 'var(--color-surface)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--elevation-hairline)' }),
       }}
     >

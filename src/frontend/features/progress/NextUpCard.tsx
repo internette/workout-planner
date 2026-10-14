@@ -20,7 +20,7 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
       </Text>
       {v.hasNext ? (
         // The session's icon beside its name and when, as on the calendar's rows.
-        <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-2h)' }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-3)' }}>
           <IconTile as="span" size="xs" variant="flat" aria-hidden>
             {v.nextSvg}
           </IconTile>
@@ -28,7 +28,7 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
             <Text variant="subheading" tone="ink" style={{ display: 'block' }}>
               {v.nextName}
             </Text>
-            <Text variant="strong" as="span" tone="muted" style={{ display: 'block', margin: '3px 0 0' }}>
+            <Text variant="strong" as="span" tone="muted" style={{ display: 'block', margin: 'var(--space-1) 0 0' }}>
               {v.nextMeta}
             </Text>
           </span>
@@ -40,7 +40,7 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
           as="p"
           tone="muted"
          
-          style={{ margin: '9px 0 0' }}
+          style={{ margin: 'var(--space-2) 0 0' }}
         >
           No call yet. Plan a session and it shows up here.
         </Text>

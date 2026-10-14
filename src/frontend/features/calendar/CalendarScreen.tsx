@@ -68,7 +68,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               display: 'flex',
               flexWrap: 'wrap',
               alignItems: 'center',
-              gap: 'var(--space-2h)',
+              gap: 'var(--space-2)',
               marginTop: 'var(--space-5)',
             }}
           >
@@ -79,7 +79,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               {v.shortDate}
             </Text>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1h)', marginTop: 'var(--space-5)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', marginTop: 'var(--space-5)' }}>
             <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
             <div style={{ flex: '1', display: 'flex' }}>
               {(v.days ?? []).map((d, i) => (
@@ -93,13 +93,13 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                     position: 'relative',
                     flex: 1,
                     minWidth: 0,
-                    padding: 'var(--space-2) var(--space-0h) var(--space-2h)',
+                    padding: 'var(--space-2) var(--space-1) var(--space-2)',
                     borderRadius: 'var(--radius-md)',
                     background: d?.selected ? 'var(--color-pink)' : 'none',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    gap: '3px',
+                    gap: 'var(--space-1)',
                   }}
                 >
                   <span style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-semibold)', color: d?.selected ? 'var(--color-surface)' : 'var(--color-muted)' }}>
@@ -135,13 +135,13 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
       ) : null}
       <RestartDialog v={v} />
       {v.hasWorkout ? (
-        <div style={{ marginTop: 'var(--space-3h)' }}>
+        <div style={{ marginTop: 'var(--space-4)' }}>
           {(v.dayCards ?? []).map((c, i) => (
             <div key={c?.key} style={{ marginTop: i ? '12px' : '0' }}>
               <DayWorkoutCard card={c} />
             </div>
           ))}
-          <aside style={{ display: 'flex', marginTop: 'var(--space-3h)' }}>
+          <aside style={{ display: 'flex', marginTop: 'var(--space-4)' }}>
             <Button type="dashed" size="md" onClick={v.goNewWorkout} style={{ flex: '1' }}>
               <Plus color="var(--color-pink-deep)" size={17} />
               Add workout
@@ -151,7 +151,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
       ) : null}
       {v.firstRun ? (
         <EmptyState
-          style={{ marginTop: '48px' }}
+          style={{ marginTop: 'calc(2 * var(--space-6))' }}
           medallion="gem"
           icon={<Gem size={40} />}
           title="The call is coming"
@@ -171,7 +171,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
       ) : null}
       {v.isRest ? (
         <EmptyState
-          style={{ marginTop: '56px' }}
+          style={{ marginTop: 'calc(2 * var(--space-7))' }}
           icon={
             <>
               <Moon color="var(--color-periwinkle)" size={40} />
@@ -203,7 +203,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
       {v.showWeek ? (
         <div style={{ marginTop: 'var(--space-5)' }}>
           {/* On a narrow phone, Save as program drops to the line under the week rather than past the edge. */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-1h)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-1)' }}>
             <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
             <Text variant="subheading" as="h1" style={{ flex: 'none', whiteSpace: 'nowrap', margin: 0 }}>
               {v.weekLabel}
@@ -216,7 +216,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             ) : null}
           </div>
           <div
-            style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: '26px', paddingBottom: v.hasRows ? '8px' : 0 }}
+            style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-7)', paddingBottom: v.hasRows ? 'var(--space-2)' : 0 }}
           >
             {(v.weekRows ?? []).map((w, i) => (
               <WeekRow key={i} row={w} />
@@ -227,7 +227,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               style={{
                 position: 'relative',
                 marginTop: 'var(--space-4)',
-                padding: '26px 24px',
+                padding: 'var(--space-6) var(--space-6)',
                 borderRadius: 'var(--radius-lg)',
                 background:
                   'var(--gradient-gem-tint)',
@@ -258,7 +258,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                 variant="body"
                 as="p"
                 tone="slate"
-                style={{ margin: '8px auto 0', maxWidth: '320px', textWrap: 'pretty' }}
+                style={{ margin: 'var(--space-2) auto 0', maxWidth: '320px', textWrap: 'pretty' }}
               >
                 {v.weekDoneNote}
               </Text>
@@ -269,7 +269,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               size="md"
               panel
               titleAs="h3"
-              style={{ margin: '34px 0 0' }}
+              style={{ margin: 'var(--space-7) 0 0' }}
               icon={<Gem size={32} />}
               title="Your wand&apos;s still charging"
               description={v.emptyWeekNote}
@@ -293,7 +293,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
       {v.showMonth ? (
         <>
           <h1 className="sr-only">{v.monthName}</h1>
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 'var(--space-2)', marginTop: 'var(--space-3h)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
             <Button type="neutral" ghost size="sm" onClick={v.prevMonth} aria-label={'Previous month, ' + v.prevMonthName}>
               <ChevronLeft color="var(--color-muted)" size={16} />
               {v.prevMonthShort}
@@ -303,11 +303,11 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               <ChevronRight color="var(--color-muted)" size={16} />
             </Button>
           </div>
-          <div style={{ marginTop: 'var(--space-2h)' }}>
+          <div style={{ marginTop: 'var(--space-3)' }}>
             <MonthGrid v={v} />
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-1h) var(--space-3h)', marginTop: 'var(--space-4)' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-1) var(--space-3)', marginTop: 'var(--space-4)' }}>
               {STATUS_NAMES.map(([status, name]) => (
-                <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1h)' }}>
+                <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)' }}>
                   <StatusDot status={status} />
                   {name}
                 </Text>
@@ -316,7 +316,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             {/* The month in two numbers, under its grid: the grid comes straight after the month's arrows. */}
             <Card
               pad="none"
-              style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-4h)', marginTop: 'var(--space-4)', padding: 'var(--space-3) var(--space-4h)' }}
+              style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-4)', marginTop: 'var(--space-4)', padding: 'var(--space-3) var(--space-4)' }}
             >
               <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
                 <span
@@ -340,7 +340,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               </span>
             </Card>
             {v.hasToday ? (
-              <div style={{ marginTop: '30px' }}>
+              <div style={{ marginTop: 'var(--space-7)' }}>
                 <Text variant="micro" as="div" tone="muted">
                   {v.todayLabel}
                 </Text>
