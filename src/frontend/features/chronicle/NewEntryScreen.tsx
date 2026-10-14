@@ -18,7 +18,7 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
         intro={<>Pick a session from the last 60 days. Ones you&apos;ve already written about aren&apos;t listed.</>}
         style={{ marginTop: 'var(--space-6)' }}
       />
-      <div style={{ marginTop: 'var(--space-7)', maxWidth: '620px' }}>
+      <div style={{ marginTop: 'var(--space-7)', maxWidth: 'var(--layout-prose-max)' }}>
         {/* One card per group (this week, last week, earlier), its sessions as rows. Back leaves. */}
         {(v.unloggedGroups ?? []).map((g) => (
           <div key={g.label} style={{ marginBottom: 'var(--space-4)' }}>

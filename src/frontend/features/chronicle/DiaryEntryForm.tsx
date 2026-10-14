@@ -46,7 +46,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
         onChange={v.pickMood}
         style={{ margin: v.entryLeft ? '28px 0 0 -2px' : '34px auto 0' }}
       />
-      <div style={{ maxWidth: '560px', margin: v.entryLeft ? '40px 0 0' : '40px auto 0' }}>
+      <div style={{ maxWidth: 'var(--layout-form-max)', margin: v.entryLeft ? '40px 0 0' : '40px auto 0' }}>
         <div
           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 'var(--space-2)' }}
         >

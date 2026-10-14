@@ -114,7 +114,7 @@ function Naming({ v }: { v: PlannerVals }) {
       <Text variant="title" as="h1" style={{ margin: 'var(--space-5) 0 0' }}>
         Make it a program
       </Text>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-4)', maxWidth: '560px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-4)', maxWidth: 'var(--layout-form-max)' }}>
         <TextField label="Program name" value={n.name} onChange={n.setName} maxLength={80} />
         {n.blocks.length ? (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
@@ -125,16 +125,16 @@ function Naming({ v }: { v: PlannerVals }) {
         ) : null}
       </div>
       <SectionLabel label="The sessions on your calendar" style={{ marginTop: 'var(--space-6)' }} />
-      <div role="radiogroup" aria-label="The sessions on your calendar" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-2)', maxWidth: '560px' }}>
+      <div role="radiogroup" aria-label="The sessions on your calendar" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-2)', maxWidth: 'var(--layout-form-max)' }}>
         <OptionCard name="scan-sessions" value="keep" checked={n.keep} onChange={n.setKeep} title="Keep them, as this program" description={n.keepNote} />
         <OptionCard name="scan-sessions" value="fresh" checked={!n.keep} onChange={n.setKeep} title="Start it fresh instead" description={n.freshNote} />
       </div>
       {!n.keep ? (
-        <div style={{ marginTop: 'var(--space-4)', maxWidth: '560px' }}>
+        <div style={{ marginTop: 'var(--space-4)', maxWidth: 'var(--layout-form-max)' }}>
           <TextField label="Starting" type="date" value={n.date} min={n.min} onChange={n.setDate} />
         </div>
       ) : null}
-      <div style={{ marginTop: 'var(--space-4)', maxWidth: '560px' }}>
+      <div style={{ marginTop: 'var(--space-4)', maxWidth: 'var(--layout-form-max)' }}>
         <Checkbox switch checked={n.endSeries} onChange={n.setEndSeries} description="Their weekly repeats are now the program’s, so nothing doubles up.">
           End the weekly series
         </Checkbox>

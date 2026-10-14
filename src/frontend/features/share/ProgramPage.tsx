@@ -95,7 +95,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
 
   if (!program || !name) {
     return (
-      <main style={{ maxWidth: '560px', margin: '0 auto', padding: 'var(--space-6) var(--space-4) calc(2 * var(--space-6))' }}>
+      <main style={{ maxWidth: 'var(--layout-form-max)', margin: '0 auto', padding: 'var(--space-6) var(--space-4) calc(2 * var(--space-6))' }}>
         <Lockup />
         <Text variant="title" as="h1" style={{ margin: 'var(--space-7) 0 0' }}>
           This link doesn’t open anything
@@ -129,7 +129,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
   };
 
   return (
-    <main style={{ maxWidth: '560px', margin: '0 auto', padding: 'var(--space-6) var(--space-4) 160px' }}>
+    <main style={{ maxWidth: 'var(--layout-form-max)', margin: '0 auto', padding: 'var(--space-6) var(--space-4) 160px' }}>
       <a href={signedIn ? '/calendar' : '/welcome'} aria-label="Moonshot" style={{ display: 'inline-flex', textDecoration: 'none' }}>
         <Lockup />
       </a>
@@ -230,7 +230,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
           boxShadow: 'var(--elevation-bar)',
         }}
       >
-        <div style={{ maxWidth: '528px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'calc(var(--layout-form-max) - 2 * var(--space-4))', margin: '0 auto' }}>
           {signedIn ? (
             <Button type="primary" size="lg" fullWidth onClick={() => setCopyOpen(true)}>
               Copy to my programs

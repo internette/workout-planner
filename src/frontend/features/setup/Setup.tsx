@@ -63,7 +63,7 @@ export function Setup({ s }: { s: S | null }) {
 
   const page = (body: ReactNode, foot: ReactNode) => (
     <Dialog open variant="fullscreen" closeButton={false} labelledBy="setup-title" onClose={s.step < s.steps ? s.useDefaults : s.toCalendar}>
-      <div ref={top} style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', padding: 'var(--space-5) var(--space-5) var(--space-7)', maxWidth: 520, margin: '0 auto' }}>
+      <div ref={top} style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', padding: 'var(--space-5) var(--space-5) var(--space-7)', maxWidth: 'var(--layout-form-max)', margin: '0 auto' }}>
         {body}
         {foot}
       </div>

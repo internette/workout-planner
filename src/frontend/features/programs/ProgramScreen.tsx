@@ -134,7 +134,7 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
         {p.equipment ? <Chip>{p.equipment}</Chip> : null}
       </ChipGroup>
       {p.notes ? (
-        <Text variant="body" tone="slate" as="p" style={{ margin: 'var(--space-4) 0 0', maxWidth: '560px', whiteSpace: 'pre-wrap' }}>
+        <Text variant="body" tone="slate" as="p" style={{ margin: 'var(--space-4) 0 0', maxWidth: 'var(--layout-form-max)', whiteSpace: 'pre-wrap' }}>
           {p.notes}
         </Text>
       ) : null}
