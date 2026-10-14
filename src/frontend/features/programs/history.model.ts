@@ -241,7 +241,7 @@ export function historyVals(ctx: Ctx) {
         name: page.r.name,
         snapshot: (o: { notes: boolean; showName: boolean }) => ({
           ...page.shown,
-          by: o.showName ? displayName(logic.auth.account) : null,
+          by: o.showName ? displayName(logic.auth.account, logic.model.profile?.name) : null,
           workouts: o.notes ? page.shown.workouts : page.shown.workouts.map((w) => ({ ...w, notes: '' })),
         }),
         canShowName: !!logic.auth.account,

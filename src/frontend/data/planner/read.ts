@@ -5,12 +5,13 @@ import { isoMonthDay, isoOf, isoWeekday, seriesWeekdays, splitMinutes } from '@/
 import type { Exercise, Entry, WorkoutSummary, BuiltinWorkout, BuiltinProgram, Model, Program, ProgramRun, ProgramWorkout } from './types';
 import { runEnd, runPlace } from '@/frontend/shared/programs';
 import { readProgram } from '@/frontend/shared/sharedProgram';
+import { toProfile } from './profile';
 import { toExercise, areasOf, numStr, workoutView, estimateMinutes } from './convert';
 import { ok, okOr } from './db';
 import type { Mood } from '@moonshot/design-system/icons';
 
 export async function loadModel(today: Date): Promise<Model> {
-  const [workouts, exercises, plan, diary, library, builtins, builtinWorkoutRows, repeatDaysProbe, programRows, blockRows, runRows, builtinProgramRows] = await Promise.all([
+  const [workouts, exercises, plan, diary, library, builtins, builtinWorkoutRows, repeatDaysProbe, programRows, blockRows, runRows, builtinProgramRows, profileRows] = await Promise.all([
     ok(supabase.from('workouts').select('*')),
     ok(supabase.from('workout_exercises').select('*').order('order_index')),
     ok(supabase.from('plan_entries').select('*').order('scheduled_date').order('id')),
@@ -26,6 +27,8 @@ export async function loadModel(today: Date): Promise<Model> {
     okOr<any[]>(supabase.from('program_blocks').select('*').order('position'), []),
     okOr<any[]>(supabase.from('program_runs').select('*').order('created_at', { ascending: false }), []),
     okOr<any[]>(supabase.from('builtin_programs').select('*').order('sort_order'), []),
+    // Their profile, until its migration has run: none (and none can be saved yet).
+    okOr<any[] | null>(supabase.from('profiles').select('*').limit(1), null),
   ]);
 
   const byId: Record<string, any> = {};
@@ -269,5 +272,7 @@ export async function loadModel(today: Date): Promise<Model> {
     programRuns,
     builtinPrograms,
     programsReady: programRows != null,
+    profile: profileRows?.[0] ? toProfile(profileRows[0]) : null,
+    profileReady: profileRows != null,
   };
 }

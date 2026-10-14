@@ -109,8 +109,8 @@ export function progressVals(ctx: Ctx) {
         xp: 'flex:none;font-family:var(--font-heading);font-size:var(--text-sm);font-weight:var(--font-weight-semibold)',
       };
     }),
-    profileName: displayName(logic.auth.account),
-    profileInitial: displayName(logic.auth.account).charAt(0).toUpperCase(),
+    profileName: displayName(logic.auth.account, logic.model.profile?.name),
+    profileInitial: displayName(logic.auth.account, logic.model.profile?.name).charAt(0).toUpperCase(),
     profilePicture: logic.auth.account?.picture ?? '',
     // The gem on the avatar's badge. The last rank's own gem is white, which the white badge would hide.
     avatarGem: derivedRank === RANKS.length - 1 ? 'var(--gradient-gem)' : RANKS[derivedRank].gem,

@@ -482,7 +482,7 @@ export function programVals(ctx: Ctx) {
           asRan: false,
           name: ownProgram.name,
           snapshot: (o: { notes: boolean; showName: boolean }) =>
-            db.programSnapshot(ownProgram, { notes: o.notes, by: o.showName ? displayName(logic.auth.account) : null }),
+            db.programSnapshot(ownProgram, { notes: o.notes, by: o.showName ? displayName(logic.auth.account, logic.model.profile?.name) : null }),
           canShowName: !!logic.auth.account,
         }
       : null;

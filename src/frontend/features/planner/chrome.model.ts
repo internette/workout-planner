@@ -6,6 +6,8 @@ import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from './store/types';
 import type { ConfirmState, Screen } from './store/state';
 import { leaveRunningWorkout } from '../session/leave';
+import { newSetup } from '../setup/model';
+import { signInName } from '@/shared/auth';
 
 // Shell: sidebar, tab bar, screen flags, navigation shortcuts, confirm dialog and error banner.
 export function chromeVals(ctx: Ctx) {
@@ -129,13 +131,16 @@ export function chromeVals(ctx: Ctx) {
     },
     // Signing out asks first. Once confirmed the page is on its way to the server, so the dialog stays up, inert,
     // rather than letting the person press it twice or close it half way.
-    // The app's tour: from Settings, on the calendar's Day view for today, where its first stops are.
+    // The app's tour: from Settings, straight to its first stop, on the calendar's Day view for today where its first
+    // stops are.
     tourStep: st.tour ?? null,
     setTourStep: (n: number) => logic.s({ tour: n }),
     startTour: () => {
       goDay();
-      logic.s({ tour: 0 });
+      logic.s({ tour: 1 });
     },
+    // "Customize your experience", from the tour's welcome or Settings, starting from what they said last time.
+    startSetup: () => logic.s({ tour: null, setup: newSetup(logic.model.profile, signInName(logic.auth.account)) }),
     canSignOut: !!logic.auth.account,
     accountEmail: logic.auth.account?.email ?? '',
     accountProvider: logic.auth.account?.provider ?? '',

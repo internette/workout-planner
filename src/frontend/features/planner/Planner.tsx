@@ -19,6 +19,8 @@ import { leaveChoice } from '../live/settings';
 import { RankUp } from '@moonshot/design-system/rank-up';
 import { Tour } from '../tour/Tour';
 import { markTourSeen, tourSeen } from '../tour/seen';
+import { Setup } from '../setup/Setup';
+import { signInName } from '@/shared/auth';
 
 // How long the plan may take before the loading screen says so.
 const SLOW_AFTER_MS = 8000;
@@ -387,16 +389,24 @@ export default function Planner({ account = null }: { account?: Account | null }
     }
   }, [rank, account?.email]);
 
-  // A new account (nothing planned, nothing saved) gets the app's tour once, the first time it opens on the calendar.
+  // A new account (nothing planned, nothing saved) is welcomed once, the first time it opens on the calendar: customize,
+  // take the tour, or neither.
   const firstRun = !!view && logic.model.workouts.length === 0 && logic.model.entries.length === 0;
   useEffect(() => {
-    if (firstRun && logic.state.screen === 'day' && logic.state.tour == null && !tourSeen()) logic.s({ tour: 0 });
+    if (firstRun && logic.state.screen === 'day' && logic.state.tour == null && !logic.state.setup && !tourSeen()) logic.s({ tour: 0 });
   }, [firstRun, logic]);
   const endTour = useCallback(() => {
     markTourSeen();
     logic.s({ tour: null });
   }, [logic]);
-  const setTourStep = useCallback((n: number) => logic.s({ tour: n }), [logic]);
+  // Once they've chosen the tour, the welcome doesn't come back, even if they leave half way round.
+  const setTourStep = useCallback(
+    (n: number) => {
+      if (n >= 1) markTourSeen();
+      logic.s({ tour: n });
+    },
+    [logic],
+  );
 
   const retry = () => {
     logic.status = 'loading';
@@ -414,15 +424,21 @@ export default function Planner({ account = null }: { account?: Account | null }
       <PlannerView v={view ?? logic.renderVals()} />
       <Tour
         step={view?.tourStep ?? null}
-        // Their first name, when sign-in gave one (not just their email).
-        name={account?.name && account.name !== account.email ? account.name.trim().split(/\s+/)[0] : ''}
+        // Their first name: the one they chose, else sign-in's (when it gave one, not just their email).
+        name={(logic.model?.profile?.name || signInName(account)).split(/\s+/)[0]}
         onStep={setTourStep}
         onEnd={endTour}
+        onCustomize={() => {
+          markTourSeen();
+          view?.startSetup();
+        }}
+        fresh={firstRun}
         onPlan={() => {
           endTour();
           view?.goNewWorkout();
         }}
       />
+      <Setup s={view?.setup ?? null} />
       <RankUp
         open={rankUp != null && rankUp === rank}
         name={view?.rankName ?? ''}
