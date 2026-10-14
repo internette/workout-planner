@@ -160,7 +160,7 @@ export function calendarVals(ctx: Ctx) {
     hasRows: weekRows.some((r) => r.hasRow),
     noRows: !weekRows.some((r) => r.hasRow),
     // Only what's true: a day with a session gets a quest.
-    emptyWeekNote: 'No sessions scheduled this week. Add one and that day gets a quest.',
+    emptyWeekNote: 'No sessions scheduled this week. Add one and that day gets a quest. The editor lets you pick any day.',
     weekAllDone: weekRows.some((r) => r.hasRow) && weekRows.filter((r) => r.hasRow).every((r) => r.done),
     weekDoneNote: (weekRows.filter((r) => r.hasRow).length === 1 ? 'Its one session done.' : 'All ' + weekRows.filter((r) => r.hasRow).length + ' sessions done.') + ' Every quest this week is cleared.',
     todayLabel: 'TODAY · ' + DOW3[todayDate.getDay()] + ' ' + TODAY_D,
