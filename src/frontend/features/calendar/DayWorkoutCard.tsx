@@ -16,7 +16,7 @@ import { StatusDot } from '@/frontend/components/StatusDot';
 export function DayWorkoutCard({ card }: { card: any }) {
   if (!card?.isOpen) return <FoldedCard card={card} />;
   return (
-    <Card pad="lg" className="day-card">
+    <Card pad="lg" className="day-card" data-day-card={card?.key}>
         <div
           style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)' }}
         >
@@ -28,6 +28,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
               <Pressable
                 onClick={card?.open}
                 hit
+                data-day-name
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)', margin: 'calc(-1 * var(--space-1)) calc(-1 * var(--space-2))', padding: 'var(--space-1) var(--space-2)', minHeight: '36px', borderRadius: 'var(--radius-sm)' }}
               >
                 {t(card?.name)}
@@ -163,14 +164,18 @@ export function DayWorkoutCard({ card }: { card: any }) {
   );
 }
 
-/** A session folded to a row: its icon, name, where it stands, and its status dot. The whole row opens it. */
+// What the dot at the end of a folded row means, for its name.
+const DOT_WORDS: Record<string, string> = { done: 'completed', partly: 'under way', missed: 'missed', planned: 'planned', rest: '' };
+
+/** A session folded to a row: its icon, name, where it stands, and its status dot. The whole row opens it. Its name
+ * says everything the row shows: the program, the kind, the status the dot stands for, and the meta line. */
 function FoldedCard({ card }: { card: any }) {
   return (
     <Card pad="none">
       <Pressable
         onClick={card?.expand}
         aria-expanded={false}
-        aria-label={card?.expandLabel + ', ' + card?.meta}
+        aria-label={[card?.expandLabel, card?.programName, card?.typeLabel, DOT_WORDS[card?.dot] || '', card?.meta].filter(Boolean).join(', ')}
         style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', width: '100%', padding: 'var(--space-3) var(--space-5)', borderRadius: 'inherit' }}
       >
         <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
