@@ -1,5 +1,5 @@
 import { DisclosureChevron } from '@moonshot/design-system/disclosure';
-import { Button } from '@moonshot/design-system/buttons';
+import { Button, Pressable } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { IconTile } from '@moonshot/design-system/icon-tile';
 import { ChevronRight, Dumbbell, DumbbellSmall } from '@moonshot/design-system/icons';
@@ -25,28 +25,14 @@ export function DayWorkoutCard({ card }: { card: any }) {
           <div style={{ minWidth: '0', flex: '1 1 0' }}>
             <SessionTags program={card?.programName} type={card?.typeLabel} />
             <Text variant="heading" as="h2" style={{ margin: '0' }}>
-              <button
+              <Pressable
                 onClick={card?.open}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '7px',
-                  margin: '-6px -10px',
-                  padding: '6px 10px',
-                  minHeight: '36px',
-                  border: 'none',
-                  borderRadius: 'var(--radius-sm)',
-                  background: 'none',
-                  font: 'inherit',
-                  color: 'inherit',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                }}
-                className="hv3 hit"
+                hit
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', margin: '-6px -10px', padding: '6px 10px', minHeight: '36px', borderRadius: 'var(--radius-sm)' }}
               >
                 {t(card?.name)}
                 <ChevronRight color="var(--color-muted)" size={17} />
-              </button>
+              </Pressable>
             </Text>
             {/* Under way, its status and time in pink, with a dot that pulses while the clock runs. */}
             <Text
@@ -181,26 +167,11 @@ export function DayWorkoutCard({ card }: { card: any }) {
 function FoldedCard({ card }: { card: any }) {
   return (
     <Card pad="none">
-      <button
-        type="button"
+      <Pressable
         onClick={card?.expand}
         aria-expanded={false}
         aria-label={card?.expandLabel + ', ' + card?.meta}
-        className="hv6"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '14px',
-          width: '100%',
-          padding: '14px 20px',
-          border: 'none',
-          borderRadius: 'inherit',
-          background: 'none',
-          font: 'inherit',
-          color: 'inherit',
-          textAlign: 'left',
-          cursor: 'pointer',
-        }}
+        style={{ display: 'flex', alignItems: 'center', gap: '14px', width: '100%', padding: '14px 20px', borderRadius: 'inherit' }}
       >
         <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
         <span style={{ flex: '1', minWidth: '0' }}>
@@ -213,7 +184,7 @@ function FoldedCard({ card }: { card: any }) {
           </Text>
         </span>
         <StatusDot status={card?.dot} size="md" />
-      </button>
+      </Pressable>
     </Card>
   );
 }

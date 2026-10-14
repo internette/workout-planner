@@ -1,5 +1,6 @@
 // Starting a Chronicle entry: picking the session to write about.
 // Moved out of PlannerView as it was; it reads the `v` object built in Planner.tsx.
+import { Pressable } from '@moonshot/design-system/buttons';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { Card } from '@moonshot/design-system/card';
 import { Badge } from '@moonshot/design-system/badge';
@@ -24,10 +25,10 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
             <SectionLabel list label={g.label} />
             <Card pad="none" style={{ overflow: 'hidden' }}>
               {g.items.map((u, i) => (
-                <button
+                <Pressable
                   key={i}
                   onClick={u.pick}
-                  className="hv7"
+                  wash="accent"
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -35,12 +36,7 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
                     width: '100%',
                     minHeight: '60px',
                     padding: '12px 18px',
-                    border: 'none',
                     borderTop: i ? '1px solid var(--color-line)' : 'none',
-                    background: 'none',
-                    fontFamily: 'inherit',
-                    textAlign: 'left',
-                    cursor: 'pointer',
                   }}
                 >
                   <Text variant="micro" as="span" tone="slate" style={{ flex: 'none', width: '52px', lineHeight: 'var(--leading-tight)' }}>
@@ -58,7 +54,7 @@ export function NewEntryScreen({ v }: { v: PlannerVals }) {
                     </Text>
                   </span>
                   <Badge tone={u.statusTone}>{u.status}</Badge>
-                </button>
+                </Pressable>
               ))}
             </Card>
           </div>

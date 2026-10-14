@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, type CSSProperties, type MouseEvent, type ReactNode, type PointerEvent, type SyntheticEvent } from 'react';
 import { Card } from '../card';
-import { useWindowEvent } from '../useWindowEvent';
+import { useWindowEvent } from '../utils/useWindowEvent';
 
 export interface PopoverProps {
   /** Whether the panel is showing. The parent owns this, so the trigger inside `children` can toggle it. */

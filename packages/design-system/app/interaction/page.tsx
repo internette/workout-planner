@@ -1,3 +1,4 @@
+import { Pressable } from '../../src/buttons';
 import { focus, hovers } from '../../src/interaction';
 import { DocPage, h2, note } from '../docs';
 
@@ -21,14 +22,6 @@ const demoBtn: React.CSSProperties = {
 };
 const panel: React.CSSProperties = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 32, padding: '28px 24px', background: 'var(--color-canvas)', borderRadius: 'var(--radius-lg)' };
 const list: React.CSSProperties = { ...note, margin: '8px 0 0', paddingLeft: 20 };
-
-// The hover classes in app/planner.css, for controls styled inline (they beat inline styles).
-const hoverClasses = [
-  { name: 'hv1', does: 'The neutral wash, var(--hover-neutral)', use: 'Quiet text buttons: the calendar’s month name, a day card’s “more” toggle, an exercise row in the Spellbook' },
-  { name: 'hv3', does: 'Deep pink text on a faint wash (rgba(35,42,69,.04))', use: 'A name that is also a link, like a day card’s workout name' },
-  { name: 'hv6', does: 'Darkens whatever is there by 3%', use: 'A control with a gradient or picture of its own: the rank badge on Profile' },
-  { name: 'hv7', does: 'The pink tint, var(--color-pink-tint)', use: 'Rows in a list card: Progress’s week, the Chronicle’s session picker' },
-];
 
 export default function InteractionPage() {
   return (
@@ -59,29 +52,17 @@ export default function InteractionPage() {
       </table>
       </div>
 
-      <h3 id="hover-classes" style={{ fontSize: 'var(--text-lg)', margin: '28px 0 4px' }}>Hover classes</h3>
+      <h3 id="pressable" style={{ fontSize: 'var(--text-lg)', margin: '28px 0 4px' }}>On a control styled inline</h3>
       <p style={note}>
-        For a control styled inline, add one of these classes from <code>app/planner.css</code> rather than a hover
-        handler. They&apos;re <code>!important</code>, so they win over the inline background. Hover each example to
-        see it.
+        A button drawn as its contents (a row of a list card, a name that opens something, a pill) is a{' '}
+        <code>Pressable</code> from <code>@moonshot/design-system/buttons</code>: it resets the native look and lays
+        the neutral wash, or with <code>wash=&quot;accent&quot;</code> the pink tint, over itself on hover, above its own
+        background. Hover each to see it.
       </p>
-      <div style={tableScroll} tabIndex={0} role="region" aria-label="Hover classes table, scrolls sideways">
-        <table style={table}>
-          <tbody>
-            {hoverClasses.map((h) => (
-              <tr key={h.name}>
-                <td style={{ ...cell, fontWeight: 600, whiteSpace: 'nowrap' }}>.{h.name}</td>
-                <td style={{ ...cell, width: 110 }}>
-                  <button type="button" className={h.name} style={{ ...demoBtn, background: h.name === 'hv6' ? 'var(--gradient-gem-tint)' : demoBtn.background }}>
-                    Hover
-                  </button>
-                </td>
-                <td style={cell}>{h.does}</td>
-                <td style={muted}>{h.use}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div style={panel}>
+        <Pressable style={{ ...demoBtn, boxShadow: 'none' }}>Neutral wash</Pressable>
+        <Pressable wash="accent" style={{ ...demoBtn, boxShadow: 'none' }}>Accent wash</Pressable>
+        <Pressable style={{ ...demoBtn, boxShadow: 'none', background: 'var(--gradient-gem-tint)' }}>On its own tint</Pressable>
       </div>
 
       <h2 id="focus" style={h2}>Focus</h2>

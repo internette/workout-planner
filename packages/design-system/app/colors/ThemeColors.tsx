@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ACCENTS, cssVarName, paletteFor, type Accent, type ColorName } from '../../src/colors';
-import { Select } from '../../src/select';
+import { SegmentedControl } from '../../src/segmented-control';
 import { Swatch } from './Swatch';
 
 // The roles a color theme fills, and the variable each is written as.
@@ -64,12 +64,14 @@ export function ThemeColors() {
           </li>
         ))}
       </ul>
-      <Select<Accent>
+      <SegmentedControl<Accent>
         label="Show the values for"
-        options={ACCENTS.map((a) => ({ value: a.name, label: a.label, icon: <Dot color={a.swatch} /> }))}
+        semantics="options"
+        wrap
+        options={ACCENTS.map((a) => ({ value: a.name, label: <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Dot color={a.swatch} />{a.label}</span> }))}
         value={accent}
         onChange={setAccent}
-        style={{ maxWidth: 280, marginBottom: 16 }}
+        style={{ marginBottom: 16 }}
       />
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
         {ROLES.map(({ role, token, use }) => (

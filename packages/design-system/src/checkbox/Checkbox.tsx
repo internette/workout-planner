@@ -1,6 +1,7 @@
 import { useId, type ReactNode } from 'react';
 import { Check } from '../icons';
 import styles from './checkbox.module.css';
+import { cx } from '../utils/cx';
 
 export interface CheckboxProps {
   checked: boolean;
@@ -18,7 +19,7 @@ export interface CheckboxProps {
 
 /** A tick box with its label. A native checkbox underneath, so Space toggles it and screen readers announce it. */
 export function Checkbox({ checked, onChange, children, switch: asSwitch, disabled, name, description }: CheckboxProps) {
-  const classes = [styles.wrap, checked && styles.checked, disabled && styles.disabled].filter(Boolean).join(' ');
+  const classes = cx(styles.wrap, checked && styles.checked, disabled && styles.disabled);
   const descId = useId();
   const box = (
     <label className={classes}>

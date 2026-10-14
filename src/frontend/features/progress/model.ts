@@ -120,7 +120,7 @@ export function progressVals(ctx: Ctx) {
       return isNaN(created.getTime()) ? '' : 'Training since ' + MONTHS[created.getMonth()] + ' ' + created.getFullYear();
     })(),
     rankPillBtn:
-      'display:inline-flex;align-items:center;gap:8px;margin-top:9px;min-height:36px;padding:8px 15px 8px 14px;border:none;border-radius:var(--radius-full);font-family:inherit;font-size:var(--text-base);font-weight:var(--font-weight-bold);cursor:pointer;' +
+      'display:inline-flex;align-items:center;gap:8px;margin-top:9px;min-height:36px;padding:8px 15px 8px 14px;border-radius:var(--radius-full);font-size:var(--text-base);font-weight:var(--font-weight-bold);' +
       RANKS[derivedRank].pill,
     rankGemColor: RANKS[derivedRank].gem,
     rankBarPct: rankPct,

@@ -94,3 +94,30 @@
 
 .icon:hover:not(:disabled):not([aria-disabled='true']),
 .icon:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-icon); }
+
+/* ---- Pressable: a button drawn as its contents (a row, a name, a pill), with a wash laid over it on hover. The wash
+   is a layer above the button's own background, so an inline background doesn't hide it; it sits under the
+   contents, and under .hit's tap area. */
+.pressable {
+  position: relative;
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.pressable::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-state) var(--ease-standard);
+}
+.wash-neutral::before { background: var(--hover-neutral); }
+.wash-accent::before { background: var(--color-pink-tint); }
+.pressable:hover:not(:disabled)::before,
+.pressable:focus-visible:not(:disabled)::before { opacity: 1; }

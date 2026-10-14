@@ -1,5 +1,6 @@
 import { useId, type ReactNode } from 'react';
 import styles from './radio.module.css';
+import { cx } from '../utils/cx';
 
 export interface RadioOption<T extends string> {
   value: T;
@@ -35,7 +36,7 @@ export function RadioGroup<T extends string>({ label, options, value, onChange, 
         const descId = name + '-' + o.value;
         return (
           <div key={o.value}>
-            <label className={[styles.wrap, checked && styles.checked, disabled && styles.disabled].filter(Boolean).join(' ')}>
+            <label className={cx(styles.wrap, checked && styles.checked, disabled && styles.disabled)}>
               <input
                 type="radio"
                 className={styles.input}

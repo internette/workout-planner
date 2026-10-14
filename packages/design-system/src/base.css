@@ -1,6 +1,5 @@
 /* The design system's global rules: the page's base type and colors, the focus ring, reduced motion, the tap-area
-   and screen-reader helpers, shared keyframes, the hover washes (hv1–hv7, see /design-system/interaction) and
-   forced-color modes. Import it once, in the root layout: import '@moonshot/design-system/base.css'. */
+   and screen-reader helpers, shared keyframes and forced-color modes. Import it once, in the root layout: import '@moonshot/design-system/base.css'. */
 
 /* Base page type and colors. */
 body {
@@ -51,11 +50,6 @@ summary:focus-visible, [tabindex]:focus-visible {
   }
 }
 
-/* Generated from the design's style-hover attributes; !important so they beat inline styles. */
-.hv1:hover{background:var(--hover-neutral) !important}
-.hv3:hover{color:var(--color-pink-deep) !important;background:color-mix(in srgb, var(--color-ink) 4%, transparent) !important}
-.hv6:hover{filter:brightness(.97) !important}
-.hv7:hover{background:var(--color-pink-tint) !important}
 
 /* Windows High Contrast and other forced-color modes drop backgrounds and shadows, which is how selection and
    buttons are drawn here. Give them outlines in system colors instead (outlines don't move anything), and keep the

@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { Chip } from './Chip';
 import styles from './chip.module.css';
+import { cx } from '../utils/cx';
 
 export interface ChipGroupProps {
   children: ReactNode;
@@ -20,7 +21,7 @@ export function ChipGroup({ children, label, compact, as: Tag = 'div', style, cl
     <Tag
       role={label ? 'group' : undefined}
       aria-label={label}
-      className={[styles.group, compact && styles.compact, className].filter(Boolean).join(' ')}
+      className={cx(styles.group, compact && styles.compact, className)}
       style={style}
     >
       {children}

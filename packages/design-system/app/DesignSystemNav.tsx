@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { useWindowEvent } from '../src/useWindowEvent';
+import { useWindowEvent } from '../src/utils';
 import { Popover } from '../src/popover';
 import { ChevronDown } from '../src/icons';
 import { Lockup } from '../src/brand/Lockup';

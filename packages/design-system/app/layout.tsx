@@ -1,10 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import '../src/base.css';
 import './globals.css';
-import { ColorVariables, colors } from '../src/colors';
-import { ElevationVariables } from '../src/elevation';
-import { StructureVariables } from '../src/StructureVariables';
-import { TypographyVariables } from '../src/typography';
+import { colors } from '../src/colors';
+import { DesignTokens } from '../src/tokens';
 import { Lockup } from '../src/brand/Lockup';
 import { DesignSystemNav } from './DesignSystemNav';
 import styles from './design-system.module.css';
@@ -19,10 +17,7 @@ export default function DesignSystemLayout({ children }: { children: React.React
   return (
     <html lang="en">
       <head>
-        <ColorVariables />
-        <TypographyVariables />
-        <ElevationVariables />
-        <StructureVariables />
+        <DesignTokens />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}

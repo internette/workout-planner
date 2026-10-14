@@ -124,6 +124,7 @@ export const sections: Section[] = [
     description: 'Hover washes, the one focus ring, tap targets and forced colors.',
     anchors: [
       { id: 'hover', title: 'Hover' },
+      { id: 'pressable', title: 'On a control styled inline' },
       { id: 'focus', title: 'Focus' },
       { id: 'tap-targets', title: 'Tap targets' },
       { id: 'screen-readers', title: 'Screen readers' },
@@ -165,6 +166,7 @@ export const sections: Section[] = [
       { id: 'link', title: 'Link' },
       { id: 'disabled', title: 'Disabled' },
       { id: 'icon-buttons', title: 'Icon buttons' },
+      { id: 'pressable', title: 'Pressable' },
     ],
   },
   {
@@ -206,17 +208,6 @@ export const sections: Section[] = [
       { id: 'compact', title: 'Compact' },
       { id: 'quiet', title: 'Quiet' },
       { id: 'full-width', title: 'Full width' },
-    ],
-  },
-  {
-    slug: 'select',
-    title: 'Select',
-    category: 'components',
-    description: 'A dropdown for picking one of a few options.',
-    anchors: [
-      { id: 'plain', title: 'Plain' },
-      { id: 'with-icons', title: 'With icons' },
-      { id: 'behaviour', title: 'Behaviour' },
     ],
   },
   {

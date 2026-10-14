@@ -8,7 +8,7 @@ import { pathForState, stateForPath } from './routes';
 import { exerciseDraftDirty, workoutDraftDirty } from '@/frontend/shared/helpers';
 import type { Account } from '@/shared/auth';
 import { logoutUrl } from '../auth/links';
-import { useWindowEvent } from '@moonshot/design-system/useWindowEvent';
+import { useWindowEvent } from '@moonshot/design-system/utils';
 import { PlannerView } from './PlannerView';
 import { PlannerStatus } from './PlannerStatus';
 import { InstallPrompt } from '../install/InstallPrompt';
