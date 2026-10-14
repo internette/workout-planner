@@ -45,7 +45,7 @@ export const STOPS: Stop[] = [
   { find: () => tab('/profile'), eyebrow: 'Profile', title: 'Your rank', body: 'Every exercise you clear moves it on. Settings are behind the gear.' },
 ];
 
-const SCRIM = 'color-mix(in srgb, var(--color-ink) 58%, transparent)';
+const SCRIM = 'color-mix(in srgb, var(--color-ink) var(--alpha-5), transparent)';
 const CARD: CSSProperties = {
   position: 'relative',
   padding: 'var(--space-4) var(--space-4) var(--space-4)',
@@ -203,7 +203,7 @@ export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: 
             width: rect.width + pad * 2,
             height: rect.height + pad * 2,
             borderRadius: 'var(--radius-lg)',
-            boxShadow: '0 0 0 3px var(--color-pink), 0 0 24px 4px color-mix(in srgb, var(--color-pink) 45%, transparent), 0 0 0 100vmax ' + SCRIM,
+            boxShadow: '0 0 0 3px var(--color-pink), 0 0 24px 4px color-mix(in srgb, var(--color-pink) var(--alpha-4), transparent), 0 0 0 100vmax ' + SCRIM,
             transition: 'left 260ms var(--ease-standard), top 260ms var(--ease-standard), width 260ms var(--ease-standard), height 260ms var(--ease-standard)',
           }}
         />

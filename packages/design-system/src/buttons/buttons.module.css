@@ -17,7 +17,7 @@
 /* aria-disabled: looks disabled but stays in the Tab order, for a button that explains what it's waiting for. */
 .base:disabled,
 .base[aria-disabled='true'] {
-  opacity: 0.5;
+  opacity: var(--alpha-5);
   cursor: not-allowed;
 }
 
@@ -63,7 +63,7 @@
 .danger.ghost:focus-visible:not(:disabled):not([aria-disabled='true']) { background: var(--hover-danger-ghost); }
 
 .dashed {
-  border: 1px dashed color-mix(in srgb, var(--color-pink) 50%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--color-pink) var(--alpha-5), transparent);
   background: var(--color-accent-wash);
   color: var(--color-pink-deep);
 }

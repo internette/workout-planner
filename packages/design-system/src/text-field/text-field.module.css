@@ -62,7 +62,7 @@
   margin: var(--space-1) 0 0;
   min-height: 44px;
   padding: var(--space-1) 0;
-  border-bottom: 1.5px dashed color-mix(in srgb, var(--color-ink) 30%, transparent);
+  border-bottom: 1.5px dashed color-mix(in srgb, var(--color-ink) var(--alpha-3), transparent);
   font-family: var(--font-heading);
   font-size: var(--text-xl);
   font-weight: var(--font-weight-bold);
@@ -88,7 +88,7 @@
 
 .hint { display: block; margin-top: var(--space-2); font-size: var(--text-sm); font-weight: var(--font-weight-regular); color: var(--color-muted); }
 .error { margin-top: var(--space-2); font-size: var(--text-sm); color: var(--color-danger); }
-.disabled { opacity: 0.5; }
+.disabled { opacity: var(--alpha-5); }
 
 /* Placeholders at 4.5:1 or more on the field fills (the browser's default grey is 4.2:1 on canvas). */
 .input::placeholder, .title::placeholder, .bare::placeholder, .textarea::placeholder { color: var(--color-muted); opacity: 1; }

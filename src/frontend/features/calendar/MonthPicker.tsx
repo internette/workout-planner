@@ -102,7 +102,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             <Sparkle
               size={11}
               color={vars.pink}
-              glow={0.45}
+              glow={4}
               glowBlur={3}
               style={{ animation: 'twinkle 3.4s ease-in-out 0s infinite' }}
             />
@@ -111,7 +111,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             <Sparkle
               size={8}
               color={vars.periwinkle}
-              glow={0.45}
+              glow={4}
               glowBlur={3}
               style={{ animation: 'twinkle 4.6s ease-in-out .4s infinite' }}
             />
@@ -120,7 +120,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             <Sparkle
               size={9}
               color={vars.teal}
-              glow={0.45}
+              glow={4}
               glowBlur={3}
               style={{ animation: 'twinkle 5.4s ease-in-out .15s infinite' }}
             />
@@ -129,7 +129,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             <Sparkle
               size={6}
               color={vars.pink}
-              glow={0.4}
+              glow={4}
               glowBlur={3}
               style={{ animation: 'twinkle 6s ease-in-out .9s infinite' }}
             />
@@ -138,7 +138,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             <Sparkle
               size={7}
               color={vars.periwinkle}
-              glow={0.42}
+              glow={4}
               glowBlur={3}
               style={{ animation: 'twinkle 4.2s ease-in-out 1.1s infinite' }}
             />
@@ -147,7 +147,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             <Sparkle
               size={5}
               color={vars.teal}
-              glow={0.4}
+              glow={4}
               glowBlur={3}
               style={{ animation: 'twinkle 5.2s ease-in-out 1.3s infinite' }}
             />
@@ -156,7 +156,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             <Sparkle
               size={6}
               color={vars.pink}
-              glow={0.38}
+              glow={4}
               glowBlur={3}
               style={{ animation: 'twinkle 6.6s ease-in-out 1.7s infinite' }}
             />
@@ -165,7 +165,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             <Sparkle
               size={4}
               color={vars.periwinkle}
-              glow={0.36}
+              glow={4}
               glowBlur={3}
               style={{ animation: 'twinkle 4.8s ease-in-out 2s infinite' }}
             />
@@ -174,7 +174,7 @@ export function MonthPicker({ v }: { v: PlannerVals }) {
             <Sparkle
               size={3}
               color={vars.teal}
-              glow={0.34}
+              glow={4}
               glowBlur={3}
               style={{ animation: 'twinkle 5.8s ease-in-out 2.4s infinite' }}
             />

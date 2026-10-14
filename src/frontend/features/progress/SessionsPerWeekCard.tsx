@@ -51,7 +51,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
                 height: b?.height + 'px',
                 borderRadius: 'var(--radius-xs)',
                 transition: 'background .2s',
-                background: b?.on ? 'linear-gradient(180deg,var(--color-pink) 0%,var(--color-periwinkle) 100%)' : 'color-mix(in srgb, var(--color-pink) 30%, transparent)',
+                background: b?.on ? 'linear-gradient(180deg,var(--color-pink) 0%,var(--color-periwinkle) 100%)' : 'color-mix(in srgb, var(--color-pink) var(--alpha-3), transparent)',
               }}
             ></div>
             <span

@@ -266,7 +266,7 @@ export function Setup({ s }: { s: S | null }) {
     <div style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center', overflow: 'hidden' }}>
       <Twinkles />
       <span style={{ position: 'absolute', right: '20%', top: '18%', animation: 'twinkle 3s ease-in-out infinite' }}>
-        <Sparkle size={14} color="var(--color-pink)" glow={0.6} />
+        <Sparkle size={14} color="var(--color-pink)" glow={5} />
       </span>
       <Medallion size={104} />
       <div style={{ marginTop: 'var(--space-2)' }}>

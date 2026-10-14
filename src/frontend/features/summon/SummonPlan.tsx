@@ -110,7 +110,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
     <>
       {waiting && !draft ? (
         <Card pad="sm" style={{ marginTop: 'var(--space-4)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-3)', background: 'var(--gradient-gem-tint)' }}>
-          <Sparkle size={16} color={vars.pink} glow={0.5} />
+          <Sparkle size={16} color={vars.pink} glow={5} />
           <div style={{ flex: '1 1 180px', minWidth: 0 }}>
             <Text variant="subheading" as="div" tone="ink">
               {senderName(waiting.source)} sent you a new arc

@@ -23,7 +23,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
           <Sparkle
             size={17}
             color={vars.periwinkle}
-            glow={0.5}
+            glow={5}
             style={{ display: 'inline-block', verticalAlign: 'middle' }}
           />
         </Text>

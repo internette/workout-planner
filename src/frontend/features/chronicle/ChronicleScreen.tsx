@@ -78,7 +78,7 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
               gap: 'var(--space-2)',
               width: '100%',
               padding: 'var(--space-1) var(--space-1)',
-              borderBottom: '1.5px dashed color-mix(in srgb, var(--color-ink) 22%, transparent)',
+              borderBottom: '1.5px dashed color-mix(in srgb, var(--color-ink) var(--alpha-3), transparent)',
             }}
           >
             <Calendar color="var(--color-muted)" size={16} />

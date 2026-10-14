@@ -77,7 +77,7 @@ export function Preview({ slug }: { slug: string }) {
           <Dumbbell size={24} color="var(--color-pink)" />
           <Bike size={24} color="var(--color-periwinkle)" />
           <Check size={24} color="var(--color-ink)" strokeWidth={2.4} />
-          <Sparkle size={22} color={colors.teal} glow={0.5} />
+          <Sparkle size={22} color={colors.teal} glow={5} />
         </>
       );
     case 'buttons':

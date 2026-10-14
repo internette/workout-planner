@@ -40,7 +40,7 @@ export function SessionProgress({ label, pct, allDone, note, bare, children }: S
       >
         {allDone ? (
           <span style={{ display: 'flex', animation: 'twinkle 2.6s ease-in-out infinite' }}>
-            <Sparkle size={14} color={vars.pink} glow={0.55} />
+            <Sparkle size={14} color={vars.pink} glow={5} />
           </span>
         ) : null}
         <span>{note}</span>

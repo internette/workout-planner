@@ -3,9 +3,9 @@
 import { toVariables, type Token } from '../tokens/variables';
 
 export const hovers = {
-  neutral: { value: 'color-mix(in srgb, var(--color-ink) 5%, transparent)', use: 'A ghost button in the neutral tone' },
-  icon: { value: 'color-mix(in srgb, var(--color-ink) 6%, transparent)', use: 'An icon button, and a focused button' },
-  dangerGhost: { value: 'color-mix(in srgb, var(--color-danger) 8%, transparent)', use: 'A ghost button in the danger tone' },
+  neutral: { value: 'color-mix(in srgb, var(--color-ink) var(--alpha-1), transparent)', use: 'A ghost button in the neutral tone' },
+  icon: { value: 'color-mix(in srgb, var(--color-ink) var(--alpha-1), transparent)', use: 'An icon button, and a focused button' },
+  dangerGhost: { value: 'color-mix(in srgb, var(--color-danger) var(--alpha-1), transparent)', use: 'A ghost button in the danger tone' },
 } as const satisfies Record<string, Token>;
 
 export const focus = {

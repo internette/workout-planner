@@ -13,7 +13,7 @@
 .card:hover { background: var(--color-mist); }
 .card.checked { background: var(--color-pink-tint); box-shadow: var(--ring-accent); }
 .card:has(.input:focus-visible) { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
-.card.disabled { opacity: 0.5; cursor: not-allowed; }
+.card.disabled { opacity: var(--alpha-5); cursor: not-allowed; }
 
 /* The dot and text; the real radio covers this whole row, invisibly, so a press anywhere on it selects the card. */
 .head { position: relative; display: flex; align-items: flex-start; gap: var(--space-3); cursor: inherit; }

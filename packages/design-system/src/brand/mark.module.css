@@ -2,7 +2,7 @@
 .facet { animation: facet 2.4s ease-in-out infinite; }
 
 @keyframes facet {
-  0%, 100% { opacity: 0.16; }
+  0%, 100% { opacity: var(--alpha-2); }
   30%, 70% { opacity: 1; }
 }
 

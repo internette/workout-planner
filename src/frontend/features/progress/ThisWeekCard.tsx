@@ -7,8 +7,8 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 const SEGMENT = {
   done: 'var(--color-pink)',
   partly:
-    'repeating-linear-gradient(135deg,color-mix(in srgb, var(--color-pink) 55%, transparent) 0 3px,color-mix(in srgb, var(--color-pink) 22%, transparent) 3px 6px)',
-  missed: 'color-mix(in srgb, var(--color-ink) 18%, transparent)',
+    'repeating-linear-gradient(135deg,color-mix(in srgb, var(--color-pink) var(--alpha-5), transparent) 0 3px,color-mix(in srgb, var(--color-pink) var(--alpha-3), transparent) 3px 6px)',
+  missed: 'color-mix(in srgb, var(--color-ink) var(--alpha-2), transparent)',
 };
 
 /** Progress: this week's sessions, done, partly done, missed and to go, opening the week. */
