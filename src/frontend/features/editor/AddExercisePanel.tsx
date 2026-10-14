@@ -134,6 +134,12 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
               {v.libraryEmptyNote}
             </Text>
           ) : null}
+          {v.createFromSearch ? (
+            <Button type="secondary" size="md" onClick={v.createFromSearch.go} style={{ alignSelf: 'flex-start', marginTop: '4px' }}>
+              <Plus color="var(--color-pink-deep)" strokeWidth={2.4} size={16} />
+              {v.createFromSearch.label}
+            </Button>
+          ) : null}
           {v.libraryMore ? (
             <Text variant="body" tone="muted" as="p" style={{ margin: '4px 0 0' }}>
               {v.libraryMore}

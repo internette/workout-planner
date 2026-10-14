@@ -240,7 +240,8 @@ export function programVals(ctx: Ctx) {
                 }),
             }))
           : [],
-        start: shown.builtin ? copyBuiltin({ programStart: { date: isoOf(nextSunday(today)), block: 0 } }) : () => logic.s({ programStart: { date: isoOf(nextSunday(today)), block: 0 } }),
+        // A built-in one is copied into the person's programs only when it actually starts (see programStart).
+        start: () => logic.s({ programStart: { date: isoOf(nextSunday(today)), block: 0 } }),
         share: shown.builtin ? null : () => logic.s({ programShareOpen: true }),
         edit: shown.builtin ? copyBuiltin({ screen: 'programEdit' }) : () => logic.nav({ screen: 'programEdit' }),
         editLabel: shown.builtin ? 'Copy to my programs' : 'Edit',
@@ -250,10 +251,12 @@ export function programVals(ctx: Ctx) {
 
   // ---- Starting it
   const startSt = st.programStart || null;
+  // What starts: one of the person's own programs, or a built-in one, which becomes theirs as it starts.
+  const startable = ownProgram ? { name: ownProgram.name, blocks: ownProgram.blocks } : builtinProgram && shown ? { name: shown.name, blocks: shown.blocks } : null;
   const programStart =
-    ownProgram && startSt
+    startable && startSt
       ? (() => {
-          const blocks = ownProgram.blocks;
+          const blocks = startable.blocks;
           const block = Math.min(startSt.block, Math.max(0, blocks.length - 1));
           const date = startSt.date < todayIso ? todayIso : startSt.date;
           const lands = runBlockDates(blocks, date, block);
@@ -267,7 +270,7 @@ export function programVals(ctx: Ctx) {
             .filter(({ r }) => r.start <= end && r.end >= date);
           return {
             open: true,
-            title: 'Start ' + ownProgram.name,
+            title: 'Start ' + startable.name,
             date,
             min: todayIso,
             setDate: (e) => logic.s({ programStart: { ...startSt, date: e.target.value || todayIso } }),
@@ -284,17 +287,25 @@ export function programVals(ctx: Ctx) {
             busy: logic.busy('startProgram'),
             cancel: () => logic.s({ programStart: null }),
             start: () =>
-              logic.saveOnce('startProgram', () => db.startProgram(ownProgram, date, block, todayIso, { name: ownProgram.name, snapshot: db.programSnapshot(ownProgram, { notes: true, by: null }) }), (r: { first: string | null; count: number }) => {
+              logic.saveOnce('startProgram', async () => {
+                // A built-in one: its copy first, read back with its workouts, then that copy starts.
+                const own = ownProgram
+                  ? ownProgram
+                  : await db.copyBuiltinProgram(builtinProgram!, catalog).then(async (id) => (await db.loadModel(today)).programs!.find((p) => p.id === id)!);
+                const r = await db.startProgram(own, date, block, todayIso, { name: own.name, snapshot: db.programSnapshot(own, { notes: true, by: null }) });
+                return { ...r, id: own.id, name: own.name };
+              }, (r: { first: string | null; count: number; id: string; name: string }) => {
                 const at = r.first ? fromIso(r.first) : fromIso(date);
                 return {
                   programStart: null,
+                  programId: r.id,
                   screen: 'day',
                   seg: 'Week',
                   month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][at.getMonth()],
                   yOff: at.getFullYear() - today.getFullYear(),
                   day: at.getDate(),
                   hist: [],
-                  ...noticePatch('“' + ownProgram.name + '” started: ' + plural(r.count, 'session') + ' on your calendar from ' + shortDate(at) + '.', 'day'),
+                  ...noticePatch('“' + r.name + '” started: ' + plural(r.count, 'session') + ' on your calendar from ' + shortDate(at) + '.', 'day'),
                 };
               }),
           };

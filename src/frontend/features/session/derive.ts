@@ -1,7 +1,7 @@
 import { idOf, longDay, monthPatch, splitMinutes, toMinutes } from '@/frontend/shared/helpers';
 import type { StatsCtx } from '../planner/store/types';
 import { colors } from '@moonshot/design-system/colors';
-import { splitSide } from '@/frontend/shared/sides';
+import { oneSided, splitSide } from '@/frontend/shared/sides';
 import { programOfWorkout } from '@/frontend/shared/programs';
 import type { Entry, Exercise } from '@/frontend/data/plannerData';
 
@@ -142,7 +142,7 @@ export function workoutStage(ctx: StatsCtx) {
   const selName = creating ? st.newName || '' : (st.renames || {})[baseName] != null ? st.renames[baseName] : baseName;
   // Every exercise that could be added to the workout being edited: all of them, less what it already has on both
   // sides. "Has" is its list as the editor shows it (selList, below). One it has once can be added again, for the
-  // other side (see shared/sides).
+  // other side (see shared/sides), if it's done a side at a time.
   const libraryFor = () => {
     const have = {};
     selList.forEach((e) => {
@@ -151,7 +151,7 @@ export function workoutStage(ctx: StatsCtx) {
     });
     const all: Exercise[] = [];
     const add = (e) => {
-      if ((have[e.name] || 0) < 2 && !all.some((x) => x.name === e.name)) all.push(e);
+      if ((have[e.name] || 0) < (oneSided(e.name) ? 2 : 1) && !all.some((x) => x.name === e.name)) all.push(e);
     };
     Object.keys(EX).forEach((k) => EX[k].forEach(add));
     Object.keys(st.extra || {}).forEach((k) => (st.extra[k] || []).forEach(add));

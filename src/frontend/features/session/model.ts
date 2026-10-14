@@ -581,7 +581,10 @@ export function workoutVals(ctx: Ctx) {
         : finished && doneCount < selList.length
           ? 'Finished · ' + doneCount + ' of ' + selList.length + ' ticked off.'
           : doneCount === 0
-          ? 'Mark each exercise as you clear it.'
+          ? // With "Done set" there, it says what to do; before the clock starts, the ticks are the way.
+            setNow?.onDone
+            ? ''
+            : 'Mark each exercise as you clear it.'
           : doneCount === selList.length
             ? hasEntry
               ? 'Transformation complete.'

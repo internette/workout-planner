@@ -10,7 +10,7 @@ import { setsFor, setsIn } from '../session/sets';
 import { kindOf } from '@/frontend/components/KindTag';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import { areaToggles, draftBand, draftWeighted, plainExercise, DRAFT_CLEARED, draftClash, draftHint, draftItem, draftOpened, draftReady, equipmentKnown, equipmentToggles } from '@/frontend/shared/exerciseDraft';
-import { otherSide, splitSide, withSide } from '@/frontend/shared/sides';
+import { oneSided, otherSide, splitSide, withSide } from '@/frontend/shared/sides';
 import { programOfWorkout } from '@/frontend/shared/programs';
 import { bandLevelOf, bandWeight, takesWeight, usesBand, type BandLevel } from '@/frontend/shared/bands';
 import type { BuiltinWorkout, WorkoutSummary } from '@/frontend/data/plannerData';
@@ -464,6 +464,14 @@ export function editVals(ctx: Ctx) {
     setPickQuery: (e) => logic.s({ pickQ: e.target.value }),
     clearPickQuery: () => logic.s({ pickQ: '' }),
     libraryEmpty: pickable.length === 0,
+    // Searched for one that isn't there: make it, under that name.
+    createFromSearch:
+      pickQ && pickable.length === 0
+        ? {
+            label: 'Create “' + (st.pickQ || '').trim() + '”',
+            go: () => logic.s({ addMode: 'new', ...draftOpened(st), dName: st.dName || (st.pickQ || '').trim() }),
+          }
+        : null,
     libraryEmptyNote: pickQ
       ? 'No exercises match “' + (st.pickQ || '').trim() + '”' + (narrowToAreas ? ' for ' + areaWords(pickAreas) + '.' : '.')
       : 'Everything that fits is already in this workout.',
@@ -476,7 +484,7 @@ export function editVals(ctx: Ctx) {
     libraryMore: pickable.length > PICK_LIMIT ? plural(pickable.length - PICK_LIMIT, 'more exercise') + ' — search to find one.' : '',
     library: pickable.slice(0, PICK_LIMIT).map((e) => ({
       name: e.name,
-      // One already in the workout once can be added again for its other side.
+      // One done a side at a time, already in the workout once, can be added again for its other side.
       detail: selList.some((x) => splitSide(x.name).base === e.name) ? 'In this workout · add it again for the other side' : exLine(e),
       // Same as the Spellbook: the row opens the exercise, "+" adds it. Back returns here with this panel still open.
       // An exercise only drafted in this visit has no saved page yet, so it can only be added.
@@ -484,8 +492,9 @@ export function editVals(ctx: Ctx) {
       // Adding keeps the list open for the next one; the added exercise leaves the list and joins the workout above.
       add: () => {
         const same = selList.filter((x) => splitSide(x.name).base === e.name);
-        // Twice at most: once for each side. (A second tap before the list updates sets the same state again.)
-        if (same.length >= 2) return;
+        // Twice at most, once for each side, and only for one done a side at a time. (A second tap before the list
+        // updates sets the same state again.)
+        if (same.length >= 2 || (same.length && !oneSided(e.name))) return;
         if (!same.length) {
           return logic.s({
             extra: Object.assign({}, st.extra, { [listKey]: added.concat([e]) }),

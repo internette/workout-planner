@@ -568,6 +568,12 @@ export function arsenalVals(ctx: Ctx) {
     : sched && sched.repeat
       ? 'every ' + dayNames(schedDays) + ' through ' + md(lastRepeat)
       : 'on ' + (repeatDays.length > 1 ? repeatDays.slice(0, -1).map(md).join(', ') + ' and ' : '') + md(lastRepeat);
+  // A running program already puts it on the calendar: said, so it isn't added on top of that by mistake.
+  const todayKey = TODAY_M * 100 + TODAY_D;
+  const byProgram = chosen ? logic.model.entries.filter((x) => x.av.name === chosen.name && x.av.program && x.m * 100 + x.d >= todayKey) : [];
+  const programNote = byProgram.length
+    ? ' “' + chosen.name + '” is already on ' + dayNames(Array.from(new Set(byProgram.map((x) => new Date(Y, x.m, x.d).getDay())))).replace(/day\b/g, 'days') + ' in ' + byProgram[0].av.program!.name + '.'
+    : '';
   const scheduleCalendar = {
     open: !!sched,
     title: chosen ? 'Add “' + chosen.name + '” to the calendar' : '',
@@ -590,7 +596,9 @@ export function arsenalVals(ctx: Ctx) {
             : 'Just ' + firstWhen + '.') +
         (plan.skipped ? ' ' + plural(plan.skipped, 'day') + ' that already ' + (plan.skipped === 1 ? 'has' : 'have') + ' it left out.' : '') +
         // Said before adding: a second one on a day that has it, or a day already gone by.
-        (schedDays.includes(schedDate.getDay()) && hasOn(schedDate) ? ' “' + chosen.name + '” is already on that day, so it would be there twice.' : '') +
+        (schedDays.includes(schedDate.getDay()) && hasOn(schedDate)
+          ? ' “' + chosen.name + '” is already on that day, so it would be there twice.'
+          : programNote) +
         (schedPast
           ? (logPast ? ' ' + schedWhen + ' goes on the calendar as done.' : ' ' + schedWhen + ' has gone by, so it will show as missed.')
           : ''),
