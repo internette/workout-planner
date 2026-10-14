@@ -15,7 +15,7 @@ const BAR: CSSProperties = {
   background: 'var(--color-surface-bar)',
   backdropFilter: 'blur(14px)',
   borderTop: '1px solid var(--color-line)',
-  boxShadow: '0 -4px 14px var(--color-line)',
+  boxShadow: 'var(--elevation-bar)',
 };
 
 // A tab: its icon over its name, lit in the accent tint where the person is.

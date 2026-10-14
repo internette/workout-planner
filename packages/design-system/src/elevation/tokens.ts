@@ -5,6 +5,7 @@ export const elevations = {
   hairline: { value: '0 1px 3px color-mix(in srgb, var(--color-ink) var(--alpha-1), transparent)', use: 'Info chips and quiet trays' },
   raised: { value: '0 4px 14px color-mix(in srgb, var(--color-ink) var(--alpha-1), transparent)', use: 'A card sitting on the page' },
   overlay: { value: '0 8px 24px color-mix(in srgb, var(--color-ink) var(--alpha-2), transparent)', use: 'Dialogs, menus and popovers; also a card on hover' },
+  bar: { value: '0 -4px 14px color-mix(in srgb, var(--color-ink) var(--alpha-1), transparent)', use: 'A bar along the bottom of the screen, over the page as it scrolls: the tab bar, a fixed footer. Raised, cast upward' },
 } as const;
 
 /** Rings: a line drawn inside an edge (an inset shadow, so nothing moves). Write `box-shadow: var(--ring-outline)`. */
