@@ -12,6 +12,7 @@ import { ProgressBar } from '../../src/progress-bar';
 import { SegmentedControl } from '../../src/segmented-control';
 import { StarRating } from '../../src/rating';
 import { Text } from '../../src/typography';
+import { Dot } from '../colors/Dot';
 import { DocPage, h2, note } from '../docs';
 
 const grid: React.CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 };
@@ -86,10 +87,6 @@ function Preview({ accent, dark }: { accent: string; dark: boolean }) {
     </div>
   );
 }
-
-const Dot = ({ color }: { color: string }) => (
-  <span aria-hidden style={{ width: 18, height: 18, flex: 'none', borderRadius: 'var(--radius-full)', background: color }} />
-);
 
 export default function ThemesPage() {
   const [accent, setAccent] = useState<Accent>('pink');
