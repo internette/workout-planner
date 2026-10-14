@@ -101,6 +101,18 @@ export function workoutVals(ctx: Ctx) {
   const goDetail = () => logic.nav({ screen: 'detail', creating: false });
   // The quest belongs to the day, so on a day with several workouts it is cleared once all of them are.
   const dayCleared = dayEntries.length > 1 ? dayEntries.every(isDoneEntry) : questCleared;
+  // A program's last session day gets its finale for a quest: the name of the program that ends here.
+  const finale = (() => {
+    const key = mi * 100 + selDay;
+    const ending = dayEntries.find(
+      // In its last week, so a program ended early (its later sessions gone) has no finale on the day it stopped.
+      (a) =>
+        a.program &&
+        a.program.week === a.program.weeks &&
+        !logic.model.entries.some((x) => x.av.program?.runId === a.program!.runId && x.m * 100 + x.d > key),
+    );
+    return ending ? ending.program!.name : '';
+  })();
   const setTimer = (patch) =>
     logic.s({ workoutTimer: Object.assign({}, st.workoutTimer, { [timerKey]: patch }) });
   const startTimer = () => setTimer({ elapsed: 0, runningSince: Date.now() });
@@ -413,7 +425,7 @@ export function workoutVals(ctx: Ctx) {
     canFinish: !!timerState && !!selAct,
     openFinish,
     finishOpen: !!fin,
-    finishTitle: fin && fin.correcting ? 'Change your time' : fin && fin.ride ? 'Finish your ride' : 'Finish your workout',
+    finishTitle: fin && fin.correcting ? 'Change your time' : 'Seal the transformation',
     // Correcting a recorded time is a plain edit: Cancel and Save, not "Not yet" and "Finish".
     finishCancelLabel: fin && fin.correcting ? 'Cancel' : 'Not yet',
     finishSaveLabel: fin && fin.correcting ? 'Save' : 'Finish',
@@ -505,11 +517,17 @@ export function workoutVals(ctx: Ctx) {
     goDiary,
     showQuest: st.seg === 'Day' && !!actFor(selDay),
     dayCards,
-    questTitle: questSeed(selDay, mi).title,
-    questNote: dayCleared ? questSeed(selDay, mi).done : questSeed(selDay, mi).note,
+    questTitle: finale ? 'Bring it home' : questSeed(selDay, mi).title,
+    questNote: finale
+      ? dayCleared
+        ? '“' + finale + '” is complete. Every session of it is in you now.'
+        : 'The last session of “' + finale + '”. Clear it and the arc is complete.'
+      : dayCleared
+        ? questSeed(selDay, mi).done
+        : questSeed(selDay, mi).note,
     questDone: dayCleared,
     questOpen: !dayCleared,
-    questEyebrow: dayCleared ? 'Quest cleared' : mi === TODAY_M && selDay === TODAY_D ? "Today's quest" : 'Quest',
+    questEyebrow: dayCleared ? (finale ? 'Finale cleared' : 'Quest cleared') : finale ? 'Finale' : mi === TODAY_M && selDay === TODAY_D ? "Today's quest" : 'Quest',
     questIconWrap:
       'width:32px;height:32px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;' +
       (dayCleared
@@ -644,8 +662,10 @@ export function workoutVals(ctx: Ctx) {
             ? hasEntry || (finished && !isPastDay)
               ? 'Transformation complete.'
               : timerState && !finished
-                ? 'Every exercise done. Finish to record your time.'
+                ? 'Every exercise cleared. Finish to seal the transformation.'
                 : 'Transformation complete. Write down how it felt while it\'s fresh.'
-            : selList.length - doneCount + ' left to go.',
+            : selList.length - doneCount === 1
+              ? 'One left. Finish it.'
+              : doneCount + ' cleared, ' + (selList.length - doneCount) + ' to go.',
   };
 }

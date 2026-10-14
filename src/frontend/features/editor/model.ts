@@ -986,7 +986,7 @@ export function editVals(ctx: Ctx) {
                 ? noticePatch(
                     '“' +
                       r.name +
-                      '” saved and added ' + (st.repeat ? '' : 'to ') + plannedText(plan.dates, plan.skipped) + '.',
+                      '” is on ' + plannedText(plan.dates, plan.skipped) + '. ' + (plan.dates.length > 1 ? 'Those days have quests now.' : 'That day has a quest now.'),
                     'day',
                   )
                 : noticePatch('“' + r.name + '” is written into your Spellbook.', 'template'),

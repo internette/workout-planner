@@ -7,7 +7,7 @@ import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { IconTile } from '@moonshot/design-system/icon-tile';
 import { Text } from '@moonshot/design-system/typography';
 import { WeekStrip } from '@moonshot/design-system/week-strip';
-import { Calendar, ChevronDown, Repeat } from '@moonshot/design-system/icons';
+import { Calendar, Check, ChevronDown, Repeat } from '@moonshot/design-system/icons';
 import { BackBar } from '@/frontend/components/BackBar';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { ShareProgramDialog } from './ShareProgramDialog';
@@ -38,6 +38,22 @@ export function ProgramRunScreen({ v }: { v: PlannerVals }) {
           {p.name}
         </Text>
       </div>
+      {/* Finished: its moment, before the details. */}
+      {p.complete ? (
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', gap: '12px', marginTop: '16px', padding: '14px 16px', borderRadius: 'var(--radius-lg)', background: 'var(--gradient-gem-tint)', overflow: 'hidden' }}>
+          <span style={{ width: '32px', height: '32px', flex: 'none', borderRadius: 'var(--radius-sm)', background: 'var(--gradient-gem)', display: 'grid', placeItems: 'center' }}>
+            <Check color="var(--color-surface)" strokeWidth={2.6} size={16} />
+          </span>
+          <span style={{ flex: 1, minWidth: 0 }}>
+            <Text variant="micro" tone="accent" as="div">
+              Arc complete
+            </Text>
+            <Text variant="body" tone="slateDeep" as="p" style={{ margin: '2px 0 0' }}>
+              {p.complete}
+            </Text>
+          </span>
+        </div>
+      ) : null}
       <ChipGroup style={{ marginTop: '14px' }}>
         <Chip icon={<Calendar color="var(--color-muted)" size={15} />}>{p.chips[0]}</Chip>
         <Chip icon={<Repeat color="var(--color-muted)" size={15} />}>{p.chips[1]}</Chip>

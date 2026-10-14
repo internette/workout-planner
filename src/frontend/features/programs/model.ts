@@ -232,10 +232,10 @@ export function programVals(ctx: Ctx) {
                 logic.setState({
                   confirm: {
                     kind: 'endProgram',
-                    title: 'End “' + ownProgram.name + '”?',
-                    body: 'Its sessions still ahead come off your calendar. Anything you’ve done, started or written about stays.',
+                    title: 'End “' + ownProgram.name + '” here?',
+                    body: 'The arc stops: its sessions still ahead come off your calendar. Everything you’ve cleared stays yours.',
                     label: 'End program',
-                    then: () => logic.save(() => db.endRun(r.id, todayIso), noticePatch('“' + ownProgram.name + '” ended.', 'program')),
+                    then: () => logic.save(() => db.endRun(r.id, todayIso), noticePatch('“' + ownProgram.name + '” ended. What you cleared stays yours.', 'program')),
                   },
                 }),
             }))
@@ -305,7 +305,7 @@ export function programVals(ctx: Ctx) {
                   yOff: at.getFullYear() - today.getFullYear(),
                   day: at.getDate(),
                   hist: [],
-                  ...noticePatch('“' + r.name + '” started: ' + plural(r.count, 'session') + ' on your calendar from ' + shortDate(at) + '.', 'day'),
+                  ...noticePatch('“' + r.name + '” begins: ' + plural(r.count, 'session') + ' on your calendar from ' + shortDate(at) + '.', 'day'),
                 };
               }),
           };
