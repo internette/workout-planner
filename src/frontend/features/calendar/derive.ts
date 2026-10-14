@@ -67,7 +67,7 @@ export function calendarStage(ctx: EntriesCtx) {
         (!dot ? 'rest day' : workoutsWord(list) + (done ? 'completed' : part ? 'partly done, ' + partText(list) : miss ? 'missed' : 'planned')),
       isToday: cellMonth === TODAY_M && num === TODAY_D ? ('date' as const) : false,
       wrapStyle:
-        'position:relative;flex:1;min-width:0;padding:8px 2px 10px;border:none;border-radius:var(--radius-md);background:' +
+        'position:relative;flex:1;min-width:0;padding:var(--space-2) var(--space-0h) var(--space-2h);border:none;border-radius:var(--radius-md);background:' +
         (on ? ACCENT : 'none') +
         ';display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer',
       letterStyle:
@@ -102,7 +102,7 @@ export function calendarStage(ctx: EntriesCtx) {
         (current
           ? 'background:' + ACCENT + ';color:var(--color-surface);font-weight:var(--font-weight-bold)'
           : now
-            ? 'box-shadow:inset 0 0 0 1.5px var(--color-pink);color:var(--color-pink-deep);font-weight:var(--font-weight-bold)'
+            ? 'box-shadow:var(--ring-accent);color:var(--color-pink-deep);font-weight:var(--font-weight-bold)'
             : 'color:var(--color-ink);font-weight:var(--font-weight-medium)'),
     };
   });
@@ -239,7 +239,7 @@ export function calendarStage(ctx: EntriesCtx) {
             : a
               ? 'background:var(--color-surface);box-shadow:var(--elevation-hairline)'
               : 'background:none') +
-        (today && !sel ? ';box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--color-pink) 45%, transparent)' : ''),
+        (today && !sel ? ';box-shadow:var(--ring-accent-soft)' : ''),
       aria: d
         ? longDay(new Date(Y, mi, d)) +
           ' — ' +

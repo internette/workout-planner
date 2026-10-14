@@ -6,7 +6,7 @@
 .band { width: 100%; padding:0 var(--space-7); }
 .inner { max-width: 1040px; margin: 0 auto; }
 
-.header { width: 100%; padding: 18px 28px; }
+.header { width: 100%; padding:var(--space-4h) var(--space-7); }
 .headerRow { max-width: 1040px; margin: 0 auto; display: flex; align-items: center; gap:var(--space-3); }
 
 .hero { padding-top: 34px; padding-bottom: 56px; }
@@ -21,9 +21,9 @@
 .authCard { width: 100%; max-width: 404px; margin: 0 auto; box-sizing: border-box; }
 .authTitle { margin-top:var(--space-2); }
 .authNote { margin-top:var(--space-2); text-wrap: pretty; }
-.providers { display: flex; flex-direction: column; gap: 10px; margin-top:var(--space-5); }
+.providers { display: flex; flex-direction: column; gap:var(--space-2h); margin-top:var(--space-5); }
 .legal { margin:var(--space-4) 0 0; text-wrap: pretty; }
-.toggle { display: flex; align-items: center; gap:var(--space-2); margin-top:var(--space-5); padding-top: 18px; border-top: 1px solid var(--color-mist); }
+.toggle { display: flex; align-items: center; gap:var(--space-2); margin-top:var(--space-5); padding-top:var(--space-4h); border-top: 1px solid var(--color-mist); }
 .toggleLink { white-space: nowrap; }
 
 /* ---- provider buttons ---- */
@@ -31,7 +31,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap:var(--space-2h);
   width: 100%;
   min-height: 52px;
   padding:0 var(--space-5);
@@ -45,7 +45,7 @@
 }
 .provider { text-decoration: none; }
 .provider[aria-disabled='true'] { cursor: progress; }
-.google { background: var(--color-surface); color: var(--color-ink); box-shadow: inset 0 0 0 1.5px var(--color-hairline); }
+.google { background: var(--color-surface); color: var(--color-ink); box-shadow: var(--ring-outline); }
 .google:hover:not([aria-disabled='true']) { background: var(--color-canvas); }
 .apple { background: var(--color-ink); color: var(--color-surface); }
 .apple:hover:not([aria-disabled='true']) { background: var(--color-slate-deep); }
@@ -53,7 +53,7 @@
 
 /* ---- sections ---- */
 .sectionGap { padding-bottom: 56px; }
-.steps { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
+.steps { display: flex; flex-wrap: wrap; gap:var(--space-3h); margin-top:var(--space-3h); }
 .step { flex: 1 1 260px; min-width: 0; }
 .stepIcon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); background: var(--color-pink-tint); }
 .stepTitle { margin:var(--space-4) 0 0; }
@@ -69,10 +69,10 @@
   background: var(--gradient-gem-tint);
 }
 .col { flex: 1 1 300px; min-width: 0; }
-.headline { margin: 10px 0 0; line-height: var(--leading-tight); text-wrap: balance; }
+.headline { margin:var(--space-2h) 0 0; line-height: var(--leading-tight); text-wrap: balance; }
 .questBody { max-width: 420px; margin:var(--space-3) 0 0; text-wrap: pretty; }
 .cleared { display: flex; align-items: center; gap: 11px; }
-.progressRow { display: flex; align-items: baseline; gap:var(--space-2); margin-top: 10px; }
+.progressRow { display: flex; align-items: baseline; gap:var(--space-2); margin-top:var(--space-2h); }
 .progressRow :last-child { margin-left: auto; }
 
 .ranks { display: flex; flex-wrap: wrap; align-items: flex-end; gap:var(--space-5); }

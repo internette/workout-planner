@@ -50,7 +50,7 @@ function FoundRow({ r }: { r: Row }) {
           display: 'grid',
           placeItems: 'center',
           background: r.on ? 'var(--color-pink)' : 'var(--color-surface)',
-          boxShadow: r.on ? 'none' : 'inset 0 0 0 1.5px var(--color-outline)',
+          boxShadow: r.on ? 'none' : 'var(--ring-outline)',
         }}
       >
         {r.on ? <Check color="var(--color-surface)" strokeWidth={3} size={14} /> : null}
@@ -64,7 +64,7 @@ function Found({ v }: { v: PlannerVals }) {
   return (
     <div>
       <BackBar label={v.backLabel} onBack={v.goBack} />
-      <div style={{ marginTop: '18px' }}>
+      <div style={{ marginTop: 'var(--space-4h)' }}>
         <Text variant="micro" tone="slate" as="div">
           From your calendar
         </Text>
@@ -80,7 +80,7 @@ function Found({ v }: { v: PlannerVals }) {
           <BlockBar blocks={s.bar} />
         </div>
       ) : null}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: 'var(--space-4)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2h)', marginTop: 'var(--space-4)' }}>
         {s.blocks.map((b) => (
           <Card key={b.key} pad="sm" as="section" aria-label={b.title}>
             <Text variant="subheading" as="h2" style={{ margin: 0 }}>
@@ -88,7 +88,7 @@ function Found({ v }: { v: PlannerVals }) {
             </Text>
             <WeekStrip days={b.strip} style={{ marginTop: 'var(--space-3)' }} />
             {b.change ? (
-              <Text variant="body" tone="muted" as="p" style={{ margin: '10px 0 0' }}>
+              <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2h) 0 0' }}>
                 {b.change}
               </Text>
             ) : null}
@@ -135,13 +135,13 @@ function Naming({ v }: { v: PlannerVals }) {
   return (
     <div>
       <BackBar label="What it found" onBack={n.back} />
-      <Text variant="title" as="h1" style={{ margin: '18px 0 0' }}>
+      <Text variant="title" as="h1" style={{ margin: 'var(--space-4h) 0 0' }}>
         Make it a program
       </Text>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-4)', maxWidth: '560px' }}>
         <TextField label="Program name" value={n.name} onChange={n.setName} maxLength={80} />
         {n.blocks.length ? (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2h)' }}>
             {n.blocks.map((b) => (
               <TextField key={b.key} label={b.label} value={b.value} onChange={b.set} maxLength={40} containerStyle={{ flex: '1 1 140px' }} />
             ))}
@@ -154,7 +154,7 @@ function Naming({ v }: { v: PlannerVals }) {
         <OptionCard name="scan-sessions" value="fresh" checked={!n.keep} onChange={n.setKeep} title="Start it fresh instead" description={n.freshNote} />
       </div>
       {!n.keep ? (
-        <div style={{ marginTop: '14px', maxWidth: '560px' }}>
+        <div style={{ marginTop: 'var(--space-3h)', maxWidth: '560px' }}>
           <TextField label="Starting" type="date" value={n.date} min={n.min} onChange={n.setDate} />
         </div>
       ) : null}

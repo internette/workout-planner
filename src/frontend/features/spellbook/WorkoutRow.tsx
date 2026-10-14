@@ -16,7 +16,7 @@ export function WorkoutRow({ workout }: { workout: any }) {
         display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
-        gap: '14px',
+        gap: 'var(--space-3h)',
         width: '100%',
       }}
     >

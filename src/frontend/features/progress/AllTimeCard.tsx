@@ -9,7 +9,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 export function AllTimeCard({ v }: { v: PlannerVals }) {
   const stats = v.allTimeStats ?? [];
   return (
-    <Card style={{ marginTop: '14px' }}>
+    <Card style={{ marginTop: 'var(--space-3h)' }}>
       <SectionLabel as="span" label="All time" />
       <dl
         style={{
@@ -18,7 +18,7 @@ export function AllTimeCard({ v }: { v: PlannerVals }) {
           gridTemplateRows: 'auto auto',
           gridAutoFlow: 'column',
           columnGap: 'var(--space-3)',
-          rowGap: '6px',
+          rowGap: 'var(--space-1h)',
           margin: 'var(--space-3) 0 0',
         }}
       >

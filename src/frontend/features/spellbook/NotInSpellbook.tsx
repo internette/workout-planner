@@ -9,7 +9,7 @@ export function NotInSpellbook({ v }: { v: PlannerVals }) {
   return (
     <div>
       <BackLink label="Spellbook" onClick={v.goArsenal} />
-      <Text variant="title" as="h1" style={{ margin: '14px 0 0' }}>
+      <Text variant="title" as="h1" style={{ margin: 'var(--space-3h) 0 0' }}>
         Not in your Spellbook
       </Text>
       <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
@@ -19,7 +19,7 @@ export function NotInSpellbook({ v }: { v: PlannerVals }) {
           ? 'This workout has been deleted, or the link is to someone else’s Spellbook.'
           : 'This exercise has been deleted, or the link is to someone else’s Spellbook.'}
       </Text>
-      <Button type="primary" size="md" onClick={v.goArsenal} style={{ marginTop: '18px' }}>
+      <Button type="primary" size="md" onClick={v.goArsenal} style={{ marginTop: 'var(--space-4h)' }}>
         Go to your Spellbook
       </Button>
     </div>

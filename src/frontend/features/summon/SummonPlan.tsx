@@ -109,7 +109,7 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
   return (
     <>
       {waiting && !draft ? (
-        <Card pad="sm" style={{ marginTop: 14, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 14px', background: 'var(--gradient-gem-tint)' }}>
+        <Card pad="sm" style={{ marginTop: 'var(--space-3h)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2h) var(--space-3h)', background: 'var(--gradient-gem-tint)' }}>
           <Sparkle size={16} color={vars.pink} glow={0.5} />
           <div style={{ flex: '1 1 180px', minWidth: 0 }}>
             <Text variant="subheading" as="div" tone="ink">
@@ -189,9 +189,9 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
     else weeks.push({ start, list: [w] });
   }
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 18 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2h)', marginTop: 'var(--space-4h)' }}>
       {weeks.map((wk, i) => (
-        <section key={wk.start} aria-label={`Week ${i + 1}`} style={{ padding: '12px 14px', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)' }}>
+        <section key={wk.start} aria-label={`Week ${i + 1}`} style={{ padding: 'var(--space-3) var(--space-3h)', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)' }}>
           <Text variant="micro" as="h3" tone="muted" style={{ margin: 0 }}>
             Week {i + 1} · from {shortDate(wk.start)}
           </Text>
@@ -203,7 +203,7 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
               <div style={{ minWidth: 0 }}>
                 <Text variant="subheading" as="div" tone="ink">
                   {w.warmup || w.stretch || w.yoga ? (
-                    <Text variant="micro" tone="accent" style={{ marginRight: 6 }}>
+                    <Text variant="micro" tone="accent" style={{ marginRight: 'var(--space-1h)' }}>
                       {w.warmup ? 'Warm-up' : w.stretch ? 'Stretch' : 'Yoga'}
                     </Text>
                   ) : null}

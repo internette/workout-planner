@@ -138,6 +138,7 @@ export const sections: Section[] = [
     description: 'The shadows the interface casts, and the one glow.',
     anchors: [
       { id: 'steps', title: 'Steps' },
+      { id: 'rings', title: 'Rings' },
       { id: 'glow', title: 'Glow' },
     ],
   },

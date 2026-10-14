@@ -81,7 +81,7 @@ export function LiveSetting() {
         </div>
       ) : null}
       {can.player ? (
-        <div style={{ marginTop: '10px' }}>
+        <div style={{ marginTop: 'var(--space-2h)' }}>
           <Checkbox
             switch
             checked={s.player}

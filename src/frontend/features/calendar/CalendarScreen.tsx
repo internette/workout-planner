@@ -69,7 +69,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               display: 'flex',
               flexWrap: 'wrap',
               alignItems: 'center',
-              gap: '10px',
+              gap: 'var(--space-2h)',
               marginTop: 'var(--space-5)',
             }}
           >
@@ -80,7 +80,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               {v.shortDate}
             </Text>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: 'var(--space-5)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1h)', marginTop: 'var(--space-5)' }}>
             <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
             <div style={{ flex: '1', display: 'flex' }}>
               {(v.days ?? []).map((d, i) => (
@@ -107,13 +107,13 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
       ) : null}
       <RestartDialog v={v} />
       {v.hasWorkout ? (
-        <div style={{ marginTop: '14px' }}>
+        <div style={{ marginTop: 'var(--space-3h)' }}>
           {(v.dayCards ?? []).map((c, i) => (
             <div key={c?.key} style={{ marginTop: i ? '12px' : '0' }}>
               <DayWorkoutCard card={c} />
             </div>
           ))}
-          <aside style={{ display: 'flex', marginTop: '14px' }}>
+          <aside style={{ display: 'flex', marginTop: 'var(--space-3h)' }}>
             <Button type="dashed" size="md" onClick={v.goNewWorkout} style={{ flex: '1' }}>
               <Plus color="var(--color-pink-deep)" size={17} />
               Add workout
@@ -175,7 +175,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
       {v.showWeek ? (
         <div style={{ marginTop: 'var(--space-5)' }}>
           {/* On a narrow phone, Save as program drops to the line under the week rather than past the edge. */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 6px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-1h)' }}>
             <StepButton dir="prev" unit="week" onClick={v.prevWeek} />
             <Text variant="subheading" as="h1" style={{ flex: 'none', whiteSpace: 'nowrap', margin: 0 }}>
               {v.weekLabel}
@@ -265,7 +265,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
       {v.showMonth ? (
         <>
           <h1 className="sr-only">{v.monthName}</h1>
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 'var(--space-2)', marginTop: '14px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 'var(--space-2)', marginTop: 'var(--space-3h)' }}>
             <Button type="neutral" ghost size="sm" onClick={v.prevMonth} aria-label={'Previous month, ' + v.prevMonthName}>
               <ChevronLeft color="var(--color-muted)" size={16} />
               {v.prevMonthShort}
@@ -275,11 +275,11 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
               <ChevronRight color="var(--color-muted)" size={16} />
             </Button>
           </div>
-          <div style={{ marginTop: '10px' }}>
+          <div style={{ marginTop: 'var(--space-2h)' }}>
             <MonthGrid v={v} />
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 14px', marginTop: 'var(--space-4)' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-1h) var(--space-3h)', marginTop: 'var(--space-4)' }}>
               {STATUS_NAMES.map(([status, name]) => (
-                <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Text key={status} variant="small" tone="muted" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1h)' }}>
                   <StatusDot status={status} />
                   {name}
                 </Text>
@@ -288,7 +288,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             {/* The month in two numbers, under its grid: the grid comes straight after the month's arrows. */}
             <Card
               pad="none"
-              style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 18px', marginTop: 'var(--space-4)', padding: '12px 18px' }}
+              style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-4h)', marginTop: 'var(--space-4)', padding: 'var(--space-3) var(--space-4h)' }}
             >
               <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
                 <span

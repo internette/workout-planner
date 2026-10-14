@@ -18,7 +18,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
   return (
     <Card pad="lg" className="day-card">
         <div
-          style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}
+          style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3h)' }}
         >
           <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
           {/* Takes the rest of the row, so a long name wraps beside the icon rather than dropping below it. */}
@@ -28,7 +28,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
               <Pressable
                 onClick={card?.open}
                 hit
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', margin: '-6px -10px', padding: '6px 10px', minHeight: '36px', borderRadius: 'var(--radius-sm)' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', margin: '-6px -10px', padding: 'var(--space-1h) var(--space-2h)', minHeight: '36px', borderRadius: 'var(--radius-sm)' }}
               >
                 {t(card?.name)}
                 <ChevronRight color="var(--color-muted)" size={17} />
@@ -62,19 +62,19 @@ export function DayWorkoutCard({ card }: { card: any }) {
           </div>
         ) : null}
         {card?.ridePlan ? (
-          <Text variant="strong" as="p" tone="ink" weight="semibold" style={{ margin: '14px 0 0' }}>
+          <Text variant="strong" as="p" tone="ink" weight="semibold" style={{ margin: 'var(--space-3h) 0 0' }}>
             {card.ridePlan}
           </Text>
         ) : null}
         {card?.rideStats?.length ? (
-          <StatRow stats={card?.rideStats ?? []} style={{ marginTop: 'var(--space-5)', paddingTop: '18px', borderTop: '1px solid var(--color-line)' }} />
+          <StatRow stats={card?.rideStats ?? []} style={{ marginTop: 'var(--space-5)', paddingTop: 'var(--space-4h)', borderTop: '1px solid var(--color-line)' }} />
         ) : null}
         {card?.isLift ? (
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '2px',
+              gap: 'var(--space-0h)',
               marginTop: 'var(--space-4)',
             }}
           >
@@ -84,7 +84,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
                   display: 'flex',
                   alignItems: 'flex-start',
                   gap: 'var(--space-3)',
-                  padding: '10px 0',
+                  padding: 'var(--space-2h) 0',
                   borderBottom: '1px solid var(--color-line)',
                 }}
               >
@@ -108,7 +108,7 @@ export function DayWorkoutCard({ card }: { card: any }) {
                     {x?.exDetail}
                   </Text>
                   {x?.setNow ? (
-                    <Text variant="small" tone="accent" weight="semibold" style={{ display: 'block', marginTop: '2px' }}>
+                    <Text variant="small" tone="accent" weight="semibold" style={{ display: 'block', marginTop: 'var(--space-0h)' }}>
                       {x.setNow}
                     </Text>
                   ) : null}
@@ -125,9 +125,9 @@ export function DayWorkoutCard({ card }: { card: any }) {
             aria-expanded={!!card?.moreOpen}
             onClick={card?.toggleMore}
             // On a line of its own, so it keeps the row height of the buttons below it.
-            style={{ marginTop: '10px', minHeight: '44px' }}
+            style={{ marginTop: 'var(--space-2h)', minHeight: '44px' }}
           >
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1h)' }}>
               {t(card?.moreLabel)}
               <DisclosureChevron open={!!card?.moreOpen} />
             </span>
@@ -171,7 +171,7 @@ function FoldedCard({ card }: { card: any }) {
         onClick={card?.expand}
         aria-expanded={false}
         aria-label={card?.expandLabel + ', ' + card?.meta}
-        style={{ display: 'flex', alignItems: 'center', gap: '14px', width: '100%', padding: '14px 20px', borderRadius: 'inherit' }}
+        style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3h)', width: '100%', padding: 'var(--space-3h) var(--space-5)', borderRadius: 'inherit' }}
       >
         <IconTile size="sm" compact>{card?.icoSvg}</IconTile>
         <span style={{ flex: '1', minWidth: '0' }}>
@@ -179,7 +179,7 @@ function FoldedCard({ card }: { card: any }) {
           <Text variant="subheading" as="span" style={{ display: 'block' }}>
             {t(card?.name)}
           </Text>
-          <Text variant="body" as="span" tone="muted" style={{ display: 'block', marginTop: '2px' }}>
+          <Text variant="body" as="span" tone="muted" style={{ display: 'block', marginTop: 'var(--space-0h)' }}>
             {card?.meta}
           </Text>
         </span>

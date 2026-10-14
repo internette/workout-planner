@@ -10,7 +10,7 @@ import { ProgressBar } from '@moonshot/design-system/progress-bar';
 function Row({ name, eyebrow, meta, icon, open, children }: { name: string; eyebrow?: string; meta?: string; icon?: React.ReactNode; open: () => void; children?: React.ReactNode }) {
   return (
     <Card as="button" interactive pad="sm" onClick={open} style={{ display: 'block', width: '100%', textAlign: 'left' }}>
-      <span style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+      <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3h)' }}>
         {icon ? <IconTile as="span" size="sm" variant="flat">{icon}</IconTile> : null}
         <span style={{ flex: 1, minWidth: 0 }}>
           {eyebrow ? (
@@ -37,7 +37,7 @@ function Row({ name, eyebrow, meta, icon, open, children }: { name: string; eyeb
 export function ProgramList({ v }: { v: PlannerVals }) {
   const l = v.programList;
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: '18px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', marginTop: 'var(--space-4h)' }}>
       {l.noMatch ? (
         <Text variant="body" as="p" tone="muted" style={{ margin: 0 }}>
           {l.noMatchNote}
@@ -51,10 +51,10 @@ export function ProgramList({ v }: { v: PlannerVals }) {
               {v.scanCard.title}
             </Text>
           </div>
-          <Text variant="body" tone="slate" as="p" style={{ margin: '6px 0 0' }}>
+          <Text variant="body" tone="slate" as="p" style={{ margin: 'var(--space-1h) 0 0' }}>
             {v.scanCard.body}
           </Text>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)', marginTop: '14px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-3h)' }}>
             <Button type="primary" size="md" onClick={v.scanCard.go}>
               Turn into a program
             </Button>
@@ -70,7 +70,7 @@ export function ProgramList({ v }: { v: PlannerVals }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
             {l.running.map((r) => (
               <Row key={r.key} name={r.name} eyebrow={r.place} open={r.open}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: 'var(--space-3)' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2h)', marginTop: 'var(--space-3)' }}>
                   <ProgressBar value={r.pct} track="tint" label="Sessions done" valueText={r.valueText} style={{ flex: 1 }} />
                   <Text variant="figure" as="span" style={{ flex: 'none' }}>
                     {r.figure}

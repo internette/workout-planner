@@ -8,7 +8,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 /** Adding an exercise to the Spellbook. */
 export function NewExerciseCard({ v }: { v: PlannerVals }) {
   return (
-    <Card elevation="overlay" id="new-exercise" data-arsenal-add style={{ marginTop: '18px' }}>
+    <Card elevation="overlay" id="new-exercise" data-arsenal-add style={{ marginTop: 'var(--space-4h)' }}>
       <Text variant="subheading" style={{ display: 'block' }}>
         New exercise
       </Text>

@@ -77,7 +77,7 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
               alignItems: 'center',
               gap: '9px',
               width: '100%',
-              padding: '4px 2px',
+              padding: 'var(--space-1) var(--space-0h)',
               borderBottom: '1.5px dashed color-mix(in srgb, var(--color-ink) 22%, transparent)',
             }}
           >
@@ -119,7 +119,7 @@ export function ChronicleScreen({ v }: { v: PlannerVals }) {
       {monthsOf(v.diaryList ?? []).map((g) => (
         <section key={g.label} aria-label={g.label.charAt(0) + g.label.slice(1).toLowerCase()}>
           <SectionLabel label={g.label} note={plural(g.entries.length, 'entry', 'entries')} style={{ margin: 'var(--space-5) 0 var(--space-2)' }} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2h)' }}>
             {g.entries.map((e, i) => (
               <ChronicleRow key={i} entry={e} />
             ))}

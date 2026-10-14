@@ -14,7 +14,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
       {/* Centred on a phone; beside the sidebar it sits in the page's column, like a saved entry. */}
       <div style={{ marginTop: '34px', textAlign: v.entryLeft ? 'left' : 'center' }}>
         {v.writeEyebrow ? (
-          <Text variant="micro" as="div" tone="slate" style={{ marginBottom: '6px' }}>
+          <Text variant="micro" as="div" tone="slate" style={{ marginBottom: 'var(--space-1h)' }}>
             {v.writeEyebrow}
           </Text>
         ) : null}
@@ -76,7 +76,7 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
             </span>
           ) : null}
         </div>
-        <Text variant="strong" weight="semibold" tone="slate" as="p" style={{ margin: '28px 0 10px' }}>
+        <Text variant="strong" weight="semibold" tone="slate" as="p" style={{ margin: 'var(--space-7) 0 var(--space-2h)' }}>
           Notes (optional)
         </Text>
         <TextArea
@@ -87,14 +87,14 @@ export function DiaryEntryForm({ v }: { v: PlannerVals }) {
           placeholder="Energy, soreness, what worked, what didn't…"
         />
         {v.showMarkDone ? (
-          <div style={{ marginTop: '18px' }}>
+          <div style={{ marginTop: 'var(--space-4h)' }}>
             <Checkbox switch checked={!!v.markDoneOn} onChange={v.setMarkDone}>
               {v.markDoneLabel}
             </Checkbox>
           </div>
         ) : null}
         {v.saveEntryHint ? (
-          <Text id="save-entry-hint" variant="body" tone="muted" as="p" style={{ margin: '18px 0 0', textAlign: 'center' }}>
+          <Text id="save-entry-hint" variant="body" tone="muted" as="p" style={{ margin: 'var(--space-4h) 0 0', textAlign: 'center' }}>
             {v.saveEntryHint}
           </Text>
         ) : null}

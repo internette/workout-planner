@@ -18,7 +18,7 @@ function AllPrograms({ count, open }: { count: number; open: () => void }) {
       <Text variant="body" tone="muted">
         {count}
       </Text>
-      <ChevronRight color="var(--color-muted)" size={16} style={{ marginLeft: '6px' }} />
+      <ChevronRight color="var(--color-muted)" size={16} style={{ marginLeft: 'var(--space-1h)' }} />
     </Pressable>
   );
 }
@@ -28,17 +28,17 @@ export function ProgramCard({ v }: { v: PlannerVals }) {
   if (!p) return null;
   if ('lastLine' in p)
     return (
-      <Card style={{ marginTop: '14px' }}>
+      <Card style={{ marginTop: 'var(--space-3h)' }}>
         <Text variant="micro" tone="slate" as="h2" style={{ margin: 0 }}>
           Current program
         </Text>
-        <Text variant="heading" as="div" style={{ marginTop: '6px' }}>
+        <Text variant="heading" as="div" style={{ marginTop: 'var(--space-1h)' }}>
           None running
         </Text>
         <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
           {p.lastLine}
         </Text>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', marginTop: '14px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', marginTop: 'var(--space-3h)' }}>
           <Button type="secondary" size="md" onClick={p.runAgain} disabled={p.busy}>
             Run it again
           </Button>
@@ -50,7 +50,7 @@ export function ProgramCard({ v }: { v: PlannerVals }) {
       </Card>
     );
   return (
-    <Card style={{ marginTop: '14px' }}>
+    <Card style={{ marginTop: 'var(--space-3h)' }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 'var(--space-1) var(--space-2)' }}>
         <Text variant="micro" tone="slate" as="h2" style={{ margin: 0, flex: 1, whiteSpace: 'nowrap' }}>
           Current program
@@ -59,7 +59,7 @@ export function ProgramCard({ v }: { v: PlannerVals }) {
           {p.place}
         </Text>
       </div>
-      <Pressable onClick={p.open} style={{ ...plainButton, gap: 'var(--space-2)', marginTop: '6px', minHeight: '36px' }}>
+      <Pressable onClick={p.open} style={{ ...plainButton, gap: 'var(--space-2)', marginTop: 'var(--space-1h)', minHeight: '36px' }}>
         <Text variant="heading" as="span" style={{ flex: 1, minWidth: 0 }}>
           {p.name}
         </Text>
@@ -71,7 +71,7 @@ export function ProgramCard({ v }: { v: PlannerVals }) {
           {p.done}/{p.total}
         </Text>
       </div>
-      <Text variant="body" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
+      <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-1h) 0 0' }}>
         {p.next}
       </Text>
       <AllPrograms count={p.count} open={p.openAll} />

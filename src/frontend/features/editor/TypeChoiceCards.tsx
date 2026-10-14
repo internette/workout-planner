@@ -34,10 +34,10 @@ function TypeChoiceCard({
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '14px',
+        gap: 'var(--space-3h)',
         textAlign: 'left',
         opacity: disabled ? 0.55 : 1,
-        boxShadow: selected ? 'inset 0 0 0 2px var(--color-pink)' : undefined,
+        boxShadow: selected ? 'var(--ring-accent)' : undefined,
       }}
     >
       <span

@@ -1,4 +1,4 @@
-import { elevations, glow } from '../../src/elevation';
+import { elevations, glow, rings } from '../../src/elevation';
 import { Button } from '../../src/buttons';
 import { DocPage, h2, note } from '../docs';
 
@@ -25,6 +25,22 @@ export default function ElevationPage() {
             <div style={meta}>var(--elevation-{name})</div>
             <div style={{ ...meta, color: 'var(--color-slate)', marginTop: 6 }}>{use}</div>
             <code style={{ ...meta, display: 'block', marginTop: 8, wordBreak: 'break-word' }}>{value}</code>
+          </div>
+        ))}
+      </div>
+
+      <h2 id="rings" style={h2}>Rings</h2>
+      <p style={note}>
+        A line drawn inside an edge, as an inset shadow, so nothing moves when it comes and goes: the outline of an empty
+        control, the accent round the selected card or tile, today on the calendar, a card of destructive settings.
+        Write <code>box-shadow: var(--ring-outline)</code>.
+      </p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+        {Object.entries(rings).map(([name, { value, use }]) => (
+          <div key={name} style={{ flex: '1 1 200px', maxWidth: 260 }}>
+            <div style={{ height: 56, borderRadius: 'var(--radius-md)', background: 'var(--color-surface)', boxShadow: value }} />
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--color-ink)', fontWeight: 600, marginTop: 8 }}>--ring-{name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())}</div>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--color-slate)', marginTop: 4 }}>{use}</div>
           </div>
         ))}
       </div>

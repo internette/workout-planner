@@ -9,7 +9,7 @@ import { KindTag, kindOf } from '@/frontend/components/KindTag';
 /** Progress: sessions per week as a bar chart, and, once a week's bar is picked, that week's sessions. */
 export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
   return (
-    <Card style={{ marginTop: '14px' }}>
+    <Card style={{ marginTop: 'var(--space-3h)' }}>
       <SectionLabel as="span" label="Sessions per week" aside={v.chartRangeLabel} />
       {v.chartCaption ? (
         <Text variant="body" as="p" tone="muted" style={{ margin: 'var(--space-2) 0 0' }}>
@@ -36,12 +36,12 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
               minWidth: '0',
               minHeight: '44px',
               // The 4 px between bars, inside each column's tap area rather than between them.
-              padding: '0 2px',
+              padding: '0 var(--space-0h)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-end',
               alignItems: 'center',
-              gap: '6px',
+              gap: 'var(--space-1h)',
             }}
             title={b?.tip}
           >
@@ -57,7 +57,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
             display: 'flex',
             flexDirection: 'column',
             gap: 'var(--space-2)',
-            marginTop: '18px',
+            marginTop: 'var(--space-4h)',
             paddingTop: 'var(--space-4)',
             borderTop: '1px solid var(--color-line)',
           }}
@@ -72,7 +72,7 @@ export function SessionsPerWeekCard({ v }: { v: PlannerVals }) {
                 flexWrap: 'wrap',
                 alignItems: 'center',
                 gap: 'var(--space-3)',
-                padding: '12px 14px',
+                padding: 'var(--space-3) var(--space-3h)',
                 borderRadius: 'var(--radius-md)',
                 background: 'var(--color-canvas)',
                 width: '100%',

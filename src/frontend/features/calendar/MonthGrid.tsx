@@ -16,7 +16,7 @@ export function MonthGrid({ v }: { v: PlannerVals }) {
         }}
       >
         {(v.dowLabels ?? []).map((l, i) => (
-          <Text key={i} variant="figure" tone="muted" as="div" style={{ textAlign: 'center', paddingBottom: '10px' }}>
+          <Text key={i} variant="figure" tone="muted" as="div" style={{ textAlign: 'center', paddingBottom: 'var(--space-2h)' }}>
             {l}
           </Text>
         ))}

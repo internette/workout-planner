@@ -20,7 +20,7 @@ export function NextUpCard({ v }: { v: PlannerVals }) {
       </Text>
       {v.hasNext ? (
         // The session's icon beside its name and when, as on the calendar's rows.
-        <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: '10px' }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-2h)' }}>
           <IconTile as="span" size="xs" variant="flat" aria-hidden>
             {v.nextSvg}
           </IconTile>

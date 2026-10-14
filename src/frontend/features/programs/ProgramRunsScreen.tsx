@@ -31,7 +31,7 @@ function RunRow({ r }: { r: Row }) {
         </span>
         <ChevronRight color="var(--color-muted)" size={16} />
       </span>
-      <span style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: 'var(--space-3)' }}>
+      <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2h)', marginTop: 'var(--space-3)' }}>
         <ProgressBar value={r.pct} track="tint" style={{ flex: 1 }} />
         <Text variant="body" tone="muted" style={{ flex: 'none' }}>
           {r.done} of {r.total}
@@ -46,12 +46,12 @@ export function ProgramRunsScreen({ v }: { v: PlannerVals }) {
   return (
     <div>
       <BackBar label={v.backLabel} onBack={v.goBack} />
-      <Text variant="title" as="h1" style={{ margin: '18px 0 0' }}>
+      <Text variant="title" as="h1" style={{ margin: 'var(--space-4h) 0 0' }}>
         Your programs
       </Text>
       {l.empty ? (
         <>
-          <Text variant="body" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
+          <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-1h) 0 0' }}>
             None run yet. Start one from the Spellbook and it shows here, and stays here once it’s done.
           </Text>
           <Button type="secondary" size="md" onClick={l.find} style={{ marginTop: 'var(--space-4)' }}>

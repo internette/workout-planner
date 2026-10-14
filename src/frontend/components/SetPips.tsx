@@ -10,7 +10,7 @@ export function SetPips({ pips }: { pips: boolean[] }) {
             height: '8px',
             borderRadius: 'var(--radius-full)',
             background: on ? 'var(--color-pink)' : 'none',
-            boxShadow: on ? 'none' : 'inset 0 0 0 1.5px var(--color-outline)',
+            boxShadow: on ? 'none' : 'var(--ring-outline)',
           }}
         />
       ))}

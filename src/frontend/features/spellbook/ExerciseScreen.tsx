@@ -32,7 +32,7 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
         </Button>
       </BackBar>
       <PageTitle icon={v.exercise.svg} eyebrow={v.exercise.builtin ? 'Built-in exercise' : 'Exercise'} title={v.exercise.name} />
-      <Card style={{ marginTop: '18px' }}>
+      <Card style={{ marginTop: 'var(--space-4h)' }}>
         <StatRow
           size="lg"
           stats={[
@@ -44,7 +44,7 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
           ]}
         />
         {(v.exercise.areas ?? []).length ? (
-          <ChipGroup style={{ marginTop: '18px' }}>
+          <ChipGroup style={{ marginTop: 'var(--space-4h)' }}>
             {(v.exercise.areas ?? []).map((a, i) => (
               <Chip key={i}>{a}</Chip>
             ))}
@@ -62,13 +62,13 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
         ) : null}
       </Card>
       {v.exercise.builtin ? (
-        <Text variant="body" as="p" tone="muted" style={{ margin: '18px 0 0' }}>
+        <Text variant="body" as="p" tone="muted" style={{ margin: 'var(--space-4h) 0 0' }}>
           Built-in exercises can&apos;t be changed. Add it to any workout as it is, or copy it to make
           your own version to edit.
         </Text>
       ) : (
         <>
-          <SectionLabel label="Used in" style={{ margin: '24px 0 10px' }} />
+          <SectionLabel label="Used in" style={{ margin: 'var(--space-6) 0 var(--space-2h)' }} />
           {(v.exercise.usedIn ?? []).length ? (
             <ChipGroup>
               {(v.exercise.usedIn ?? []).map((w, i) => (
@@ -83,7 +83,7 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
             </Text>
           )}
           {v.exercise.usedInNote ? (
-            <Text variant="body" as="p" tone="muted" style={{ margin: '10px 0 0' }}>
+            <Text variant="body" as="p" tone="muted" style={{ margin: 'var(--space-2h) 0 0' }}>
               {v.exercise.usedInNote}
             </Text>
           ) : null}

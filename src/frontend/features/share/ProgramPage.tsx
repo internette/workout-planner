@@ -57,7 +57,7 @@ function WorkoutCard({ w, open, onToggle }: { w: SharedWorkout; open: boolean; o
         <ChevronDown color="var(--color-muted)" size={16} style={{ flex: 'none', transform: open ? 'rotate(180deg)' : undefined }} />
       </Pressable>
       {open ? (
-        <div style={{ margin: '10px 0 4px 50px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ margin: '10px 0 4px 50px', display: 'flex', flexDirection: 'column', gap: 'var(--space-2h)' }}>
           {w.exercises.map((e, i) => (
             <div key={i}>
               <Text variant="body" as="div">
@@ -141,7 +141,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
           {name}
         </Text>
       </div>
-      <ChipGroup style={{ marginTop: '14px' }}>
+      <ChipGroup style={{ marginTop: 'var(--space-3h)' }}>
         <Chip icon={<Calendar color="var(--color-muted)" size={15} />}>{plural(weeks, 'week')}</Chip>
         <Chip icon={<Repeat color="var(--color-muted)" size={15} />}>{plural(trainingDays(program), 'day')} a week</Chip>
         {kitChip(kit) ? <Chip>{kitChip(kit)}</Chip> : null}
@@ -161,7 +161,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
             setPdfBusy(false);
           }
         }}
-        style={{ marginTop: '14px', whiteSpace: 'nowrap' }}
+        style={{ marginTop: 'var(--space-3h)', whiteSpace: 'nowrap' }}
       >
         <Download color="var(--color-pink-deep)" size={16} />
         {pdfBusy ? 'Making PDF…' : 'Save as PDF'}
@@ -172,7 +172,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
         </Text>
       ) : null}
       {several ? (
-        <div style={{ marginTop: '18px' }}>
+        <div style={{ marginTop: 'var(--space-4h)' }}>
           <BlockBar blocks={program.blocks.map((b, i) => ({ name: blockName(b, i), weeks: b.weeks }))} />
         </div>
       ) : null}
@@ -181,7 +181,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
         return (
           <section key={bi} aria-label={several ? blockName(b, bi) : 'The week'} style={{ marginTop: '22px' }}>
             {several || b.weeks > 1 ? (
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-2)', marginBottom: '6px' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-2)', marginBottom: 'var(--space-1h)' }}>
                 <Text variant="subheading" as="h2" style={{ margin: 0, flex: 1 }}>
                   {several ? blockName(b, bi) : 'Every week'}
                 </Text>
@@ -251,7 +251,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
         <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
           You’ll come back here, and nothing is copied until you choose to.
         </Text>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: 'var(--space-4)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2h)', marginTop: 'var(--space-4)' }}>
           {providers.length ? (
             providers.map((p) => (
               <ProviderButton key={p} provider={p} returnTo={'/p/' + id} onClick={() => setBusyProvider(p)} busy={busyProvider === p} disabled={!!busyProvider}>
