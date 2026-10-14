@@ -1,10 +1,10 @@
 'use client';
 
-import { useId, useLayoutEffect, useRef, useState, type MouseEvent, type SyntheticEvent } from 'react';
+import { useState } from 'react';
 import { Mark } from '@moonshot/design-system/brand';
 import { Button } from '@moonshot/design-system/buttons';
 import { Checkbox } from '@moonshot/design-system/checkbox';
-import { pressedOutside } from '@moonshot/design-system/dialog';
+import { Dialog } from '@moonshot/design-system/dialog';
 import { Text } from '@moonshot/design-system/typography';
 import styles from './install-prompt.module.css';
 
@@ -52,46 +52,10 @@ export function InstallPrompt({ open, notice, kind = 'install', onInstall, onNot
   );
 }
 
-// Mounted only while open, so showModal() runs once per opening.
 function Sheet({ words, onInstall, onNotNow }: Pick<InstallPromptProps, 'onInstall' | 'onNotNow'> & { words: (typeof WORDS)['install'] }) {
-  const titleId = useId();
-  const ref = useRef<HTMLDialogElement>(null);
   const [dontAsk, setDontAsk] = useState(false);
-
-  useLayoutEffect(() => {
-    const dialog = ref.current;
-    if (!dialog) return;
-    dialog.showModal();
-    return () => {
-      if (dialog.open) dialog.close();
-    };
-  }, []);
-
-  // Escape answers the same as Not now. The parent closes it, so the browser must not.
-  const onCancel = (e: SyntheticEvent) => {
-    e.preventDefault();
-    onNotNow(dontAsk);
-  };
-
-  // A press on the dimmed area answers the same as Escape.
-  const onPress = (e: MouseEvent<HTMLDialogElement>) => {
-    if (pressedOutside(e)) onNotNow(dontAsk);
-  };
-
   return (
-    <dialog ref={ref} className={styles.sheet} aria-labelledby={titleId} onCancel={onCancel} onClick={onPress}>
-      <div className={styles.handle} aria-hidden="true" />
-      <div className={styles.head}>
-        <span className={styles.icon}>
-          <Mark size={36} />
-        </span>
-        <Text variant="heading" as="h2" id={titleId} style={{ margin: 0 }}>
-          {words.title}
-        </Text>
-      </div>
-      <Text variant="body" tone="muted" as="p" style={{ margin: 0, textWrap: 'pretty' }}>
-        {words.body}
-      </Text>
+    <Dialog open variant="sheet" closeButton={false} icon={<Mark size={36} />} title={words.title} description={words.body} onClose={() => onNotNow(dontAsk)}>
       <div className={styles.actions}>
         <Button type="primary" size="lg" fullWidth onClick={() => onInstall(dontAsk)}>
           {words.action}
@@ -103,6 +67,6 @@ function Sheet({ words, onInstall, onNotNow }: Pick<InstallPromptProps, 'onInsta
       <Checkbox switch checked={dontAsk} onChange={setDontAsk}>
         Don’t ask me again
       </Checkbox>
-    </dialog>
+    </Dialog>
   );
 }

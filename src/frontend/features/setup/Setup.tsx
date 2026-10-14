@@ -5,6 +5,7 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import { ACCENTS, paletteFor } from '@moonshot/design-system/colors';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
+import { Dialog } from '@moonshot/design-system/dialog';
 import { Chip, ChipGroup, ChoiceChips } from '@moonshot/design-system/chip';
 import { IconChoiceGroup } from '@moonshot/design-system/icon-choice-group';
 import { Bike, Check, ChevronLeft, Dumbbell, Gem, LotusFlower, Lunge, Sparkle } from '@moonshot/design-system/icons';
@@ -91,26 +92,18 @@ export function Setup({ s }: { s: S | null }) {
   // Each step starts at its top, with its question read out.
   useEffect(() => {
     if (step == null) return;
-    top.current?.scrollTo(0, 0);
+    top.current?.parentElement?.scrollTo(0, 0);
     document.getElementById('setup-title')?.focus();
   }, [step]);
-  // While it's open, the app underneath can't be reached, by keyboard or by a screen reader.
-  const open = s != null;
-  useEffect(() => {
-    if (!open) return;
-    const others = Array.from(top.current?.parentElement?.children ?? []).filter((el): el is HTMLElement => el !== top.current && el instanceof HTMLElement && !el.inert);
-    others.forEach((el) => (el.inert = true));
-    return () => others.forEach((el) => (el.inert = false));
-  }, [open]);
   if (!s) return null;
 
   const page = (body: ReactNode, foot: ReactNode) => (
-    <div ref={top} role="dialog" aria-modal="true" aria-labelledby="setup-title" style={{ position: 'fixed', inset: 0, zIndex: 1000, overflowY: 'auto', background: 'var(--color-canvas)' }}>
-      <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', padding: '20px 20px 28px', maxWidth: 520, margin: '0 auto' }}>
+    <Dialog open variant="fullscreen" closeButton={false} labelledBy="setup-title" onClose={s.step < s.steps ? s.useDefaults : s.toCalendar}>
+      <div ref={top} style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', padding: '20px 20px 28px', maxWidth: 520, margin: '0 auto' }}>
         {body}
         {foot}
       </div>
-    </div>
+    </Dialog>
   );
   const heading = (text: string) => (
     <Text variant="title" as="h1" id="setup-title" tabIndex={-1} style={{ margin: '6px 0 0', outline: 'none' }}>

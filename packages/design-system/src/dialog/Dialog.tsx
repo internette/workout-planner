@@ -12,7 +12,12 @@ export interface DialogProps {
   open: boolean;
   /** Called when the browser asks to close it (Escape), on the close button, and on a press on the dimmed area around it. It should set `open` to false. */
   onClose: () => void;
-  title: string;
+  /** The heading. Leave it out when the content draws its own (a welcome card, a flow of screens), and say which with
+   * `labelledBy`: then no header is drawn. */
+  title?: string;
+  labelledBy?: string;
+  /** Before the title: the app's mark, say. */
+  icon?: ReactNode;
   /** Small muted text beside the title. */
   aside?: string;
   /** The X button in the top right corner. It does the same as Escape. On by default; pass false to leave it out. */
@@ -23,23 +28,25 @@ export interface DialogProps {
   actions?: ReactNode;
   /** md is a little wider than the default sm. */
   size?: 'sm' | 'md';
-  /** On a phone, a sheet along the bottom of the screen, its buttons across it: choices to pick from while the page
-   * stays in view above. Wider screens show it in the middle, like any dialog. */
-  sheet?: boolean;
+  /** center: in the middle of the screen, over the dimmed page. sheet: on a phone, along the bottom of the screen,
+   * its buttons across it, for choices to pick from while the page stays in view above (wider screens center it).
+   * fullscreen: the whole screen, on the page color, for a flow of its own such as customizing. */
+  variant?: 'center' | 'sheet' | 'fullscreen';
   /** Anything between the description and the buttons. */
   children?: ReactNode;
 }
 
 /**
  * A modal dialog, built on the native <dialog> element. The browser makes the rest of the page inert, keeps
- * Tab inside, closes it on Escape and gives focus back to whatever opened it.
+ * Tab inside, closes it on Escape and gives focus back to whatever opened it. In the middle of the screen by default;
+ * a sheet along the bottom of a phone's, or the whole screen for a flow of its own (see `variant`).
  */
 export function Dialog(props: DialogProps) {
   return props.open ? <DialogPanel {...props} /> : null;
 }
 
 // Mounted only while open, so showModal() runs once per opening.
-function DialogPanel({ onClose, title, aside, closeButton = true, description, actions, size = 'sm', sheet = false, children }: DialogProps) {
+function DialogPanel({ onClose, title, labelledBy, icon, aside, closeButton = true, description, actions, size = 'sm', variant: kind = 'center', children }: DialogProps) {
   const titleId = useId();
   const descId = useId();
   const ref = useRef<HTMLDialogElement>(null);
@@ -50,8 +57,9 @@ function DialogPanel({ onClose, title, aside, closeButton = true, description, a
     const dialog = ref.current;
     if (!dialog) return;
     live.current = true;
-    // A sheet holds the page still behind it: focus inside it, low on the screen, would otherwise scroll the page.
-    const unlock = sheet ? holdPage() : null;
+    // A sheet or a full screen holds the page still behind it: focus inside it, low on the screen, would otherwise
+    // scroll the page.
+    const unlock = kind !== 'center' ? holdPage() : null;
     dialog.showModal();
     // Start on the first action if there is one (Cancel, Keep it), otherwise on the close button.
     (dialog.querySelector<HTMLElement>('[data-dialog-actions] button') ?? dialog.querySelector<HTMLElement>('button'))?.focus();
@@ -60,7 +68,7 @@ function DialogPanel({ onClose, title, aside, closeButton = true, description, a
       if (dialog.open) dialog.close();
       unlock?.();
     };
-    // Mounted once per opening: `sheet` doesn't change while it's open.
+    // Mounted once per opening: `variant` doesn't change while it's open.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -83,31 +91,35 @@ function DialogPanel({ onClose, title, aside, closeButton = true, description, a
     <Card
       ref={ref as never}
       as="dialog"
-      pad="lg"
+      pad={kind === 'fullscreen' ? 'none' : 'lg'}
       elevation="overlay"
-      aria-labelledby={titleId}
+      aria-labelledby={title ? titleId : labelledBy}
       // Read out with the title when it opens, since focus lands on a button past the text.
       aria-describedby={description ? descId : undefined}
-      className={`${styles.panel} ${styles[size]}${sheet ? ' ' + styles.sheet : ''}`}
+      className={`${styles.panel} ${styles[size]} ${styles[kind]}`}
       onClick={onPress as never}
       // React supports these two events on <dialog>, but Card's props are typed for a generic element.
       {...({ onCancel, onClose: onNativeClose } as object)}
     >
+      {kind === 'sheet' ? <div className={styles.handle} aria-hidden="true" /> : null}
       {closeButton ? (
         <IconButton label="Close" size="md" onClick={onClose} className={styles.close}>
           <Close color="var(--color-muted)" strokeWidth={2.2} size={16} />
         </IconButton>
       ) : null}
-      <div className={`${styles.header} ${closeButton ? styles.withClose : ''}`}>
-        <Text variant="heading" as="h2" id={titleId} className={styles.title}>
-          {title}
-        </Text>
-        {aside ? (
-          <Text variant="strong" tone="muted">
-            {aside}
+      {title ? (
+        <div className={`${styles.header} ${closeButton ? styles.withClose : ''}`}>
+          {icon ? <span className={styles.icon}>{icon}</span> : null}
+          <Text variant="heading" as="h2" id={titleId} className={styles.title}>
+            {title}
           </Text>
-        ) : null}
-      </div>
+          {aside ? (
+            <Text variant="strong" tone="muted">
+              {aside}
+            </Text>
+          ) : null}
+        </div>
+      ) : null}
       {description ? (
         <Text variant="body" as="p" tone="muted" id={descId} className={styles.description}>
           {description}

@@ -21,9 +21,31 @@
 .description { margin: 10px 0 0; text-wrap: pretty; }
 .actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 22px; }
 
-/* A sheet: along the bottom of a phone's screen, full width, its buttons stretched across it. */
+/* An icon before the title: the app's mark on a tile. */
+.icon { width: 56px; height: 56px; flex: none; display: grid; place-items: center; border-radius: 22%; background: var(--color-canvas); box-shadow: var(--elevation-hairline); }
+.header:has(.icon) { align-items: center; gap: var(--space-4); }
+/* The handle a sheet is pulled by; only a sheet draws it, and only on a phone. */
+.handle { display: none; }
+
+/* The whole screen, on the page color: a flow of its own. The content lays itself out and scrolls inside. Two classes,
+   so it outranks Card's own corners and background whichever stylesheet the build loads last. */
+.panel.fullscreen {
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  border-radius: 0;
+  background: var(--color-canvas);
+  box-shadow: none;
+}
+.panel.fullscreen::backdrop { background: none; }
+
+/* A sheet: along the bottom of a phone's screen, full width, its buttons stretched across it, rising from the edge. */
 @media (max-width: 599px) {
+  .sheet .handle { display: block; width: 36px; height: 4px; margin: -8px auto 12px; border-radius: 2px; background: var(--color-hairline); }
   .sheet {
+    animation: rise var(--dur-bar) var(--ease-soft);
     width: 100%;
     max-width: none;
     max-height: 88vh;
@@ -33,4 +55,8 @@
     padding-bottom: max(var(--space-6, 24px), env(safe-area-inset-bottom));
   }
   .sheet .actions > * { flex: 1 1 auto; }
+}
+@keyframes rise {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }

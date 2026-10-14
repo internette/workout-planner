@@ -16,7 +16,7 @@ function PickerDialog({ v }: { v: PlannerVals }) {
   const p = v.programPicker;
   if (!p) return null;
   return (
-    <Dialog open={p.open} onClose={p.cancel} title={p.title} sheet>
+    <Dialog open={p.open} onClose={p.cancel} title={p.title} variant="sheet">
       <Text variant="body" tone="muted" as="p" style={{ margin: '6px 0 0' }}>
         The program gets its own copy: changes to it stay in the program.
       </Text>

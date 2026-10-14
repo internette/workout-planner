@@ -86,7 +86,7 @@ function FilterSheet({ v }: { v: PlannerVals }) {
       open={!!v.filterOpen}
       onClose={v.closeFilter}
       title={v.filterTitle ?? 'Filter'}
-      sheet
+      variant="sheet"
       actions={
         <>
           {v.activeFilters?.length ? (

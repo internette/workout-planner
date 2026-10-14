@@ -248,7 +248,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
         </div>
       </div>
 
-      <Dialog open={signIn} onClose={() => setSignIn(false)} title="Sign in to copy it" sheet>
+      <Dialog open={signIn} onClose={() => setSignIn(false)} title="Sign in to copy it" variant="sheet">
         <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
           You’ll come back here, and nothing is copied until you choose to.
         </Text>
@@ -271,7 +271,7 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
         open={copyOpen}
         onClose={() => !busy && setCopyOpen(false)}
         title={'Copy ' + name}
-        sheet
+        variant="sheet"
         actions={
           <>
             <Button type="neutral" ghost size="md" onClick={() => setCopyOpen(false)} disabled={busy}>
