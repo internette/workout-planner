@@ -129,6 +129,13 @@ export function chromeVals(ctx: Ctx) {
     },
     // Signing out asks first. Once confirmed the page is on its way to the server, so the dialog stays up, inert,
     // rather than letting the person press it twice or close it half way.
+    // The app's tour: from Settings, on the calendar's Day view for today, where its first stops are.
+    tourStep: st.tour ?? null,
+    setTourStep: (n: number) => logic.s({ tour: n }),
+    startTour: () => {
+      goDay();
+      logic.s({ tour: 0 });
+    },
     canSignOut: !!logic.auth.account,
     accountEmail: logic.auth.account?.email ?? '',
     accountProvider: logic.auth.account?.provider ?? '',

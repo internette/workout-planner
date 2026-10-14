@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { CALENDAR_KEY, PlannerLogic } from './store/PlannerLogic';
 import { useViewport } from './useViewport';
@@ -17,6 +17,8 @@ import { useLiveActivity } from '../live/useLiveActivity';
 import { useWakeLock } from '../live/useWakeLock';
 import { leaveChoice } from '../live/settings';
 import { RankUp } from '@moonshot/design-system/rank-up';
+import { Tour } from '../tour/Tour';
+import { markTourSeen, tourSeen } from '../tour/seen';
 
 // How long the plan may take before the loading screen says so.
 const SLOW_AFTER_MS = 8000;
@@ -385,6 +387,17 @@ export default function Planner({ account = null }: { account?: Account | null }
     }
   }, [rank, account?.email]);
 
+  // A new account (nothing planned, nothing saved) gets the app's tour once, the first time it opens on the calendar.
+  const firstRun = !!view && logic.model.workouts.length === 0 && logic.model.entries.length === 0;
+  useEffect(() => {
+    if (firstRun && logic.state.screen === 'day' && logic.state.tour == null && !tourSeen()) logic.s({ tour: 0 });
+  }, [firstRun, logic]);
+  const endTour = useCallback(() => {
+    markTourSeen();
+    logic.s({ tour: null });
+  }, [logic]);
+  const setTourStep = useCallback((n: number) => logic.s({ tour: n }), [logic]);
+
   const retry = () => {
     logic.status = 'loading';
     setSlow(false);
@@ -399,6 +412,17 @@ export default function Planner({ account = null }: { account?: Account | null }
   return (
     <>
       <PlannerView v={view ?? logic.renderVals()} />
+      <Tour
+        step={view?.tourStep ?? null}
+        // Their first name, when sign-in gave one (not just their email).
+        name={account?.name && account.name !== account.email ? account.name.trim().split(/\s+/)[0] : ''}
+        onStep={setTourStep}
+        onEnd={endTour}
+        onPlan={() => {
+          endTour();
+          view?.goNewWorkout();
+        }}
+      />
       <RankUp
         open={rankUp != null && rankUp === rank}
         name={view?.rankName ?? ''}

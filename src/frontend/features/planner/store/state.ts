@@ -184,6 +184,8 @@ export interface PlannerState {
   programMove?: { runId: string; date: string } | null;
   // Moving the session on screen to another day: the day picked so far.
   sessionMove?: { date: string } | null;
+  // The app's tour: 0 is its welcome, then its stops, then its send-off (see tour/Tour); null when it isn't showing.
+  tour?: number | null;
   programPick?: { blockId: string; day: number; q?: string } | null;
   programShareOpen?: boolean;
   programOpenBlocks?: Record<string, boolean>;

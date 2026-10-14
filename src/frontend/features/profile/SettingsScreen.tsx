@@ -9,6 +9,8 @@ import { DeleteAccount } from '@/frontend/features/profile/DeleteAccount';
 import { InstallSetting } from '@/frontend/features/profile/InstallSetting';
 import { LiveSetting } from '@/frontend/features/profile/LiveSetting';
 import { SettingsCard } from '@/frontend/features/profile/SettingsCard';
+import { Button } from '@moonshot/design-system/buttons';
+import { Text } from '@moonshot/design-system/typography';
 
 export function SettingsScreen({ v }: { v: PlannerVals }) {
   return (
@@ -20,6 +22,14 @@ export function SettingsScreen({ v }: { v: PlannerVals }) {
       </SettingsCard>
       <LiveSetting />
       <InstallSetting />
+      <SettingsCard title="Tour">
+        <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
+          A minute around the calendar, Chronicle, Spellbook, Progress and Profile.
+        </Text>
+        <Button type="secondary" size="md" onClick={v.startTour} style={{ marginTop: '12px' }}>
+          Take the tour
+        </Button>
+      </SettingsCard>
       {v.canSignOut ? (
         <>
           <AccountCard v={v} />
