@@ -379,12 +379,12 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
             </Card>
             {v.hasToday ? (
               <div style={{ marginTop: 'var(--space-7)' }}>
-                <Text variant="micro" as="div" tone="muted">
+                <Text variant="micro" as="h2" tone="muted" style={{ margin: 0 }}>
                   {v.todayLabel}
                 </Text>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-3)' }}>
                   {(v.todayCards ?? []).map((c, i) => (
-                    <LinkRow key={i} title={c?.name} detail={c?.meta} kind={kindOf(c)} onClick={c?.open} />
+                    <LinkRow key={i} title={c?.name} detail={c?.meta} kind={kindOf(c)} onClick={c?.open} label={c?.aria} />
                   ))}
                 </div>
               </div>
