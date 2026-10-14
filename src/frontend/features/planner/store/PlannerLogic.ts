@@ -1,3 +1,4 @@
+import { setupVals } from '@/frontend/features/setup/model';
 import { DCLogic } from './dcLogic';
 import * as db from '@/frontend/data/plannerData';
 import type { Model } from '@/frontend/data/plannerData';
@@ -225,6 +226,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
       ...progressVals(ctx),
       ...liveVals(ctx),
       ...restVals(ctx),
+      ...setupVals(ctx),
     };
   }
 }

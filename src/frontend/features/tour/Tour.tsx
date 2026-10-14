@@ -1,11 +1,13 @@
 'use client';
-// The app's tour: a welcome, seven stops lit up on the calendar and the nav, and a send-off. Each stop dims the page
-// but the thing it's about, rings that in the accent, and explains it in a bubble beside it. Tapping what's lit up uses
-// it (and ends the tour); a stop whose thing isn't on screen (a calendar that already has workouts has no "Plan your
-// first workout") is passed over.
+// The app's tour: a welcome that offers it (or customizing first, or neither), seven stops lit up on the calendar and
+// the nav, and a send-off. Each stop dims the page but the thing it's about, rings that in the accent, and explains it
+// in a bubble beside it. Tapping what's lit up uses it (and ends the tour); a stop whose thing isn't on screen (a
+// calendar that already has workouts has no "Plan your first workout") is passed over.
 import { useEffect, useState, type CSSProperties } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
-import { Gem } from '@moonshot/design-system/icons';
+import { Calendar, Gem, Sliders, Sparkle } from '@moonshot/design-system/icons';
+import { IconTile } from '@moonshot/design-system/icon-tile';
+import { LinkRow } from '@/frontend/components/LinkRow';
 import { Text } from '@moonshot/design-system/typography';
 import { Twinkles } from '@/frontend/components/Twinkles';
 import { RankGem } from '@/frontend/components/RankGem';
@@ -53,18 +55,22 @@ const CARD: CSSProperties = {
 };
 
 export interface TourProps {
-  /** 0 is the welcome, 1 to 7 the stops, 8 the send-off; null is closed. */
+  /** 0 is the welcome, 1 to 7 the stops, 8 the send-off; null is closed. Settings starts it at 1. */
   step: number | null;
   /** What to call them in the welcome, or '' for none. */
   name: string;
   onStep: (step: number) => void;
   /** Ends it, whichever way: skipped, finished, or by tapping what was lit up. */
   onEnd: () => void;
-  /** The send-off's button. */
+  /** The welcome's first choice: "Customize your experience". */
+  onCustomize: () => void;
+  /** Nothing on their calendar yet: the send-off offers to plan their first workout. */
+  fresh: boolean;
+  /** The send-off's button, when `fresh`. */
   onPlan: () => void;
 }
 
-export function Tour({ step, name, onStep, onEnd, onPlan }: TourProps) {
+export function Tour({ step, name, onStep, onEnd, onCustomize, fresh, onPlan }: TourProps) {
   const total = STOPS.length;
   const stop = step != null && step >= 1 && step <= total ? STOPS[step - 1] : null;
   const [rect, setRect] = useState<DOMRect | null>(null);
@@ -99,8 +105,51 @@ export function Tour({ step, name, onStep, onEnd, onPlan }: TourProps) {
     onStep(Math.max(0, Math.min(total + 1, n)));
   };
 
-  if (step === 0 || step > total) {
-    const first = step === 0;
+  if (step === 0)
+    return (
+      <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: SCRIM, display: 'grid', placeItems: 'center', padding: 20 }}>
+        <div role="dialog" aria-modal="true" aria-labelledby="tour-title" style={{ ...CARD, width: '100%', maxWidth: 400, padding: '26px 18px 18px' }}>
+          <Twinkles />
+          <div style={{ textAlign: 'center' }}>
+            <span style={{ width: 72, height: 72, margin: '0 auto', borderRadius: 'var(--radius-full)', background: 'var(--gradient-gem-tint)', display: 'grid', placeItems: 'center' }}>
+              <Gem size={34} />
+            </span>
+            <Text variant="micro" tone="accent" as="div" style={{ marginTop: 14 }}>
+              {name ? 'Welcome, ' + name : 'Welcome'}
+            </Text>
+            <Text variant="heading" as="h2" id="tour-title" style={{ margin: '6px 0 0' }}>
+              How would you like to begin?
+            </Text>
+          </div>
+          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 8, marginTop: 18 }}>
+            <LinkRow
+              leading={<IconTile as="span" size="sm"><Sliders color="var(--color-pink-deep)" size={18} /></IconTile>}
+              title="Customize your experience"
+              detail="Your name, color, what you train and when."
+              onClick={onCustomize}
+            />
+            <LinkRow
+              leading={<IconTile as="span" size="sm"><Sparkle color="var(--color-pink-deep)" size={18} /></IconTile>}
+              title="Take the tour"
+              detail="Seven stops, about a minute."
+              onClick={() => go(0, 1)}
+            />
+            <LinkRow
+              leading={<IconTile as="span" size="sm"><Calendar color="var(--color-pink-deep)" size={18} /></IconTile>}
+              title="Go straight to the app"
+              detail="Start on the defaults."
+              onClick={onEnd}
+            />
+          </div>
+          <Text variant="small" tone="muted" as="p" style={{ position: 'relative', margin: '12px 0 0', textAlign: 'center' }}>
+            Both of these are in Settings later.
+          </Text>
+        </div>
+      </div>
+    );
+
+  // The send-off.
+  if (step > total)
     return (
       <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: SCRIM, display: 'grid', placeItems: 'center', padding: 20 }}>
         <div role="dialog" aria-modal="true" aria-labelledby="tour-title" style={{ ...CARD, width: '100%', maxWidth: 360, padding: '26px 22px 20px', textAlign: 'center' }}>
@@ -109,26 +158,31 @@ export function Tour({ step, name, onStep, onEnd, onPlan }: TourProps) {
             <Gem size={34} />
           </span>
           <Text variant="micro" tone="accent" as="div" style={{ marginTop: 14 }}>
-            {first ? (name ? 'Welcome, ' + name : 'Welcome') : 'You’re ready'}
+            You’re ready
           </Text>
           <Text variant="heading" as="h2" id="tour-title" style={{ margin: '6px 0 0' }}>
-            {first ? 'Let’s find your way around' : 'The call is yours to answer'}
+            The call is yours to answer
           </Text>
           <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
-            {first
-              ? 'Seven stops, about a minute. Tap Next, or tap what’s lit up to try it.'
-              : 'Plan your first workout and that day gets a quest. You can take this tour again from Settings.'}
+            {fresh ? 'Plan your first workout and that day gets a quest. ' : ''}You can take this tour again from Settings.
           </Text>
-          <Button type="primary" size="lg" fullWidth glow onClick={first ? () => go(0, 1) : onPlan} style={{ marginTop: 18 }}>
-            {first ? 'Show me around' : 'Plan your first workout'}
-          </Button>
-          <Button type="neutral" link size="sm" onClick={onEnd} style={{ display: 'flex', margin: '6px auto 0', minHeight: 44 }}>
-            {first ? 'I’ll explore on my own' : 'Done'}
-          </Button>
+          {fresh ? (
+            <>
+              <Button type="primary" size="lg" fullWidth glow onClick={onPlan} style={{ marginTop: 18 }}>
+                Plan your first workout
+              </Button>
+              <Button type="neutral" link size="sm" onClick={onEnd} style={{ display: 'flex', margin: '6px auto 0', minHeight: 44 }}>
+                Done
+              </Button>
+            </>
+          ) : (
+            <Button type="primary" size="lg" fullWidth glow onClick={onEnd} style={{ marginTop: 18 }}>
+              Done
+            </Button>
+          )}
         </div>
       </div>
     );
-  }
 
   // A stop: the bubble goes below its thing in the top half of the screen, above it in the bottom half.
   const pad = 6;

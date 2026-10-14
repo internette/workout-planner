@@ -22,13 +22,18 @@ export function SettingsScreen({ v }: { v: PlannerVals }) {
       </SettingsCard>
       <LiveSetting />
       <InstallSetting />
-      <SettingsCard title="Tour">
+      <SettingsCard title="Getting started">
         <Text variant="body" tone="muted" as="p" style={{ margin: '8px 0 0' }}>
-          A minute around the calendar, Chronicle, Spellbook, Progress and Profile.
+          Your name, color, what you train and when, and a program to begin with. Or a minute around the app.
         </Text>
-        <Button type="secondary" size="md" onClick={v.startTour} style={{ marginTop: '12px' }}>
-          Take the tour
-        </Button>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '12px' }}>
+          <Button type="secondary" size="md" onClick={v.startSetup}>
+            Customize your experience
+          </Button>
+          <Button type="secondary" size="md" onClick={v.startTour}>
+            Take the tour
+          </Button>
+        </div>
       </SettingsCard>
       {v.canSignOut ? (
         <>

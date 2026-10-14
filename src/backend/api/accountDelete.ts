@@ -6,15 +6,27 @@ import { deleteAuth0User, MANAGEMENT_CONFIGURED } from '@/backend/auth0/manageme
 import { freshIdToken } from '@/backend/auth0/sessionToken';
 
 // Everything a person owns, children before parents in case the tables reference each other.
-const TABLES = ['plan_drafts', 'diary_entries', 'plan_entries', 'workout_exercises', 'library_exercises', 'workouts'] as const;
+const TABLES = [
+  'plan_drafts',
+  'diary_entries',
+  'plan_entries',
+  'workout_exercises',
+  'library_exercises',
+  'workouts',
+  'shared_programs',
+  'program_runs',
+  'program_blocks',
+  'programs',
+  'profiles',
+] as const;
 // Tables that only exist once a later migration has run: missing is the same as empty.
-const OPTIONAL = new Set<string>(['plan_drafts']);
+const OPTIONAL = new Set<string>(['plan_drafts', 'shared_programs', 'program_runs', 'program_blocks', 'programs', 'profiles']);
 const isMissingTable = (code?: string) => code === '42P01' || code === 'PGRST205';
 
 const respond = (body: object, status: number) => NextResponse.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
 
 /**
- * Permanently deletes the signed-in person: their plan, workouts, exercises and diary from Supabase, then their sign-in
+ * Permanently deletes the signed-in person: their plan, workouts, exercises, programs, diary and profile from Supabase, then their sign-in
  * from Auth0. There is no way back. The data goes first, so a failure can never leave personal data behind with no
  * sign-in to reach it, and running it again after a failure is safe.
  */

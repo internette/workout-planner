@@ -32,13 +32,16 @@ export interface Account {
   provider: string | null;
 }
 
+/** The name their sign-in gave, or '' when it gave none (only their email). */
+export const signInName = (a: Account | null): string => (a?.name && a.name !== a.email ? a.name.trim() : '');
+
 /**
- * What to call them. Apple can hide the name and Auth0 then fills it with the email, so a name that is just the email
- * does not count; the part of the email before the @ is the next best thing.
+ * What to call them: the name they chose in the app, if any, else their sign-in's. Apple can hide the name and Auth0
+ * then fills it with the email, so a name that is just the email does not count; the part of the email before the @ is
+ * the next best thing.
  */
-export const displayName = (a: Account | null): string => {
-  const named = a?.name && a.name !== a.email ? a.name.trim() : '';
-  return named || a?.email?.split('@')[0] || 'You';
+export const displayName = (a: Account | null, chosen?: string | null): string => {
+  return chosen?.trim() || signInName(a) || a?.email?.split('@')[0] || 'You';
 };
 
 /** What each provider is called on screen. */

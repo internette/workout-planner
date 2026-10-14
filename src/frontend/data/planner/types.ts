@@ -156,6 +156,18 @@ export interface Model {
   builtinPrograms: BuiltinProgram[]; // the shared catalog, in catalog order
   // Whether programs can be made yet (the programs migration has run).
   programsReady: boolean;
+  profile: Profile | null; // what they said in "Customize your experience"; null until they have
+  // Whether that can be saved yet (the profiles migration has run).
+  profileReady: boolean;
+}
+
+// What a person said in "Customize your experience".
+export interface Profile {
+  name: string | null; // null: the name from their sign-in
+  trains: ('lift' | 'ride' | 'stretch' | 'yoga')[];
+  equipment: string[] | null; // from EQUIPMENT; empty is bodyweight only, null is not said
+  days: number[]; // weekdays, 0 = Sunday
+  minutes: number | null;
 }
 
 export interface NewWorkout {

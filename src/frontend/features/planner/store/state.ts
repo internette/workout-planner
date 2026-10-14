@@ -1,3 +1,4 @@
+import type { SetupDraft } from '@/frontend/features/setup/model';
 import type { Exercise } from '@/frontend/data/plannerData';
 import type { Mood } from '@moonshot/design-system/icons';
 
@@ -186,6 +187,8 @@ export interface PlannerState {
   sessionMove?: { date: string } | null;
   // The app's tour: 0 is its welcome, then its stops, then its send-off (see tour/Tour); null when it isn't showing.
   tour?: number | null;
+  // "Customize your experience", while it's open (see setup/model).
+  setup?: SetupDraft | null;
   programPick?: { blockId: string; day: number; q?: string } | null;
   programShareOpen?: boolean;
   programOpenBlocks?: Record<string, boolean>;
