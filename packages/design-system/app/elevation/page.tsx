@@ -17,7 +17,7 @@ export default function ElevationPage() {
       </p>
 
       <h2 id="steps" style={h2}>Steps</h2>
-      <p style={note}>Three steps, from a quiet tray to a floating dialog.</p>
+      <p style={note}>Four steps: from a quiet tray to a floating dialog, and a bar along the bottom of the screen, which casts its shadow upward.</p>
       <div style={row}>
         {Object.entries(elevations).map(([name, { value, use }]) => (
           <div key={name} style={{ background: 'var(--color-surface)', borderRadius: 'var(--radius-md)', padding: 18, boxShadow: `var(--elevation-${name})` }}>

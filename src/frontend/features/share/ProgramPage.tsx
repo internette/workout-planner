@@ -226,7 +226,8 @@ export function ProgramPage({ id, name, program, signedIn, providers }: ProgramP
           bottom: 0,
           padding: 'var(--space-3) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom))',
           background: 'var(--color-surface)',
-          boxShadow: '0 -1px 0 var(--color-line)',
+          borderTop: '1px solid var(--color-line)',
+          boxShadow: 'var(--elevation-bar)',
         }}
       >
         <div style={{ maxWidth: '528px', margin: '0 auto' }}>

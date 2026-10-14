@@ -16,6 +16,7 @@ export const darkOverrides: Record<string, string> = {
   '--elevation-hairline': '0 1px 3px ' + translucent('black', 4),
   '--elevation-raised': '0 4px 14px ' + translucent('black', 4),
   '--elevation-overlay': '0 8px 24px ' + translucent('black', 5),
+  '--elevation-bar': '0 -4px 14px ' + translucent('black', 4),
   '--glow-primary': '0 8px 20px ' + translucent('pink', 4),
   // Hover washes: light over dark surfaces
   '--hover-neutral': translucent('white', 1),
