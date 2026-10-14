@@ -1,4 +1,5 @@
 import { typeLabelOf } from '@/frontend/components/KindTag';
+import { programPlace } from '@/frontend/shared/programs';
 import { DOWFULL } from '@/frontend/shared/constants';
 import { dayShort, digitsOnly, shortDay, exLine, isoMonthDay, isoOf, formatElapsed, idOf, longDay, monDay, monthPatch, newWorkoutPatch, noticePatch, numericOnly, plural, questSeed, rollMinutes, toMinutes } from '@/frontend/shared/helpers';
 import { iconSvg } from '@/frontend/shared/icons';
@@ -339,6 +340,8 @@ export function workoutVals(ctx: Ctx) {
       yoga: !!av.yoga,
       // Put there by a program: its name, above the session's.
       programName: av.program ? av.program.name : '',
+      // Where in the program the day falls: "Base, week 4 of 4".
+      programPlace: av.program ? programPlace(av.program) : '',
       // Open, what kind of workout it is, named as "What kind of workout?" names it: "Warm-up · Stretching".
       typeLabel: typeLabelOf({ ...av, ride }),
       meta: complete
