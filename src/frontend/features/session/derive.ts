@@ -146,8 +146,11 @@ export function workoutStage(ctx: StatsCtx) {
       have[base] = (have[base] || 0) + 1;
     });
     const all: Exercise[] = [];
+    // Listed by its base name: a sided copy in a workout ("Pallof Press · Left") stands for the exercise itself, which
+    // goes into a workout for both sides at once.
     const add = (e) => {
-      if ((have[e.name] || 0) < (oneSided(e.name) ? 2 : 1) && !all.some((x) => x.name === e.name)) all.push(e);
+      const { base } = splitSide(e.name);
+      if ((have[base] || 0) < (oneSided(base) ? 2 : 1) && !all.some((x) => x.name === base)) all.push(base === e.name ? e : { ...e, name: base });
     };
     Object.keys(EX).forEach((k) => EX[k].forEach(add));
     Object.keys(st.extra || {}).forEach((k) => (st.extra[k] || []).forEach(add));

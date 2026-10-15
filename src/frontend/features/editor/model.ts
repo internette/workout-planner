@@ -10,7 +10,7 @@ import { setsFor, setsIn } from '../session/sets';
 import { kindOf } from '@/frontend/components/KindTag';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import { areaToggles, draftBand, draftWeighted, plainExercise, DRAFT_CLEARED, draftClash, draftHint, draftItem, draftOpened, draftReady, equipmentKnown, equipmentToggles } from '@/frontend/shared/exerciseDraft';
-import { oneSided, otherSide, splitSide, withSide } from '@/frontend/shared/sides';
+import { forWorkout, oneSided, otherSide, splitSide, withSide } from '@/frontend/shared/sides';
 import { programOfWorkout } from '@/frontend/shared/programs';
 import { bandLevelOf, bandWeight, takesWeight, usesBand, type BandLevel } from '@/frontend/shared/bands';
 import type { BuiltinWorkout, WorkoutSummary } from '@/frontend/data/plannerData';
@@ -481,8 +481,9 @@ export function editVals(ctx: Ctx) {
     library: pickable.slice(0, PICK_LIMIT).map((e) => ({
       name: e.name,
       builtin: !!e.builtin,
-      // One done a side at a time, already in the workout once, can be added again for its other side.
-      detail: selList.some((x) => splitSide(x.name).base === e.name) ? 'In this workout · add it again for the other side' : exLine(e),
+      // One done a side at a time goes in for both sides; one already in the workout once (from before it did) can be
+      // added again for its other side.
+      detail: selList.some((x) => splitSide(x.name).base === e.name) ? 'In this workout · add it again for the other side' : exLine(e) + (oneSided(e.name) ? ' · each side' : ''),
       // Same as the Spellbook: the row opens the exercise, "+" adds it. Back returns here with this panel still open.
       // An exercise only drafted in this visit has no saved page yet, so it can only be added.
       open: e.id ? () => logic.nav({ screen: 'exercise', exerciseId: e.id }) : null,
@@ -493,10 +494,11 @@ export function editVals(ctx: Ctx) {
         // updates sets the same state again.)
         if (same.length >= 2 || (same.length && !oneSided(e.name))) return;
         if (!same.length) {
+          const both = forWorkout(e);
           return logic.s({
-            extra: Object.assign({}, st.extra, { [listKey]: added.concat([e]) }),
+            extra: Object.assign({}, st.extra, { [listKey]: added.concat(both) }),
             removed: Object.assign({}, st.removed, { [listKey]: gone.filter((n) => n !== e.name) }),
-            announce: e.name + ' added.',
+            announce: e.name + (both.length > 1 ? ' added for the left and right sides.' : ' added.'),
           });
         }
         // Already in it: this one is for the other side. The first is labeled Left if it has no side yet, and the new
