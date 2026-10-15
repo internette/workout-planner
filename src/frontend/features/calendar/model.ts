@@ -140,8 +140,9 @@ export function calendarVals(ctx: Ctx) {
     nextMonthShort: MON3[mod12(mi + 1)] + (Math.floor((mi + 1) / 12) !== shownYOff ? ' ' + (Y + Math.floor((mi + 1) / 12)) : ''),
     prevMonthName: MONTHS[mod12(mi - 1)] + ' ' + (Y + Math.floor((mi - 1) / 12)),
     nextMonthName: MONTHS[mod12(mi + 1)] + ' ' + (Y + Math.floor((mi + 1) / 12)),
-    prevMonth: () => logic.s({ ...monthPatch(mi - 1), day: 1 }),
-    nextMonth: () => logic.s({ ...monthPatch(mi + 1), day: 1 }),
+    // A month's arrows say the month they landed on: the heading is only for screen readers and isn't focused.
+    prevMonth: () => logic.s({ ...monthPatch(mi - 1), day: 1, announce: MONTHS[mod12(mi - 1)] + ' ' + (Y + Math.floor((mi - 1) / 12)) }),
+    nextMonth: () => logic.s({ ...monthPatch(mi + 1), day: 1, announce: MONTHS[mod12(mi + 1)] + ' ' + (Y + Math.floor((mi + 1) / 12)) }),
     months,
     days,
     dayName: DOWFULL[selDate.getDay()],
@@ -167,6 +168,8 @@ export function calendarVals(ctx: Ctx) {
     hasToday: isCurMonth && todayActs.length > 0,
     todayCards: todayActs.map((a) => ({
       name: nameOf(a.name),
+      // Its name with pauses, where the tag, title and detail would run together.
+      aria: [nameOf(a.name), a.warmup ? 'warm-up' : a.stretch ? 'stretch' : a.yoga ? 'yoga' : '', metaFor(a)].filter(Boolean).join(', '),
       warmup: !!a.warmup,
       stretch: !!a.stretch,
       yoga: !!a.yoga,

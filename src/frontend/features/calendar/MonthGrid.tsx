@@ -32,7 +32,7 @@ export function MonthGrid({ v }: { v: PlannerVals }) {
       <div style={{ position: 'relative' }}>
         <div
           role="group"
-          aria-label={v.monthYear + '. Use the arrow keys to move between days.'}
+          aria-label={v.monthYear + '. Use the arrow keys to move between days, and Page Up and Page Down between months.'}
           onKeyDown={v.monthKeyDown}
           style={{
             position: 'relative',

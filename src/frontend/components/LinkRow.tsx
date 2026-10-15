@@ -17,11 +17,13 @@ export interface LinkRowProps {
   onClick?: () => void;
   /** Can't be picked: dimmed, with no chevron. */
   disabled?: boolean;
+  /** What a screen reader calls it, where the title, tag and detail wouldn't read well run together. */
+  label?: string;
 }
 
 /** A card-sized row you press to open or add something: an optional icon, a title with a detail line, and a chevron
  * or plus at the end. Lists of them sit in a column 8px apart. */
-export function LinkRow({ title, detail, kind, leading, action = 'open', onClick, disabled }: LinkRowProps) {
+export function LinkRow({ title, detail, kind, leading, action = 'open', onClick, disabled, label }: LinkRowProps) {
   return (
     <Card
       as="button"
@@ -29,7 +31,8 @@ export function LinkRow({ title, detail, kind, leading, action = 'open', onClick
       interactive
       disabled={disabled}
       onClick={onClick}
-      style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', textAlign: 'left', width: '100%', opacity: disabled ? 0.55 : 1 }}
+      aria-label={label}
+      style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', textAlign: 'left', width: '100%', opacity: disabled ? 'var(--alpha-5)' : 1 }}
     >
       {leading}
       <span style={{ flex: '1', minWidth: '0' }}>
