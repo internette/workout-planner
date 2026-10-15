@@ -1,3 +1,4 @@
+import { splitSide } from '@/frontend/shared/sides';
 // Loading everything the planner shows, in one go.
 
 import { supabase } from '../supabase';
@@ -218,7 +219,10 @@ export async function loadModel(today: Date): Promise<Model> {
   const builtinByName: Record<string, Exercise> = {};
   builtinList.forEach((e) => (builtinByName[e.name] = e));
   const builtinWorkouts: BuiltinWorkout[] = builtinWorkoutRows.map((r: any) => {
-    const list = (r.exercises || []).map((n: string) => builtinByName[n]).filter(Boolean) as Exercise[];
+    // A name with a side ("Pallof Press · Left") is the exercise it's made from, under that name.
+    const list = (r.exercises || [])
+      .map((n: string) => (builtinByName[n] ? builtinByName[n] : builtinByName[splitSide(n).base] ? { ...builtinByName[splitSide(n).base], name: n } : null))
+      .filter(Boolean) as Exercise[];
     // Its own length when it says one (a stretching routine's is short), else estimated the way a new workout is: about
     // ten minutes an exercise, at least twenty (a warm-up's are quicker).
     const minutes = r.minutes || estimateMinutes(list.length, !!r.is_warmup || !!r.is_stretch || !!r.is_yoga);
