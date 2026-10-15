@@ -50,7 +50,7 @@ const changeWith = (d: PlanDraft): Who =>
   (d.source === 'claude' || d.source === 'chatgpt') && AVAILABLE.includes(d.source) ? d.source : AVAILABLE[0] ?? 'claude';
 const openChat = (who: Who, message: string) => window.open(ASSISTANTS[who].chat(message), '_blank', 'noopener,noreferrer');
 
-export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => void; adding: boolean }) {
+export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => Promise<boolean> | undefined; adding: boolean }) {
   const [draft, setDraft] = useState<PlanDraft | null>(null);
   const [waiting, setWaiting] = useState<PlanDraft | null>(null);
   const [problem, setProblem] = useState('');
@@ -94,11 +94,15 @@ export function SummonPlan({ onAdd, adding }: { onAdd: (draft: PlanDraft) => voi
       setProblem('That didn’t go through. Try again in a moment.');
     }
   };
-  const add = (d: PlanDraft) => {
+  const add = async (d: PlanDraft) => {
     decided.current.add(d.id);
-    onAdd(d);
     setWaiting(null);
     close();
+    // Not added (the error banner says why): the card comes back, to add it again.
+    if ((await onAdd(d)) === false) {
+      decided.current.delete(d.id);
+      setWaiting(d);
+    }
   };
   // Asking for changes opens the assistant; the changed plan shows here as a new card once it's sent.
   const askForChanges = (d: PlanDraft) => {

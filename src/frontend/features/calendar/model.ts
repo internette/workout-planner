@@ -91,7 +91,7 @@ export function calendarVals(ctx: Ctx) {
       const w = draft.plan.workouts;
       const first = w[0].date;
       const at = isoMonthDay(first, Y);
-      logic.saveOnce('plan-draft', () => db.addPlanDraft(draft, logic.model!), {
+      return logic.saveOnce('plan-draft', () => db.addPlanDraft(draft, logic.model!), {
         ...monthPatch(at.m),
         day: at.d,
         ...noticePatch(`Your new arc is on the calendar: ${plural(w.length, 'workout')}, starting ${shortDate(first)}.`, 'day'),
