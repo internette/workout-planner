@@ -25,6 +25,17 @@ import { CALENDAR_KEY, NOTICE_KEY } from '@/frontend/shared/handoff';
 
 export { CALENDAR_KEY };
 
+// Dialogs that start a save and wait on it: how to save a change, finishing a workout, moving a session or a program,
+// starting a program, adding a workout to a program's day.
+const SAVE_DIALOGS_CLOSED: Partial<PlannerState> = {
+  tplConfirm: null,
+  finish: null,
+  sessionMove: null,
+  programMove: null,
+  programStart: null,
+  programPick: null,
+};
+
 export class PlannerLogic extends DCLogic<PlannerState> {
   /** Which layout the window calls for. The host component keeps it current. */
   viewport: Viewport = 'wide';
@@ -109,15 +120,19 @@ export class PlannerLogic extends DCLogic<PlannerState> {
   private pendingPatch: any = {};
 
   // Queues a database write; when the queue drains the model is reloaded and `patch` applied to the
-  // UI state. A failed write shows in the error banner and the reload puts the UI back in sync.
+  // UI state. `patch` is what follows a save that landed (the next screen, a notice, a form cleared), so it applies
+  // only when the write succeeds: a failed one leaves the person where they were, with what they typed, and shows the
+  // error banner, and the reload puts the UI back in sync with what was saved.
   // `patch` may be a function of what the write returned, for state that depends on rows it created.
-  save(write: () => Promise<any>, patch: any = {}): Promise<unknown> {
+  // Resolves, once the reload is done, to whether this write landed.
+  save(write: () => Promise<any>, patch: any = {}): Promise<boolean> {
     this.pending++;
-    if (typeof patch !== 'function') this.pendingPatch = { ...this.pendingPatch, ...patch };
+    let ok = false;
     this.queue = this.queue
       .then(async () => {
         const result = await write();
-        if (typeof patch === 'function') this.pendingPatch = { ...this.pendingPatch, ...patch(result) };
+        ok = true;
+        this.pendingPatch = { ...this.pendingPatch, ...(typeof patch === 'function' ? patch(result) : patch) };
       })
       .catch((e) => this.fail(e))
       .then(() => {
@@ -126,7 +141,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
         this.pendingPatch = {};
         return this.load(p);
       });
-    return this.queue;
+    return this.queue.then(() => ok);
   }
 
   // Saves that make something new (a workout, a session, an exercise) or finish a form. A second press while the
@@ -136,11 +151,11 @@ export class PlannerLogic extends DCLogic<PlannerState> {
   busy(key: string) {
     return this.inFlight.has(key);
   }
-  saveOnce(key: string, write: () => Promise<any>, patch: any = {}) {
+  saveOnce(key: string, write: () => Promise<any>, patch: any = {}): Promise<boolean> | undefined {
     if (this.inFlight.has(key)) return;
     this.inFlight.add(key);
     this.forceUpdate();
-    this.save(write, patch).finally(() => {
+    return this.save(write, patch).finally(() => {
       this.inFlight.delete(key);
       this.forceUpdate();
     });
@@ -160,7 +175,9 @@ export class PlannerLogic extends DCLogic<PlannerState> {
 
   /** Shows what went wrong with a save in the error banner. */
   fail(e: unknown) {
-    this.setState({ saveError: e instanceof Error ? e.message : String(e) });
+    // The dialog the save was started from closes, so the banner isn't hidden behind it. What it was saving stays:
+    // the editor's draft, the session's clock.
+    this.setState({ saveError: e instanceof Error ? e.message : String(e), ...SAVE_DIALOGS_CLOSED });
   }
 
   s(p: Partial<PlannerState>) {

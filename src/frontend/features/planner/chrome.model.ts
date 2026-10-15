@@ -168,11 +168,12 @@ export function chromeVals(ctx: Ctx) {
         const timers = Object.assign({}, st.workoutTimer);
         delete timers[id];
         // Back to the day it was on, past the session's own pages (and their history entries), which are gone now.
+        // The notice waits for the delete to land: if it fails, the reload brings the session back with the error.
         const gone = noticePatch('“' + nameOf(srcAct.name) + '” removed from ' + monDay(selDate) + '.', 'day');
         logic.s({ workoutTimer: timers, creating: false });
-        if ((st.hist || []).some((h) => h.screen === 'day')) logic.backTo('day', { screen: 'day', entryId: null, ...gone });
-        else logic.s({ screen: 'day', seg: 'Day', entryId: null, hist: [], ...gone });
-        logic.save(() => db.deletePlanEntries([id]));
+        if ((st.hist || []).some((h) => h.screen === 'day')) logic.backTo('day', { screen: 'day', entryId: null });
+        else logic.s({ screen: 'day', seg: 'Day', entryId: null, hist: [] });
+        logic.save(() => db.deletePlanEntries([id]), gone);
       }
       if (c.kind === 'unfinish') {
         logic.s({ rideDone: Object.assign({}, st.rideDone, { [c.id]: false }) });
@@ -181,35 +182,31 @@ export function chromeVals(ctx: Ctx) {
       if (c.kind === 'entry') {
         // Deleted while reading it: back to the Chronicle's list, past the entry (and the picker it came from).
         if (c.after === 'diaryList') {
-          const gone = noticePatch('Entry deleted.', 'diaryList');
-          if ((st.hist || []).some((h) => h.screen === 'diaryList')) logic.backTo('diaryList', { screen: 'diaryList', ...gone });
-          else logic.s({ screen: 'diaryList', hist: [], ...gone });
-          logic.save(() => db.deleteDiary(c.day));
+          if ((st.hist || []).some((h) => h.screen === 'diaryList')) logic.backTo('diaryList', { screen: 'diaryList' });
+          else logic.s({ screen: 'diaryList', hist: [] });
+          logic.save(() => db.deleteDiary(c.day), noticePatch('Entry deleted.', 'diaryList'));
         } else logic.save(() => db.deleteDiary(c.day), noticePatch('Entry deleted.', st.screen));
       }
       if (c.kind === 'series')
         logic.save(() => db.endSeries(c.sid, isoOf(new Date(Y, mi, selDay)), ctx.isoToday, c.days || []), {
           ...noticePatch('Weekly series ended. Its repeats still ahead are off the calendar.', 'detail'),
         });
-      // Deleting from the Spellbook goes back to the list it was opened from, which then no longer shows it.
+      // Deleting from the Spellbook goes back to the list it was opened from, which then no longer shows it. The
+      // notice waits for the delete to land: if it fails, the reload puts the item back with the error.
       const toList = (arsenalView) => {
         const h = st.hist || [];
         if (h.length && h[h.length - 1].screen === 'arsenal') logic.back();
         else logic.s({ screen: 'arsenal' });
-        logic.s({ arsenalView, ...noticePatch('“' + c.name + '” deleted.', 'arsenal') });
+        logic.s({ arsenalView });
       };
       if (c.kind === 'archiveWorkout') {
         const keep = !!c.option && !c.option.on;
         toList('workouts');
         // Kept, its upcoming sessions stay on the calendar: the notice says so.
-        if (keep)
-          logic.s(
-            noticePatch(
-              '“' + c.name + '” deleted. ' + (c.ahead === 1 ? 'Its upcoming session stays' : 'Its upcoming sessions stay') + ' on your calendar.',
-              'arsenal',
-            ),
-          );
-        logic.saveOnce('archive', () => db.archiveWorkout(c.id, isoOf(new Date()), !keep));
+        const text = keep
+          ? '“' + c.name + '” deleted. ' + (c.ahead === 1 ? 'Its upcoming session stays' : 'Its upcoming sessions stay') + ' on your calendar.'
+          : '“' + c.name + '” deleted.';
+        logic.saveOnce('archive', () => db.archiveWorkout(c.id, isoOf(new Date()), !keep), noticePatch(text, 'arsenal'));
       }
       // Browser Back from the exercise editor with changes: confirmed, so go back without them.
       if (c.kind === 'leaveExercise') {
@@ -218,7 +215,7 @@ export function chromeVals(ctx: Ctx) {
       }
       if (c.kind === 'deleteExercise') {
         toList('exercises');
-        logic.saveOnce('archive', () => db.deleteLibraryExercise(c.id));
+        logic.saveOnce('archive', () => db.deleteLibraryExercise(c.id), noticePatch('“' + c.name + '” deleted.', 'arsenal'));
       }
     },
     isArsenal: st.screen === 'arsenal',

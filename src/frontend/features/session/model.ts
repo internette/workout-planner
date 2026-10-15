@@ -211,19 +211,21 @@ export function workoutVals(ctx: Ctx) {
   const saveFinish = () => {
     if (!fin || !selAct || finMinutes <= 0) return;
     const id = idOf(selAct);
-    const timers = Object.assign({}, st.workoutTimer);
-    delete timers[timerKey];
-    logic.s(
-      Object.assign(
-        { finish: null, workoutTimer: timers, ...(st.rest && st.rest.id === id ? { rest: null } : {}), ...noticePatch(
+    // The dialog and the clock stay until the time is saved: if it doesn't go through, the clock is still there to
+    // finish from again. Read from the state as it is when the save lands, which may have moved on since.
+    logic.saveOnce(
+      'finish',
+      () => db.finishSession(id, { ride: fin.ride, minutes: finMinutes, dist: fin.dist, elev: fin.elev }),
+      () => {
+        const now = logic.state;
+        const timers = Object.assign({}, now.workoutTimer);
+        delete timers[timerKey];
+        // A ride comes back from the reload marked done, so it isn't set here.
+        return { finish: null, workoutTimer: timers, ...(now.rest && now.rest.id === id ? { rest: null } : {}), ...noticePatch(
           fin.correcting ? 'Time changed to ' + minText(finMinutes) + '.' : 'Transformation complete. ' + minText(finMinutes) + ' recorded.',
           'detail',
-        ) },
-        fin.ride ? { rideDone: Object.assign({}, st.rideDone, { [id]: true }) } : {},
-      ),
-    );
-    logic.saveOnce('finish', () =>
-      db.finishSession(id, { ride: fin.ride, minutes: finMinutes, dist: fin.dist, elev: fin.elev }),
+        ) };
+      },
     );
   };
   // A stat next to its plan, once the ride is done and what was ridden differs from it.
