@@ -10,7 +10,7 @@ import { setsFor, setsIn } from '../session/sets';
 import { kindOf } from '@/frontend/components/KindTag';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import { areaToggles, draftBand, draftWeighted, plainExercise, DRAFT_CLEARED, draftClash, draftHint, draftItem, draftOpened, draftReady, equipmentKnown, equipmentToggles } from '@/frontend/shared/exerciseDraft';
-import { forWorkout, oneSided, otherSide, splitSide, withSide } from '@/frontend/shared/sides';
+import { forWorkout, oneSided, otherSide, pairName, splitSide, withSide } from '@/frontend/shared/sides';
 import { programOfWorkout } from '@/frontend/shared/programs';
 import { bandLevelOf, bandWeight, takesWeight, usesBand, type BandLevel } from '@/frontend/shared/bands';
 import type { BuiltinWorkout, WorkoutSummary } from '@/frontend/data/plannerData';
@@ -178,7 +178,11 @@ export function editVals(ctx: Ctx) {
   // A new exercise's name must be new where it's going: among the person's exercises and the built-ins in the Spellbook
   // (saving one there would otherwise overwrite the old one), or among this workout's exercises in the editor (a
   // workout keeps track of its exercises by name).
-  const clash = draftClash(st, st.screen === 'arsenal' ? logic.model.library.concat(logic.model.builtins) : selList);
+  // In the editor a sided copy ("Pallof Press · Left") stands for its exercise, so a new "Pallof Press" clashes with it.
+  const clash = draftClash(
+    st,
+    st.screen === 'arsenal' ? logic.model.library.concat(logic.model.builtins) : selList.map((e) => ({ ...e, name: splitSide(e.name).base })),
+  );
   const draftNameError = !clash
     ? ''
     : st.screen === 'arsenal'
@@ -215,6 +219,44 @@ export function editVals(ctx: Ctx) {
       exOpen: null,
     };
   };
+  // Puts exercises into the workout. One taken out earlier in this edit comes back as its saved row rather than as a
+  // second copy (a workout keeps its exercises by name); with `asGiven` (a new exercise just filled in) it comes back
+  // with the values given, otherwise as it was saved. Anything else is added, without edits left from an earlier copy
+  // of the same name. `base` is a patch already made in the same step (a relabel), built on. Adding clears any "Undo"
+  // still on offer, which would otherwise undo the add too.
+  const putIn = (items: any[], base: Record<string, any> = {}, asGiven = false) => {
+    const extraNow = base.extra?.[listKey] ?? added;
+    const goneNow: string[] = base.removed?.[listKey] ?? gone;
+    const back = items.filter((x) => goneNow.includes(x.name) && owned.some((o) => o.name === x.name));
+    const fresh = items.filter((x) => !back.includes(x));
+    const fields = Object.assign({}, base.fields ?? st.fields);
+    fresh.forEach((x) => delete fields[listKey + '|' + x.name]);
+    if (asGiven)
+      back.forEach((x) => {
+        fields[listKey + '|' + x.name] = { sets: x.sets, weight: x.weight, rest: x.rest, areas: x.areas, ...(x.band !== undefined ? { band: x.band } : {}) };
+      });
+    return {
+      ...base,
+      extra: Object.assign({}, st.extra, base.extra, { [listKey]: extraNow.concat(fresh) }),
+      removed: Object.assign({}, st.removed, base.removed, { [listKey]: goneNow.filter((n) => !items.some((x) => x.name === n)) }),
+      fields,
+      undoRemove: null,
+    };
+  };
+  // Takes exercises out of the workout. One added in this visit is simply dropped, so nothing of it is saved; a saved
+  // one is marked to be removed on Save. Either way "Undo" puts things back as they were.
+  const takeOut = (names: string[], text: string) => {
+    const mine = names.filter((n) => added.some((x) => x.name === n));
+    logic.s({
+      extra: Object.assign({}, st.extra, { [listKey]: added.filter((x) => !mine.includes(x.name)) }),
+      removed: Object.assign({}, st.removed, { [listKey]: gone.concat(names.filter((n) => !mine.includes(n))) }),
+      exOpen: null,
+      undoRemove: { key: listKey, text, prev: { extra: st.extra, removed: st.removed } },
+      announce: text,
+    });
+  };
+  // What the add panel says it just did: the new rows land in the list above it, often out of sight.
+  const addedPatch = (text: string) => ({ announce: text, addNote: { key: listKey, text } });
   const pickable = libraryFor()
     .filter((e) => !narrowToAreas || (e.areas || []).some((a) => pickAreas.includes(a)))
     .filter((e) => !pickQ || e.name.toLowerCase().includes(pickQ))
@@ -426,8 +468,8 @@ export function editVals(ctx: Ctx) {
     addOpen: !!st.addOpen,
     addLib: st.addMode !== 'new',
     addNew: st.addMode === 'new',
-    openAdd: () => logic.s({ addOpen: true, addMode: 'lib', pickQ: '', pickAll: false, pickAreas: picked }),
-    closeAdd: () => logic.s({ addOpen: false }),
+    openAdd: () => logic.s({ addOpen: true, addMode: 'lib', pickQ: '', pickAll: false, pickAreas: picked, addNote: null }),
+    closeAdd: () => logic.s({ addOpen: false, addNote: null }),
     addMode: st.addMode === 'new' ? 'new' : 'lib',
     // "Create new" starts with real values (3 × 10, 60 sec rest), as in the Spellbook; weight starts empty.
     setAddMode: (mode) =>
@@ -478,48 +520,58 @@ export function editVals(ctx: Ctx) {
         ? plural(pickable.length, 'exercise') + ' found.'
         : 'No exercises match “' + (st.pickQ || '').trim() + '”' + (narrowToAreas ? ' for ' + areaWords(pickAreas) + '.' : '.'),
     libraryMore: pickable.length > PICK_LIMIT ? plural(pickable.length - PICK_LIMIT, 'more exercise') + ' — search to find one.' : '',
-    library: pickable.slice(0, PICK_LIMIT).map((e) => ({
-      name: e.name,
-      builtin: !!e.builtin,
-      // One done a side at a time goes in for both sides; one already in the workout once (from before it did) can be
-      // added again for its other side.
-      detail: selList.some((x) => splitSide(x.name).base === e.name) ? 'In this workout · add it again for the other side' : exLine(e) + (oneSided(e.name) ? ' · each side' : ''),
-      // Same as the Spellbook: the row opens the exercise, "+" adds it. Back returns here with this panel still open.
-      // An exercise only drafted in this visit has no saved page yet, so it can only be added.
-      open: e.id ? () => logic.nav({ screen: 'exercise', exerciseId: e.id }) : null,
-      // Adding keeps the list open for the next one; the added exercise leaves the list and joins the workout above.
-      add: () => {
-        const same = selList.filter((x) => splitSide(x.name).base === e.name);
-        // Twice at most, once for each side, and only for one done a side at a time. (A second tap before the list
-        // updates sets the same state again.)
-        if (same.length >= 2 || (same.length && !oneSided(e.name))) return;
-        if (!same.length) {
-          const both = forWorkout(e);
-          return logic.s({
-            extra: Object.assign({}, st.extra, { [listKey]: added.concat(both) }),
-            removed: Object.assign({}, st.removed, { [listKey]: gone.filter((n) => n !== e.name) }),
-            announce: e.name + (both.length > 1 ? ' added for the left and right sides.' : ' added.'),
-          });
-        }
-        // Already in it: this one is for the other side. The first is labeled Left if it has no side yet, and the new
-        // one goes right after it, with the same sets, weight and rest.
-        const first = same[0];
-        const firstSide = splitSide(first.name).side;
-        const firstName = firstSide ? first.name : withSide(e.name, 'Left');
-        const newName = withSide(e.name, firstSide ? otherSide(firstSide) : 'Right');
-        const relabeled = relabel(first.name, firstName);
-        const copy = Object.assign({}, first, { name: newName, id: undefined });
-        const order = selList.map((x) => (x.name === first.name ? firstName : x.name));
-        order.splice(order.indexOf(firstName) + 1, 0, newName);
-        logic.s(
-          Object.assign(relabeled, {
-            extra: Object.assign({}, st.extra, { [listKey]: (relabeled.extra?.[listKey] ?? added).concat([copy]) }),
+    library: pickable.slice(0, PICK_LIMIT).map((e) => {
+      const same = selList.filter((x) => splitSide(x.name).base === e.name);
+      // Already in it once: one done a side at a time can be added again for its other side, said by name.
+      const firstSide = same.length ? splitSide(same[0].name).side : null;
+      const missing = same.length ? (firstSide ? otherSide(firstSide) : 'Right') : null;
+      const line = exLine(e);
+      return {
+        name: e.name,
+        builtin: !!e.builtin,
+        detail: missing
+          ? 'In this workout · ' + missing.toLowerCase() + ' side missing'
+          : oneSided(e.name)
+            ? 'Each side' + (line ? ' · ' + line : '')
+            : line,
+        addAria: missing ? 'Add the ' + missing.toLowerCase() + ' side of ' + e.name : 'Add ' + e.name + ' to workout',
+        // Same as the Spellbook: the row opens the exercise, "+" adds it. Back returns here with this panel still open.
+        // An exercise only drafted in this visit has no saved page yet, so it can only be added.
+        open: e.id ? () => logic.nav({ screen: 'exercise', exerciseId: e.id }) : null,
+        // Adding keeps the list open for the next one; the added exercise leaves the list and joins the workout above.
+        add: () => {
+          // Twice at most, once for each side, and only for one done a side at a time. (A second tap before the list
+          // updates sets the same state again.)
+          if (same.length >= 2 || (same.length && !oneSided(e.name))) return;
+          if (!same.length) {
+            const both = forWorkout(e);
+            return logic.s({
+              ...putIn(both),
+              ...addedPatch(e.name + (both.length > 1 ? ' added for the left and right sides.' : ' added.')),
+            });
+          }
+          // Already in it: this one is for the other side. The first is labeled Left if it has no side yet, and the
+          // new one goes right after it, with the same sets, weight and rest.
+          const first = same[0];
+          const firstName = firstSide ? first.name : withSide(e.name, 'Left');
+          const newName = withSide(e.name, missing!);
+          const relabeled = relabel(first.name, firstName);
+          const copy = Object.assign({}, first, { name: newName, id: undefined });
+          const order = selList.map((x) => (x.name === first.name ? firstName : x.name));
+          order.splice(order.indexOf(firstName) + 1, 0, newName);
+          logic.s({
+            ...putIn([copy], relabeled),
             exOrder: Object.assign({}, st.exOrder, { [listKey]: order }),
-            announce: e.name + ' added for the ' + splitSide(newName).side!.toLowerCase() + ' side.',
-          }),
-        );
-      },
-    })),
+            ...addedPatch(e.name + ' added for the ' + missing!.toLowerCase() + ' side.'),
+          });
+        },
+      };
+    }),
+    addNote: st.addNote && st.addNote.key === listKey ? st.addNote.text : '',
+    // Just taken out: says so under the list, with a way to put it back.
+    undoNote: st.undoRemove && st.undoRemove.key === listKey ? st.undoRemove.text : '',
+    undoRemove: () => st.undoRemove && logic.s({ ...st.undoRemove.prev, undoRemove: null, announce: 'Put back.' }),
+    dismissUndo: () => logic.s({ undoRemove: null }),
     draftName: st.dName || '',
     draftSets: st.dSets || '',
     draftReps: st.dReps || '',
@@ -552,12 +604,20 @@ export function editVals(ctx: Ctx) {
     commitDisabled: !draftReady(st, clash),
     // Why the button is off, when it is (a name clash says so on the field itself).
     draftHint: clash ? '' : draftHint(st),
+    // "Each side": guessed from the name as it's typed, until it's switched by hand.
+    draftSided: st.dSided ?? oneSided(st.dName || ''),
+    setDraftSided: (on: boolean) => logic.s({ dSided: !!on }),
+    // Like adding from the list: in it goes (for both sides, if it's done on each side), and the panel stays open on
+    // the list for the next one.
     commitNew: () => {
       if (!draftReady(st, clash)) return;
+      const item = draftItem(st, logic.model);
+      const both = forWorkout(item, st.dSided ?? oneSided(item.name));
       logic.s({
-        extra: Object.assign({}, st.extra, { [listKey]: added.concat([draftItem(st, logic.model)]) }),
-        addOpen: false,
+        ...putIn(both, {}, true),
+        addMode: 'lib',
         ...DRAFT_CLEARED,
+        ...addedPatch(item.name + (both.length > 1 ? ' added for the left and right sides.' : ' added.')),
       });
     },
     iconsOpen: !!st.iconsOpen,
@@ -693,6 +753,8 @@ export function editVals(ctx: Ctx) {
       if (!creating) {
         // Its saved exercises, under any new names given here (owned, from derive).
         const byName = (n) => owned.find((e) => e.name === n);
+        // Added in this visit and still in it: one taken out again isn't saved.
+        const kept = added.filter((a) => gone.indexOf(a.name) === -1);
         const prefix = listKey + '|';
         const update = Object.keys(st.fields || {})
           .filter((k) => k.indexOf(prefix) === 0)
@@ -767,7 +829,7 @@ export function editVals(ctx: Ctx) {
               .filter((e) => e && e.id)
               .map((e) => e.id),
             // As the editor shows them: with any edits made after adding (sets, weight, a band level) and icon picked.
-            add: added.map((a) => {
+            add: kept.map((a) => {
               const shown = selList.find((x) => x.name === a.name) || a;
               return plainExercise(iconPick(shown.name) ? { ...shown, i: iconPick(shown.name) } : shown);
             }),
@@ -809,7 +871,7 @@ export function editVals(ctx: Ctx) {
           !!edit.ride ||
           update.length > 0 ||
           edit.exercises.removeIds.length > 0 ||
-          added.length > 0 ||
+          kept.length > 0 ||
           reordered ||
           kindChanged ||
           warmupChanged;
@@ -1077,14 +1139,22 @@ export function editVals(ctx: Ctx) {
           exIcons: Object.assign({}, st.exIcons, { [listKey + '|' + e.name]: v }),
           ...(via === 'arrow' ? {} : { exOpen: null }),
         });
-      const setField = (k) => (ev) =>
-        logic.s({
-          fields: Object.assign({}, st.fields, {
-            [listKey + '|' + e.name]: Object.assign({}, (st.fields || {})[listKey + '|' + e.name], {
-              [k]: ev.target.value,
-            }),
-          }),
-        });
+      // Its other side, when both are in the workout: the two keep the same sets, weight and rest unless "Same for both
+      // sides" is switched off, so one change is made once.
+      const pair = pairName(e.name);
+      const partnerEx = pair ? selList.find((x) => x.name === pair) : undefined;
+      const partner = partnerEx ? pair : null;
+      const splitKey = listKey + '|' + splitSide(e.name).base;
+      // Until switched by hand: the same while the two sides match, so sides saved with different weights stay so.
+      const matching = !!partnerEx && (['sets', 'weight', 'rest', 'band'] as const).every((k) => (e[k] ?? '') === (partnerEx[k] ?? ''));
+      const split = (st.sideSplit || {})[splitKey];
+      const synced = !!partner && (split === undefined ? matching : !split);
+      const withFields = (fields, name, patch) =>
+        Object.assign({}, fields, { [listKey + '|' + name]: Object.assign({}, (fields || {})[listKey + '|' + name], patch) });
+      const setField = (k) => (ev) => {
+        const fields = withFields(st.fields, e.name, { [k]: ev.target.value });
+        logic.s({ fields: synced ? withFields(fields, partner, { [k]: ev.target.value }) : fields });
+      };
       // Sets and reps are two boxes on screen, but still one "4 × 8" field everywhere else (the row's stored
       // value, "detail" below, and the database). Split it to show two boxes; each one writes the whole string
       // back, filling in the other box's current value.
@@ -1153,7 +1223,7 @@ export function editVals(ctx: Ctx) {
           logic.s({ exExpanded: Object.assign({}, st.exExpanded, { [k]: !cur }) });
         },
         iconAria: 'Choose icon for ' + e.name,
-        removeAria: 'Remove ' + e.name,
+        removeAria: partner ? 'Remove ' + splitSide(e.name).base + ', both sides' : 'Remove ' + e.name,
         // One name either way; aria-pressed says whether it's done.
         doneAria: 'Mark ' + e.name + ' done',
         toggleDone: () => {
@@ -1178,11 +1248,26 @@ export function editVals(ctx: Ctx) {
               db.setExercisesDone(listKey, names, (tot > 0 && names.length === tot) || !!(selAct && ctx.actualMinutes(selAct))),
             );
         },
+        // One done on each side comes out with its other side, unless just this side is asked for.
         remove: () =>
+          partner
+            ? takeOut([e.name, partner], 'Removed ' + splitSide(e.name).base + ', both sides.')
+            : takeOut([e.name], 'Removed ' + e.name + '.'),
+        removeSideLabel: partner ? 'Remove ' + splitSide(e.name).side!.toLowerCase() + ' side only' : '',
+        removeSide: () => takeOut([e.name], 'Removed ' + splitSide(e.name).base + ', ' + splitSide(e.name).side!.toLowerCase() + ' side.'),
+        removeLabel: partner ? 'Remove both sides' : 'Remove',
+        // "Same for both sides": switched back on, the other side takes this one's sets, weight, band and rest.
+        showSync: !!partner,
+        synced,
+        setSynced: (on: boolean) =>
           logic.s({
-            removed: Object.assign({}, st.removed, { [listKey]: gone.concat([e.name]) }),
-            exOpen: null,
+            sideSplit: Object.assign({}, st.sideSplit, { [splitKey]: !on }),
+            ...(on && partner
+              ? { fields: withFields(st.fields, partner, { sets: e.sets, weight: e.weight, rest: e.rest, ...(e.band !== undefined ? { band: e.band } : {}) }) }
+              : {}),
           }),
+        // Added while editing a saved workout or session: not in it until Save.
+        isNew: !creating && added.some((a) => a.name === e.name),
         open: st.exOpen === e.name,
         toggle: () => logic.s({ exOpen: st.exOpen === e.name ? null : e.name }),
         close: () => logic.state.exOpen === e.name && logic.s({ exOpen: null }),

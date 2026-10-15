@@ -25,12 +25,19 @@ const ONE_SIDED = /\b(single|one)[- ](arm|leg)\b|\blunges?\b|kickbacks?\b|abduct
 /** Whether an exercise is done a side at a time: already labeled with a side, or named like it. */
 export const oneSided = (name: string) => !!splitSide(name).side || ONE_SIDED.test(name);
 
+/** The other side's name of a sided exercise ("Row · Left" → "Row · Right"), or null for one with no side. */
+export function pairName(name: string): string | null {
+  const { base, side } = splitSide(name);
+  return side ? withSide(base, otherSide(side)) : null;
+}
+
 /**
  * An exercise as it goes into a workout: one done a side at a time goes in twice, "· Left" then "· Right" (the second
  * a copy without the first's id, as its own exercise), so a Pallof Press arrives for both sides in one tap. Anything
- * else, or one already labeled with a side, goes in as it is.
+ * else, or one already labeled with a side, goes in as it is. `sided` overrides the guess from the name, for a new
+ * exercise whose "Each side" switch was set by hand.
  */
-export function forWorkout<T extends { name: string; id?: string }>(e: T): T[] {
-  if (!oneSided(e.name) || splitSide(e.name).side) return [e];
+export function forWorkout<T extends { name: string; id?: string }>(e: T, sided = oneSided(e.name)): T[] {
+  if (!sided || splitSide(e.name).side) return [e];
   return [Object.assign({}, e, { name: withSide(e.name, 'Left') }), Object.assign({}, e, { name: withSide(e.name, 'Right'), id: undefined })];
 }

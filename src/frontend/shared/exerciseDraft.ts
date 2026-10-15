@@ -21,6 +21,7 @@ export const DRAFT_CLEARED = {
   dAreas: [],
   dEquip: [],
   dEquipOpen: false,
+  dSided: null,
 };
 
 // Equipment is only asked for once the database has it at all.

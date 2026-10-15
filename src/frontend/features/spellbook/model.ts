@@ -1,4 +1,4 @@
-import { forWorkout } from '@/frontend/shared/sides';
+import { forWorkout, oneSided, splitSide } from '@/frontend/shared/sides';
 import { EQUIPMENT, EQUIPMENT_GROUPS, EX_DRAFT_CLEARED, MONTHS, TARGET_AREAS } from '@/frontend/shared/constants';
 import { iconOptions, iconSvg } from '@/frontend/shared/icons';
 import { DEFAULT_WEEKS, dayNames, pickedDays, planDays, toggleDay } from '@/frontend/shared/schedule';
@@ -655,15 +655,35 @@ export function arsenalVals(ctx: Ctx) {
   // ---- "Add to workout". Opened from a workout's "Browse the full Spellbook", it goes into that workout and returns
   // there; opened any other way, it asks which workout: a saved one (opened in the editor with it added) or a new one.
   const pick = st.arsenalPick || null;
+  // How much of an exercise a workout's names already hold. A sided copy ("Pallof Press · Left") counts as the exercise
+  // itself; one done on each side is only all there with both sides (or as one plain row, from before it went in twice).
+  const sidesIn = (names: string[], name: string) => names.filter((n) => splitSide(n).base === name);
+  const allIn = (names: string[], name: string) => {
+    const have = sidesIn(names, name);
+    return have.length > 0 && (!oneSided(name) || have.length >= 2 || have.some((n) => !splitSide(n).side));
+  };
+  // What adding says: both sides when it went in twice.
+  const sidesWord = (n: number) => (n > 1 ? ' (left and right sides)' : '');
   const addToWorkout = (e) => {
     const ex = plainExercise(e);
     if (pick) {
       const gone = (st.removed || {})[pick.key] || [];
+      // Only what's missing: both sides, or the one side the workout doesn't have yet.
+      const items = forWorkout(ex).filter((x) => !pick.names.includes(x.name) || gone.includes(x.name));
       // Taken out of this workout earlier in the edit: bring the original back rather than adding a second copy.
-      const patch = gone.includes(e.name)
-        ? { removed: { ...st.removed, [pick.key]: gone.filter((n) => n !== e.name) } }
-        : { extra: { ...st.extra, [pick.key]: ((st.extra || {})[pick.key] || []).concat(forWorkout(ex)) } };
-      return logic.backTo('edit', { ...patch, arsenalPick: null, arsenalAreas: pick.prevAreas || [] });
+      const back = items.filter((x) => gone.includes(x.name)).map((x) => x.name);
+      const fresh = items.filter((x) => !back.includes(x.name));
+      const patch = {
+        removed: { ...st.removed, [pick.key]: gone.filter((n) => !back.includes(n)) },
+        extra: { ...st.extra, [pick.key]: ((st.extra || {})[pick.key] || []).concat(fresh) },
+        undoRemove: null,
+      };
+      return logic.backTo('edit', {
+        ...patch,
+        arsenalPick: null,
+        arsenalAreas: pick.prevAreas || [],
+        ...noticePatch('“' + e.name + '” added' + sidesWord(items.length) + '. Save to keep it.', 'edit'),
+      });
     }
     // Otherwise ask which workout it goes in: one of the saved ones, or a new one.
     logic.s({ addTo: ex });
@@ -676,7 +696,7 @@ export function arsenalVals(ctx: Ctx) {
         addTo: null,
         extra: { ['tpl:' + w.id]: forWorkout(addTo) },
         // Added in the editor, not yet saved: says so, so leaving without Save isn't a surprise.
-        ...noticePatch('“' + addTo.name + '” added to “' + w.name + '”. Save to keep it.', 'edit'),
+        ...noticePatch('“' + addTo.name + '”' + sidesWord(forWorkout(addTo).length) + ' added to “' + w.name + '”. Save to keep it.', 'edit'),
       }),
     );
   const addToNew = (ex) => {
@@ -688,7 +708,7 @@ export function arsenalVals(ctx: Ctx) {
         arsenalPick: null,
         addTo: null,
         extra: { __draft: forWorkout(ex) },
-        ...noticePatch('“' + ex.name + '” is in a new workout. Name it and save to keep it.', 'edit'),
+        ...noticePatch('“' + ex.name + '”' + sidesWord(forWorkout(ex).length) + ' is in a new workout. Name it and save to keep it.', 'edit'),
       }),
     );
   };
@@ -700,7 +720,7 @@ export function arsenalVals(ctx: Ctx) {
       ? workouts
           .filter((w) => w.kind === 'lift')
           .map((w) => {
-            const has = w.exercises.includes(addTo.name);
+            const has = sidesIn(w.exercises, addTo.name).length > 0;
             return {
               name: w.name,
               meta: has ? 'Already in it' : plural(w.exercises.length, 'exercise'),
@@ -717,10 +737,12 @@ export function arsenalVals(ctx: Ctx) {
   const exerciseRow = (e: Exercise) => ({
     name: e.name,
     svg: iconSvg(e.i),
-    detail: exLine(e),
+    // Done on each side: says so, as the editor's list does, since it goes in for both.
+    detail: oneSided(e.name) ? 'Each side' + (exLine(e) ? ' · ' + exLine(e) : '') : exLine(e),
     open: () => openExercise(e.id),
-    // Already in the workout being built: one of each, since a workout tracks its exercises by name.
-    inWorkout: !!pick && pick.names.includes(e.name),
+    // Already in the workout being built: one of each (both sides of one done on each side), since a workout tracks its
+    // exercises by name.
+    inWorkout: !!pick && allIn(pick.names, e.name),
     add: () => addToWorkout(e),
   });
   const moveGroups: { label: string; count: string; items: ReturnType<typeof exerciseRow>[] }[] = [];

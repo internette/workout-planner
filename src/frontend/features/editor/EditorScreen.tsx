@@ -9,8 +9,9 @@ import { Stat } from '@moonshot/design-system/stat';
 import { Text } from '@moonshot/design-system/typography';
 import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { TextArea } from '@moonshot/design-system/text-field';
-import { Button } from '@moonshot/design-system/buttons';
-import { ChevronDown, Clock, Plus, Repeat } from '@moonshot/design-system/icons';
+import { Button, IconButton } from '@moonshot/design-system/buttons';
+import { Callout } from '@moonshot/design-system/callout';
+import { ChevronDown, Clock, Close, Plus, Repeat } from '@moonshot/design-system/icons';
 import { WorkoutIcon } from '@/frontend/shared/icons';
 import { BackBar } from '@/frontend/components/BackBar';
 import { FormActions } from '@/frontend/components/FormActions';
@@ -183,6 +184,25 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
               <EditorExerciseItem exercise={ex} handle={handle} />
           )}
         />
+      ) : null}
+      {/* Just taken out of the list: says so, with a way to put it back. */}
+      {v.isLift && v.undoNote ? (
+        <Callout
+          tone="success"
+          action={
+            <span style={{ display: 'flex', gap: 'var(--space-1)' }}>
+              <Button type="secondary" ghost size="sm" onClick={v.undoRemove}>
+                Undo
+              </Button>
+              <IconButton label="Dismiss" size="md" onClick={v.dismissUndo}>
+                <Close color="var(--color-muted)" strokeWidth={2.2} size={14} />
+              </IconButton>
+            </span>
+          }
+          style={{ marginTop: 'var(--space-4)' }}
+        >
+          {v.undoNote}
+        </Callout>
       ) : null}
       {v.isLift ? (
         <Button
