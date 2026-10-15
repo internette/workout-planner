@@ -290,6 +290,9 @@ export interface PlannerState {
   ranksOpen?: boolean;
   xpInfo?: boolean;
   signOutOpen?: boolean;
+  // The session ended while the page was open (see data/session), and whether its "Sign in again" dialog is showing.
+  signedOut?: boolean;
+  signedOutOpen?: boolean;
   signingOut?: boolean;
 
   // Messages

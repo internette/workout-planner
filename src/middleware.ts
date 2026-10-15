@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { connectionOn } from '@/shared/auth';
+import { connectionOn, safeReturnTo } from '@/shared/auth';
 import { getAuth0 } from '@/backend/auth0/client';
 
 // Public: the front door, a shared program's page, the design-system site (another app, forwarded by next.config.js), the SDK's own routes
@@ -21,8 +21,15 @@ const isPublic = (path: string) =>
 const required = () => process.env.NEXT_PUBLIC_AUTH_REQUIRED !== 'false';
 
 export async function middleware(request: NextRequest) {
-  const { pathname, origin } = request.nextUrl;
-  const toFrontDoor = () => NextResponse.redirect(new URL('/welcome', origin));
+  const { pathname, origin, search } = request.nextUrl;
+  // Signed out: an API route answers 401 itself (a redirect would hand the page's fetch the front door's HTML, which it
+  // would take for success). A page goes to the front door, which brings the person back to it once they're signed in.
+  const toFrontDoor = () => {
+    if (pathname.startsWith('/api/')) return NextResponse.json({ error: 'signed_out' }, { status: 401, headers: { 'Cache-Control': 'no-store' } });
+    const door = new URL('/welcome', origin);
+    if (pathname !== '/') door.searchParams.set('returnTo', safeReturnTo(pathname + search));
+    return NextResponse.redirect(door);
+  };
 
   // Sign-in goes only through a provider that's switched on in vendors.config.ts. Without a connection Auth0 would show its
   // own page with every provider, so that's refused too.

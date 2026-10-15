@@ -73,12 +73,15 @@ export function chromeVals(ctx: Ctx) {
     saveError: st.saveError || '',
     dismissError: () => logic.s({ saveError: null }),
     // No signal: what's waiting, and the way to try again now (it also happens by itself when the connection is back).
-    syncNote: logic.ticksWaiting
-      ? 'No connection. Your ticks are kept on this device and save when you’re back online.'
-      : logic.stale
-        ? 'Couldn’t refresh your plan, so what’s here may be out of date.'
-        : '',
-    resync: () => void logic.resync(),
+    syncNote: st.signedOut
+      ? 'Your sign-in has ended, so nothing new can be saved until you sign in again.'
+      : logic.ticksWaiting
+        ? 'No connection. Your ticks are kept on this device and save when you’re back online.'
+        : logic.stale
+          ? 'Couldn’t refresh your plan, so what’s here may be out of date.'
+          : '',
+    syncAction: st.signedOut ? 'Sign in' : 'Try again',
+    resync: () => (st.signedOut ? logic.s({ signedOutOpen: true }) : void logic.resync()),
     // A nav item is a link, so it can open in a new tab. A plain click goes there without a page load. `dest` is
     // which nav item this is ('day', 'arsenal', ...); if there's a workout draft in the way, the click is held and
     // asks first, the same "Keep your changes?" the screen's own Back arrow already uses — the tab is going nowhere.
