@@ -25,6 +25,13 @@ import { CALENDAR_KEY, NOTICE_KEY } from '@/frontend/shared/handoff';
 
 export { CALENDAR_KEY };
 
+// A request that didn't reach the server (no signal, or the connection dropped), as against one the server refused.
+// Supabase reports a failed fetch as an error message, not a thrown TypeError.
+const unreachable = (e: unknown) =>
+  (typeof navigator !== 'undefined' && navigator.onLine === false) ||
+  e instanceof TypeError ||
+  /failed to fetch|network|load failed|fetch failed/i.test(e instanceof Error ? e.message : String(e));
+
 // Dialogs that start a save and wait on it: how to save a change, finishing a workout, moving a session or a program,
 // starting a program, adding a workout to a program's day.
 const SAVE_DIALOGS_CLOSED: Partial<PlannerState> = {
@@ -90,7 +97,12 @@ export class PlannerLogic extends DCLogic<PlannerState> {
       }
       // Sets done only for sessions still on the clock: a finished one's are done with.
       const setsDone = Object.fromEntries(Object.entries(this.state.setsDone || {}).filter(([k]) => workoutTimer[k]));
-      this.setState({ done: model.done, rideDone: model.rideDone, workoutTimer, setsDone, ...opened, ...patch });
+      // Ticks still waiting to be saved stay ticked: the database doesn't have them yet.
+      const done = { ...model.done, ...Object.fromEntries(Object.entries(this.unsaved).map(([k, t]) => [k, t.names])) };
+      this.stale = false;
+      this.setState({ done, rideDone: model.rideDone, workoutTimer, setsDone, ...opened, ...patch });
+      // Ticks kept from a visit that lost its connection: saved now the plan has loaded.
+      if (first && this.ticksWaiting) void this.save(() => this.flushTicks(), {}, true);
       // The "Today" shortcut: today's first session not yet done, as its card on the calendar opens it. With none left
       // today, the calendar stays on today.
       if (first && this.openToday) {
@@ -101,10 +113,84 @@ export class PlannerLogic extends DCLogic<PlannerState> {
           this.setState({ screen: 'detail', seg: 'Day', creating: false, ...monthPatch(up.m), day: up.d, entryId: up.id });
       }
     } catch (e) {
+      // Once the plan is on screen, a reload that fails (a weak signal mid-workout) keeps it there, with a note that it
+      // may be out of date, rather than swapping the whole app for the error page. What follows a save that landed
+      // still happens. Only the first load, with nothing to show yet, ends on the error page.
+      if (this.status === 'ready') {
+        this.stale = true;
+        this.setState(patch);
+        return;
+      }
       this.status = 'error';
       this.loadError = e instanceof Error ? e.message : String(e);
       this.forceUpdate();
     }
+  }
+
+  /** The last reload didn't go through, so what's on screen may be out of date. */
+  stale = false;
+
+  // Ticks not saved yet, per session: the whole list of exercises done, and whether that completes it. They're kept in
+  // this browser, per account (`ticksKey`, set by the host component), so a tick made with no signal survives a
+  // reload, and they're saved again when the connection is back. A session's done list is written whole, so saving
+  // the latest one again is always right.
+  ticksKey = '';
+  private unsaved: Record<string, { names: string[]; completed: boolean }> = {};
+  /** Some ticks haven't been saved yet. */
+  get ticksWaiting() {
+    return Object.keys(this.unsaved).length > 0;
+  }
+  restoreTicks(key: string) {
+    this.ticksKey = key;
+    try {
+      const kept = JSON.parse(window.localStorage.getItem(key) || 'null');
+      if (kept && typeof kept === 'object') this.unsaved = kept;
+    } catch {
+      // No storage: nothing was kept.
+    }
+  }
+  private keepTicks() {
+    try {
+      if (this.ticksWaiting) window.localStorage.setItem(this.ticksKey, JSON.stringify(this.unsaved));
+      else window.localStorage.removeItem(this.ticksKey);
+    } catch {
+      // No storage: they're kept for this visit only.
+    }
+  }
+  private async flushTicks() {
+    for (const [id, t] of Object.entries(this.unsaved)) {
+      try {
+        await db.setExercisesDone(id, t.names, t.completed);
+      } catch (e) {
+        // Refused by the database rather than lost on the way: saving it again won't help. It stops waiting, the error
+        // shows, and the reload puts that session's ticks back to what was saved.
+        if (!unreachable(e)) {
+          const { [id]: _refused, ...rest } = this.unsaved;
+          this.unsaved = rest;
+          this.keepTicks();
+          this.fail(e);
+        }
+        throw e;
+      }
+      // A newer tick on the same session while this one was saving goes on waiting.
+      if (this.unsaved[id] === t) {
+        const { [id]: _saved, ...rest } = this.unsaved;
+        this.unsaved = rest;
+        this.keepTicks();
+      }
+    }
+  }
+  /** Saves a session's ticks: `names` done, and whether that completes it. One that doesn't go through is kept and
+   * shown as waiting, not as an error, and saved again with the next tick or when the connection is back. */
+  saveTicks(entryId: string, names: string[], completed: boolean) {
+    this.unsaved = { ...this.unsaved, [entryId]: { names, completed } };
+    this.keepTicks();
+    return this.save(() => this.flushTicks(), {}, true);
+  }
+  /** Back online, or back to the app: saves the ticks still waiting, and reloads a plan that may be out of date. */
+  resync() {
+    if (this.ticksWaiting) return this.save(() => this.flushTicks(), {}, true);
+    if (this.stale) return this.load();
   }
 
   /** A session's address opens that session on its own day (month and day with it), or the calendar if it's gone.
@@ -125,7 +211,8 @@ export class PlannerLogic extends DCLogic<PlannerState> {
   // error banner, and the reload puts the UI back in sync with what was saved.
   // `patch` may be a function of what the write returned, for state that depends on rows it created.
   // Resolves, once the reload is done, to whether this write landed.
-  save(write: () => Promise<any>, patch: any = {}): Promise<boolean> {
+  // `quiet`: a failure isn't shown as an error (ticks, which say they're waiting instead).
+  save(write: () => Promise<any>, patch: any = {}, quiet = false): Promise<boolean> {
     this.pending++;
     let ok = false;
     this.queue = this.queue
@@ -134,7 +221,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
         ok = true;
         this.pendingPatch = { ...this.pendingPatch, ...(typeof patch === 'function' ? patch(result) : patch) };
       })
-      .catch((e) => this.fail(e))
+      .catch((e) => (quiet ? this.forceUpdate() : this.fail(e)))
       .then(() => {
         if (--this.pending > 0) return;
         const p = this.pendingPatch;
