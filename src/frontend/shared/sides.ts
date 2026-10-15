@@ -24,3 +24,13 @@ const ONE_SIDED = /\b(single|one)[- ](arm|leg)\b|\blunges?\b|kickbacks?\b|abduct
 
 /** Whether an exercise is done a side at a time: already labeled with a side, or named like it. */
 export const oneSided = (name: string) => !!splitSide(name).side || ONE_SIDED.test(name);
+
+/**
+ * An exercise as it goes into a workout: one done a side at a time goes in twice, "· Left" then "· Right" (the second
+ * a copy without the first's id, as its own exercise), so a Pallof Press arrives for both sides in one tap. Anything
+ * else, or one already labeled with a side, goes in as it is.
+ */
+export function forWorkout<T extends { name: string; id?: string }>(e: T): T[] {
+  if (!oneSided(e.name) || splitSide(e.name).side) return [e];
+  return [Object.assign({}, e, { name: withSide(e.name, 'Left') }), Object.assign({}, e, { name: withSide(e.name, 'Right'), id: undefined })];
+}

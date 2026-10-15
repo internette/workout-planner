@@ -1,3 +1,4 @@
+import { forWorkout } from '@/frontend/shared/sides';
 import { EQUIPMENT, EQUIPMENT_GROUPS, EX_DRAFT_CLEARED, MONTHS, TARGET_AREAS } from '@/frontend/shared/constants';
 import { iconOptions, iconSvg } from '@/frontend/shared/icons';
 import { DEFAULT_WEEKS, dayNames, pickedDays, planDays, toggleDay } from '@/frontend/shared/schedule';
@@ -661,7 +662,7 @@ export function arsenalVals(ctx: Ctx) {
       // Taken out of this workout earlier in the edit: bring the original back rather than adding a second copy.
       const patch = gone.includes(e.name)
         ? { removed: { ...st.removed, [pick.key]: gone.filter((n) => n !== e.name) } }
-        : { extra: { ...st.extra, [pick.key]: ((st.extra || {})[pick.key] || []).concat([ex]) } };
+        : { extra: { ...st.extra, [pick.key]: ((st.extra || {})[pick.key] || []).concat(forWorkout(ex)) } };
       return logic.backTo('edit', { ...patch, arsenalPick: null, arsenalAreas: pick.prevAreas || [] });
     }
     // Otherwise ask which workout it goes in: one of the saved ones, or a new one.
@@ -673,7 +674,7 @@ export function arsenalVals(ctx: Ctx) {
     logic.nav(
       editTemplatePatch(w.id, {
         addTo: null,
-        extra: { ['tpl:' + w.id]: [addTo] },
+        extra: { ['tpl:' + w.id]: forWorkout(addTo) },
         // Added in the editor, not yet saved: says so, so leaving without Save isn't a surprise.
         ...noticePatch('“' + addTo.name + '” added to “' + w.name + '”. Save to keep it.', 'edit'),
       }),
@@ -686,7 +687,7 @@ export function arsenalVals(ctx: Ctx) {
         schedule: false,
         arsenalPick: null,
         addTo: null,
-        extra: { __draft: [ex] },
+        extra: { __draft: forWorkout(ex) },
         ...noticePatch('“' + ex.name + '” is in a new workout. Name it and save to keep it.', 'edit'),
       }),
     );
