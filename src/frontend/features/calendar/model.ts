@@ -60,6 +60,7 @@ export function calendarVals(ctx: Ctx) {
     monthDone: monthDays.length ? String(monthDays.filter((x) => x.done).length) : '—',
     monthDoneUnit: monthDays.length ? 'of ' + monthDays.length + ' done' : 'nothing planned yet',
     // The Month view's tile counts the month on screen (the values above are always this month, for Progress).
+    monthEmpty: shownMonth.length === 0,
     shownMonthDone: shownMonth.length ? String(shownMonth.filter(isDoneEntry).length) : '—',
     shownMonthDoneUnit: shownMonth.length ? 'of ' + shownMonth.length + ' done in ' + MONTHS[mod12(mi)] : 'nothing planned yet',
     dowLabels: DOW1,

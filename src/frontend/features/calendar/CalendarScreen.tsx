@@ -377,6 +377,23 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
                 </Text>
               </span>
             </Card>
+            {v.monthEmpty ? (
+              <EmptyState
+                size="md"
+                panel
+                style={{ margin: 'var(--space-7) 0 0' }}
+                icon={<Gem size={32} />}
+                title={'Nothing on the calendar in ' + v.monthName}
+                description="Put a workout on a day and that day gets a quest. The editor lets you pick any day."
+                actions={
+                  <Button type="primary" size="lg" onClick={v.goNewWorkout}>
+                    <Plus color="var(--color-surface)" size={16} />
+                    {'Add workout on ' + v.dayName.slice(0, 3) + ' ' + v.shortDate.split(' ')[1]}
+                  </Button>
+                }
+                decoration={<Twinkles />}
+              />
+            ) : null}
             {v.hasToday ? (
               <div style={{ marginTop: 'var(--space-7)' }}>
                 <Text variant="micro" as="h2" tone="muted" style={{ margin: 0 }}>
