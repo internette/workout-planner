@@ -1244,9 +1244,7 @@ export function editVals(ctx: Ctx) {
               : { setsDone: Object.assign({}, st.setsDone, { [listKey]: Object.assign({}, (st.setsDone || {})[listKey], { [e.name]: 0 }) }) }),
           });
           if (!creating)
-            logic.save(() =>
-              db.setExercisesDone(listKey, names, (tot > 0 && names.length === tot) || !!(selAct && ctx.actualMinutes(selAct))),
-            );
+            logic.saveTicks(listKey, names, (tot > 0 && names.length === tot) || !!(selAct && ctx.actualMinutes(selAct)));
         },
         // One done on each side comes out with its other side, unless just this side is asked for.
         remove: () =>

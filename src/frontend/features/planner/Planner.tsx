@@ -52,6 +52,8 @@ export default function Planner({ account = null }: { account?: Account | null }
   // the clock was. A running one is stored by when it started, so it has kept counting in the meantime.
   const timersKey = 'moonshot.timers.' + (account?.email || 'local');
   const setsKey = 'moonshot.sets.' + (account?.email || 'local');
+  // Ticks not saved yet (made with no signal), kept the same way, so a reload doesn't lose them.
+  const ticksKey = 'moonshot.unsavedTicks.' + (account?.email || 'local');
 
   useEffect(() => {
     try {
@@ -63,7 +65,21 @@ export default function Planner({ account = null }: { account?: Account | null }
     } catch {
       // Unreadable or unavailable storage: start without saved timers.
     }
-  }, [logic, timersKey, setsKey]);
+    logic.restoreTicks(ticksKey);
+  }, [logic, timersKey, setsKey, ticksKey]);
+
+  // The connection back, or the app back in view: ticks still waiting are saved, and a plan that couldn't be refreshed
+  // is reloaded.
+  useWindowEvent('online', () => {
+    if (logic.status === 'ready') void logic.resync();
+  });
+  useEffect(() => {
+    const onShow = () => {
+      if (document.visibilityState === 'visible' && logic.status === 'ready') void logic.resync();
+    };
+    document.addEventListener('visibilitychange', onShow);
+    return () => document.removeEventListener('visibilitychange', onShow);
+  }, [logic]);
 
   // The logic object owns the state; it asks this component to re-render whenever that changes.
   useEffect(() => {

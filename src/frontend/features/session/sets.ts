@@ -1,5 +1,4 @@
 import { exLine, formatElapsed, idOf, splitSetsReps } from '@/frontend/shared/helpers';
-import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from '../planner/store/types';
 import type { PlannerState } from '../planner/store/state';
 import type { Entry, Exercise } from '@/frontend/data/plannerData';
@@ -85,9 +84,7 @@ export function setsFor(ctx: Ctx) {
       (patch.rest ? ' Rest ' + rest + ' seconds.' : '');
     logic.s(patch);
     if (ticked)
-      logic.save(() =>
-        db.setExercisesDone(id, names, names.length === list.length || actualMinutes(at.av) > 0),
-      );
+      logic.saveTicks(id, names, names.length === list.length || actualMinutes(at.av) > 0);
   };
 
   const restLeft = restNow ? Math.max(0, Math.ceil((restNow.endsAt - Date.now()) / 1000)) : 0;

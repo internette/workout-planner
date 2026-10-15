@@ -169,7 +169,7 @@ export function workoutVals(ctx: Ctx) {
         logic.save(() => db.setRideDone(idOf(selAct), false));
       } else {
         logic.s({ done: Object.assign({}, st.done, { [listKey]: [] }) });
-        logic.save(() => db.setExercisesDone(listKey, [], false));
+        logic.saveTicks(listKey, [], false);
       }
     }
     // From the Day view it opens the session; on the session's own page it stays there.

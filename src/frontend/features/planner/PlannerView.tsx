@@ -5,6 +5,7 @@ import { AddToDayDialog } from '@/frontend/features/calendar/AddToDayDialog';
 import { ConfirmDialog } from '@/frontend/features/planner/ConfirmDialog';
 import { NoticeBanner } from '@/frontend/features/planner/NoticeBanner';
 import { SaveErrorBanner } from '@/frontend/features/planner/SaveErrorBanner';
+import { SyncBanner } from '@/frontend/features/planner/SyncBanner';
 import { Sidebar } from '@/frontend/features/planner/Sidebar';
 import { TabBar } from '@/frontend/features/planner/TabBar';
 import { SignOutDialog } from '@/frontend/features/profile/SignOutDialog';
@@ -61,6 +62,7 @@ export function PlannerView({ v }: { v: PlannerVals }) {
           <Sidebar v={v} />
           <main style={{ flex: '1 1 560px', minWidth: '0' }}>
             {v.saveError ? <SaveErrorBanner v={v} /> : null}
+            {v.syncNote ? <SyncBanner v={v} /> : null}
             {v.notice ? <NoticeBanner v={v} /> : null}
             {v.isCal ? <CalendarScreen v={v} /> : null}
             {v.isSaved ? <SavedScreen v={v} /> : null}

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Moonshot · No connection</title>
+<!-- Shown by the service worker (sw.js) when the app is opened with no connection. It has to stand alone: no scripts or
+     styles from the app, which can't be fetched either. Colors are the design system's default pink theme. -->
+<style>
+  :root { --canvas: #FBF1F3; --ink: #232A45; --pink: #D63479; --deep: #B22461; color-scheme: light; }
+  @media (prefers-color-scheme: dark) { :root { --canvas: #1B1320; --ink: #F1E9EF; --pink: #F06FA6; --deep: #F58BB8; color-scheme: dark; } }
+  html, body { height: 100%; margin: 0; }
+  body { display: grid; place-items: center; background: var(--canvas); color: var(--ink);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+    box-sizing: border-box; }
+  main { max-width: 22rem; text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  h1 { font-size: 1.4rem; margin: 0; }
+  p { margin: 0; opacity: .8; }
+  button { margin-top: 8px; font: inherit; font-weight: 600; color: #fff; background: var(--pink); border: 0; border-radius: 999px;
+    padding: 12px 24px; min-height: 44px; cursor: pointer; }
+  button:focus-visible { outline: 3px solid var(--deep); outline-offset: 3px; }
+</style>
+</head>
+<body>
+<main>
+  <svg width="48" height="48" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="var(--pink)"/></svg>
+  <h1>No connection</h1>
+  <p>Moonshot needs a connection to open your plan. A workout you started keeps its clock, so nothing is lost.</p>
+  <button type="button" onclick="location.reload()">Try again</button>
+</main>
+<script>
+  // Back online: open the app again by itself.
+  addEventListener('online', () => location.reload());
+</script>
+</body>
+</html>
