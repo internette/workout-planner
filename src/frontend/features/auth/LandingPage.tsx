@@ -10,14 +10,20 @@ import { Text } from '@moonshot/design-system/typography';
 import { RANKS, RANK_XP } from '@/frontend/shared/constants';
 import { PROVIDER_NAME, PROVIDERS, type Provider } from '@/shared/auth';
 import { Callout } from '@moonshot/design-system/callout';
+import { useWindowEvent } from '@moonshot/design-system/utils';
 import { ProviderButton } from './ProviderButton';
 import styles from './landing.module.css';
 import { RankGem } from '@/frontend/components/RankGem';
 
 // ---- the auth card: two modes that differ only in wording, since both are the same OAuth call
-function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.RefObject<HTMLDivElement>; configured: boolean; returned?: string; deleted?: boolean }) {
+function AuthCard({ cardRef, configured, returned, deleted, returnTo }: { cardRef: React.RefObject<HTMLDivElement>; configured: boolean; returned?: string; deleted?: boolean; returnTo?: string }) {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [busy, setBusy] = useState<Provider | null>(null);
+  // Back from the provider's page (cancelled with Back) can restore this page as it was left, mid sign-in. The buttons
+  // work again.
+  useWindowEvent('pageshow', (e) => {
+    if (e.persisted) setBusy(null);
+  });
   // What the server reported when Auth0 sent the person back (see backend/auth0/client.ts), until they try again.
   const [error, setError] = useState<string | null>(
     returned === 'cancelled' ? 'Sign-in was cancelled. Try again when you are ready.' : returned ? 'Sign-in did not finish. Try again.' : null,
@@ -52,7 +58,7 @@ function AuthCard({ cardRef, configured, returned, deleted }: { cardRef: React.R
         {PROVIDERS.length ? (
           <div className={styles.providers}>
             {PROVIDERS.map((p) => (
-              <ProviderButton key={p} provider={p} onClick={go(p)} busy={busy === p} disabled={!!busy}>
+              <ProviderButton key={p} provider={p} onClick={go(p)} busy={busy === p} disabled={!!busy} returnTo={returnTo}>
                 {busy === p ? `Opening ${PROVIDER_NAME[p]}…` : `Continue with ${PROVIDER_NAME[p]}`}
               </ProviderButton>
             ))}
@@ -112,7 +118,7 @@ const Section = ({ children, last }: { children: React.ReactNode; last?: boolean
 );
 
 /** Explains what Moonshot is, and lets a returning person in within one screen height. */
-export function LandingPage({ configured, returned, deleted }: { configured: boolean; returned?: string; deleted?: boolean }) {
+export function LandingPage({ configured, returned, deleted, returnTo }: { configured: boolean; returned?: string; deleted?: boolean; returnTo?: string }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const focusCard = () => cardRef.current?.querySelector<HTMLElement>('a')?.focus();
   // No provider is chosen yet, so the closing button takes the person back to the card rather than signing in.
@@ -149,7 +155,7 @@ export function LandingPage({ configured, returned, deleted }: { configured: boo
               </Text>
             </div>
             <div className={styles.authWrap}>
-              <AuthCard cardRef={cardRef} configured={configured} returned={returned} deleted={deleted} />
+              <AuthCard cardRef={cardRef} configured={configured} returned={returned} deleted={deleted} returnTo={returnTo} />
             </div>
           </div>
         </section>

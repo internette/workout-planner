@@ -17,6 +17,11 @@ export const CONNECTION: Record<Provider, string> = { google: 'google-oauth2', a
 /** The providers people can sign in with: those switched on in vendors.config.ts. */
 export const PROVIDERS: Provider[] = (['google', 'apple'] as const).filter(vendorOn);
 
+/** A path on this site to come back to after signing in: `path` when it is one, else the planner. Anything else (another
+ * site, "//elsewhere") could send the person off this site straight after signing in. */
+export const safeReturnTo = (path: string | null | undefined) =>
+  path && path.startsWith('/') && !path.startsWith('//') && !path.startsWith('/\\') ? path : '/calendar';
+
 /** Whether an Auth0 connection name ("google-oauth2") is one people may sign in with here. */
 export const connectionOn = (connection: string | null) => PROVIDERS.some((p) => CONNECTION[p] === connection);
 

@@ -8,6 +8,8 @@ import { pathForState, stateForPath } from './routes';
 import { exerciseDraftDirty, workoutDraftDirty } from '@/frontend/shared/helpers';
 import type { Account } from '@/shared/auth';
 import { logoutUrl } from '../auth/links';
+import { SignedOutDialog } from '../auth/SignedOutDialog';
+import { onSignedOut, welcomeHere } from '@/frontend/data/session';
 import { useWindowEvent } from '@moonshot/design-system/utils';
 import { PlannerView } from './PlannerView';
 import { PlannerStatus } from './PlannerStatus';
@@ -67,6 +69,17 @@ export default function Planner({ account = null }: { account?: Account | null }
     }
     logic.restoreTicks(ticksKey);
   }, [logic, timersKey, setsKey, ticksKey]);
+
+  // The session ending while the page is open is said here, in a dialog, so a workout or a draft isn't left behind.
+  // Before the plan has loaded there's nothing to keep, so it's the front door, which comes back here.
+  useEffect(
+    () =>
+      onSignedOut(() => {
+        if (logic.status === 'ready') logic.setState({ signedOut: true, signedOutOpen: true });
+        else window.location.assign(welcomeHere());
+      }),
+    [logic],
+  );
 
   // The connection back, or the app back in view: ticks still waiting are saved, and a plan that couldn't be refreshed
   // is reloaded.
@@ -254,9 +267,13 @@ export default function Planner({ account = null }: { account?: Account | null }
     stamp();
   });
   // Closing or reloading the tab with unsaved changes asks the browser's own "Leave site?".
-  useWindowEvent('beforeunload', (e) => {
+  // A workout, exercise or Chronicle entry with changes not yet saved.
+  const draftDirty = () => {
     const st = logic.state;
-    if ((st.screen === 'edit' && workoutDraftDirty(st)) || exerciseDraftDirty(st) || logic.renderVals().entryDirty) {
+    return (st.screen === 'edit' && workoutDraftDirty(st)) || exerciseDraftDirty(st) || !!logic.renderVals().entryDirty;
+  };
+  useWindowEvent('beforeunload', (e) => {
+    if (draftDirty()) {
       e.preventDefault();
       e.returnValue = '';
     }
@@ -438,6 +455,11 @@ export default function Planner({ account = null }: { account?: Account | null }
   return (
     <>
       <PlannerView v={view ?? logic.renderVals()} />
+      <SignedOutDialog
+        open={!!logic.state.signedOutOpen}
+        onClose={() => logic.s({ signedOutOpen: false })}
+        unsaved={draftDirty()}
+      />
       <Tour
         step={view?.tourStep ?? null}
         // Their first name: the one they chose, else sign-in's (when it gave one, not just their email).

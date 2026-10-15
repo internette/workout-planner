@@ -1,6 +1,7 @@
 import { setupVals } from '@/frontend/features/setup/model';
 import { DCLogic } from './dcLogic';
 import * as db from '@/frontend/data/plannerData';
+import { isSignedOut } from '@/frontend/data/session';
 import type { Model } from '@/frontend/data/plannerData';
 import { HOME_OF, MONTHS } from '@/frontend/shared/constants';
 import { monthPatch, noticePatch } from '@/frontend/shared/helpers';
@@ -25,9 +26,11 @@ import { CALENDAR_KEY, NOTICE_KEY } from '@/frontend/shared/handoff';
 
 export { CALENDAR_KEY };
 
-// A request that didn't reach the server (no signal, or the connection dropped), as against one the server refused.
+// A request that didn't reach the server (no signal, or the connection dropped), or went while signed out, as against
+// one the server refused.
 // Supabase reports a failed fetch as an error message, not a thrown TypeError.
 const unreachable = (e: unknown) =>
+  isSignedOut() ||
   (typeof navigator !== 'undefined' && navigator.onLine === false) ||
   e instanceof TypeError ||
   /failed to fetch|network|load failed|fetch failed/i.test(e instanceof Error ? e.message : String(e));
@@ -100,7 +103,9 @@ export class PlannerLogic extends DCLogic<PlannerState> {
       // Ticks still waiting to be saved stay ticked: the database doesn't have them yet.
       const done = { ...model.done, ...Object.fromEntries(Object.entries(this.unsaved).map(([k, t]) => [k, t.names])) };
       this.stale = false;
-      this.setState({ done, rideDone: model.rideDone, workoutTimer, setsDone, ...opened, ...patch });
+      // Signed in again (in another tab, say): the note that it had ended goes.
+      const back = this.state.signedOut && !isSignedOut() ? { signedOut: false, signedOutOpen: false } : {};
+      this.setState({ done, rideDone: model.rideDone, workoutTimer, setsDone, ...opened, ...back, ...patch });
       // Ticks kept from a visit that lost its connection: saved now the plan has loaded.
       if (first && this.ticksWaiting) void this.save(() => this.flushTicks(), {}, true);
       // The "Today" shortcut: today's first session not yet done, as its card on the calendar opens it. With none left
@@ -187,10 +192,11 @@ export class PlannerLogic extends DCLogic<PlannerState> {
     this.keepTicks();
     return this.save(() => this.flushTicks(), {}, true);
   }
-  /** Back online, or back to the app: saves the ticks still waiting, and reloads a plan that may be out of date. */
+  /** Back online, or back to the app: saves the ticks still waiting, and reloads a plan that may be out of date (or
+   * one signed out of, in case the person has signed in again elsewhere). */
   resync() {
     if (this.ticksWaiting) return this.save(() => this.flushTicks(), {}, true);
-    if (this.stale) return this.load();
+    if (this.stale || this.state.signedOut) return this.load();
   }
 
   /** A session's address opens that session on its own day (month and day with it), or the calendar if it's gone.
