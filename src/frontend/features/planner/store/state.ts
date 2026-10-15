@@ -218,6 +218,12 @@ export interface PlannerState {
   pickQ?: string;
   pickAll?: boolean;
   pickAreas?: string[] | null;
+  /** What the add panel just put in the workout, shown in the panel (the new rows land above it). */
+  addNote?: { key: string; text: string } | null;
+  /** Just taken out of the workout being edited, with what to put back on "Undo". */
+  undoRemove?: { key: string; text: string; prev: Pick<PlannerState, 'extra' | 'removed'> } | null;
+  /** Exercises done on each side whose two sides are set separately ("Same for both sides" off), by list key | name. */
+  sideSplit?: Record<string, boolean> | null;
   // The new-exercise form (shared with the Spellbook's; see shared/exerciseDraft.ts)
   dName?: string;
   dSets?: string;
@@ -229,6 +235,8 @@ export interface PlannerState {
   dAreas?: string[];
   dEquip?: string[];
   dEquipOpen?: boolean;
+  /** "Each side", once switched by hand; until then it's guessed from the name. */
+  dSided?: boolean | null;
 
   // Sessions
   done: Record<string, string[]>;

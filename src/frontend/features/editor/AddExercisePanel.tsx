@@ -1,6 +1,7 @@
 import { Button, IconButton, Pressable } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
-import { ChevronRight, Plus } from '@moonshot/design-system/icons';
+import { Checkbox } from '@moonshot/design-system/checkbox';
+import { Check, ChevronRight, Plus } from '@moonshot/design-system/icons';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { FormActions } from '@/frontend/components/FormActions';
@@ -28,6 +29,16 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
           style={{ marginLeft: 'auto' }}
         />
       </div>
+      {/* What was just added: its rows join the list above, usually out of sight. (Read out by the planner's own
+          status line, so not a live region here too.) */}
+      {v.addNote ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-3)' }}>
+          <Check color="var(--color-pink-deep)" strokeWidth={2.4} size={16} />
+          <Text variant="body" weight="medium" style={{ color: 'var(--color-pink-deep)' }}>
+            {v.addNote}
+          </Text>
+        </div>
+      ) : null}
       {v.addLib ? (
         <>
           <div style={{ marginTop: 'var(--space-4)' }}>
@@ -97,7 +108,7 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
                       </Pressable>
                       <Pressable
                         onClick={l?.add}
-                        aria-label={'Add ' + l?.name + ' to workout'}
+                        aria-label={l?.addAria}
                         style={{ flex: 'none', width: '44px', height: '44px', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)' }}
                       >
                         <span style={{ width: '32px', height: '32px', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)', background: 'var(--color-pink-tint)' }}>
@@ -157,6 +168,17 @@ export function AddExercisePanel({ v }: { v: PlannerVals }) {
             equipment={v.draftEquipment ? { id: 'picker-new-equipment', open: v.draftEquipment.open, onToggle: v.draftEquipment.toggle, summary: v.draftEquipment.summary, groups: v.draftEquipment.groups } : null}
             icon={v.iconGrid}
           />
+          {/* Done one side at a time: it goes in twice, as Left and Right. Guessed from the name until switched. */}
+          <div style={{ marginTop: 'var(--space-4)' }}>
+            <Checkbox
+              switch
+              checked={!!v.draftSided}
+              onChange={v.setDraftSided}
+              description={v.draftSided ? 'Goes in twice, once for the left side and once for the right.' : 'Goes in once.'}
+            >
+              Each side
+            </Checkbox>
+          </div>
         </div>
       ) : null}
       <FormActions compact>
