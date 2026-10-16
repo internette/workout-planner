@@ -2,8 +2,8 @@
 
 import { supabase } from '../supabase';
 import { isoWeekday } from '@/frontend/shared/helpers';
-import type { BuiltinWorkout, NewWorkout, WorkoutEdit } from './types';
-import { numOrNull, rideCols, nameKey, freeName } from './convert';
+import type { BuiltinWorkout, Exercise, NewWorkout, WorkoutEdit } from './types';
+import { exerciseRow, numOrNull, rideCols, nameKey, freeName } from './convert';
 import { ok, workoutById, savedWorkoutOf, renameDoneExercise, insertExercises, patchExercise, takenWorkoutNames } from './db';
 import { deletePlanEntries, scheduleWorkout, upcomingOfWorkout } from './sessions';
 
@@ -136,8 +136,14 @@ export async function updateWorkout(e: WorkoutEdit) {
 // Takes a saved workout out of the Spellbook. Its sessions still ahead (from today on, not completed) come off the
 // calendar unless they're kept (`removeUpcoming` false); past and completed ones stay, pointing at it, so history
 // keeps its exercises. Archiving rather than deleting is what the edit snapshots already do, and it frees the name.
-// Either way a weekly series ends: no more repeats are added.
-export async function archiveWorkout(workoutId: string, todayIso: string, removeUpcoming = true) {
+// Either way a weekly series ends: no more repeats are added. Exercises only this workout had (`keep`) are saved as
+// the person's own first, so deleting it doesn't take them out of the Spellbook; one already there by name is skipped.
+export async function archiveWorkout(workoutId: string, todayIso: string, removeUpcoming = true, keep: Exercise[] = []) {
+  if (keep.length) {
+    const own = new Set(((await ok(supabase.from('library_exercises').select('name'))) as any[]).map((r) => nameKey(r.name)));
+    const rows = keep.filter((e) => !own.has(nameKey(e.name))).map(exerciseRow);
+    if (rows.length) await ok(supabase.from('library_exercises').insert(rows));
+  }
   if (removeUpcoming) await deletePlanEntries(await upcomingOfWorkout(workoutId, todayIso));
   await ok(supabase.from('workouts').update({ archived: true, repeat_enabled: false }).eq('id', workoutId));
 }

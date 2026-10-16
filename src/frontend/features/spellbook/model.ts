@@ -457,6 +457,23 @@ export function arsenalVals(ctx: Ctx) {
             const ahead = (await db.upcomingOfWorkout(chosen.id, todayIso)).length;
             // Sessions it keeps: past and completed ones (its earlier versions carry the same name).
             const kept = Math.max(0, logic.model.entries.filter((x) => x.av.name === chosen.name).length - ahead);
+            // Exercises made in this workout and nowhere else (not in another workout, not the person's own, not
+            // built in) would go with it, so they're kept as the person's own: one of each, without its side.
+            const key = (name: string) => splitSide(name).base.trim().toLowerCase();
+            const elsewhere = new Set(
+              Object.keys(EX)
+                .filter((w) => w !== chosen.name)
+                .flatMap((w) => EX[w] || [])
+                .concat(logic.model.library, logic.model.builtins)
+                .map((e) => key(e.name)),
+            );
+            const keepExercises: Exercise[] = [];
+            (EX[chosen.name] || []).forEach((e) => {
+              if (elsewhere.has(key(e.name))) return;
+              elsewhere.add(key(e.name));
+              keepExercises.push({ ...e, name: splitSide(e.name).base });
+            });
+            const keptNames = keepExercises.map((e) => '“' + e.name + '”');
             logic.s({
               confirm: {
                 kind: 'archiveWorkout',
@@ -469,7 +486,15 @@ export function arsenalVals(ctx: Ctx) {
                     ? ' Its past session stays in your history.'
                     : kept
                       ? ' Its ' + kept + ' past sessions stay in your history.'
+                      : '') +
+                  (keptNames.length === 1
+                    ? ' ' + keptNames[0] + ' isn’t in any other workout, so it moves to Your own exercises.'
+                    : keptNames.length
+                      ? ' ' + keptNames.length + ' exercises that aren’t in any other workout (' +
+                        (keptNames.length > 3 ? keptNames.slice(0, 3).join(', ') + ' and more' : keptNames.join(', ')) +
+                        ') move to Your own exercises.'
                       : ''),
+                ...(keepExercises.length ? { keepExercises } : {}),
                 ...(ahead
                   ? {
                       option: {

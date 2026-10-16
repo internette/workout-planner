@@ -216,7 +216,7 @@ export function chromeVals(ctx: Ctx) {
         const text = keep
           ? '“' + c.name + '” deleted. ' + (c.ahead === 1 ? 'Its upcoming session stays' : 'Its upcoming sessions stay') + ' on your calendar.'
           : '“' + c.name + '” deleted.';
-        logic.saveOnce('archive', () => db.archiveWorkout(c.id, isoOf(new Date()), !keep), noticePatch(text, 'arsenal'));
+        logic.saveOnce('archive', () => db.archiveWorkout(c.id, isoOf(new Date()), !keep, c.keepExercises || []), noticePatch(text, 'arsenal'));
       }
       // Browser Back from the exercise editor with changes: confirmed, so go back without them.
       if (c.kind === 'leaveExercise') {

@@ -69,6 +69,8 @@ export interface ConfirmState {
   after?: Screen;
   /** How many sessions are still ahead (deleting a saved workout). */
   ahead?: number;
+  /** Exercises only that workout has, kept as the person's own when it's deleted. */
+  keepExercises?: Exercise[];
 }
 
 /** The Finish dialog: what a session actually took, as typed. */
