@@ -59,14 +59,15 @@ export function arsenalVals(ctx: Ctx) {
       }),
     );
   const confirm = st.tplConfirm;
+  const noun = confirm?.exercise ? 'exercise' : 'workout';
   const copyNameTrim = confirm && confirm.copyName != null && confirm.choice === 'new' ? confirm.copyName.trim() : null;
   const copyNameError =
     copyNameTrim == null
       ? ''
       : !copyNameTrim
-        ? 'Give the new workout a name.'
-        : logic.model.workouts.some((w) => w.name.trim().toLowerCase() === copyNameTrim.toLowerCase())
-          ? 'You already have a workout called “' + copyNameTrim + '”.'
+        ? 'Give the new ' + noun + ' a name.'
+        : (confirm.taken || []).includes(copyNameTrim.toLowerCase())
+          ? 'You already have ' + (confirm.exercise ? 'an exercise' : 'a workout') + ' called “' + copyNameTrim + '”.'
           : '';
 
   // ---- saved workouts
@@ -258,9 +259,10 @@ export function arsenalVals(ctx: Ctx) {
     : null;
   const exDraft = st.exDraft || { name: '', sets: '', reps: '', weight: '', rest: '', i: 'h', areas: [] };
   const setExDraft = (field) => (e) => logic.s({ exDraft: { ...exDraft, [field]: e.target.value } });
-  // Saving an exercise always asks how: update it, or keep it and save the edit as a new exercise.
-  // Updating can also carry on to the workout's upcoming sessions. Completed and past sessions never change.
-  const askExerciseSave = async (patch) => {
+  // Saving an exercise. One in a workout with sessions still ahead asks whether they follow the change; with none (or
+  // one saved on its own) nothing depends on it and it just saves. "Save as new" (`asNew`) asks only for the new one's
+  // name, and it goes in Your own exercises. Completed and past sessions never change.
+  const askExerciseSave = async (patch, asNew = false) => {
     // Back to the exercise's page. Opened with its own history entry (Edit), that entry is left behind.
     const after = {
       screen: 'exercise',
@@ -271,43 +273,53 @@ export function arsenalVals(ctx: Ctx) {
       ...noticePatch('“' + patch.name + '” saved.', 'exercise'),
     };
     const workout = found.workout;
+    // The new one's name: the one typed if it's free, else "<name> (copy)", "(copy 2)", ... as saving would make it.
+    const taken = logic.model.library.concat(logic.model.builtins).map((e) => e.name.trim().toLowerCase());
+    let copyName = patch.name;
+    for (let n = 1; taken.includes(copyName.trim().toLowerCase()); n++) copyName = patch.name + (n === 1 ? ' (copy)' : ' (copy ' + n + ')');
+    const apply = (choice, upcoming, name) => {
+      if (choice === 'new') {
+        // A new exercise of their own: the original and its workout stay exactly as they are. The notice names it as
+        // it was saved, in case the name was taken meanwhile.
+        logic.saveOnce('exercise', () => db.createLibraryExercise({ ...patch, name: name || copyName }), (r) => ({
+          ...after,
+          exerciseId: r.id,
+          tplConfirm: null,
+          ...noticePatch('“' + r.name + '” saved to Your own exercises.', 'exercise'),
+        }));
+      } else if (workout) {
+        applyEdit(
+          {
+            entryId: '',
+            workoutId: workout.id,
+            exercises: { update: [{ id: found.ex.id, patch }], removeIds: [], add: [] },
+            repeatDates: [],
+          },
+          'update',
+          upcoming,
+          after,
+        );
+      } else {
+        logic.saveOnce('exercise', () => db.updateLibraryExercise(found.ex.id, patch), {
+          ...after,
+          tplConfirm: null,
+        });
+      }
+    };
     try {
-      const count = workout ? await db.countUpcoming(workout.id, todayIso) : 0;
+      const count = workout && !asNew ? await db.countUpcoming(workout.id, todayIso) : 0;
+      if (!asNew && !count) return apply('update', true, '');
       logic.s({
         tplConfirm: {
           exercise: found.ex.name,
-          copies: copiesIn.length,
           name: workout ? workout.name : '',
           count,
-          choice: 'update',
+          choice: asNew ? 'new' : 'update',
+          onlyNew: asNew,
           upcoming: true,
-          apply: (choice, upcoming) => {
-            if (choice === 'new') {
-              // A new standalone exercise: the original and its workout stay exactly as they are.
-              logic.saveOnce('exercise', () => db.createLibraryExercise(patch), (r) => ({
-                ...after,
-                exerciseId: r.id,
-                tplConfirm: null,
-              }));
-            } else if (workout) {
-              applyEdit(
-                {
-                  entryId: '',
-                  workoutId: workout.id,
-                  exercises: { update: [{ id: found.ex.id, patch }], removeIds: [], add: [] },
-                  repeatDates: [],
-                },
-                'update',
-                upcoming,
-                after,
-              );
-            } else {
-              logic.saveOnce('exercise', () => db.updateLibraryExercise(found.ex.id, patch), {
-                ...after,
-                tplConfirm: null,
-              });
-            }
-          },
+          copyName,
+          taken,
+          apply,
         },
       });
     } catch (e) {
@@ -388,11 +400,15 @@ export function arsenalVals(ctx: Ctx) {
     heading: copying ? 'Copy of ' + (found ? found.ex.name : 'exercise') : 'Editing exercise',
     saveLabel: copying ? 'Save copy' : 'Save changes',
     cancel: cancelEdit,
-    save: () => {
+    // Its changes into a new exercise of their own instead, named in a small dialog (a copy already is one).
+    canSaveAsNew: !copying,
+    saveAsNew: () => logic.renderVals().exerciseEdit.save(true),
+    // `asNew` (true, not a click event): "Save as new".
+    save: (asNew?: unknown) => {
       if (!found || !exDraft.name.trim() || !(exDraft.areas || []).length || renameClash || !countsOk(exDraft.sets, exDraft.reps))
         return;
-      // Nothing changed: nothing to ask about or save.
-      if (!copying && !exerciseDraftDirty(st)) return cancelEdit();
+      // Nothing changed: nothing to ask about or save (a copy of it as it is can still be saved as new).
+      if (!copying && asNew !== true && !exerciseDraftDirty(st)) return cancelEdit();
       const patch = {
         name: exDraft.name.trim(),
         sets: joinSetsReps(exDraft.sets, exDraft.reps),
@@ -416,7 +432,7 @@ export function arsenalVals(ctx: Ctx) {
           ...(st.exEditNav ? { hist: (st.hist || []).slice(0, -1) } : {}),
           ...noticePatch('“' + r.name + '” is written into your Spellbook.', 'exercise'),
         }));
-      askExerciseSave(patch);
+      askExerciseSave(patch, asNew === true);
     },
   };
 
@@ -788,74 +804,77 @@ export function arsenalVals(ctx: Ctx) {
 
   return {
     tplConfirmOpen: !!confirm,
-    tplConfirmTitle: 'How should this change be saved?',
-    // For a workout, its name once (the options carry the rest). An exercise names itself in its own options.
-    // A caller can bring its own text and options (the calendar does, for an edit to one session).
-    tplConfirmBody: confirm?.body ?? (confirm && !confirm.exercise ? 'Editing “' + confirm.name + '”.' : ''),
-    tplConfirmChoice: confirm?.choice === 'new' ? 'new' : 'update',
+    tplConfirmTitle: !confirm
+      ? ''
+      : confirm.options
+        ? 'How should this change be saved?'
+        : confirm.onlyNew
+          ? 'Save as a new ' + noun
+          : 'Save changes to “' + (confirm.exercise || confirm.name) + '”?',
+    // What depends on it: the sessions still ahead (past ones never change). A caller can bring its own text and
+    // options (the calendar does, for an edit to one session).
+    tplConfirmBody: !confirm
+      ? ''
+      : confirm.body ??
+        (confirm.onlyNew
+          ? confirm.exercise
+            ? 'It goes in Your own exercises. “' + confirm.exercise + '” stays as it is.'
+            : '“' + confirm.name + '” and its sessions stay as they are.'
+          : (confirm.exercise ? 'It’s in “' + confirm.name + '”, which is' : 'It’s') +
+            ' on your calendar ' + (confirm.count === 1 ? 'once more' : confirm.count + ' more times') +
+            '. Past sessions always stay as they were.'),
+    tplConfirmChoice: confirm?.choice ?? 'update',
     tplConfirmSetChoice: (value) => confirm && logic.s({ tplConfirm: { ...confirm, choice: value } }),
-    tplConfirmOptions: confirm?.options
-      ? confirm.options
-      : confirm
-      ? [
-          confirm.exercise
-            ? {
-                value: 'update',
-                title: 'Update “' + confirm.exercise + '”',
-                description: confirm.name
-                  ? 'Changes the exercise in “' + confirm.name + '”. Past and completed sessions keep the old version.'
-                  : confirm.copies
-                    ? 'Changes this exercise. Workouts that use it keep their own copy.'
-                    : 'Changes the exercise itself.',
-              }
-            : {
-                value: 'update',
-                title: 'Update this workout',
-                // Nothing on the calendar yet: there's no old version to keep.
-                description:
-                  confirm.sessions === 0
-                    ? 'Changes “' + confirm.name + '” in your Spellbook.'
-                    : 'Past and completed sessions keep the old version.',
-              },
-          confirm.exercise
-            ? {
-                value: 'new',
-                title: 'Save as a new exercise',
-                description: confirm.name
-                  ? '“' + confirm.exercise + '” in “' + confirm.name + '” stays exactly as it is.'
-                  : 'Keeps the original as it is.',
-              }
-            : {
-                value: 'new',
-                title: 'Save as a new workout',
-                description: 'The original and its sessions stay as they are.',
-              },
-        ]
-      : [],
-    // Inside the Update option only, and only when the exercise's workout has upcoming sessions.
-    tplConfirmShowUpcoming: !!confirm && !confirm.options && confirm.count > 0,
-    tplConfirmUpcoming: !!confirm?.upcoming,
-    tplConfirmToggleUpcoming: () => confirm && logic.s({ tplConfirm: { ...confirm, upcoming: !confirm.upcoming } }),
-    tplConfirmUpcomingLabel: confirm
-      ? confirm.exercise
-        ? 'Also update ' +
-          plural(confirm.count, 'upcoming session') +
-          ' of “' +
-          confirm.name +
-          '”.'
-        : 'Also update ' + plural(confirm.count, 'upcoming session')
-      : '',
-    // A saved workout's "Save as a new workout" takes a name for the copy, which has to be new.
+    // Three plain choices; "Save as new" from the editor asks only for the name.
+    tplConfirmOptions: !confirm || confirm.onlyNew
+      ? []
+      : confirm.options
+        ? confirm.options
+        : [
+            {
+              value: 'update',
+              title: 'Update everywhere',
+              description:
+                (confirm.exercise ? 'The exercise in “' + confirm.name + '”' : 'The workout') +
+                ' and its ' + plural(confirm.count, 'upcoming session') + ' change.',
+            },
+            {
+              value: 'only',
+              title: confirm.exercise ? 'Update “' + confirm.name + '” only' : 'Update the workout only',
+              description:
+                (confirm.count === 1 ? 'The upcoming session keeps' : 'The ' + confirm.count + ' upcoming sessions keep') +
+                ' the old version.',
+            },
+            {
+              value: 'new',
+              title: 'Save as a new ' + noun,
+              description: confirm.exercise
+                ? 'Leaves “' + confirm.exercise + '” as it is.'
+                : '“' + confirm.name + '” and its sessions stay as they are.',
+            },
+          ],
+    // "Save as new" names the new one: given, and changeable, here.
     tplConfirmShowName: !!confirm && confirm.copyName != null && confirm.choice === 'new',
+    tplConfirmNameLabel: 'Name of the new ' + noun,
+    tplConfirmNameHint: confirm?.exercise ? 'It goes in Your own exercises.' : '',
     tplConfirmName: confirm && confirm.copyName != null ? confirm.copyName : '',
     tplConfirmSetName: (e) => confirm && logic.s({ tplConfirm: { ...confirm, copyName: e.target.value } }),
     tplConfirmNameError: copyNameError,
     tplConfirmBlocked: !!copyNameError,
+    // The button says what it will do.
+    tplConfirmSaveLabel: !confirm || confirm.options
+      ? 'Save'
+      : confirm.choice === 'new'
+        ? 'Save new ' + noun
+        : confirm.choice === 'only'
+          ? 'Update ' + (confirm.exercise ? '“' + confirm.name + '”' : 'workout')
+          : 'Update everywhere',
     tplConfirmCancel: () => logic.s({ tplConfirm: null }),
     tplConfirmSave: () => {
       if (!confirm || copyNameError) return;
       logic.s({ tplConfirm: null });
-      confirm.apply(confirm.choice === 'new' ? 'new' : 'update', !!confirm.upcoming, (confirm.copyName || '').trim());
+      if (confirm.choice === 'new') confirm.apply('new', false, (confirm.copyName || '').trim());
+      else confirm.apply('update', confirm.options ? !!confirm.upcoming : confirm.choice === 'update');
     },
     exercise,
     exerciseEdit,

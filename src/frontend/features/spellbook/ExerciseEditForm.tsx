@@ -38,11 +38,16 @@ export function ExerciseEditForm({ v }: { v: PlannerVals }) {
         <Button type="neutral" ghost size="lg" onClick={v.exerciseEdit.cancel}>
           Cancel
         </Button>
+        {v.exerciseEdit.canSaveAsNew ? (
+          <Button type="secondary" size="lg" disabled={!v.exerciseEdit.canSave} onClick={v.exerciseEdit.saveAsNew}>
+            Save as new
+          </Button>
+        ) : null}
         <Button
           type="primary"
           size="lg"
           disabled={!v.exerciseEdit.canSave}
-          onClick={v.exerciseEdit.save}
+          onClick={() => v.exerciseEdit.save()}
         >
           {v.exerciseEdit.saveLabel}
         </Button>

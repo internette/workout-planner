@@ -93,12 +93,15 @@ export interface TemplateConfirm {
   count: number;
   /** The workout's name (for an exercise, the workout it's in, if any). */
   name: string;
-  /** How many sessions the workout has on the calendar. */
-  sessions?: number;
-  choice: 'update' | 'new';
+  /** Update everywhere (with its upcoming sessions), update the workout only, or save as new. */
+  choice: 'update' | 'only' | 'new';
   upcoming: boolean;
-  /** The name for "Save as a new workout", while it's being typed. */
+  /** Opened by "Save as new": only the new one's name is asked. */
+  onlyNew?: boolean;
+  /** The name for "Save as a new workout" (or exercise), while it's being typed. */
   copyName?: string;
+  /** Names the new one can't take (lower case): the person's workouts, or their own and built-in exercises. */
+  taken?: string[];
   /** Editing an exercise: its name. */
   exercise?: string;
   /** Editing an exercise saved on its own: how many workouts hold their own copy of it. */
