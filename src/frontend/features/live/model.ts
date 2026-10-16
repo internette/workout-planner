@@ -47,8 +47,14 @@ export function liveVals(ctx: Ctx) {
   const sets = setsFor(ctx);
   const timers = st.workoutTimer || {};
   const found = (id: string) => logic.model.entries.find((x) => x.av.id === id) || null;
+  // A session stays in progress while its clock is kept: until Finish records it (which takes the clock away), so
+  // ticking the last exercise doesn't end it before its time is recorded. A ride marked done otherwise has ended.
+  const ongoing = (id: string) => {
+    const at = found(id);
+    return !!at && (at.av.ride ? !isDoneEntry(at.av) : !(actualMinutes(at.av) > 0));
+  };
   // The one whose clock is going; else one paused today (an old paused clock isn't a workout in progress).
-  const ids = Object.keys(timers).filter((id) => found(id) && !isDoneEntry(found(id).av));
+  const ids = Object.keys(timers).filter(ongoing);
   const liveId =
     ids.find((id) => timers[id].runningSince) ||
     ids.find((id) => {

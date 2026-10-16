@@ -116,9 +116,9 @@ export function diaryVals(ctx: Ctx) {
           entryNote: null,
           diaryFrom: 'list',
           diaryEdit: true,
-          // Writing about a session not marked done: most likely it was done, so offer to mark it (on to start). Not
-          // for one partly done: some exercises were skipped, and that's kept unless asked.
-          entryMarkDone: !x.done && !(!x.av.ride && ctx.doneCountAt(x.av) > 0),
+          // Writing about a session not marked done: offered, but off to start. A note about a missed one is often why
+          // it was skipped, and one about today's comes before it's done; marking it done ticks every exercise.
+          entryMarkDone: false,
         }),
   });
   return {

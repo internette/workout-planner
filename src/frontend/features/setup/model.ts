@@ -72,8 +72,8 @@ export function newSetup(profile: Profile | null, signInName: string): SetupDraf
     kit: profile?.equipment ?? null,
     days: profile?.days.length ? profile.days : [1, 3, 5],
     minutes: profile?.minutes ?? 45,
-    // Programs run Sunday to Saturday, so the next Sunday is where a first week begins.
-    start: isoOf(new Date(today.getFullYear(), today.getMonth(), today.getDate() + (7 - today.getDay()))),
+    // Programs run Sunday to Saturday, so a first week begins on a Sunday: today if it is one, else the next.
+    start: isoOf(new Date(today.getFullYear(), today.getMonth(), today.getDate() + ((7 - today.getDay()) % 7))),
     started: null,
   };
 }

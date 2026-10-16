@@ -55,7 +55,14 @@ export function historyVals(ctx: Ctx) {
     if (!r.ended || !r.endedOn) return all;
     return Math.max(0, Math.min(all, Math.ceil((fromIso(r.endedOn).getTime() - fromIso(r.start).getTime() + DAY) / DAY / 7)));
   };
-  const statusOf = (r: ProgramRun) => (running(r) ? 'running' : r.ended ? 'ended' : 'finished');
+  // Past its end, a run is complete only if most of it was done (three in four sessions): one left to run out on its own
+  // with few sessions done was let go, not completed.
+  const completed = (r: ProgramRun, p: SharedProgram) => {
+    const total = totalOf(r, p);
+    return total > 0 && doneOf(r.id) >= total * 0.75;
+  };
+  const statusOf = (r: ProgramRun, p: SharedProgram) =>
+    running(r) ? 'running' : r.ended ? 'ended' : completed(r, p) ? 'finished' : 'lapsed';
   const endOf = (r: ProgramRun) => (r.ended && r.endedOn ? r.endedOn : r.end);
 
   // A running one opens its program (where it can be moved or ended); one that's done, its own page.
@@ -109,7 +116,7 @@ export function historyVals(ctx: Ctx) {
               'Last: ' +
               r.name +
               ', ' +
-              (r.ended ? 'ended ' : 'finished ') +
+              (statusOf(r, shown) === 'finished' ? 'finished ' : 'ended ') +
               shortDate(endOf(r)) +
               ' (' +
               doneOf(r.id) +
@@ -130,14 +137,14 @@ export function historyVals(ctx: Ctx) {
 
   // ---- Every program run
   const rowOf = ({ r, shown }: { r: ProgramRun; shown: SharedProgram }) => {
-    const status = statusOf(r);
+    const status = statusOf(r, shown);
     const total = totalOf(r, shown);
     const done = doneOf(r.id);
     const all = runWeeks(shown.blocks, r.startBlock);
     return {
       key: r.id,
       name: r.name,
-      status: status === 'running' ? where(r, shown) : status === 'ended' ? 'Left unfinished' : 'Arc complete',
+      status: status === 'running' ? where(r, shown) : status === 'finished' ? 'Arc complete' : 'Left unfinished',
       statusTone: (status === 'running' ? 'accent' : 'muted') as 'accent' | 'muted',
       dates:
         shortDate(r.start) +
@@ -157,7 +164,7 @@ export function historyVals(ctx: Ctx) {
     .filter(({ r }) => !running(r))
     .sort((a, b) => (endOf(a.r) < endOf(b.r) ? 1 : -1))
     .map(rowOf);
-  const finished = runs.filter(({ r }) => statusOf(r) === 'finished').length;
+  const finished = runs.filter(({ r, shown }) => statusOf(r, shown) === 'finished').length;
   const sessionsDone = runs.reduce((n, { r }) => n + doneOf(r.id), 0);
   const programRuns = {
     summary: [plural(runs.length, 'program') + ' run', finished ? plural(finished, 'arc') + ' complete' : '', plural(sessionsDone, 'session') + ' done'].filter(Boolean).join(' · '),
@@ -173,13 +180,13 @@ export function historyVals(ctx: Ctx) {
   const programRun = page
     ? (() => {
         const { r, shown } = page;
-        const status = statusOf(r);
+        const status = statusOf(r, shown);
         const done = doneOf(r.id);
         const total = totalOf(r, shown);
         let before = 0;
         return {
           // Finished, the card under the name says so: the eyebrow keeps to the dates.
-          eyebrow: (status === 'running' ? 'Running · ' : status === 'ended' ? 'Left unfinished · ' : '') + shortDate(r.start) + ' – ' + shortDate(endOf(r)),
+          eyebrow: (status === 'running' ? 'Running · ' : status === 'finished' ? '' : 'Left unfinished · ') + shortDate(r.start) + ' – ' + shortDate(endOf(r)),
           name: r.name,
           // Finished: its moment, said on its page.
           complete: status === 'finished' ? '“' + r.name + '” is done: ' + done + ' of ' + total + ' sessions. Every one of them is in you now.' : '',

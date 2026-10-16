@@ -55,7 +55,9 @@ function liveNotice(a: LiveActivity, now: number): Shown {
           .join(' · ')
       : a.now
         ? (a.now.line ? a.now.line + '\n' : '') + a.name + ' · ' + a.done + ' of ' + a.total + ' done'
-        : a.name + ' · ' + a.done + ' of ' + a.total + ' done';
+        : a.total > 0 && a.done === a.total
+          ? a.name + ' · All ' + a.total + ' done · Finish to record it'
+          : a.name + ' · ' + a.done + ' of ' + a.total + ' done';
   const finish = { action: 'finish' as const, title: a.kind === 'ride' ? 'Finish ride' : 'Finish' };
   const pause = { action: 'pause' as const, title: 'Pause' };
   // Lifting, the set and Pause; paused, Resume and Finish; riding, Pause and Finish.
