@@ -242,7 +242,12 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
         <Button type="neutral" ghost size="lg" onClick={v.footerSecondary} style={{ flex: 'none' }}>
           Cancel
         </Button>
-        <Button type="primary" size="lg" onClick={v.saveWorkout} disabled={!!v.saveBlocked} style={{ flex: '1 1 auto' }}>
+        {v.canSaveAsNew ? (
+          <Button type="secondary" size="lg" onClick={v.saveAsNew} disabled={!!v.saveBlocked} style={{ flex: 'none' }}>
+            Save as new
+          </Button>
+        ) : null}
+        <Button type="primary" size="lg" onClick={() => v.saveWorkout()} disabled={!!v.saveBlocked} style={{ flex: '1 1 auto' }}>
           {v.eSaveLabel}
         </Button>
         {v.canDeleteSession ? (

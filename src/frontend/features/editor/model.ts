@@ -703,6 +703,9 @@ export function editVals(ctx: Ctx) {
     // button, apart from Cancel, so one can't be mistaken for the other.
     footerSecondary: () => (workoutDraftDirty(st) ? logic.s({ leaveOpen: true }) : logic.back()),
     canDeleteSession: !creating && !tplMode,
+    // A saved workout's changes can go into a new workout instead, named in a small dialog.
+    canSaveAsNew: tplMode,
+    saveAsNew: () => logic.renderVals().saveWorkout(true),
     deleteSession: () =>
       logic.s({
         confirm: {
@@ -746,7 +749,8 @@ export function editVals(ctx: Ctx) {
       logic.s({ leaveOpen: false });
       logic.renderVals().saveWorkout();
     },
-    saveWorkout: () => {
+    // `asNew` (true, not a click event): a saved workout's "Save as new", which asks only for the new one's name.
+    saveWorkout: (asNew?: unknown) => {
       if (nameClash || needsName || needsExercise) return logic.s({ leaveOpen: false, pendingNav: null });
       if (saving) return;
       const cleared = EDIT_OVERLAYS;
@@ -875,8 +879,9 @@ export function editVals(ctx: Ctx) {
           reordered ||
           kindChanged ||
           warmupChanged;
-        // A saved workout, edited from the Spellbook: saved the way the Spellbook always has, asking whether sessions
-        // still ahead should follow (or saving it as a new workout). Then back to the saved workout's page.
+        // A saved workout, edited from the Spellbook. With sessions still ahead, it asks whether they follow the change
+        // (or it's saved as a new workout); with none, nothing depends on it and it just saves. "Save as new" asks only
+        // for the new one's name. Then back to the saved workout's page.
         if (tplMode) {
           const id = selAct.workoutId;
           const tplEdit = Object.assign({}, edit, { entryId: '', moveTo: undefined, actual: null, repeatDates: [] });
@@ -892,7 +897,7 @@ export function editVals(ctx: Ctx) {
             tplConfirm: null,
             hist: (st.hist || []).slice(0, -1),
           });
-          if (!changesWorkout) return logic.s(back);
+          if (!changesWorkout && asNew !== true) return logic.s(back);
           // "Save as a new workout" is named in the dialog: the name typed here if it's new, else "<name> (copy)".
           const taken = (n) => logic.model.workouts.some((w) => sameName(w.name, n));
           let copyName = (edit.name || '').trim();
@@ -920,23 +925,26 @@ export function editVals(ctx: Ctx) {
                     : noticePatch('“' + (edit.name || baseName) + '” saved.', backScreen),
                 ),
             );
-          // Asked every time, so "Save as a new workout" is always there; the upcoming switch shows only when
-          // there are upcoming sessions.
+          const ask = (count: number) =>
+            logic.s({
+              tplConfirm: {
+                count,
+                name: baseName,
+                choice: asNew === true ? 'new' : 'update',
+                onlyNew: asNew === true,
+                upcoming: true,
+                copyName,
+                taken: logic.model.workouts.map((w) => w.name.trim().toLowerCase()),
+                apply,
+              },
+            });
+          if (asNew === true) return ask(0);
           return db
             .countUpcoming(id, todayIso)
-            .then((count) =>
-              logic.s({
-                tplConfirm: {
-                  count,
-                  name: baseName,
-                  sessions: logic.model.entries.filter((x) => x.av.name === baseName).length,
-                  choice: 'update',
-                  upcoming: true,
-                  copyName,
-                  apply,
-                },
-              }),
-            )
+            .then((count) => {
+              if (count) ask(count);
+              else apply('update', true, '');
+            })
             .catch((e) => logic.fail(e));
         }
         if (!changesWorkout) return logic.saveOnce('workout', () => db.updateWorkout(edit).then(saveTicks), after);
