@@ -145,6 +145,13 @@ export class PlannerLogic extends DCLogic<PlannerState> {
   get ticksWaiting() {
     return Object.keys(this.unsaved).length > 0;
   }
+  // A save of them didn't reach the database. Until then a tick that's simply on its way isn't "waiting": every tick
+  // is unsaved for the moment its save takes, and that's no reason to say the connection is gone.
+  private ticksStuck = false;
+  /** Ticks are waiting because a save of them couldn't get through, so say so. */
+  get ticksOffline() {
+    return this.ticksStuck && this.ticksWaiting;
+  }
   restoreTicks(key: string) {
     this.ticksKey = key;
     try {
@@ -174,7 +181,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
           this.unsaved = rest;
           this.keepTicks();
           this.fail(e);
-        }
+        } else this.ticksStuck = true;
         throw e;
       }
       // A newer tick on the same session while this one was saving goes on waiting.
@@ -184,6 +191,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
         this.keepTicks();
       }
     }
+    this.ticksStuck = false;
   }
   /** Saves a session's ticks: `names` done, and whether that completes it. One that doesn't go through is kept and
    * shown as waiting, not as an error, and saved again with the next tick or when the connection is back. */
