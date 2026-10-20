@@ -75,7 +75,7 @@ export function chromeVals(ctx: Ctx) {
     // No signal: what's waiting, and the way to try again now (it also happens by itself when the connection is back).
     syncNote: st.signedOut
       ? 'Your sign-in has ended, so nothing new can be saved until you sign in again.'
-      : logic.ticksWaiting
+      : logic.ticksOffline
         ? 'No connection. Your ticks are kept on this device and save when you’re back online.'
         : logic.stale
           ? 'Couldn’t refresh your plan, so what’s here may be out of date.'
