@@ -1,4 +1,4 @@
-import { splitSide } from '@/frontend/shared/sides';
+import { splitSide, unlabeledPairs, withSide } from '@/frontend/shared/sides';
 // Loading everything the planner shows, in one go.
 
 import { supabase } from '../supabase';
@@ -47,6 +47,21 @@ export async function loadModel(today: Date): Promise<Model> {
     const w = byId[e.workout_id];
     if (w) EXV[keyOf(w)].push(toExercise(e));
   });
+  // An exercise done on each side that a workout holds twice under one plain name (saved before sides were labeled)
+  // gets its Left and Right back, here and in the database, so the two show their chips and tick on their own. The
+  // names it had, by workout, to tick both sides where the plain name was ticked.
+  const relabeled: Record<string, Set<string>> = {};
+  const renames: PromiseLike<unknown>[] = [];
+  Object.keys(EXV).forEach((k) => {
+    unlabeledPairs(EXV[k].map((e) => e.name)).forEach((side, i) => {
+      const e = EXV[k][i];
+      (relabeled[k] = relabeled[k] || new Set()).add(e.name);
+      e.name = withSide(e.name, side);
+      if (e.id) renames.push(supabase.from('workout_exercises').update({ name: e.name }).eq('id', e.id));
+    });
+  });
+  const withSides = (k: string, names: string[]) =>
+    relabeled[k] ? names.flatMap((n) => (relabeled[k].has(n) ? [withSide(n, 'Left'), withSide(n, 'Right')] : [n])) : names;
   const EX: Record<string, Exercise[]> = {};
   workouts.filter((w: any) => !w.archived && !inProgram(w)).forEach((w: any) => (EX[w.name] = EXV[w.name]));
 
@@ -176,7 +191,11 @@ export async function loadModel(today: Date): Promise<Model> {
     entries.push({ m, d: dd, iso: p.scheduled_date, av });
     entryById[p.id] = av;
     if (isRide) rideDone[p.id] = completed;
-    else done[p.id] = p.done_exercises ?? (completed ? EXV[keyOf(w)].map((e) => e.name) : []);
+    else {
+      done[p.id] = p.done_exercises ? withSides(keyOf(w), p.done_exercises) : completed ? EXV[keyOf(w)].map((e) => e.name) : [];
+      if (p.done_exercises && done[p.id].length !== p.done_exercises.length)
+        renames.push(supabase.from('plan_entries').update({ done_exercises: done[p.id] }).eq('id', p.id));
+    }
   });
 
   // A day's warm-ups come before its other workouts, and its stretches after them, however they were added.
@@ -245,6 +264,9 @@ export async function loadModel(today: Date): Promise<Model> {
       list,
     };
   });
+
+  // Saved in the background: until they are, the next load labels the same rows again.
+  if (renames.length) Promise.all(renames).catch(() => {});
 
   const builtinPrograms: BuiltinProgram[] = builtinProgramRows.map((r: any) => {
     const blocks = (Array.isArray(r.blocks) ? r.blocks : []).map((b: any) => ({
