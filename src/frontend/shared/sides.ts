@@ -41,3 +41,21 @@ export function forWorkout<T extends { name: string; id?: string }>(e: T, sided 
   if (!sided || splitSide(e.name).side) return [e];
   return [Object.assign({}, e, { name: withSide(e.name, 'Left') }), Object.assign({}, e, { name: withSide(e.name, 'Right'), id: undefined })];
 }
+
+/**
+ * A workout saved before its sides were labeled can hold an exercise done on each side twice under one plain name
+ * ("Pallof Press", "Pallof Press"), and the two tick together. Which of `names` those are, by position, and the side
+ * each one is: the first Left, the second Right. A name held once, or more than twice, is left alone, as is a pair
+ * whose sided names are already taken.
+ */
+export function unlabeledPairs(names: string[]): Map<number, Side> {
+  const at: Record<string, number[]> = {};
+  names.forEach((n, i) => (at[n] = (at[n] || []).concat(i)));
+  const sides = new Map<number, Side>();
+  Object.entries(at).forEach(([n, ix]) => {
+    if (ix.length !== 2 || splitSide(n).side || !ONE_SIDED.test(n)) return;
+    if (names.includes(withSide(n, 'Left')) || names.includes(withSide(n, 'Right'))) return;
+    sides.set(ix[0], 'Left').set(ix[1], 'Right');
+  });
+  return sides;
+}
