@@ -30,7 +30,7 @@ export const colorGroups = {
     pinkTint: { hex: '#FCE8F1', use: 'Selected and active backgrounds, the pink rank badge' },
   },
   // Colors that stay themselves whatever the theme: periwinkle and teal for the planned and upcoming marks and the
-  // later rank tiers, and the sparkles.
+  // later rank tiers, and the sparkles; peach and gold for the sparkles and the rank tiers after teal.
   Brand: {
     periwinkle: { hex: '#7C8FC9', use: 'Planned sessions, the Sad mood, the second rank tier' },
     periwinkleTint: { hex: '#E9EEF9', use: 'Periwinkle rank badge' },
@@ -38,8 +38,12 @@ export const colorGroups = {
     teal: { hex: '#5EC4D6', use: 'Upcoming markers, the third rank tier' },
     tealTint: { hex: '#E4F4F7', use: 'Teal rank badge' },
     tealDeep: { hex: '#2A7480', use: 'Text on teal tints (4.75:1 on teal tint)' },
-    peach: { hex: '#F0A385', use: 'Sparkles, and a workout icon color' },
-    gold: { hex: '#E0A93A', use: 'Sparkles: the rest-day moon and the profile picture' },
+    peach: { hex: '#F0A385', use: 'Sparkles, a workout icon color, and the fourth rank tier' },
+    peachTint: { hex: '#FDEEE8', use: 'Peach rank badge' },
+    peachDeep: { hex: '#9A4A2C', use: 'Text on peach tints (5.4:1 on peach tint)' },
+    gold: { hex: '#E0A93A', use: 'Sparkles: the rest-day moon and the profile picture; the fifth rank tier' },
+    goldTint: { hex: '#FBF3E0', use: 'Gold rank badge' },
+    goldDeep: { hex: '#7D5A12', use: 'Text on gold tints (5.6:1 on gold tint)' },
   },
   Status: {
     danger: { hex: '#B23A4C', use: 'Destructive actions, errors, the Mad mood' },

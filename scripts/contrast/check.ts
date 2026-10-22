@@ -23,6 +23,8 @@ const PAIRS: Pair[] = [
   ['slate', 'pinkTint', TEXT, 'text on the gem tint, at its strongest'],
   ['periwinkleDeep', 'periwinkleTint', TEXT, 'the periwinkle rank badge'],
   ['tealDeep', 'tealTint', TEXT, 'the teal rank badge'],
+  ['peachDeep', 'peachTint', TEXT, 'the peach rank badge'],
+  ['goldDeep', 'goldTint', TEXT, 'the gold rank badge'],
   ['outline', 'surface', UI, 'an unticked box on a card'],
   ['outline', 'canvas', UI, 'an unticked box on the page'],
   ['pink', 'surface', UI, 'a tick, bar or mark on a card'],
