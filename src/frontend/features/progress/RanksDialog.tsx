@@ -1,9 +1,15 @@
+import { useEffect, useRef } from 'react';
 import { Dialog } from '@moonshot/design-system/dialog';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { RankGem } from '@/frontend/components/RankGem';
 
 /** The rank ladder, opened from the rank badge. */
 export function RanksDialog({ v }: { v: PlannerVals }) {
+  // Two hundred ranks are far too many to find yours by scrolling, so the ladder opens on the current one.
+  const curRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (v.ranksOpen) curRef.current?.scrollIntoView({ block: 'center' });
+  }, [v.ranksOpen]);
   return (
     <Dialog
       open={!!v.ranksOpen}
@@ -17,6 +23,7 @@ export function RanksDialog({ v }: { v: PlannerVals }) {
         {(v.rankLadder ?? []).map((r, i) => (
           <div
             key={i}
+            ref={r?.cur ? curRef : undefined}
             style={{
               display: 'flex',
               alignItems: 'center',

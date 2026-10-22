@@ -1,7 +1,7 @@
 // Plum dusk: the dark theme. The light palette's names, with values for a dark plum page. Applied when
 // <html data-theme="dark"> is set (Profile → Settings → Appearance). Text on its surfaces is 4.5:1 or more; the pink
 // is brightened so it glows, and text on it turns dark plum (5.8:1), since white on the brighter pink would be faint.
-// Only what changes is listed: peach and gold stay as they are. As in the light palette, a value can name another
+// Only what changes is listed: peach and gold stay as they are, and only their rank badges' tint and text change. As in the light palette, a value can name another
 // color instead of a hex.
 import type { ColorName } from './tokens';
 
@@ -29,6 +29,10 @@ export const darkColors: Partial<Record<ColorName, string>> = {
   teal: '#6FD0E0',
   tealTint: '#1E3238',
   tealDeep: '#8FDCE8',
+  peachTint: '#3E2622',
+  peachDeep: '#F5BBA3',
+  goldTint: '#3A2F1C',
+  goldDeep: '#EBC57A',
   // Status
   danger: '#E0677A',
   dangerHover: '#E88595',
