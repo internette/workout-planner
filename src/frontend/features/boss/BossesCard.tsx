@@ -25,14 +25,14 @@ export function BossesCard({ v }: { v: PlannerVals }) {
                 width: '60px',
                 height: '60px',
                 borderRadius: 'var(--radius-md)',
-                background: b.won ? 'var(--color-pink-tint)' : 'var(--color-mist)',
+                background: b.won ? b.tint : 'var(--color-mist)',
                 boxShadow: b.fighting ? 'inset 0 0 0 2px var(--color-pink)' : undefined,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <BossGlyph fill={b.won || b.fighting ? b.gem : 'var(--color-outline)'} size={36} faded={!b.won && !b.fighting} />
+              <BossGlyph fill={b.won || b.fighting ? b.deep : 'var(--color-outline)'} size={36} faded={!b.won && !b.fighting} />
             </span>
             <Text variant="small" tone={b.won ? 'ink' : 'muted'} style={{ textAlign: 'center', lineHeight: 'var(--leading-tight)' }}>
               {b.label}
