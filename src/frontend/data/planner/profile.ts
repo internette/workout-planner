@@ -5,7 +5,7 @@ import { EQUIPMENT } from '@/frontend/shared/constants';
 import type { Profile } from './types';
 import { ok } from './db';
 
-const TRAINS: Profile['trains'] = ['lift', 'ride', 'stretch', 'yoga'];
+const TRAINS: Profile['trains'] = ['lift', 'ride', 'run', 'stretch', 'yoga'];
 
 export const toProfile = (r: any): Profile => ({
   name: typeof r.name === 'string' && r.name.trim() ? r.name.trim() : null,

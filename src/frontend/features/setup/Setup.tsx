@@ -8,7 +8,7 @@ import { Card } from '@moonshot/design-system/card';
 import { Dialog } from '@moonshot/design-system/dialog';
 import { Chip, ChipGroup, ChoiceChips } from '@moonshot/design-system/chip';
 import { IconChoiceGroup } from '@moonshot/design-system/icon-choice-group';
-import { Bike, Check, ChevronLeft, Dumbbell, Gem, LotusFlower, Lunge, Sparkle } from '@moonshot/design-system/icons';
+import { Bike, Check, ChevronLeft, Dumbbell, Gem, LotusFlower, Lunge, Runner, Sparkle } from '@moonshot/design-system/icons';
 import { IconTile } from '@moonshot/design-system/icon-tile';
 import { CheckCard, CheckGroup } from '@moonshot/design-system/option-card';
 import { TextField } from '@moonshot/design-system/text-field';
@@ -21,7 +21,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
 type S = NonNullable<PlannerVals['setup']>;
 
-const TRAIN_ICON = { lift: Dumbbell, ride: Bike, stretch: Lunge, yoga: LotusFlower };
+const TRAIN_ICON = { lift: Dumbbell, ride: Bike, run: Runner, stretch: Lunge, yoga: LotusFlower };
 
 function Medallion({ size }: { size: number }) {
   return (

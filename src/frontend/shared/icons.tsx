@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import { themed } from '@moonshot/design-system/colors';
-import { Bike, Dumbbell, DumbbellSmall, DumbbellUpright, LotusFlower, Lunge, MoodFace, type IconProps } from '@moonshot/design-system/icons';
+import { Bike, Dumbbell, DumbbellSmall, DumbbellUpright, LotusFlower, Lunge, MoodFace, Runner, type IconProps } from '@moonshot/design-system/icons';
 import { ICON_NAMES } from './constants';
 
 // The glyphs a workout or exercise can be tagged with, by the key the database stores.
@@ -11,7 +11,11 @@ const WORKOUT_ICONS: Record<string, ComponentType<IconProps>> = {
   bike: Bike,
   flower: LotusFlower,
   lunge: Lunge,
+  run: Runner,
 };
+
+/** A workout's own icon when none was picked: the runner for a run or walk, the bike for a ride, else the dumbbell. */
+export const typeIcon = (ride: { run?: boolean } | null | undefined | false) => (ride ? (ride.run ? 'run' : 'bike') : 'h');
 
 /** Every workout icon's key, in the order they're offered. */
 export const ICON_KEYS = Object.keys(WORKOUT_ICONS);

@@ -60,13 +60,19 @@ export async function addPlanDraft(draft: PlanDraft, model: Model) {
         ...(hit?.band ? { band: hit.band } : {}),
       };
     });
-    const isRide = w.kind === 'ride';
+    // A run is saved as a ride marked as one, once the run/walk migration has run (a ride until then).
+    const isRide = w.kind === 'ride' || w.kind === 'run';
     await createWorkout({
       name: w.name,
       isRide,
       durationMinutes: w.minutes ?? estimateMinutes(exercises.length, !!w.warmup || !!w.stretch || !!w.yoga),
       ride: isRide
-        ? { dist: numStr(w.ride?.miles), elev: numStr(w.ride?.elevation_ft), zone: w.ride?.zone ?? DEFAULT_ZONE }
+        ? {
+            dist: numStr(w.ride?.miles),
+            elev: numStr(w.ride?.elevation_ft),
+            zone: w.ride?.zone ?? DEFAULT_ZONE,
+            ...(model.runReady ? { run: w.kind === 'run' } : {}),
+          }
         : null,
       icon: null,
       iconColor: null,

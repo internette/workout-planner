@@ -6,12 +6,12 @@ import { DurationFields } from '@/frontend/components/DurationFields';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { RIDE_ZONES } from '@/shared/planDraft';
 
-/** A ride’s plan: distance, elevation, duration and effort zone. */
+/** A ride’s plan (or a run’s or walk’s): distance, elevation, duration and effort zone. */
 export function RidePlanFields({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: 'var(--space-4)' }}>
       <Text variant="micro" as="div" tone="slate">
-        Ride plan
+        {v.rideWord === 'run' ? 'Run plan' : 'Ride plan'}
       </Text>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
         <TextField

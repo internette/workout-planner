@@ -1,3 +1,4 @@
+import { typeIcon } from '@/frontend/shared/icons';
 import { MON3, RANK_XP } from '@/frontend/shared/constants';
 import { idOf, numericOnly, questSeed, shortDay } from '@/frontend/shared/helpers';
 import type { CalendarCtx } from '../types';
@@ -26,7 +27,7 @@ export function statsStage(ctx: CalendarCtx) {
       m: upcoming.m,
       d: upcoming.d,
       id: upcoming.av.id,
-      icon: upcoming.av.icon || (upcoming.av.ride ? 'bike' : 'h'),
+      icon: upcoming.av.icon || typeIcon(upcoming.av.ride),
       iconColor: upcoming.av.iconColor || undefined,
       meta2: upcoming.m * 100 + upcoming.d === TK ? 'Today · ' + upcoming.av.time :
         shortDay(nd) + ' · ' + upcoming.av.time,
@@ -141,11 +142,11 @@ export function statsStage(ctx: CalendarCtx) {
       if (!isNaN(w) && w > (bestByEx[e.name] || 0)) bestByEx[e.name] = w;
     });
   });
-  // The longest ride done, by what was ridden when that was recorded.
-  const longestRide = pastDays.reduce(
-    (max, x) => (x.av.ride && x.done ? Math.max(max, parseFloat(distOf(x.av)) || 0) : max),
-    0,
-  );
+  // The longest ride done, by what was ridden when that was recorded, and the longest run or walk the same way.
+  const longestOf = (run: boolean) =>
+    pastDays.reduce((max, x) => (x.av.ride && !!x.av.ride.run === run && x.done ? Math.max(max, parseFloat(distOf(x.av)) || 0) : max), 0);
+  const longestRide = longestOf(false);
+  const longestRun = longestOf(true);
   // XP counts everything ever done, so a rank never slips as old months pass.
   const xpTotal = logic.model.entries.reduce(
     (sum, x) => sum + (x.av.ride ? 0 : doneCountAt(x.av) * 10) + (isDoneEntry(x.av) ? 50 : 0),
@@ -191,6 +192,7 @@ export function statsStage(ctx: CalendarCtx) {
     moodTotal,
     bestByEx,
     longestRide,
+    longestRun,
     weekAll,
   };
 }

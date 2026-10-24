@@ -49,6 +49,7 @@ const TRAINS: { value: Profile['trains'][number]; title: string; line: string }[
   { value: 'ride', title: 'Cycling', line: 'Distance, time and effort.' },
   { value: 'stretch', title: 'Stretching', line: 'Warm-ups and mobility.' },
   { value: 'yoga', title: 'Yoga', line: 'Flows and holds.' },
+  { value: 'run', title: 'Run/Walk', line: 'Distance, time and effort, on foot.' },
 ];
 const MINUTES = [20, 30, 45, 60];
 
@@ -138,7 +139,8 @@ export function setupVals(ctx: Ctx) {
       canNameNext: !!d.name.trim(),
 
       // 1: what they train
-      trains: TRAINS.map((t) => ({
+      // Run/Walk once the database can save it.
+      trains: TRAINS.filter((t) => t.value !== 'run' || model.runReady).map((t) => ({
         ...t,
         on: d.trains.includes(t.value),
         toggle: () => set({ trains: d.trains.includes(t.value) ? d.trains.filter((x) => x !== t.value) : TRAINS.map((x) => x.value).filter((x) => x === t.value || d.trains.includes(x)) }),
@@ -191,7 +193,7 @@ export function setupVals(ctx: Ctx) {
       // Why nothing ready-made: they don't lift (every built-in program is lifting), or none fits what they have.
       noSuggestion: d.trains.includes('lift')
         ? 'None of the ready-made programs fits what you have yet. Plan a workout of your own, and repeat it weekly if it works.'
-        : 'The ready-made programs are all lifting for now. Plan a ride, a stretch or a flow on any day.',
+        : 'The ready-made programs are all lifting for now. Plan a ride, a run, a stretch or a flow on any day.',
       startProgram: () => finish('start'),
       planOne: () => {
         logic.s({ setup: null });

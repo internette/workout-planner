@@ -81,6 +81,8 @@ function mark(g: OffscreenCanvasRenderingContext2D, x: number, y: number, size: 
 // Stroke icons from the app's 24-unit set, drawn in one color.
 const ICON = {
   bike: ['M6 17m-3.4 0a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0', 'M18 17m-3.4 0a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0', 'M6 17l5-8h5l2 8', 'M10 9h4'],
+  // The runner: its head a dot (a tiny ring, stroked thick enough to fill in).
+  run: ['M15 3.6m-0.9 0a0.9 0.9 0 1 0 1.8 0a0.9 0.9 0 1 0 -1.8 0', 'M13.6 7.4L11 13', 'M11 13l4.2 2.2-.8 5', 'M11 13l-2.6 3.6L4.5 17', 'M13 9.2l3.3 1.8 2.2-2', 'M13 9.2L9.6 9.8L8 12.5'],
   clock: ['M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0', 'M12 7L12 12L15.5 14'],
 };
 function icon(g: OffscreenCanvasRenderingContext2D, paths: string[], x: number, y: number, size: number, color: string) {
@@ -180,12 +182,12 @@ async function draw(a: LiveActivity, c: LiveLook, paused: boolean): Promise<Blob
       g.fillText('UP NEXT', PAD, y - 54);
     }
   } else if (a.kind === 'ride' && a.ride) {
-    // Ride: the bike on its tile, the plan's distance and climb.
+    // Ride: the bike (or a run's runner) on its tile, the plan's distance and climb.
     roundRect(g, PAD, PAD + 4, 76, 76, 20);
     g.fillStyle = c.second;
     g.fill();
-    icon(g, ICON.bike, PAD + 16, PAD + 20, 44, c.iconInk);
-    const eyebrow = paused ? 'PAUSED' : 'RIDE' + (a.ride.zone ? ' · ' + a.ride.zone.toUpperCase() : '');
+    icon(g, a.ride.run ? ICON.run : ICON.bike, PAD + 16, PAD + 20, 44, c.iconInk);
+    const eyebrow = paused ? 'PAUSED' : (a.ride.run ? 'RUN/WALK' : 'RIDE') + (a.ride.zone ? ' · ' + a.ride.zone.toUpperCase() : '');
     heading(g, c, PAD + 96, eyebrow, a.name);
     // The plan along the bottom.
     const sy = SIZE - PAD - 52;

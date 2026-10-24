@@ -19,7 +19,7 @@ export function serviceDb(): SupabaseClient | null {
 /** What the assistant is told about Moonshot when it connects. */
 export const INSTRUCTIONS = `Moonshot is a workout planner with a magical-girl theme: workouts live in the person's Spellbook, sessions sit on a calendar, and their journal is the Chronicle.
 To plan training for someone: call get_training_context first, ask about anything you still need (goal, days they can train, time per session, equipment, experience, injuries), then call save_plan.
-Moonshot has two kinds of workout: "lift" (strength or bodyweight exercises with sets and reps) and "ride" (a bike ride with minutes, distance and an effort zone). It has no runs, swims or classes; write those as notes, or ask the person how they'd like them handled.
+Moonshot has three kinds of workout: "lift" (strength or bodyweight exercises with sets and reps), "ride" (a bike ride with minutes, distance and an effort zone) and "run" (a run or walk, planned the same way as a ride, in its ride field). It has no swims or classes; write those as notes, or ask the person how they'd like them handled.
 save_plan saves a draft; nothing goes on their calendar until they review it in Moonshot and add it.`;
 
 export const TOOLS = [
@@ -54,11 +54,11 @@ export const TOOLS = [
             properties: {
               date: { type: 'string', description: 'YYYY-MM-DD' },
               name: { type: 'string', maxLength: PLAN_LIMITS.name, description: 'e.g. "Upper Push", "Easy Ride". Reuse a name for the same workout on different days.' },
-              kind: { type: 'string', enum: ['lift', 'ride'] },
+              kind: { type: 'string', enum: ['lift', 'ride', 'run'] },
               warmup: { type: 'boolean', description: 'True for a short warm-up done before another workout that day. Any kind can be a warm-up: a lift, a stretch or yoga.' },
               yoga: { type: 'boolean', description: 'True for a yoga flow (poses held in turn). Not together with stretch; can be a warmup.' },
               stretch: { type: 'boolean', description: 'True for a stretching routine (a cool-down), done after another workout that day or on its own, or a warm-up stretch with warmup true too.' },
-              minutes: { type: 'integer', minimum: 5, maximum: 600, description: 'Required for a ride. Optional for a lift.' },
+              minutes: { type: 'integer', minimum: 5, maximum: 600, description: 'Required for a ride or a run. Optional for a lift.' },
               notes: { type: 'string', maxLength: PLAN_LIMITS.notes },
               exercises: {
                 type: 'array',
@@ -110,7 +110,8 @@ async function trainingContext(db: SupabaseClient, sub: string): Promise<ToolRes
   const [mine, builtin, workouts, sessions] = await Promise.all([
     rows<any>(db.from('library_exercises').select('name, target_areas, equipment').eq('user_id', sub)),
     rows<any>(db.from('builtin_exercises').select('name, target_areas, equipment').order('sort_order')),
-    rows<any>(db.from('workouts').select('id, name, kind').eq('user_id', sub).eq('archived', false)),
+    // Every column, so is_run is read where the run/walk migration has added it and nothing breaks where it hasn't.
+    rows<any>(db.from('workouts').select('*').eq('user_id', sub).eq('archived', false)),
     rows<any>(
       db.from('plan_entries').select('scheduled_date, status, workout_id').eq('user_id', sub)
         .gte('scheduled_date', today).lte('scheduled_date', plusDays(today, 56)).order('scheduled_date'),
@@ -121,12 +122,12 @@ async function trainingContext(db: SupabaseClient, sub: string): Promise<ToolRes
   const context = {
     today,
     today_note: "Today's date where Moonshot's server is. Ask the person if the plan should start on a particular day.",
-    workout_kinds: ['lift', 'ride'],
+    workout_kinds: ['lift', 'ride', 'run'],
     ride_zones: RIDE_ZONES,
     target_areas: TARGET_AREAS,
     their_exercises: mine.map(ex),
     builtin_exercises: builtin.map(ex),
-    workouts_in_spellbook: workouts.map((w: any) => ({ name: w.name, kind: w.kind })),
+    workouts_in_spellbook: workouts.map((w: any) => ({ name: w.name, kind: w.is_run ? 'run' : w.kind })),
     already_scheduled: sessions.map((s: any) => ({ date: s.scheduled_date, name: byId.get(s.workout_id)?.name ?? 'Workout', status: s.status })),
   };
   return reply(JSON.stringify(context, null, 1), { structuredContent: context });

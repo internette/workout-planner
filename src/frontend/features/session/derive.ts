@@ -3,6 +3,7 @@ import type { StatsCtx } from '../planner/store/types';
 import { colors } from '@moonshot/design-system/colors';
 import { oneSided, splitSide } from '@/frontend/shared/sides';
 import { programOfWorkout } from '@/frontend/shared/programs';
+import { typeIcon } from '@/frontend/shared/icons';
 import type { Entry, Exercise } from '@/frontend/data/plannerData';
 
 // The selected workout: ride plan and actuals, exercise list, icons and completion state.
@@ -95,6 +96,7 @@ export function workoutStage(ctx: StatsCtx) {
               dist: tplWorkout.ride.dist,
               elev: tplWorkout.ride.elev,
               zone: tplWorkout.ride.zone,
+              run: tplWorkout.ride.run,
               ...splitMinutes(tplWorkout.minutes),
             }
           : undefined,
@@ -112,6 +114,8 @@ export function workoutStage(ctx: StatsCtx) {
   const rideDone = !!(st.rideDone || {})[idOf(srcAct)];
   const savedRide = !creating && selRide ? selRide : null;
   const isCycleView = creating ? st.newType === 'cycle' : !!savedRide;
+  // A ride that's a run or walk: as picked in "What kind of workout?", else as saved.
+  const runView = isCycleView && (st.rRun ?? !!(savedRide && savedRide.run));
   const rDist = st.rDist != null ? st.rDist : savedRide ? savedRide.dist || '' : '';
   const rElev = st.rElev != null ? st.rElev : savedRide ? savedRide.elev || '' : '';
   const rHrs = st.rHrs != null ? st.rHrs : savedRide ? savedRide.hrs || '' : '';
@@ -161,7 +165,7 @@ export function workoutStage(ctx: StatsCtx) {
   };
   const listKey = creating ? '__draft' : idOf(srcAct);
   const notesVal = (st.notes || {})[listKey] != null ? (st.notes || {})[listKey] : (srcAct && srcAct.notes) || '';
-  const wIcon = (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (isCycleView ? 'bike' : 'h');
+  const wIcon = (st.icons || {})[listKey] || (srcAct && srcAct.icon) || typeIcon(isCycleView && { run: runView });
   // The color picked for this workout's icon, if any; with none, it's drawn in the theme's accent, and the picker
   // shows pink (the first choice) as picked.
   const wColorSet = (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || undefined;
@@ -214,6 +218,7 @@ export function workoutStage(ctx: StatsCtx) {
     hasEntry,
     doneSel,
     isCycleView,
+    runView,
     ridePlanOpen,
     ridePast,
     rDist,

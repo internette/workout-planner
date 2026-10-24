@@ -2,7 +2,7 @@ import { typeLabelOf } from '@/frontend/components/KindTag';
 import { programPlace } from '@/frontend/shared/programs';
 import { DOWFULL } from '@/frontend/shared/constants';
 import { dayShort, digitsOnly, shortDay, exLine, isoMonthDay, isoOf, formatElapsed, idOf, longDay, monDay, monthPatch, newWorkoutPatch, noticePatch, numericOnly, plural, questSeed, rollMinutes, toMinutes } from '@/frontend/shared/helpers';
-import { iconSvg } from '@/frontend/shared/icons';
+import { iconSvg, typeIcon } from '@/frontend/shared/icons';
 import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from '../planner/store/types';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
@@ -181,6 +181,9 @@ export function workoutVals(ctx: Ctx) {
   // lifting session's time — pre-filled from the timer (or the plan), so it's usually one tap. A ride is marked
   // complete here too; a lifting session is complete once every exercise is ticked, as before.
   const finished = !!selAct && actualMinutes(selAct) > 0;
+  // What a ride is called in what the screen says: a run (or walk) or a ride.
+  const rideWordOf = (r: { run?: boolean } | null | undefined) => (r && r.run ? 'run' : 'ride');
+  const selRideWord = rideWordOf(selRide);
   const plannedRideMin = selRide ? toMinutes(selRide.hrs, selRide.mins) : 0;
   const openFinish = () => {
     if (!selAct) return;
@@ -361,7 +364,7 @@ export function workoutVals(ctx: Ctx) {
             ? doneN + ' of ' + list.length + ' done · ' + av.time
             : plural(list.length, 'exercise') + ' · ' + av.time,
       icoSvg: iconSvg(
-        (st.icons || {})[id] || av.icon || (ride ? 'bike' : 'h'),
+        (st.icons || {})[id] || av.icon || typeIcon(ride),
         (st.iconColors || {})[id] || av.iconColor || undefined,
       ),
       open: run('goDetail'),
@@ -390,8 +393,8 @@ export function workoutVals(ctx: Ctx) {
         : complete
           ? 'Write about it'
           : isPastDay || isFutureDay
-              ? ride ? 'Open ride' : 'Open workout'
-              : ride ? 'Start ride' : 'Start workout',
+              ? ride ? 'Open ' + rideWordOf(ride) : 'Open workout'
+              : ride ? 'Start ' + rideWordOf(ride) : 'Start workout',
       cta: run(logged || complete ? 'goDiary' : isPastDay || isFutureDay ? 'goDetail' : 'startWorkout'),
       // A day ahead opens its session; moving it to today is the smaller choice under that.
       doToday: !logged && !complete && isFutureDay ? () => doToday(av) : null,
@@ -554,18 +557,18 @@ export function workoutVals(ctx: Ctx) {
         confirm: {
           kind: 'unfinish',
           id: idOf(selAct),
-          title: 'Mark this ride not done?',
+          title: 'Mark this ' + selRideWord + ' not done?',
           body: actualMinutes(selAct) > 0 ? 'The distance and time you recorded for it will be cleared.' : 'It goes back to planned.',
           label: 'Mark not done',
         },
       });
     },
-    rideDoneLabel: rideDone ? 'Ride completed' : 'Mark ride complete',
+    rideDoneLabel: rideDone ? (selRide?.run ? 'Run completed' : 'Ride completed') : 'Mark ' + selRideWord + ' complete',
     rideDoneType: rideDone ? ('secondary' as const) : ('neutral' as const),
     rideIsDone: rideDone,
     rideDoneStroke: rideDone ? 'var(--color-surface)' : 'var(--color-outline)',
     dayIcoSvg: iconSvg(
-      (st.icons || {})[listKey] || (srcAct && srcAct.icon) || (selRide ? 'bike' : 'h'),
+      (st.icons || {})[listKey] || (srcAct && srcAct.icon) || typeIcon(selRide),
       (st.iconColors || {})[listKey] || (srcAct && srcAct.iconColor) || undefined,
     ),
     rideStats: !selRide || !selAct ? [] : rideStatsFor(selAct, rideDone),
@@ -640,7 +643,7 @@ export function workoutVals(ctx: Ctx) {
       (!hasProgress
         ? 'This starts the timer again from 0:00.'
         : selRide
-          ? 'This marks the ride as not done and starts the timer again from 0:00.'
+          ? 'This marks the ' + selRideWord + ' as not done and starts the timer again from 0:00.'
           : 'This clears the ' + plural(doneCount, 'exercise') + " you've ticked off and starts the timer again from 0:00.") +
       (timedAMinute ? " You've been going for " + formatElapsed(timerElapsedSec) + '.' : '') +
       (hasProgress ? " It can't be undone." : ''),

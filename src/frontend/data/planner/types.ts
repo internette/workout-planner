@@ -20,12 +20,21 @@ export interface Exercise {
   builtin?: boolean; // from the shared catalog: read-only, copy it to change it
 }
 
+// The plan of a workout done for distance rather than with exercises: a ride, or a run or walk (`run`).
+export interface RidePlan {
+  dist: string;
+  elev: string;
+  zone: string;
+  run?: boolean;
+}
+
 export interface Ride {
   dist: string;
   hrs: string;
   mins: string;
   elev: string;
   zone: string;
+  run?: boolean; // a run or walk rather than a ride: the same plan, its own name and icon
 }
 
 // One workout scheduled on one date (a plan_entries row joined with its workout).
@@ -72,7 +81,7 @@ export interface WorkoutSummary {
   icon: string | null;
   iconColor: string | null;
   exercises: string[];
-  ride?: { dist: string; elev: string; zone: string };
+  ride?: RidePlan;
   notes: string;
   warmup: boolean;
   stretch: boolean;
@@ -149,6 +158,8 @@ export interface Model {
   stretchReady: boolean;
   // Whether workouts can be marked as yoga yet (the yoga migration has added the column).
   yogaReady: boolean;
+  // Whether a distance workout can be a run or walk yet (the run/walk migration has added the column).
+  runReady: boolean;
   // Whether a weekly series can repeat on more than one weekday yet (the repeat-days migration has added the column).
   repeatDaysReady: boolean;
   programs: Program[]; // the person's own, by name
@@ -164,7 +175,7 @@ export interface Model {
 // What a person said in "Customize your experience".
 export interface Profile {
   name: string | null; // null: the name from their sign-in
-  trains: ('lift' | 'ride' | 'stretch' | 'yoga')[];
+  trains: ('lift' | 'ride' | 'run' | 'stretch' | 'yoga')[];
   equipment: string[] | null; // from EQUIPMENT; empty is bodyweight only, null is not said
   days: number[]; // weekdays, 0 = Sunday
   minutes: number | null;
@@ -174,7 +185,7 @@ export interface NewWorkout {
   name: string;
   isRide: boolean;
   durationMinutes: number;
-  ride: { dist: string; elev: string; zone: string } | null;
+  ride: RidePlan | null;
   icon: string | null;
   iconColor: string | null;
   exercises: Exercise[];
@@ -194,7 +205,7 @@ export interface WorkoutEdit {
   icon?: string | null;
   iconColor?: string | null;
   notes?: string;
-  ride?: { dist: string; elev: string; zone: string; minutes: number } | null;
+  ride?: (RidePlan & { minutes: number }) | null;
   moveTo?: string; // ISO date
   actual?: { dist: string; elev: string; minutes: number } | null;
   exercises: {

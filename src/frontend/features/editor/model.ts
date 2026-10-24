@@ -1,7 +1,7 @@
 import { programPlace } from '@/frontend/shared/programs';
 import { DOWFULL, EDIT_OVERLAYS, ICON_COLOR_NAMES, ICON_COLORS, LIFT_MINUTES, MONTHS, NEW_WORKOUT_CLEARED, RIDE_MINUTES } from '@/frontend/shared/constants';
 import { digitsOnly, exLine, idOf, isoOf, joinSetsReps, longDay, minText, mod12, monDay, monthPatch, needsLine, noticePatch, numericOnly, plural, rollMinutes, isHold, setsRepsOk, shortDay, splitSetsReps, toMinutes, withLb, withSec, workoutDraftDirty } from '@/frontend/shared/helpers';
-import { iconOptions, iconSvg } from '@/frontend/shared/icons';
+import { iconOptions, iconSvg, typeIcon } from '@/frontend/shared/icons';
 import { DEFAULT_WEEKS, dayNames, pickedDays, planDays, toggleDay } from '@/frontend/shared/schedule';
 import * as db from '@/frontend/data/plannerData';
 import { themed } from '@moonshot/design-system/colors';
@@ -22,6 +22,7 @@ export function editVals(ctx: Ctx) {
     creating,
     st,
     isCycleView,
+    runView,
     ridePlanOpen,
     rideDone,
     ridePast,
@@ -154,8 +155,10 @@ export function editVals(ctx: Ctx) {
   // What kind of workout it is (lifts only, once the migrations have added the kinds): a plain one, a stretch or yoga.
   // It's chosen with the workout's type when it's made (Lifting, Stretching or Yoga) and kept after. And, whatever its
   // kind, whether it's a warm-up: a switch of its own in the editor, a draft value until Save.
-  const { warmupReady, stretchReady, yogaReady } = logic.model;
+  const { warmupReady, stretchReady, yogaReady, runReady } = logic.model;
   const lift = creating ? st.newType !== 'cycle' : !selRide;
+  // What a ride's plan is called in the editor's notes: a run (or walk) or a ride.
+  const rideWord = runView ? 'run' : 'ride';
   const kindShown = (stretchReady || yogaReady) && lift;
   const savedKind = creating || !srcAct ? 'main' : srcAct.stretch ? 'stretch' : srcAct.yoga ? 'yoga' : 'main';
   const workoutKind = kindShown ? ((st.workoutKinds || {})[listKey] ?? savedKind) : 'main';
@@ -271,10 +274,10 @@ export function editVals(ctx: Ctx) {
       warmup: !!w.warmup && !builtinOne,
       stretch: !!w.stretch && !builtinOne,
       yoga: !!w.yoga && !builtinOne,
-      svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || undefined),
+      svg: iconSvg(w.icon || typeIcon(w.kind === 'ride' && (w.ride || {})), w.iconColor || undefined),
       meta:
         (w.kind === 'ride'
-          ? ['Ride', w.ride && w.ride.dist ? w.ride.dist + ' mi' : '', w.time].filter(Boolean).join(' · ')
+          ? [w.ride?.run ? 'Run/Walk' : 'Ride', w.ride && w.ride.dist ? w.ride.dist + ' mi' : '', w.time].filter(Boolean).join(' · ')
           : plural(w.exercises.length, 'exercise') + ' · ' + w.time) +
         // Already on this day: tapping it adds a second one, so say so first.
         (logic.model.entries.some((x) => x.m === mi && x.d === selDay && x.av.name === w.name) ? ' · Already on this day' : ''),
@@ -372,31 +375,36 @@ export function editVals(ctx: Ctx) {
     logDoneOn,
     setLogDone: (on) => logic.s({ logDone: !!on }),
     savedChoiceGroups,
-    // The type picked on "What kind of workout?": lifting, cycling, stretching or yoga. For a new workout it sets
-    // whether it's a ride, its kind, and its icon (the type's own, unless one was chosen). For one being edited, its
-    // kind: a lift can become a stretch or yoga and back, but not a ride, which has a plan instead of exercises.
+    // The type picked on "What kind of workout?": lifting, cycling, stretching, yoga or run/walk. For a new workout it
+    // sets whether it's a ride (a run or walk is one too), its kind, and its icon (the type's own, unless one was
+    // chosen). For one being edited, its kind: a lift can become a stretch or yoga and back, and a ride a run or walk
+    // and back, but a lift can't become a ride, which has a plan instead of exercises.
     typeChoices: (() => {
-      const cur: 'lift' | 'cycle' | 'stretch' | 'yoga' = !lift ? 'cycle' : stretchOn ? 'stretch' : yogaOn ? 'yoga' : 'lift';
-      const DEFAULT_ICON = { lift: null, cycle: null, stretch: 'lunge', yoga: 'flower' };
-      const pick = (t: 'lift' | 'cycle' | 'stretch' | 'yoga') => {
+      type T = 'lift' | 'cycle' | 'stretch' | 'yoga' | 'run';
+      const cur: T = !lift ? (runView ? 'run' : 'cycle') : stretchOn ? 'stretch' : yogaOn ? 'yoga' : 'lift';
+      const DEFAULT_ICON = { lift: null, cycle: null, stretch: 'lunge', yoga: 'flower', run: null };
+      const ridden = (t: T) => t === 'cycle' || t === 'run';
+      const pick = (t: T) => {
         const kind = t === 'stretch' || t === 'yoga' ? t : 'main';
         const icon = (st.icons || {})[listKey];
         // Its icon follows the type when it was the last type's own (or none), not when it was picked by hand.
-        const ownIcon = icon == null || ['h', 'bike', 'lunge', 'flower'].includes(icon);
+        const ownIcon = icon == null || ['h', 'bike', 'lunge', 'flower', 'run'].includes(icon);
         logic.s({
-          ...(creating ? { newType: t === 'cycle' ? 'cycle' : 'lift' } : {}),
+          ...(creating ? { newType: ridden(t) ? 'cycle' : 'lift' } : {}),
           workoutKinds: Object.assign({}, st.workoutKinds, { [listKey]: kind }),
+          rRun: ridden(t) ? t === 'run' : null,
           ...(creating && ownIcon ? { icons: Object.assign({}, st.icons, { [listKey]: DEFAULT_ICON[t] }) } : {}),
           retype: false,
         });
       };
-      const can = (t) => (creating ? true : srcAct && srcAct.ride ? t === 'cycle' : t !== 'cycle');
+      const can = (t: T) => (creating ? true : srcAct && srcAct.ride ? ridden(t) : !ridden(t));
       return {
         // Chosen already, when coming back to change it: the one it is now.
         selected: creating && !st.newType ? null : cur,
         stretch: logic.model.stretchReady,
         yoga: logic.model.yogaReady,
-        can: { lift: can('lift'), cycle: can('cycle'), stretch: can('stretch'), yoga: can('yoga') },
+        run: runReady,
+        can: { lift: can('lift'), cycle: can('cycle'), stretch: can('stretch'), yoga: can('yoga'), run: can('run') },
         pick,
       };
     })(),
@@ -405,7 +413,8 @@ export function editVals(ctx: Ctx) {
     openRetype: () => logic.s({ retype: true }),
     closeRetype: () => logic.s({ retype: false }),
     needsType: st.screen === 'edit' && ((creating && !st.newType) || !!st.retype),
-    rideLockNote: rideDone ? 'Completed — plan locked' : ridePast ? 'Past ride — plan locked' : '',
+    rideLockNote: rideDone ? 'Completed — plan locked' : ridePast ? 'Past ' + rideWord + ' — plan locked' : '',
+    rideWord,
     ridePlanEdit: isCycleView && (creating || ridePlanOpen),
     ridePlanStatic: isCycleView && !creating && !ridePlanOpen,
     planDistText: rDist ? rDist + ' mi' : '—',
@@ -447,9 +456,13 @@ export function editVals(ctx: Ctx) {
     rideBarPct: ridePct == null ? 0 : Math.min(100, ridePct),
     rideNote:
       ridePct == null
-        ? 'Enter what you rode — a partial ride still counts.'
+        ? runView
+          ? 'Enter how far you went — a partial run still counts.'
+          : 'Enter what you rode — a partial ride still counts.'
         : ridePct >= 100
-          ? 'Full route ridden. Plan met.'
+          ? runView
+            ? 'Full distance covered. Plan met.'
+            : 'Full route ridden. Plan met.'
           : ridePct + '% of the planned distance. The rest stays on the plan.',
     rideMet: ridePct != null && ridePct >= 100,
     setHours: (e) => logic.s({ rHrs: digitsOnly(e.target.value).slice(0, 2) }),
@@ -786,7 +799,7 @@ export function editVals(ctx: Ctx) {
         const actualEdited = st.aDist != null || st.aElev != null || st.aHrs != null || st.aMins != null;
         const newName = ((st.renames || {})[baseName] || '').trim();
         const notes = (st.notes || {})[listKey];
-        const rideEdited = !!selRide && [st.rDist, st.rElev, st.rHrs, st.rMins, st.rZone].some((v) => v != null);
+        const rideEdited = !!selRide && [st.rDist, st.rElev, st.rHrs, st.rMins, st.rZone, st.rRun].some((v) => v != null);
         // Exercises ticked in the editor. A finished session stays completed while ticks change; otherwise it's done
         // once all are ticked.
         const ticked = st.editDone ? st.editDone.filter((n) => selList.some((e) => e.name === n)) : null;
@@ -815,7 +828,13 @@ export function editVals(ctx: Ctx) {
           iconColor: (st.iconColors || {})[listKey],
           notes: notes != null && notes !== (selAct.notes || '') ? notes : undefined,
           ride: rideEdited
-            ? { dist: rDist, elev: rElev, zone: st.rZone || selRide.zone || DEFAULT_ZONE, minutes: plannedMin }
+            ? {
+                dist: rDist,
+                elev: rElev,
+                zone: st.rZone || selRide.zone || DEFAULT_ZONE,
+                minutes: plannedMin,
+                ...(runReady ? { run: runView } : {}),
+              }
             : null,
           moveTo: moved ? isoOf(new Date(Y, mi, selDay)) : undefined,
           actual:
@@ -1006,7 +1025,7 @@ export function editVals(ctx: Ctx) {
             isRide,
             durationMinutes: isRide ? plannedMin || RIDE_MINUTES : estMin,
             ride: isRide
-              ? { dist: st.rDist || '', elev: st.rElev || '', zone: st.rZone || DEFAULT_ZONE }
+              ? { dist: st.rDist || '', elev: st.rElev || '', zone: st.rZone || DEFAULT_ZONE, ...(runReady ? { run: runView } : {}) }
               : null,
             icon: (st.icons || {}).__draft || null,
             iconColor: (st.iconColors || {}).__draft || null,
@@ -1090,7 +1109,9 @@ export function editVals(ctx: Ctx) {
             : (selAct && selAct.time) || '~50 min',
     // The workout's type, beside its length: what was picked when it was made, named as "What kind of workout?" names it.
     editType: !lift
-      ? { label: 'Cycling', icon: 'bike' }
+      ? runView
+        ? { label: 'Run/Walk', icon: 'run' }
+        : { label: 'Cycling', icon: 'bike' }
       : stretchOn
         ? { label: 'Stretching', icon: 'lunge' }
         : yogaOn

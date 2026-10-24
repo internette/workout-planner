@@ -202,7 +202,7 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
           {wk.list.map((w, j) => (
             <div key={w.date + w.name + j} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-2) 0', borderTop: j ? '1px solid var(--color-line)' : 'none' }}>
               <IconTile size="sm">
-                <WorkoutIcon name={w.kind === 'ride' ? 'bike' : w.stretch ? 'lunge' : w.yoga ? 'flower' : 'h'} color="var(--color-pink)" />
+                <WorkoutIcon name={w.kind === 'run' ? 'run' : w.kind === 'ride' ? 'bike' : w.stretch ? 'lunge' : w.yoga ? 'flower' : 'h'} color="var(--color-pink)" />
               </IconTile>
               <div style={{ minWidth: 0 }}>
                 <Text variant="subheading" as="div" tone="ink">
@@ -226,7 +226,7 @@ function Weeks({ workouts }: { workouts: PlanWorkout[] }) {
 }
 
 const meta = (w: PlanWorkout) => {
-  if (w.kind === 'ride') return [w.minutes ? `${w.minutes} min` : '', w.ride?.miles ? `${w.ride.miles} mi` : '', w.ride?.zone ?? ''].filter(Boolean).join(' · ');
+  if (w.kind === 'ride' || w.kind === 'run') return [w.kind === 'run' ? 'Run/Walk' : '', w.minutes ? `${w.minutes} min` : '', w.ride?.miles ? `${w.ride.miles} mi` : '', w.ride?.zone ?? ''].filter(Boolean).join(' · ');
   const n = w.exercises?.length ?? 0;
   return [plural(n, 'exercise'), w.minutes ? `~${w.minutes} min` : ''].filter(Boolean).join(' · ');
 };

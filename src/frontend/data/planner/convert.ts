@@ -84,11 +84,13 @@ export const numStr = (v: number | null | undefined) => (v != null ? String(v) :
 
 export const numOrNull = (v: string | undefined) => (v ? Number(v) : null);
 
-// A ride's plan as workout columns.
-export const rideCols = (ride: { dist: string; elev: string; zone: string }) => ({
+// A ride's plan as workout columns. Whether it's a run is left out when it isn't known, so a ride still saves before
+// the run/walk migration has added the column.
+export const rideCols = (ride: { dist: string; elev: string; zone: string; run?: boolean }) => ({
   ride_distance_miles: numOrNull(ride.dist),
   ride_elevation_ft: numOrNull(ride.elev),
   ride_zone: ride.zone,
+  ...(ride.run !== undefined ? { is_run: ride.run } : {}),
 });
 
 // A session marked complete or not.
@@ -113,7 +115,15 @@ export function workoutView(w: any, exercises: Exercise[]) {
     warmup: !!w.is_warmup,
     stretch: !!w.is_stretch,
     yoga: !!w.is_yoga,
-    ride: isRide ? { dist: numStr(w.ride_distance_miles), elev: numStr(w.ride_elevation_ft), zone: w.ride_zone || DEFAULT_ZONE } : undefined,
+    ride: isRide
+      ? {
+          dist: numStr(w.ride_distance_miles),
+          elev: numStr(w.ride_elevation_ft),
+          zone: w.ride_zone || DEFAULT_ZONE,
+          // Unknown (left out) until the run/walk migration has run.
+          ...('is_run' in w ? { run: !!w.is_run } : {}),
+        }
+      : undefined,
   };
 }
 

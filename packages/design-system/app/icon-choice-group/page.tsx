@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card } from '../../src/card';
 import { colors, themed } from '../../src/colors';
 import { ACCENTS } from '../../src/colors/themes';
-import { Bike, Dumbbell, DumbbellSmall, DumbbellUpright, LotusFlower, Lunge } from '../../src/icons';
+import { Bike, Dumbbell, DumbbellSmall, DumbbellUpright, LotusFlower, Lunge, Runner } from '../../src/icons';
 import { IconChoiceGroup } from '../../src/icon-choice-group';
 import { IconTile } from '../../src/icon-tile';
 import { Label } from '../../src/text-field';
@@ -19,6 +19,7 @@ const WORKOUT_ICONS = [
   { value: 'bike', label: 'Bike', Glyph: Bike },
   { value: 'flower', label: 'Lotus flower', Glyph: LotusFlower },
   { value: 'lunge', label: 'Lunge', Glyph: Lunge },
+  { value: 'run', label: 'Runner', Glyph: Runner },
 ];
 const glyphOf = (value: string) => (WORKOUT_ICONS.find((i) => i.value === value) || WORKOUT_ICONS[0]).Glyph;
 const SWATCHES = [

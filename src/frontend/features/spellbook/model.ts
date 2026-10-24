@@ -1,6 +1,6 @@
 import { forWorkout, oneSided, splitSide } from '@/frontend/shared/sides';
 import { EQUIPMENT, EQUIPMENT_GROUPS, EX_DRAFT_CLEARED, MONTHS, TARGET_AREAS } from '@/frontend/shared/constants';
-import { iconOptions, iconSvg } from '@/frontend/shared/icons';
+import { iconOptions, iconSvg, typeIcon } from '@/frontend/shared/icons';
 import { DEFAULT_WEEKS, dayNames, pickedDays, planDays, toggleDay } from '@/frontend/shared/schedule';
 import * as db from '@/frontend/data/plannerData';
 import { countsOk, digitsOnly, editTemplatePatch, exerciseDraftDirty, exLine, isoOf, joinSetsReps, longDay, monthPatch, needsLine, newWorkoutPatch, noticePatch, numericOnly, plural, splitSetsReps, withLb, withSec } from '@/frontend/shared/helpers';
@@ -130,10 +130,10 @@ export function arsenalVals(ctx: Ctx) {
     warmup: !!w.warmup && !('builtin' in w && w.builtin),
     stretch: !!w.stretch && !('builtin' in w && w.builtin),
     yoga: !!w.yoga && !('builtin' in w && w.builtin),
-    svg: iconSvg(w.icon || (w.kind === 'ride' ? 'bike' : 'h'), w.iconColor || undefined),
+    svg: iconSvg(w.icon || typeIcon(w.kind === 'ride' && (w.ride || {})), w.iconColor || undefined),
     meta:
       w.kind === 'ride'
-        ? ['Ride', w.ride && w.ride.dist ? w.ride.dist + ' mi' : '', w.ride && w.ride.zone, w.time]
+        ? [w.ride?.run ? 'Run/Walk' : 'Ride', w.ride && w.ride.dist ? w.ride.dist + ' mi' : '', w.ride && w.ride.zone, w.time]
             .filter(Boolean)
             .join(' · ')
         : plural(w.exercises.length, 'exercise') + ' · ' + w.time,
@@ -431,7 +431,7 @@ export function arsenalVals(ctx: Ctx) {
   const template = chosen
     ? {
         name: chosen.name,
-        svg: iconSvg(chosen.icon || (chosen.kind === 'ride' ? 'bike' : 'h'), chosen.iconColor || undefined),
+        svg: iconSvg(chosen.icon || typeIcon(chosen.kind === 'ride' && (chosen.ride || {})), chosen.iconColor || undefined),
         time: chosen.time,
         areas: chosen.areas,
         needs: chosen.kind === 'ride' ? null : needsLine(chosenBuiltin ? chosenBuiltin.list : EX[chosen.name] || []),

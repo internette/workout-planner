@@ -13,7 +13,7 @@ export function RideActualCard({ v }: { v: PlannerVals }) {
         style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 'var(--space-2)' }}
       >
         <Text variant="micro" tone="slate">
-          What you actually rode
+          {v.rideWord === 'run' ? 'What you actually covered' : 'What you actually rode'}
         </Text>
         <Text variant="figure" tone="ink" style={{ marginLeft: 'auto' }}>
           {v.ridePctLabel}

@@ -255,3 +255,15 @@ export const Lunge = strokeIcon(
     <path d="M11 9l4.5 2.5" />
   </>,
 );
+// Running or walking: a runner mid-stride, leaning into it, arms swinging.
+export const Runner = strokeIcon(
+  'Runner',
+  <>
+    <Head cx={15} cy={3.6} />
+    <path d="M13.6 7.4 11 13" />
+    <path d="M11 13l4.2 2.2-.8 5" />
+    <path d="M11 13l-2.6 3.6L4.5 17" />
+    <path d="M13 9.2l3.3 1.8 2.2-2" />
+    <path d="M13 9.2 9.6 9.8 8 12.5" />
+  </>,
+);

@@ -130,7 +130,9 @@ export function diaryVals(ctx: Ctx) {
     // A lift with some exercises already ticked says so: marking it done ticks the rest.
     markDoneLabel:
       entrySession && entrySession.av.ride
-        ? 'Mark this ride done'
+        ? entrySession.av.ride.run
+          ? 'Mark this run done'
+          : 'Mark this ride done'
         : entrySession && ctx.doneCountAt(entrySession.av) > 0
           ? 'Mark all ' + plural((ctx.EXV[entrySession.av.exKey] || []).length, 'exercise') + ' done (' +
             ctx.doneCountAt(entrySession.av) + ' ticked so far)'
@@ -165,7 +167,7 @@ export function diaryVals(ctx: Ctx) {
               ...(hasEntry || st.diaryFrom === 'list'
                 ? noticePatch(
                     (hasEntry ? 'Changes saved.' : 'Entry saved.') +
-                      (markDone ? (entrySession && entrySession.av.ride ? ' Ride' : ' Workout') + ' marked done.' : ''),
+                      (markDone ? (entrySession && entrySession.av.ride ? (entrySession.av.ride.run ? ' Run' : ' Ride') : ' Workout') + ' marked done.' : ''),
                     'diary',
                   )
                 : {}),

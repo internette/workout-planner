@@ -18,7 +18,7 @@ const safe = (s: string) =>
     .join('');
 
 const kindOf = (w: SharedWorkout) =>
-  [w.warmup ? 'Warm-up' : '', w.kind === 'ride' ? 'Cycling' : w.stretch ? 'Stretching' : w.yoga ? 'Yoga' : 'Lifting'].filter(Boolean).join(' · ');
+  [w.warmup ? 'Warm-up' : '', w.kind === 'ride' ? (w.ride?.run ? 'Run/Walk' : 'Cycling') : w.stretch ? 'Stretching' : w.yoga ? 'Yoga' : 'Lifting'].filter(Boolean).join(' · ');
 const dayName = (d: number) => DOW3[d].charAt(0) + DOW3[d].slice(1).toLowerCase();
 
 /** The PDF's bytes, for a program called `name`. */
