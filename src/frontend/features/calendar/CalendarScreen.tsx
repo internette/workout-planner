@@ -154,10 +154,8 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
           ) : null}
         </>
       ) : null}
-      {v.showQuest ? (
-        <QuestCard v={v} />
-      ) : null}
-      {v.bossOnDay ? <BossCard v={v} /> : null}
+      {/* One card above the workouts: the boss while a fight is on (today only), else the day's quest. */}
+      {v.bossOnDay ? <BossCard v={v} /> : v.showQuest ? <QuestCard v={v} /> : null}
       <RestartDialog v={v} />
       {v.hasWorkout ? (
         <div style={{ marginTop: 'var(--space-4)' }}>
