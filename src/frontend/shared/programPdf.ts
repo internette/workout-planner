@@ -166,14 +166,19 @@ export async function programPdf(name: string, program: SharedProgram): Promise<
 /** A file name for it: "Fall routine.pdf", with characters file systems refuse taken out. */
 export const pdfName = (name: string) => (name.replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim() || 'Program') + '.pdf';
 
+/** A phone or tablet. Desktop Chrome and Safari take files in the share sheet too, but there it should just download. */
+const isMobile = () =>
+  window.matchMedia('(pointer: coarse) and (hover: none)').matches ||
+  (navigator as Navigator & { userAgentData?: { mobile?: boolean } }).userAgentData?.mobile === true;
+
 /**
- * Makes the PDF and hands it over: to the phone's share sheet where it takes files (to send, or save to Files), else
- * downloaded. Resolves once it's out, or the share sheet was closed.
+ * Makes the PDF and hands it over: on a phone, to the share sheet where it takes files (to send, or save to Files),
+ * else downloaded. Resolves once it's out, or the share sheet was closed.
  */
 export async function savePdf(name: string, program: SharedProgram) {
   const bytes = await programPdf(name, program);
   const file = new File([bytes], pdfName(name), { type: 'application/pdf' });
-  if (typeof navigator.canShare === 'function' && navigator.canShare({ files: [file] })) {
+  if (isMobile() && typeof navigator.canShare === 'function' && navigator.canShare({ files: [file] })) {
     try {
       await navigator.share({ files: [file], title: name });
       return;
