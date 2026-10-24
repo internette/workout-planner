@@ -20,6 +20,8 @@ import { useWakeLock } from '../live/useWakeLock';
 import { leaveChoice } from '../live/settings';
 import { RankUp } from '@moonshot/design-system/rank-up';
 import { BossBattle } from '../boss/BossBattle';
+import type { PlannerVals } from './store/types';
+import { AchievementUnlock } from '../achievements/AchievementUnlock';
 import { Tour } from '../tour/Tour';
 import { markTourSeen, tourSeen } from '../tour/seen';
 import { Setup } from '../setup/Setup';
@@ -451,6 +453,23 @@ export default function Planner({ account = null }: { account?: Account | null }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bossAppearKey, bossWinKey, account?.email, !!view, bossShow]);
 
+  // Achievements earned since the last ones shown, on a card of their own. The count already shown is kept per account
+  // in this browser; with nothing kept yet, the current count is recorded quietly, so the ones earned before don't all
+  // pop up at once. While a workout's clock runs they wait, and show together once it stops.
+  const achCount: number | null = view ? view.achCount : null;
+  const [achShow, setAchShow] = useState<ReturnType<PlannerVals['achSince']> | null>(null);
+  useEffect(() => {
+    if (achCount == null || achShow || anyTimerRunning) return;
+    const key = 'moonshot.achSeen.' + (account?.email || 'local');
+    try {
+      const raw = window.localStorage.getItem(key);
+      if (raw != null && achCount > Number(raw)) setAchShow(viewRef.current?.achSince(Number(raw)) ?? null);
+      if (raw == null || achCount !== Number(raw)) window.localStorage.setItem(key, String(achCount));
+    } catch {
+      // Storage can be unavailable; then they're just on Profile.
+    }
+  }, [achCount, account?.email, achShow, anyTimerRunning]);
+
   // A new account (nothing planned, nothing saved) is welcomed once, the first time it opens on the calendar: customize,
   // take the tour, or neither.
   const firstRun = !!view && logic.model.workouts.length === 0 && logic.model.entries.length === 0;
@@ -510,6 +529,14 @@ export default function Planner({ account = null }: { account?: Account | null }
         v={view}
         show={bossShow}
         onClose={() => setBossShow(null)}
+      />
+      <AchievementUnlock
+        rows={!bossShow && !(rankUp != null && rankUp === rank) ? achShow : null}
+        onClose={() => setAchShow(null)}
+        onSeeAll={() => {
+          setAchShow(null);
+          view?.goAchievements();
+        }}
       />
       <RankUp
         open={rankUp != null && rankUp === rank && !bossShow}

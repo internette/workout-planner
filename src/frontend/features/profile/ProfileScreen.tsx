@@ -9,6 +9,7 @@ import { ProfileHeaderCard } from '@/frontend/features/profile/ProfileHeaderCard
 import { ProgramCard } from '@/frontend/features/profile/ProgramCard';
 import { QuestsClearedCard } from '@/frontend/features/profile/QuestsClearedCard';
 import { BossesCard } from '@/frontend/features/boss/BossesCard';
+import { AchievementsCard } from '@/frontend/features/achievements/AchievementsCard';
 
 export function ProfileScreen({ v }: { v: PlannerVals }) {
   return (
@@ -26,6 +27,7 @@ export function ProfileScreen({ v }: { v: PlannerVals }) {
       <ProfileHeaderCard v={v} />
       <ProgramCard v={v} />
       <BossesCard v={v} />
+      <AchievementsCard v={v} />
       <QuestsClearedCard v={v} />
       <div
         style={{
