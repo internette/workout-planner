@@ -19,6 +19,7 @@ import { programVals } from '@/frontend/features/programs/model';
 import { scanVals } from '@/frontend/features/programs/scan.model';
 import { historyVals } from '@/frontend/features/programs/history.model';
 import { progressVals } from '@/frontend/features/progress/model';
+import { bossVals } from '@/frontend/features/boss/model';
 import { liveVals } from '@/frontend/features/live/model';
 import { restVals } from '@/frontend/features/session/sets';
 
@@ -342,6 +343,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
       ...scanVals(ctx),
       ...historyVals(ctx),
       ...progressVals(ctx),
+      ...bossVals(ctx),
       ...liveVals(ctx),
       ...restVals(ctx),
       ...setupVals(ctx),

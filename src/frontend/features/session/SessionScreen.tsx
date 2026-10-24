@@ -21,6 +21,7 @@ import { SessionExerciseRow } from '@/frontend/features/session/SessionExerciseR
 import { WorkoutCard } from '@/frontend/features/session/WorkoutCard';
 import { RestartDialog } from '@/frontend/features/calendar/RestartDialog';
 import { KindTag } from '@/frontend/components/KindTag';
+import { BossCard } from '@/frontend/features/boss/BossCard';
 
 export function SessionScreen({ v }: { v: PlannerVals }) {
   return (
@@ -136,6 +137,8 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
       ) : null}
       {/* The clock, and for a lift its progress, sets and rest (nothing to tick off before its day). */}
       <WorkoutCard v={v} />
+      {/* Today's session: each tick hits the boss being fought. */}
+      {v.bossOnSession ? <BossCard v={v} live /> : null}
       <RestartDialog v={v} />
       {v.moveDay ? (
         <Dialog

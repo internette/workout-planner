@@ -3,13 +3,14 @@ import { MON3, RANK_XP } from '@/frontend/shared/constants';
 import { idOf, numericOnly, questSeed, shortDay } from '@/frontend/shared/helpers';
 import type { CalendarCtx } from '../types';
 import type { Entry } from '@/frontend/data/plannerData';
+import { bossStage } from '@/frontend/features/boss/derive';
 
 // Streaks, weekly buckets, XP and rank, records and quest counts, derived from every entry.
 /** One session in a week of the Progress chart. */
 type WeekSession = { date: Date; av: Entry; done: boolean };
 
 export function statsStage(ctx: CalendarCtx) {
-  const { logic, Y, TODAY_M, TODAY_D, listForDate, TK, relM, entriesAt, isDoneEntry, ENTRIES, st, EXV, doneCountAt, distOf } = ctx;
+  const { logic, Y, TODAY_M, TODAY_D, listForDate, TK, relM, entriesAt, isDoneEntry, ENTRIES, st, EXV, distOf } = ctx;
   const todayDate = new Date(Y, TODAY_M, TODAY_D);
   const todayWkStart = new Date(Y, TODAY_M, TODAY_D - todayDate.getDay());
   const weekAll: Entry[] = [];
@@ -147,14 +148,10 @@ export function statsStage(ctx: CalendarCtx) {
     pastDays.reduce((max, x) => (x.av.ride && !!x.av.ride.run === run && x.done ? Math.max(max, parseFloat(distOf(x.av)) || 0) : max), 0);
   const longestRide = longestOf(false);
   const longestRun = longestOf(true);
-  // XP counts everything ever done, so a rank never slips as old months pass.
-  const xpTotal = logic.model.entries.reduce(
-    (sum, x) => sum + (x.av.ride ? 0 : doneCountAt(x.av) * 10) + (isDoneEntry(x.av) ? 50 : 0),
-    0,
-  );
+  // XP counts everything ever done, so it never slips as old months pass; a boss still standing holds the rank at its
+  // own until it's beaten.
+  const { xpTotal, derivedRank, bossFight, bossWins, bossBlocks, bossTodayPlan } = bossStage(ctx);
   const XP_STEPS = RANK_XP;
-  let derivedRank = 0;
-  while (derivedRank < XP_STEPS.length - 1 && xpTotal >= XP_STEPS[derivedRank]) derivedRank++;
   const rankFloor = derivedRank === 0 ? 0 : XP_STEPS[derivedRank - 1];
   const rankCeil = XP_STEPS[derivedRank];
   const todayActs = entriesAt(TODAY_M, TODAY_D);
@@ -168,6 +165,10 @@ export function statsStage(ctx: CalendarCtx) {
     todayWkStart,
     derivedRank,
     xpTotal,
+    bossFight,
+    bossWins,
+    bossBlocks,
+    bossTodayPlan,
     rankCeil,
     XP_STEPS,
     rankPct,

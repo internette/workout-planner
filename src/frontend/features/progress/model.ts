@@ -1,4 +1,5 @@
 import { DOW3, DOWFULL, MON3, MONTHS, RANKS } from '@/frontend/shared/constants';
+import { bossName, bossRank } from '../boss/bosses';
 import { displayName } from '@/shared/auth';
 import { plural, questSeed } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
@@ -48,6 +49,7 @@ export function progressVals(ctx: Ctx) {
     todayDate,
     entriesAt,
     isDoneEntry,
+    bossFight,
   } = ctx;
   // A week by its dates: "Sep 20–26", or "Aug 30 – Sep 5" across a month.
   const weekRange = (b) =>
@@ -59,7 +61,15 @@ export function progressVals(ctx: Ctx) {
   // The next rank by its full name, as the ladder writes it ("Novice guardian"); past the top, the next season.
   const nextRankName = RANKS[derivedRank + 1] ? RANKS[derivedRank + 1].name : RANKS[derivedRank].next;
   const xpLeft = Math.max(0, rankCeil - xpTotal);
-  const xpToGo = xpLeft ? xpLeft.toLocaleString('en-US') + ' more to reach ' + nextRankName + '.' : 'The top rank.';
+  // A boss standing at this rank holds the next one back until it's beaten, however much XP there is.
+  const bossHold = bossFight && derivedRank === bossRank(bossFight.k) && RANKS[derivedRank + 1] ? bossName(bossFight.k) : '';
+  const xpToGo = bossHold
+    ? xpLeft
+      ? xpLeft.toLocaleString('en-US') + ' more, and beat ' + bossHold + ', to reach ' + nextRankName + '.'
+      : 'Beat ' + bossHold + ' to reach ' + nextRankName + '.'
+    : xpLeft
+      ? xpLeft.toLocaleString('en-US') + ' more to reach ' + nextRankName + '.'
+      : 'The top rank.';
   const statusOf = (x) => (x.done ? 'Done' : ctx.sessionStatus(relM(x.date), x.date.getDate(), x.av));
   return {
     // Empty states: say what will show up, instead of "0 of 0" or a bare heading.
@@ -117,7 +127,9 @@ export function progressVals(ctx: Ctx) {
     rankProgress:
       xpTotal === 0
         ? 'Clear your first exercise to start toward ' + nextRankName + '.'
-        : rankPct === 0
+        : bossHold && rankPct >= 100
+          ? 'Beat ' + bossHold + ' to reach ' + nextRankName
+          : rankPct === 0
           ? 'New rank: ' + RANKS[derivedRank].name + '. On to ' + nextRankName + '.'
           : rankPct + '% to ' + nextRankName,
     streakCount: streak,

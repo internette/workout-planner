@@ -20,6 +20,7 @@ import { QuestCard } from '@/frontend/features/calendar/QuestCard';
 import { RestartDialog } from '@/frontend/features/calendar/RestartDialog';
 import { WeekRow } from '@/frontend/features/calendar/WeekRow';
 import { kindOf } from '@/frontend/components/KindTag';
+import { BossCard } from '@/frontend/features/boss/BossCard';
 
 /** The day's cards in groups: each program's together, in the order they come, then the ones on their own. */
 function groupByProgram(cards: any[]) {
@@ -156,6 +157,7 @@ export function CalendarScreen({ v }: { v: PlannerVals }) {
       {v.showQuest ? (
         <QuestCard v={v} />
       ) : null}
+      {v.bossOnDay ? <BossCard v={v} /> : null}
       <RestartDialog v={v} />
       {v.hasWorkout ? (
         <div style={{ marginTop: 'var(--space-4)' }}>

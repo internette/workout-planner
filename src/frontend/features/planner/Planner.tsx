@@ -19,6 +19,7 @@ import { useLiveActivity } from '../live/useLiveActivity';
 import { useWakeLock } from '../live/useWakeLock';
 import { leaveChoice } from '../live/settings';
 import { RankUp } from '@moonshot/design-system/rank-up';
+import { BossBattle } from '../boss/BossBattle';
 import { Tour } from '../tour/Tour';
 import { markTourSeen, tourSeen } from '../tour/seen';
 import { Setup } from '../setup/Setup';
@@ -422,6 +423,34 @@ export default function Planner({ account = null }: { account?: Account | null }
     }
   }, [rank, account?.email]);
 
+  // A boss's ceremonies play once each: when it first appears, and when it falls (the win first, if both are new). The
+  // last of each already shown is kept per account in this browser; with nothing kept yet, the current ones are
+  // recorded quietly, as the rank is.
+  const bossAppearKey: number | null = view ? view.bossAppearKey : null;
+  const bossWinKey: number | null = view ? view.bossWinKey : null;
+  const [bossShow, setBossShow] = useState<'appear' | 'won' | null>(null);
+  useEffect(() => {
+    // Closing one checks again, so a new boss can follow the win that let it appear.
+    if (!view || bossShow) return;
+    const key = 'moonshot.bossSeen.' + (account?.email || 'local');
+    try {
+      const raw = window.localStorage.getItem(key);
+      const seen: { a: number; w: number } | null = raw ? JSON.parse(raw) : null;
+      const next = { a: bossAppearKey ?? seen?.a ?? -1, w: bossWinKey ?? seen?.w ?? -1 };
+      if (!seen) return window.localStorage.setItem(key, JSON.stringify(next));
+      if (bossWinKey != null && bossWinKey > seen.w) {
+        window.localStorage.setItem(key, JSON.stringify({ ...seen, w: bossWinKey }));
+        setBossShow('won');
+      } else if (bossAppearKey != null && bossAppearKey > seen.a) {
+        window.localStorage.setItem(key, JSON.stringify({ ...seen, a: bossAppearKey }));
+        setBossShow('appear');
+      }
+    } catch {
+      // Storage can be unavailable; then the boss just shows up on its card.
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bossAppearKey, bossWinKey, account?.email, !!view, bossShow]);
+
   // A new account (nothing planned, nothing saved) is welcomed once, the first time it opens on the calendar: customize,
   // take the tour, or neither.
   const firstRun = !!view && logic.model.workouts.length === 0 && logic.model.entries.length === 0;
@@ -477,8 +506,13 @@ export default function Planner({ account = null }: { account?: Account | null }
         }}
       />
       <Setup s={view?.setup ?? null} />
+      <BossBattle
+        v={view}
+        show={bossShow}
+        onClose={() => setBossShow(null)}
+      />
       <RankUp
-        open={rankUp != null && rankUp === rank}
+        open={rankUp != null && rankUp === rank && !bossShow}
         name={view?.rankName ?? ''}
         step={view?.rankStepLabel ?? ''}
         next={view?.rankNext ?? ''}
