@@ -13,8 +13,10 @@ export interface CalloutProps {
   children: ReactNode;
 }
 
+// Success takes a border in the theme color: its tint is 1.06:1 against the page in light, so without one the strip
+// barely shows. The border is 4.1:1 or more on the page in every theme.
 const TONES = {
-  success: { background: 'var(--color-pink-tint)', color: 'var(--color-pink-deep)' },
+  success: { background: 'var(--color-pink-tint)', color: 'var(--color-pink-deep)', border: '1px solid var(--color-pink)' },
   danger: { background: 'var(--color-danger-tint)', color: 'var(--color-danger)' },
 };
 
