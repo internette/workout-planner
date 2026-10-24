@@ -22,7 +22,6 @@ import { WorkoutCard } from '@/frontend/features/session/WorkoutCard';
 import { RestartDialog } from '@/frontend/features/calendar/RestartDialog';
 import { KindTag } from '@/frontend/components/KindTag';
 import { BossCard } from '@/frontend/features/boss/BossCard';
-import { SessionChallenges } from '@/frontend/features/challenges/ChallengesCard';
 
 export function SessionScreen({ v }: { v: PlannerVals }) {
   return (
@@ -140,8 +139,6 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
       <WorkoutCard v={v} />
       {/* Today's session: each tick hits the boss being fought. */}
       {v.bossOnSession ? <BossCard v={v} live /> : null}
-      {/* And moves this week's challenges it counts toward. */}
-      {v.challengesOnSession ? <SessionChallenges v={v} /> : null}
       <RestartDialog v={v} />
       {v.moveDay ? (
         <Dialog
