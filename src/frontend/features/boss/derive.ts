@@ -26,10 +26,9 @@ const rankOfXp = (xp: number) => {
 
 /**
  * XP, rank and boss battles, replayed from every session in date order. Nothing is stored: like XP, a fight is worked
- * out again from the ticks each time, so it is the same on every device. `awards` is XP won on a day besides the
- * sessions' own (weekly challenges), oldest first; like any XP it counts while a boss holds the rank.
+ * out again from the ticks each time, so it is the same on every device.
  */
-export function bossStage(ctx: CalendarCtx, awards: { day: number; xp: number }[] = []) {
+export function bossStage(ctx: CalendarCtx) {
   const { logic, st, Y, TODAY_M, TODAY_D, instList, isDoneEntry, doneCountAt } = ctx;
   const dayNum = (m: number, d: number) => Math.round(Date.UTC(Y, m, d) / 864e5);
   const today = dayNum(TODAY_M, TODAY_D);
@@ -69,24 +68,7 @@ export function bossStage(ctx: CalendarCtx, awards: { day: number; xp: number }[
     const k = wins.length;
     if (!now.fight && k < BOSS_COUNT && rankOfXp(xp) >= bossRank(k)) now.fight = { k, start: day, first: day, dealt: 0, escapes: 0, lastLeft: 0 };
   };
-  // XP won on days before `day`: counted, and a boss it reaches appears.
-  let ai = 0;
-  const award = (before: number) => {
-    let any = false;
-    while (ai < awards.length && awards[ai].day < before && awards[ai].day <= today) {
-      roll(awards[ai].day);
-      xp += awards[ai].xp;
-      spawn(awards[ai].day);
-      any = true;
-      ai++;
-    }
-    if (any) {
-      const held = now.fight;
-      log.push({ day: awards[ai - 1].day, xp, rank: held ? Math.min(rankOfXp(xp), bossRank(held.k)) : rankOfXp(xp) });
-    }
-  };
   for (const { day, av } of ordered) {
-    award(day);
     const gain = xpOf(av);
     // Sessions still ahead count toward XP, but a fight only happens up to today.
     if (day > today) {
@@ -108,7 +90,6 @@ export function bossStage(ctx: CalendarCtx, awards: { day: number; xp: number }[
     const held = now.fight;
     log.push({ day, xp, rank: held ? Math.min(rankOfXp(xp), bossRank(held.k)) : rankOfXp(xp) });
   }
-  award(today + 1);
   roll(today);
   // A boss still standing holds the rank at its own.
   const f = now.fight;
