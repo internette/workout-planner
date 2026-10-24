@@ -15,7 +15,7 @@ export type BossFight = {
   escapes: number;
   lastLeft: number;
 };
-export type BossWin = { k: number; days: number; escapes: number };
+export type BossWin = { k: number; days: number; escapes: number; day: number };
 
 // The rank a total of XP reaches, before any boss holds it back.
 const rankOfXp = (xp: number) => {
@@ -49,6 +49,8 @@ export function bossStage(ctx: CalendarCtx) {
     .sort((a, b) => a.day - b.day);
   let xp = 0;
   const wins: BossWin[] = [];
+  // XP and rank after each session up to today, for the achievements that are worked out from them.
+  const log: { day: number; xp: number; rank: number }[] = [];
   type Fight = { k: number; start: number; first: number; dealt: number; escapes: number; lastLeft: number };
   // Kept in a box so the helpers below can change it.
   const now: { fight: Fight | null } = { fight: null };
@@ -79,12 +81,14 @@ export function bossStage(ctx: CalendarCtx) {
     if (fight) {
       fight.dealt += damageOf(av);
       if (fight.dealt >= bossHp(fight.k)) {
-        wins.push({ k: fight.k, days: day - fight.first + 1, escapes: fight.escapes });
+        wins.push({ k: fight.k, days: day - fight.first + 1, escapes: fight.escapes, day });
         xp += BOSS_XP;
         now.fight = null;
       }
     }
     spawn(day);
+    const held = now.fight;
+    log.push({ day, xp, rank: held ? Math.min(rankOfXp(xp), bossRank(held.k)) : rankOfXp(xp) });
   }
   roll(today);
   // A boss still standing holds the rank at its own.
@@ -105,5 +109,5 @@ export function bossStage(ctx: CalendarCtx) {
       const left = instList(x.av.exKey, id).filter((e) => !ticked.includes(e.name));
       return n + left.reduce((s, e) => s + setsIn(e) * SET_DAMAGE, 0) + FINISH_DAMAGE;
     }, 0);
-  return { xpTotal: xp, derivedRank, bossFight, bossWins: wins, bossBlocks, bossTodayPlan: todayPlan, rankCount: RANKS.length };
+  return { xpTotal: xp, derivedRank, bossFight, bossWins: wins, bossBlocks, bossTodayPlan: todayPlan, rankCount: RANKS.length, xpLog: log };
 }

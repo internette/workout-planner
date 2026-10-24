@@ -27,7 +27,8 @@ export type Screen =
   | 'programEdit'
   | 'programScan'
   | 'programRuns'
-  | 'programRun';
+  | 'programRun'
+  | 'achievements';
 
 export type CalendarView = 'Day' | 'Week' | 'Month';
 
@@ -290,6 +291,8 @@ export interface PlannerState {
 
   // Progress and profile
   barSel?: number | null;
+  /** Which group of achievements their page shows. */
+  achGroup?: string;
   ranksOpen?: boolean;
   xpInfo?: boolean;
   signOutOpen?: boolean;

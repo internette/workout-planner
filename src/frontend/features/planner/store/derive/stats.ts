@@ -4,6 +4,7 @@ import { idOf, numericOnly, questSeed, shortDay } from '@/frontend/shared/helper
 import type { CalendarCtx } from '../types';
 import type { Entry } from '@/frontend/data/plannerData';
 import { bossStage } from '@/frontend/features/boss/derive';
+import { achievementStage } from '@/frontend/features/achievements/derive';
 
 // Streaks, weekly buckets, XP and rank, records and quest counts, derived from every entry.
 /** One session in a week of the Progress chart. */
@@ -150,7 +151,9 @@ export function statsStage(ctx: CalendarCtx) {
   const longestRun = longestOf(true);
   // XP counts everything ever done, so it never slips as old months pass; a boss still standing holds the rank at its
   // own until it's beaten.
-  const { xpTotal, derivedRank, bossFight, bossWins, bossBlocks, bossTodayPlan } = bossStage(ctx);
+  const { xpTotal, derivedRank, bossFight, bossWins, bossBlocks, bossTodayPlan, xpLog } = bossStage(ctx);
+  // Achievements are worked out the same way, from every session up to today.
+  const achievements = achievementStage(ctx, { bossWins, xpLog });
   const XP_STEPS = RANK_XP;
   const rankFloor = derivedRank === 0 ? 0 : XP_STEPS[derivedRank - 1];
   const rankCeil = XP_STEPS[derivedRank];
@@ -169,6 +172,7 @@ export function statsStage(ctx: CalendarCtx) {
     bossWins,
     bossBlocks,
     bossTodayPlan,
+    achievements,
     rankCeil,
     XP_STEPS,
     rankPct,
