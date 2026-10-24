@@ -8,6 +8,12 @@ import { BOSS_COUNT, BOSS_DAYS, BOSS_XP, bossName, bossRank } from './bosses';
 export function bossVals(ctx: Ctx) {
   const { bossFight: f, bossWins, bossBlocks, bossTodayPlan, derivedRank, st, mi, selDay, TODAY_M, TODAY_D } = ctx;
   const gemOf = (k: number) => (bossRank(k) === RANKS.length - 1 ? 'var(--color-gold)' : RANKS[bossRank(k)].gem);
+  // A trophy is drawn in the deep shade its rank's pill uses for text, on that rank's tint: most bright gems are under
+  // 3:1 on a light tile, and the deep shade is 4.7:1 or more.
+  const trophyLookOf = (k: number) =>
+    bossRank(k) === RANKS.length - 1
+      ? { tint: 'var(--color-gold-tint)', deep: 'var(--color-gold-deep)' }
+      : { tint: RANKS[bossRank(k)].pill.background, deep: RANKS[bossRank(k)].pill.color };
   const unlocks = (k: number) => RANKS[bossRank(k) + 1]?.name ?? '';
   const onToday = mi === TODAY_M && selDay === TODAY_D;
   const card = f
@@ -73,7 +79,7 @@ export function bossVals(ctx: Ctx) {
     bossesLabel: bossWins.length + ' of ' + BOSS_COUNT + ' beaten',
     bossTrophies: Array.from({ length: BOSS_COUNT }, (_, k) => {
       const won = bossWins.some((w) => w.k === k);
-      return { k, won, fighting: !!f && f.k === k, label: won ? bossName(k).replace(/^The /, '') : 'Rank ' + (bossRank(k) + 1), gem: gemOf(k) };
+      return { k, won, fighting: !!f && f.k === k, label: won ? bossName(k).replace(/^The /, '') : 'Rank ' + (bossRank(k) + 1), ...trophyLookOf(k) };
     }).slice(0, Math.min(BOSS_COUNT, Math.max(8, Math.ceil((nextK + 2) / 4) * 4))),
     bossNext: f
       ? { label: 'Fighting now', value: bossName(f.k), aside: card?.daysLabel ?? '' }
