@@ -21,6 +21,7 @@ import { historyVals } from '@/frontend/features/programs/history.model';
 import { progressVals } from '@/frontend/features/progress/model';
 import { bossVals } from '@/frontend/features/boss/model';
 import { achievementVals } from '@/frontend/features/achievements/model';
+import { challengeVals } from '@/frontend/features/challenges/model';
 import { liveVals } from '@/frontend/features/live/model';
 import { restVals } from '@/frontend/features/session/sets';
 
@@ -346,6 +347,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
       ...progressVals(ctx),
       ...bossVals(ctx),
       ...achievementVals(ctx),
+      ...challengeVals(ctx),
       ...liveVals(ctx),
       ...restVals(ctx),
       ...setupVals(ctx),

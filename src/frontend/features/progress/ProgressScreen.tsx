@@ -8,6 +8,7 @@ import { NextUpCard } from '@/frontend/features/progress/NextUpCard';
 import { StreakBanner } from '@/frontend/features/progress/StreakBanner';
 import { ThisWeekCard } from '@/frontend/features/progress/ThisWeekCard';
 import { WeekQuestsCard } from '@/frontend/features/progress/WeekQuestsCard';
+import { ChallengeWeeksCard } from '@/frontend/features/challenges/ChallengeWeeksCard';
 import { PersonalBestsCard } from '@/frontend/features/progress/PersonalBestsCard';
 import { SessionsPerWeekCard } from '@/frontend/features/progress/SessionsPerWeekCard';
 
@@ -24,6 +25,7 @@ export function ProgressScreen({ v }: { v: PlannerVals }) {
       <div style={{ display: 'flex', marginTop: 'var(--space-4)' }}>
         <NextUpCard v={v} />
       </div>
+      <ChallengeWeeksCard v={v} />
       <WeekQuestsCard v={v} />
       <PersonalBestsCard v={v} style={{ marginTop: 'var(--space-4)' }} />
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>

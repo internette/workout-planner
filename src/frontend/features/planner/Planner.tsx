@@ -22,6 +22,7 @@ import { RankUp } from '@moonshot/design-system/rank-up';
 import { BossBattle } from '../boss/BossBattle';
 import type { PlannerVals } from './store/types';
 import { AchievementUnlock } from '../achievements/AchievementUnlock';
+import { WeekCleared } from '../challenges/WeekCleared';
 import { Tour } from '../tour/Tour';
 import { markTourSeen, tourSeen } from '../tour/seen';
 import { Setup } from '../setup/Setup';
@@ -470,6 +471,23 @@ export default function Planner({ account = null }: { account?: Account | null }
     }
   }, [achCount, account?.email, achShow, anyTimerRunning]);
 
+  // A week's three challenges all cleared plays once, for the newest such week. The last week shown is kept per account
+  // in this browser; with nothing kept yet, the current one is recorded quietly. Like achievements, it waits while a
+  // workout's clock runs.
+  const challengeFullKey: number | null = view ? view.challengeFullKey : null;
+  const [weekShow, setWeekShow] = useState(false);
+  useEffect(() => {
+    if (challengeFullKey == null || weekShow || anyTimerRunning) return;
+    const key = 'moonshot.challengeSeen.' + (account?.email || 'local');
+    try {
+      const raw = window.localStorage.getItem(key);
+      if (raw != null && challengeFullKey > Number(raw)) setWeekShow(true);
+      if (raw == null || challengeFullKey !== Number(raw)) window.localStorage.setItem(key, String(challengeFullKey));
+    } catch {
+      // Storage can be unavailable; then the week shows as cleared on its card.
+    }
+  }, [challengeFullKey, account?.email, weekShow, anyTimerRunning]);
+
   // A new account (nothing planned, nothing saved) is welcomed once, the first time it opens on the calendar: customize,
   // take the tour, or neither.
   const firstRun = !!view && logic.model.workouts.length === 0 && logic.model.entries.length === 0;
@@ -530,8 +548,9 @@ export default function Planner({ account = null }: { account?: Account | null }
         show={bossShow}
         onClose={() => setBossShow(null)}
       />
+      <WeekCleared v={view} open={weekShow && !bossShow && !(rankUp != null && rankUp === rank)} onClose={() => setWeekShow(false)} />
       <AchievementUnlock
-        rows={!bossShow && !(rankUp != null && rankUp === rank) ? achShow : null}
+        rows={!bossShow && !weekShow && !(rankUp != null && rankUp === rank) ? achShow : null}
         onClose={() => setAchShow(null)}
         onSeeAll={() => {
           setAchShow(null);
