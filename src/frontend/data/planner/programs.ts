@@ -2,7 +2,7 @@
 
 import { supabase } from '../supabase';
 import { runPlace, runSessions } from '@/frontend/shared/programs';
-import type { BuiltinProgram, BuiltinWorkout, Exercise, Program } from './types';
+import type { BuiltinProgram, BuiltinWorkout, Exercise, Program, RidePlan } from './types';
 import type { SharedProgram } from '@/frontend/shared/sharedProgram';
 import { freeName, nameKey, rideCols } from './convert';
 import { ok, insertExercises, isAhead, untouchedIds, SESSION_COLS } from './db';
@@ -13,7 +13,7 @@ export interface WorkoutCopy {
   name: string;
   isRide: boolean;
   minutes: number;
-  ride: { dist: string; elev: string; zone: string } | null;
+  ride: RidePlan | null;
   icon: string | null;
   iconColor: string | null;
   notes: string;

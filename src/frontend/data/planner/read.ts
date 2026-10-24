@@ -293,6 +293,7 @@ export async function loadModel(today: Date): Promise<Model> {
     warmupReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_warmup' in r),
     stretchReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_stretch' in r),
     yogaReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_yoga' in r),
+    runReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_run' in r),
     repeatDaysReady: !repeatDaysProbe.error,
     programs,
     programRuns,

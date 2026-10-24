@@ -22,7 +22,7 @@ export type LiveActivity = {
   /** Resting between sets: until when, out of how long, and what's up next. */
   rest: { endsAt: number; total: number; next: { name: string; line: string } | null } | null;
   /** Riding: the plan. */
-  ride: { planned: string; dist: string; climb: string; zone: string } | null;
+  ride: { planned: string; dist: string; climb: string; zone: string; run?: boolean } | null;
   /** How long it's planned to take, in seconds (0 if unknown): the length of the lock-screen player's bar. */
   plannedSec: number;
 };
@@ -84,7 +84,7 @@ export function liveVals(ctx: Ctx) {
         ? { endsAt: r.endsAt, total: r.total, next: sets.restNext ? { name: sets.restNext.e.name, line: sets.restNext.line } : null }
         : null,
       ride: av.ride
-        ? { planned: av.time, dist: av.ride.dist || '', climb: av.ride.elev || '', zone: av.ride.zone || '' }
+        ? { planned: av.time, dist: av.ride.dist || '', climb: av.ride.elev || '', zone: av.ride.zone || '', run: !!av.ride.run }
         : null,
       plannedSec: (av.ride ? toMinutes(av.ride.hrs, av.ride.mins) : minutesIn(av.time)) * 60,
     };

@@ -28,7 +28,8 @@ export interface SharedWorkout {
   warmup: boolean;
   stretch: boolean;
   yoga: boolean;
-  ride: { dist: string; elev: string; zone: string } | null;
+  // A run or walk is a ride with `run` set.
+  ride: { dist: string; elev: string; zone: string; run?: boolean } | null;
   exercises: SharedExercise[];
 }
 
@@ -84,12 +85,13 @@ function readWorkout(raw: any): SharedWorkout | null {
   const name = str(raw?.name);
   if (!name) return null;
   const ride = raw.kind === 'ride';
+  const run = ride && raw.ride?.run === true;
   const minutes = Math.round(Number(raw.minutes));
   return {
     name,
     kind: ride ? 'ride' : 'lift',
     minutes: minutes > 0 && minutes <= 600 ? minutes : 45,
-    icon: ride ? 'bike' : icon(raw.icon),
+    icon: run ? 'run' : ride ? 'bike' : icon(raw.icon),
     iconColor: typeof raw.iconColor === 'string' && /^#[0-9a-f]{6}$/i.test(raw.iconColor) ? raw.iconColor : null,
     notes: str(raw.notes, SHARE_LIMITS.notes),
     warmup: raw.warmup === true,
@@ -100,6 +102,7 @@ function readWorkout(raw: any): SharedWorkout | null {
           dist: str(raw.ride?.dist, 8),
           elev: str(raw.ride?.elev, 8),
           zone: (RIDE_ZONES as readonly string[]).includes(raw.ride?.zone) ? raw.ride.zone : DEFAULT_ZONE,
+          ...(run ? { run: true } : {}),
         }
       : null,
     exercises: ride

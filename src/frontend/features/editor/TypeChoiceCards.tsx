@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Card } from '@moonshot/design-system/card';
-import { Bike, Check, Dumbbell, LotusFlower, Lunge } from '@moonshot/design-system/icons';
+import { Bike, Check, Dumbbell, LotusFlower, Lunge, Runner } from '@moonshot/design-system/icons';
 import { Text } from '@moonshot/design-system/typography';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 
@@ -83,11 +83,11 @@ function TypeChoiceCard({
   );
 }
 
-/** A new workout's first choice: lifting, cycling, or (once the database has them) stretching or yoga. Coming back from
+/** A new workout's first choice: lifting, cycling, or (once the database has them) stretching, yoga or run/walk. Coming back from
  * the editor to change it, the current one is chosen, and one it can't become is dimmed. */
 export function TypeChoiceCards({ v }: { v: PlannerVals }) {
   const c = v.typeChoices;
-  const card = (t: 'lift' | 'cycle' | 'stretch' | 'yoga') => ({
+  const card = (t: 'lift' | 'cycle' | 'stretch' | 'yoga' | 'run') => ({
     onClick: () => c.pick(t),
     selected: c.selected === t,
     disabled: !c.can[t],
@@ -134,6 +134,16 @@ export function TypeChoiceCards({ v }: { v: PlannerVals }) {
           title="Yoga"
           note="A flow of poses, each held for a few breaths."
           {...card('yoga')}
+        />
+      ) : null}
+      {c.run ? (
+        <TypeChoiceCard
+          // Peach, the palette's fifth color: its deep shade on its tint, as the rank badges have it.
+          icon={<Runner color="var(--color-peach-deep)" size={22} />}
+          tint="var(--color-peach-tint)"
+          title="Run/Walk"
+          note="Set a distance, duration and target effort for the run or walk."
+          {...card('run')}
         />
       ) : null}
     </div>

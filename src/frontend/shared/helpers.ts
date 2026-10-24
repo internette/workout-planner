@@ -147,7 +147,7 @@ export const workoutDraftDirty = st => !!(
   st.renames || st.fields || st.removed || st.newName ||
   st.rDist || st.rElev || st.rHrs || st.rMins ||
   st.aDist || st.aElev || st.aHrs || st.aMins ||
-  st.repeat || st.icons || st.iconColors || st.exIcons || st.notes || st.rZone || st.editDone || st.exOrder || st.exRenames || st.workoutKinds || st.warmups ||
+  st.repeat || st.icons || st.iconColors || st.exIcons || st.notes || st.rZone || st.rRun != null || st.editDone || st.exOrder || st.exRenames || st.workoutKinds || st.warmups ||
   // A session moved to another day in the editor.
   (st.editKey && st.editKey !== (MONTHS.indexOf(st.month) + 12 * (st.yOff || 0)) + '-' + st.day) ||
   (st.extra && Object.keys(st.extra).some(k => (st.extra[k] || []).length))

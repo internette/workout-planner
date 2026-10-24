@@ -12,8 +12,9 @@ const LABEL: Record<WorkoutKind, string> = { warmup: 'Warm-up', stretch: 'Stretc
 
 /** What kind of workout a session is, named as "What kind of workout?" names it, after "Warm-up · " when it's one:
  * "Lifting", "Warm-up · Stretching". */
-export const typeLabelOf = (x: { warmup?: boolean; stretch?: boolean; yoga?: boolean; ride?: unknown }) =>
-  (x.warmup ? 'Warm-up · ' : '') + (x.ride ? 'Cycling' : x.stretch ? 'Stretching' : x.yoga ? 'Yoga' : 'Lifting');
+export const typeLabelOf = (x: { warmup?: boolean; stretch?: boolean; yoga?: boolean; ride?: { run?: boolean } | null }) =>
+  (x.warmup ? 'Warm-up · ' : '') +
+  (x.ride ? (x.ride.run ? 'Run/Walk' : 'Cycling') : x.stretch ? 'Stretching' : x.yoga ? 'Yoga' : 'Lifting');
 
 // Marks a warm-up, a stretch or yoga ("Warm-up · Stretch" for both): an eyebrow above its name, or beside it
 // (inline) where a row has no room above. Nothing for a plain workout.

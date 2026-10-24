@@ -171,6 +171,7 @@ export interface PlannerState {
   rHrs?: string | null;
   rMins?: string | null;
   rZone?: string | null;
+  rRun?: boolean | null; // a ride picked as a run or walk (true) or as cycling (false); null is as saved
   aDist?: string | null;
   aElev?: string | null;
   aHrs?: string | null;

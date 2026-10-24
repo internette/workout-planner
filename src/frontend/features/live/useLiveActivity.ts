@@ -58,7 +58,7 @@ function liveNotice(a: LiveActivity, now: number): Shown {
         : a.total > 0 && a.done === a.total
           ? a.name + ' · All ' + a.total + ' done · Finish to record it'
           : a.name + ' · ' + a.done + ' of ' + a.total + ' done';
-  const finish = { action: 'finish' as const, title: a.kind === 'ride' ? 'Finish ride' : 'Finish' };
+  const finish = { action: 'finish' as const, title: a.kind === 'ride' ? (a.ride?.run ? 'Finish run' : 'Finish ride') : 'Finish' };
   const pause = { action: 'pause' as const, title: 'Pause' };
   // Lifting, the set and Pause; paused, Resume and Finish; riding, Pause and Finish.
   const actions =
@@ -344,7 +344,9 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
       : a.kind === 'ride'
         ? a.ride?.dist
           ? a.ride.dist + ' mi planned'
-          : 'Ride'
+          : a.ride?.run
+            ? 'Run/Walk'
+            : 'Ride'
         : a.done + ' of ' + a.total + ' done' + (a.now ? ' · Now: ' + a.now.name + (a.now.of > 1 ? ', set ' + a.now.set + ' of ' + a.now.of : '') : '');
     const key = JSON.stringify([title, artist, art.current.url, paused, !!a.rest]);
     if (key !== metaKey.current) {

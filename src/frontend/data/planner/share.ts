@@ -2,6 +2,7 @@
 
 import { supabase } from '../supabase';
 import { isoOf } from '@/frontend/shared/helpers';
+import { typeIcon } from '@/frontend/shared/icons';
 import { newShareId, daysOf, blockWorkouts, SHARE_LIMITS, type SharedProgram, type SharedWorkout } from '@/frontend/shared/sharedProgram';
 import type { Entry, Exercise, Model, Program } from './types';
 import { ok, okOr } from './db';
@@ -37,13 +38,13 @@ export function programSnapshot(program: Program, o: { notes: boolean; by: strin
         name: w.name,
         kind: w.kind,
         minutes: w.minutes,
-        icon: w.icon || (w.kind === 'ride' ? 'bike' : 'h'),
+        icon: w.icon || typeIcon(w.ride),
         iconColor: w.iconColor,
         notes: o.notes ? w.notes || '' : '',
         warmup: w.warmup,
         stretch: w.stretch,
         yoga: w.yoga,
-        ride: w.ride ? { dist: w.ride.dist, elev: w.ride.elev, zone: w.ride.zone } : null,
+        ride: w.ride ? { dist: w.ride.dist, elev: w.ride.elev, zone: w.ride.zone, ...(w.ride.run ? { run: true } : {}) } : null,
         exercises: w.kind === 'ride' ? [] : w.list.slice(0, SHARE_LIMITS.exercises).map(plain),
       });
       w.days.forEach((d) => days[d].push(ix));
@@ -69,13 +70,13 @@ export function copiesSnapshot(blocks: { name: string; weeks: number; workouts: 
             name: w.name,
             kind: w.isRide ? 'ride' : 'lift',
             minutes: w.minutes,
-            icon: w.icon || (w.isRide ? 'bike' : 'h'),
+            icon: w.icon || typeIcon(w.isRide && (w.ride || {})),
             iconColor: w.iconColor,
             notes: w.notes || '',
             warmup: !!w.warmup,
             stretch: !!w.stretch,
             yoga: !!w.yoga,
-            ride: w.ride,
+            ride: w.ride && { dist: w.ride.dist, elev: w.ride.elev, zone: w.ride.zone, ...(w.ride.run ? { run: true } : {}) },
             exercises: w.isRide ? [] : w.exercises.slice(0, SHARE_LIMITS.exercises).map(plain),
           }) - 1;
         on.forEach((d) => days[d].push(ix));
@@ -92,8 +93,8 @@ export function entryCopy(model: Model, av: Entry): WorkoutCopy {
     name: av.name,
     isRide: !!av.ride,
     minutes: saved?.minutes ?? (av.ride ? Number(av.ride.hrs || 0) * 60 + Number(av.ride.mins || 0) : 45),
-    ride: av.ride ? { dist: av.ride.dist, elev: av.ride.elev, zone: av.ride.zone } : null,
-    icon: av.icon || (av.ride ? 'bike' : 'h'),
+    ride: av.ride ? { dist: av.ride.dist, elev: av.ride.elev, zone: av.ride.zone, run: av.ride.run } : null,
+    icon: av.icon || typeIcon(av.ride),
     iconColor: av.iconColor,
     notes: av.notes || '',
     warmup: av.warmup,

@@ -19,7 +19,8 @@ export interface PlanWorkout {
   /** YYYY-MM-DD */
   date: string;
   name: string;
-  kind: 'lift' | 'ride';
+  /** A run is a run or walk: planned like a ride, by distance, time and effort, in `ride`. */
+  kind: 'lift' | 'ride' | 'run';
   warmup?: boolean;
   /** A stretching routine, listed after that day's other workouts (a cool-down) unless it's also a warm-up. */
   stretch?: boolean;
@@ -74,10 +75,10 @@ export function checkPlan(raw: unknown, today: string): { plan: PlanBody } | { p
     if (!date) problems.push(`${at}.date must be a real date written YYYY-MM-DD.`);
     else if (dayDiff(date, today) < -1) problems.push(`${at}.date ${date} has already gone by (today is ${today}).`);
     else if (dayDiff(date, today) > PLAN_LIMITS.daysAhead) problems.push(`${at}.date ${date} is more than a year away.`);
-    if (w?.kind !== 'lift' && w?.kind !== 'ride') problems.push(`${at}.kind must be "lift" or "ride".`);
+    if (w?.kind !== 'lift' && w?.kind !== 'ride' && w?.kind !== 'run') problems.push(`${at}.kind must be "lift", "ride" or "run".`);
     if (w?.minutes !== undefined && !isInt(w.minutes, 5, 600)) problems.push(`${at}.minutes must be a whole number from 5 to 600.`);
 
-    const out: PlanWorkout = { date, name, kind: w?.kind === 'ride' ? 'ride' : 'lift' };
+    const out: PlanWorkout = { date, name, kind: w?.kind === 'ride' || w?.kind === 'run' ? w.kind : 'lift' };
     if (w?.warmup === true) out.warmup = true;
     if (w?.stretch === true) out.stretch = true;
     else if (w?.yoga === true) out.yoga = true;
@@ -109,7 +110,7 @@ export function checkPlan(raw: unknown, today: string): { plan: PlanBody } | { p
       if (r.zone !== undefined && !RIDE_ZONES.includes(r.zone)) problems.push(`${at}.ride.zone must be one of ${RIDE_ZONES.join(', ')}.`);
       if (r.miles !== undefined && !isNum(r.miles, 0, 500)) problems.push(`${at}.ride.miles must be a number of miles.`);
       if (r.elevation_ft !== undefined && !isNum(r.elevation_ft, 0, 50000)) problems.push(`${at}.ride.elevation_ft must be a number of feet.`);
-      if (out.minutes === undefined) problems.push(`${at}.minutes is needed for a ride.`);
+      if (out.minutes === undefined) problems.push(`${at}.minutes is needed for a ${out.kind}.`);
       out.ride = {
         ...(isNum(r.miles, 0, 500) ? { miles: r.miles } : {}),
         ...(isNum(r.elevation_ft, 0, 50000) ? { elevation_ft: r.elevation_ft } : {}),

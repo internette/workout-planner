@@ -42,6 +42,7 @@ export function progressVals(ctx: Ctx) {
     moodTotal,
     bestByEx,
     longestRide,
+    longestRun,
     weekAll,
     nextUp,
     todayDate,
@@ -71,7 +72,7 @@ export function progressVals(ctx: Ctx) {
     questsNone: questDayCount === 0,
     questsHas: questDayCount > 0,
     moodEmpty: Object.keys(moodCounts).length === 0,
-    recordsEmpty: Object.keys(bestByEx).length === 0 && !longestRide,
+    recordsEmpty: Object.keys(bestByEx).length === 0 && !longestRide && !longestRun,
     monthLabel: MONTHS[TODAY_M],
     rankName: RANKS[derivedRank].name,
     // For the rank-up transformation (RankUp, in @moonshot/design-system/rank-up).
@@ -243,6 +244,7 @@ export function progressVals(ctx: Ctx) {
       .slice(0, 4)
       .map((n) => [n, bestByEx[n] + ' lb', ''])
       .concat(longestRide ? [['Longest ride', longestRide + ' mi', '']] : [])
+      .concat(longestRun ? [['Longest run/walk', longestRun + ' mi', '']] : [])
       .map(([name, value, delta], ix, arr) => ({
         name,
         value,

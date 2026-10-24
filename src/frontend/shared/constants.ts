@@ -52,6 +52,7 @@ export const ICON_NAMES: Record<string, string> = {
   bike: 'Bike',
   flower: 'Lotus flower',
   lunge: 'Lunge',
+  run: 'Runner',
 };
 // The XP each rank after the first is reached at, the last being the top rank's own bar. Each step costs a fixed share
 // more than the one before (exponential): the first 300 XP (about three sessions), each next one RANK_GROWTH times
@@ -150,7 +151,7 @@ export const RANK_XP = RANKS.map((_, i) =>
 
 // Overlay state the edit screens accumulate; once a save lands in the database it is dropped.
 export const EDIT_OVERLAYS = { renames:null, fields:null, removed:null, icons:null, iconColors:null, exIcons:null,
-  extra:null, repeat:false, repeatDays:null, repeatWeeks:null, rDist:null, rElev:null, rHrs:null, rMins:null, rZone:null,
+  extra:null, repeat:false, repeatDays:null, repeatWeeks:null, rDist:null, rElev:null, rHrs:null, rMins:null, rZone:null, rRun:null,
   aDist:null, aElev:null, aHrs:null, aMins:null, editKey:null, editId:null, pendingNav:null, notes:null, editDone:null,
   logDone:null, exOrder:null, exRenames:null, workoutKinds:null, warmups:null, retype:null,
   undoRemove:null, addNote:null, sideSplit:null };

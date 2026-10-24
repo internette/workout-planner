@@ -136,7 +136,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
             style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 'var(--space-2)' }}
           >
             <Text variant="micro" tone="slate">
-              Ride plan
+              {v.rideWord === 'run' ? 'Run plan' : 'Ride plan'}
             </Text>
             <Text variant="small" tone="muted" weight="medium" style={{ marginLeft: 'auto' }}>
               {v.rideLockNote}

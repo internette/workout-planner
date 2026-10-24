@@ -2,7 +2,7 @@
 // (its weeks, and ticking workouts in or out), then naming it and choosing what happens to the sessions already there.
 import { DOW3, DOWFULL, MON3 } from '@/frontend/shared/constants';
 import { isoOf, noticePatch, plural } from '@/frontend/shared/helpers';
-import { iconSvg } from '@/frontend/shared/icons';
+import { iconSvg, typeIcon } from '@/frontend/shared/icons';
 import { programOfWorkout } from '@/frontend/shared/programs';
 import { dayNames } from '@/frontend/shared/schedule';
 import { scanCalendar, scanKey, type Scan, type ScanSession } from '@/frontend/shared/scan';
@@ -111,7 +111,7 @@ export function scanVals(ctx: Ctx) {
       key: name,
       name,
       meta: (days ? daysPlural(days) + ' · ' : '') + meta,
-      svg: iconSvg(av?.icon || (av?.ride ? 'bike' : 'h'), av?.iconColor || undefined),
+      svg: iconSvg(av?.icon || typeIcon(av?.ride), av?.iconColor || undefined),
       on: !off.has(name),
       toggle: () => set({ off: off.has(name) ? [...off].filter((n) => n !== name) : [...off, name] }),
     };
@@ -156,7 +156,7 @@ export function scanVals(ctx: Ctx) {
                 return {
                   letter: DOW3[d].charAt(0),
                   label: DOWFULL[d] + ': ' + (on.length ? on.map((w) => w.name).join(', ') : 'Rest'),
-                  icon: e ? iconSvg(e.av.icon || (e.av.ride ? 'bike' : 'h'), e.av.iconColor || undefined) : undefined,
+                  icon: e ? iconSvg(e.av.icon || typeIcon(e.av.ride), e.av.iconColor || undefined) : undefined,
                 };
               }),
               change,
