@@ -382,6 +382,8 @@ export function programVals(ctx: Ctx) {
       : null;
 
   // ---- Editing it
+  // One change to a block's weeks at a time.
+  const weeksKey = (b: { id: string }) => 'blockWeeks:' + b.id;
   const pick = st.programPick || null;
   const pickBlock = ownProgram && pick ? ownProgram.blocks.find((b) => b.id === pick.blockId) || null : null;
   const programEdit =
@@ -412,13 +414,15 @@ export function programVals(ctx: Ctx) {
                           title: 'Take off week ' + b.weeks + '?',
                           body: 'Its workouts, with their weights and reps, leave the program.',
                           label: 'Take it off',
-                          then: () => logic.save(() => db.setBlockWeeks(ownProgram, b, b.weeks - 1, todayIso)),
+                          then: () => logic.saveOnce(weeksKey(b), () => db.setBlockWeeks(ownProgram, b, b.weeks - 1, todayIso)),
                         },
                       })
-                  : () => logic.save(() => db.setBlockWeeks(ownProgram, b, b.weeks - 1, todayIso)),
-            more: b.weeks < 52 ? () => logic.save(() => db.setBlockWeeks(ownProgram, b, b.weeks + 1, todayIso)) : null,
-            // Same every week, or each week its own: offered once the program weeks migration has run.
+                  : () => logic.saveOnce(weeksKey(b), () => db.setBlockWeeks(ownProgram, b, b.weeks - 1, todayIso)),
+            more: b.weeks < 52 ? () => logic.saveOnce(weeksKey(b), () => db.setBlockWeeks(ownProgram, b, b.weeks + 1, todayIso)) : null,
+            // Same every week, or each week its own: offered once the program weeks migration has run. While a change to
+            // its weeks saves, they wait: a second tap would work from the block as it was.
             byWeek: b.byWeek,
+            weeksBusy: logic.busy(weeksKey(b)),
             weekModes: model.weeksReady
               ? [
                   { value: 'same', label: 'Same every week' },
@@ -427,7 +431,7 @@ export function programVals(ctx: Ctx) {
               : null,
             setWeekMode: (v: string) =>
               v === 'week'
-                ? logic.save(() => db.setBlockByWeek(ownProgram, b, true, todayIso))
+                ? logic.saveOnce(weeksKey(b), () => db.setBlockByWeek(ownProgram, b, true, todayIso))
                 : b.weeks > 1
                   ? logic.setState({
                       confirm: {
@@ -435,10 +439,10 @@ export function programVals(ctx: Ctx) {
                         title: 'Make every week the same?',
                         body: 'Every week does week 1’s workouts. Weeks 2' + (b.weeks > 2 ? '–' + b.weeks : '') + ' lose their own weights and reps.',
                         label: 'Same every week',
-                        then: () => logic.save(() => db.setBlockByWeek(ownProgram, b, false, todayIso)),
+                        then: () => logic.saveOnce(weeksKey(b), () => db.setBlockByWeek(ownProgram, b, false, todayIso)),
                       },
                     })
-                  : logic.save(() => db.setBlockByWeek(ownProgram, b, false, todayIso)),
+                  : logic.saveOnce(weeksKey(b), () => db.setBlockByWeek(ownProgram, b, false, todayIso)),
             days: Array.from({ length: 7 }, (_, d) => ({
               key: d,
               day: DOWFULL[d],
