@@ -21,6 +21,8 @@ export type LiveActivity = {
   now: { name: string; line: string; set: number; of: number } | null;
   /** Resting between sets: until when, out of how long, and what's up next. */
   rest: { endsAt: number; total: number; next: { name: string; line: string } | null } | null;
+  /** A timed set counting down: until when, out of how long, and which set of which exercise. */
+  hold: { endsAt: number; total: number; name: string; set: number; of: number } | null;
   /** Riding: the plan. */
   ride: { planned: string; dist: string; climb: string; zone: string; run?: boolean } | null;
   /** How long it's planned to take, in seconds (0 if unknown): the length of the lock-screen player's bar. */
@@ -72,6 +74,7 @@ export function liveVals(ctx: Ctx) {
     const dn = ticked(av.id);
     const next = sets.nextSet(av.id);
     const r = sets.restNow && sets.restNow.id === av.id ? sets.restNow : null;
+    const h = sets.holdNow && sets.holdNow.id === av.id ? sets.holdNow : null;
     liveActivity = {
       id: av.id,
       kind: av.ride ? 'ride' : 'lift',
@@ -83,6 +86,7 @@ export function liveVals(ctx: Ctx) {
       rest: r
         ? { endsAt: r.endsAt, total: r.total, next: sets.restNext ? { name: sets.restNext.e.name, line: sets.restNext.line } : null }
         : null,
+      hold: h && next ? { endsAt: h.endsAt, total: h.total, name: h.name, set: next.set, of: next.of } : null,
       ride: av.ride
         ? { planned: av.time, dist: av.ride.dist || '', climb: av.ride.elev || '', zone: av.ride.zone || '', run: !!av.ride.run }
         : null,
@@ -123,7 +127,8 @@ export function liveVals(ctx: Ctx) {
       const n = sets.nextSet(id);
       if (n) sets.completeSet(id, n.e.name);
     },
-    liveMoreRest: () => sets.addRest(30),
+    // "+30 sec": on a timed set counting down, or else the rest.
+    liveMoreRest: () => (logic.state.hold ? sets.addHold(30) : sets.addRest(30)),
     liveSkipRest: sets.skipRest,
     livePause: (id: string) => {
       const c = timers[id];

@@ -40,6 +40,8 @@ export interface ExerciseDraft {
   name: string;
   sets: string;
   reps: string;
+  /** Seconds a set, for timed sets (a plank, a dead hang); missing when they're counted in reps. */
+  time?: string;
   weight: string;
   band?: string;
   rest: string;
@@ -113,6 +115,14 @@ export interface TemplateConfirm {
 export interface RestState {
   id: string;
   after: string;
+  endsAt: number;
+  total: number;
+}
+
+/** A timed set counting down (a plank, a dead hang): for which session, which exercise, and when it ends. */
+export interface HoldState {
+  id: string;
+  name: string;
   endsAt: number;
   total: number;
 }
@@ -232,6 +242,8 @@ export interface PlannerState {
   dName?: string;
   dSets?: string;
   dReps?: string;
+  /** The new exercise's seconds a set, when its sets are timed; missing when they're counted in reps. */
+  dTime?: string;
   dWeight?: string;
   dBand?: string;
   dRest?: string;
@@ -250,6 +262,7 @@ export interface PlannerState {
   setsDone?: Record<string, Record<string, number>>;
   /** The rest between sets, counting down. */
   rest?: RestState | null;
+  hold?: HoldState | null;
   finish?: FinishState | null;
   pausePrompt?: { proceed: () => void } | null;
   restartPrompt?: boolean;

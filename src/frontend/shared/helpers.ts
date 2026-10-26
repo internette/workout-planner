@@ -93,35 +93,58 @@ export const isoOf = (dt: Date) => dt.getFullYear() + '-' + String(dt.getMonth()
 // at every call site. Pass the plural form only when it isn't just the singular plus "s".
 export const plural = (n: number, singular: string, pluralForm = '') => n + ' ' + (n === 1 ? singular : pluralForm || singular + 's');
 
+// Sets of a held exercise (a plank, a dead hang) are timed: "3 × 45 sec", seconds in place of reps.
+const TIMED = /^(\d*)\s*[×xX*]\s*(\d*)\s*sec\b/i;
+/** Whether an exercise's sets are timed ("3 × 45 sec") rather than counted in reps. */
+export const isTimed = (text: string | null | undefined) => TIMED.test((text || '').trim());
 // An exercise's sets and reps are two separate inputs on screen, but one field everywhere else: the database column,
 // the "4 × 8" shown in lists, and data/planner/convert.ts's own parser all expect one string. These two convert at the
 // edges, so the rest of the app never has to know the box was split in two.
 export const splitSetsReps = (text: string | null | undefined) => {
   const t = (text || '').trim();
-  if (!t || t === '—') return { sets: '', reps: '' };
+  if (!t || t === '—') return { sets: '', reps: '', time: '' };
+  // A timed set ("3 × 45 sec"): the time in place of the reps. Its boxes can be cleared while editing ("× sec").
+  const timed = t.match(TIMED);
+  if (timed) return { sets: timed[1], reps: '', time: timed[2] };
   const both = t.match(/^(\d+)\s*[×xX*]\s*(\d+)/);
-  if (both) return { sets: both[1], reps: both[2] };
+  if (both) return { sets: both[1], reps: both[2], time: '' };
   // Reps with the sets cleared while editing ("× 8"): keep the reps.
   const repsOnly = t.match(/^[×xX*]\s*(\d+)/);
-  if (repsOnly) return { sets: '', reps: repsOnly[1] };
+  if (repsOnly) return { sets: '', reps: repsOnly[1], time: '' };
   const setsOnly = t.match(/^(\d+)/);
-  return { sets: setsOnly ? setsOnly[1] : '', reps: '' };
+  return { sets: setsOnly ? setsOnly[1] : '', reps: '', time: '' };
 };
 // An exercise needs at least one set of at least one rep.
 export const countsOk = (sets: string | number | null | undefined, reps: string | number | null | undefined) => Number(sets) >= 1 && Number(reps) >= 1;
-/** A held exercise, timed rather than counted: its hold is in its name, as the catalog writes it ("Forearm Plank
- * (30 sec)", "Pigeon Pose (30 sec each side)"). */
-export const isHold = (name: string | null | undefined) => /\(\d+\s*sec\b/i.test(name || '');
-/** At least one set of at least one rep, or for a held exercise (named with it), at least one set. */
+/** A held exercise named with its hold, as the catalog wrote them before holds had their own time ("Forearm Plank
+ * (30 sec)", "Pigeon Pose (30 sec each side)"): the seconds, or 0. */
+export const holdInName = (name: string | null | undefined) => {
+  const m = /\((\d+)\s*sec\b/i.exec(name || '');
+  return m ? Number(m[1]) : 0;
+};
+/** At least one set of at least one rep, or for a timed set, at least one set of at least one second. A hold named
+ * with its time (see holdInName) needs only its sets. */
 export const setsRepsOk = (text: string | null | undefined, name?: string | null) => {
   const p = splitSetsReps(text);
-  return isHold(name) ? Number(p.sets) >= 1 : countsOk(p.sets, p.reps);
+  return isTimed(text) ? countsOk(p.sets, p.time) : holdInName(name) ? Number(p.sets) >= 1 : countsOk(p.sets, p.reps);
 };
 export const joinSetsReps = (sets: string | null | undefined, reps: string | null | undefined) => {
   const s = (sets || '').trim();
   const r = (reps || '').trim();
   // Sets alone read as the database gives them back ("2 sets"), so a rep typed and then cleared doesn't leave a bare "2".
   return s && r ? s + ' × ' + r : s ? plural(Number(s), 'set') : r ? '× ' + r : '';
+};
+/** Sets as the exercise editor's boxes hold them: sets and reps, or for timed sets, sets and time (`time` is there only
+ * when they're timed). */
+export const setsDraft = (text: string | null | undefined): { sets: string; reps: string; time?: string } => {
+  const p = splitSetsReps(text);
+  return isTimed(text) ? { sets: p.sets, reps: '', time: p.time } : { sets: p.sets, reps: p.reps };
+};
+/** Timed sets as one field: "3 × 45 sec". With a box cleared it stays timed ("3 × sec", "× 45 sec"). */
+export const joinSetsTime = (sets: string | null | undefined, time: string | null | undefined) => {
+  const s = (sets || '').trim();
+  const t = (time || '').trim();
+  return (s ? s + ' ' : '') + '× ' + (t ? t + ' ' : '') + 'sec';
 };
 
 // Digits only, for a field that should never hold anything else (sets, reps, and the number inside "90 sec").

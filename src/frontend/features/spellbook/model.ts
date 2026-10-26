@@ -3,7 +3,7 @@ import { EQUIPMENT, EQUIPMENT_GROUPS, EX_DRAFT_CLEARED, MONTHS, TARGET_AREAS } f
 import { iconOptions, iconSvg, typeIcon } from '@/frontend/shared/icons';
 import { DEFAULT_WEEKS, dayNames, pickedDays, planDays, toggleDay } from '@/frontend/shared/schedule';
 import * as db from '@/frontend/data/plannerData';
-import { countsOk, digitsOnly, editTemplatePatch, exerciseDraftDirty, exLine, isoOf, joinSetsReps, longDay, monthPatch, needsLine, newWorkoutPatch, noticePatch, numericOnly, plural, splitSetsReps, withLb, withSec } from '@/frontend/shared/helpers';
+import { countsOk, digitsOnly, editTemplatePatch, exerciseDraftDirty, exLine, isoOf, joinSetsReps, joinSetsTime, longDay, monthPatch, needsLine, newWorkoutPatch, noticePatch, numericOnly, plural, setsDraft, withLb, withSec } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
 import { kitOf } from '@/frontend/shared/equipment';
 import { areaToggles, draftBand, plainExercise, DRAFT_CLEARED, draftClash, draftItem, draftOpened, draftReady, equipmentToggles } from '@/frontend/shared/exerciseDraft';
@@ -181,7 +181,7 @@ export function arsenalVals(ctx: Ctx) {
   const found = onExerciseScreen ? findExercise(st.exerciseId) : null;
   const draftFrom = (ex, name) => ({
     name,
-    ...splitSetsReps(ex.sets),
+    ...setsDraft(ex.sets),
     weight: ex.weight,
     ...(ex.band !== undefined ? { band: ex.band } : {}),
     rest: ex.rest,
@@ -329,6 +329,9 @@ export function arsenalVals(ctx: Ctx) {
     logic.s(EX_DRAFT_CLEARED);
     logic.back();
   };
+  // Timed sets have a time where others have reps.
+  const timedDraft = exDraft.time !== undefined;
+  const countOf = timedDraft ? exDraft.time : exDraft.reps;
   const exerciseEdit = {
     name: exDraft.name,
     sets: exDraft.sets,
@@ -338,6 +341,20 @@ export function arsenalVals(ctx: Ctx) {
     setName: setExDraft('name'),
     setSets: (e) => logic.s({ exDraft: { ...exDraft, sets: digitsOnly(e.target.value) } }),
     setReps: (e) => logic.s({ exDraft: { ...exDraft, reps: digitsOnly(e.target.value) } }),
+    // Reps or a time for each set, once the time can be saved. Before then a hold keeps its time in its name, and has
+    // sets only.
+    time: logic.model.holdReady
+      ? {
+          on: timedDraft,
+          value: exDraft.time || '',
+          onSwitch: (on: boolean) => {
+            const { time, ...rest } = exDraft;
+            logic.s({ exDraft: on ? { ...rest, time: time || '30' } : { ...rest, reps: rest.reps || '10' } });
+          },
+          onChange: (e) => logic.s({ exDraft: { ...exDraft, time: digitsOnly(e.target.value) } }),
+        }
+      : null,
+    noReps: timedDraft,
     setWeight: (e) => logic.s({ exDraft: { ...exDraft, weight: withLb(numericOnly(e.target.value)) } }),
     // Done with a band: its level. Pounds for anything done with other equipment (shared/bands).
     band: usesBand(exDraft)
@@ -374,14 +391,16 @@ export function arsenalVals(ctx: Ctx) {
         renameClash.name +
         '”. Give this one another name.'
       : '',
-    canSave: !!exDraft.name.trim() && (exDraft.areas || []).length > 0 && !renameClash && countsOk(exDraft.sets, exDraft.reps),
+    canSave: !!exDraft.name.trim() && (exDraft.areas || []).length > 0 && !renameClash && countsOk(exDraft.sets, countOf),
     // Why Save is off, when it is (a name clash says so on the field itself).
     saveHint: renameClash
       ? ''
       : !exDraft.name.trim()
         ? 'Name it to save it.'
-        : !countsOk(exDraft.sets, exDraft.reps)
-          ? 'Sets and reps need to be at least 1.'
+        : !countsOk(exDraft.sets, countOf)
+          ? timedDraft
+            ? 'Sets and time need to be at least 1.'
+            : 'Sets and reps need to be at least 1.'
           : !(exDraft.areas || []).length
             ? 'Pick at least one target area.'
             : '',
@@ -389,13 +408,13 @@ export function arsenalVals(ctx: Ctx) {
     saveLabel: copying ? 'Save copy' : 'Save changes',
     cancel: cancelEdit,
     save: () => {
-      if (!found || !exDraft.name.trim() || !(exDraft.areas || []).length || renameClash || !countsOk(exDraft.sets, exDraft.reps))
+      if (!found || !exDraft.name.trim() || !(exDraft.areas || []).length || renameClash || !countsOk(exDraft.sets, countOf))
         return;
       // Nothing changed: nothing to ask about or save.
       if (!copying && !exerciseDraftDirty(st)) return cancelEdit();
       const patch = {
         name: exDraft.name.trim(),
-        sets: joinSetsReps(exDraft.sets, exDraft.reps),
+        sets: timedDraft ? joinSetsTime(exDraft.sets, exDraft.time) : joinSetsReps(exDraft.sets, exDraft.reps),
         // What its equipment doesn't ask for is cleared: no pounds for bodyweight or a band alone, no level without a band.
         weight: takesWeight(exDraft) ? exDraft.weight : '—',
         ...(exDraft.band !== undefined ? { band: usesBand({ equipment: exDraft.equipment }) || exDraft.equipment === undefined ? exDraft.band : '' } : {}),

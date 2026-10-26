@@ -24,6 +24,7 @@ export function NewExerciseCard({ v }: { v: PlannerVals }) {
           rest={v.draftRest ?? ''}
           onSets={v.setSets}
           onReps={v.setReps}
+          time={v.draftTime}
           onWeight={v.setWeight}
           band={v.draftBand}
           weighted={v.draftWeighted}

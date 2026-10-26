@@ -33,6 +33,16 @@ const clock = (sec: number) => {
 // What the notification says about a session in progress. The clock leads the title, and is sent again each second
 // while it runs (a notification can't count by itself), so it ticks.
 function liveNotice(a: LiveActivity, now: number): Shown {
+  // A timed set: its time left leads, as the clock does, with which set of which exercise.
+  if (a.hold)
+    return {
+      title: clock(Math.max(0, Math.ceil((a.hold.endsAt - now) / 1000))) + ' · ' + a.hold.name + (a.hold.of > 1 ? ', set ' + a.hold.set + ' of ' + a.hold.of : ''),
+      body: a.hold.total + ' sec\n' + a.name + ' · ' + a.done + ' of ' + a.total + ' done',
+      actions: [
+        { action: 'more', title: '+30 sec' },
+        { action: 'set', title: 'Done set' },
+      ],
+    };
   // Resting: how long is left, and what's next.
   if (a.rest)
     return {
@@ -135,11 +145,16 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
     else v.openLive(id);
   };
 
-  // A rest that has run out goes (and the phone buzzes, where it can), whether or not anything shows outside the page.
+  // A rest or a timed set that has run out goes (and the phone buzzes, where it can), whether or not anything shows
+  // outside the page. A timed set's end counts it done, which may start a rest.
   useEffect(() => {
     const v = viewRef.current;
-    if (!v || !v.restEndsAt || Date.now() < v.restEndsAt) return;
-    v.restOver();
+    if (!v) return;
+    const holdOut = !!v.holdEndsAt && Date.now() >= v.holdEndsAt;
+    const restOut = !!v.restEndsAt && Date.now() >= v.restEndsAt;
+    if (!holdOut && !restOut) return;
+    if (holdOut) v.holdOver();
+    else v.restOver();
     try {
       navigator.vibrate?.([200, 100, 200]);
     } catch {

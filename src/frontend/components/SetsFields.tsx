@@ -1,5 +1,6 @@
 import type { ChangeEventHandler } from 'react';
 import { Chip, ChipGroup } from '@moonshot/design-system/chip';
+import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { Label, TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
 import { BAND_LEVELS, type BandLevel } from '@/frontend/shared/bands';
@@ -22,13 +23,36 @@ export interface SetsFieldsProps {
   band?: { level: BandLevel | null; onLevel: (level: BandLevel | null) => void } | null;
   /** Whether it takes a weight in pounds: not for bodyweight (no equipment) or a band on its own. Defaults to true. */
   weighted?: boolean;
+  /** Counted in reps or timed (a plank, a dead hang): a Reps / Time switch, and with Time, the seconds of each set in
+   * place of the reps. Left out until the timed-holds migration has run. */
+  time?: { on: boolean; value: string; onSwitch: (on: boolean) => void; onChange: OnChange } | null;
+  /** A hold whose time is in its name (before the timed-holds migration): sets only, no reps. */
+  noReps?: boolean;
 }
+
+const COUNTED_BY = [
+  { value: 'reps' as const, label: 'Reps' },
+  { value: 'time' as const, label: 'Time' },
+];
 
 /** An exercise's sets, reps, weight and rest, as one row of fields that wraps on a narrow screen, with example values
  * in the empty ones. Used by both "New exercise" forms, the exercise editor and the exercises in the workout editor. */
-export function SetsFields({ sets, reps, weight, rest, onSets, onReps, onWeight, onRest, band, weighted = true }: SetsFieldsProps) {
+export function SetsFields({ sets, reps, weight, rest, onSets, onReps, onWeight, onRest, band, weighted = true, time, noReps }: SetsFieldsProps) {
   return (
     <>
+    {time ? (
+      <SegmentedControl
+        label="Counted by"
+        size="sm"
+        tone="quiet"
+        fullWidth
+        equalWidth
+        options={COUNTED_BY}
+        value={time.on ? 'time' : 'reps'}
+        onChange={(v) => time.onSwitch(v === 'time')}
+        style={{ marginTop: 'var(--space-4)' }}
+      />
+    ) : null}
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
       <TextField
         label="Sets"
@@ -38,14 +62,26 @@ export function SetsFields({ sets, reps, weight, rest, onSets, onReps, onWeight,
         placeholder="3"
         inputMode="numeric"
       />
-      <TextField
-        label="Reps"
-        containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
-        value={reps}
-        onChange={onReps}
-        placeholder="10"
-        inputMode="numeric"
-      />
+      {time?.on ? (
+        <TextField
+          label="Time"
+          suffix="sec"
+          containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
+          value={time.value}
+          onChange={time.onChange}
+          placeholder="30"
+          inputMode="numeric"
+        />
+      ) : noReps ? null : (
+        <TextField
+          label="Reps"
+          containerStyle={{ flex: '1 1 90px', minWidth: '0' }}
+          value={reps}
+          onChange={onReps}
+          placeholder="10"
+          inputMode="numeric"
+        />
+      )}
       {!weighted ? null : (
         <TextField
           label="Weight"

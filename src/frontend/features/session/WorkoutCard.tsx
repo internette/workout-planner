@@ -13,7 +13,8 @@ const divider: CSSProperties = { border: 0, borderTop: '1px solid var(--color-li
 
 /**
  * The session being done, in one card: its clock (start, pause, finish), then for a lift how far through it is, with
- * the set up next and "Done set" while the workout is going, or, between sets, the rest counting down.
+ * the set up next and "Done set" while the workout is going ("Start set" for a timed one, then its time counting down),
+ * or, between sets, the rest counting down.
  */
 export function WorkoutCard({ v }: { v: PlannerVals }) {
   const progress = v.dayIsLift && !v.isFuture;
@@ -24,7 +25,7 @@ export function WorkoutCard({ v }: { v: PlannerVals }) {
       {v.showTimer && progress ? <hr style={divider} /> : null}
       {progress ? (
         <SessionProgress bare label={v.progLabel} pct={v.progPct ?? 0} allDone={!!v.allDone} note={v.progNote ?? ''}>
-          {v.restShown ? <RestSection v={v} /> : v.setNow ? <NextSet now={v.setNow} /> : null}
+          {v.holdShown ? <HoldSection v={v} /> : v.restShown ? <RestSection v={v} /> : v.setNow ? <NextSet now={v.setNow} /> : null}
           {v.finishNow ? (
             <Button type="primary" size="lg" fullWidth onClick={v.finishNow} style={{ marginTop: 'var(--space-4)' }}>
               Finish workout
@@ -99,12 +100,53 @@ function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
         <Button type="primary" size="sm" onClick={now.onDone} aria-label={now.doneAria}>
           Done set
         </Button>
+      ) : now.onStart ? (
+        <Button type="primary" size="sm" onClick={now.onStart} aria-label={now.startAria}>
+          Start set
+        </Button>
       ) : now.paused ? (
         <Text variant="body" tone="muted">
           Paused
         </Text>
       ) : null}
     </div>
+  );
+}
+
+/** A timed set counting down: which set of which exercise, with a longer time and "Done set" to end it early. At
+ * 0:00 it's done, as if "Done set" were pressed. */
+function HoldSection({ v }: { v: PlannerVals }) {
+  return (
+    <section aria-label="Set" style={{ marginTop: 'var(--space-4)' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: 'var(--space-3)' }}>
+        <div>
+          <Text variant="micro" tone="slate" as="div">
+            {v.holdSet}
+          </Text>
+          {/* Read out once a second would be too much; the set's end is announced instead. */}
+          <Text variant="title" as="div" aria-hidden="true" style={{ margin: 'var(--space-1) 0 0', fontVariantNumeric: 'tabular-nums' }}>
+            {v.holdLabel}
+          </Text>
+        </div>
+        <div style={{ flex: '1 1 160px', minWidth: 0, textAlign: 'right' }}>
+          <Text variant="subheading" as="div">
+            {v.holdName}
+          </Text>
+          <Text variant="body" tone="muted" as="div" style={{ marginTop: 'var(--space-1)' }}>
+            {v.holdLine}
+          </Text>
+        </div>
+      </div>
+      <ProgressBar value={v.holdPct} style={{ marginTop: 'var(--space-3)' }} />
+      <div style={{ display: 'flex', gap: 'var(--space-2)', marginTop: 'var(--space-3)' }}>
+        <Button type="secondary" size="sm" onClick={v.holdMore}>
+          +30 sec
+        </Button>
+        <Button type="primary" size="sm" onClick={v.holdDone}>
+          Done set
+        </Button>
+      </div>
+    </section>
   );
 }
 

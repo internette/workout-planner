@@ -65,6 +65,8 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
         onRest={exercise?.setRest}
         band={exercise?.band}
         weighted={exercise?.weighted}
+        time={exercise?.time}
+        noReps={!!exercise?.noReps}
       />
       {/* Both sides keep the same sets, weight and rest unless switched off here. */}
       {exercise?.showSync ? (
