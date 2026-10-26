@@ -42,6 +42,7 @@ export const Plus = strokeIcon(
     <line x1="5" y1="12" x2="19" y2="12" />
   </>,
 );
+export const Minus = strokeIcon('Minus', <line x1="5" y1="12" x2="19" y2="12" />);
 export const Repeat = strokeIcon(
   'Repeat',
   <>

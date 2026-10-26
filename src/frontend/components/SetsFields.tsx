@@ -4,6 +4,7 @@ import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { Label, TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
 import { BAND_LEVELS, type BandLevel } from '@/frontend/shared/bands';
+import { StepButton, type WeightStep } from '@/frontend/components/WeightStepper';
 
 type OnChange = ChangeEventHandler<HTMLInputElement>;
 
@@ -28,6 +29,8 @@ export interface SetsFieldsProps {
   time?: { on: boolean; value: string; onSwitch: (on: boolean) => void; onChange: OnChange } | null;
   /** A hold whose time is in its name (before the timed-holds migration): sets only, no reps. */
   noReps?: boolean;
+  /** − and + beside the weight, a step at a time (the workout editor only). The weight then has a row of its own. */
+  weightStep?: WeightStep | null;
 }
 
 const COUNTED_BY = [
@@ -37,7 +40,7 @@ const COUNTED_BY = [
 
 /** An exercise's sets, reps, weight and rest, as one row of fields that wraps on a narrow screen, with example values
  * in the empty ones. Used by both "New exercise" forms, the exercise editor and the exercises in the workout editor. */
-export function SetsFields({ sets, reps, weight, rest, onSets, onReps, onWeight, onRest, band, weighted = true, time, noReps }: SetsFieldsProps) {
+export function SetsFields({ sets, reps, weight, rest, onSets, onReps, onWeight, onRest, band, weighted = true, time, noReps, weightStep }: SetsFieldsProps) {
   return (
     <>
     {time ? (
@@ -82,7 +85,7 @@ export function SetsFields({ sets, reps, weight, rest, onSets, onReps, onWeight,
           inputMode="numeric"
         />
       )}
-      {!weighted ? null : (
+      {!weighted || weightStep ? null : (
         <TextField
           label="Weight"
           suffix="lb"
@@ -103,6 +106,21 @@ export function SetsFields({ sets, reps, weight, rest, onSets, onReps, onWeight,
         inputMode="numeric"
       />
     </div>
+    {weighted && weightStep ? (
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--space-2)', marginTop: 'var(--space-3)' }}>
+        <StepButton dir={-1} s={weightStep} size="lg" />
+        <TextField
+          label="Weight"
+          suffix="lb"
+          containerStyle={{ flex: '1 1 auto', minWidth: '0' }}
+          value={weight}
+          onChange={onWeight}
+          placeholder="Optional"
+          inputMode="decimal"
+        />
+        <StepButton dir={1} s={weightStep} size="lg" />
+      </div>
+    ) : null}
     {band ? (
       <>
         <Label style={{ margin: 'var(--space-4) 0 var(--space-2)' }}>Band</Label>

@@ -9,6 +9,7 @@ import type { Ctx } from '../planner/store/types';
 import { setsFor, setsIn } from '../session/sets';
 import { kindOf } from '@/frontend/components/KindTag';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
+import { stepWeight, weightStep } from '@/frontend/shared/weightSteps';
 import { areaToggles, draftBand, draftWeighted, plainExercise, DRAFT_CLEARED, draftClash, draftHint, draftItem, draftOpened, draftReady, equipmentKnown, equipmentToggles } from '@/frontend/shared/exerciseDraft';
 import { forWorkout, oneSided, otherSide, pairName, splitSide, withSide } from '@/frontend/shared/sides';
 import { programOfWorkout } from '@/frontend/shared/programs';
@@ -1244,6 +1245,14 @@ export function editVals(ctx: Ctx) {
           ? { level: bandLevelOf(e.band), onLevel: (l: BandLevel | null) => setBand({ target: { value: l ? bandWeight(l) : '' } }) }
           : null,
         weighted: takesWeight(e) || /\d/.test(e.weight || ''),
+        // − and + beside its weight, a step at a time: anything that takes pounds, except a timed hold.
+        weightStep: (takesWeight(e) || /\d/.test(e.weight || '')) && !timed ? (() => {
+          const step = weightStep(e);
+          const bump = (dir: 1 | -1) => setWeight({ target: { value: withLb(stepWeight(numericOnly(e.weight), dir, step)) } });
+          return { step, name: e.name, less: () => bump(-1), more: () => bump(1) };
+        })() : null,
+        // Closed, with a weight, the row shows it between − and +, so its line leaves the weight out.
+        detailNoWeight: exLine({ ...e, weight: '' }, true),
         setRest: (ev) => setRest({ target: { value: withSec(digitsOnly(ev.target.value)) } }),
         areas: areaToggles(exAreas, (value) => setAreas({ target: { value } })),
         icoSvg: iconSvg(cur),
