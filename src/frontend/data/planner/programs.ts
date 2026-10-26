@@ -210,23 +210,59 @@ export async function removeWorkoutFromDay(block: Program['blocks'][number], w: 
   await archiveWorkouts(gone);
 }
 
+/** A block as it is saved now (not as the screen last read it): its weeks, whether it goes week by week, its workouts. */
+async function blockNow(blockId: string) {
+  const [b]: any[] = await ok(supabase.from('program_blocks').select('weeks, by_week').eq('id', blockId));
+  const rows: any[] = await ok(
+    supabase.from('workouts').select('id, name, program_week').eq('program_block_id', blockId).eq('archived', false),
+  );
+  return {
+    weeks: Number(b?.weeks) || 1,
+    byWeek: !!b?.by_week,
+    workouts: rows.map((w) => ({ id: w.id as string, name: w.name as string, week: (w.program_week ?? null) as number | null })),
+  };
+}
+
+/**
+ * Copies `from` (workouts as the screen has them, for their exercises) into each of `weeks`, leaving out any a week
+ * already has (by name), so doing it twice copies nothing twice. The copies are made side by side.
+ */
+async function copyIntoWeeks(
+  blockId: string,
+  from: Program['blocks'][number]['workouts'],
+  weeks: number[],
+  have: { name: string; week: number | null }[],
+) {
+  await Promise.all(
+    weeks.flatMap((week) =>
+      from
+        .filter((w) => !have.some((x) => x.week === week && nameKey(x.name) === nameKey(w.name)))
+        .map((w) => addProgramWorkout(blockId, w.days, copyOf(w), week)),
+    ),
+  );
+}
+
 /**
  * Turns a block's weeks into their own (`on`), or back into one week repeated. Going week by week, each workout becomes
  * week 1's and is copied into every other week, so they all start out the same. Going back, week 1's stay for every
- * week and the other weeks' copies leave the program. Sessions ahead follow (see refollowRuns).
+ * week and the other weeks' copies leave the program. Sessions ahead follow (see refollowRuns). Each step goes by the
+ * block as it's saved now, so asking twice does it once.
  */
 export async function setBlockByWeek(program: Program, block: Program['blocks'][number], on: boolean, todayIso: string) {
-  if (on === block.byWeek) return;
+  const now = await blockNow(block.id);
   if (on) {
-    const firsts = block.workouts.filter((w) => w.week == null);
+    const firsts = now.workouts.filter((w) => w.week == null);
     if (firsts.length) await ok(supabase.from('workouts').update({ program_week: 1 }).in('id', firsts.map((w) => w.id)));
-    for (let week = 2; week <= block.weeks; week++) for (const w of firsts) await addProgramWorkout(block.id, w.days, copyOf(w), week);
+    if (!now.byWeek) await ok(supabase.from('program_blocks').update({ by_week: true }).eq('id', block.id));
+    const weekOne = block.workouts.filter((w) => w.week == null || w.week === 1);
+    await copyIntoWeeks(block.id, weekOne, Array.from({ length: now.weeks - 1 }, (_, i) => i + 2), now.workouts);
   } else {
-    const firsts = block.workouts.filter((w) => w.week === 1 || w.week == null);
+    if (!now.byWeek) return;
+    const firsts = now.workouts.filter((w) => w.week === 1 || w.week == null);
     if (firsts.length) await ok(supabase.from('workouts').update({ program_week: null }).in('id', firsts.map((w) => w.id)));
-    await archiveWorkouts(block.workouts.filter((w) => !firsts.includes(w)).map((w) => w.id));
+    await archiveWorkouts(now.workouts.filter((w) => !firsts.includes(w)).map((w) => w.id));
+    await ok(supabase.from('program_blocks').update({ by_week: false }).eq('id', block.id));
   }
-  await ok(supabase.from('program_blocks').update({ by_week: on }).eq('id', block.id));
   await refollowRuns(program.id, todayIso);
 }
 
@@ -236,12 +272,13 @@ export async function setBlockByWeek(program: Program, block: Program['blocks'][
  */
 export async function setBlockWeeks(program: Program, block: Program['blocks'][number], weeks: number, todayIso: string) {
   weeks = Math.min(52, Math.max(1, Math.round(weeks)));
+  const now = await blockNow(block.id);
   await updateBlock(block.id, { weeks });
-  if (!block.byWeek) return;
-  if (weeks > block.weeks) {
-    const last = block.workouts.filter((w) => w.week === block.weeks);
-    for (let week = block.weeks + 1; week <= weeks; week++) for (const w of last) await addProgramWorkout(block.id, w.days, copyOf(w), week);
-  } else await archiveWorkouts(block.workouts.filter((w) => (w.week ?? 0) > weeks).map((w) => w.id));
+  if (!now.byWeek) return;
+  if (weeks > now.weeks) {
+    const last = block.workouts.filter((w) => w.week === Math.min(now.weeks, block.weeks));
+    await copyIntoWeeks(block.id, last, Array.from({ length: weeks - now.weeks }, (_, i) => now.weeks + i + 1), now.workouts);
+  } else await archiveWorkouts(now.workouts.filter((w) => (w.week ?? 0) > weeks).map((w) => w.id));
   await refollowRuns(program.id, todayIso);
 }
 
