@@ -3,7 +3,8 @@
 
 import { isoOf } from './helpers';
 
-type Blocks = { name: string; weeks: number; workouts?: { id: string; days: number[] }[] }[];
+// A workout with a week is that week's own copy (in a block that goes week by week); one without is in every week.
+type Blocks = { name: string; weeks: number; workouts?: { id: string; days: number[]; week?: number | null }[] }[];
 
 const fromIso = (iso: string) => {
   const [y, m, d] = iso.split('-').map(Number);
@@ -41,6 +42,13 @@ export function runBlockDates(blocks: Blocks, startIso: string, startBlock: numb
   });
 }
 
+/** Whether a block's workout is in its week `week` (1 = the first). */
+export const inWeek = (w: { week?: number | null }, week: number) => w.week == null || w.week === week;
+
+/** How many sessions a block puts on the calendar: each workout on each of its weekdays, in each week it's in. */
+export const blockSessions = (b: { weeks: number; workouts: { days: number[]; week?: number | null }[] }) =>
+  b.workouts.reduce((n, w) => n + w.days.length * (w.week == null ? b.weeks : 1), 0);
+
 /** Every session a run puts on the calendar: each workout on each of its weekdays, week by week. */
 export function runSessions(blocks: Blocks, startIso: string, startBlock: number) {
   const out: { workoutId: string; date: string }[] = [];
@@ -50,7 +58,7 @@ export function runSessions(blocks: Blocks, startIso: string, startBlock: number
       for (let i = 0; i < 7; i++) {
         const day = addDays(week0, w * 7 + i);
         (blocks[b].workouts || []).forEach((x) => {
-          if (x.days.includes(day.getDay())) out.push({ workoutId: x.id, date: isoOf(day) });
+          if (inWeek(x, w + 1) && x.days.includes(day.getDay())) out.push({ workoutId: x.id, date: isoOf(day) });
         });
       }
     }

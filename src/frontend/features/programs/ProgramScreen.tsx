@@ -1,4 +1,4 @@
-// A program's page: its blocks as one bar, each block's week and workouts, and starting, sharing and editing it.
+// A program's page: its blocks as one bar, each block's week (or, week by week, each of its weeks) and workouts, and starting, sharing and editing it.
 import { Button, Pressable } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Chip, ChipGroup } from '@moonshot/design-system/chip';
@@ -12,6 +12,7 @@ import { BackBar } from '@/frontend/components/BackBar';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { WeekStrip } from '@moonshot/design-system/week-strip';
+import { Fragment } from 'react';
 import { ShareProgramDialog } from './ShareProgramDialog';
 
 function StartDialog({ v }: { v: PlannerVals }) {
@@ -230,25 +231,36 @@ export function ProgramScreen({ v }: { v: PlannerVals }) {
                   </Text>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', marginTop: 'var(--space-3)' }}>
-                    {b.workouts.map((w) => (
-                      <Pressable
-                        key={w.key}
-                        onClick={w.open}
-                        style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', minHeight: '52px', padding: 'var(--space-1) 0'}}
-                      >
-                        <IconTile as="span" size="xs" variant="flat">
-                          {w.svg}
-                        </IconTile>
-                        <span style={{ flex: 1, minWidth: 0 }}>
-                          <Text variant="body" weight="semibold" as="span" style={{ display: 'block' }}>
-                            {w.name}
+                    {(b.weekList || [null]).map((wk) => (
+                      <Fragment key={wk ? wk.key : 0}>
+                        {wk ? (
+                          <Text variant="micro" tone="slate" as="div" style={{ marginTop: wk.key > 1 ? 'var(--space-3)' : 0 }}>
+                            {wk.label}
                           </Text>
-                          <Text variant="body" tone="muted" as="span" style={{ display: 'block' }}>
-                            {w.days} · {w.meta}
-                          </Text>
-                        </span>
-                        <ChevronRight color="var(--color-muted)" size={14} />
-                      </Pressable>
+                        ) : null}
+                        {b.workouts
+                          .filter((w) => !wk || wk.ids.includes(w.key))
+                          .map((w) => (
+                            <Pressable
+                              key={w.key}
+                              onClick={w.open}
+                              style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', minHeight: '52px', padding: 'var(--space-1) 0'}}
+                            >
+                              <IconTile as="span" size="xs" variant="flat">
+                                {w.svg}
+                              </IconTile>
+                              <span style={{ flex: 1, minWidth: 0 }}>
+                                <Text variant="body" weight="semibold" as="span" style={{ display: 'block' }}>
+                                  {w.name}
+                                </Text>
+                                <Text variant="body" tone="muted" as="span" style={{ display: 'block' }}>
+                                  {w.days} · {w.meta}
+                                </Text>
+                              </span>
+                              <ChevronRight color="var(--color-muted)" size={14} />
+                            </Pressable>
+                          ))}
+                      </Fragment>
                     ))}
                   </div>
                 )}
