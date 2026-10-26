@@ -3,7 +3,7 @@
 import { supabase } from '../supabase';
 import { isoOf } from '@/frontend/shared/helpers';
 import { typeIcon } from '@/frontend/shared/icons';
-import { newShareId, daysOf, blockWorkouts, SHARE_LIMITS, type SharedProgram, type SharedWorkout } from '@/frontend/shared/sharedProgram';
+import { newShareId, daysOf, blockWorkouts, weeksOf, SHARE_LIMITS, type SharedProgram, type SharedWorkout } from '@/frontend/shared/sharedProgram';
 import type { Entry, Exercise, Model, Program } from './types';
 import { ok, okOr } from './db';
 import { createProgramFrom, type WorkoutCopy } from './programs';
@@ -30,7 +30,8 @@ const plain = (e: Exercise) => ({
 export function programSnapshot(program: Program, o: { notes: boolean; by: string | null }): SharedProgram {
   const workouts: SharedWorkout[] = [];
   const blocks = program.blocks.map((b) => {
-    const days: number[][] = Array.from({ length: 7 }, () => []);
+    // Week by week, each week's days on their own; the block's `days` are its first week's.
+    const weeks: number[][][] = Array.from({ length: b.byWeek ? b.weeks : 1 }, () => Array.from({ length: 7 }, () => []));
     b.workouts.forEach((w) => {
       if (workouts.length >= SHARE_LIMITS.workouts) return;
       const ix = workouts.length;
@@ -47,9 +48,10 @@ export function programSnapshot(program: Program, o: { notes: boolean; by: strin
         ride: w.ride ? { dist: w.ride.dist, elev: w.ride.elev, zone: w.ride.zone, ...(w.ride.run ? { run: true } : {}) } : null,
         exercises: w.kind === 'ride' ? [] : w.list.slice(0, SHARE_LIMITS.exercises).map(plain),
       });
-      w.days.forEach((d) => days[d].push(ix));
+      const days = weeks[b.byWeek ? (w.week || 1) - 1 : 0];
+      if (days) w.days.forEach((d) => days[d].push(ix));
     });
-    return { name: b.name, weeks: b.weeks, days };
+    return { name: b.name, weeks: b.weeks, days: weeks[0], ...(b.byWeek ? { byWeek: weeks } : {}) };
   });
   return { v: 2, by: o.by, workouts, blocks };
 }
@@ -166,10 +168,15 @@ export async function copySharedProgram(name: string, program: SharedProgram) {
     program.blocks.map((b) => ({
       name: b.name,
       weeks: b.weeks,
-      workouts: blockWorkouts(b).map((ix) => {
+      byWeek: !!b.byWeek,
+      workouts: weeksOf(b).flatMap((days, wk) => {
+        const week = { ...b, days };
+        return blockWorkouts(week).map((ix) => ({ ix, days: daysOf(week, ix), week: b.byWeek ? wk + 1 : null }));
+      }).map(({ ix, days, week }) => {
         const w = program.workouts[ix];
         return {
-          days: daysOf(b, ix),
+          days,
+          week,
           workout: {
             name: w.name,
             isRide: w.kind === 'ride',

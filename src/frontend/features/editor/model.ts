@@ -71,6 +71,16 @@ export function editVals(ctx: Ctx) {
     tplMode,
   } = ctx;
   const sets = setsFor(ctx);
+  // A program's workout for one of its weeks says which: "Build, week 2 of 3".
+  const tplProgram = tplMode && st.editTemplate ? programOfWorkout(logic.model, st.editTemplate) : null;
+  const tplWeek =
+    tplProgram && tplProgram.workout.week
+      ? programPlace({
+          block: tplProgram.program.blocks.length > 1 ? tplProgram.block.name : '',
+          week: tplProgram.workout.week,
+          weeks: tplProgram.block.weeks,
+        })
+      : '';
   // Another year than this one says which, next to the date.
   const yearNote = Math.floor(mi / 12) ? ', ' + selDate.getFullYear() : '';
   // Where each nav item actually goes, so a guarded nav click can land there after "Discard" or "Save changes" —
@@ -712,7 +722,7 @@ export function editVals(ctx: Ctx) {
       if (e.key === 'Enter') e.preventDefault();
     },
     setEditName: (e) => logic.s({ renames: Object.assign({}, st.renames, { [baseName]: e.target.value }) }),
-    eEyebrow: tplMode ? 'Editing saved workout' : st.editing ? 'Editing workout' : 'New workout',
+    eEyebrow: tplWeek ? 'Editing · ' + tplWeek : tplMode ? 'Editing saved workout' : st.editing ? 'Editing workout' : 'New workout',
     eSaveLabel: saving
       ? 'Saving…'
       : tplMode

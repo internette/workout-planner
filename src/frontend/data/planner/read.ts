@@ -12,7 +12,7 @@ import { ok, okOr } from './db';
 import type { Mood } from '@moonshot/design-system/icons';
 
 export async function loadModel(today: Date): Promise<Model> {
-  const [workouts, exercises, plan, diary, library, builtins, builtinWorkoutRows, repeatDaysProbe, programRows, blockRows, runRows, builtinProgramRows, profileRows] = await Promise.all([
+  const [workouts, exercises, plan, diary, library, builtins, builtinWorkoutRows, repeatDaysProbe, weeksProbe, programRows, blockRows, runRows, builtinProgramRows, profileRows] = await Promise.all([
     ok(supabase.from('workouts').select('*')),
     ok(supabase.from('workout_exercises').select('*').order('order_index')),
     ok(supabase.from('plan_entries').select('*').order('scheduled_date').order('id')),
@@ -23,6 +23,8 @@ export async function loadModel(today: Date): Promise<Model> {
     okOr<any[]>(supabase.from('builtin_workouts').select('*').order('sort_order'), []),
     // Whether a weekly series can keep its weekdays yet: asked of the column itself, as an account may have no workouts.
     supabase.from('workouts').select('repeat_days').limit(1),
+    // Whether a block can go week by week yet: asked of the column, as an account may have no blocks.
+    supabase.from('program_blocks').select('by_week').limit(1),
     // Programs, until their migration has run: none (and none can be made yet).
     okOr<any[] | null>(supabase.from('programs').select('*').order('name'), null),
     okOr<any[]>(supabase.from('program_blocks').select('*').order('position'), []),
@@ -79,6 +81,7 @@ export async function loadModel(today: Date): Promise<Model> {
         name: (b.name || '') as string,
         weeks: Number(b.weeks) || 1,
         position: Number(b.position) || 0,
+        byWeek: !!b.by_week,
         workouts: workouts
           .filter((w: any) => w.program_block_id === b.id && !w.archived)
           .map((w: any): ProgramWorkout => {
@@ -91,10 +94,11 @@ export async function loadModel(today: Date): Promise<Model> {
               exercises: list.map((e) => e.name),
               exKey: keyOf(w),
               days: (w.program_days || []).map(Number).sort((a: number, c: number) => a - c),
+              week: b.by_week && w.program_week ? Number(w.program_week) : null,
               list,
             };
           })
-          .sort((a, c) => (a.days[0] ?? 7) - (c.days[0] ?? 7) || a.name.localeCompare(c.name)),
+          .sort((a, c) => (a.week ?? 0) - (c.week ?? 0) || (a.days[0] ?? 7) - (c.days[0] ?? 7) || a.name.localeCompare(c.name)),
       }))
       .sort((a, c) => a.position - c.position);
     return { id: p.id, name: p.name, notes: p.notes || '', blocks, weeks: blocks.reduce((s, b) => s + b.weeks, 0) };
@@ -301,6 +305,7 @@ export async function loadModel(today: Date): Promise<Model> {
     runReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_run' in r),
     repeatDaysReady: !repeatDaysProbe.error,
     holdReady,
+    weeksReady: !weeksProbe.error,
     programs,
     programRuns,
     builtinPrograms,

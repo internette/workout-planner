@@ -203,7 +203,8 @@ export interface PlannerState {
   tour?: number | null;
   // "Customize your experience", while it's open (see setup/model).
   setup?: SetupDraft | null;
-  programPick?: { blockId: string; day: number; q?: string } | null;
+  // `day` null: the day is picked in the sheet too (`chosen`), for a block that goes week by week.
+  programPick?: { blockId: string; day: number | null; chosen?: number; q?: string } | null;
   programShareOpen?: boolean;
   programOpenBlocks?: Record<string, boolean>;
   // Turning the calendar's weekly repeats into a program: which stretch of it, what it found ('none': nothing), the

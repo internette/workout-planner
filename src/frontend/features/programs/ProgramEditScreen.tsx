@@ -1,10 +1,12 @@
-// Editing a program: its name and notes, and each block's name, weeks and week of workouts. Every change saves as it's
+// Editing a program: its name and notes, and each block's name, weeks and week of workouts (or, a block that goes week
+// by week, each of its weeks' workouts). Every change saves as it's
 // made. A day's workouts are picked from the Spellbook and copied into the program; tapping one opens it in the
 // workout editor, where changes stay in this program.
 import { Button, IconButton, Pressable } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Dialog } from '@moonshot/design-system/dialog';
 import { IconTile } from '@moonshot/design-system/icon-tile';
+import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { TextField } from '@moonshot/design-system/text-field';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import { Close, Copy, Pencil, Plus, Trash } from '@moonshot/design-system/icons';
@@ -20,6 +22,14 @@ function PickerDialog({ v }: { v: PlannerVals }) {
       <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
         The program gets its own copy: changes to it stay in the program.
       </Text>
+      {p.dayChoice ? (
+        <div style={{ marginTop: 'var(--space-3)' }}>
+          <Text variant="micro" tone="slate" as="div" aria-hidden="true" style={{ marginBottom: 'var(--space-2)' }}>
+            On
+          </Text>
+          <SegmentedControl label="On" options={p.dayChoice.options} value={p.dayChoice.value} onChange={p.dayChoice.set} fullWidth equalWidth compact />
+        </div>
+      ) : null}
       <div style={{ marginTop: 'var(--space-3)' }}>
         <SearchBar value={p.q} onChange={p.setQ} placeholder="Search workouts" label="Search workouts" onClear={p.clearQ} status="" />
       </div>
@@ -112,20 +122,31 @@ export function ProgramEditScreen({ v }: { v: PlannerVals }) {
                 </div>
               </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
-              {b.days.map((d) => (
-                <div key={d.key} style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-2)' }}>
-                  <Text variant="micro" tone="slate" style={{ width: '88px', flex: 'none', paddingTop: 'var(--space-3)' }}>
-                    {d.day}
-                  </Text>
-                  <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
-                    {d.workouts.map((w) => (
+            {b.weekModes ? (
+              <SegmentedControl
+                label="How its weeks go"
+                options={b.weekModes}
+                value={b.byWeek ? 'week' : 'same'}
+                onChange={b.setWeekMode}
+                tone="quiet"
+                fullWidth
+                equalWidth
+                style={{ marginTop: 'var(--space-4)' }}
+              />
+            ) : null}
+            {b.weekList ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', marginTop: 'var(--space-4)' }}>
+                {b.weekList.map((wk, k) => (
+                  <div
+                    key={wk.key}
+                    style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', ...(k ? { borderTop: '1px solid var(--color-line)', paddingTop: 'var(--space-4)' } : {}) }}
+                  >
+                    <Text variant="micro" tone="slate" as="div">
+                      {wk.label}
+                    </Text>
+                    {wk.workouts.map((w) => (
                       <div key={w.key} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', padding: 'var(--space-1) var(--space-1) var(--space-1) var(--space-3)', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)' }}>
-                        <Pressable
-                          onClick={w.open}
-                          aria-label={'Edit ' + w.name}
-                          style={{ flex: 1, minWidth: 0, minHeight: '44px'}}
-                        >
+                        <Pressable onClick={w.open} aria-label={w.openLabel} style={{ flex: 1, minWidth: 0, minHeight: '44px' }}>
                           <Text variant="body" weight="semibold" as="span" style={{ display: 'block' }}>
                             {w.name}
                           </Text>
@@ -139,14 +160,55 @@ export function ProgramEditScreen({ v }: { v: PlannerVals }) {
                         </IconButton>
                       </div>
                     ))}
-                    <Button type="dashed" size="sm" onClick={d.add} aria-label={d.addLabel}>
-                      <Plus color="var(--color-pink-deep)" size={14} />
-                      {d.workouts.length ? 'Add another' : 'Add workout'}
-                    </Button>
+                    {!wk.workouts.length ? (
+                      <Text variant="body" tone="muted" as="p" style={{ margin: 0 }}>
+                        No workouts yet.
+                      </Text>
+                    ) : null}
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+                <Button type="dashed" size="md" onClick={b.addEveryWeek} style={{ width: '100%' }}>
+                  <Plus color="var(--color-pink-deep)" size={14} />
+                  Add a workout to every week
+                </Button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
+                {b.days.map((d) => (
+                  <div key={d.key} style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-2)' }}>
+                    <Text variant="micro" tone="slate" style={{ width: '88px', flex: 'none', paddingTop: 'var(--space-3)' }}>
+                      {d.day}
+                    </Text>
+                    <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
+                      {d.workouts.map((w) => (
+                        <div key={w.key} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', padding: 'var(--space-1) var(--space-1) var(--space-1) var(--space-3)', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)' }}>
+                          <Pressable
+                            onClick={w.open}
+                            aria-label={'Edit ' + w.name}
+                            style={{ flex: 1, minWidth: 0, minHeight: '44px'}}
+                          >
+                            <Text variant="body" weight="semibold" as="span" style={{ display: 'block' }}>
+                              {w.name}
+                            </Text>
+                            <Text variant="body" tone="muted" as="span" style={{ display: 'block' }}>
+                              {w.meta}
+                            </Text>
+                          </Pressable>
+                          <Pencil color="var(--color-muted)" size={14} aria-hidden="true" />
+                          <IconButton label={w.removeLabel} size="md" onClick={w.remove}>
+                            <Close color="var(--color-muted)" size={14} />
+                          </IconButton>
+                        </div>
+                      ))}
+                      <Button type="dashed" size="sm" onClick={d.add} aria-label={d.addLabel}>
+                        <Plus color="var(--color-pink-deep)" size={14} />
+                        {d.workouts.length ? 'Add another' : 'Add workout'}
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
               <Button type="secondary" ghost size="sm" onClick={b.copyNext}>
                 <Copy color="var(--color-pink-deep)" size={14} />

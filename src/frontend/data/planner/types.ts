@@ -92,6 +92,7 @@ export interface WorkoutSummary {
 export interface ProgramWorkout extends WorkoutSummary {
   exKey: string; // where its exercises live in Model.EXV
   days: number[]; // the weekdays it falls on in its block (0 = Sunday)
+  week: number | null; // in a block that goes week by week, the week it's for (1 = the first); else null, every week
   list: Exercise[];
 }
 export interface ProgramBlock {
@@ -99,6 +100,7 @@ export interface ProgramBlock {
   name: string;
   weeks: number;
   position: number;
+  byWeek: boolean; // each week has its own copy of each workout (ProgramWorkout.week)
   workouts: ProgramWorkout[];
 }
 export interface Program {
@@ -163,6 +165,7 @@ export interface Model {
   // Whether a held exercise's time can be set yet (the timed-holds migration has added hold_seconds). Until then a
   // hold's time is the one in its name.
   holdReady: boolean;
+  weeksReady: boolean; // the program weeks migration has run: a block can go week by week
   // Whether a weekly series can repeat on more than one weekday yet (the repeat-days migration has added the column).
   repeatDaysReady: boolean;
   programs: Program[]; // the person's own, by name

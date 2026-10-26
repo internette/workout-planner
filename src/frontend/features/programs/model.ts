@@ -3,12 +3,13 @@
 import { DOW3, DOWFULL, MON3 } from '@/frontend/shared/constants';
 import { isoOf, minText, noticePatch, plural, editTemplatePatch } from '@/frontend/shared/helpers';
 import { iconSvg } from '@/frontend/shared/icons';
-import { blockDays, runBlockDates, runPlace, runWeeks } from '@/frontend/shared/programs';
+import { blockDays, blockSessions, runBlockDates, runPlace, runWeeks } from '@/frontend/shared/programs';
 import { displayName } from '@/shared/auth';
 import { EQUIPMENT } from '@/frontend/shared/constants';
 import { kitChip, kitOfAll } from '@/frontend/shared/equipment';
 import * as db from '@/frontend/data/plannerData';
-import type { BuiltinProgram, Program, ProgramRun } from '@/frontend/data/plannerData';
+import type { BuiltinProgram, Exercise, Program, ProgramRun } from '@/frontend/data/plannerData';
+import { splitSide } from '@/frontend/shared/sides';
 import type { Ctx } from '../planner/store/types';
 
 export const BUILTIN = 'builtin:';
@@ -19,6 +20,17 @@ const fromIso = (iso: string) => {
   return new Date(y, m - 1, d);
 };
 const nextSunday = (today: Date) => new Date(today.getFullYear(), today.getMonth(), today.getDate() + (7 - today.getDay()));
+
+/**
+ * A workout's main lifts and their weights, to tell one week's from the next: "Bench Press 100 lb · Barbell Row 90 lb".
+ * One with no weights says how many exercises it has.
+ */
+const liftsLine = (list: Exercise[]) => {
+  const lifts = Array.from(new Map(list.filter((e) => /\d/.test(e.weight)).map((e) => [splitSide(e.name).base, e.weight])));
+  return lifts.length
+    ? lifts.slice(0, 2).map(([name, weight]) => name + ' ' + weight).join(' · ') + (lifts.length > 2 ? ' · +' + (lifts.length - 2) : '')
+    : plural(list.length, 'exercise');
+};
 
 /** "Mon", "Mon, Wed, Fri". */
 const dayList = (days: number[]) => days.map((d) => DOW3[d].charAt(0) + DOW3[d].slice(1).toLowerCase()).join(', ');
@@ -34,7 +46,20 @@ type Shown = {
     id: string;
     name: string;
     weeks: number;
-    workouts: { id: string; name: string; icon: string | null; iconColor: string | null; days: number[]; minutes: number; count: number; ride: boolean; kit: { need: string[]; complete: boolean } }[];
+    byWeek: boolean;
+    workouts: {
+      id: string;
+      name: string;
+      icon: string | null;
+      iconColor: string | null;
+      days: number[];
+      week: number | null;
+      minutes: number;
+      count: number;
+      ride: boolean;
+      lifts: string;
+      kit: { need: string[]; complete: boolean };
+    }[];
   }[];
 };
 
@@ -49,15 +74,18 @@ function shownOwn(p: Program): Shown {
       id: b.id,
       name: b.name,
       weeks: b.weeks,
+      byWeek: b.byWeek,
       workouts: b.workouts.map((w) => ({
         id: w.id,
         name: w.name,
         icon: w.icon,
         iconColor: w.iconColor,
         days: w.days,
+        week: w.week,
         minutes: w.minutes,
         count: w.list.length,
         ride: w.kind === 'ride',
+        lifts: liftsLine(w.list),
         kit: kitOfAll(w.list),
       })),
     })),
@@ -75,6 +103,7 @@ function shownBuiltin(p: BuiltinProgram, catalog: db.BuiltinWorkout[]): Shown {
       id: BUILTIN + p.id + ':' + bi,
       name: b.name,
       weeks: b.weeks,
+      byWeek: false,
       workouts: Array.from(new Set(b.days.flat()))
         .map((n) => catalog.find((w) => w.name === n))
         .filter((w): w is db.BuiltinWorkout => !!w)
@@ -84,9 +113,11 @@ function shownBuiltin(p: BuiltinProgram, catalog: db.BuiltinWorkout[]): Shown {
           icon: w.icon,
           iconColor: null,
           days: b.days.flatMap((list, d) => (list.includes(w.name) ? [d] : [])),
+          week: null,
           minutes: w.minutes,
           count: w.list.length,
           ride: false,
+          lifts: liftsLine(w.list),
           kit: kitOfAll(w.list),
         })),
     })),
@@ -134,7 +165,7 @@ export function programVals(ctx: Ctx) {
       .filter(live)
       .filter(() => hit(shownOwn(p)))
       .map((r) => {
-        const total = p.blocks.slice(r.startBlock).reduce((n, b) => n + b.weeks * b.workouts.reduce((k, w) => k + w.days.length, 0), 0);
+        const total = p.blocks.slice(r.startBlock).reduce((n, b) => n + blockSessions(b), 0);
         const done = model.entries.filter((e) => e.av.program?.runId === r.id && e.av.s === 'c').length;
         return { key: r.id, name: p.name, place: where(p, r), pct: total ? Math.round((done / total) * 100) : 0, figure: done + '/' + total, valueText: done + ' of ' + total + ' sessions done', open: open(p.id) };
       }),
@@ -185,7 +216,7 @@ export function programVals(ctx: Ctx) {
         progress: (() => {
           const r = ownProgram ? myRuns.filter(live).sort((a, c) => (a.start < c.start ? -1 : 1))[0] : null;
           if (!ownProgram || !r) return null;
-          const total = ownProgram.blocks.slice(r.startBlock).reduce((n, b) => n + b.weeks * b.workouts.reduce((k, w) => k + w.days.length, 0), 0);
+          const total = ownProgram.blocks.slice(r.startBlock).reduce((n, b) => n + blockSessions(b), 0);
           const done = model.entries.filter((e) => e.av.program?.runId === r.id && e.av.s === 'c').length;
           return { pct: total ? Math.round((done / total) * 100) : 0, figure: done + '/' + total, valueText: done + ' of ' + total + ' sessions done' };
         })(),
@@ -200,16 +231,23 @@ export function programVals(ctx: Ctx) {
             key: b.id,
             name: blockLabel(b, i),
             range: b.weeks === 1 ? 'Week ' + (before + 1) : 'Weeks ' + (before + 1) + '–' + (before + b.weeks),
-            summary: plural(b.workouts.length, 'workout') + ', ' + plural(blockDays(b), 'day') + ' a week',
+            summary: b.byWeek
+              ? plural(new Set(b.workouts.map((w) => w.name)).size, 'workout') + ', week by week'
+              : plural(b.workouts.length, 'workout') + ', ' + plural(blockDays(b), 'day') + ' a week',
             open: isOpen,
             toggle: () => logic.s({ programOpenBlocks: { ...openBlocks, [b.id]: !isOpen } }),
             strip,
+            // Week by week: each week, with its own workouts and their weights.
+            weekList: b.byWeek
+              ? Array.from({ length: b.weeks }, (_, k) => ({ key: k + 1, label: 'Week ' + (before + k + 1), ids: b.workouts.filter((w) => w.week === k + 1).map((w) => w.id) }))
+              : null,
             workouts: b.workouts.map((w) => ({
               key: w.id,
               days: dayList(w.days),
               name: w.name,
               // Each part stays on one line ("6 exercises", "~1 h"); the line only breaks between them.
-              meta: [w.ride ? '' : plural(w.count, 'exercise'), '~' + minText(w.minutes)]
+              // Week by week, its lifts and their weights in place of its exercise count, each lift a part.
+              meta: [...(w.ride ? [] : b.byWeek ? w.lifts.split(' · ') : [plural(w.count, 'exercise')]), '~' + minText(w.minutes)]
                 .filter(Boolean)
                 .map((part) => part.replace(/ /g, '\u00a0'))
                 .join(' · '),
@@ -263,7 +301,7 @@ export function programVals(ctx: Ctx) {
           const end = isoOf(lands.length ? lands[lands.length - 1].to : fromIso(date));
           const sessions = blocks
             .slice(block)
-            .reduce((n, b) => n + b.weeks * b.workouts.reduce((k, w) => k + w.days.length, 0), 0);
+            .reduce((n, b) => n + blockSessions(b), 0);
           // Other programs running at the same time.
           const overlap = (model.programs || [])
             .flatMap((p) => runsOf(p.id).filter(live).map((r) => ({ p, r })))
@@ -362,8 +400,45 @@ export function programVals(ctx: Ctx) {
             name: b.name,
             weeks: b.weeks,
             rename: (e) => logic.save(() => db.updateBlock(b.id, { name: e.target.value })),
-            fewer: b.weeks > 1 ? () => logic.save(() => db.updateBlock(b.id, { weeks: b.weeks - 1 })) : null,
-            more: b.weeks < 52 ? () => logic.save(() => db.updateBlock(b.id, { weeks: b.weeks + 1 })) : null,
+            // Week by week, a week taken off takes its own workouts with it, so that asks first.
+            fewer:
+              b.weeks <= 1
+                ? null
+                : b.byWeek
+                  ? () =>
+                      logic.setState({
+                        confirm: {
+                          kind: 'dropWeek',
+                          title: 'Take off week ' + b.weeks + '?',
+                          body: 'Its workouts, with their weights and reps, leave the program.',
+                          label: 'Take it off',
+                          then: () => logic.save(() => db.setBlockWeeks(ownProgram, b, b.weeks - 1, todayIso)),
+                        },
+                      })
+                  : () => logic.save(() => db.setBlockWeeks(ownProgram, b, b.weeks - 1, todayIso)),
+            more: b.weeks < 52 ? () => logic.save(() => db.setBlockWeeks(ownProgram, b, b.weeks + 1, todayIso)) : null,
+            // Same every week, or each week its own: offered once the program weeks migration has run.
+            byWeek: b.byWeek,
+            weekModes: model.weeksReady
+              ? [
+                  { value: 'same', label: 'Same every week' },
+                  { value: 'week', label: 'Week by week' },
+                ]
+              : null,
+            setWeekMode: (v: string) =>
+              v === 'week'
+                ? logic.save(() => db.setBlockByWeek(ownProgram, b, true, todayIso))
+                : b.weeks > 1
+                  ? logic.setState({
+                      confirm: {
+                        kind: 'sameEveryWeek',
+                        title: 'Make every week the same?',
+                        body: 'Every week does week 1’s workouts. Weeks 2' + (b.weeks > 2 ? '–' + b.weeks : '') + ' lose their own weights and reps.',
+                        label: 'Same every week',
+                        then: () => logic.save(() => db.setBlockByWeek(ownProgram, b, false, todayIso)),
+                      },
+                    })
+                  : logic.save(() => db.setBlockByWeek(ownProgram, b, false, todayIso)),
             days: Array.from({ length: 7 }, (_, d) => ({
               key: d,
               day: DOWFULL[d],
@@ -374,12 +449,34 @@ export function programVals(ctx: Ctx) {
                   name: w.name,
                   meta: w.kind === 'ride' ? '~' + minText(w.minutes) : plural(w.list.length, 'exercise'),
                   open: () => logic.nav(editTemplatePatch(w.id)),
-                  remove: () => logic.save(() => db.removeWorkoutFromDay(w, d)),
+                  remove: () => logic.save(() => db.removeWorkoutFromDay(b, w, d)),
                   removeLabel: 'Take ' + w.name + ' off ' + DOWFULL[d],
                 })),
               add: () => logic.s({ programPick: { blockId: b.id, day: d } }),
               addLabel: 'Add a workout on ' + DOWFULL[d],
             })),
+            // Week by week: every week listed, each with its own workouts, by weekday. A workout taken off a day comes
+            // off that day in every week, as the weeks share their days.
+            weekList: b.byWeek
+              ? Array.from({ length: b.weeks }, (_, k) => ({
+                  key: k + 1,
+                  label: 'Week ' + (k + 1),
+                  workouts: b.workouts
+                    .filter((w) => w.week === k + 1)
+                    .flatMap((w) => w.days.map((d) => ({ w, d })))
+                    .sort((x, y) => x.d - y.d || x.w.name.localeCompare(y.w.name))
+                    .map(({ w, d }) => ({
+                      key: w.id + ':' + d,
+                      name: dayList([d]) + ' · ' + w.name,
+                      meta: w.kind === 'ride' ? '~' + minText(w.minutes) : liftsLine(w.list),
+                      open: () => logic.nav(editTemplatePatch(w.id)),
+                      openLabel: 'Edit ' + w.name + ', week ' + (k + 1),
+                      remove: () => logic.save(() => db.removeWorkoutFromDay(b, w, d)),
+                      removeLabel: 'Take ' + w.name + ' off ' + DOWFULL[d] + ' in every week',
+                    })),
+                }))
+              : null,
+            addEveryWeek: () => logic.s({ programPick: { blockId: b.id, day: null } }),
             copyNext: () => logic.save(() => db.addBlock(ownProgram, b)),
             remove:
               ownProgram.blocks.length > 1
@@ -425,11 +522,22 @@ export function programVals(ctx: Ctx) {
 
   // ---- Picking a workout for a day: one of the person's own, or a built-in one, copied into the block.
   const pq = (pick?.q || '').trim().toLowerCase();
+  // Monday, until another day is picked.
+  const pickDay = pick ? (pick.day ?? pick.chosen ?? 1) : 1;
   const programPicker =
     pick && pickBlock && ownProgram
       ? {
           open: true,
-          title: 'Add to ' + DOWFULL[pick.day],
+          title: pick.day == null ? 'Add to every week' : 'Add to ' + DOWFULL[pick.day],
+          // Its day, when it's picked here too.
+          dayChoice:
+            pick.day == null
+              ? {
+                  options: Array.from({ length: 7 }, (_, d) => ({ value: String(d), label: DOW3[d].charAt(0) + DOW3[d].slice(1).toLowerCase() })),
+                  value: String(pickDay),
+                  set: (v: string) => logic.s({ programPick: { ...pick, chosen: Number(v) } }),
+                }
+              : null,
           q: pick.q || '',
           setQ: (e) => logic.s({ programPick: { ...pick, q: e.target.value } }),
           clearQ: () => logic.s({ programPick: { ...pick, q: '' } }),
@@ -463,7 +571,7 @@ export function programVals(ctx: Ctx) {
                             yoga: w.yoga,
                             exercises: model.EX[w.name] || [],
                           };
-                    logic.save(() => db.addWorkoutToDay(pickBlock, pick.day, copy), { programPick: null });
+                    logic.save(() => db.addWorkoutToDay(pickBlock, pickDay, copy), { programPick: null });
                   },
                 })),
             }))

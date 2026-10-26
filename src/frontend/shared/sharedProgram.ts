@@ -38,6 +38,11 @@ export interface SharedBlock {
   weeks: number;
   /** Per weekday, Sunday first: the workouts on it, as places in the program's `workouts`. */
   days: number[][];
+  /**
+   * A block that goes week by week: `days` for each of its weeks, each week with its own copies. `days` is then its
+   * first week's, so a reader that doesn't know weeks still shows the block's week.
+   */
+  byWeek?: number[][][];
 }
 
 export interface SharedProgram {
@@ -126,17 +131,18 @@ export function readProgram(raw: any): SharedProgram | null {
   read.forEach((w: SharedWorkout | null, ix: number) => {
     at[ix] = w ? workouts.push(w) - 1 : -1;
   });
-  const blocks = rawBlocks.slice(0, SHARE_LIMITS.blocks).map((b) => {
-    const weeks = Math.round(Number(b?.weeks));
-    return {
-      name: str(b?.name, 40),
-      weeks: weeks >= 1 && weeks <= SHARE_LIMITS.weeks ? weeks : 1,
-      days: Array.from({ length: 7 }, (_, d) =>
-        (Array.isArray(b?.days?.[d]) ? b.days[d] : [])
-          .map((ix: unknown) => (Number.isInteger(ix) && at[ix as number] != null ? at[ix as number] : -1))
-          .filter((ix: number, k: number, all: number[]) => ix >= 0 && all.indexOf(ix) === k),
-      ),
-    };
+  const readDays = (days: any): number[][] =>
+    Array.from({ length: 7 }, (_, d) =>
+      (Array.isArray(days?.[d]) ? days[d] : [])
+        .map((ix: unknown) => (Number.isInteger(ix) && at[ix as number] != null ? at[ix as number] : -1))
+        .filter((ix: number, k: number, all: number[]) => ix >= 0 && all.indexOf(ix) === k),
+    );
+  const blocks = rawBlocks.slice(0, SHARE_LIMITS.blocks).map((b): SharedBlock => {
+    const raw = Math.round(Number(b?.weeks));
+    const weeks = raw >= 1 && raw <= SHARE_LIMITS.weeks ? raw : 1;
+    // Week by week: one week's days for each of its weeks, no more and no fewer.
+    const byWeek = Array.isArray(b?.byWeek) && b.byWeek.length ? Array.from({ length: weeks }, (_, w) => readDays(b.byWeek[w])) : null;
+    return { name: str(b?.name, 40), weeks, days: byWeek ? byWeek[0] : readDays(b?.days), ...(byWeek ? { byWeek } : {}) };
   });
   if (!workouts.length || !blocks.length) return null;
   return { v: 2, by: str(raw.by) || null, workouts, blocks };
@@ -147,6 +153,9 @@ export const daysOf = (b: SharedBlock, ix: number) => b.days.flatMap((list, d) =
 
 /** The workouts in a block, as places in the program's `workouts`. */
 export const blockWorkouts = (b: SharedBlock) => Array.from(new Set(b.days.flat()));
+
+/** A block's weeks, each as its days: one for every week, or (week by week) each its own. */
+export const weeksOf = (b: SharedBlock) => b.byWeek || [b.days];
 
 /** All its blocks' weeks. */
 export const programWeeks = (p: SharedProgram) => p.blocks.reduce((sum, b) => sum + b.weeks, 0);
