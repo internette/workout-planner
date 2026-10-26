@@ -20,6 +20,8 @@ export function ExerciseEditForm({ v }: { v: PlannerVals }) {
           rest={v.exerciseEdit.rest}
           onSets={v.exerciseEdit.setSets}
           onReps={v.exerciseEdit.setReps}
+          time={v.exerciseEdit.time}
+          noReps={v.exerciseEdit.noReps}
           onWeight={v.exerciseEdit.setWeight}
           band={v.exerciseEdit.band}
           weighted={v.exerciseEdit.weighted}

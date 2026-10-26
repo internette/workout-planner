@@ -7,7 +7,7 @@ import type { Exercise, Entry, WorkoutSummary, BuiltinWorkout, BuiltinProgram, M
 import { runEnd, runPlace } from '@/frontend/shared/programs';
 import { readProgram } from '@/frontend/shared/sharedProgram';
 import { toProfile } from './profile';
-import { toExercise, areasOf, numStr, workoutView, estimateMinutes } from './convert';
+import { setHoldColumn, toExercise, areasOf, numStr, workoutView, estimateMinutes } from './convert';
 import { ok, okOr } from './db';
 import type { Mood } from '@moonshot/design-system/icons';
 
@@ -31,6 +31,11 @@ export async function loadModel(today: Date): Promise<Model> {
     // Their profile, until its migration has run: none (and none can be saved yet).
     okOr<any[] | null>(supabase.from('profiles').select('*').limit(1), null),
   ]);
+
+  // The catalog always has rows, so it says whether the timed-holds migration has run. Before any row is read as an
+  // exercise, so each one's sets come out timed.
+  const holdReady = builtins.some((r: any) => 'hold_seconds' in r);
+  setHoldColumn(holdReady);
 
   const byId: Record<string, any> = {};
   workouts.forEach((w: any) => (byId[w.id] = w));
@@ -295,6 +300,7 @@ export async function loadModel(today: Date): Promise<Model> {
     yogaReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_yoga' in r),
     runReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_run' in r),
     repeatDaysReady: !repeatDaysProbe.error,
+    holdReady,
     programs,
     programRuns,
     builtinPrograms,

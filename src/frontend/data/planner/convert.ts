@@ -3,19 +3,29 @@
 import { colors } from '@moonshot/design-system/colors';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import { LIFT_MINUTES, RIDE_MINUTES } from '@/frontend/shared/constants';
-import { minText } from '@/frontend/shared/helpers';
+import { holdInName, minText } from '@/frontend/shared/helpers';
 import type { Exercise } from './types';
 import { bandOfLevel, levelOfBand } from '@/frontend/shared/bands';
 
-export const fmtSets = (sets: number | null, reps: number | null) =>
-  sets && reps ? `${sets} × ${reps}` : sets ? `${sets} ${sets === 1 ? 'set' : 'sets'}` : '—';
+// A held exercise's sets are timed, "3 × 45 sec", from hold_seconds in place of reps.
+export const fmtSets = (sets: number | null, reps: number | null, hold: number | null = null) =>
+  hold ? `${sets || 1} × ${hold} sec` : sets && reps ? `${sets} × ${reps}` : sets ? `${sets} ${sets === 1 ? 'set' : 'sets'}` : '—';
 
-export function parseSets(text: string): { sets: number | null; reps: number | null } | null {
+export function parseSets(text: string): { sets: number | null; reps: number | null; hold: number | null } | null {
+  const h = text.trim().match(/^(\d+)\s*[×xX*]\s*(\d+)\s*sec\b/i);
+  if (h) return { sets: Number(h[1]), reps: null, hold: Number(h[2]) };
   const m = text.trim().match(/^(\d+)\s*[×xX*]\s*(\d+)/);
-  if (m) return { sets: Number(m[1]), reps: Number(m[2]) };
+  if (m) return { sets: Number(m[1]), reps: Number(m[2]), hold: null };
   const s = text.trim().match(/^(\d+)(\s*sets?)?$/i);
-  return s ? { sets: Number(s[1]), reps: null } : null;
+  return s ? { sets: Number(s[1]), reps: null, hold: null } : null;
 }
+
+// Whether the exercise tables have hold_seconds yet (the timed_holds migration). Until then a hold's time is the one
+// in its name, and nothing writes the column. Set as the plan loads, from the rows it read.
+let holdColumn = false;
+export const setHoldColumn = (on: boolean) => {
+  holdColumn = on;
+};
 
 export const fmtWeight = (value: number | null, unit: string | null) =>
   value != null ? `${value} ${unit || 'lb'}` : unit === 'body' ? 'body' : '—';
@@ -39,7 +49,8 @@ export const parseRest = (text: string) => {
 export const toExercise = (r: any): Exercise => ({
   id: r.id,
   name: r.name,
-  sets: fmtSets(r.sets, r.reps),
+  // Its time, or for one saved before holds had their own, the time in its name.
+  sets: fmtSets(r.sets, r.reps, r.hold_seconds ?? (r.reps == null ? holdInName(r.name) || null : null)),
   // A band's level was once saved as the weight (unit "band"); the band_level migration moves it to its own column.
   weight: r.weight_unit === 'band' ? '—' : fmtWeight(r.weight_value, r.weight_unit),
   ...(r.band_level !== undefined
@@ -60,6 +71,7 @@ export function exerciseRow(e: Exercise) {
     name: e.name,
     sets: sets ? sets.sets : null,
     reps: sets ? sets.reps : null,
+    ...(holdColumn ? { hold_seconds: sets ? sets.hold : null } : {}),
     weight_value: weight.value,
     weight_unit: weight.unit,
     rest_seconds: parseRest(e.rest),

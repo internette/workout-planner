@@ -10,6 +10,7 @@ import { BackBar } from '@/frontend/components/BackBar';
 import { DeleteSection } from '@/frontend/components/DeleteSection';
 import { StatRow } from '@moonshot/design-system/stat';
 import { PageTitle } from '@/frontend/components/PageTitle';
+import { isTimed } from '@/frontend/shared/helpers';
 
 export function ExerciseScreen({ v }: { v: PlannerVals }) {
   return (
@@ -36,7 +37,7 @@ export function ExerciseScreen({ v }: { v: PlannerVals }) {
         <StatRow
           size="lg"
           stats={[
-            { label: 'SETS × REPS', value: v.exercise.sets },
+            { label: isTimed(v.exercise.sets) ? 'SETS × TIME' : 'SETS × REPS', value: v.exercise.sets },
             // A band on its own has a level and no weight; a band with other equipment has both.
             ...(v.exercise.band && v.exercise.weight === '—' ? [] : [{ label: 'Weight', value: v.exercise.weight }]),
             ...(v.exercise.band ? [{ label: 'Band', value: v.exercise.band.replace(/ band$/, '') }] : []),

@@ -7,7 +7,7 @@ import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from '../planner/store/types';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import type { Entry } from '@/frontend/data/plannerData';
-import { setsFor, setsIn } from './sets';
+import { setsFor, setsIn, timeIn } from './sets';
 import { leaveRunningWorkout, pausedClock } from './leave';
 import type { DayStatus } from '@/frontend/components/StatusDot';
 
@@ -160,6 +160,7 @@ export function workoutVals(ctx: Ctx) {
     logic.s({
       setsDone: Object.assign({}, st.setsDone, { [listKey]: {} }),
       ...(st.rest && st.rest.id === listKey ? { rest: null } : {}),
+      ...(st.hold && st.hold.id === listKey ? { hold: null } : {}),
     });
     // Starting over also undoes Finish: what it recorded belonged to the go being thrown away.
     if (selAct && actualMinutes(selAct) > 0) logic.save(() => db.reopenSession(idOf(selAct)));
@@ -224,7 +225,7 @@ export function workoutVals(ctx: Ctx) {
         const timers = Object.assign({}, now.workoutTimer);
         delete timers[timerKey];
         // A ride comes back from the reload marked done, so it isn't set here.
-        return { finish: null, workoutTimer: timers, ...(now.rest && now.rest.id === id ? { rest: null } : {}), ...noticePatch(
+        return { finish: null, workoutTimer: timers, ...(now.rest && now.rest.id === id ? { rest: null } : {}), ...(now.hold && now.hold.id === id ? { hold: null } : {}), ...noticePatch(
           fin.correcting ? 'Time changed to ' + minText(finMinutes) + '.' : 'Transformation complete. ' + minText(finMinutes) + ' recorded.',
           'detail',
         ) };
@@ -323,6 +324,7 @@ export function workoutVals(ctx: Ctx) {
       setNow: now && e.name === now.name && setsIn(e) > 1 ? 'Set ' + Math.min(setsIn(e), (setsOf[e.name] || 0) + 1) + ' of ' + setsIn(e) : '',
     }));
     const resting = !!(st.rest && st.rest.id === id && st.rest.endsAt > Date.now());
+    const holding = !!(st.hold && st.hold.id === id && st.hold.endsAt > Date.now());
     const expanded = !!(st.moreIds || {})[id];
     const open = id === openId;
     return {
@@ -356,6 +358,8 @@ export function workoutVals(ctx: Ctx) {
         ? 'Completed · ' + (ride && distOf(av) ? distOf(av) + ' mi · ' : '') + ctx.doneTimeOf(av)
         : resting
           ? 'Resting ' + formatElapsed(Math.ceil((st.rest.endsAt - Date.now()) / 1000)) + (timer ? ' · ' + formatElapsed(timerSec) + ' total' : '')
+          : holding
+          ? st.hold.name + ' ' + formatElapsed(Math.ceil((st.hold.endsAt - Date.now()) / 1000)) + (timer ? ' · ' + formatElapsed(timerSec) + ' total' : '')
           : timer
           ? (timer.runningSince ? 'In progress · ' : 'Paused · ') + formatElapsed(timerSec)
           : ride
@@ -407,17 +411,21 @@ export function workoutVals(ctx: Ctx) {
     };
   });
   // The set up next, on today's session page, for the progress card: the exercise the rows' sets are counting, and
-  // "Done set" for it while the workout is going (its clock running, not paused, and not finished).
+  // "Done set" for it while the workout is going (its clock running, not paused, and not finished). A timed set has
+  // "Start set" instead, which counts its time down; it's done when the time is up.
   const setNow = (() => {
     if (st.screen !== 'detail' || selRide || isCycleView || mi * 100 + selDay !== TK || !selAct || doneSel) return null;
     const sets = setsFor(ctx);
     const n = sets.nextSet(listKey);
     if (!n) return null;
+    const time = timeIn(n.e);
     return {
       name: n.e.name,
-      label: n.of > 1 ? 'Set ' + n.set + ' of ' + n.of : 'One set',
+      label: (n.of > 1 ? 'Set ' + n.set + ' of ' + n.of : 'One set') + (time ? ' · ' + time + ' sec' : ''),
       pips: Array.from({ length: n.of }, (_, i) => i < n.set - 1),
-      onDone: timerRunning && !finished ? () => sets.completeSet(listKey, n.e.name) : undefined,
+      onDone: timerRunning && !finished && !time ? () => sets.completeSet(listKey, n.e.name) : undefined,
+      onStart: timerRunning && !finished && time ? () => sets.startSet(listKey, n.e.name) : undefined,
+      startAria: 'Start: ' + n.e.name + (n.of > 1 ? ', set ' + n.set + ' of ' + n.of : '') + ', ' + time + ' seconds',
       // Paused: the clock says so where "Done set" was.
       paused: !!timerState && !timerRunning && !finished,
       doneAria: 'Done: ' + n.e.name + (n.of > 1 ? ', set ' + n.set + ' of ' + n.of : ''),
@@ -665,7 +673,7 @@ export function workoutVals(ctx: Ctx) {
           ? 'Finished · ' + doneCount + ' of ' + selList.length + ' ticked off.'
           : doneCount === 0
           ? // With "Done set" there, it says what to do; before the clock starts, the ticks are the way.
-            setNow?.onDone
+            setNow?.onDone || setNow?.onStart
             ? ''
             : 'Mark each exercise as you clear it.'
           : doneCount === selList.length

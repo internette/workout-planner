@@ -1,9 +1,9 @@
 import { EQUIPMENT, EQUIPMENT_GROUPS, TARGET_AREAS } from './constants';
 import { bandLevelOf, bandWeight, takesWeight, usesBand, type BandLevel } from '@/frontend/shared/bands';
-import { countsOk, joinSetsReps, withLb, withSec } from './helpers';
+import { countsOk, joinSetsReps, joinSetsTime, withLb, withSec } from './helpers';
 
 // The new-exercise form, used by the editor's "Create new" and the Spellbook's "New exercise". Its fields live in
-// planner state as dName, dSets, dReps, dWeight, dBand, dRest, dIcon, dAreas, dEquip and dEquipOpen.
+// planner state as dName, dSets, dReps, dTime (timed sets only), dWeight, dBand, dRest, dIcon, dAreas, dEquip and dEquipOpen.
 
 // Opening the form: real values in its boxes (3 × 10, 60 sec rest), what it saves if left alone, rather than grey
 // examples that look like values. Weight starts empty: none is saved unless one is typed.
@@ -14,6 +14,7 @@ export const DRAFT_CLEARED = {
   dName: '',
   dSets: '',
   dReps: '',
+  dTime: undefined,
   dWeight: '',
   dBand: '',
   dRest: '',
@@ -38,8 +39,10 @@ export const draftClash = (st, list) => {
 export const draftHint = (st) =>
   !(st.dName || '').trim()
     ? 'Name it to save it.'
-    : !countsOk(st.dSets, st.dReps)
-      ? 'Sets and reps need to be at least 1.'
+    : !countsOk(st.dSets, st.dTime ?? st.dReps)
+      ? st.dTime !== undefined
+        ? 'Sets and time need to be at least 1.'
+        : 'Sets and reps need to be at least 1.'
       : !(st.dAreas || []).length
         ? 'Pick at least one target area.'
         : '';
@@ -71,7 +74,7 @@ export const draftWeighted = (st, model) => takesWeight(draftKit(st, model));
 // The exercise the draft describes.
 export const draftItem = (st, model) => ({
   name: (st.dName || '').trim(),
-  sets: joinSetsReps(st.dSets, st.dReps) || '3 × 10',
+  sets: st.dTime !== undefined ? joinSetsTime(st.dSets, st.dTime) : joinSetsReps(st.dSets, st.dReps) || '3 × 10',
   weight: (draftWeighted(st, model) && withLb(st.dWeight)) || '—',
   ...(usesBand(draftKit(st, model)) && bandLevelOf(st.dBand) ? { band: st.dBand } : {}),
   rest: withSec(st.dRest) || '60 sec',

@@ -160,6 +160,9 @@ export interface Model {
   yogaReady: boolean;
   // Whether a distance workout can be a run or walk yet (the run/walk migration has added the column).
   runReady: boolean;
+  // Whether a held exercise's time can be set yet (the timed-holds migration has added hold_seconds). Until then a
+  // hold's time is the one in its name.
+  holdReady: boolean;
   // Whether a weekly series can repeat on more than one weekday yet (the repeat-days migration has added the column).
   repeatDaysReady: boolean;
   programs: Program[]; // the person's own, by name

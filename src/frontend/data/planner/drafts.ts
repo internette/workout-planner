@@ -7,6 +7,7 @@ import { supabase } from '../supabase';
 import { DEFAULT_ZONE, type PlanDraft, type PlanWorkout } from '@/shared/planDraft';
 import type { Exercise, Model } from './types';
 import { numStr, estimateMinutes } from './convert';
+import { isTimed } from '@/frontend/shared/helpers';
 import { ok, okOr } from './db';
 import { createWorkout } from './workouts';
 
@@ -50,7 +51,8 @@ export async function addPlanDraft(draft: PlanDraft, model: Model) {
       const hit = known.get(e.name.trim().toLowerCase());
       return {
         name: hit?.name ?? e.name,
-        sets: `${e.sets} × ${e.reps}`,
+        // A hold from the catalog is timed: its reps are the seconds a set.
+        sets: hit && isTimed(hit.sets) ? `${e.sets} × ${e.reps} sec` : `${e.sets} × ${e.reps}`,
         weight: e.weight_lb ? `${e.weight_lb} lb` : hit?.equipment?.length ? '—' : 'body',
         rest: e.rest_seconds != null ? `${e.rest_seconds} sec` : '—',
         i: hit?.i ?? 'h',

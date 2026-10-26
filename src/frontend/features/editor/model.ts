@@ -1,6 +1,6 @@
 import { programPlace } from '@/frontend/shared/programs';
 import { DOWFULL, EDIT_OVERLAYS, ICON_COLOR_NAMES, ICON_COLORS, LIFT_MINUTES, MONTHS, NEW_WORKOUT_CLEARED, RIDE_MINUTES } from '@/frontend/shared/constants';
-import { digitsOnly, exLine, idOf, isoOf, joinSetsReps, longDay, minText, mod12, monDay, monthPatch, needsLine, noticePatch, numericOnly, plural, rollMinutes, isHold, setsRepsOk, shortDay, splitSetsReps, toMinutes, withLb, withSec, workoutDraftDirty } from '@/frontend/shared/helpers';
+import { digitsOnly, exLine, holdInName, idOf, isTimed, isoOf, joinSetsReps, joinSetsTime, longDay, minText, mod12, monDay, monthPatch, needsLine, noticePatch, numericOnly, plural, rollMinutes, setsRepsOk, shortDay, splitSetsReps, toMinutes, withLb, withSec, workoutDraftDirty } from '@/frontend/shared/helpers';
 import { iconOptions, iconSvg, typeIcon } from '@/frontend/shared/icons';
 import { DEFAULT_WEEKS, dayNames, pickedDays, planDays, toggleDay } from '@/frontend/shared/schedule';
 import * as db from '@/frontend/data/plannerData';
@@ -337,7 +337,7 @@ export function editVals(ctx: Ctx) {
     saveHint: nameClash
       ? ''
       : badCounts
-        ? '“' + badCounts.name + (isHold(badCounts.name) ? '” needs at least 1 set.' : '” needs at least 1 set and 1 rep.')
+        ? '“' + badCounts.name + (isTimed(badCounts.sets) ? '” needs at least 1 set and a time.' : holdInName(badCounts.name) ? '” needs at least 1 set.' : '” needs at least 1 set and 1 rep.')
         : needsName && needsExercise
           ? 'Name it and add an exercise to save it.'
           : needsName
@@ -593,6 +593,15 @@ export function editVals(ctx: Ctx) {
     setName: (e) => logic.s({ dName: e.target.value }),
     setSets: (e) => logic.s({ dSets: digitsOnly(e.target.value) }),
     setReps: (e) => logic.s({ dReps: digitsOnly(e.target.value) }),
+    // Reps or a time for each set, once the time can be saved.
+    draftTime: logic.model.holdReady
+      ? {
+          on: st.dTime !== undefined,
+          value: st.dTime || '',
+          onSwitch: (on: boolean) => logic.s({ dTime: on ? st.dTime || '30' : undefined }),
+          onChange: (e) => logic.s({ dTime: digitsOnly(e.target.value) }),
+        }
+      : null,
     setWeight: (e) => logic.s({ dWeight: numericOnly(e.target.value) }),
     draftBand: draftBand(st, logic.model, (patch) => logic.s(patch)),
     draftWeighted: draftWeighted(st, logic.model),
@@ -1180,6 +1189,7 @@ export function editVals(ctx: Ctx) {
       // value, "detail" below, and the database). Split it to show two boxes; each one writes the whole string
       // back, filling in the other box's current value.
       const setsParts = splitSetsReps(e.sets);
+      const timed = isTimed(e.sets);
       const setSets = setField('sets');
       const setWeight = setField('weight');
       const setBand = setField('band');
@@ -1207,7 +1217,26 @@ export function editVals(ctx: Ctx) {
         reps: setsParts.reps,
         weight: numericOnly(e.weight),
         rest: digitsOnly(e.rest),
-        setSets: (ev) => setSets({ target: { value: joinSetsReps(digitsOnly(ev.target.value), setsParts.reps) } }),
+        setSets: (ev) =>
+          setSets({
+            target: {
+              value: timed
+                ? joinSetsTime(digitsOnly(ev.target.value), setsParts.time)
+                : joinSetsReps(digitsOnly(ev.target.value), setsParts.reps),
+            },
+          }),
+        // Reps or a time for each set, once the time can be saved. Switched over, it starts from a usual amount.
+        time: logic.model.holdReady
+          ? {
+              on: timed,
+              value: setsParts.time,
+              onSwitch: (on: boolean) =>
+                on !== timed && setSets({ target: { value: on ? joinSetsTime(setsParts.sets, '30') : joinSetsReps(setsParts.sets, '10') } }),
+              onChange: (ev) => setSets({ target: { value: joinSetsTime(setsParts.sets, digitsOnly(ev.target.value)) } }),
+            }
+          : null,
+        // Before then, a hold keeps the time in its name, and has sets only.
+        noReps: timed,
         setReps: (ev) => setSets({ target: { value: joinSetsReps(setsParts.sets, digitsOnly(ev.target.value)) } }),
         setWeight: (ev) => setWeight({ target: { value: withLb(numericOnly(ev.target.value)) } }),
         // Done with a band: its level. Pounds for anything done with other equipment, or that already has a weight.

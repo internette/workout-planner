@@ -64,9 +64,9 @@ export default function Planner({ account = null }: { account?: Account | null }
     try {
       const saved = JSON.parse(window.localStorage.getItem(timersKey) || 'null');
       if (saved && typeof saved === 'object') logic.setState({ workoutTimer: saved });
-      // Sets done and a rest counting down are kept the same way, beside it.
+      // Sets done and a rest or timed set counting down are kept the same way, beside it.
       const sets = JSON.parse(window.localStorage.getItem(setsKey) || 'null');
-      if (sets && typeof sets === 'object') logic.setState({ setsDone: sets.setsDone || {}, rest: sets.rest || null });
+      if (sets && typeof sets === 'object') logic.setState({ setsDone: sets.setsDone || {}, rest: sets.rest || null, hold: sets.hold || null });
     } catch {
       // Unreadable or unavailable storage: start without saved timers.
     }
@@ -387,15 +387,16 @@ export default function Planner({ account = null }: { account?: Account | null }
       // Storage can be unavailable (private windows, blocked site data); the timer then lasts until a reload.
     }
   }, [timers, timersKey]);
-  const { setsDone, rest } = logic.state;
+  const { setsDone, rest, hold } = logic.state;
   useEffect(() => {
     try {
-      if ((setsDone && Object.keys(setsDone).length) || rest) window.localStorage.setItem(setsKey, JSON.stringify({ setsDone, rest }));
+      if ((setsDone && Object.keys(setsDone).length) || rest || hold)
+        window.localStorage.setItem(setsKey, JSON.stringify({ setsDone, rest, hold }));
       else window.localStorage.removeItem(setsKey);
     } catch {
       // Storage unavailable: sets done last until a reload, like the timer.
     }
-  }, [setsDone, rest, setsKey]);
+  }, [setsDone, rest, hold, setsKey]);
 
 
   // The rank-up transformation plays the first time a new rank is reached. The highest rank already celebrated is
@@ -406,7 +407,7 @@ export default function Planner({ account = null }: { account?: Account | null }
   // A running workout stopwatch (or a rest counting down) needs the screen to tick even though nothing else in state is changing; the session in
   // progress also shows outside the page, as a notification and on the lock screen.
   const anyTimerRunning =
-    Object.values(logic.state.workoutTimer || {}).some((t) => t && t.runningSince) || !!logic.state.rest;
+    Object.values(logic.state.workoutTimer || {}).some((t) => t && t.runningSince) || !!logic.state.rest || !!logic.state.hold;
   useLiveActivity(logic, view, anyTimerRunning);
   // The screen stays on from Start until the workout is finished, paused or not (unless turned off in Settings).
   useWakeLock(!!view?.liveActivity);
