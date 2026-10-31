@@ -42,7 +42,7 @@ function BossPanel({ v, show, onClose }: { v: PlannerVals; show: 'appear' | 'won
         <div className={styles.panel}>
           <p className={styles.eyebrow}>{a.eyebrow}</p>
           <span className={styles.glyph}>
-            <BossGlyph fill={a.gem} size={180} />
+            <BossGlyph k={a.k} fill={a.gem} size={180} />
           </span>
           <h2 id={titleId} className={styles.name}>
             {a.name}
@@ -77,7 +77,7 @@ function BossPanel({ v, show, onClose }: { v: PlannerVals; show: 'appear' | 'won
         <div className={styles.panel}>
           <p className={styles.eyebrow}>Victory</p>
           <span className={styles.felled}>
-            <BossGlyph fill="var(--color-gold)" size={180} faded />
+            <BossGlyph k={w.k} fill="var(--color-gold)" size={180} faded />
           </span>
           <h2 id={titleId} className={styles.name}>
             {w.name} is defeated

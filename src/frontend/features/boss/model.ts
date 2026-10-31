@@ -18,6 +18,7 @@ export function bossVals(ctx: Ctx) {
   const onToday = mi === TODAY_M && selDay === TODAY_D;
   const card = f
     ? {
+        k: f.k,
         name: bossName(f.k),
         gem: gemOf(f.k),
         eyebrow: f.escapes && f.dealt === 0 ? 'Rematch' : 'Boss battle',
@@ -47,6 +48,7 @@ export function bossVals(ctx: Ctx) {
     bossAppearKey: f ? f.k : null,
     bossAppear: f
       ? {
+          k: f.k,
           name: bossName(f.k),
           gem: gemOf(f.k),
           eyebrow: 'Boss battle · Rank ' + (bossRank(f.k) + 1),
@@ -62,6 +64,7 @@ export function bossVals(ctx: Ctx) {
     bossWinKey: lastWin ? lastWin.k : null,
     bossWon: lastWin
       ? {
+          k: lastWin.k,
           name: bossName(lastWin.k),
           line:
             'Felled in ' +
