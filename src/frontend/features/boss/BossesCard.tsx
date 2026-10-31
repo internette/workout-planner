@@ -32,7 +32,7 @@ export function BossesCard({ v }: { v: PlannerVals }) {
                 justifyContent: 'center',
               }}
             >
-              <BossGlyph fill={b.won || b.fighting ? b.deep : 'var(--color-outline)'} size={36} faded={!b.won && !b.fighting} />
+              <BossGlyph k={b.k} fill={b.won || b.fighting ? b.deep : 'var(--color-outline)'} size={36} faded={!b.won && !b.fighting} />
             </span>
             <Text variant="small" tone={b.won ? 'ink' : 'muted'} style={{ textAlign: 'center', lineHeight: 'var(--leading-tight)' }}>
               {b.label}
