@@ -1,6 +1,16 @@
 import { useId } from 'react';
 import { COMET_HOUND_BODY, COMET_HOUND_EYES, COMET_HOUND_VIEWBOX } from './cometHound';
-import { ECLIPSE_MAW_PARTS, ECLIPSE_MAW_RING, ECLIPSE_MAW_VIEWBOX } from './eclipseMaw';
+import {
+  ECLIPSE_MAW_ARCS,
+  ECLIPSE_MAW_BACK,
+  ECLIPSE_MAW_FACE,
+  ECLIPSE_MAW_GAP,
+  ECLIPSE_MAW_HEAD,
+  ECLIPSE_MAW_RING,
+  ECLIPSE_MAW_RING_TILT,
+  ECLIPSE_MAW_TEETH,
+  ECLIPSE_MAW_VIEWBOX,
+} from './eclipseMaw';
 import { RADIANT_GOLEM_BODY, RADIANT_GOLEM_CHEST, RADIANT_GOLEM_EYES, RADIANT_GOLEM_HEART, RADIANT_GOLEM_RAYS } from './radiantGolem';
 
 /** Indexes in BOSS_NAMES of the bosses with their own drawing. */
@@ -29,13 +39,31 @@ export function BossGlyph({ k, fill, size = 44, faded = false }: { k: number; fi
     );
   }
   if (k === ECLIPSE_MAW) {
-    // No eyes to drop: felled, it's just faded.
+    // Two masks part the layers: everything behind the ring stops short of the ring and the face, and the ring stops
+    // short of the face. Felled, the face has no eyes, star or mouth.
+    const gap = { fill: '#000', stroke: '#000', strokeWidth: ECLIPSE_MAW_GAP };
     return (
       <svg width={size} height={size} viewBox={ECLIPSE_MAW_VIEWBOX} aria-hidden="true" style={style} fill={fill}>
-        <path fillRule="evenodd" d={ECLIPSE_MAW_RING} />
-        {ECLIPSE_MAW_PARTS.map((d, i) => (
-          <path key={i} d={d} />
-        ))}
+        <mask id={maskId + 'r'} maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024">
+          <rect width="1024" height="1024" fill="#fff" />
+          <path d={ECLIPSE_MAW_HEAD} {...gap} />
+          <path d={ECLIPSE_MAW_RING} fillRule="evenodd" transform={ECLIPSE_MAW_RING_TILT} {...gap} />
+        </mask>
+        <mask id={maskId + 'f'} maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024">
+          <rect width="1024" height="1024" fill="#fff" />
+          <path d={ECLIPSE_MAW_HEAD} {...gap} />
+        </mask>
+        <g mask={`url(#${maskId}r)`}>
+          {ECLIPSE_MAW_BACK.map((d, i) => (
+            <path key={i} d={d} />
+          ))}
+          {ECLIPSE_MAW_ARCS.map((d, i) => (
+            <path key={'a' + i} d={d} fillRule="evenodd" />
+          ))}
+        </g>
+        <path d={ECLIPSE_MAW_RING} fillRule="evenodd" transform={ECLIPSE_MAW_RING_TILT} mask={`url(#${maskId}f)`} />
+        <path d={faded ? ECLIPSE_MAW_HEAD : ECLIPSE_MAW_HEAD + ECLIPSE_MAW_FACE} fillRule="evenodd" />
+        {faded ? null : <path d={ECLIPSE_MAW_TEETH} />}
       </svg>
     );
   }
