@@ -171,7 +171,6 @@ export function historyVals(ctx: Ctx) {
     running: runningRows,
     done: doneRows,
     empty: !runs.length,
-    find: () => logic.nav({ screen: 'arsenal', arsenalView: 'programs' }),
   };
 
   // ---- A run's page: the program as it ran

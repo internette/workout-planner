@@ -1,7 +1,7 @@
 // Programs: making and changing them, their blocks and their own workouts, and running them on the calendar.
 
 import { supabase } from '../supabase';
-import { inWeek, runPlace, runSessions } from '@/frontend/shared/programs';
+import { blockOnDays, inWeek, runPlace, runSessions } from '@/frontend/shared/programs';
 import type { BuiltinProgram, BuiltinWorkout, Exercise, Program, RidePlan } from './types';
 import type { SharedProgram } from '@/frontend/shared/sharedProgram';
 import { freeName, nameKey, rideCols } from './convert';
@@ -193,6 +193,17 @@ export async function addWorkoutToDay(block: Program['blocks'][number], day: num
         await ok(supabase.from('workouts').update({ program_days: [...same.days, day].sort((a, b) => a - b) }).eq('id', same.id));
     } else await addProgramWorkout(block.id, [day], w, week);
   }
+}
+
+/**
+ * Moves a program's workouts onto the weekdays chosen, block by block (see blockOnDays): to start it on days another
+ * program leaves free. Gives back its blocks with their new days, to start it on.
+ */
+export async function moveProgramDays<P extends Program>(program: P, chosen: number[]): Promise<P> {
+  const blocks = program.blocks.map((b) => ({ ...b, workouts: blockOnDays(b.workouts, chosen) }));
+  const changed = blocks.flatMap((b, i) => b.workouts.filter((w, j) => w.days.join() !== program.blocks[i].workouts[j].days.join()));
+  await Promise.all(changed.map((w) => ok(supabase.from('workouts').update({ program_days: w.days }).eq('id', w.id))));
+  return { ...program, blocks };
 }
 
 /**

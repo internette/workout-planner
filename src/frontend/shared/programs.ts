@@ -70,6 +70,25 @@ export function runSessions(blocks: Blocks, startIso: string, startBlock: number
 /** How many days a week a block has a workout on. */
 export const blockDays = (b: { workouts: { days: number[] }[] }) => new Set(b.workouts.flatMap((w) => w.days)).size;
 
+/**
+ * Moves a week's training days onto the weekdays chosen: its days, in order, go to the chosen days in order (spread
+ * out when there are more chosen than it needs). Each of `used` maps to its new day; null when it needs more days than
+ * were chosen, or has none, and stays as it is.
+ */
+export function dayMap(used: number[], chosen: number[]): Map<number, number> | null {
+  const from = [...new Set(used)].sort((a, b) => a - b);
+  const to = [...new Set(chosen)].sort((a, b) => a - b);
+  if (!from.length || from.length > to.length) return null;
+  const n = from.length;
+  return new Map(from.map((d, i) => [d, to[n === 1 ? 0 : Math.round((i * (to.length - 1)) / (n - 1))]]));
+}
+
+/** A block's workouts moved onto the chosen weekdays (see dayMap); as they were when they don't fit. */
+export function blockOnDays<W extends { days: number[] }>(workouts: W[], chosen: number[]): W[] {
+  const map = dayMap(workouts.flatMap((w) => w.days), chosen);
+  return map ? workouts.map((w) => ({ ...w, days: w.days.map((d) => map.get(d)!).sort((a, b) => a - b) })) : workouts;
+}
+
 type ModelLike = {
   workouts: { id: string }[];
   programs: { id: string; blocks: { id: string; workouts: { id: string }[] }[] }[];

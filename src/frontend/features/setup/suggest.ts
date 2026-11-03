@@ -1,6 +1,7 @@
 // Where to begin: the built-in program that best fits what someone said in "Customize your experience".
 import { EQUIPMENT } from '@/frontend/shared/constants';
 import { kitOfAll } from '@/frontend/shared/equipment';
+import { dayMap } from '@/frontend/shared/programs';
 import type { BuiltinProgram, BuiltinWorkout, Profile } from '@/frontend/data/plannerData';
 
 export interface Suggestion {
@@ -20,16 +21,13 @@ export interface Suggestion {
  * (spread out when they have more days than it needs). A block that needs more days than they have stays as it is.
  */
 export function onDays(program: BuiltinProgram, chosen: number[]): BuiltinProgram {
-  const mine = [...chosen].sort((a, b) => a - b);
   return {
     ...program,
     blocks: program.blocks.map((b) => {
-      const used = b.days.flatMap((list, d) => (list.length ? [d] : []));
-      if (!used.length || used.length > mine.length) return b;
-      const n = used.length;
-      const to = used.map((_, i) => mine[n === 1 ? 0 : Math.round((i * (mine.length - 1)) / (n - 1))]);
+      const map = dayMap(b.days.flatMap((list, d) => (list.length ? [d] : [])), chosen);
+      if (!map) return b;
       const days: string[][] = Array.from({ length: 7 }, () => []);
-      used.forEach((d, i) => (days[to[i]] = b.days[d]));
+      map.forEach((to, from) => (days[to] = b.days[from]));
       return { ...b, days };
     }),
   };

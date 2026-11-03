@@ -3,7 +3,7 @@
 import { DOW3, DOWFULL, MON3 } from '@/frontend/shared/constants';
 import { isoOf, minText, noticePatch, plural, editTemplatePatch } from '@/frontend/shared/helpers';
 import { iconSvg } from '@/frontend/shared/icons';
-import { blockDays, blockSessions, runBlockDates, runPlace, runWeeks } from '@/frontend/shared/programs';
+import { blockDays, blockOnDays, blockSessions, runBlockDates, runPlace, runWeeks } from '@/frontend/shared/programs';
 import { displayName } from '@/shared/auth';
 import { EQUIPMENT } from '@/frontend/shared/constants';
 import { kitChip, kitOfAll } from '@/frontend/shared/equipment';
@@ -155,6 +155,17 @@ export function programVals(ctx: Ctx) {
     return (p.blocks.length > 1 ? blockLabel(p.blocks[at.block], at.block) + ' · ' : '') + 'week ' + at.week + ' of ' + at.weeks;
   };
 
+  // A running program's weekdays on and after `iso` (or its start, if later): each day's workouts, in the block it's at
+  // then; every block's, when it has ended by then.
+  const daysThen = (p: Program, r: ProgramRun, iso: string) => {
+    const at = runPlace(p.blocks, r.start, r.startBlock, iso > r.start ? iso : r.start);
+    const map = new Map<number, Program['blocks'][number]['workouts']>();
+    for (const b of at ? [p.blocks[at.block]] : p.blocks)
+      for (const w of b.workouts.filter((x) => x.week == null || x.week === (at?.week ?? 1)))
+        for (const d of w.days) if (!(map.get(d) || []).some((x) => x.name === w.name)) map.set(d, [...(map.get(d) || []), w]);
+    return map;
+  };
+
   const open = (id: string) => () => logic.nav({ screen: 'program', programId: id, programOpenBlocks: {}, programStart: null, programShareOpen: false });
 
   // ---- The Programs tab
@@ -188,6 +199,61 @@ export function programVals(ctx: Ctx) {
       programId: id,
       hist: (st.hist || []).concat([{ screen: 'arsenal' }]),
     }));
+
+  // ---- Adding a program, from Your programs: every one not running, with its days and how they sit with what's running.
+  const addSt = st.programAdd || null;
+  const runningNow = (model.programs || []).flatMap((p) => runsOf(p.id).filter(live).map((r) => ({ p, r })));
+  const busyNow = new Set(runningNow.flatMap(({ p, r }) => [...daysThen(p, r, todayIso).keys()]));
+  const aq = (addSt?.q || '').trim().toLowerCase();
+  const addRow = (p: Shown) => {
+    const days = [...new Set(p.blocks[0]?.workouts.flatMap((w) => w.days) ?? [])].sort((a, b) => a - b);
+    const shared = days.filter((d) => busyNow.has(d));
+    return {
+      key: p.id,
+      name: p.name,
+      meta: metaOf(p),
+      days: days.length ? dayList(days) : '',
+      svg: iconSvg(p.blocks[0]?.workouts[0]?.icon || 'h', p.blocks[0]?.workouts[0]?.iconColor || undefined),
+      // Next to what's running: the days it shares, or that it fits around it.
+      tag: !runningNow.length || !days.length
+        ? null
+        : shared.length
+          ? { label: 'Shares ' + dayList(shared), tone: 'neutral' as const }
+          : { label: runningNow.length === 1 ? 'Fits around ' + runningNow[0].p.name : 'Fits around what’s running', tone: 'soft' as const },
+      pick: () => logic.s({ programAdd: null, programId: p.id, programStart: { date: isoOf(nextSunday(today)), block: 0 } }),
+    };
+  };
+  const addHit = (p: Shown) => !aq || p.name.toLowerCase().includes(aq);
+  const programAdd = {
+    label: runningNow.length ? 'Add a program' : 'Start a program',
+    openPicker: () => logic.s({ programAdd: { q: '' } }),
+    picker: addSt
+      ? {
+          open: true,
+          title: runningNow.length ? 'Add a program' : 'Start a program',
+          q: addSt.q,
+          setQ: (e: { target: { value: string } }) => logic.s({ programAdd: { q: e.target.value } }),
+          clearQ: () => logic.s({ programAdd: { q: '' } }),
+          groups: [
+            { label: 'Yours', items: own.filter((p) => !isRunning(p.id)) },
+            { label: 'Built-in', items: builtins },
+          ]
+            .map((g) => ({ label: g.label, items: g.items.filter(addHit).map(addRow) }))
+            .filter((g) => g.items.length),
+          noMatch: aq ? 'No programs match “' + addSt.q.trim() + '”.' : 'Every program you have is running.',
+          // Making a new one: its editor, then back to Your programs.
+          newProgram: () =>
+            logic.saveOnce('program', () => db.createProgram('My program'), (id: string) => ({
+              programAdd: null,
+              screen: 'programEdit',
+              programId: id,
+              hist: (st.hist || []).concat([{ screen: 'programRuns' }]),
+            })),
+          busy: logic.busy('program'),
+          cancel: () => logic.s({ programAdd: null }),
+        }
+      : null,
+  };
 
   // ---- A program's page
   const ownProgram = st.programId ? (model.programs || []).find((p) => p.id === st.programId) || null : null;
@@ -294,42 +360,104 @@ export function programVals(ctx: Ctx) {
   const programStart =
     startable && startSt
       ? (() => {
-          const blocks = startable.blocks;
-          const block = Math.min(startSt.block, Math.max(0, blocks.length - 1));
+          // Its blocks, as starting it needs them.
+          type StartBlock = { name: string; weeks: number; workouts: { id: string; name: string; icon: string | null; iconColor: string | null; days: number[]; week: number | null }[] };
+          const base: StartBlock[] = startable.blocks;
+          const block = Math.min(startSt.block, Math.max(0, base.length - 1));
           const date = startSt.date < todayIso ? todayIso : startSt.date;
+          const end0 = isoOf(runBlockDates(base, date, block).slice(-1)[0]?.to ?? fromIso(date));
+          // Other programs running at the same time, and the weekdays they have then.
+          const overlap = (model.programs || [])
+            .filter((p) => p.id !== ownProgram?.id)
+            .flatMap((p) => runsOf(p.id).filter(live).map((r) => ({ p, r })))
+            .filter(({ r }) => r.start <= end0 && r.end >= date);
+          const others = overlap.map(({ p, r }) => ({ p, days: daysThen(p, r, date) }));
+          const busy = new Set(others.flatMap((o) => [...o.days.keys()]));
+          // Its own weekdays, in the block it starts at, and how many it needs in its busiest week.
+          const ownDays = [...new Set(base[block]?.workouts.flatMap((w) => w.days) ?? [])].sort((a, b) => a - b);
+          const needs = Math.max(0, ...base.slice(block).map((b) => blockDays(b)));
+          const shared = ownDays.filter((d) => busy.has(d));
+          // Shared days: it moves to the free days (enough of them to fit, keeping its own days when there aren't), unless
+          // the person keeps both.
+          const free = [0, 1, 2, 3, 4, 5, 6].filter((d) => !busy.has(d));
+          const suggested = free.length >= needs ? free : [...free, ...ownDays.filter((d) => busy.has(d))].slice(0, Math.max(needs, free.length)).sort((a, b) => a - b);
+          const chosen = startSt.days ?? suggested;
+          const moving = shared.length > 0 && !startSt.both;
+          const fits = chosen.length >= needs;
+          const blocks = moving && fits ? base.map((b) => ({ ...b, workouts: blockOnDays(b.workouts, chosen) })) : base;
           const lands = runBlockDates(blocks, date, block);
           const end = isoOf(lands.length ? lands[lands.length - 1].to : fromIso(date));
-          const sessions = blocks
-            .slice(block)
-            .reduce((n, b) => n + blockSessions(b), 0);
-          // Other programs running at the same time.
-          const overlap = (model.programs || [])
-            .flatMap((p) => runsOf(p.id).filter(live).map((r) => ({ p, r })))
-            .filter(({ r }) => r.start <= end && r.end >= date);
+          const sessions = blocks.slice(block).reduce((n, b) => n + blockSessions(b), 0);
+          const newDays = new Set(blocks[block]?.workouts.flatMap((w) => w.days) ?? []);
+          const stillShared = [...newDays].filter((d) => busy.has(d)).sort((a, b) => a - b);
+          const names = overlap.map(({ p }) => '“' + p.name + '”').join(' and ');
+          const shortNames = overlap.map(({ p }) => p.name).join(' and ');
+          const setSt = (patch: Partial<NonNullable<typeof startSt>>) => logic.s({ programStart: { ...startSt, ...patch } });
           return {
             open: true,
             title: 'Start ' + startable.name,
             date,
             min: todayIso,
-            setDate: (e) => logic.s({ programStart: { ...startSt, date: e.target.value || todayIso } }),
-            blocks: blocks.length > 1 ? blocks.map((b, i) => ({ value: String(i), label: blockLabel(b, i) })) : null,
+            setDate: (e) => setSt({ date: e.target.value || todayIso }),
+            blocks: base.length > 1 ? base.map((b, i) => ({ value: String(i), label: blockLabel(b, i) })) : null,
             block: String(block),
-            setBlock: (v: string) => logic.s({ programStart: { ...startSt, block: Number(v) } }),
+            setBlock: (v: string) => setSt({ block: Number(v) }),
             summary: shortDate(fromIso(date)) + ' – ' + shortDate(fromIso(end)) + ' · ' + plural(runWeeks(blocks, block), 'week') + ', ' + plural(sessions, 'session'),
             lands: lands.length > 1 ? lands.map((l) => l.name + ' ' + shortDate(l.from) + ' – ' + shortDate(l.to)).join(' · ') : '',
-            overlap: overlap.length
-              ? overlap.map(({ p }) => '“' + p.name + '”').join(' and ') + (overlap.length > 1 ? ' run' : ' runs') + ' then too. Both go on the calendar.'
-              : '',
-            canStart: sessions > 0,
+            // No shared days: it just says the other runs then too.
+            overlap: overlap.length && !shared.length ? names + (overlap.length > 1 ? ' run' : ' runs') + ' then too, on other days.' : '',
+            // Its week with theirs, once another runs then: each day's workouts, a shared day ringed.
+            week: overlap.length
+              ? Array.from({ length: 7 }, (_, d) => {
+                  const mine = blocks[block]?.workouts.filter((w) => w.days.includes(d)) ?? [];
+                  const theirs = others.flatMap((o) => o.days.get(d) ?? []);
+                  const all = [...theirs, ...mine];
+                  return {
+                    letter: DOW3[d].charAt(0),
+                    label: DOWFULL[d] + ': ' + (all.length ? all.map((w) => w.name).join(' and ') : 'rest'),
+                    icons: all.slice(0, 2).map((w) => iconSvg(w.icon || 'h', w.iconColor || undefined)),
+                    flag: mine.length > 0 && theirs.length > 0,
+                  };
+                })
+              : null,
+            weekNote: overlap.length ? 'Your week with ' + shortNames + (stillShared.length ? '. Ringed days have both.' : '.') : '',
+            // On the days it shares: move it, or do both.
+            clash: shared.length
+              ? {
+                  title: dayList(shared) + (shared.length > 1 ? ' are' : ' is') + ' taken by ' + shortNames,
+                  value: moving ? 'move' : 'both',
+                  set: (v: string) => setSt({ both: v === 'both' }),
+                  moveTitle: 'Use the free days',
+                  moveNote: ownProgram
+                    ? 'Moves “' + ownProgram.name + '” onto the days you pick, for this run and the next.'
+                    : 'Your copy goes on the days you pick.',
+                  bothTitle: 'Do both on those days',
+                  bothNote: 'Two workouts on ' + dayList(shared) + '.',
+                  days: chosen,
+                  toggleDay: (d: number) => {
+                    const next = chosen.includes(d) ? chosen.filter((x) => x !== d) : [...chosen, d].sort((a, b) => a - b);
+                    if (next.length) setSt({ days: next });
+                  },
+                  daysNote: !fits
+                    ? 'It needs ' + plural(needs, 'day') + ' a week: pick ' + (needs - chosen.length) + ' more.'
+                    : moving && stillShared.length
+                      ? 'Only ' + plural(free.length, 'day') + (free.length === 1 ? ' is' : ' are') + ' free, so ' + dayList(stillShared) + ' still ' + (stillShared.length > 1 ? 'have' : 'has') + ' both.'
+                      : '',
+                  daysNoteTone: (fits ? 'muted' : 'danger') as 'muted' | 'danger',
+                }
+              : null,
+            canStart: sessions > 0 && (!moving || fits),
             emptyNote: sessions ? '' : 'Add workouts to it first: it has nothing to put on the calendar.',
             busy: logic.busy('startProgram'),
             cancel: () => logic.s({ programStart: null }),
             start: () =>
               logic.saveOnce('startProgram', async () => {
                 // A built-in one: its copy first, read back with its workouts, then that copy starts.
-                const own = ownProgram
+                let own = ownProgram
                   ? ownProgram
                   : await db.copyBuiltinProgram(builtinProgram!, catalog).then(async (id) => (await db.loadModel(today)).programs!.find((p) => p.id === id)!);
+                // Moved off the days another program has: onto the days picked, then started there.
+                if (moving) own = await db.moveProgramDays(own, chosen);
                 const r = await db.startProgram(own, date, block, todayIso, { name: own.name, snapshot: db.programSnapshot(own, { notes: true, by: null }) });
                 return { ...r, id: own.id, name: own.name };
               }, (r: { first: string | null; count: number; id: string; name: string }) => {
@@ -603,6 +731,7 @@ export function programVals(ctx: Ctx) {
     isProgram: st.screen === 'program',
     program,
     programStart,
+    programAdd,
     programMove,
     isProgramEdit: st.screen === 'programEdit',
     programEdit,

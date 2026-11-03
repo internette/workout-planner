@@ -29,10 +29,24 @@ export default function WeekStripPage() {
         <WeekStrip days={days} />
       </Card>
 
+      <h2 id="flagged" style={h2}>Two on a day</h2>
+      <p style={note}>
+        A day can hold more than one icon: they sit side by side. <code>flag</code> rings a day in{' '}
+        <code>--color-pink</code> to call it out, as the Start sheet does for a day two programs share. Say so in its{' '}
+        <code>label</code> too (&ldquo;Tuesday: Lower Body Machines and Front Splits Workout&rdquo;), since the ring is only seen.
+      </p>
+      <Card pad="md" style={{ maxWidth: 420 }}>
+        <WeekStrip
+          days={days.map((d, i) =>
+            i === 3 ? { ...d, label: NAMES[i] + ': two workouts', icon: <>{icon('v')}{icon('h')}</>, flag: true } : d,
+          )}
+        />
+      </Card>
+
       <h2 id="accessibility" style={h2}>Accessibility</h2>
       <p style={note}>
         Each day is an image to a screen reader, read by its <code>label</code>: &ldquo;Monday: Band Upper Body&rdquo;,
-        &ldquo;Tuesday: rest&rdquo;. The letters and icons are hidden from it. In forced colors each tile is outlined.
+        &ldquo;Tuesday: rest&rdquo;. The letters and icons are hidden from it. In forced colors each tile is outlined, and a ringed one gets a thicker outline in the highlight color.
       </p>
     </DocPage>
   );
