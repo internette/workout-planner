@@ -4,18 +4,21 @@ import { Card } from '@moonshot/design-system/card';
 import { Chip, ChipGroup } from '@moonshot/design-system/chip';
 import { Dialog } from '@moonshot/design-system/dialog';
 import { IconTile } from '@moonshot/design-system/icon-tile';
+import { OptionCard, OptionGroup } from '@moonshot/design-system/option-card';
 import { SegmentedControl } from '@moonshot/design-system/segmented-control';
 import { TextField } from '@moonshot/design-system/text-field';
 import { Text } from '@moonshot/design-system/typography';
 import { Calendar, ChevronDown, ChevronRight, Copy, Pencil, Repeat } from '@moonshot/design-system/icons';
 import { BackBar } from '@/frontend/components/BackBar';
+import { WeekdayToggles } from '@/frontend/components/WeekdayToggles';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { WeekStrip } from '@moonshot/design-system/week-strip';
 import { Fragment } from 'react';
 import { ShareProgramDialog } from './ShareProgramDialog';
 
-function StartDialog({ v }: { v: PlannerVals }) {
+/** Starting a program: when, from which block, and, with another program running then, the week the two make. */
+export function StartDialog({ v }: { v: PlannerVals }) {
   const s = v.programStart;
   if (!s) return null;
   return (
@@ -43,6 +46,39 @@ function StartDialog({ v }: { v: PlannerVals }) {
               Start at
             </Text>
             <SegmentedControl label="Start at" options={s.blocks} value={s.block} onChange={s.setBlock} fullWidth equalWidth wrap />
+          </div>
+        ) : null}
+        {s.week ? (
+          <div>
+            <Text variant="micro" tone="slate" as="div" aria-hidden="true">
+              Your week
+            </Text>
+            <WeekStrip
+              days={s.week.map((d) => ({ letter: d.letter, label: d.label, flag: d.flag, icon: d.icons.length ? <>{d.icons.map((icon, i) => <Fragment key={i}>{icon}</Fragment>)}</> : undefined }))}
+            />
+            <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
+              {s.weekNote}
+            </Text>
+          </div>
+        ) : null}
+        {s.clash ? (
+          <div>
+            <Text variant="body" weight="semibold" as="p" style={{ margin: '0 0 var(--space-2)' }}>
+              {s.clash.title}
+            </Text>
+            <OptionGroup label={s.clash.title}>
+              <OptionCard name="startDays" value="move" checked={s.clash.value === 'move'} onChange={s.clash.set} title={s.clash.moveTitle} description={s.clash.moveNote}>
+                <div style={{ marginTop: 'var(--space-2)' }}>
+                  <WeekdayToggles label="Its days" days={s.clash.days} onToggle={s.clash.toggleDay} />
+                  {s.clash.daysNote ? (
+                    <Text variant="body" tone={s.clash.daysNoteTone} as="p" role="status" style={{ margin: 'var(--space-2) 0 0' }}>
+                      {s.clash.daysNote}
+                    </Text>
+                  ) : null}
+                </div>
+              </OptionCard>
+              <OptionCard name="startDays" value="both" checked={s.clash.value === 'both'} onChange={s.clash.set} title={s.clash.bothTitle} description={s.clash.bothNote} />
+            </OptionGroup>
           </div>
         ) : null}
         <Card pad="sm" style={{ background: 'var(--color-canvas)', boxShadow: 'none' }}>

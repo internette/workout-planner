@@ -11,12 +11,19 @@
   margin-top: var(--space-2);
   height: 36px;
   border-radius: var(--radius-md);
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
   background: var(--color-day-rest);
 }
 .on { background: var(--color-pink-tint); }
+/* Two icons on a narrow tile shrink to share it rather than spill out. */
+.tile > :not(:only-child) { flex: 0 1 auto; min-width: 0; max-width: calc(50% - 2px); height: auto; }
+/* Called out: a ring in the theme color, inside the tile so the week keeps its width. */
+.flag { box-shadow: inset 0 0 0 2px var(--color-pink); }
 
 @media (forced-colors: active) {
   .tile { outline: 1px solid CanvasText; outline-offset: -1px; }
+  .flag { outline: 3px solid Highlight; }
 }

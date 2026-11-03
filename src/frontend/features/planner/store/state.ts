@@ -194,7 +194,11 @@ export interface PlannerState {
   // Programs: the one whose page is open (a built-in one's id starts "builtin:"), the start sheet, the workout picker
   // (the block and weekday it adds to), the share sheet, which blocks are open on the page.
   programId?: string | null;
-  programStart?: { date: string; block: number } | null;
+  // `days`: the weekdays it goes on, picked to stay off the days another running program has (null: the ones it
+  // suggests); `both`: it keeps its own days, so those days have both.
+  programStart?: { date: string; block: number; days?: number[] | null; both?: boolean } | null;
+  // Adding a program from Your programs: the picker, and what's typed in its search.
+  programAdd?: { q: string } | null;
   // Moving a running program to start on another day: which run, and the day picked.
   programMove?: { runId: string; date: string } | null;
   // Moving the session on screen to another day: the day picked so far.
