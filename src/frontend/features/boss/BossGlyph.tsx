@@ -13,7 +13,7 @@ import {
 } from './eclipseMaw';
 import { CRESCENT_TYRANT_PATH, CRESCENT_TYRANT_VIEWBOX } from './crescentTyrant';
 import { STORM_WYRM_BOLT, STORM_WYRM_FACE, STORM_WYRM_HEAD, STORM_WYRM_MIRROR, STORM_WYRM_SIDE, STORM_WYRM_WHISKER } from './stormWyrm';
-import { RADIANT_GOLEM_BODY, RADIANT_GOLEM_CHEST, RADIANT_GOLEM_EYES, RADIANT_GOLEM_HEART, RADIANT_GOLEM_RAYS } from './radiantGolem';
+import { RADIANT_GOLEM_BODY, RADIANT_GOLEM_CUTS } from './radiantGolem';
 
 /** Indexes in BOSS_NAMES of the bosses with their own drawing. */
 const STORM_WYRM = 1;
@@ -100,27 +100,16 @@ export function BossGlyph({ k, fill, size = 44, faded = false }: { k: number; fi
     );
   }
   if (k === RADIANT_GOLEM) {
-    // Eyes and heart are cut out with a mask; felled, it's whole.
+    // Eyes and the sun core are cut out with a mask; felled, it's whole.
     return (
-      <svg width={size} height={size} viewBox="0 0 220 220" aria-hidden="true" style={style} fill={fill}>
+      <svg width={size} height={size} viewBox="0 0 220 220" aria-hidden="true" style={style}>
         {faded ? null : (
           <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="220" height="220">
             <rect width="220" height="220" fill="#fff" />
-            <g fill="#000" stroke="#000" strokeWidth="3" strokeLinejoin="round">
-              {RADIANT_GOLEM_EYES.map((e, i) => (
-                <rect key={i} x={e.x} y={e.y} width="13" height="13" rx="2" />
-              ))}
-              <path d={RADIANT_GOLEM_HEART} />
-            </g>
+            <path d={RADIANT_GOLEM_CUTS} fill="#000" />
           </mask>
         )}
-        <g stroke={fill} strokeWidth="4" strokeLinejoin="round" mask={faded ? undefined : `url(#${maskId})`}>
-          {RADIANT_GOLEM_BODY.map((r, i) => (
-            <rect key={i} {...r} rx="10" />
-          ))}
-          <path d={RADIANT_GOLEM_CHEST} />
-        </g>
-        <path d={RADIANT_GOLEM_RAYS} />
+        <path d={RADIANT_GOLEM_BODY} fill={fill} mask={faded ? undefined : `url(#${maskId})`} />
       </svg>
     );
   }
