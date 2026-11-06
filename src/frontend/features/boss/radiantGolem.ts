@@ -1,21 +1,10 @@
-// The Radiant Golem (rank 25): a stone block with a gem heart, eyes and heart cut through, and a sunburst crown of
-// seven sharp rays fanned over its head, long and short in turn. In the 220 × 220 box the crescent uses.
+// The Radiant Golem (rank 25): a crystal golem, cut like a gem. A hexagon head, a faceted chest, crystal shards for
+// shoulders and arms (the lower arms tilted 6° in), and a fan of sharp rays over its head, long and short in turn. In the 220 × 220 box the crescent uses.
 
-/** The head, the chest and the two arms. Drawn with a soft rounded stroke, since stone has worn edges. */
-export const RADIANT_GOLEM_BODY = [
-  { x: 78, y: 50, width: 64, height: 52 },
-  { x: 16, y: 112, width: 26, height: 64 },
-  { x: 178, y: 112, width: 26, height: 64 },
-] as const;
-export const RADIANT_GOLEM_CHEST = 'M46 112 L174 112 L160 192 L60 192 Z';
+/** The head, chest, shoulders, arms and rays, as one path. */
+export const RADIANT_GOLEM_BODY =
+  'M110 30L131 42L131 68L110 80L89 68L89 42ZM70 92L150 92L168 122L138 194L82 194L52 122ZM62 92L36 58L24 90L46 116ZM158 92L184 58L196 90L174 116ZM44 124L24.4 148.2L37.4 195.1L59.5 156.6ZM176 124L195.6 148.2L182.6 195.1L160.5 156.6ZM76.4 42.1L63.3 32.2L79.1 36.5ZM81.2 33.3L75.9 24.3L85.4 28.7ZM88.3 26.2L82.4 10.9L93.7 22.9ZM97.1 21.4L97.3 10.9L103.1 19.7ZM106.9 19.1L110 3L113.1 19.1ZM116.9 19.7L122.7 10.9L122.9 21.4ZM126.3 22.9L137.6 10.9L131.7 26.2ZM134.6 28.7L144.1 24.3L138.8 33.3ZM140.9 36.5L156.7 32.2L143.6 42.1Z';
 
-/** Cut through the body: two square eyes, then the gem heart. */
-export const RADIANT_GOLEM_EYES = [
-  { x: 92, y: 68 },
-  { x: 115, y: 68 },
-] as const;
-export const RADIANT_GOLEM_HEART = 'M110 132 L126 150 L110 168 L94 150 Z';
-
-/** The crown's rays, kept off the soft stroke so their tips stay sharp. */
-export const RADIANT_GOLEM_RAYS =
-  'M65.4 64.9C59.7 55.4 50.1 49.2 42.9 44.7C51.0 47.4 61.9 50.7 72.8 49.0ZM74.8 46.4C74.3 39.0 70.3 32.9 67.2 28.4C71.3 32.0 77.0 36.6 84.3 37.9ZM85.6 37.0C88.1 26.2 85.6 15.1 83.5 6.9C87.4 14.4 93.0 24.3 102.0 30.7ZM103.6 30.4C108.2 24.6 109.3 17.4 110.0 12.0C110.7 17.4 111.8 24.6 116.4 30.4ZM118.0 30.7C127.0 24.3 132.6 14.4 136.5 6.9C134.4 15.1 131.9 26.2 134.4 37.0ZM135.7 37.9C143.0 36.6 148.7 32.0 152.8 28.4C149.7 32.9 145.7 39.0 145.2 46.4ZM147.2 49.0C158.1 50.7 169.0 47.4 177.1 44.7C169.9 49.2 160.3 55.4 154.6 64.9Z';
+/** Cut through the body: two slit eyes, and the sun core in the chest. */
+export const RADIANT_GOLEM_CUTS =
+  'M96 52L106 56L106 61L96 58ZM124 52L114 56L114 61L124 58ZM99 138a11 11 0 1 0 22 0a11 11 0 1 0 -22 0ZM107.9 124.7L110 119L112.1 124.7ZM117.9 127.1L123.4 124.6L120.9 130.1ZM123.3 135.9L129 138L123.3 140.1ZM120.9 145.9L123.4 151.4L117.9 148.9ZM112.1 151.3L110 157L107.9 151.3ZM102.1 148.9L96.6 151.4L99.1 145.9ZM96.7 140.1L91 138L96.7 135.9ZM99.1 130.1L96.6 124.6L102.1 127.1Z';

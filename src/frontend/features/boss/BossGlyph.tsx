@@ -12,22 +12,52 @@ import {
   ECLIPSE_MAW_VIEWBOX,
 } from './eclipseMaw';
 import { CRESCENT_TYRANT_PATH, CRESCENT_TYRANT_VIEWBOX } from './crescentTyrant';
-import { RADIANT_GOLEM_BODY, RADIANT_GOLEM_CHEST, RADIANT_GOLEM_EYES, RADIANT_GOLEM_HEART, RADIANT_GOLEM_RAYS } from './radiantGolem';
+import { STORM_WYRM_BOLT, STORM_WYRM_FACE, STORM_WYRM_HEAD, STORM_WYRM_MIRROR, STORM_WYRM_SIDE, STORM_WYRM_WHISKER } from './stormWyrm';
+import { RADIANT_GOLEM_BODY, RADIANT_GOLEM_CUTS } from './radiantGolem';
 
 /** Indexes in BOSS_NAMES of the bosses with their own drawing. */
+const STORM_WYRM = 1;
 const COMET_HOUND = 2;
 const ECLIPSE_MAW = 3;
 const RADIANT_GOLEM = 4;
 const CRESCENT_TYRANT = 5;
 
 /**
- * A boss, in the color of the rank it guards. Felled, it's drawn faded and eyeless. The Comet Hound, the Eclipse Maw,
- * the Radiant Golem and the Crescent Tyrant have their own drawings; every other boss is still the crescent with two eyes.
+ * A boss, in the color of the rank it guards. Felled, it's drawn faded and eyeless. The Storm Wyrm, the Comet Hound,
+ * the Eclipse Maw, the Radiant Golem and the Crescent Tyrant have their own drawings; every other boss is still the crescent with two eyes.
  */
 export function BossGlyph({ k, fill, size = 44, faded = false }: { k: number; fill: string; size?: number; faded?: boolean }) {
   const style = { display: 'block', opacity: faded ? 0.45 : undefined };
   // useId's colons and guillemets aren't safe inside url(#…)
   const maskId = 'boss' + useId().replace(/[^\w-]/g, '');
+  if (k === STORM_WYRM) {
+    // Eyes, nostrils and the brow bolt are cut out with a mask; felled, it's whole.
+    const side = (
+      <>
+        <path d={STORM_WYRM_SIDE} />
+        <path d={STORM_WYRM_WHISKER} fill="none" stroke={fill} strokeWidth="4" strokeLinecap="round" />
+      </>
+    );
+    return (
+      <svg width={size} height={size} viewBox="0 0 220 220" aria-hidden="true" style={style} fill={fill}>
+        {faded ? null : (
+          <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="220" height="220">
+            <rect width="220" height="220" fill="#fff" />
+            <g fill="#000">
+              <path d={STORM_WYRM_FACE} />
+              <path d={STORM_WYRM_FACE} transform={STORM_WYRM_MIRROR} />
+              <path d={STORM_WYRM_BOLT} />
+            </g>
+          </mask>
+        )}
+        <g mask={faded ? undefined : `url(#${maskId})`}>
+          <path d={STORM_WYRM_HEAD} />
+          {side}
+          <g transform={STORM_WYRM_MIRROR}>{side}</g>
+        </g>
+      </svg>
+    );
+  }
   if (k === COMET_HOUND) {
     return (
       <svg width={size} height={size} viewBox={COMET_HOUND_VIEWBOX} aria-hidden="true" style={style}>
@@ -70,27 +100,16 @@ export function BossGlyph({ k, fill, size = 44, faded = false }: { k: number; fi
     );
   }
   if (k === RADIANT_GOLEM) {
-    // Eyes and heart are cut out with a mask; felled, it's whole.
+    // Eyes and the sun core are cut out with a mask; felled, it's whole.
     return (
-      <svg width={size} height={size} viewBox="0 0 220 220" aria-hidden="true" style={style} fill={fill}>
+      <svg width={size} height={size} viewBox="0 0 220 220" aria-hidden="true" style={style}>
         {faded ? null : (
           <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="220" height="220">
             <rect width="220" height="220" fill="#fff" />
-            <g fill="#000" stroke="#000" strokeWidth="3" strokeLinejoin="round">
-              {RADIANT_GOLEM_EYES.map((e, i) => (
-                <rect key={i} x={e.x} y={e.y} width="13" height="13" rx="2" />
-              ))}
-              <path d={RADIANT_GOLEM_HEART} />
-            </g>
+            <path d={RADIANT_GOLEM_CUTS} fill="#000" />
           </mask>
         )}
-        <g stroke={fill} strokeWidth="4" strokeLinejoin="round" mask={faded ? undefined : `url(#${maskId})`}>
-          {RADIANT_GOLEM_BODY.map((r, i) => (
-            <rect key={i} {...r} rx="10" />
-          ))}
-          <path d={RADIANT_GOLEM_CHEST} />
-        </g>
-        <path d={RADIANT_GOLEM_RAYS} />
+        <path d={RADIANT_GOLEM_BODY} fill={fill} mask={faded ? undefined : `url(#${maskId})`} />
       </svg>
     );
   }
