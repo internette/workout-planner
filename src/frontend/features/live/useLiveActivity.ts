@@ -1,21 +1,17 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { savedAccent, savedTheme } from '@moonshot/design-system/theme';
 import type { PlannerLogic } from '@/frontend/features/planner/store/PlannerLogic';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { clockSeconds, type LiveActivity, type LiveDone } from './model';
-import { liveLook } from './look';
-import { canNotify, canPlayer, liveSettings, onLiveSettings, setAudioSession, type LiveSettings } from './settings';
+import { canNotify, liveSettings, onLiveSettings, setAudioSession, type LiveSettings } from './settings';
 import type { WorkerIn, WorkerOut } from './timer.worker';
 
 // The web's stand-in for a Live Activity: the workout in progress, kept up to date outside the page.
-// - A Web Worker keeps the clock ticking (the page's own timers slow to once a minute in the background) and draws the
-//   lock-screen artwork.
+// - A Web Worker keeps the clock ticking (the page's own timers slow to once a minute in the background).
 // - The service worker shows it as a notification with buttons (tick off the next exercise, finish, pause), updated
 //   in place as it goes.
-// - The Media Session puts it on the lock screen as the "now playing" player, with its own clock and buttons. That
-//   needs audio playing, so it plays silence, which stops other music: it's off unless turned on.
+// It plays no sound of its own, so music from other apps plays on at its own volume.
 
 // 'tick' is what the first version's notifications called 'set'; one still showing may send it.
 type Action = 'open' | 'set' | 'tick' | 'more' | 'skip' | 'finish' | 'pause' | 'resume' | 'write';
@@ -89,29 +85,6 @@ function doneNotice(d: LiveDone): Shown {
   };
 }
 
-// One second of silence, as a WAV file (8 kHz, 8-bit, so it's tiny), looped under the lock-screen player.
-function silence(): string {
-  const n = 8000;
-  const buf = new ArrayBuffer(44 + n);
-  const v = new DataView(buf);
-  const str = (o: number, s: string) => [...s].forEach((ch, i) => v.setUint8(o + i, ch.charCodeAt(0)));
-  str(0, 'RIFF');
-  v.setUint32(4, 36 + n, true);
-  str(8, 'WAVE');
-  str(12, 'fmt ');
-  v.setUint32(16, 16, true);
-  v.setUint16(20, 1, true);
-  v.setUint16(22, 1, true);
-  v.setUint32(24, 8000, true);
-  v.setUint32(28, 8000, true);
-  v.setUint16(32, 1, true);
-  v.setUint16(34, 8, true);
-  str(36, 'data');
-  v.setUint32(40, n, true);
-  for (let i = 0; i < n; i++) v.setUint8(44 + i, 128);
-  return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
-}
-
 const post = (m: Record<string, unknown>) =>
   navigator.serviceWorker?.ready.then((reg) => reg.active?.postMessage(m)).catch(() => undefined);
 
@@ -120,7 +93,7 @@ const post = (m: Record<string, unknown>) =>
  * page needs to redraw every second.
  */
 export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, anyRunning: boolean) {
-  const [settings, setSettings] = useState<LiveSettings>({ awake: false, notify: false, player: false });
+  const [settings, setSettings] = useState<LiveSettings>({ awake: false, notify: false });
   useEffect(() => {
     setSettings(liveSettings());
     return onLiveSettings((s) => setSettings((cur) => ({ ...cur, ...s })));
@@ -131,7 +104,7 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
   const activityRef = useRef(activity);
   activityRef.current = activity;
 
-  // What the page does when a notification's (or the lock-screen player's) button is pressed.
+  // What the page does when a notification's button is pressed.
   const act = (action: Action, id: string) => {
     const v = viewRef.current;
     if (!v || !id) return;
@@ -162,9 +135,8 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
     }
   });
 
-  // The worker: a tick a second while a clock runs, and the artwork on request.
+  // The worker: a tick a second while a clock runs.
   const worker = useRef<Worker | null>(null);
-  const artWanted = useRef<(key: string, blob: Blob | null) => void>(() => undefined);
   useEffect(() => {
     if (typeof Worker === 'undefined') return;
     let w: Worker;
@@ -175,7 +147,6 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
     }
     w.onmessage = (e: MessageEvent<WorkerOut>) => {
       if (e.data.type === 'tick') logic.forceUpdate();
-      else artWanted.current(e.data.key, e.data.blob);
     };
     worker.current = w;
     return () => {
@@ -194,9 +165,8 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
     send({ type: 'run', on: anyRunning });
   }, [anyRunning, logic]);
 
-  // The browser asks whether notifications may be shown the first time a workout starts (it needs a tap to ask from),
-  // and the lock-screen player's silence starts on a tap too. Both listen after the page's own handling of the tap,
-  // so the clock the tap started is already in state.
+  // The browser asks whether notifications may be shown the first time a workout starts (it needs a tap to ask from).
+  // This listens after the page's own handling of the tap, so the clock the tap started is already in state.
   useEffect(() => {
     const onTap = () => {
       const running = Object.values(logic.state.workoutTimer || {}).some((t) => t && t.runningSince);
@@ -211,7 +181,6 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
           // Storage blocked: don't ask on every tap.
         }
       }
-      if (settings.player) startSilence();
     };
     window.addEventListener('click', onTap);
     return () => window.removeEventListener('click', onTap);
@@ -301,109 +270,8 @@ export function useLiveActivity(logic: PlannerLogic, view: PlannerVals | null, a
     act(action, id);
   });
 
-  // ---- The lock-screen player ----
-  // The app has no sound of its own, so it says so: other apps' music plays on, at its own volume. Only the lock-screen
-  // player (off unless turned on) claims to be what's playing, while it's showing.
-  useEffect(() => setAudioSession('ambient'), []);
-  const audio = useRef<HTMLAudioElement | null>(null);
-  const startSilence = () => {
-    if (!canPlayer()) return;
-    setAudioSession('playback');
-    if (!audio.current) {
-      audio.current = new Audio(silence());
-      audio.current.loop = true;
-    }
-    if (audio.current.paused) audio.current.play().catch(() => undefined);
-  };
-  const art = useRef<{ key: string; url: string | null }>({ key: '', url: null });
-  const metaKey = useRef('');
-  const posKey = useRef('');
-  useEffect(() => {
-    const ms = canPlayer() ? navigator.mediaSession : null;
-    if (!ms) return;
-    const a = settings.player ? activity : null;
-    if (!a) {
-      if (metaKey.current) {
-        audio.current?.pause();
-        setAudioSession('ambient');
-        ms.metadata = null;
-        ms.playbackState = 'none';
-        (['play', 'pause', 'nexttrack'] as MediaSessionAction[]).forEach((h) => ms.setActionHandler(h, null));
-        metaKey.current = '';
-        posKey.current = '';
-      }
-      return;
-    }
-    const paused = !a.clock.runningSince;
-    const now = Date.now();
-    // The artwork: drawn by the worker when what's on it changes, in the colors this browser uses.
-    const accent = savedAccent();
-    const theme = savedTheme();
-    const artKey = JSON.stringify([a.name, a.kind, a.done, a.total, a.now, a.ride, a.rest && a.rest.next, a.rest && a.rest.endsAt, paused, accent, theme]);
-    if (art.current.key !== artKey) {
-      art.current.key = artKey;
-      artWanted.current = (key, blob) => {
-        if (key !== art.current.key) return;
-        if (art.current.url) URL.revokeObjectURL(art.current.url);
-        art.current.url = blob ? URL.createObjectURL(blob) : null;
-        metaKey.current = '';
-        logic.forceUpdate();
-      };
-      send({ type: 'art', key: artKey, activity: a, look: liveLook(accent, theme), paused });
-    }
-    const title = a.rest ? 'Rest · ' + a.name : a.name;
-    const artist = a.rest
-      ? a.rest.next
-        ? 'Up next: ' + a.rest.next.name + (a.rest.next.line ? ' · ' + a.rest.next.line : '')
-        : 'Rest'
-      : a.kind === 'ride'
-        ? a.ride?.dist
-          ? a.ride.dist + ' mi planned'
-          : a.ride?.run
-            ? 'Run/Walk'
-            : 'Ride'
-        : a.done + ' of ' + a.total + ' done' + (a.now ? ' · Now: ' + a.now.name + (a.now.of > 1 ? ', set ' + a.now.set + ' of ' + a.now.of : '') : '');
-    const key = JSON.stringify([title, artist, art.current.url, paused, !!a.rest]);
-    if (key !== metaKey.current) {
-      metaKey.current = key;
-      ms.metadata = new MediaMetadata({
-        title,
-        artist,
-        album: paused ? 'Paused · Moonshot' : 'Moonshot',
-        artwork: art.current.url
-          ? [{ src: art.current.url, sizes: '512x512', type: 'image/png' }]
-          : [{ src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' }],
-      });
-      ms.playbackState = paused ? 'paused' : 'playing';
-      ms.setActionHandler('play', () => {
-        startSilence();
-        act('resume', a.id);
-      });
-      ms.setActionHandler('pause', () => {
-        audio.current?.pause();
-        act('pause', a.id);
-      });
-      // "Next": the next set done (not while paused, as on the page), or, resting, on to it now.
-      ms.setActionHandler(
-        'nexttrack',
-        a.rest ? () => act('skip', a.id) : a.kind === 'lift' && a.now && !paused ? () => act('set', a.id) : null,
-      );
-    }
-    // The player's bar is the clock: it runs by itself while playing, so it's only set when the clock changes. Its
-    // length is the plan, stretched in ten-minute steps once a session runs past it.
-    // Resting, the bar is the rest instead.
-    const sec = a.rest ? a.rest.total - Math.max(0, (a.rest.endsAt - now) / 1000) : clockSeconds(a.clock, now);
-    const plan = a.rest ? a.rest.total : Math.max(a.plannedSec, 60);
-    const duration = a.rest || sec < plan ? plan : plan + Math.ceil((sec - plan + 1) / 600) * 600;
-    const pos = JSON.stringify(a.rest ? [a.rest.endsAt, a.rest.total] : [a.clock.elapsed, a.clock.runningSince, duration]);
-    if (pos !== posKey.current && ms.setPositionState) {
-      posKey.current = pos;
-      try {
-        ms.setPositionState({ duration, position: Math.max(0, Math.min(sec, duration)), playbackRate: 1 });
-      } catch {
-        // Some browsers refuse a position state; the player then just shows the title.
-      }
-    }
-    if (paused) audio.current?.pause();
-  });
+  // ---- Other apps' music ----
+  // The app has no sound of its own, so it tells the phone so (Safari's Audio Session API): other apps' music plays on,
+  // at its own volume.
+  useEffect(() => setAudioSession(), []);
 }

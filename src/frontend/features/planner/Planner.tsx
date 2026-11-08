@@ -405,7 +405,7 @@ export default function Planner({ account = null }: { account?: Account | null }
   const view = status === 'ready' ? logic.renderVals() : null;
   viewRef.current = view;
   // A running workout stopwatch (or a rest counting down) needs the screen to tick even though nothing else in state is changing; the session in
-  // progress also shows outside the page, as a notification and on the lock screen.
+  // progress also shows outside the page, as a notification.
   const anyTimerRunning =
     Object.values(logic.state.workoutTimer || {}).some((t) => t && t.runningSince) || !!logic.state.rest || !!logic.state.hold;
   useLiveActivity(logic, view, anyTimerRunning);

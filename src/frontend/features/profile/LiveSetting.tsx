@@ -5,21 +5,21 @@ import { Checkbox } from '@moonshot/design-system/checkbox';
 import { RadioGroup } from '@moonshot/design-system/radio';
 import { Text } from '@moonshot/design-system/typography';
 import { SettingsCard } from './SettingsCard';
-import { canNotify, canPlayer, canWake, leaveChoice, liveSettings, onLiveSettings, setLeaveChoice, setLiveSetting, type LeaveChoice, type LiveSettings } from '@/frontend/features/live/settings';
+import { canNotify, canWake, leaveChoice, liveSettings, onLiveSettings, setLeaveChoice, setLiveSetting, type LeaveChoice, type LiveSettings } from '@/frontend/features/live/settings';
 
 /** Settings → During a workout: what leaving a workout does with its clock, then whether the screen stays on and
  * whether a workout in progress shows outside the app. Saved in this browser. Each switch shows only where the browser
  * can do it, and their heading only with one to show. */
 export function LiveSetting() {
-  const [s, setS] = useState<LiveSettings>({ awake: false, notify: false, player: false });
-  const [can, setCan] = useState({ awake: false, notify: false, player: false });
+  const [s, setS] = useState<LiveSettings>({ awake: false, notify: false });
+  const [can, setCan] = useState({ awake: false, notify: false });
   const [blocked, setBlocked] = useState(false);
   const [leave, setLeave] = useState<LeaveChoice>('ask');
   // Read after mounting: the server doesn't know what this browser saved, or what it can do.
   useEffect(() => {
     setS(liveSettings());
     setLeave(leaveChoice());
-    setCan({ awake: canWake(), notify: canNotify(), player: canPlayer() });
+    setCan({ awake: canWake(), notify: canNotify() });
     setBlocked(canNotify() && Notification.permission === 'denied');
     return onLiveSettings(({ leave: l, ...p }) => {
       if (l) setLeave(l);
@@ -51,7 +51,7 @@ export function LiveSetting() {
         />
       </div>
       {/* The switches under their own heading, styled as the leave choice's. */}
-      {can.awake || can.notify || can.player ? (
+      {can.awake || can.notify ? (
         <Text variant="body" as="div" tone="ink" style={{ marginTop: 'var(--space-3)' }}>
           Screen and notifications
         </Text>
@@ -77,18 +77,6 @@ export function LiveSetting() {
             description={s.notify && blocked ? 'Notifications are blocked for Moonshot. Allow them in your browser’s site settings.' : undefined}
           >
             Show it in a notification, with buttons to tick off and finish
-          </Checkbox>
-        </div>
-      ) : null}
-      {can.player ? (
-        <div style={{ marginTop: 'var(--space-3)' }}>
-          <Checkbox
-            switch
-            checked={s.player}
-            onChange={(on) => setLiveSetting('player', on)}
-            description="This plays silence to hold the spot, so it stops other music."
-          >
-            Show it on the lock screen as what’s playing
           </Checkbox>
         </div>
       ) : null}

@@ -1,4 +1,4 @@
-import { minText, monthPatch, toMinutes } from '@/frontend/shared/helpers';
+import { minText, monthPatch } from '@/frontend/shared/helpers';
 import { setsFor } from '../session/sets';
 import type { Ctx } from '../planner/store/types';
 import type { Entry } from '@/frontend/data/plannerData';
@@ -7,7 +7,7 @@ import type { Entry } from '@/frontend/data/plannerData';
 export type LiveClock = { elapsed: number; runningSince: number | null };
 
 /**
- * The session being done right now, for what shows outside the page: the lock-screen player and the notification.
+ * The session being done right now, for what shows outside the page: the notification.
  * Plain data, so it can go to the timer worker and the service worker as it is.
  */
 export type LiveActivity = {
@@ -25,25 +25,16 @@ export type LiveActivity = {
   hold: { endsAt: number; total: number; name: string; set: number; of: number } | null;
   /** Riding: the plan. */
   ride: { planned: string; dist: string; climb: string; zone: string; run?: boolean } | null;
-  /** How long it's planned to take, in seconds (0 if unknown): the length of the lock-screen player's bar. */
-  plannedSec: number;
 };
 
 /** A session just finished, for the "Quest cleared" notification. */
 export type LiveDone = { id: string; name: string; took: string; exercises: string; streak: number; ride: boolean };
 
-// "~50 min", "1 h 15 min" as minutes.
-const minutesIn = (text: string) => {
-  const h = /(\d+)\s*h/.exec(text || '');
-  const m = /(\d+)\s*min/.exec(text || '');
-  return (h ? Number(h[1]) * 60 : 0) + (m ? Number(m[1]) : 0);
-};
-
 /** Seconds on a clock at a moment (now, by default). */
 export const clockSeconds = (c: LiveClock, at = Date.now()) =>
   c.elapsed + (c.runningSince ? Math.max(0, Math.floor((at - c.runningSince) / 1000)) : 0);
 
-// The session outside the page: which one is going, and what the lock screen and notification can do with it.
+// The session outside the page: which one is going, and what the notification can do with it.
 export function liveVals(ctx: Ctx) {
   const { logic, st, nameOf, isDoneEntry, actualMinutes, distOf, TODAY_M, TODAY_D, streak } = ctx;
   const sets = setsFor(ctx);
@@ -90,7 +81,6 @@ export function liveVals(ctx: Ctx) {
       ride: av.ride
         ? { planned: av.time, dist: av.ride.dist || '', climb: av.ride.elev || '', zone: av.ride.zone || '', run: !!av.ride.run }
         : null,
-      plannedSec: (av.ride ? toMinutes(av.ride.hrs, av.ride.mins) : minutesIn(av.time)) * 60,
     };
   }
   const setClock = (id: string, clock: LiveClock) =>
