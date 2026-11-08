@@ -42,7 +42,9 @@ async function fetchIdToken(): Promise<string | null> {
       // that looks empty. Failing it keeps what's on screen, and ticks wait to be saved.
       throw new Error('Signed out');
     }
-    return null;
+    // The token couldn't be renewed just now (Auth0 slow or unreachable, or a server error). The person is still
+    // signed in, so this fails the request like being offline does, and the next one asks again.
+    throw new Error('Sign-in check failed, try again');
   }
   const { idToken, expiresAt } = (await res.json()) as { idToken: string; expiresAt: number };
   cached = { token: idToken, expiresAt };
