@@ -11,6 +11,7 @@ import { QuestsClearedCard } from '@/frontend/features/profile/QuestsClearedCard
 import { BossesCard } from '@/frontend/features/boss/BossesCard';
 import { AchievementsCard } from '@/frontend/features/achievements/AchievementsCard';
 import { StarbookCard } from '@/frontend/features/moonwalk/StarbookCard';
+import { CharmsCard } from '@/frontend/features/moonwalk/CharmsCard';
 
 export function ProfileScreen({ v }: { v: PlannerVals }) {
   return (
@@ -30,6 +31,7 @@ export function ProfileScreen({ v }: { v: PlannerVals }) {
       <BossesCard v={v} />
       <AchievementsCard v={v} />
       {v.moonwalkReady ? <StarbookCard v={v} /> : null}
+      {v.charmsReady ? <CharmsCard v={v} /> : null}
       <QuestsClearedCard v={v} />
       <div
         style={{

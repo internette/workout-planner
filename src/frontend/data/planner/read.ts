@@ -7,13 +7,13 @@ import type { Exercise, Entry, WorkoutSummary, BuiltinWorkout, BuiltinProgram, M
 import { runEnd, runPlace } from '@/frontend/shared/programs';
 import { readProgram } from '@/frontend/shared/sharedProgram';
 import { toProfile } from './profile';
-import { toFound } from './moonwalk';
+import { toCharm, toFound } from './moonwalk';
 import { setHoldColumn, toExercise, areasOf, numStr, workoutView, estimateMinutes } from './convert';
 import { ok, okOr } from './db';
 import type { Mood } from '@moonshot/design-system/icons';
 
 export async function loadModel(today: Date): Promise<Model> {
-  const [workouts, exercises, plan, diary, library, builtins, builtinWorkoutRows, repeatDaysProbe, weeksProbe, programRows, blockRows, runRows, builtinProgramRows, profileRows, foundRows] = await Promise.all([
+  const [workouts, exercises, plan, diary, library, builtins, builtinWorkoutRows, repeatDaysProbe, weeksProbe, programRows, blockRows, runRows, builtinProgramRows, profileRows, foundRows, charmRows] = await Promise.all([
     ok(supabase.from('workouts').select('*')),
     ok(supabase.from('workout_exercises').select('*').order('order_index')),
     ok(supabase.from('plan_entries').select('*').order('scheduled_date').order('id')),
@@ -35,6 +35,8 @@ export async function loadModel(today: Date): Promise<Model> {
     okOr<any[] | null>(supabase.from('profiles').select('*').limit(1), null),
     // Moonwalk's Finds, until its migration has run: none (and sessions don't collect yet).
     okOr<any[] | null>(supabase.from('moonwalk_finds').select('*').order('found_at').order('slot'), null),
+    // Moonwalk's charms, until their migration has run: none (and none can be crafted yet).
+    okOr<any[] | null>(supabase.from('moonwalk_charms').select('*').order('created_at'), null),
   ]);
 
   // The catalog always has rows, so it says whether the timed-holds migration has run. Before any row is read as an
@@ -317,5 +319,7 @@ export async function loadModel(today: Date): Promise<Model> {
     profileReady: profileRows != null,
     found: (foundRows || []).map(toFound),
     moonwalkReady: foundRows != null,
+    charms: (charmRows || []).map(toCharm),
+    charmsReady: charmRows != null,
   };
 }

@@ -44,7 +44,7 @@ export function chromeVals(ctx: Ctx) {
     arsenal: arsenalActive,
     summary: st.screen === 'summary',
     // Settings is Profile's page: Profile stays lit while it's open.
-    profile: ['profile', 'settings', 'programRuns', 'programRun', 'achievements', 'starbook'].includes(st.screen),
+    profile: ['profile', 'settings', 'programRuns', 'programRun', 'achievements', 'starbook', 'charms'].includes(st.screen),
   };
   const navGoTo: Record<NavId, () => void> = { day: goDay, diaryList: goDiaryList, arsenal: goArsenal, summary: goSummary, profile: goProfile };
   return {

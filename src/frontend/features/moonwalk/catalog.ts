@@ -23,6 +23,7 @@ export type Moment = {
   ride: boolean; // cycling, not a run or walk
   newShare: number; // the share of its distance on streets never walked before, 0–1
   bossFight: boolean;
+  veil?: boolean; // a Dusk Veil is on: night and dawn sets fit at any hour
 };
 
 export type FindSet = { key: string; name: string; hint: string; fits: (m: Moment) => boolean };
@@ -31,10 +32,10 @@ const winter = (m: Moment) => m.month === 11 || m.month <= 1;
 
 export const SETS: FindSet[] = [
   { key: 'wayfarer', name: 'Wayfarer', hint: 'Turns up on any walk or ride', fits: () => true },
-  { key: 'dawn', name: 'Dawn Meadow', hint: 'Out before 9 am', fits: (m) => m.hour >= 4 && m.hour < 9 },
+  { key: 'dawn', name: 'Dawn Meadow', hint: 'Out before 9 am', fits: (m) => !!m.veil || (m.hour >= 4 && m.hour < 9) },
   { key: 'sunlit', name: 'Sunlit Path', hint: 'Out in the middle of the day', fits: (m) => m.hour >= 9 && m.hour < 16 },
   { key: 'dusk', name: 'Dusk Garden', hint: 'Out in the late afternoon', fits: (m) => m.hour >= 16 && m.hour < 19 },
-  { key: 'lantern', name: 'Lantern Street', hint: 'Out after dark', fits: (m) => m.hour >= 19 || m.hour < 4 },
+  { key: 'lantern', name: 'Lantern Street', hint: 'Out after dark', fits: (m) => !!m.veil || m.hour >= 19 || m.hour < 4 },
   { key: 'frost', name: 'Frost Hollow', hint: 'December to February', fits: winter },
   { key: 'bloom', name: 'Bloom Field', hint: 'March to May', fits: (m) => m.month >= 2 && m.month <= 4 },
   { key: 'ember', name: 'Ember Path', hint: 'June to August', fits: (m) => m.month >= 5 && m.month <= 7 },

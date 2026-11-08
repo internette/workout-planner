@@ -3,6 +3,7 @@ import { idOf } from '@/frontend/shared/helpers';
 import { setsIn } from '@/frontend/features/session/sets';
 import type { CalendarCtx } from '@/frontend/features/planner/store/types';
 import type { Entry } from '@/frontend/data/plannerData';
+import { usesByDay } from '@/frontend/features/moonwalk/effects';
 import { BOSS_COUNT, BOSS_DAYS, BOSS_XP, FINISH_DAMAGE, SET_DAMAGE, bossHp, bossRank } from './bosses';
 
 /** The boss being fought now: which one, how hurt it is, and how long is left this week. */
@@ -14,8 +15,12 @@ export type BossFight = {
   /** How many weeks it has got away so far, and with how much left the last time. */
   escapes: number;
   lastLeft: number;
+  /** An Hourglass has been used on this boss, and a Trophy Banner raised in this fight. */
+  glassed: boolean;
+  banner: boolean;
 };
-export type BossWin = { k: number; days: number; escapes: number; day: number };
+/** A boss beaten: which, how long it took, on which day and session, and whether a Trophy Banner was up. */
+export type BossWin = { k: number; days: number; escapes: number; day: number; entryId: string; banner?: boolean };
 
 // The rank a total of XP reaches, before any boss holds it back.
 const rankOfXp = (xp: number) => {
@@ -32,9 +37,27 @@ export function bossStage(ctx: CalendarCtx) {
   const { logic, st, Y, TODAY_M, TODAY_D, instList, isDoneEntry, doneCountAt } = ctx;
   const dayNum = (m: number, d: number) => Math.round(Date.UTC(Y, m, d) / 864e5);
   const today = dayNum(TODAY_M, TODAY_D);
-  const xpOf = (av: Entry) => (av.ride ? 0 : doneCountAt(av) * 10) + (isDoneEntry(av) ? 50 : 0);
+  // Moonwalk's charms, by the day each was used: a Twin Moon doubles that day's first finished workout's XP, a Sun
+  // Draught adds half to every workout's, an Iron Edge doubles what sets hit for and an Echo Bell triples the
+  // finishing blow. A Comet Spark, an Hourglass and a Trophy Banner act on the fight itself.
+  const uses = usesByDay(logic.model);
+  const twinDone = new Set<number>();
+  const baseXp = (av: Entry) => (av.ride ? 0 : doneCountAt(av) * 10) + (isDoneEntry(av) ? 50 : 0);
+  const xpOf = (av: Entry, day: number) => {
+    const gain = baseXp(av);
+    const u = uses.get(day);
+    if (u && u.effect === 'sun') return Math.round(gain * 1.5);
+    if (u && u.effect === 'twin' && isDoneEntry(av) && !twinDone.has(day)) {
+      twinDone.add(day);
+      return gain * 2;
+    }
+    return gain;
+  };
   // Each ticked exercise hits for its sets (as the session has them), and a finished workout adds the finishing blow.
-  const damageOf = (av: Entry) => {
+  const damageOf = (av: Entry, day: number) => {
+    const u = uses.get(day);
+    const perSet = u && u.effect === 'edge' ? SET_DAMAGE * 2 : SET_DAMAGE;
+    const finish = u && u.effect === 'bell' ? FINISH_DAMAGE * 3 : FINISH_DAMAGE;
     const id = idOf(av);
     const ticked = (st.done || {})[id] || [];
     const sets = av.ride
@@ -42,34 +65,52 @@ export function bossStage(ctx: CalendarCtx) {
       : instList(av.exKey, id)
           .filter((e) => ticked.includes(e.name))
           .reduce((n, e) => n + setsIn({ sets: ((st.fields || {})[id + '|' + e.name] || {}).sets ?? e.sets }), 0);
-    return sets * SET_DAMAGE + (isDoneEntry(av) ? FINISH_DAMAGE : 0);
+    return sets * perSet + (isDoneEntry(av) ? finish : 0);
   };
-  const ordered = logic.model.entries
-    .map((x) => ({ day: dayNum(x.m, x.d), av: x.av }))
-    .sort((a, b) => a.day - b.day);
+  // The sessions, and the days a charm acted on the fight, in order. A charm comes before that day's sessions.
+  const ordered: { day: number; av: Entry | null }[] = logic.model.entries
+    .map((x) => ({ day: dayNum(x.m, x.d), av: x.av as Entry | null }))
+    .concat(Array.from(uses.entries()).filter(([, u]) => u.effect === 'spark' || u.effect === 'glass' || u.effect === 'banner').map(([day]) => ({ day, av: null })))
+    .sort((a, b) => a.day - b.day || (a.av ? 1 : 0) - (b.av ? 1 : 0));
   let xp = 0;
   const wins: BossWin[] = [];
   // XP and rank after each session up to today, for the achievements that are worked out from them.
   const log: { day: number; xp: number; rank: number }[] = [];
-  type Fight = { k: number; start: number; first: number; dealt: number; escapes: number; lastLeft: number };
+  type Fight = { k: number; start: number; first: number; dealt: number; escapes: number; lastLeft: number; extra: number; glassed: boolean; banner: boolean };
   // Kept in a box so the helpers below can change it.
   const now: { fight: Fight | null } = { fight: null };
   // A week gone by without a win: it gets away, and the next week starts it at full strength.
   const roll = (day: number) => {
     const fight = now.fight;
-    while (fight && day >= fight.start + BOSS_DAYS) {
+    while (fight && day >= fight.start + BOSS_DAYS + fight.extra) {
       fight.escapes++;
       fight.lastLeft = bossHp(fight.k) - fight.dealt;
-      fight.start += BOSS_DAYS;
+      fight.start += BOSS_DAYS + fight.extra;
+      fight.extra = 0;
       fight.dealt = 0;
     }
   };
   const spawn = (day: number) => {
     const k = wins.length;
-    if (!now.fight && k < BOSS_COUNT && rankOfXp(xp) >= bossRank(k)) now.fight = { k, start: day, first: day, dealt: 0, escapes: 0, lastLeft: 0 };
+    if (!now.fight && k < BOSS_COUNT && rankOfXp(xp) >= bossRank(k)) now.fight = { k, start: day, first: day, dealt: 0, escapes: 0, lastLeft: 0, extra: 0, glassed: false, banner: false };
   };
   for (const { day, av } of ordered) {
-    const gain = xpOf(av);
+    if (!av) {
+      // A charm on the fight, up to today: a Comet Spark hits for 100 but never the last 100, an Hourglass gives the
+      // boss 3 more days (once per boss), and a Trophy Banner marks the win to come.
+      if (day > today) continue;
+      roll(day);
+      const fight = now.fight;
+      const effect = uses.get(day)?.effect;
+      if (fight && effect === 'spark') fight.dealt = Math.max(fight.dealt, Math.min(fight.dealt + 100, bossHp(fight.k) - 100));
+      if (fight && effect === 'glass' && !fight.glassed) {
+        fight.extra += 3;
+        fight.glassed = true;
+      }
+      if (fight && effect === 'banner') fight.banner = true;
+      continue;
+    }
+    const gain = xpOf(av, day);
     // Sessions still ahead count toward XP, but a fight only happens up to today.
     if (day > today) {
       xp += gain;
@@ -79,9 +120,9 @@ export function bossStage(ctx: CalendarCtx) {
     xp += gain;
     const fight = now.fight;
     if (fight) {
-      fight.dealt += damageOf(av);
+      fight.dealt += damageOf(av, day);
       if (fight.dealt >= bossHp(fight.k)) {
-        wins.push({ k: fight.k, days: day - fight.first + 1, escapes: fight.escapes, day });
+        wins.push({ k: fight.k, days: day - fight.first + 1, escapes: fight.escapes, day, entryId: av.id, banner: fight.banner });
         xp += BOSS_XP;
         now.fight = null;
       }
@@ -95,7 +136,7 @@ export function bossStage(ctx: CalendarCtx) {
   const f = now.fight;
   const derivedRank = f ? Math.min(rankOfXp(xp), bossRank(f.k)) : rankOfXp(xp);
   const bossFight: BossFight | null = f
-    ? { k: f.k, hp: bossHp(f.k), dealt: f.dealt, daysLeft: f.start + BOSS_DAYS - today, escapes: f.escapes, lastLeft: f.lastLeft }
+    ? { k: f.k, hp: bossHp(f.k), dealt: f.dealt, daysLeft: f.start + BOSS_DAYS + f.extra - today, escapes: f.escapes, lastLeft: f.lastLeft, glassed: f.glassed, banner: f.banner }
     : null;
   // Held at a boss with the XP for the next rank already earned.
   const bossBlocks = !!f && rankOfXp(xp) > bossRank(f.k);

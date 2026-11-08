@@ -22,6 +22,7 @@ import { progressVals } from '@/frontend/features/progress/model';
 import { bossVals } from '@/frontend/features/boss/model';
 import { achievementVals } from '@/frontend/features/achievements/model';
 import { moonwalkVals } from '@/frontend/features/moonwalk/model';
+import { charmVals } from '@/frontend/features/moonwalk/charmModel';
 import { liveVals } from '@/frontend/features/live/model';
 import { restVals } from '@/frontend/features/session/sets';
 
@@ -348,6 +349,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
       ...bossVals(ctx),
       ...achievementVals(ctx),
       ...moonwalkVals(ctx),
+      ...charmVals(ctx),
       ...liveVals(ctx),
       ...restVals(ctx),
       ...setupVals(ctx),

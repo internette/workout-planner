@@ -28,6 +28,7 @@ import { ProgramScanScreen } from '@/frontend/features/programs/ProgramScanScree
 import { ProgramRunsScreen } from '@/frontend/features/programs/ProgramRunsScreen';
 import { AchievementsScreen } from '@/frontend/features/achievements/AchievementsScreen';
 import { StarbookScreen } from '@/frontend/features/moonwalk/StarbookScreen';
+import { CharmTableScreen } from '@/frontend/features/moonwalk/CharmTableScreen';
 import { ProgramRunScreen } from '@/frontend/features/programs/ProgramRunScreen';
 import { NewEntryScreen } from '@/frontend/features/chronicle/NewEntryScreen';
 import { ChronicleScreen } from '@/frontend/features/chronicle/ChronicleScreen';
@@ -83,6 +84,7 @@ export function PlannerView({ v }: { v: PlannerVals }) {
             {v.isProgramRun ? <ProgramRunScreen v={v} /> : null}
             {v.isAchievements ? <AchievementsScreen v={v} /> : null}
             {v.isStarbook ? <StarbookScreen v={v} /> : null}
+            {v.isCharms ? <CharmTableScreen v={v} /> : null}
             {(v.isProgram && !v.program) || (v.isProgramEdit && !v.programEdit) ? <NotInSpellbook v={v} /> : null}
             {v.isNewEntry ? <NewEntryScreen v={v} /> : null}
             {v.isDiaryList ? <ChronicleScreen v={v} /> : null}

@@ -179,13 +179,30 @@ export interface Model {
   found: FoundRow[]; // every Find picked up on a Run/Walk or Cycling session, oldest first
   // Whether sessions can collect Finds yet (the Moonwalk migration has run).
   moonwalkReady: boolean;
+  charms: CharmRow[]; // charms crafted and Legendary recipes picked, oldest first
+  // Whether charms can be crafted yet (the Moonwalk charms migration has run).
+  charmsReady: boolean;
+}
+
+// A charm crafted (kind 'charm'), or a Legendary recipe picked (kind 'recipe'). A charm is held until it's used.
+export interface CharmRow {
+  id: string;
+  kind: 'charm' | 'recipe';
+  charm: string; // its key in features/moonwalk/charms.ts
+  at: string;
+  used: boolean;
+  usedDay: string | null; // YYYY-MM-DD: the day it was today's charm
+  usedEntry: string | null;
+  usedFor: string | null;
 }
 
 // One Find picked up: which (an id in features/moonwalk/catalog.ts), how, on which session and when. Every row is a
 // copy in the satchel until a charm spends it.
 export interface FoundRow {
+  id: string;
+  slot: number;
   findId: number;
-  source: 'pouch' | 'glimmer' | 'boss' | 'wish';
+  source: 'pouch' | 'glimmer' | 'boss' | 'wish' | 'craft';
   entryId: string | null;
   at: string;
   spent: boolean;

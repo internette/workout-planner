@@ -48,9 +48,14 @@ export function drawOne(rand: () => number, m: Moment, odds: Record<Rarity, numb
   return inSet[Math.floor(rand() * inSet.length)].id;
 }
 
-/** The Finds for `stars` stars, by id. */
-export function drawPouch(seed: string, stars: number, m: Moment): number[] {
+/** The Finds for `stars` stars, by id. With a Lucky Pebble (`lucky`), one of them is Bright or better. */
+export function drawPouch(seed: string, stars: number, m: Moment, lucky = false): number[] {
   const rand = rng(seed);
   const odds = rarityOdds(m.miles, m.ride);
-  return Array.from({ length: stars }, () => drawOne(rand, m, odds));
+  const ids = Array.from({ length: stars }, () => drawOne(rand, m, odds));
+  if (lucky && ids.length && ids.every((id) => FINDS[id].rarity === 'common')) {
+    const lucky = rng(seed + ':lucky');
+    ids[0] = drawOne(lucky, m, { ...odds, common: 0 });
+  }
+  return ids;
 }
