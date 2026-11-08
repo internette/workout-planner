@@ -15,6 +15,8 @@ export const SETTINGS_PATH = TAB_PATHS.profile + '/settings';
 export const RUNS_PATH = TAB_PATHS.profile + '/programs';
 // And every achievement.
 export const ACHIEVEMENTS_PATH = TAB_PATHS.profile + '/achievements';
+// And the Starbook, Moonwalk's collection.
+export const STARBOOK_PATH = TAB_PATHS.profile + '/starbook';
 
 const CALENDAR = ['day', 'rest', 'edit', 'detail'];
 const ARSENAL = ['arsenal', 'template', 'exercise', 'exerciseEdit', 'program', 'programEdit', 'programScan'];
@@ -32,6 +34,7 @@ export function pathForScreen(screen: string): string | null {
   if (screen === 'settings') return SETTINGS_PATH;
   if (screen === 'programRuns') return RUNS_PATH;
   if (screen === 'achievements') return ACHIEVEMENTS_PATH;
+  if (screen === 'starbook') return STARBOOK_PATH;
   return null;
 }
 
@@ -112,6 +115,8 @@ export function screenForPath(path: string): string | null {
       return 'programRuns';
     case ACHIEVEMENTS_PATH:
       return 'achievements';
+    case STARBOOK_PATH:
+      return 'starbook';
     default:
       return null;
   }

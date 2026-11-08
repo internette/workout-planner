@@ -22,6 +22,9 @@ import { RankUp } from '@moonshot/design-system/rank-up';
 import { BossBattle } from '../boss/BossBattle';
 import type { PlannerVals } from './store/types';
 import { AchievementUnlock } from '../achievements/AchievementUnlock';
+import { PouchDialog } from '../moonwalk/PouchDialog';
+import { useMoonwalk } from '../moonwalk/useMoonwalk';
+import { setMoonwalkAccount, tracksKey } from '../moonwalk/storage';
 import { Tour } from '../tour/Tour';
 import { markTourSeen, tourSeen } from '../tour/seen';
 import { Setup } from '../setup/Setup';
@@ -56,6 +59,7 @@ export default function Planner({ account = null }: { account?: Account | null }
   // Workout timers are kept in this browser, per account, so a reload (or the phone dropping the page) picks up where
   // the clock was. A running one is stored by when it started, so it has kept counting in the meantime.
   const timersKey = 'moonshot.timers.' + (account?.email || 'local');
+  setMoonwalkAccount(account?.email);
   const setsKey = 'moonshot.sets.' + (account?.email || 'local');
   // Ticks not saved yet (made with no signal), kept the same way, so a reload doesn't lose them.
   const ticksKey = 'moonshot.unsavedTicks.' + (account?.email || 'local');
@@ -67,6 +71,9 @@ export default function Planner({ account = null }: { account?: Account | null }
       // Sets done and a rest or timed set counting down are kept the same way, beside it.
       const sets = JSON.parse(window.localStorage.getItem(setsKey) || 'null');
       if (sets && typeof sets === 'object') logic.setState({ setsDone: sets.setsDone || {}, rest: sets.rest || null, hold: sets.hold || null });
+      // Sessions Moonwalk is following, kept the same way.
+      const walks = JSON.parse(window.localStorage.getItem(tracksKey()) || 'null');
+      if (walks && typeof walks === 'object') logic.setState({ moonwalk: walks });
     } catch {
       // Unreadable or unavailable storage: start without saved timers.
     }
@@ -397,6 +404,15 @@ export default function Planner({ account = null }: { account?: Account | null }
       // Storage unavailable: sets done last until a reload, like the timer.
     }
   }, [setsDone, rest, hold, setsKey]);
+  const walks = logic.state.moonwalk;
+  useEffect(() => {
+    try {
+      if (walks && Object.keys(walks).length) window.localStorage.setItem(tracksKey(), JSON.stringify(walks));
+      else window.localStorage.removeItem(tracksKey());
+    } catch {
+      // Storage unavailable: the walk's count lasts until a reload, like the timer.
+    }
+  }, [walks]);
 
 
   // The rank-up transformation plays the first time a new rank is reached. The highest rank already celebrated is
@@ -411,6 +427,8 @@ export default function Planner({ account = null }: { account?: Account | null }
   useLiveActivity(logic, view, anyTimerRunning);
   // The screen stays on from Start until the workout is finished, paused or not (unless turned off in Settings).
   useWakeLock(!!view?.liveActivity);
+  // Moonwalk follows GPS for the Run/Walk or Cycling session it's collecting on, while its clock runs.
+  useMoonwalk(logic, view ? view.mwWatch : null);
   const rank: number | null = view ? view.rankIndex : null;
   const [rankUp, setRankUp] = useState<number | null>(null);
   useEffect(() => {
@@ -531,6 +549,7 @@ export default function Planner({ account = null }: { account?: Account | null }
         show={bossShow}
         onClose={() => setBossShow(null)}
       />
+      <PouchDialog v={view} />
       <AchievementUnlock
         rows={!bossShow && !(rankUp != null && rankUp === rank) ? achShow : null}
         onClose={() => setAchShow(null)}

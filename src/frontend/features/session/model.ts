@@ -9,6 +9,8 @@ import { DEFAULT_ZONE } from '@/shared/planDraft';
 import type { Entry } from '@/frontend/data/plannerData';
 import { setsFor, setsIn, timeIn } from './sets';
 import { leaveRunningWorkout, pausedClock } from './leave';
+import { dropTrack, openPouch } from '../moonwalk/model';
+import { milesText } from '../moonwalk/track';
 import type { DayStatus } from '@/frontend/components/StatusDot';
 
 // The day card and the workout detail screen (today's quest, exercise preview, completion).
@@ -195,6 +197,7 @@ export function workoutVals(ctx: Ctx) {
     const fromTimer = useTimer ? Math.max(1, Math.round(timerElapsedSec / 60)) : 0;
     const mins = fromTimer || recorded || plannedRideMin;
     const a: Partial<Entry['actual']> = selAct.actual || {};
+    const gps = selRide ? (st.moonwalk || {})[idOf(selAct)] : null;
     if (timerRunning) pauseTimer();
     logic.s({
       finish: {
@@ -203,7 +206,8 @@ export function workoutVals(ctx: Ctx) {
         ride: !!selRide,
         hrs: mins >= 60 ? String(Math.floor(mins / 60)) : '',
         mins: mins ? String(mins % 60) : '',
-        dist: a.dist || (selRide && selRide.dist) || '',
+        // Tracked by GPS (Moonwalk): how far it measured, unless a distance was already recorded.
+        dist: a.dist || (gps && gps.miles >= 0.05 ? milesText(gps.miles) : '') || (selRide && selRide.dist) || '',
         elev: a.elev || (selRide && selRide.elev) || '',
         fromTimer: !!fromTimer,
       },
@@ -219,13 +223,18 @@ export function workoutVals(ctx: Ctx) {
     // finish from again. Read from the state as it is when the save lands, which may have moved on since.
     logic.saveOnce(
       'finish',
-      () => db.finishSession(id, { ride: fin.ride, minutes: finMinutes, dist: fin.dist, elev: fin.elev }),
-      () => {
+      async () => {
+        await db.finishSession(id, { ride: fin.ride, minutes: finMinutes, dist: fin.dist, elev: fin.elev });
+        // A Run/Walk or Cycling session tracked by Moonwalk opens its pouch. If that doesn't save, the session is still
+        // finished, and its card offers to open the pouch again.
+        return fin.ride ? openPouch(logic, id, !!ctx.bossFight).catch(() => null) : null;
+      },
+      (pouch: any) => {
         const now = logic.state;
         const timers = Object.assign({}, now.workoutTimer);
         delete timers[timerKey];
         // A ride comes back from the reload marked done, so it isn't set here.
-        return { finish: null, workoutTimer: timers, ...(now.rest && now.rest.id === id ? { rest: null } : {}), ...(now.hold && now.hold.id === id ? { hold: null } : {}), ...noticePatch(
+        return { finish: null, workoutTimer: timers, ...(pouch ? { pouch, moonwalk: dropTrack(logic, id) } : {}), ...(now.rest && now.rest.id === id ? { rest: null } : {}), ...(now.hold && now.hold.id === id ? { hold: null } : {}), ...noticePatch(
           fin.correcting ? 'Time changed to ' + minText(finMinutes) + '.' : 'Transformation complete. ' + minText(finMinutes) + ' recorded.',
           'detail',
         ) };
