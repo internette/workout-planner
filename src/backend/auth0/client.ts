@@ -12,12 +12,23 @@ export const AUTH0_CONFIGURED = REQUIRED.every((name) => !!process.env[name]);
 // would put the whole token in the cookie.
 const KEPT_CLAIMS = ['sub', 'name', 'nickname', 'given_name', 'family_name', 'picture', 'email', 'email_verified', 'created_at'];
 
+// How long a sign-in lasts. The SDK's defaults (one day without a visit, three days at most) signed people out of a
+// workout app they open every other day. Now a session lasts while the app is opened at least once a month, for up
+// to a year. Auth0's refresh token must last as long (Applications → this app → Refresh Token Expiration; see the
+// README), or the session outlives the token it renews with.
+const DAY = 60 * 60 * 24;
+const SESSION = { rolling: true, inactivityDuration: 30 * DAY, absoluteDuration: 365 * DAY };
+
 let client: Auth0Client | null = null;
 
 /** The Auth0 client, or null while sign-in is not configured, so the app runs without it. */
 export function getAuth0(): Auth0Client | null {
   if (!AUTH0_CONFIGURED) return null;
   client ??= new Auth0Client({
+    session: SESSION,
+    // offline_access asks Auth0 for a refresh token, which renews the ID token (Auth0's default lifetime is 10 hours)
+    // without sending the person back through sign-in. It is the SDK's default too; spelled out so it isn't dropped.
+    authorizationParameters: { scope: 'openid profile email offline_access' },
     beforeSessionSaved: async (session) => ({
       ...session,
       user: Object.fromEntries(Object.entries(session.user).filter(([claim]) => KEPT_CLAIMS.includes(claim))) as typeof session.user,

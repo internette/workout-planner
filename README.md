@@ -92,6 +92,14 @@ The planner has a landing page with Google and Apple sign-in (at `/welcome`; any
 5. **Environment.** Fill in the `AUTH0_*` and `APP_BASE_URL` variables from `.env.local.example`, and restart the dev server. (Leave `NEXT_PUBLIC_AUTH_REQUIRED` out, or remove any `false`.) `AUTH0_CLIENT_SECRET` and `AUTH0_SECRET` are secrets and are only ever read on the server.
 6. **Database.** Run [supabase/migrations/20260921000000_per_user_rls.sql](supabase/migrations/20260921000000_per_user_rls.sql) in the SQL editor. It gives every table an owner and lets only that person read or change their rows.
 
+**Staying signed in.** A session lasts while the app is opened at least once every 30 days, for up to a year (`SESSION` in `src/backend/auth0/client.ts`). Auth0's ID token lasts 10 hours, and the app renews it with a refresh token, so Auth0 must issue one that lasts as long as the session. In the Auth0 dashboard, under Applications → this application:
+
+1. **Settings → Advanced Settings → Grant Types:** tick **Refresh Token**.
+2. **Settings → Refresh Token Rotation:** **Allow Refresh Token Rotation** can stay on. Keep **Rotation Overlap Period** at 10 seconds or more, so two tabs renewing at once don't sign each other out.
+3. **Settings → Refresh Token Expiration:** turn on **Set Idle Refresh Token Lifetime** at 2592000 seconds (30 days) and **Set Maximum Refresh Token Lifetime** at 31557600 seconds (365 days). Shorter values sign people out sooner than the session would.
+
+Without a refresh token, the server logs "The session has no refresh token" and the person is signed out about 10 hours after signing in. Sessions that already exist get the longer lifetimes on their next visit.
+
 **Deleting an account.** Profile has a "Delete my account and information" button. It is permanent: it deletes the person's workouts, plan, exercises and diary from Supabase, then their sign-in from Auth0, and nothing can be recovered. (Your hosting provider's own backups may hold a copy for a while, and the app cannot restore from them.) Removing the Auth0 user needs credentials the app's login does not have, so it uses a second application:
 
 1. In Auth0, Applications → Create Application → **Machine to Machine**, and authorise it for the **Auth0 Management API** with the single permission `delete:users`.
