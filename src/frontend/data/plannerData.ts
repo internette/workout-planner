@@ -12,4 +12,4 @@ export { estimateMinutes } from './planner/convert';
 export { programSnapshot, copiesSnapshot, entryCopy, weekBlock, myShare, shareProgram, stopSharing, copySharedProgram, type MyShare, type ShareTarget } from './planner/share';
 export { createProgram, createProgramFrom, copyBuiltinProgram, builtinCopy, updateProgram, updateBlock, addBlock, deleteBlock, addWorkoutToDay, removeWorkoutFromDay, setBlockByWeek, setBlockWeeks, moveProgramDays, startProgram, moveRun, endRun, deleteProgram, programFromCalendar, type WorkoutCopy, type RunKeep } from './planner/programs';
 export { saveProfile } from './planner/profile';
-export { savePouch } from './planner/moonwalk';
+export { savePouch, saveGlimmer } from './planner/moonwalk';

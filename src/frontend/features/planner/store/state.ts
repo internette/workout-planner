@@ -318,6 +318,8 @@ export interface PlannerState {
 
   // Moonwalk: GPS on Run/Walk and Cycling sessions, by session. Kept in this browser, like the clock.
   moonwalk?: Record<string, Track>;
+  /** The glimmer just picked up, for the card to say so for a few seconds. */
+  mwFound?: { findId: number; isNew: boolean; at: number } | null;
   /** A finished session's pouch, opened. */
   pouch?: PouchState | null;
   /** Which set the Starbook shows. */

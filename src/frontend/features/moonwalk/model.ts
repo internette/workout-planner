@@ -5,7 +5,8 @@ import type { PlannerLogic } from '../planner/store/PlannerLogic';
 import { FINDS, FIND_COUNT, PER_SET, RARITIES, SETS, rarityOf, type Moment } from './catalog';
 import { drawPouch } from './pouch';
 import { addFix, milesText, newTrack, starMiles, starsOf, toNextStar, MAX_STARS, type Fix, type Track } from './track';
-import { knownCells, rememberCells } from './storage';
+import { knownCells, rememberCells, takeGlimmer, takenGlimmers } from './storage';
+import { REACH_M, glimmerDay, glimmersNear, metersTo } from './glimmers';
 import * as db from '@/frontend/data/plannerData';
 
 const look = (rarity: (typeof RARITIES)[number]['key']) => {
@@ -20,6 +21,42 @@ export function trackFix(logic: PlannerLogic, id: string, f: Fix) {
   const known = knownCells();
   const next = addFix(t, f, (c) => known.has(c));
   if (next !== t) logic.s({ moonwalk: { ...logic.state.moonwalk, [id]: next } });
+  collectNear(logic, id, next);
+}
+
+// What glimmers are drawn from: only what stays the same along the way, so they don't move mid-walk.
+const glimmerMoment = (t: Track): Moment => {
+  const now = new Date();
+  return { hour: now.getHours(), month: now.getMonth(), miles: 0, ride: t.ride, newShare: 0, bossFight: !!t.boss };
+};
+
+/** The glimmers around the session's last fix that are still there today. */
+export function glimmersFor(t: Track) {
+  if (!t.last) return [];
+  const day = glimmerDay();
+  const gone = takenGlimmers(day);
+  return glimmersNear(t.last.lat, t.last.lon, day, glimmerMoment(t)).filter((g) => !gone.has(g.key));
+}
+
+// Walking within reach of a glimmer picks it up: it's saved to the session, and the card says what it was.
+function collectNear(logic: PlannerLogic, id: string, t: Track) {
+  const model = logic.model;
+  if (!t.last || !model || !model.moonwalkReady || t.last.acc > 40) return;
+  const here = t.last;
+  const day = glimmerDay();
+  glimmersFor(t)
+    .filter((g) => metersTo(here, g) <= REACH_M)
+    .forEach((g) => {
+      takeGlimmer(day, g.key);
+      const isNew = !model.found.some((r) => r.findId === g.findId);
+      try {
+        navigator.vibrate?.(80);
+      } catch {
+        // No vibration here: the card still says it.
+      }
+      logic.s({ mwFound: { findId: g.findId, isNew, at: Date.now() } });
+      void logic.save(() => db.saveGlimmer(id, g.findId, g.slot));
+    });
 }
 export function trackError(logic: PlannerLogic, id: string, error: string) {
   const t = (logic.state.moonwalk || {})[id];
@@ -106,12 +143,36 @@ export function moonwalkVals(ctx: Ctx) {
     .map((r, i) => ({ ...tile(r.findId), key: r.findId + '-' + i, setName: SETS[FINDS[r.findId].set].name }));
 
   const pouch = st.pouch || null;
+  // The map around the session being collected, and its glimmers, nearest first.
+  const here = track && track.last && !track.error ? track.last : null;
+  const glimmers = here && track
+    ? glimmersFor(track)
+        .map((g) => ({ ...g, m: metersTo(here, g) }))
+        .sort((a, b) => a.m - b.m)
+    : [];
+  const nearest = glimmers[0];
+  const justFound = st.mwFound && Date.now() - st.mwFound.at < 6000 ? st.mwFound : null;
   return {
+    mwMap: here
+      ? {
+          lat: here.lat,
+          lon: here.lon,
+          glimmers: glimmers.map((g) => ({ key: g.key, lat: g.lat, lon: g.lon, fill: look(g.rarity).fill, rarity: rarityOf(g.rarity).label })),
+        }
+      : null,
+    mwNearby: !here
+      ? ''
+      : glimmers.length
+        ? glimmers.length + (glimmers.length === 1 ? ' glimmer' : ' glimmers') + ' nearby. The nearest, ' + rarityOf(nearest.rarity).label + ', is ' + Math.round(nearest.m) + ' m away.'
+        : 'No glimmers left nearby today. The pouch still fills as you go.',
+    mwJustFound: justFound
+      ? { name: FINDS[justFound.findId].name, rarity: FINDS[justFound.findId].rarity, rarityLabel: rarityOf(FINDS[justFound.findId].rarity).label, isNew: justFound.isNew, ...look(FINDS[justFound.findId].rarity) }
+      : null,
     // The card on the session.
     mwShow: canCollect || unopened,
     mwOn: !!track,
     mwRide: ride,
-    mwStart: () => logic.s({ moonwalk: { ...tracks, [id]: newTrack(ride) } }),
+    mwStart: () => logic.s({ moonwalk: { ...tracks, [id]: { ...newTrack(ride), boss: !!bossFight } } }),
     mwStop: () => {
       const { [id]: _gone, ...rest } = tracks;
       logic.s({ moonwalk: rest });

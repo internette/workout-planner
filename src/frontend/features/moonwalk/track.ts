@@ -19,6 +19,7 @@ export type Track = {
   cells: string[]; // squares passed through this session, hashed
   fixes: number;
   error?: string;
+  boss?: boolean; // a boss fight was on when it started, for which sets glimmers favor
 };
 
 export const newTrack = (ride: boolean): Track => ({ ride, miles: 0, credit: 0, newMiles: 0, last: null, cells: [], fixes: 0 });

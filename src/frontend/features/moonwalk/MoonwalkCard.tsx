@@ -2,6 +2,8 @@ import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { SectionLabel, Text } from '@moonshot/design-system/typography';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
+import { FindGlyph } from './FindGlyph';
+import { MoonwalkMap } from './MoonwalkMap';
 
 const Star = ({ on }: { on: boolean }) => (
   <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
@@ -34,8 +36,8 @@ export function MoonwalkCard({ v }: { v: PlannerVals }) {
       <Card style={{ marginTop: 'var(--space-4)' }}>
         <SectionLabel as="h2" label="Moonwalk" />
         <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
-          Collect Finds for your Starbook as you {v.mwRide ? 'ride' : 'go'}. GPS fills a pouch with stars, {v.mwPer.toLowerCase()}, and it opens when you finish.
-          Your route and location are never saved.
+          Collect Finds for your Starbook as you {v.mwRide ? 'ride' : 'go'}. Walk up to the glimmers on the map to pick them up, and GPS fills a pouch with
+          stars, {v.mwPer.toLowerCase()}, that opens when you finish. Your route and location are never saved.
         </Text>
         <Button type="secondary" size="md" onClick={v.mwStart} style={{ marginTop: 'var(--space-3)' }}>
           Find things as I go
@@ -45,6 +47,31 @@ export function MoonwalkCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: 'var(--space-4)' }}>
       <SectionLabel as="h2" label="Moonwalk" aside={v.mwMiles + ' mi'} />
+      {v.mwJustFound ? (
+        <div
+          role="status"
+          style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-3)', padding: 'var(--space-3)', borderRadius: 'var(--radius-md)', background: v.mwJustFound.tint }}
+        >
+          <FindGlyph rarity={v.mwJustFound.rarity} found tint="var(--color-surface)" fill={v.mwJustFound.fill} size={44} />
+          <span style={{ minWidth: 0 }}>
+            <Text variant="small" tone="muted" as="span" style={{ display: 'block' }}>
+              You found
+            </Text>
+            <Text variant="subheading" tone="ink" as="span" style={{ display: 'block' }}>
+              {v.mwJustFound.name}
+            </Text>
+            <Text variant="small" as="span" style={{ display: 'block', color: v.mwJustFound.deep }}>
+              {v.mwJustFound.rarityLabel} · {v.mwJustFound.isNew ? 'New to your Starbook' : 'A copy for your satchel'}
+            </Text>
+          </span>
+        </div>
+      ) : null}
+      {v.mwMap ? <MoonwalkMap lat={v.mwMap.lat} lon={v.mwMap.lon} glimmers={v.mwMap.glimmers} /> : null}
+      {v.mwNearby ? (
+        <Text variant="small" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
+          {v.mwNearby}
+        </Text>
+      ) : null}
       <div role="img" aria-label={v.mwStars + ' of ' + v.mwMaxStars + ' stars'} style={{ display: 'flex', flexWrap: 'wrap', gap: 2, marginTop: 'var(--space-3)' }}>
         {Array.from({ length: v.mwMaxStars }, (_, i) => (
           <Star key={i} on={i < v.mwStars} />

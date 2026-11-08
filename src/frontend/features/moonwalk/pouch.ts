@@ -3,7 +3,7 @@
 import { FINDS, PER_SET, RARITIES, SETS, type Moment, type Rarity } from './catalog';
 
 // A small seeded random number generator (mulberry32).
-function rng(seed: string) {
+export function rng(seed: string) {
   let h = 1779033703 ^ seed.length;
   for (let i = 0; i < seed.length; i++) {
     h = Math.imul(h ^ seed.charCodeAt(i), 3432918353);
@@ -39,17 +39,18 @@ const pick = <T,>(items: T[], weights: number[], r: number) => {
   return items[items.length - 1];
 };
 
+/** One Find, by id: a rarity by `odds`, a set by how well each fits `m`, then one of that set's Finds of that rarity. */
+export function drawOne(rand: () => number, m: Moment, odds: Record<Rarity, number>): number {
+  const setWeights = SETS.map((s) => (s.fits(m) ? FIT_WEIGHT : MISS_WEIGHT));
+  const rarity = pick(RARITIES.map((r) => r.key), RARITIES.map((r) => odds[r.key]), rand());
+  const set = pick(SETS.map((_, k) => k), setWeights, rand());
+  const inSet = FINDS.slice(set * PER_SET, (set + 1) * PER_SET).filter((f) => f.rarity === rarity);
+  return inSet[Math.floor(rand() * inSet.length)].id;
+}
+
 /** The Finds for `stars` stars, by id. */
 export function drawPouch(seed: string, stars: number, m: Moment): number[] {
   const rand = rng(seed);
   const odds = rarityOdds(m.miles, m.ride);
-  const setWeights = SETS.map((s) => (s.fits(m) ? FIT_WEIGHT : MISS_WEIGHT));
-  const out: number[] = [];
-  for (let i = 0; i < stars; i++) {
-    const rarity = pick(RARITIES.map((r) => r.key), RARITIES.map((r) => odds[r.key]), rand());
-    const set = pick(SETS.map((_, k) => k), setWeights, rand());
-    const inSet = FINDS.slice(set * PER_SET, (set + 1) * PER_SET).filter((f) => f.rarity === rarity);
-    out.push(inSet[Math.floor(rand() * inSet.length)].id);
-  }
-  return out;
+  return Array.from({ length: stars }, () => drawOne(rand, m, odds));
 }
