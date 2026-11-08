@@ -25,3 +25,11 @@ export const savePouch = (entryId: string, findIds: number[]) =>
           ),
       )
     : Promise.resolve(null);
+
+/** Saves a glimmer walked up to on a session. Saved by its number, so one saved twice is only kept once. */
+export const saveGlimmer = (entryId: string, findId: number, slot: number) =>
+  ok(
+    supabase
+      .from('moonwalk_finds')
+      .upsert([{ plan_entry_id: entryId, find_id: findId, source: 'glimmer', slot }], { onConflict: 'plan_entry_id,source,slot', ignoreDuplicates: true }),
+  );

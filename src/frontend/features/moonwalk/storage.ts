@@ -7,6 +7,7 @@ export const setMoonwalkAccount = (email: string | null | undefined) => {
   if ((email || 'local') === account) return;
   account = email || 'local';
   cache = null;
+  taken = null;
 };
 export const tracksKey = () => 'moonshot.moonwalk.' + account;
 const cellsKey = () => 'moonshot.moonwalkCells.' + account;
@@ -35,5 +36,29 @@ export function rememberCells(cells: string[]) {
     window.localStorage.setItem(cellsKey(), JSON.stringify(list));
   } catch {
     // No storage: every street stays new on this device.
+  }
+}
+
+// The glimmers collected today, so one picked up doesn't show again, even on a second session the same day.
+const glimmersKey = () => 'moonshot.glimmers.' + account;
+let taken: { day: number; keys: string[] } | null = null;
+export function takenGlimmers(day: number): Set<string> {
+  if (!taken || taken.day !== day) {
+    try {
+      const kept = JSON.parse(window.localStorage.getItem(glimmersKey()) || 'null');
+      taken = kept && kept.day === day && Array.isArray(kept.keys) ? kept : { day, keys: [] };
+    } catch {
+      taken = { day, keys: [] };
+    }
+  }
+  return new Set(taken!.keys);
+}
+export function takeGlimmer(day: number, key: string) {
+  const keys = Array.from(takenGlimmers(day)).concat([key]);
+  taken = { day, keys };
+  try {
+    window.localStorage.setItem(glimmersKey(), JSON.stringify(taken));
+  } catch {
+    // No storage: it's still saved, and only shows again after a reload.
   }
 }

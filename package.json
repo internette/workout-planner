@@ -16,6 +16,7 @@
     "@auth0/nextjs-auth0": "^4.30.0",
     "@moonshot/design-system": "0.1.0",
     "@supabase/supabase-js": "^2.116.0",
+    "maplibre-gl": "4.7.1",
     "next": "^14.2.35",
     "pdf-lib": "1.17.1",
     "react": "18.3.1",
