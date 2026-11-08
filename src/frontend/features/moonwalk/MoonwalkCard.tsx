@@ -72,6 +72,16 @@ export function MoonwalkCard({ v }: { v: PlannerVals }) {
           {v.mwNearby}
         </Text>
       ) : null}
+      {v.mwCompass ? (
+        <Text variant="small" tone="ink" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
+          {v.mwCompass}
+        </Text>
+      ) : null}
+      {v.mwCharmNote ? (
+        <Text variant="small" tone="muted" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
+          {v.mwCharmNote}
+        </Text>
+      ) : null}
       <div role="img" aria-label={v.mwStars + ' of ' + v.mwMaxStars + ' stars'} style={{ display: 'flex', flexWrap: 'wrap', gap: 2, marginTop: 'var(--space-3)' }}>
         {Array.from({ length: v.mwMaxStars }, (_, i) => (
           <Star key={i} on={i < v.mwStars} />

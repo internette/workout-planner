@@ -6,7 +6,9 @@ import { FINDS, FIND_COUNT, PER_SET, RARITIES, SETS, rarityOf, type Moment } fro
 import { drawPouch } from './pouch';
 import { addFix, milesText, newTrack, starMiles, starsOf, toNextStar, MAX_STARS, type Fix, type Track } from './track';
 import { knownCells, rememberCells, takeGlimmer, takenGlimmers } from './storage';
-import { REACH_M, glimmerDay, glimmersNear, metersTo } from './glimmers';
+import { COMPASS_M, NET_REACH_M, REACH_M, glimmerDay, glimmersNear, metersTo } from './glimmers';
+import { todayEffect } from './effects';
+import type { Effect } from './charms';
 import * as db from '@/frontend/data/plannerData';
 
 const look = (rarity: (typeof RARITIES)[number]['key']) => {
@@ -21,31 +23,37 @@ export function trackFix(logic: PlannerLogic, id: string, f: Fix) {
   const known = knownCells();
   const next = addFix(t, f, (c) => known.has(c));
   if (next !== t) logic.s({ moonwalk: { ...logic.state.moonwalk, [id]: next } });
-  collectNear(logic, id, next);
+  collectNear(logic, id, next, todayEffect(logic.model));
 }
 
 // What glimmers are drawn from: only what stays the same along the way, so they don't move mid-walk.
-const glimmerMoment = (t: Track): Moment => {
+// A Dusk Veil today lets night and dawn sets turn up whatever the hour.
+const glimmerMoment = (t: Track, fx: Effect | null): Moment => {
   const now = new Date();
-  return { hour: now.getHours(), month: now.getMonth(), miles: 0, ride: t.ride, newShare: 0, bossFight: !!t.boss };
+  return { hour: now.getHours(), month: now.getMonth(), miles: 0, ride: t.ride, newShare: 0, bossFight: !!t.boss, veil: fx === 'veil' };
 };
 
-/** The glimmers around the session's last fix that are still there today. */
-export function glimmersFor(t: Track) {
+/** The glimmers around the session's last fix that are still there today. A Lure Lantern today doubles them, and
+ * `ring` looks further out (for a Star Compass). */
+export function glimmersFor(t: Track, fx: Effect | null, ring?: number) {
   if (!t.last) return [];
   const day = glimmerDay();
   const gone = takenGlimmers(day);
-  return glimmersNear(t.last.lat, t.last.lon, day, glimmerMoment(t)).filter((g) => !gone.has(g.key));
+  return glimmersNear(t.last.lat, t.last.lon, day, glimmerMoment(t, fx), { lure: fx === 'lure', ring }).filter((g) => !gone.has(g.key));
 }
+/** How close to walk to a glimmer to collect it: further with a Wide Net today. */
+const reachOf = (fx: Effect | null) => (fx === 'net' ? NET_REACH_M : REACH_M);
+/** Stars in a session's pouch: a Seed Star today adds 2. */
+export const pouchStars = (t: Track, fx: Effect | null) => Math.min(MAX_STARS, starsOf(t) + (fx === 'seed' ? 2 : 0));
 
 // Walking within reach of a glimmer picks it up: it's saved to the session, and the card says what it was.
-function collectNear(logic: PlannerLogic, id: string, t: Track) {
+function collectNear(logic: PlannerLogic, id: string, t: Track, fx: Effect | null) {
   const model = logic.model;
   if (!t.last || !model || !model.moonwalkReady || t.last.acc > 40) return;
   const here = t.last;
   const day = glimmerDay();
-  glimmersFor(t)
-    .filter((g) => metersTo(here, g) <= REACH_M)
+  glimmersFor(t, fx)
+    .filter((g) => metersTo(here, g) <= reachOf(fx))
     .forEach((g) => {
       takeGlimmer(day, g.key);
       const isNew = !model.found.some((r) => r.findId === g.findId);
@@ -64,7 +72,7 @@ export function trackError(logic: PlannerLogic, id: string, error: string) {
 }
 
 /** What a finished session's pouch holds: its Finds, and which are new to the Starbook. */
-export function pouchOf(id: string, t: Track, found: { findId: number }[], bossFight: boolean) {
+export function pouchOf(id: string, t: Track, found: { findId: number }[], bossFight: boolean, fx: Effect | null = null) {
   const now = new Date();
   const m: Moment = {
     hour: now.getHours(),
@@ -73,8 +81,9 @@ export function pouchOf(id: string, t: Track, found: { findId: number }[], bossF
     ride: t.ride,
     newShare: t.miles ? t.newMiles / t.miles : 0,
     bossFight,
+    veil: fx === 'veil',
   };
-  const ids = drawPouch(id, starsOf(t), m);
+  const ids = drawPouch(id, pouchStars(t, fx), m, fx === 'lucky');
   const had = new Set(found.map((r) => r.findId));
   return ids.map((fid) => {
     const isNew = !had.has(fid);
@@ -88,7 +97,7 @@ export async function openPouch(logic: PlannerLogic, id: string, bossFight: bool
   const t = (logic.state.moonwalk || {})[id];
   const model = logic.model;
   if (!t || !model || !model.moonwalkReady) return null;
-  const finds = pouchOf(id, t, model.found, bossFight);
+  const finds = pouchOf(id, t, model.found, bossFight, todayEffect(model));
   await db.savePouch(id, finds.map((f) => f.id));
   rememberCells(t.cells);
   return { entryId: id, finds, miles: t.miles, ride: t.ride };
@@ -100,13 +109,14 @@ export function moonwalkVals(ctx: Ctx) {
   const ready = !!model && model.moonwalkReady;
   const found = (model && model.found) || [];
   const tracks = st.moonwalk || {};
+  const fx = todayEffect(model);
 
   // The session on screen: a Run/Walk or Cycling session today, not done yet.
   const id = selAct ? selAct.id : '';
   const track = id ? tracks[id] || null : null;
   const canCollect = ready && !!selAct && !!selRide && selAct.s === 't' && !rideDone;
   const ride = !!selRide && !selRide.run;
-  const stars = track ? starsOf(track) : 0;
+  const stars = track ? pouchStars(track, fx) : 0;
   const next = track ? toNextStar(track) : null;
   const status = !track
     ? ''
@@ -146,18 +156,29 @@ export function moonwalkVals(ctx: Ctx) {
   // The map around the session being collected, and its glimmers, nearest first.
   const here = track && track.last && !track.error ? track.last : null;
   const glimmers = here && track
-    ? glimmersFor(track)
+    ? glimmersFor(track, fx)
         .map((g) => ({ ...g, m: metersTo(here, g) }))
         .sort((a, b) => a.m - b.m)
     : [];
   const nearest = glimmers[0];
+  // A Star Compass today: the nearest Rare glimmer within half a mile, and which way it is.
+  const compass =
+    here && track && fx === 'compass'
+      ? glimmersFor(track, fx, 3)
+          .filter((g) => g.rarity === 'rare')
+          .map((g) => ({ ...g, m: metersTo(here, g) }))
+          .filter((g) => g.m <= COMPASS_M)
+          .sort((a, b) => a.m - b.m)[0] || null
+      : null;
   const justFound = st.mwFound && Date.now() - st.mwFound.at < 6000 ? st.mwFound : null;
   return {
     mwMap: here
       ? {
           lat: here.lat,
           lon: here.lon,
-          glimmers: glimmers.map((g) => ({ key: g.key, lat: g.lat, lon: g.lon, fill: look(g.rarity).fill, rarity: rarityOf(g.rarity).label })),
+          glimmers: glimmers
+            .concat(compass && !glimmers.some((g) => g.key === compass.key) ? [compass] : [])
+            .map((g) => ({ key: g.key, lat: g.lat, lon: g.lon, fill: look(g.rarity).fill, rarity: rarityOf(g.rarity).label, target: !!compass && g.key === compass.key })),
         }
       : null,
     mwNearby: !here
@@ -165,6 +186,13 @@ export function moonwalkVals(ctx: Ctx) {
       : glimmers.length
         ? glimmers.length + (glimmers.length === 1 ? ' glimmer' : ' glimmers') + ' nearby. The nearest, ' + rarityOf(nearest.rarity).label + ', is ' + Math.round(nearest.m) + ' m away.'
         : 'No glimmers left nearby today. The pouch still fills as you go.',
+    mwCompass:
+      fx !== 'compass' || !here
+        ? ''
+        : compass
+          ? 'Star Compass: a Rare glimmer is ' + Math.round(compass.m) + ' m to the ' + compassWay(here, compass) + '.'
+          : 'Star Compass: no Rare glimmer within half a mile here. Keep going and it will look again.',
+    mwCharmNote: fx === 'lure' ? 'Lure Lantern: twice the glimmers today.' : fx === 'net' ? 'Wide Net: collect from 80 m away today.' : fx === 'veil' ? 'Dusk Veil: Lantern Street and Dawn Meadow turn up today.' : fx === 'seed' ? 'Seed Star: today’s pouch starts with 2 stars.' : fx === 'lucky' ? 'Lucky Pebble: today’s pouch holds a Bright or better.' : '',
     mwJustFound: justFound
       ? { name: FINDS[justFound.findId].name, rarity: FINDS[justFound.findId].rarity, rarityLabel: rarityOf(FINDS[justFound.findId].rarity).label, isNew: justFound.isNew, ...look(FINDS[justFound.findId].rarity) }
       : null,
@@ -225,6 +253,15 @@ export function moonwalkVals(ctx: Ctx) {
     sbTiles: setFinds.map((f) => tile(f.id)),
     sbRarities: RARITIES.map((r) => ({ key: r.key, label: r.label, per: r.perSet, ...look(r.key) })),
   };
+}
+
+// Which way a spot is from here, in words: north, northeast and so on.
+const WAYS = ['north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest'];
+function compassWay(from: { lat: number; lon: number }, to: { lat: number; lon: number }) {
+  const dy = to.lat - from.lat;
+  const dx = (to.lon - from.lon) * Math.cos((from.lat * Math.PI) / 180);
+  const deg = ((Math.atan2(dx, dy) * 180) / Math.PI + 360) % 360;
+  return WAYS[Math.round(deg / 45) % 8];
 }
 
 const dropTrack = (logic: PlannerLogic, id: string) => {

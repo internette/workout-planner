@@ -30,3 +30,12 @@ export function useMoonwalk(logic: PlannerLogic, id: string | null) {
     return () => navigator.geolocation.clearWatch(watch);
   }, [logic, id]);
 }
+
+/** Saves the loot of bosses beaten (a Lunar each, and a Rare with a Trophy Banner) once, when some is still owed. */
+export function useBossLoot(key: string, save: () => void) {
+  useEffect(() => {
+    if (key) save();
+    // Only when what's owed changes: `save` is new on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+}

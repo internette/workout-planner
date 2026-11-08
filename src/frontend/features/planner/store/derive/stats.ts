@@ -5,6 +5,7 @@ import type { CalendarCtx } from '../types';
 import type { Entry } from '@/frontend/data/plannerData';
 import { bossStage } from '@/frontend/features/boss/derive';
 import { achievementStage } from '@/frontend/features/achievements/derive';
+import { coveredDays, usesByDay } from '@/frontend/features/moonwalk/effects';
 
 // Streaks, weekly buckets, XP and rank, records and quest counts, derived from every entry.
 /** One session in a week of the Progress chart. */
@@ -71,16 +72,26 @@ export function statsStage(ctx: CalendarCtx) {
     })
     .filter((x) => x.at >= firstK)
     .sort((a, b) => a.at - b.at);
+  // Days a charm covers (a Streak Ward, Second Wind, Moon Shift or Bookmark Ribbon): missed, they neither add to the
+  // streak nor break it.
+  const dayNumOf = (k: string) => {
+    const [m, d] = k.split('|').map(Number);
+    return Math.round(Date.UTC(Y, m, d) / 864e5);
+  };
+  const finishedOn = new Set(Object.keys(plannedByDay).filter((k) => dayComplete[k]).map(dayNumOf));
+  const covered = coveredDays(usesByDay(logic.model), (n) => finishedOn.has(n));
+  const isCovered = (k: string) => !dayComplete[k] && covered.has(dayNumOf(k));
   let streak = 0;
   for (let i = streakDays.length - 1; i >= 0; i--) {
     const { k, at } = streakDays[i];
-    if (at === TK) continue;
+    if (at === TK || isCovered(k)) continue;
     if (dayComplete[k]) streak++;
     else break;
   }
   let longest = 0,
     run = 0;
   streakDays.forEach(({ k }) => {
+    if (isCovered(k)) return;
     if (dayComplete[k]) {
       run++;
       longest = Math.max(longest, run);

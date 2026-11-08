@@ -23,7 +23,8 @@ import { BossBattle } from '../boss/BossBattle';
 import type { PlannerVals } from './store/types';
 import { AchievementUnlock } from '../achievements/AchievementUnlock';
 import { PouchDialog } from '../moonwalk/PouchDialog';
-import { useMoonwalk } from '../moonwalk/useMoonwalk';
+import { useBossLoot, useMoonwalk } from '../moonwalk/useMoonwalk';
+import { CharmPicker } from '../moonwalk/CharmPicker';
 import { setMoonwalkAccount, tracksKey } from '../moonwalk/storage';
 import { Tour } from '../tour/Tour';
 import { markTourSeen, tourSeen } from '../tour/seen';
@@ -429,6 +430,8 @@ export default function Planner({ account = null }: { account?: Account | null }
   useWakeLock(!!view?.liveActivity);
   // Moonwalk follows GPS for the Run/Walk or Cycling session it's collecting on, while its clock runs.
   useMoonwalk(logic, view ? view.mwWatch : null);
+  // A boss beaten drops its Lunar into the satchel, saved once.
+  useBossLoot(view ? view.charmLootKey : '', () => view?.charmLootSave());
   const rank: number | null = view ? view.rankIndex : null;
   const [rankUp, setRankUp] = useState<number | null>(null);
   useEffect(() => {
@@ -550,6 +553,7 @@ export default function Planner({ account = null }: { account?: Account | null }
         onClose={() => setBossShow(null)}
       />
       <PouchDialog v={view} />
+      <CharmPicker v={view} />
       <AchievementUnlock
         rows={!bossShow && !(rankUp != null && rankUp === rank) ? achShow : null}
         onClose={() => setAchShow(null)}

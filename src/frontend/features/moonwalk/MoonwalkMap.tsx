@@ -7,12 +7,13 @@ import type { Map as MapLibre, Marker } from 'maplibre-gl';
 // OpenFreeMap's tiles: free, with no account or key. Positron is the quiet one, so the glimmers stand out.
 const STYLE = 'https://tiles.openfreemap.org/styles/positron';
 
-type Glim = { key: string; lat: number; lon: number; fill: string; rarity: string };
+type Glim = { key: string; lat: number; lon: number; fill: string; rarity: string; target?: boolean };
 
 const glimmerEl = (g: Glim) => {
   const el = document.createElement('div');
   el.setAttribute('aria-hidden', 'true');
-  el.style.cssText = `width:26px;height:26px;display:grid;place-items:center;border-radius:999px;background:color-mix(in srgb, ${g.fill} 30%, transparent)`;
+  // The one a Star Compass points to has a ring around it.
+  el.style.cssText = `width:26px;height:26px;display:grid;place-items:center;border-radius:999px;background:color-mix(in srgb, ${g.fill} 30%, transparent)${g.target ? `;box-shadow:0 0 0 3px ${g.fill}` : ''}`;
   el.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" fill="${g.fill}" stroke="var(--color-surface)" stroke-width="1"/></svg>`;
   return el;
 };

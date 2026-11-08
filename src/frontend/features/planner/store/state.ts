@@ -30,7 +30,8 @@ export type Screen =
   | 'programRuns'
   | 'programRun'
   | 'achievements'
-  | 'starbook';
+  | 'starbook'
+  | 'charms';
 
 export type PouchState = { entryId: string; finds: { id: number; isNew: boolean }[]; miles: number; ride: boolean };
 
@@ -324,6 +325,11 @@ export interface PlannerState {
   pouch?: PouchState | null;
   /** Which set the Starbook shows. */
   starbookSet?: number;
+  /** Today's charm picker, open: the charm chosen (null for the recommended one), what a charm that makes a Find
+   * makes, and the set a Wish Star looks in. */
+  charmPick?: { key: string | null; target?: string | null; set?: number } | null;
+  /** The day (YYYY-MM-DD) the Streak Ward's question was answered no. */
+  charmSkip?: string;
   ranksOpen?: boolean;
   xpInfo?: boolean;
   signOutOpen?: boolean;
