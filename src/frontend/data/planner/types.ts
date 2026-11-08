@@ -176,6 +176,19 @@ export interface Model {
   profile: Profile | null; // what they said in "Customize your experience"; null until they have
   // Whether that can be saved yet (the profiles migration has run).
   profileReady: boolean;
+  found: FoundRow[]; // every Find picked up on a Run/Walk or Cycling session, oldest first
+  // Whether sessions can collect Finds yet (the Moonwalk migration has run).
+  moonwalkReady: boolean;
+}
+
+// One Find picked up: which (an id in features/moonwalk/catalog.ts), how, on which session and when. Every row is a
+// copy in the satchel until a charm spends it.
+export interface FoundRow {
+  findId: number;
+  source: 'pouch' | 'glimmer' | 'boss' | 'wish';
+  entryId: string | null;
+  at: string;
+  spent: boolean;
 }
 
 // What a person said in "Customize your experience".

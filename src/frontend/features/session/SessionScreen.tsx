@@ -17,6 +17,7 @@ import { PageTitle } from '@/frontend/components/PageTitle';
 import { FinishDialog } from '@/frontend/features/session/FinishDialog';
 import { LeaveWorkoutDialog } from '@/frontend/features/session/LeaveWorkoutDialog';
 import { RideSessionCard } from '@/frontend/features/session/RideSessionCard';
+import { MoonwalkCard } from '@/frontend/features/moonwalk/MoonwalkCard';
 import { SessionExerciseRow } from '@/frontend/features/session/SessionExerciseRow';
 import { WorkoutCard } from '@/frontend/features/session/WorkoutCard';
 import { RestartDialog } from '@/frontend/features/calendar/RestartDialog';
@@ -165,6 +166,7 @@ export function SessionScreen({ v }: { v: PlannerVals }) {
         </Dialog>
       ) : null}
       {v.dayIsRide ? <RideSessionCard v={v} /> : null}
+      {v.dayIsRide && v.mwShow ? <MoonwalkCard v={v} /> : null}
       {v.dayIsLift ? (
         <div
           style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}

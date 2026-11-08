@@ -1,3 +1,4 @@
+import type { Track } from '@/frontend/features/moonwalk/track';
 import type { SetupDraft } from '@/frontend/features/setup/model';
 import type { Exercise } from '@/frontend/data/plannerData';
 import type { Mood } from '@moonshot/design-system/icons';
@@ -28,7 +29,10 @@ export type Screen =
   | 'programScan'
   | 'programRuns'
   | 'programRun'
-  | 'achievements';
+  | 'achievements'
+  | 'starbook';
+
+export type PouchState = { entryId: string; finds: { id: number; isNew: boolean }[]; miles: number; ride: boolean };
 
 export type CalendarView = 'Day' | 'Week' | 'Month';
 
@@ -307,6 +311,13 @@ export interface PlannerState {
   barSel?: number | null;
   /** Which group of achievements their page shows. */
   achGroup?: string;
+
+  // Moonwalk: GPS on Run/Walk and Cycling sessions, by session. Kept in this browser, like the clock.
+  moonwalk?: Record<string, Track>;
+  /** A finished session's pouch, opened. */
+  pouch?: PouchState | null;
+  /** Which set the Starbook shows. */
+  starbookSet?: number;
   ranksOpen?: boolean;
   xpInfo?: boolean;
   signOutOpen?: boolean;
