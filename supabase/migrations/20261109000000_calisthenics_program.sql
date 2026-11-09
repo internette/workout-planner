@@ -46,7 +46,8 @@ begin
       '90/90 Hip Switch', 'Knee-to-Wall Ankle Rock · Left', 'Knee-to-Wall Ankle Rock · Right', 'Deep Squat Hold', 'Dead Hang']),
     (66, 'Legs and Glutes', 'Calisthenics', false, false, null, null, array[
       'Split Squat · Left', 'Split Squat · Right',
-      'Seated Leg Curl', 'Cable Pull-Through', 'Cable Goblet Squat', 'Banded Glute Bridge', 'Hollow Body Hold']),
+      'Seated Leg Curl', 'Cable Pull-Through', 'Cable Goblet Squat', 'Banded Glute Bridge',
+      'Cable Hip Abduction · Left', 'Cable Hip Abduction · Right', 'Hollow Body Hold']),
     (67, 'Push Bridge', 'Calisthenics', false, false, null, null, array[
       'Incline Push-Up', 'Standing Cable Chest Press',
       'Cable Lateral Raise · Left', 'Cable Lateral Raise · Right',
