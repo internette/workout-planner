@@ -44,7 +44,7 @@ begin
       'Cat-Cow', 'Open Book Stretch', 'World''s Greatest Stretch', 'Scapular Pull-Up']),
     (65, 'Hips & Ankles Prep', 'Warm-up', true, false, null, null, array[
       '90/90 Hip Switch', 'Knee-to-Wall Ankle Rock · Left', 'Knee-to-Wall Ankle Rock · Right', 'Deep Squat Hold', 'Dead Hang']),
-    (66, 'Lower Body Bridge', 'Calisthenics', false, false, null, null, array[
+    (66, 'Legs and Glutes', 'Calisthenics', false, false, null, null, array[
       'Split Squat · Left', 'Split Squat · Right',
       'Seated Leg Curl', 'Cable Pull-Through', 'Cable Goblet Squat', 'Banded Glute Bridge', 'Hollow Body Hold']),
     (67, 'Push Bridge', 'Calisthenics', false, false, null, null, array[
@@ -71,7 +71,7 @@ begin
   insert into public.builtin_programs (sort_order, name, notes, blocks)
   values
     (5, 'Beginner Lifting 2', 'Four more weeks of Beginner Lifting, moving toward bodyweight work, with front splits four days a week and mobility on Tuesday. Weeks 3 and 4: lower the incline on push-ups (floor push-ups once 3 × 8 is easy), hang 30 seconds or more, and hold the hollow body for 30 seconds with longer legs. Add 5 lb to a cable or machine lift when all 3 sets feel easy. On climbing days keep the dead hangs short and easy. For the splits, bend your knees as much as you need to and go only as deep as you can without pain.',
-     '[{"name": "Bridge", "weeks": 4, "days": [["Front Splits Workout"], ["Climbing Warmup", "Hips & Ankles Prep", "Lower Body Bridge"], ["Mobility Session", "Front Splits Workout"], ["Climbing Warmup", "Push Bridge"], ["Front Splits Workout"], ["Upper Back Prep", "Pull Bridge"], ["Front Splits Workout"]]}]')
+     '[{"name": "Bridge", "weeks": 4, "days": [["Front Splits Workout"], ["Climbing Warmup", "Hips & Ankles Prep", "Legs and Glutes"], ["Mobility Session", "Front Splits Workout"], ["Climbing Warmup", "Push Bridge"], ["Front Splits Workout"], ["Upper Back Prep", "Pull Bridge"], ["Front Splits Workout"]]}]')
   on conflict (name) do update set
     sort_order = excluded.sort_order,
     notes = excluded.notes,
@@ -79,13 +79,13 @@ begin
 
   -- An earlier draft of this migration: its program name and the rows it no longer has.
   delete from public.builtin_programs where name = 'Lifting to calisthenics';
-  delete from public.builtin_workouts where name = 'Shoulders & Wrists Prep';
+  delete from public.builtin_workouts where name in ('Shoulders & Wrists Prep', 'Lower Body Bridge');
   delete from public.builtin_exercises where name = 'Negative Pull-Up';
 
   -- A sided name ("Split Squat · Left") is the exercise it's made from.
   select array_agg(distinct e) into missing
     from public.builtin_workouts w, unnest(w.exercises) e
-    where w.name in ('Climbing Warmup', 'Hips & Ankles Prep', 'Lower Body Bridge', 'Push Bridge', 'Upper Back Prep',
+    where w.name in ('Climbing Warmup', 'Hips & Ankles Prep', 'Legs and Glutes', 'Push Bridge', 'Upper Back Prep',
                      'Pull Bridge', 'Mobility Session')
       and not exists (select 1 from public.builtin_exercises b where b.name = regexp_replace(e, ' · (Left|Right)$', ''));
   if missing is not null then
