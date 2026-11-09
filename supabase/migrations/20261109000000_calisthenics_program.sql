@@ -43,7 +43,7 @@ begin
       'Arm Circles', 'Wrist Circles', 'Finger Extensor Stretch (each side)', 'Tendon Glides',
       'Cat-Cow', 'Open Book Stretch', 'World''s Greatest Stretch', 'Scapular Pull-Up']),
     (65, 'Hips & Ankles Prep', 'Warm-up', true, false, null, null, array[
-      '90/90 Hip Switch', 'Knee-to-Wall Ankle Rock · Left', 'Knee-to-Wall Ankle Rock · Right', 'Deep Squat Hold']),
+      '90/90 Hip Switch', 'Knee-to-Wall Ankle Rock · Left', 'Knee-to-Wall Ankle Rock · Right', 'Deep Squat Hold', 'Dead Hang']),
     (66, 'Lower Body Bridge', 'Calisthenics', false, false, null, null, array[
       'Split Squat · Left', 'Split Squat · Right',
       'Seated Leg Curl', 'Cable Pull-Through', 'Cable Goblet Squat', 'Banded Glute Bridge', 'Hollow Body Hold']),
