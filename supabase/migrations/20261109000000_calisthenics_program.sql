@@ -1,7 +1,7 @@
 -- Beginner Lifting 2: a built-in four-week program that continues Beginner Lifting, with the front splits work and
 -- mobility added. The Monday, Wednesday and Friday lifting days (legs, push, pull) stay, and move toward bodyweight
--- work: split squats in place of leg extensions, incline push-ups in place of cable flys, a hollow body hold, and dead
--- hangs. Monday and Wednesday start with the Climbing Warmup. Monday adds a short hips and ankles warm-up, and Friday
+-- work: incline push-ups in place of cable flys, a hollow body hold, cable hip abduction for the side glutes, and
+-- dead hangs. Monday and Wednesday start with the Climbing Warmup. Monday adds a short hips and ankles warm-up, and Friday
 -- an upper back one. Tuesday is a longer mobility session, and Sunday, Tuesday, Thursday and Saturday have the Front
 -- Splits Workout from the Splits program.
 -- Adds five exercises to the built-in catalog (Deep Squat Hold is timed, with hold_seconds in place of reps).
@@ -45,7 +45,7 @@ begin
     (65, 'Hips & Ankles Prep', 'Warm-up', true, false, null, null, array[
       '90/90 Hip Switch', 'Knee-to-Wall Ankle Rock · Left', 'Knee-to-Wall Ankle Rock · Right', 'Deep Squat Hold', 'Dead Hang']),
     (66, 'Legs and Glutes', 'Calisthenics', false, false, null, null, array[
-      'Split Squat · Left', 'Split Squat · Right',
+      'Leg Extension',
       'Seated Leg Curl', 'Cable Pull-Through', 'Cable Goblet Squat', 'Banded Glute Bridge',
       'Cable Hip Abduction · Left', 'Cable Hip Abduction · Right', 'Hollow Body Hold']),
     (67, 'Push Bridge', 'Calisthenics', false, false, null, null, array[
@@ -83,7 +83,7 @@ begin
   delete from public.builtin_workouts where name in ('Shoulders & Wrists Prep', 'Lower Body Bridge');
   delete from public.builtin_exercises where name = 'Negative Pull-Up';
 
-  -- A sided name ("Split Squat · Left") is the exercise it's made from.
+  -- A sided name ("Cable Hip Abduction · Left") is the exercise it's made from.
   select array_agg(distinct e) into missing
     from public.builtin_workouts w, unnest(w.exercises) e
     where w.name in ('Climbing Warmup', 'Hips & Ankles Prep', 'Legs and Glutes', 'Push Bridge', 'Upper Back Prep',
