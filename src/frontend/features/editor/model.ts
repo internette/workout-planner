@@ -1,5 +1,5 @@
 import { programPlace } from '@/frontend/shared/programs';
-import { DOWFULL, EDIT_OVERLAYS, ICON_COLOR_NAMES, ICON_COLORS, LIFT_MINUTES, MONTHS, NEW_WORKOUT_CLEARED, RIDE_MINUTES } from '@/frontend/shared/constants';
+import { DOW1, DOWFULL, EDIT_OVERLAYS, ICON_COLOR_NAMES, ICON_COLORS, LIFT_MINUTES, MONTHS, NEW_WORKOUT_CLEARED, RIDE_MINUTES } from '@/frontend/shared/constants';
 import { digitsOnly, exLine, holdInName, idOf, isTimed, isoOf, joinSetsReps, joinSetsTime, longDay, minText, mod12, monDay, monthPatch, needsLine, noticePatch, numericOnly, plural, rollMinutes, setsRepsOk, shortDay, splitSetsReps, toMinutes, withLb, withSec, workoutDraftDirty } from '@/frontend/shared/helpers';
 import { iconOptions, iconSvg, typeIcon } from '@/frontend/shared/icons';
 import { DEFAULT_WEEKS, dayNames, pickedDays, planDays, toggleDay } from '@/frontend/shared/schedule';
@@ -342,6 +342,79 @@ export function editVals(ctx: Ctx) {
     (!!st.repeat || createPlan.dates.length !== 1 || createPlan.dates[0].getTime() !== startDate.getTime());
   // The series' own days, not this session's date (which may have just been moved in this editor).
   const seriesDayNames = dayNames(selAct && selAct.seriesDays && selAct.seriesDays.length ? selAct.seriesDays : [selDate.getDay()]);
+  // "Copy to other days", on a session being edited: a week strip from the session's own week on, to pick days from.
+  // Copies go on today or later, never on the session's own day, and are saved with the edit (so they have it).
+  const copyable = !creating && !tplMode && !!selAct && !!st.editing;
+  const ownIso = isoOf(new Date(Y, mi, selDay));
+  const isoDate = (iso: string) => {
+    const [y, mo, d] = iso.split('-').map(Number);
+    return new Date(y, mo - 1, d);
+  };
+  const copyTo = copyable && st.copyOn ? [...new Set(st.copyDates || [])].filter((d) => d >= todayIso && d !== ownIso).sort() : [];
+  // "Sat, Nov 14", "Sat, Nov 14 and Mon, Nov 16", "Sat, Nov 14, Mon, Nov 16 and Tue, Nov 17".
+  const copyList = (() => {
+    const days = copyTo.map((d) => shortDay(isoDate(d)));
+    return days.length < 2 ? days.join('') : days.slice(0, -1).join(', ') + ' and ' + days[days.length - 1];
+  })();
+  const copyVals = (() => {
+    if (!copyable) return null;
+    const week = Math.max(0, st.copyWeek || 0);
+    const own = new Date(Y, mi, selDay);
+    const first = new Date(own.getFullYear(), own.getMonth(), own.getDate() - own.getDay() + 7 * week);
+    const last = new Date(first.getFullYear(), first.getMonth(), first.getDate() + 6);
+    const picked = st.copyDates || [];
+    // What else is on a day: every session but this one (which may be moving).
+    const onDay = (iso: string) => logic.model.entries.filter((x) => x.iso === iso && x.av.id !== selAct!.id).map((x) => x.av);
+    const toggle = (iso: string) =>
+      logic.s({ copyDates: picked.includes(iso) ? picked.filter((d) => d !== iso) : picked.concat(iso) });
+    return {
+      on: !!st.copyOn,
+      setOn: (on: boolean) => logic.s({ copyOn: on }),
+      note: 'Each copy is this workout as you’ve edited it, ready to start.',
+      range:
+        monDay(first) + ' – ' + (first.getMonth() === last.getMonth() ? String(last.getDate()) : monDay(last)),
+      canPrev: week > 0,
+      prev: () => logic.s({ copyWeek: Math.max(0, week - 1) }),
+      next: () => logic.s({ copyWeek: week + 1 }),
+      days: Array.from({ length: 7 }, (_, i) => {
+        const dt = new Date(first.getFullYear(), first.getMonth(), first.getDate() + i);
+        const iso = isoOf(dt);
+        const others = onDay(iso);
+        const isOwn = iso === ownIso;
+        const gone = iso < todayIso;
+        const on = !isOwn && !gone && picked.includes(iso);
+        return {
+          letter: DOW1[dt.getDay()],
+          num: dt.getDate(),
+          own: isOwn,
+          disabled: isOwn || gone,
+          on,
+          today: iso === todayIso,
+          // A dot for each workout already on it: teal for a stretch or yoga, pink for the rest.
+          dots: others.map((a) => (a.stretch || a.yoga ? 'calm' : 'work')),
+          aria:
+            longDay(dt) +
+            (isOwn ? ', this session' : '') +
+            (others.length ? ', ' + plural(others.length, 'workout') + ' on it' : '') +
+            (gone ? ', gone by' : ''),
+          toggle: isOwn || gone ? undefined : () => toggle(iso),
+        };
+      }),
+      picks: copyTo.map((iso) => {
+        const others = onDay(iso);
+        const twice = others.some((a) => sameName(a.name, baseName));
+        return {
+          day: shortDay(isoDate(iso)),
+          detail: twice
+            ? 'It’s already on that day, so it would be there twice.'
+            : others.length
+              ? 'With ' + others.map((a) => a.name).join(', ')
+              : 'Nothing else on it',
+        };
+      }),
+    };
+  })();
+
   return {
     nameError: nameClash ? 'You already have a workout called “' + nameClash.name + '”. Give this one another name.' : '',
     saveBlocked: !!nameClash || needsName || needsExercise || !!badCounts || saving,
@@ -674,6 +747,7 @@ export function editVals(ctx: Ctx) {
     inSeries: !!(selAct && selAct.series),
     // A program's session repeats as the program does: a weekly series on top would double it up.
     canRepeat: !tplMode && !(selAct && (selAct.series || selAct.program)),
+    copy: copyVals,
     // The program a session is part of, and where in it, opening the program.
     eProgram:
       !creating && selAct && selAct.program
@@ -728,7 +802,9 @@ export function editVals(ctx: Ctx) {
       : tplMode
         ? 'Save changes'
         : st.editing
-        ? 'Update workout'
+        ? copyTo.length
+          ? 'Save and copy to ' + plural(copyTo.length, 'day')
+          : 'Update workout'
         : creating && st.schedule === false
           ? 'Save to Spellbook'
           : 'Save workout',
@@ -823,6 +899,8 @@ export function editVals(ctx: Ctx) {
         // Exercises ticked in the editor. A finished session stays completed while ticks change; otherwise it's done
         // once all are ticked.
         const ticked = st.editDone ? st.editDone.filter((n) => selList.some((e) => e.name === n)) : null;
+        // The copies, once the edit is saved: of the workout the session is on by then, so they have the edit.
+        const saveCopies = (r?) => (copyTo.length ? db.copySession(selAct.id, copyTo).then(() => r) : Promise.resolve(r));
         const saveTicks = (r?) =>
           (ticked
             ? db.setExercisesDone(
@@ -896,7 +974,8 @@ export function editVals(ctx: Ctx) {
                   (edit.repeatDates.length
                     ? ' Repeats every ' + dayNames(repeatDays) + ', ' +
                       plural(edit.repeatDates.length, 'more session') + ' on the calendar.'
-                    : ''),
+                    : '') +
+                  (copyTo.length ? ' Copied to ' + copyList + '.' : ''),
                 'detail',
               ),
         );
@@ -978,7 +1057,7 @@ export function editVals(ctx: Ctx) {
             )
             .catch((e) => logic.fail(e));
         }
-        if (!changesWorkout) return logic.saveOnce('workout', () => db.updateWorkout(edit).then(saveTicks), after);
+        if (!changesWorkout) return logic.saveOnce('workout', () => db.updateWorkout(edit).then(saveTicks).then(saveCopies), after);
         // The workout is shared with the Spellbook, and maybe with other sessions: ask whether the change is for this
         // session only, or for the saved workout too (and the sessions still ahead). Asked even when this is its only
         // session, since changing what was lifted today shouldn't quietly rewrite the saved workout. Past and
@@ -1023,7 +1102,8 @@ export function editVals(ctx: Ctx) {
                           updateUpcoming: true,
                           todayIso,
                         })
-                        .then(saveTicks),
+                        .then(saveTicks)
+                        .then(saveCopies),
                     after,
                   ),
               },

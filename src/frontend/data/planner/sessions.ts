@@ -118,6 +118,20 @@ export async function scheduleWorkout(
   return { entryId: rows.find((r) => r.scheduled_date === dates[0])?.id ?? null };
 }
 
+// Copies a session onto other days: a new session of the workout it is on now (so with an edit just saved), on each
+// date. Each starts fresh, and on its own: not part of a program's run or a weekly series, so ending or moving the
+// program leaves it where it is.
+export async function copySession(entryId: string, dates: string[]) {
+  if (!dates.length) return;
+  const rows: { workout_id: string }[] = await ok(supabase.from('plan_entries').select('workout_id').eq('id', entryId));
+  if (!rows.length) return;
+  await ok(
+    supabase
+      .from('plan_entries')
+      .insert(dates.map((d) => ({ workout_id: rows[0].workout_id, scheduled_date: d, status: 'planned' }))),
+  );
+}
+
 // How many sessions of this workout are still ahead: from today on, and not already completed.
 export async function countUpcoming(workoutId: string, todayIso: string): Promise<number> {
   const rows: any[] = await ok(

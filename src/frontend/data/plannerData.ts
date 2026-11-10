@@ -3,7 +3,7 @@
 
 export type { Exercise, Ride, Entry, DiaryEntry, WorkoutSummary, BuiltinWorkout, Model, Program, ProgramBlock, ProgramWorkout, ProgramRun, BuiltinProgram, Profile, FoundRow, CharmRow, NewWorkout, WorkoutEdit, TemplateEditResult } from './planner/types';
 export { loadModel } from './planner/read';
-export { setExercisesDone, setRideDone, finishSession, reopenSession, saveDiary, deleteDiary, deletePlanEntries, endSeries, scheduleWorkout, upcomingOfWorkout, countUpcoming, sessionScope } from './planner/sessions';
+export { setExercisesDone, setRideDone, finishSession, reopenSession, saveDiary, deleteDiary, deletePlanEntries, endSeries, scheduleWorkout, upcomingOfWorkout, countUpcoming, sessionScope, copySession } from './planner/sessions';
 export { ownCopyOfBuiltin, createWorkout, updateWorkout, archiveWorkout } from './planner/workouts';
 export { updateWorkoutTemplate } from './planner/workoutTemplate';
 export { deleteLibraryExercise, createLibraryExercise, updateLibraryExercise } from './planner/exercises';

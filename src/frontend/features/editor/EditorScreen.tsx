@@ -18,6 +18,7 @@ import { FormActions } from '@/frontend/components/FormActions';
 import { RepeatWeekly } from '@/frontend/components/RepeatWeekly';
 import { SessionProgress } from '@/frontend/components/SessionProgress';
 import { AddExercisePanel } from '@/frontend/features/editor/AddExercisePanel';
+import { CopyToDays } from '@/frontend/features/editor/CopyToDays';
 import { DatePicker } from '@/frontend/features/editor/DatePicker';
 import { EditorExerciseItem } from '@/frontend/features/editor/EditorExerciseItem';
 import { EditorHeader } from '@/frontend/features/editor/EditorHeader';
@@ -117,6 +118,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
               </RepeatWeekly>
             </Card>
           ) : null}
+          {v.copy ? <CopyToDays copy={v.copy} /> : null}
         </>
       )}
       {/* Whether it's a warm-up, whatever its kind: a workout, a stretch or yoga can each be one. */}
