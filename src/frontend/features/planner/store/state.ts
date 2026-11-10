@@ -161,6 +161,11 @@ export interface PlannerState {
   repeatDays?: number[] | null;
   // How many weeks it repeats for, when not the default.
   repeatWeeks?: number | null;
+  /** The session editor's "Copy to other days": on, the days picked (ISO dates), and which week the strip shows
+   * (weeks after the session's own; 0 is its week). */
+  copyOn?: boolean | null;
+  copyDates?: string[] | null;
+  copyWeek?: number | null;
   logDone?: boolean | null;
   extra?: Record<string, Exercise[]> | null;
   removed?: Record<string, string[]> | null;
