@@ -1,43 +1,15 @@
-import { minText, monthPatch } from '@/frontend/shared/helpers';
-import { setsFor } from '../session/sets';
 import type { Ctx } from '../planner/store/types';
 import type { Entry } from '@/frontend/data/plannerData';
 
 /** A session's clock, as kept in state: seconds banked, plus when it was last started if it's going. */
 export type LiveClock = { elapsed: number; runningSince: number | null };
 
-/**
- * The session being done right now, for what shows outside the page: the notification.
- * Plain data, so it can go to the timer worker and the service worker as it is.
- */
-export type LiveActivity = {
-  id: string;
-  kind: 'lift' | 'ride';
-  name: string;
-  clock: LiveClock;
-  /** Lifting: how many are ticked, of how many, and the first one still to do. */
-  done: number;
-  total: number;
-  now: { name: string; line: string; set: number; of: number } | null;
-  /** Resting between sets: until when, out of how long, and what's up next. */
-  rest: { endsAt: number; total: number; next: { name: string; line: string } | null } | null;
-  /** A timed set counting down: until when, out of how long, and which set of which exercise. */
-  hold: { endsAt: number; total: number; name: string; set: number; of: number } | null;
-  /** Riding: the plan. */
-  ride: { planned: string; dist: string; climb: string; zone: string; run?: boolean } | null;
-};
+/** The session being done right now (its clock going, or paused today): the screen stays on while there is one. */
+export type LiveActivity = { id: string; name: string; clock: LiveClock };
 
-/** A session just finished, for the "Quest cleared" notification. */
-export type LiveDone = { id: string; name: string; took: string; exercises: string; streak: number; ride: boolean };
-
-/** Seconds on a clock at a moment (now, by default). */
-export const clockSeconds = (c: LiveClock, at = Date.now()) =>
-  c.elapsed + (c.runningSince ? Math.max(0, Math.floor((at - c.runningSince) / 1000)) : 0);
-
-// The session outside the page: which one is going, and what the notification can do with it.
+// Which session is in progress.
 export function liveVals(ctx: Ctx) {
-  const { logic, st, nameOf, isDoneEntry, actualMinutes, distOf, TODAY_M, TODAY_D, streak } = ctx;
-  const sets = setsFor(ctx);
+  const { logic, st, nameOf, isDoneEntry, actualMinutes, TODAY_M, TODAY_D } = ctx;
   const timers = st.workoutTimer || {};
   const found = (id: string) => logic.model.entries.find((x) => x.av.id === id) || null;
   // A session stays in progress while its clock is kept: until Finish records it (which takes the clock away), so
@@ -57,87 +29,8 @@ export function liveVals(ctx: Ctx) {
     null;
   const x = liveId ? found(liveId) : null;
   const av: Entry | null = x ? x.av : null;
-  const exercises = sets.exercisesOf;
-  const ticked = (id: string): string[] => (st.done || {})[id] || [];
-  let liveActivity: LiveActivity | null = null;
-  if (av) {
-    const list = av.ride ? [] : exercises(av);
-    const dn = ticked(av.id);
-    const next = sets.nextSet(av.id);
-    const r = sets.restNow && sets.restNow.id === av.id ? sets.restNow : null;
-    const h = sets.holdNow && sets.holdNow.id === av.id ? sets.holdNow : null;
-    liveActivity = {
-      id: av.id,
-      kind: av.ride ? 'ride' : 'lift',
-      name: nameOf(av.name),
-      clock: { elapsed: timers[av.id].elapsed, runningSince: timers[av.id].runningSince },
-      done: list.filter((e) => dn.indexOf(e.name) !== -1).length,
-      total: list.length,
-      now: next ? { name: next.e.name, line: next.line, set: next.set, of: next.of } : null,
-      rest: r
-        ? { endsAt: r.endsAt, total: r.total, next: sets.restNext ? { name: sets.restNext.e.name, line: sets.restNext.line } : null }
-        : null,
-      hold: h && next ? { endsAt: h.endsAt, total: h.total, name: h.name, set: next.set, of: next.of } : null,
-      ride: av.ride
-        ? { planned: av.time, dist: av.ride.dist || '', climb: av.ride.elev || '', zone: av.ride.zone || '', run: !!av.ride.run }
-        : null,
-    };
-  }
-  const setClock = (id: string, clock: LiveClock) =>
-    logic.s({ workoutTimer: Object.assign({}, logic.state.workoutTimer, { [id]: clock }) });
-  // Opens the session's page, as its card on the calendar does.
-  const openLive = (id: string) => {
-    const at = found(id);
-    if (at) logic.nav({ screen: 'detail', seg: 'Day', creating: false, ...monthPatch(at.m), day: at.d, entryId: id });
-  };
-  return {
-    liveActivity,
-    // The same numbers the session's own page would show once Finish has recorded it.
-    liveDoneFor: (id: string): LiveDone | null => {
-      const at = found(id);
-      if (!at || !isDoneEntry(at.av)) return null;
-      const a = at.av;
-      const list = a.ride ? [] : exercises(a);
-      const dn = ticked(a.id);
-      return {
-        id,
-        name: nameOf(a.name),
-        took: actualMinutes(a) ? minText(actualMinutes(a)) : a.time,
-        exercises: a.ride
-          ? distOf(a)
-            ? distOf(a) + ' mi'
-            : ''
-          : list.filter((e) => dn.indexOf(e.name) !== -1).length + ' of ' + list.length,
-        streak,
-        ride: !!a.ride,
-      };
-    },
-    // The next set done, as "Done set" on the session's page does (the last of an exercise's sets ticks it off).
-    liveSet: (id: string) => {
-      const n = sets.nextSet(id);
-      if (n) sets.completeSet(id, n.e.name);
-    },
-    // "+30 sec": on a timed set counting down, or else the rest.
-    liveMoreRest: () => (logic.state.hold ? sets.addHold(30) : sets.addRest(30)),
-    liveSkipRest: sets.skipRest,
-    livePause: (id: string) => {
-      const c = timers[id];
-      if (c && c.runningSince) setClock(id, { elapsed: clockSeconds(c), runningSince: null });
-    },
-    liveResume: (id: string) => {
-      const c = timers[id];
-      if (c && !c.runningSince) setClock(id, { elapsed: c.elapsed, runningSince: Date.now() });
-    },
-    openLive,
-    // Finish asks what it took, so it opens the session's page with the Finish dialog up.
-    liveFinish: (id: string) => {
-      openLive(id);
-      logic.renderVals().openFinish();
-    },
-    // Straight to writing about it, from the "Quest cleared" notification.
-    liveWrite: (id: string) => {
-      openLive(id);
-      logic.renderVals().goDiary();
-    },
-  };
+  const liveActivity: LiveActivity | null = av
+    ? { id: av.id, name: nameOf(av.name), clock: { elapsed: timers[av.id].elapsed, runningSince: timers[av.id].runningSince } }
+    : null;
+  return { liveActivity };
 }

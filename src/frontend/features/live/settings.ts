@@ -1,11 +1,10 @@
-// During a workout: whether the screen stays on (on unless turned off), and whether the session in progress shows
-// outside the page as a notification (on unless turned off; the browser asks the first time a workout starts). Both are chosen in
-// Profile → Settings and kept in this browser. So is what leaving a workout's page does with its running clock: ask
+// During a workout: whether the screen stays on (on unless turned off), chosen in Profile → Settings and kept in this
+// browser. So is what leaving a workout's page does with its running clock: ask
 // each time (unless told otherwise), keep it running, or pause it.
 
-export type LiveSettings = { awake: boolean; notify: boolean };
+export type LiveSettings = { awake: boolean };
 
-const KEYS = { awake: 'moonshot.live.awake', notify: 'moonshot.live.notify' } as const;
+const KEYS = { awake: 'moonshot.live.awake' } as const;
 const EVENT = 'moonshot-live-settings';
 
 export type LeaveChoice = 'ask' | 'run' | 'pause';
@@ -32,12 +31,9 @@ export function setLeaveChoice(choice: LeaveChoice) {
 
 export function liveSettings(): LiveSettings {
   try {
-    return {
-      awake: localStorage.getItem(KEYS.awake) !== '0',
-      notify: localStorage.getItem(KEYS.notify) !== '0',
-    };
+    return { awake: localStorage.getItem(KEYS.awake) !== '0' };
   } catch {
-    return { awake: true, notify: true };
+    return { awake: true };
   }
 }
 
@@ -56,9 +52,6 @@ export function onLiveSettings(fn: (s: Partial<LiveSettings> & { leave?: LeaveCh
   window.addEventListener(EVENT, handler);
   return () => window.removeEventListener(EVENT, handler);
 }
-
-/** Notifications can be shown here: the browser has them, and a service worker to show them from. */
-export const canNotify = () => typeof window !== 'undefined' && 'Notification' in window && 'serviceWorker' in navigator;
 
 /** The screen can be kept on here. An app added to an iPhone's or iPad's home screen before iOS 18.4 has the API but
  * it does nothing there, so it doesn't count. */
