@@ -1,7 +1,7 @@
 // The session clock's heartbeat, off the page's main thread.
 //
 // A page in the background has its timers slowed to about once a minute; a worker's keep time. So the page asks this
-// worker to tick while a session's clock is running, and redraws (and updates the notification) on each tick.
+// worker to tick while a session's clock is running, and redraws on each tick.
 
 export type WorkerIn = { type: 'run'; on: boolean };
 export type WorkerOut = { type: 'tick'; at: number };

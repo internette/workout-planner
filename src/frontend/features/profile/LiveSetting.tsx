@@ -5,40 +5,36 @@ import { Checkbox } from '@moonshot/design-system/checkbox';
 import { RadioGroup } from '@moonshot/design-system/radio';
 import { Text } from '@moonshot/design-system/typography';
 import { SettingsCard } from './SettingsCard';
-import { canNotify, canWake, leaveChoice, liveSettings, onLiveSettings, setLeaveChoice, setLiveSetting, type LeaveChoice, type LiveSettings } from '@/frontend/features/live/settings';
+import { canWake, leaveChoice, liveSettings, onLiveSettings, setLeaveChoice, setLiveSetting, type LeaveChoice, type LiveSettings } from '@/frontend/features/live/settings';
 
-/** Settings → During a workout: what leaving a workout does with its clock, then whether the screen stays on and
- * whether a workout in progress shows outside the app. Saved in this browser. Each switch shows only where the browser
- * can do it, and their heading only with one to show. */
+/** Settings → During a workout: what leaving a workout does with its clock, then whether the screen stays on. Saved in
+ * this browser. The switch shows only where the browser can keep the screen on. */
 export function LiveSetting() {
-  const [s, setS] = useState<LiveSettings>({ awake: false, notify: false });
-  const [can, setCan] = useState({ awake: false, notify: false });
-  const [blocked, setBlocked] = useState(false);
+  const [s, setS] = useState<LiveSettings>({ awake: false });
+  const [canAwake, setCanAwake] = useState(false);
   const [leave, setLeave] = useState<LeaveChoice>('ask');
   // Read after mounting: the server doesn't know what this browser saved, or what it can do.
   useEffect(() => {
     setS(liveSettings());
     setLeave(leaveChoice());
-    setCan({ awake: canWake(), notify: canNotify() });
-    setBlocked(canNotify() && Notification.permission === 'denied');
+    setCanAwake(canWake());
     return onLiveSettings(({ leave: l, ...p }) => {
       if (l) setLeave(l);
       setS((cur) => ({ ...cur, ...p }));
     });
   }, []);
-  // Turning notifications on asks the browser now, while there's a tap to ask from.
-  const pickNotify = (on: boolean) => {
-    setLiveSetting('notify', on);
-    if (on && Notification.permission === 'default')
-      Notification.requestPermission()
-        .then((p) => setBlocked(p === 'denied'))
-        .catch(() => undefined);
-  };
   return (
     <SettingsCard title="During a workout">
       {/* What leaving a workout's page does with its clock: ask each time, or the answer given once. A rule sets the
-          choice apart from the switches under it. */}
-      <div style={{ marginTop: 'var(--space-3)', paddingBottom: 'var(--space-4)', marginBottom: 'var(--space-1)', borderBottom: '1px solid var(--color-line)' }}>
+          choice apart from the switch under it. */}
+      <div
+        style={{
+          marginTop: 'var(--space-3)',
+          paddingBottom: canAwake ? 'var(--space-4)' : undefined,
+          marginBottom: canAwake ? 'var(--space-1)' : undefined,
+          borderBottom: canAwake ? '1px solid var(--color-line)' : undefined,
+        }}
+      >
         <RadioGroup<LeaveChoice>
           label="When you leave a workout"
           options={[
@@ -50,35 +46,23 @@ export function LiveSetting() {
           onChange={setLeaveChoice}
         />
       </div>
-      {/* The switches under their own heading, styled as the leave choice's. */}
-      {can.awake || can.notify ? (
-        <Text variant="body" as="div" tone="ink" style={{ marginTop: 'var(--space-3)' }}>
-          Screen and notifications
-        </Text>
-      ) : null}
-      {can.awake ? (
-        <div style={{ marginTop: 'var(--space-3)' }}>
-          <Checkbox
-            switch
-            checked={s.awake}
-            onChange={(on) => setLiveSetting('awake', on)}
-            description="From Start until you finish, paused or not. Low Power Mode can overrule it."
-          >
-            Keep the screen on during a workout
-          </Checkbox>
-        </div>
-      ) : null}
-      {can.notify ? (
-        <div style={{ marginTop: can.awake ? '10px' : '12px' }}>
-          <Checkbox
-            switch
-            checked={s.notify}
-            onChange={pickNotify}
-            description={s.notify && blocked ? 'Notifications are blocked for Moonshot. Allow them in your browser’s site settings.' : undefined}
-          >
-            Show it in a notification, with buttons to tick off and finish
-          </Checkbox>
-        </div>
+      {/* The switch under its own heading, styled as the leave choice's. */}
+      {canAwake ? (
+        <>
+          <Text variant="body" as="div" tone="ink" style={{ marginTop: 'var(--space-3)' }}>
+            Screen
+          </Text>
+          <div style={{ marginTop: 'var(--space-3)' }}>
+            <Checkbox
+              switch
+              checked={s.awake}
+              onChange={(on) => setLiveSetting('awake', on)}
+              description="From Start until you finish, paused or not. Low Power Mode can overrule it."
+            >
+              Keep the screen on during a workout
+            </Checkbox>
+          </div>
+        </>
       ) : null}
     </SettingsCard>
   );

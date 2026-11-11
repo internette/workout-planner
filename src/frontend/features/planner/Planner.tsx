@@ -15,7 +15,7 @@ import { PlannerView } from './PlannerView';
 import { PlannerStatus } from './PlannerStatus';
 import { InstallPrompt } from '../install/InstallPrompt';
 import { useInstallPrompt } from '../install/useInstallPrompt';
-import { useLiveActivity } from '../live/useLiveActivity';
+import { useWorkoutClock } from '../live/useWorkoutClock';
 import { useWakeLock } from '../live/useWakeLock';
 import { leaveChoice } from '../live/settings';
 import { RankUp } from '@moonshot/design-system/rank-up';
@@ -421,11 +421,10 @@ export default function Planner({ account = null }: { account?: Account | null }
   // recorded quietly rather than celebrated, and a rank that drops and is earned back doesn't play again.
   const view = status === 'ready' ? logic.renderVals() : null;
   viewRef.current = view;
-  // A running workout stopwatch (or a rest counting down) needs the screen to tick even though nothing else in state is changing; the session in
-  // progress also shows outside the page, as a notification.
+  // A running workout stopwatch (or a rest counting down) needs the screen to tick even though nothing else in state is changing.
   const anyTimerRunning =
     Object.values(logic.state.workoutTimer || {}).some((t) => t && t.runningSince) || !!logic.state.rest || !!logic.state.hold;
-  useLiveActivity(logic, view, anyTimerRunning);
+  useWorkoutClock(logic, view, anyTimerRunning);
   // The screen stays on from Start until the workout is finished, paused or not (unless turned off in Settings).
   useWakeLock(!!view?.liveActivity);
   // Moonwalk follows GPS for the Run/Walk or Cycling session it's collecting on, while its clock runs.
