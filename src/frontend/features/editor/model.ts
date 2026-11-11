@@ -343,14 +343,14 @@ export function editVals(ctx: Ctx) {
   // The series' own days, not this session's date (which may have just been moved in this editor).
   const seriesDayNames = dayNames(selAct && selAct.seriesDays && selAct.seriesDays.length ? selAct.seriesDays : [selDate.getDay()]);
   // "Copy to other days", on a session being edited: a week strip from the session's own week on, to pick days from.
-  // Copies go on today or later, never on the session's own day, and are saved with the edit (so they have it).
+  // Copies go on any day but the session's own, days gone by too, and are saved with the edit (so they have it).
   const copyable = !creating && !tplMode && !!selAct && !!st.editing;
   const ownIso = isoOf(new Date(Y, mi, selDay));
   const isoDate = (iso: string) => {
     const [y, mo, d] = iso.split('-').map(Number);
     return new Date(y, mo - 1, d);
   };
-  const copyTo = copyable && st.copyOn ? [...new Set(st.copyDates || [])].filter((d) => d >= todayIso && d !== ownIso).sort() : [];
+  const copyTo = copyable && st.copyOn ? [...new Set(st.copyDates || [])].filter((d) => d !== ownIso).sort() : [];
   // "Sat, Nov 14", "Sat, Nov 14 and Mon, Nov 16", "Sat, Nov 14, Mon, Nov 16 and Tue, Nov 17".
   const copyList = (() => {
     const days = copyTo.map((d) => shortDay(isoDate(d)));
@@ -358,7 +358,7 @@ export function editVals(ctx: Ctx) {
   })();
   const copyVals = (() => {
     if (!copyable) return null;
-    const week = Math.max(0, st.copyWeek || 0);
+    const week = st.copyWeek || 0;
     const own = new Date(Y, mi, selDay);
     const first = new Date(own.getFullYear(), own.getMonth(), own.getDate() - own.getDay() + 7 * week);
     const last = new Date(first.getFullYear(), first.getMonth(), first.getDate() + 6);
@@ -373,21 +373,19 @@ export function editVals(ctx: Ctx) {
       note: 'Each copy is this workout as you’ve edited it, ready to start.',
       range:
         monDay(first) + ' – ' + (first.getMonth() === last.getMonth() ? String(last.getDate()) : monDay(last)),
-      canPrev: week > 0,
-      prev: () => logic.s({ copyWeek: Math.max(0, week - 1) }),
+      prev: () => logic.s({ copyWeek: week - 1 }),
       next: () => logic.s({ copyWeek: week + 1 }),
       days: Array.from({ length: 7 }, (_, i) => {
         const dt = new Date(first.getFullYear(), first.getMonth(), first.getDate() + i);
         const iso = isoOf(dt);
         const others = onDay(iso);
         const isOwn = iso === ownIso;
-        const gone = iso < todayIso;
-        const on = !isOwn && !gone && picked.includes(iso);
+        const on = !isOwn && picked.includes(iso);
         return {
           letter: DOW1[dt.getDay()],
           num: dt.getDate(),
           own: isOwn,
-          disabled: isOwn || gone,
+          disabled: isOwn,
           on,
           today: iso === todayIso,
           // A dot for each workout already on it: teal for a stretch or yoga, pink for the rest.
@@ -395,9 +393,8 @@ export function editVals(ctx: Ctx) {
           aria:
             longDay(dt) +
             (isOwn ? ', this session' : '') +
-            (others.length ? ', ' + plural(others.length, 'workout') + ' on it' : '') +
-            (gone ? ', gone by' : ''),
-          toggle: isOwn || gone ? undefined : () => toggle(iso),
+            (others.length ? ', ' + plural(others.length, 'workout') + ' on it' : ''),
+          toggle: isOwn ? undefined : () => toggle(iso),
         };
       }),
       picks: copyTo.map((iso) => {

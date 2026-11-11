@@ -18,10 +18,7 @@ export function CopyToDays({ copy }: { copy: Copy }) {
       {copy.on ? (
         <div style={{ marginTop: 'var(--space-3)', paddingTop: 'var(--space-3)', borderTop: '1px solid var(--color-line)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-            {/* Never before the session's own week: nothing there can take a copy. */}
-            <span style={{ visibility: copy.canPrev ? 'visible' : 'hidden' }}>
-              <StepButton dir="prev" unit="week" onClick={copy.prev} />
-            </span>
+            <StepButton dir="prev" unit="week" onClick={copy.prev} />
             <Text variant="subheading" as="div" style={{ flex: '1', textAlign: 'center' }} aria-live="polite">
               {copy.range}
             </Text>
