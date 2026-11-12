@@ -108,7 +108,7 @@ export function ProgramEditScreen({ v }: { v: PlannerVals }) {
                   Weeks
                 </Text>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', height: '48px', padding: '0 var(--space-1)', borderRadius: 'var(--radius-md)', background: 'var(--color-canvas)' }}>
-                  <IconButton label="One week fewer" size="md" onClick={b.fewer || undefined} disabled={!b.fewer}>
+                  <IconButton label="One week fewer" size="md" onClick={b.fewer || undefined} disabled={!b.fewer || b.weeksBusy}>
                     <span aria-hidden="true" style={{ fontSize: 'var(--text-xl)', lineHeight: 1, color: 'var(--color-pink-deep)' }}>
                       −
                     </span>
@@ -116,24 +116,21 @@ export function ProgramEditScreen({ v }: { v: PlannerVals }) {
                   <Text variant="subheading" aria-live="polite" style={{ minWidth: '24px', textAlign: 'center' }}>
                     {b.weeks}
                   </Text>
-                  <IconButton label="One week more" size="md" onClick={b.more || undefined} disabled={!b.more}>
+                  <IconButton label="One week more" size="md" onClick={b.more || undefined} disabled={!b.more || b.weeksBusy}>
                     <Plus color="var(--color-pink-deep)" size={16} />
                   </IconButton>
                 </div>
               </div>
             </div>
             {b.weekModes ? (
-              <SegmentedControl
-                label="How its weeks go"
-                options={b.weekModes}
-                value={b.byWeek ? 'week' : 'same'}
-                onChange={b.setWeekMode}
-                tone="quiet"
-                fullWidth
-                equalWidth
-                style={{ marginTop: 'var(--space-4)' }}
-              />
+              // Held still while its weeks save: copying workouts into every week takes a moment.
+              <div aria-busy={b.weeksBusy} style={{ marginTop: 'var(--space-4)', ...(b.weeksBusy ? { pointerEvents: 'none', opacity: 0.6 } : {}) }}>
+                <SegmentedControl label="How its weeks go" options={b.weekModes} value={b.byWeek ? 'week' : 'same'} onChange={b.setWeekMode} tone="quiet" fullWidth equalWidth />
+              </div>
             ) : null}
+            <Text variant="body" tone="muted" as="p" role="status" style={{ margin: b.weeksBusy ? 'var(--space-2) 0 0' : 0 }}>
+              {b.weeksBusy ? 'Updating its weeks…' : ''}
+            </Text>
             {b.weekList ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', marginTop: 'var(--space-4)' }}>
                 {b.weekList.map((wk, k) => (
