@@ -30,7 +30,7 @@ export function PouchDialog({ v }: { v: PlannerVals | null }) {
         <ul style={{ listStyle: 'none', padding: 0, margin: 'var(--space-4) 0 0', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(88px, 1fr))', gap: 'var(--space-3)' }}>
           {v.pouchFinds.map((f) => (
             <li key={f.key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-1)', textAlign: 'center' }}>
-              <FindGlyph rarity={f.rarity} found tint={f.tint} fill={f.fill} />
+              <FindGlyph rarity={f.rarity} found tint={f.tint} fill={f.fill} stroke={f.deep} />
               <Text variant="small" tone="ink" weight="semibold">
                 {f.name}
               </Text>

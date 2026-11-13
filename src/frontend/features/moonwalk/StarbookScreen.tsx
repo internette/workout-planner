@@ -37,7 +37,7 @@ export function StarbookScreen({ v }: { v: PlannerVals }) {
               aria-label={f.found ? f.name + ', ' + f.rarityLabel + (f.copies > 1 ? ', ' + f.copies + ' copies' : '') : 'Not found yet, ' + f.rarityLabel}
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-1)', textAlign: 'center' }}
             >
-              <FindGlyph rarity={f.rarity} found={f.found} tint={f.tint} fill={f.fill} />
+              <FindGlyph rarity={f.rarity} found={f.found} tint={f.tint} fill={f.fill} stroke={f.deep} />
               <Text variant="small" tone={f.found ? 'ink' : 'muted'} aria-hidden="true">
                 {f.found ? f.name : f.rarityLabel}
               </Text>
@@ -52,7 +52,7 @@ export function StarbookScreen({ v }: { v: PlannerVals }) {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2) var(--space-4)', marginTop: 'var(--space-4)' }}>
           {v.sbRarities.map((r) => (
             <Text key={r.key} variant="small" tone="muted">
-              <span aria-hidden="true" style={{ display: 'inline-block', width: 10, height: 10, borderRadius: 'var(--radius-full)', background: r.fill, marginRight: 6 }} />
+              <span aria-hidden="true" style={{ display: 'inline-block', width: 10, height: 10, borderRadius: 'var(--radius-full)', background: r.fill, boxShadow: `inset 0 0 0 1.5px ${r.deep}`, marginRight: 6 }} />
               {r.per} {r.label}
             </Text>
           ))}

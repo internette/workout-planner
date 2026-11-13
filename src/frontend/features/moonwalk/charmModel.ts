@@ -221,7 +221,7 @@ export function charmVals(ctx: Ctx) {
           : [];
 
   // The Charm Table.
-  const satchelCounts = RARITIES.map((r) => ({ key: r.key, label: r.label, n: tierCount(r.key), fill: `var(--color-${r.color})` }));
+  const satchelCounts = RARITIES.map((r) => ({ key: r.key, label: r.label, n: tierCount(r.key), fill: `var(--color-${r.color})`, deep: r.color === 'slate' ? 'var(--color-slate)' : `var(--color-${r.color}-deep)` }));
   const wards = heldCount('streak-ward');
   const craftable = (c: Charm) => spendFor(c.cost, satchel, held);
   const recipeRow = (c: Charm) => {

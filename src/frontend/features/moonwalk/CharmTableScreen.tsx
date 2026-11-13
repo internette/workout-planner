@@ -23,7 +23,7 @@ export function CharmTableScreen({ v }: { v: PlannerVals }) {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2) var(--space-4)', marginTop: 'var(--space-2)' }}>
           {v.ctSatchel.map((r) => (
             <Text key={r.key} variant="body" tone="ink">
-              <span aria-hidden="true" style={{ display: 'inline-block', width: 10, height: 10, borderRadius: 'var(--radius-full)', background: r.fill, marginRight: 6 }} />
+              <span aria-hidden="true" style={{ display: 'inline-block', width: 10, height: 10, borderRadius: 'var(--radius-full)', background: r.fill, boxShadow: `inset 0 0 0 1.5px ${r.deep}`, marginRight: 6 }} />
               {r.n} {r.label}
             </Text>
           ))}
@@ -38,7 +38,7 @@ export function CharmTableScreen({ v }: { v: PlannerVals }) {
           <ul style={{ listStyle: 'none', padding: 0, margin: 'var(--space-3) 0 0', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
             {v.ctPicks.map((c) => (
               <li key={c.key} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
-                <CharmGlyph tint={c.tint} fill={c.fill} size={40} />
+                <CharmGlyph tint={c.tint} fill={c.fill} stroke={c.deep} size={40} />
                 <span style={{ flex: '1 1 160px', minWidth: 0 }}>
                   <Text variant="strong" tone="ink" as="span" style={{ display: 'block' }}>
                     {c.name}
@@ -66,7 +66,7 @@ export function CharmTableScreen({ v }: { v: PlannerVals }) {
           <ul style={{ listStyle: 'none', padding: 0, margin: g.rows.length ? 'var(--space-3) 0 0' : 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
             {g.rows.map((c) => (
               <li key={c.key} style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
-                <CharmGlyph tint={c.tint} fill={c.fill} size={40} known={c.known} />
+                <CharmGlyph tint={c.tint} fill={c.fill} stroke={c.deep} size={40} known={c.known} />
                 <span style={{ flex: '1 1 180px', minWidth: 0 }}>
                   <Text variant="strong" tone={c.known || c.pages ? 'ink' : 'muted'} as="span" style={{ display: 'block' }}>
                     {c.name}

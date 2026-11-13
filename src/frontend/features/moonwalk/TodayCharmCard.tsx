@@ -23,7 +23,7 @@ export function TodayCharmCard({ v }: { v: PlannerVals }) {
       {used ? (
         <>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-3)' }}>
-            <CharmGlyph tint={used.tint} fill={used.fill} />
+            <CharmGlyph tint={used.tint} fill={used.fill} stroke={used.deep} />
             <span style={{ minWidth: 0 }}>
               <Text variant="strong" tone="ink" as="span" style={{ display: 'block' }}>
                 {used.name}
@@ -69,7 +69,7 @@ export function TodayCharmCard({ v }: { v: PlannerVals }) {
               background: 'var(--color-surface)',
             }}
           >
-            <CharmGlyph tint={rec.tint} fill={rec.fill} />
+            <CharmGlyph tint={rec.tint} fill={rec.fill} stroke={rec.deep} />
             <span style={{ minWidth: 0, flex: '1 1 0' }}>
               <Text variant="micro" tone="accent" as="span" style={{ display: 'block' }}>
                 Recommended{rec.count > 1 ? ' · ×' + rec.count : ''}
