@@ -4,12 +4,14 @@ import { Text } from '@moonshot/design-system/typography';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { CharmGlyph } from './CharmGlyph';
 
-/** Today's charm on the day view: the one in use, or the recommended one, preselected, with why. One a day. */
+/** Today's charm on the day view: one compact row above the workouts (the charm in use, or the recommended one,
+ * preselected), so the first workout starts high on a phone. Only the Streak Ward question gets a full card. One a day. */
 export function TodayCharmCard({ v }: { v: PlannerVals }) {
   if (!v.tcShow) return null;
-  const used = v.tcUsed;
   const rec = v.tcRec;
   const ward = v.tcWard;
+  // A Streak Ward question keeps the full card below: it is a one-time choice with a midnight deadline.
+  if (!ward) return <TodayCharmRow v={v} />;
   return (
     <Card as="section" aria-label="Today’s charm" style={{ marginTop: 'var(--space-4)' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 'var(--space-3)' }}>
@@ -20,37 +22,7 @@ export function TodayCharmCard({ v }: { v: PlannerVals }) {
           1 a day
         </Text>
       </div>
-      {used ? (
-        <>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-3)' }}>
-            <CharmGlyph tint={used.tint} fill={used.fill} stroke={used.deep} />
-            <span style={{ minWidth: 0 }}>
-              <Text variant="strong" tone="ink" as="span" style={{ display: 'block' }}>
-                {used.name}
-              </Text>
-              <Text variant="body" tone="muted" as="span" style={{ display: 'block' }}>
-                {used.note}
-              </Text>
-            </span>
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-3)', marginTop: 'var(--space-3)' }}>
-            {v.tcCanChange ? (
-              <>
-                <Button type="secondary" size="md" onClick={v.tcChange} disabled={v.tcBusy}>
-                  Change
-                </Button>
-                <Text variant="small" tone="muted">
-                  You can change it until it starts working.
-                </Text>
-              </>
-            ) : (
-              <Text variant="small" tone="muted">
-                It’s working today. A new charm can be used tomorrow.
-              </Text>
-            )}
-          </div>
-        </>
-      ) : rec ? (
+      {rec ? (
         <>
           {ward ? (
             <Text variant="body" tone="slate" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
@@ -108,16 +80,65 @@ export function TodayCharmCard({ v }: { v: PlannerVals }) {
             </Text>
           ) : null}
         </>
-      ) : (
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-2) var(--space-3)', marginTop: 'var(--space-2)' }}>
-          <Text variant="body" tone="muted">
+      ) : null}
+    </Card>
+  );
+}
+
+/** The one-row form: the charm, what it is, and Use / Change. Change opens the same picker. */
+function TodayCharmRow({ v }: { v: PlannerVals }) {
+  const used = v.tcUsed;
+  const rec = v.tcRec;
+  const shown = used || rec;
+  const label = used ? 'Today’s charm' : rec ? 'Recommended charm' + (rec.count > 1 ? ' · ×' + rec.count : '') : 'Today’s charm';
+  return (
+    <Card
+      as="section"
+      aria-labelledby="today-charm-label"
+      style={{ marginTop: 'var(--space-3)', padding: 'var(--space-3)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-3)' }}
+    >
+      {shown ? <CharmGlyph tint={shown.tint} fill={shown.fill} stroke={shown.deep} size={36} /> : null}
+      <span style={{ flex: '1 1 8rem', minWidth: 0 }}>
+        <Text variant="micro" tone="accent" as="h2" id="today-charm-label" style={{ margin: 0 }}>
+          {label}
+        </Text>
+        {shown ? (
+          <Text variant="strong" tone="ink" as="span" style={{ display: 'block' }}>
+            {shown.name}
+            {used ? (
+              <Text variant="small" tone="muted" as="span">
+                {v.tcCanChange ? ' · on today' : ' · working today'}
+              </Text>
+            ) : null}
+          </Text>
+        ) : (
+          <Text variant="body" tone="muted" as="span" style={{ display: 'block' }}>
             {v.tcRest}
           </Text>
-          <Button type="secondary" size="md" onClick={v.tcOpen}>
+        )}
+      </span>
+      <span style={{ display: 'flex', gap: 'var(--space-1)', marginLeft: 'auto' }}>
+        {used ? (
+          v.tcCanChange ? (
+            <Button type="neutral" ghost size="sm" onClick={v.tcChange} disabled={v.tcBusy} aria-label="Change today’s charm">
+              Change
+            </Button>
+          ) : null
+        ) : rec ? (
+          <>
+            <Button type="primary" size="sm" onClick={v.tcUse} disabled={v.tcBusy} aria-label={'Use ' + rec.name + ' today'}>
+              Use
+            </Button>
+            <Button type="neutral" ghost size="sm" onClick={v.tcOpen} aria-label="Change today’s charm">
+              Change
+            </Button>
+          </>
+        ) : (
+          <Button type="secondary" size="sm" onClick={v.tcOpen}>
             Pick a charm
           </Button>
-        </div>
-      )}
+        )}
+      </span>
     </Card>
   );
 }
