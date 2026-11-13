@@ -8,7 +8,7 @@ import { CharmGlyph } from './CharmGlyph';
 export function CharmsCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: 'var(--space-4)' }}>
-      <SectionLabel as="span" label="My charms" aside={v.mcKnown} />
+      <SectionLabel label="My charms" aside={v.mcKnown} />
       {v.mcToday ? (
         <Text variant="body" tone="slate" as="p" style={{ margin: 'var(--space-1) 0 0' }}>
           {v.mcToday}

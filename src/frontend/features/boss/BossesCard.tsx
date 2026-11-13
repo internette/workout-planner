@@ -7,7 +7,7 @@ import { BossGlyph } from './BossGlyph';
 export function BossesCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: 'var(--space-4)' }}>
-      <SectionLabel as="span" label="Bosses" aside={v.bossesLabel} />
+      <SectionLabel label="Bosses" aside={v.bossesLabel} />
       <ul
         style={{
           listStyle: 'none',

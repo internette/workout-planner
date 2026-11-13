@@ -7,7 +7,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 export function MoodSplitCard({ v }: { v: PlannerVals }) {
   return (
     <Card>
-      <SectionLabel as="span" label="How it feels" aside={v.allTimeLabel} />
+      <SectionLabel label="How it feels" aside={v.allTimeLabel} />
       {v.moodEmpty ? (
         <Text variant="strong" as="p" tone="muted" style={{ margin: 'var(--space-3) 0 0' }}>
           Write about a session in the Chronicle and your moods gather here.

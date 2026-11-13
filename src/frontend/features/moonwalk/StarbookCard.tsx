@@ -9,7 +9,7 @@ import { FindGlyph } from './FindGlyph';
 export function StarbookCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: 'var(--space-4)' }}>
-      <SectionLabel as="span" label="Starbook" aside={v.sbLabel} />
+      <SectionLabel label="Starbook" aside={v.sbLabel} />
       <ProgressBar value={v.sbPct} track="mist" label="Starbook filled" valueText={v.sbLabel} style={{ marginTop: 'var(--space-3)' }} />
       {v.sbLatest.length ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
