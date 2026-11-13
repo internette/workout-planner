@@ -3,28 +3,34 @@
 import { useEffect, useRef } from 'react';
 import type { PlannerLogic } from '@/frontend/features/planner/store/PlannerLogic';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
-import { setAudioSession } from './settings';
+import { CUE_MS, markEnd, playChime, unlockChime } from './cue';
+import { liveSettings, setAudioSession } from './settings';
 import type { WorkerIn, WorkerOut } from './timer.worker';
 
 // Keeps a workout's clock going while the page is in the background: a Web Worker ticks once a second (the page's own
 // timers slow to once a minute there), and a rest or timed set that runs out ends on time. Nothing shows outside the
-// page, and it plays no sound of its own, so music from other apps plays on at its own volume.
+// page. Its only sound is a short chime when a rest or timed set runs out, which mixes with music from other apps
+// rather than pausing or lowering it.
 
 /** `anyRunning`: some session's clock (or a rest, or a timed set) is going, so the page needs to redraw every second. */
 export function useWorkoutClock(logic: PlannerLogic, view: PlannerVals | null, anyRunning: boolean) {
   const viewRef = useRef(view);
   viewRef.current = view;
 
-  // A rest or a timed set that has run out goes (and the phone buzzes, where it can). A timed set's end counts it
-  // done, which may start a rest.
+  // A rest or a timed set that has run out goes, with a chime (unless turned off), a short glow on the card, and a buzz
+  // where the phone allows it. A timed set's end counts it done, which may start a rest.
   useEffect(() => {
     const v = viewRef.current;
     if (!v) return;
     const holdOut = !!v.holdEndsAt && Date.now() >= v.holdEndsAt;
     const restOut = !!v.restEndsAt && Date.now() >= v.restEndsAt;
     if (!holdOut && !restOut) return;
+    markEnd(holdOut ? 'hold' : 'rest');
     if (holdOut) v.holdOver();
     else v.restOver();
+    if (liveSettings().chime) playChime();
+    // The glow goes after a few seconds even if nothing else redraws the page.
+    setTimeout(() => logic.forceUpdate(), CUE_MS + 50);
     try {
       navigator.vibrate?.([200, 100, 200]);
     } catch {
@@ -64,4 +70,15 @@ export function useWorkoutClock(logic: PlannerLogic, view: PlannerVals | null, a
   // The app has no sound of its own, so it tells the phone so (Safari's Audio Session API): other apps' music plays on,
   // at its own volume.
   useEffect(() => setAudioSession(), []);
+
+  // iOS plays a page's sound only after a tap on it, so any tap or key press readies the chime.
+  useEffect(() => {
+    const ready = () => unlockChime();
+    window.addEventListener('pointerdown', ready);
+    window.addEventListener('keydown', ready);
+    return () => {
+      window.removeEventListener('pointerdown', ready);
+      window.removeEventListener('keydown', ready);
+    };
+  }, []);
 }

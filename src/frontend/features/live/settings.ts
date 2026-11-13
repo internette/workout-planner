@@ -1,10 +1,11 @@
-// During a workout: whether the screen stays on (on unless turned off), chosen in Profile → Settings and kept in this
+// During a workout: whether the screen stays on (on unless turned off), whether a rest or timed set chimes when it
+// runs out (on unless turned off), chosen in Profile → Settings and kept in this
 // browser. So is what leaving a workout's page does with its running clock: ask
 // each time (unless told otherwise), keep it running, or pause it.
 
-export type LiveSettings = { awake: boolean };
+export type LiveSettings = { awake: boolean; chime: boolean };
 
-const KEYS = { awake: 'moonshot.live.awake' } as const;
+const KEYS = { awake: 'moonshot.live.awake', chime: 'moonshot.live.chime' } as const;
 const EVENT = 'moonshot-live-settings';
 
 export type LeaveChoice = 'ask' | 'run' | 'pause';
@@ -31,9 +32,9 @@ export function setLeaveChoice(choice: LeaveChoice) {
 
 export function liveSettings(): LiveSettings {
   try {
-    return { awake: localStorage.getItem(KEYS.awake) !== '0' };
+    return { awake: localStorage.getItem(KEYS.awake) !== '0', chime: localStorage.getItem(KEYS.chime) !== '0' };
   } catch {
-    return { awake: true };
+    return { awake: true, chime: true };
   }
 }
 
@@ -62,8 +63,8 @@ export const canWake = () => {
   return !(ios && homeScreen && Number(ios[1]) * 100 + Number(ios[2]) < 1804);
 };
 
-/** Tells the phone the page has no sound of its own (Safari's Audio Session API, iOS 16.4 and later, type "ambient"),
- * so music from other apps plays on, neither paused nor turned down. Elsewhere this does nothing. */
+/** Tells the phone the page's only sound is the end-of-rest chime, which mixes in (Safari's Audio Session API, iOS 16.4
+ * and later, type "ambient"), so music from other apps plays on, neither paused nor turned down. Elsewhere this does nothing. */
 export function setAudioSession() {
   const session = typeof navigator !== 'undefined' ? (navigator as Navigator & { audioSession?: { type: string } }).audioSession : undefined;
   if (session) session.type = 'ambient';
