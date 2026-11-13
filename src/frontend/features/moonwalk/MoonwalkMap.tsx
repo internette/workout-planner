@@ -63,6 +63,9 @@ export function MoonwalkMap({ lat, lon, glimmers }: { lat: number; lon: number; 
           center: [lon, lat],
           zoom: 16,
           attributionControl: { compact: true },
+          // No one-finger dragging: on a phone a thumb on the map scrolls the page instead of moving the map, which
+          // re-centres on you with every fix anyway. Pinching still zooms.
+          dragPan: false,
           dragRotate: false,
           pitchWithRotate: false,
         });
