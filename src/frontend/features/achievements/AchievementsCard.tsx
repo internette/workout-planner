@@ -9,7 +9,7 @@ import { AchievementBadge } from './AchievementBadge';
 export function AchievementsCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: 'var(--space-4)' }}>
-      <SectionLabel as="span" label="Achievements" aside={v.achLabel} />
+      <SectionLabel label="Achievements" aside={v.achLabel} />
       <ProgressBar value={v.achPct} track="mist" label="Achievements earned" valueText={v.achLabel} style={{ marginTop: 'var(--space-3)' }} />
       {v.achLatest.length ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>

@@ -8,7 +8,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 export function WeekQuestsCard({ v }: { v: PlannerVals }) {
   return (
     <Card style={{ marginTop: 'var(--space-4)' }}>
-      <SectionLabel as="span" label="This week's quests" aside={v.wkHas ? v.questsDoneLabel : undefined} />
+      <SectionLabel label="This week's quests" aside={v.wkHas ? v.questsDoneLabel : undefined} />
       {v.wkEmpty ? (
         <Text variant="strong" as="p" tone="muted" style={{ margin: 'var(--space-3) 0 0' }}>
           No quests this week yet. Plan a session and its day gets one.

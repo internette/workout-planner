@@ -10,7 +10,7 @@ export function AllTimeCard({ v }: { v: PlannerVals }) {
   const stats = v.allTimeStats ?? [];
   return (
     <Card style={{ marginTop: 'var(--space-4)' }}>
-      <SectionLabel as="span" label="All time" />
+      <SectionLabel label="All time" />
       <dl
         style={{
           display: 'grid',
