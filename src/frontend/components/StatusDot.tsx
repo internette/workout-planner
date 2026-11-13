@@ -30,7 +30,7 @@ export function StatusDot({ status, size = 'sm', selected = false }: StatusDotPr
         : status === 'missed'
           ? { width: s.missed, height: s.missed, boxShadow: `inset 0 0 0 1.5px ${selected ? ink : 'var(--color-muted)'}`, transform: 'rotate(45deg) scale(0.86)' }
           : status === 'planned'
-            ? round(s.dot, { boxShadow: `inset 0 0 0 1.5px ${selected ? ink : 'var(--color-teal)'}` })
+            ? round(s.dot, { boxShadow: `inset 0 0 0 1.5px ${selected ? ink : 'var(--color-teal-deep)'}` })
             : {
                 width: s.rest[0],
                 height: s.rest[1],

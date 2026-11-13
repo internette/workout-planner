@@ -201,9 +201,24 @@ export function moonwalkVals(ctx: Ctx) {
     mwOn: !!track,
     mwRide: ride,
     mwStart: () => logic.s({ moonwalk: { ...tracks, [id]: { ...newTrack(ride), boss: !!bossFight } } }),
+    // Stopping throws the track away: its miles and the stars in the pouch. With something to lose it asks first,
+    // as "Start over" does; Finds already picked up from glimmers are saved and stay either way.
     mwStop: () => {
-      const { [id]: _gone, ...rest } = tracks;
-      logic.s({ moonwalk: rest });
+      const stop = () => logic.s({ moonwalk: dropTrack(logic, id) });
+      if (!track || (stars === 0 && track.miles < 0.01)) return stop();
+      const miles = milesText(track.miles) + ' mi';
+      logic.s({
+        confirm: {
+          kind: 'moonwalkStop',
+          title: 'Stop collecting?',
+          body:
+            (stars ? 'The ' + stars + (stars === 1 ? ' star' : ' stars') + ' in your pouch and the ' + miles + ' so far go.' : 'The ' + miles + ' so far won’t count.') +
+            ' Finds you’ve picked up stay in your Starbook.',
+          label: 'Stop collecting',
+          cancelLabel: 'Keep collecting',
+          then: stop,
+        },
+      });
     },
     mwMiles: track ? milesText(track.miles) : '0.00',
     mwStars: stars,

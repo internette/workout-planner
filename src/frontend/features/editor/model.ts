@@ -853,7 +853,11 @@ export function editVals(ctx: Ctx) {
       logic.renderVals().saveWorkout();
     },
     saveWorkout: () => {
-      if (nameClash || needsName || needsExercise) return logic.s({ leaveOpen: false, pendingNav: null });
+      // Pressed while it can't save (it stays focusable, so it can say why): what's missing is read out.
+      if (nameClash || needsName || needsExercise || badCounts) {
+        const why = logic.renderVals();
+        return logic.s({ leaveOpen: false, pendingNav: null, announce: why.nameError || why.saveHint || '' });
+      }
       if (saving) return;
       const cleared = EDIT_OVERLAYS;
       if (!creating) {

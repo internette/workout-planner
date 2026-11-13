@@ -29,7 +29,7 @@ export function EditorHeader({ v }: { v: PlannerVals }) {
             onChange={v.setNewName}
             onKeyDown={v.commitOnEnter}
             placeholder="Name this workout"
-            error={v.nameError || undefined}
+            error={v.nameError || ''}
           />
         ) : null}
         {v.eNameStatic ? (
@@ -40,7 +40,7 @@ export function EditorHeader({ v }: { v: PlannerVals }) {
             onChange={v.setEditName}
             onKeyDown={v.commitOnEnter}
             placeholder="Name this workout"
-            error={v.nameError || undefined}
+            error={v.nameError || ''}
           />
         ) : null}
       </div>
