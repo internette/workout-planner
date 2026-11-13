@@ -8,6 +8,7 @@ import type { PlannerVals } from '@/frontend/features/planner/store/types';
 import { SessionProgress } from '@/frontend/components/SessionProgress';
 import { ExerciseName } from '@/frontend/components/ExerciseName';
 import { SetPips } from '@/frontend/components/SetPips';
+import { endCue } from '@/frontend/features/live/cue';
 
 const divider: CSSProperties = { border: 0, borderTop: '1px solid var(--color-line)', margin: 'var(--space-4) 0' };
 
@@ -19,12 +20,23 @@ const divider: CSSProperties = { border: 0, borderTop: '1px solid var(--color-li
 export function WorkoutCard({ v }: { v: PlannerVals }) {
   const progress = v.dayIsLift && !v.isFuture;
   if (!v.showTimer && !progress) return null;
+  // For a few seconds after a rest or timed set runs out, the card glows and says so (screen readers hear it from the
+  // page's announcement instead).
+  const cue = progress && !v.holdShown && !v.restShown ? endCue() : null;
   return (
-    <Card style={{ marginTop: 'var(--space-4)' }}>
+    <Card style={{ marginTop: 'var(--space-4)', ...(cue ? { boxShadow: '0 0 0 3px var(--color-pink), 0 0 22px color-mix(in srgb, var(--color-pink) 35%, transparent)' } : null) }}>
       {v.showTimer ? <TimerSection v={v} /> : null}
       {v.showTimer && progress ? <hr style={divider} /> : null}
       {progress ? (
         <SessionProgress bare label={v.progLabel} pct={v.progPct ?? 0} allDone={!!v.allDone} note={v.progNote ?? ''}>
+          {cue ? (
+            <div
+              aria-hidden="true"
+              style={{ marginTop: 'var(--space-4)', padding: 'var(--space-2) var(--space-3)', borderRadius: 'var(--radius-md)', background: 'var(--color-pink)', color: 'var(--color-surface)', fontFamily: 'var(--font-heading)', fontWeight: 'var(--font-weight-semibold)' }}
+            >
+              {cue.label}
+            </div>
+          ) : null}
           {v.holdShown ? <HoldSection v={v} /> : v.restShown ? <RestSection v={v} /> : v.setNow ? <NextSet now={v.setNow} /> : null}
           {v.finishNow ? (
             <Button type="primary" size="lg" fullWidth onClick={v.finishNow} style={{ marginTop: 'var(--space-4)' }}>
