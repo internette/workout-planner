@@ -19,9 +19,17 @@ export function CopyToDays({ copy }: { copy: Copy }) {
         <div style={{ marginTop: 'var(--space-3)', paddingTop: 'var(--space-3)', borderTop: '1px solid var(--color-line)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
             <StepButton dir="prev" unit="week" onClick={copy.prev} />
-            <Text variant="subheading" as="div" style={{ flex: '1', textAlign: 'center' }} aria-live="polite">
-              {copy.range}
-            </Text>
+            {/* The week, and how many days are picked in all: read out together when the week changes. */}
+            <div style={{ flex: '1', textAlign: 'center' }} aria-live="polite">
+              <Text variant="subheading" as="div">
+                {copy.range}
+              </Text>
+              {copy.pickedNote ? (
+                <Text variant="small" tone="accent" as="div" style={{ marginTop: '2px' }}>
+                  {copy.pickedNote}
+                </Text>
+              ) : null}
+            </div>
             <StepButton dir="next" unit="week" onClick={copy.next} />
           </div>
           <div
