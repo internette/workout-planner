@@ -87,7 +87,7 @@
 .textarea.invalid { outline: 2px solid var(--color-danger); }
 
 .hint { display: block; margin-top: var(--space-2); font-size: var(--text-sm); font-weight: var(--font-weight-regular); color: var(--color-muted); }
-.error { margin-top: var(--space-2); font-size: var(--text-sm); color: var(--color-danger); }
+.error { display: block; margin-top: var(--space-2); font-size: var(--text-sm); color: var(--color-danger); }
 .disabled { opacity: var(--alpha-5); }
 
 /* Placeholders at 4.5:1 or more on the field fills (the browser's default grey is 4.2:1 on canvas). */

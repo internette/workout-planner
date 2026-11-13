@@ -236,7 +236,7 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
       </div>
       <FormActions>
         {v.saveHint ? (
-          <Text variant="body" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
+          <Text id="workout-save-hint" variant="body" tone="muted" as="p" style={{ margin: '0 auto 0 0', flex: '1 1 200px' }}>
             {v.saveHint}
           </Text>
         ) : null}
@@ -244,7 +244,10 @@ export function EditorScreen({ v }: { v: PlannerVals }) {
         <Button type="neutral" ghost size="lg" onClick={v.footerSecondary} style={{ flex: 'none' }}>
           Cancel
         </Button>
-        <Button type="primary" size="lg" onClick={v.saveWorkout} disabled={!!v.saveBlocked} style={{ flex: '1 1 auto' }}>
+        <Button type="primary" size="lg" onClick={v.saveWorkout}
+          aria-disabled={!!v.saveBlocked || undefined}
+          aria-describedby={v.saveHint ? 'workout-save-hint' : undefined}
+          style={{ flex: '1 1 auto' }}>
           {v.eSaveLabel}
         </Button>
         {v.canDeleteSession ? (

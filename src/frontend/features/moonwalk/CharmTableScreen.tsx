@@ -84,14 +84,18 @@ export function CharmTableScreen({ v }: { v: PlannerVals }) {
                     <ProgressBar value={c.pagePct} track="mist" label={c.name + ' recipe pages'} valueText={c.pages + ' of 3 pages'} style={{ marginTop: 'var(--space-2)', maxWidth: 220 }} />
                   ) : null}
                   {c.known ? (
-                    <Text variant="small" tone="slate" as="span" style={{ display: 'block', marginTop: 'var(--space-1)' }}>
+                    <Text id={'craft-' + c.key} variant="small" tone="slate" as="span" style={{ display: 'block', marginTop: 'var(--space-1)' }}>
                       {c.cost}
                       {c.need ? ' · ' + c.need : ''}
                     </Text>
                   ) : null}
                 </span>
                 {c.known ? (
-                  <Button type={c.canCraft ? 'primary' : 'secondary'} size="sm" onClick={c.craft} disabled={!c.canCraft || c.busy} aria-label={'Craft ' + c.name}>
+                  <Button type={c.canCraft ? 'primary' : 'secondary'} size="sm" onClick={c.craft}
+                    aria-disabled={!c.canCraft || c.busy || undefined}
+                    aria-label={'Craft ' + c.name}
+                    aria-describedby={'craft-' + c.key}
+                  >
                     Craft
                   </Button>
                 ) : null}

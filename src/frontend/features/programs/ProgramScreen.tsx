@@ -32,7 +32,7 @@ export function StartDialog({ v }: { v: PlannerVals }) {
           <Button type="neutral" ghost size="md" onClick={s.cancel}>
             Cancel
           </Button>
-          <Button type="primary" size="md" onClick={s.start} disabled={!s.canStart || s.busy}>
+          <Button type="primary" size="md" onClick={s.start} aria-disabled={!s.canStart || s.busy || undefined} aria-describedby={s.whyId || undefined}>
             {s.busy ? 'Starting…' : 'Start program'}
           </Button>
         </>
@@ -71,7 +71,7 @@ export function StartDialog({ v }: { v: PlannerVals }) {
                 <div style={{ marginTop: 'var(--space-2)' }}>
                   <WeekdayToggles label="Its days" days={s.clash.days} onToggle={s.clash.toggleDay} />
                   {s.clash.daysNote ? (
-                    <Text variant="body" tone={s.clash.daysNoteTone} as="p" role="status" style={{ margin: 'var(--space-2) 0 0' }}>
+                    <Text id="start-days-note" variant="body" tone={s.clash.daysNoteTone} as="p" role="status" style={{ margin: 'var(--space-2) 0 0' }}>
                       {s.clash.daysNote}
                     </Text>
                   ) : null}
@@ -96,7 +96,7 @@ export function StartDialog({ v }: { v: PlannerVals }) {
             </Text>
           ) : null}
           {s.emptyNote ? (
-            <Text variant="body" tone="danger" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
+            <Text id="start-empty-note" variant="body" tone="danger" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
               {s.emptyNote}
             </Text>
           ) : null}
@@ -120,7 +120,7 @@ function MoveDialog({ v }: { v: PlannerVals }) {
           <Button type="neutral" ghost size="md" onClick={m.cancel}>
             Cancel
           </Button>
-          <Button type="primary" size="md" onClick={m.save} disabled={!m.changed || m.busy}>
+          <Button type="primary" size="md" onClick={m.save} aria-disabled={!m.changed || m.busy || undefined}>
             {m.busy ? 'Moving…' : 'Move it'}
           </Button>
         </>

@@ -48,7 +48,7 @@ export function SaveScopeDialog({ v }: { v: PlannerVals }) {
                   value={v.tplConfirmName ?? ''}
                   onChange={v.tplConfirmSetName}
                   placeholder="Name the new workout"
-                  error={v.tplConfirmNameError || undefined}
+                  error={v.tplConfirmNameError || ''}
                 />
               ) : null}
             </OptionCard>

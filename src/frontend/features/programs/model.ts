@@ -448,10 +448,14 @@ export function programVals(ctx: Ctx) {
               : null,
             canStart: sessions > 0 && (!moving || fits),
             emptyNote: sessions ? '' : 'Add workouts to it first: it has nothing to put on the calendar.',
+            // Which note says why it can't start yet: the button stays focusable and is described by it.
+            whyId: !sessions ? 'start-empty-note' : moving && !fits ? 'start-days-note' : '',
             busy: logic.busy('startProgram'),
             cancel: () => logic.s({ programStart: null }),
             start: () =>
-              logic.saveOnce('startProgram', async () => {
+              !sessions || (moving && !fits)
+                ? logic.s({ announce: !sessions ? 'Add workouts to it first: it has nothing to put on the calendar.' : 'It needs ' + plural(needs, 'day') + ' a week: pick ' + (needs - chosen.length) + ' more.' })
+                : logic.saveOnce('startProgram', async () => {
                 // A built-in one: its copy first, read back with its workouts, then that copy starts.
                 let own = ownProgram
                   ? ownProgram
@@ -498,7 +502,9 @@ export function programVals(ctx: Ctx) {
             busy: logic.busy('moveRun'),
             cancel: () => logic.s({ programMove: null }),
             save: () =>
-              logic.saveOnce('moveRun', () => db.moveRun(ownProgram, moving, date, todayIso), (r: { first: string | null }) => ({
+              date === moving.start
+                ? logic.s({ announce: 'Pick another day for it to start.' })
+                : logic.saveOnce('moveRun', () => db.moveRun(ownProgram, moving, date, todayIso), (r: { first: string | null }) => ({
                 programMove: null,
                 ...noticePatch(
                   '“' + ownProgram.name + '” starts ' + shortDate(fromIso(date)) + ' now' + (r.first ? ': its next session is ' + shortDate(fromIso(r.first)) + '.' : '.'),
@@ -584,7 +590,7 @@ export function programVals(ctx: Ctx) {
               addLabel: 'Add a workout on ' + DOWFULL[d],
             })),
             // Week by week: every week listed, each with its own workouts, by weekday. A workout taken off a day comes
-            // off that day in every week, as the weeks share their days.
+            // off that week only.
             weekList: b.byWeek
               ? Array.from({ length: b.weeks }, (_, k) => ({
                   key: k + 1,
@@ -600,7 +606,7 @@ export function programVals(ctx: Ctx) {
                       open: () => logic.nav(editTemplatePatch(w.id)),
                       openLabel: 'Edit ' + w.name + ', week ' + (k + 1),
                       remove: () => logic.save(() => db.removeWorkoutFromDay(b, w, d)),
-                      removeLabel: 'Take ' + w.name + ' off ' + DOWFULL[d] + ' in every week',
+                      removeLabel: 'Take ' + w.name + ' off ' + DOWFULL[d] + ' in week ' + (k + 1),
                     })),
                 }))
               : null,

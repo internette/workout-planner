@@ -1,4 +1,4 @@
-import { forwardRef, type CSSProperties, type InputHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, type CSSProperties, type InputHTMLAttributes, type ReactNode } from 'react';
 import { Label } from './Label';
 import styles from './text-field.module.css';
 
@@ -15,7 +15,9 @@ export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElemen
   suffix?: ReactNode;
   /** Helper text beneath the field. */
   hint?: ReactNode;
-  /** An error message. Marks the field invalid and shows the message beneath it. */
+  /** An error message. Marks the field invalid, shows the message beneath it and reads it out with the field. Pass ''
+   * (not undefined) on a field that can show one while you type, so the field keeps its place, and its focus, when
+   * the message comes and goes. */
   error?: string;
   /** Layout for the wrapper (flex basis, margins). `style` styles the input. */
   containerStyle?: CSSProperties;
@@ -33,10 +35,14 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
     containerStyle,
     className,
     disabled,
+    'aria-describedby': describedBy,
     ...rest
   },
   ref,
 ) {
+  const id = useId();
+  const noteId = id + '-note';
+  const note = error || hint;
   const inputClass = [
     styles.input,
     variant === 'title' && styles.title,
@@ -52,12 +58,14 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
       className={inputClass}
       disabled={disabled}
       aria-invalid={error ? true : undefined}
+      aria-describedby={[describedBy, note ? noteId : ''].filter(Boolean).join(' ') || undefined}
       {...rest}
     />
   );
   // With no caption around it (named by aria-label), the box itself is the label, so a tap anywhere in it — its
   // padding, its suffix — focuses the input, not only the line of text in the middle.
-  const Box = !label && !error && !hint ? 'label' : 'span';
+  const bare = !label && error === undefined && !hint;
+  const Box = bare ? 'label' : 'span';
   const control =
     variant === 'filled' ? (
       <Box
@@ -72,17 +80,22 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
       input
     );
 
-  if (!label && !error && !hint)
-    return containerStyle ? <span style={containerStyle}>{control}</span> : control;
+  if (bare) return containerStyle ? <span style={containerStyle}>{control}</span> : control;
+  // The message sits after the <label>, not in it, so it isn't read as part of the field's name; the input is
+  // described by it instead. It's a live region that's always there, so an error that turns up while typing is said.
   return (
-    <label className={styles.field} style={containerStyle}>
-      {label ? <Label note={labelNote}>{label}</Label> : null}
-      {control}
-      {error ? (
-        <span className={styles.error}>{error}</span>
-      ) : hint ? (
-        <span className={styles.hint}>{hint}</span>
-      ) : null}
-    </label>
+    <span className={styles.field} style={containerStyle}>
+      {label ? (
+        <label className={styles.field}>
+          <Label note={labelNote}>{label}</Label>
+          {control}
+        </label>
+      ) : (
+        control
+      )}
+      <span id={noteId} aria-live="polite" className={error ? styles.error : hint ? styles.hint : undefined}>
+        {note || null}
+      </span>
+    </span>
   );
 });

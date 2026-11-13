@@ -29,6 +29,8 @@ const PAIRS: Pair[] = [
   ['outline', 'canvas', UI, 'an unticked box on the page'],
   ['pink', 'surface', UI, 'a tick, bar or mark on a card'],
   ['pink', 'canvas', UI, 'a tick, bar or mark on the page'],
+  ['tealDeep', 'surface', UI, 'a planned day’s ring on a card'],
+  ['tealDeep', 'canvas', UI, 'a planned day’s ring on the page'],
 ];
 
 const lum = (hex: string) => {

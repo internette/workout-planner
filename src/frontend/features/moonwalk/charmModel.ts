@@ -243,7 +243,9 @@ export function charmVals(ctx: Ctx) {
       need: full ? 'You hold ' + MAX_WARDS + ', the most.' : known && s.missing.length ? 'Need ' + s.missing.join(', ') + '.' : '',
       craft: () => {
         const sp = craftable(c);
-        if (sp.missing.length || full) return;
+        // Pressed while it can't be made (the button stays focusable): say what's missing.
+        if (!known || !ready || sp.missing.length || full)
+          return logic.s({ announce: full ? 'You hold ' + MAX_WARDS + ', the most.' : sp.missing.length ? 'Need ' + sp.missing.join(', ') + '.' : '' });
         void logic.saveOnce('craft', () => db.craftCharm(c.key, sp.finds, sp.charms), { notice: { text: 'Made a ' + c.name + '.', screen: 'charms' } });
       },
       busy: logic.busy('craft'),
@@ -270,6 +272,12 @@ export function charmVals(ctx: Ctx) {
 
   const onToday = mi === TODAY_M && selDay === TODAY_D;
   const tierOf = (c: Charm) => TIERS.find((t) => t.key === c.tier)!.label;
+  const cpWhy = !pickCharm
+    ? 'Pick a charm to use.'
+    : why(pickCharm) ||
+      (needsTarget(pickCharm) && !made(pickCharm, held.find((r) => r.charm === pickCharm.key)?.id || '')
+        ? 'Pick a ' + (pickCharm.effect === 'mirror' ? 'Find to copy' : pickCharm.effect === 'ring' ? 'trade' : 'Find to fill') + ' first.'
+        : '');
   return {
     charmsReady: ready,
     // Today's charm on the day view.
@@ -300,8 +308,13 @@ export function charmVals(ctx: Ctx) {
     cpTargetLabel: pickCharm ? (pickCharm.effect === 'mirror' ? 'Find to copy' : pickCharm.effect === 'ring' ? 'Trade' : pickCharm.effect === 'wish' ? 'Find to fill' : '') : '',
     cpTargets: targets,
     cpWishSets: pickCharm && pickCharm.effect === 'wish' ? wishSets.map((k) => ({ key: SETS[k].key, label: SETS[k].name, on: k === wishSet, choose: () => setPick({ set: k, target: null }) })) : [],
-    cpCanUse: !!pickCharm && !why(pickCharm) && (!needsTarget(pickCharm) || !!made(pickCharm, held.find((r) => r.charm === pickCharm.key)?.id || '')),
-    cpUse: () => (pickKey ? spendCharm(pickKey) : undefined),
+    cpCanUse: !cpWhy,
+    // Why "Use" can't be pressed yet, said beside it (the button stays focusable, so it can be read).
+    cpWhy,
+    cpUse: () => {
+      if (cpWhy) return logic.s({ announce: cpWhy });
+      if (pickKey) spendCharm(pickKey);
+    },
     cpNow: !!pickCharm && !!pickCharm.now,
 
     // The Charm Table.

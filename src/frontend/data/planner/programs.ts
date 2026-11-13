@@ -207,18 +207,15 @@ export async function moveProgramDays<P extends Program>(program: P, chosen: num
 }
 
 /**
- * Takes a workout off one weekday of its block (in a block that goes week by week, off that day in every week); off
- * its last day, it leaves the program.
+ * Takes a workout off one weekday of its block; off its last day, it leaves the program. In a block that goes week by
+ * week this is that week's own copy only: the other weeks keep theirs, with their own weights and reps.
  */
-export async function removeWorkoutFromDay(block: Program['blocks'][number], w: { id: string; name: string }, day: number) {
-  const all = block.byWeek ? block.workouts.filter((x) => nameKey(x.name) === nameKey(w.name)) : block.workouts.filter((x) => x.id === w.id);
-  const gone: string[] = [];
-  for (const x of all) {
-    const days = x.days.filter((d) => d !== day);
-    if (days.length) await ok(supabase.from('workouts').update({ program_days: days }).eq('id', x.id));
-    else gone.push(x.id);
-  }
-  await archiveWorkouts(gone);
+export async function removeWorkoutFromDay(block: Program['blocks'][number], w: { id: string }, day: number) {
+  const x = block.workouts.find((y) => y.id === w.id);
+  if (!x) return;
+  const days = x.days.filter((d) => d !== day);
+  if (days.length) await ok(supabase.from('workouts').update({ program_days: days }).eq('id', x.id));
+  else await archiveWorkouts([x.id]);
 }
 
 /**

@@ -21,7 +21,13 @@ export function CharmPicker({ v }: { v: PlannerVals | null }) {
           <Button type="neutral" ghost size="md" onClick={v.cpClose}>
             Cancel
           </Button>
-          <Button type="primary" size="md" onClick={v.cpUse} disabled={!v.cpCanUse || v.tcBusy}>
+          <Button
+            type="primary"
+            size="md"
+            onClick={v.cpUse}
+            aria-disabled={!v.cpCanUse || v.tcBusy || undefined}
+            aria-describedby={v.cpWhy ? 'charm-use-why' : undefined}
+          >
             {v.cpName ? 'Use ' + v.cpName + ' today' : 'Use today'}
           </Button>
         </>
@@ -65,7 +71,13 @@ export function CharmPicker({ v }: { v: PlannerVals | null }) {
             ))}
           </OptionGroup>
         </div>
-      ) : (
+      ) : null}
+      {v.cpList.length > 0 && v.cpWhy ? (
+        <Text id="charm-use-why" variant="body" tone="muted" as="p" style={{ margin: 'var(--space-3) 0 0' }}>
+          {v.cpWhy}
+        </Text>
+      ) : null}
+      {v.cpList.length ? null : (
         <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-4) 0 0' }}>
           You don’t hold any charms yet. Craft one at the Charm Table, under Profile.
         </Text>
