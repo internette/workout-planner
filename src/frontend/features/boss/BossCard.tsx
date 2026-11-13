@@ -30,7 +30,9 @@ export function BossCard({ v, live = false }: { v: PlannerVals; live?: boolean }
     <Card as="section" aria-label={'Boss battle: ' + b.name} style={{ marginTop: 'var(--space-4)', position: 'relative' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
         <span className={hit ? styles.shake : undefined} key={hit?.id} style={{ display: 'flex', flex: 'none' }}>
-          <BossGlyph k={b.k} fill={b.gem} size={44} />
+          <span style={{ width: '52px', height: '52px', borderRadius: 'var(--radius-md)', background: b.tint, display: 'grid', placeItems: 'center' }}>
+            <BossGlyph k={b.k} fill={b.deep} size={36} />
+          </span>
         </span>
         <div style={{ flex: '1 1 0', minWidth: 0 }}>
           <Text variant="micro" as="div" tone="accent">
