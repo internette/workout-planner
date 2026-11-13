@@ -43,7 +43,7 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
               </Badge>
             ) : null}
             {!exercise?.expanded ? (
-              <Text variant="body" tone="muted" style={{ display: 'block', marginTop: 'var(--space-1)' }}>
+              <Text variant="body" tone="muted" className={stepper ? 'ex-wide' : undefined} style={{ display: 'block', marginTop: 'var(--space-1)' }}>
                 {stepper ? exercise.detailNoWeight : exercise?.detail}
               </Text>
             ) : null}
@@ -52,11 +52,29 @@ export function EditorExerciseItem({ exercise, handle }: { exercise: any; handle
         </Pressable>
         {/* Closed, its weight can go up or down a step without opening it. Outside the row's button: a button can't
             hold buttons. */}
-        {stepper ? <WeightStepper weight={exercise.weight} s={exercise.weightStep} /> : null}
+        {stepper ? (
+          <span className="ex-wide" style={{ display: 'flex', flex: 'none' }}>
+            <WeightStepper weight={exercise.weight} s={exercise.weightStep} />
+          </span>
+        ) : null}
         {exercise?.showTick ? (
           <DoneTick done={!!exercise?.isDone} onToggle={exercise?.toggleDone} label={exercise?.doneAria ?? ''} />
         ) : null}
       </div>
+      {/* On a phone the name keeps the whole first line, and its sets and the stepper go on a second, lined up with
+          the name (past the 28px handle). Only one of the two layouts is shown: the other is display: none, so a
+          screen reader meets one stepper. */}
+      {stepper ? (
+        <div
+          className="ex-narrow"
+          style={{ alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-3)', marginTop: 'var(--space-2)', paddingLeft: 'calc(28px + var(--space-3))' }}
+        >
+          <Text variant="body" tone="muted" style={{ minWidth: 0 }}>
+            {exercise.detailNoWeight}
+          </Text>
+          <WeightStepper weight={exercise.weight} s={exercise.weightStep} />
+        </div>
+      ) : null}
       {exercise?.expanded ? (
       <>
       <SetsFields

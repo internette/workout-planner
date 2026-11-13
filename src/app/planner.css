@@ -25,3 +25,11 @@ html { scroll-padding-top: 16px; scroll-padding-bottom: 104px; }
 /* The Day card's dot while a workout's clock runs: a slow pulse (reduced motion stops it, in base.css). */
 .live-dot { animation: live-pulse 1.6s ease-in-out infinite; }
 @keyframes live-pulse { 0%, 100% { opacity: 1; } 50% { opacity: var(--alpha-4); } }
+
+/* A closed exercise in Edit with its weight stepper: on a phone the stepper and the sets move under the name, so the
+   name has the whole line (EditorExerciseItem). */
+.ex-narrow { display: none; }
+@media (max-width: 479.98px) {
+  .ex-wide { display: none !important; }
+  .ex-narrow { display: flex; }
+}
