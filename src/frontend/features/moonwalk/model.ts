@@ -178,7 +178,7 @@ export function moonwalkVals(ctx: Ctx) {
           lon: here.lon,
           glimmers: glimmers
             .concat(compass && !glimmers.some((g) => g.key === compass.key) ? [compass] : [])
-            .map((g) => ({ key: g.key, lat: g.lat, lon: g.lon, fill: look(g.rarity).fill, rarity: rarityOf(g.rarity).label, target: !!compass && g.key === compass.key })),
+            .map((g) => ({ key: g.key, lat: g.lat, lon: g.lon, color: rarityOf(g.rarity).color, rarity: rarityOf(g.rarity).label, target: !!compass && g.key === compass.key })),
         }
       : null,
     mwNearby: !here

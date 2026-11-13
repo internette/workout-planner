@@ -3,25 +3,38 @@
 import { useEffect, useRef, useState } from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import type { Map as MapLibre, Marker } from 'maplibre-gl';
+import { ACCENTS, paletteFor, type Accent } from '@moonshot/design-system/colors';
 
 // OpenFreeMap's tiles: free, with no account or key. Positron is the quiet one, so the glimmers stand out.
 const STYLE = 'https://tiles.openfreemap.org/styles/positron';
 
-type Glim = { key: string; lat: number; lon: number; fill: string; rarity: string; target?: boolean };
+type Glim = { key: string; lat: number; lon: number; color: 'slate' | 'teal' | 'periwinkle' | 'gold'; rarity: string; target?: boolean };
 
+// The map is light in every theme, so what's drawn on it takes the light palette's values (for the color theme in
+// use), not the page's CSS variables, which turn pale in Plum dusk and would be faint on a light map.
+const lightPalette = () => {
+  const a = typeof document !== 'undefined' ? document.documentElement.dataset.accent : undefined;
+  return paletteFor('light', (ACCENTS.some((x) => x.name === a) ? a : 'pink') as Accent);
+};
+
+// A glimmer: a four-point star in its rarity's deep shade, on a faint halo in the rarity's own color (25%), with no
+// outline. The star is 3.7:1 or more against the halo, and more against the map.
 const glimmerEl = (g: Glim) => {
+  const p = lightPalette();
+  const halo = p[g.color];
+  const deep = g.color === 'slate' ? p.slate : p[(g.color + 'Deep') as 'tealDeep' | 'periwinkleDeep' | 'goldDeep'];
   const el = document.createElement('div');
   el.setAttribute('aria-hidden', 'true');
   // The one a Star Compass points to has a ring around it.
-  el.style.cssText = `width:26px;height:26px;display:grid;place-items:center;border-radius:999px;background:color-mix(in srgb, ${g.fill} 30%, transparent)${g.target ? `;box-shadow:0 0 0 3px ${g.fill}` : ''}`;
-  el.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" fill="${g.fill}" stroke="var(--color-surface)" stroke-width="1"/></svg>`;
+  el.style.cssText = `width:26px;height:26px;display:grid;place-items:center;border-radius:999px;background:color-mix(in srgb, ${halo} 25%, transparent)${g.target ? `;box-shadow:0 0 0 3px ${deep}` : ''}`;
+  el.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" fill="${deep}"/></svg>`;
   return el;
 };
 const youEl = () => {
+  const p = lightPalette();
   const el = document.createElement('div');
   el.setAttribute('aria-hidden', 'true');
-  el.style.cssText =
-    'width:18px;height:18px;border-radius:999px;background:var(--color-pink);border:3px solid var(--color-surface);box-shadow:0 0 0 10px color-mix(in srgb, var(--color-pink) 18%, transparent)';
+  el.style.cssText = `width:18px;height:18px;border-radius:999px;background:${p.pink};border:3px solid ${p.surface};box-shadow:0 0 0 10px color-mix(in srgb, ${p.pink} 18%, transparent)`;
   return el;
 };
 
