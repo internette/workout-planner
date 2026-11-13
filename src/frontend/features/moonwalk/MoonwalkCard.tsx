@@ -39,7 +39,7 @@ export function MoonwalkCard({ v }: { v: PlannerVals }) {
         <SectionLabel as="h2" label="Moonwalk" />
         <Text variant="body" tone="muted" as="p" style={{ margin: 'var(--space-2) 0 0' }}>
           Collect Finds for your Starbook as you {v.mwRide ? 'ride' : 'go'}. Walk up to the glimmers on the map to pick them up, and GPS fills a pouch with
-          stars, {v.mwPer.toLowerCase()}, that opens when you finish. Your route and location are never saved.
+          stars, {v.mwPer.toLowerCase()}, that opens when you finish. Keep Moonshot open on screen as you go: if the phone locks, GPS pauses and the miles stop. Your route and location are never saved.
         </Text>
         <Button type="secondary" size="md" onClick={v.mwStart} style={{ marginTop: 'var(--space-3)' }}>
           Find things as I go
