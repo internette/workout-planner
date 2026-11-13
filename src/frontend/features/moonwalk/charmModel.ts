@@ -330,7 +330,21 @@ export function charmVals(ctx: Ctx) {
     ctPicks: recipes.picksLeft
       ? legendary
           .filter((c) => !recipes.known.has(c.key))
-          .map((c) => ({ key: c.key, name: c.name, what: c.what, cost: costText(c.cost), pick: () => logic.saveOnce('recipe', () => db.pickRecipe(c.key), { notice: { text: 'The ' + c.name + ' recipe is on your table.', screen: 'charms' } }), ...colorOf(c) }))
+          .map((c) => ({ key: c.key, name: c.name, what: c.what, cost: costText(c.cost), // A pick is for good, so it asks first (the quiet answer is the main button).
+            pick: () =>
+              logic.s({
+                confirm: {
+                  kind: 'recipePick',
+                  title: 'Pick the ' + c.name + ' recipe?',
+                  body:
+                    c.what + '. Crafting it costs ' + costText(c.cost) + '. A pick can’t be changed later' +
+                    (recipes.picksLeft > 1 ? '; you’ll have ' + (recipes.picksLeft - 1) + ' more to make.' : '.'),
+                  label: 'Pick ' + c.name,
+                  cancelLabel: 'Not yet',
+                  safe: true,
+                  then: () => logic.saveOnce('recipe', () => db.pickRecipe(c.key), { notice: { text: 'The ' + c.name + ' recipe is on your table.', screen: 'charms' }, announce: 'The ' + c.name + ' recipe is on your table.' }),
+                },
+              }), ...colorOf(c) }))
       : [],
     ctLocked: legendary.every((c) => recipes.known.has(c.key))
       ? ''
