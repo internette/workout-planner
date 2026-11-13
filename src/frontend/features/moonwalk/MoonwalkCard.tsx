@@ -10,8 +10,10 @@ const Star = ({ on }: { on: boolean }) => (
     <path
       d="M12 2.5l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.4l-6.1 3.5 1.5-6.8L2.2 9.5l6.9-.7z"
       fill={on ? 'var(--color-gold)' : 'var(--color-mist)'}
-      stroke={on ? 'none' : 'var(--color-outline)'}
-      strokeWidth="1"
+      stroke={on ? 'var(--color-gold-deep)' : 'var(--color-outline)'}
+      strokeWidth={on ? 1.5 : 1}
+      strokeLinejoin="round"
+      vectorEffect={on ? 'non-scaling-stroke' : undefined}
     />
   </svg>
 );
@@ -52,7 +54,7 @@ export function MoonwalkCard({ v }: { v: PlannerVals }) {
           role="status"
           style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-3)', padding: 'var(--space-3)', borderRadius: 'var(--radius-md)', background: v.mwJustFound.tint }}
         >
-          <FindGlyph rarity={v.mwJustFound.rarity} found tint="var(--color-surface)" fill={v.mwJustFound.fill} size={44} />
+          <FindGlyph rarity={v.mwJustFound.rarity} found tint="var(--color-surface)" fill={v.mwJustFound.fill} stroke={v.mwJustFound.deep} size={44} />
           <span style={{ minWidth: 0 }}>
             <Text variant="small" tone="muted" as="span" style={{ display: 'block' }}>
               You found

@@ -31,6 +31,7 @@ const PAIRS: Pair[] = [
   ['pink', 'canvas', UI, 'a tick, bar or mark on the page'],
   ['tealDeep', 'surface', UI, 'a planned day’s ring on a card'],
   ['tealDeep', 'canvas', UI, 'a planned day’s ring on the page'],
+  ...(['tealDeep', 'periwinkleDeep', 'goldDeep'] as ColorName[]).map((c): Pair => [c, 'surface', UI, 'a Find, charm or filled pouch star’s outline on a card']),
 ];
 
 const lum = (hex: string) => {

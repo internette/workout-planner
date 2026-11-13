@@ -1,5 +1,8 @@
-// A charm's mark until the charms have art of their own: a crescent around a star, in the charm's color on its tint.
-export function CharmGlyph({ tint, fill, size = 44, known = true }: { tint: string; fill: string; size?: number; known?: boolean }) {
+// A charm's mark until the charms have art of their own: a crescent around a star, in the charm's color on its tint,
+// outlined 1.5px in the charm's deep shade so it reads at 3:1 or more.
+const outline = (stroke: string) => ({ stroke, strokeWidth: 1.5, strokeLinejoin: 'round' as const, vectorEffect: 'non-scaling-stroke' as const });
+
+export function CharmGlyph({ tint, fill, stroke, size = 44, known = true }: { tint: string; fill: string; stroke: string; size?: number; known?: boolean }) {
   return (
     <span
       aria-hidden="true"
@@ -8,8 +11,8 @@ export function CharmGlyph({ tint, fill, size = 44, known = true }: { tint: stri
       <svg width={size * 0.6} height={size * 0.6} viewBox="0 0 24 24">
         {known ? (
           <>
-            <path d="M14 3a9 9 0 1 0 7 14.6A7.5 7.5 0 0 1 14 3z" fill={fill} />
-            <path d="M16.5 7l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9z" fill={fill} />
+            <path d="M14 3a9 9 0 1 0 7 14.6A7.5 7.5 0 0 1 14 3z" fill={fill} {...outline(stroke)} />
+            <path d="M16.5 7l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9z" fill={fill} {...outline(stroke)} />
           </>
         ) : (
           <>

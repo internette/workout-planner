@@ -15,7 +15,7 @@ export function StarbookCard({ v }: { v: PlannerVals }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
           {v.sbLatest.map((f) => (
             <div key={f.key} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-              <FindGlyph rarity={f.rarity} found tint={f.tint} fill={f.fill} size={40} />
+              <FindGlyph rarity={f.rarity} found tint={f.tint} fill={f.fill} stroke={f.deep} size={40} />
               <span style={{ minWidth: 0 }}>
                 <Text variant="subheading" as="span" style={{ display: 'block' }}>
                   {f.name}

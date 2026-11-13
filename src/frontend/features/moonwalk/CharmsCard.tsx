@@ -18,7 +18,7 @@ export function CharmsCard({ v }: { v: PlannerVals }) {
         <ul style={{ listStyle: 'none', padding: 0, margin: 'var(--space-3) 0 0', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
           {v.mcHeld.map((c) => (
             <li key={c.key} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-              <CharmGlyph tint={c.tint} fill={c.fill} size={40} />
+              <CharmGlyph tint={c.tint} fill={c.fill} stroke={c.deep} size={40} />
               <span style={{ minWidth: 0, flex: '1 1 0' }}>
                 <Text variant="subheading" as="span" style={{ display: 'block' }}>
                   {c.name}
