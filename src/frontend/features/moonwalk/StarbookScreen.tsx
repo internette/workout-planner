@@ -32,11 +32,11 @@ export function StarbookScreen({ v }: { v: PlannerVals }) {
         </Text>
         <ul style={{ listStyle: 'none', padding: 0, margin: 'var(--space-4) 0 0', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(84px, 1fr))', gap: 'var(--space-3)' }}>
           {v.sbTiles.map((f) => (
-            <li
-              key={f.key}
-              aria-label={f.found ? f.name + ', ' + f.rarityLabel + (f.copies > 1 ? ', ' + f.copies + ' copies' : '') : 'Not found yet, ' + f.rarityLabel}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-1)', textAlign: 'center' }}
-            >
+            <li key={f.key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-1)', textAlign: 'center' }}>
+              {/* The tile's name for screen readers, as text in the tile: VoiceOver often skips an aria-label on a list item. */}
+              <span className="sr-only">
+                {f.found ? f.name + ', ' + f.rarityLabel + (f.copies > 1 ? ', ' + f.copies + ' copies' : '') : 'Not found yet, ' + f.rarityLabel}
+              </span>
               <FindGlyph rarity={f.rarity} found={f.found} tint={f.tint} fill={f.fill} stroke={f.deep} />
               <Text variant="small" tone={f.found ? 'ink' : 'muted'} aria-hidden="true">
                 {f.found ? f.name : f.rarityLabel}
