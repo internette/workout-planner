@@ -20,7 +20,8 @@ export function bossVals(ctx: Ctx) {
     ? {
         k: f.k,
         name: bossName(f.k),
-        gem: gemOf(f.k),
+        // Drawn as the trophies are, its rank's deep shade on that rank's tint: the bright gem is ~2:1 on a white card.
+        ...trophyLookOf(f.k),
         eyebrow: f.escapes && f.dealt === 0 ? 'Rematch' : 'Boss battle',
         hpLeft: f.hp - f.dealt,
         hp: f.hp,
