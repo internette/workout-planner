@@ -186,7 +186,7 @@ export function charmVals(ctx: Ctx) {
     void logic.saveOnce(
       'charm',
       () => (m ? db.applyMakingCharm(row.id, todayIso, m.spend, m.findId, m.source) : db.applyCharm(row.id, todayIso, usedFor)),
-      { charmPick: null, notice: { text, screen: st.screen } },
+      { charmPick: null, notice: { text, screen: st.screen }, announce: text },
     );
   };
 
@@ -246,7 +246,7 @@ export function charmVals(ctx: Ctx) {
         // Pressed while it can't be made (the button stays focusable): say what's missing.
         if (!known || !ready || sp.missing.length || full)
           return logic.s({ announce: full ? 'You hold ' + MAX_WARDS + ', the most.' : sp.missing.length ? 'Need ' + sp.missing.join(', ') + '.' : '' });
-        void logic.saveOnce('craft', () => db.craftCharm(c.key, sp.finds, sp.charms), { notice: { text: 'Made a ' + c.name + '.', screen: 'charms' } });
+        void logic.saveOnce('craft', () => db.craftCharm(c.key, sp.finds, sp.charms), { notice: { text: 'Made a ' + c.name + '.', screen: 'charms' }, announce: 'Made a ' + c.name + '.' });
       },
       busy: logic.busy('craft'),
       ...colorOf(c),
