@@ -55,7 +55,8 @@ export function PlannerView({ v }: { v: PlannerVals }) {
           style={{
             maxWidth: 'var(--layout-shell-max)',
             margin: '0 auto',
-            padding: 'var(--space-7) var(--space-7) 0',
+            // A 16px gutter on phones (28px left too little room for a row's name beside its controls), 28px wider.
+            padding: v.layout === 'narrow' ? 'var(--space-7) var(--space-4) 0' : 'var(--space-7) var(--space-7) 0',
             display: 'flex',
             flexWrap: 'wrap',
             gap: 'var(--space-7)',
