@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
 import { Text } from '@moonshot/design-system/typography';
@@ -91,6 +92,21 @@ function TodayCharmRow({ v }: { v: PlannerVals }) {
   const rec = v.tcRec;
   const shown = used || rec;
   const label = used ? 'Today’s charm' : rec ? 'Recommended charm' + (rec.count > 1 ? ' · ×' + rec.count : '') : 'Today’s charm';
+  // Use swaps itself for Change once the charm is on, so the focused button goes. Focus then moves to the row's Change
+  // (or its heading, once the charm can't be changed), not back to the top of the page.
+  const usedName = used ? used.name : '';
+  const pressedUse = useRef(false);
+  const changeRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!usedName || !pressedUse.current) return;
+    pressedUse.current = false;
+    (changeRef.current ?? document.getElementById('today-charm-label'))?.focus();
+  }, [usedName]);
+  const use = () => {
+    if (v.tcBusy) return;
+    pressedUse.current = true;
+    v.tcUse?.();
+  };
   return (
     <Card
       as="section"
@@ -99,7 +115,7 @@ function TodayCharmRow({ v }: { v: PlannerVals }) {
     >
       {shown ? <CharmGlyph tint={shown.tint} fill={shown.fill} stroke={shown.deep} size={36} /> : null}
       <span style={{ flex: '1 1 8rem', minWidth: 0 }}>
-        <Text variant="micro" tone="accent" as="h2" id="today-charm-label" style={{ margin: 0 }}>
+        <Text tabIndex={-1} variant="micro" tone="accent" as="h2" id="today-charm-label" style={{ margin: 0, outline: 'none' }}>
           {label}
         </Text>
         {shown ? (
@@ -120,13 +136,14 @@ function TodayCharmRow({ v }: { v: PlannerVals }) {
       <span style={{ display: 'flex', gap: 'var(--space-1)', marginLeft: 'auto' }}>
         {used ? (
           v.tcCanChange ? (
-            <Button type="neutral" ghost size="sm" onClick={v.tcChange} disabled={v.tcBusy} aria-label="Change today’s charm">
+            <Button ref={changeRef} type="neutral" ghost size="sm" onClick={v.tcChange} disabled={v.tcBusy} aria-label="Change today’s charm">
               Change
             </Button>
           ) : null
         ) : rec ? (
           <>
-            <Button type="primary" size="sm" onClick={v.tcUse} disabled={v.tcBusy} aria-label={'Use ' + rec.name + ' today'}>
+            {/* aria-disabled, not disabled, while it saves: a disabled button would drop focus before the swap. */}
+            <Button type="primary" size="sm" onClick={use} aria-disabled={v.tcBusy || undefined} aria-label={'Use ' + rec.name + ' today'}>
               Use
             </Button>
             <Button type="neutral" ghost size="sm" onClick={v.tcOpen} aria-label="Change today’s charm">

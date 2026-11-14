@@ -38,7 +38,9 @@ const youEl = () => {
   return el;
 };
 
-/** The map on a session being collected: where you are, and today's glimmers around you. It follows you as you go.
+const FOLLOW_PAUSE_MS = 20_000;
+
+/** The map on a session being collected: where you are, and today's glimmers around you. It follows you as you go, pausing for a bit after it's moved by hand.
  * The glimmers are also said in words beside it, so the map itself is hidden from screen readers. */
 export function MoonwalkMap({ lat, lon, glimmers }: { lat: number; lon: number; glimmers: Glim[] }) {
   const box = useRef<HTMLDivElement | null>(null);
@@ -46,6 +48,7 @@ export function MoonwalkMap({ lat, lon, glimmers }: { lat: number; lon: number; 
   const you = useRef<Marker | null>(null);
   const marks = useRef<Map<string, Marker>>(new Map());
   const lib = useRef<typeof import('maplibre-gl') | null>(null);
+  const lookedAt = useRef(0);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -63,13 +66,17 @@ export function MoonwalkMap({ lat, lon, glimmers }: { lat: number; lon: number; 
           center: [lon, lat],
           zoom: 16,
           attributionControl: { compact: true },
-          // No one-finger dragging: on a phone a thumb on the map scrolls the page instead of moving the map, which
-          // re-centres on you with every fix anyway. Pinching still zooms.
-          dragPan: false,
+          // On a phone one finger scrolls the page and two move the map (a hint says so when one finger tries); on a
+          // computer the wheel scrolls the page and Ctrl/⌘ + wheel zooms. Dragging with a mouse still moves it.
+          cooperativeGestures: true,
           dragRotate: false,
           pitchWithRotate: false,
         });
         mp.on('error', () => undefined);
+        // Moved by hand: stop following for a while, so there's time to look around.
+        mp.on('movestart', (e) => {
+          if ((e as { originalEvent?: unknown }).originalEvent) lookedAt.current = Date.now();
+        });
         map.current = mp;
         you.current = new m.Marker({ element: youEl() }).setLngLat([lon, lat]).addTo(mp);
         setReady(true);
@@ -88,7 +95,8 @@ export function MoonwalkMap({ lat, lon, glimmers }: { lat: number; lon: number; 
   useEffect(() => {
     if (!ready || !map.current) return;
     you.current?.setLngLat([lon, lat]);
-    map.current.easeTo({ center: [lon, lat], duration: 600 });
+    // It follows you, unless the map was moved by hand in the last 20 seconds.
+    if (Date.now() - lookedAt.current > FOLLOW_PAUSE_MS) map.current.easeTo({ center: [lon, lat], duration: 600 });
   }, [ready, lat, lon]);
 
   useEffect(() => {
