@@ -373,6 +373,14 @@ export function editVals(ctx: Ctx) {
       note: 'Each copy is this workout as you’ve edited it, ready to start.',
       range:
         monDay(first) + ' – ' + (first.getMonth() === last.getMonth() ? String(last.getDate()) : monDay(last)),
+      // How many days are picked, and how many of them are in weeks not shown, so picks made in another week aren't lost.
+      pickedNote: (() => {
+        if (!copyTo.length) return '';
+        const from = isoOf(first);
+        const to = isoOf(last);
+        const away = copyTo.filter((d) => d < from || d > to).length;
+        return plural(copyTo.length, 'day') + ' picked' + (away ? ' · ' + away + ' in other ' + (away === 1 ? 'week' : 'weeks') : '');
+      })(),
       prev: () => logic.s({ copyWeek: week - 1 }),
       next: () => logic.s({ copyWeek: week + 1 }),
       days: Array.from({ length: 7 }, (_, i) => {

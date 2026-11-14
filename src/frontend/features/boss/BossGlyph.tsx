@@ -23,11 +23,12 @@ const RADIANT_GOLEM = 4;
 const CRESCENT_TYRANT = 5;
 
 /**
- * A boss, in the color of the rank it guards. Felled, it's drawn faded and eyeless. The Storm Wyrm, the Comet Hound,
+ * A boss, in the color of the rank it guards. Felled, it's drawn faded and eyeless; one still ahead is eyeless but solid. The Storm Wyrm, the Comet Hound,
  * the Eclipse Maw, the Radiant Golem and the Crescent Tyrant have their own drawings; every other boss is still the crescent with two eyes.
  */
-export function BossGlyph({ k, fill, size = 44, faded = false }: { k: number; fill: string; size?: number; faded?: boolean }) {
-  const style = { display: 'block', opacity: faded ? 0.45 : undefined };
+export function BossGlyph({ k, fill, size = 44, faded = false, solid = false }: { k: number; fill: string; size?: number; faded?: boolean; solid?: boolean }) {
+  // `solid`: eyeless like a faded boss, but at full strength (a boss still ahead, on Profile).
+  const style = { display: 'block', opacity: faded && !solid ? 0.45 : undefined };
   // useId's colons and guillemets aren't safe inside url(#…)
   const maskId = 'boss' + useId().replace(/[^\w-]/g, '');
   if (k === STORM_WYRM) {
