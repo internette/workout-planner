@@ -54,7 +54,7 @@ export function LiveSetting() {
           switch
           checked={s.chime}
           onChange={(on) => setLiveSetting('chime', on)}
-          description="Plays over your music without pausing or lowering it. On iPhone, the silent switch mutes it."
+          description="Also ticks softly in a hold’s last 3 seconds. Plays over your music without pausing or lowering it. On iPhone, the silent switch mutes it."
         >
           Chime when a rest or hold ends
         </Checkbox>

@@ -128,6 +128,8 @@ export interface RestState {
 export interface HoldState {
   id: string;
   name: string;
+  /** When its time starts counting: a few seconds after "Start set", to get into position. Older saved ones have none. */
+  startsAt?: number;
   endsAt: number;
   total: number;
 }

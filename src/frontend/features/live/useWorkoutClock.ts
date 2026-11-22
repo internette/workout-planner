@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import type { PlannerLogic } from '@/frontend/features/planner/store/PlannerLogic';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
-import { CUE_MS, markEnd, playChime, unlockChime } from './cue';
+import { CUE_MS, markEnd, playChime, playTick, unlockChime } from './cue';
 import { liveSettings, setAudioSession } from './settings';
 import type { WorkerIn, WorkerOut } from './timer.worker';
 
@@ -16,6 +16,29 @@ import type { WorkerIn, WorkerOut } from './timer.worker';
 export function useWorkoutClock(logic: PlannerLogic, view: PlannerVals | null, anyRunning: boolean) {
   const viewRef = useRef(view);
   viewRef.current = view;
+
+  // A timed set: when getting ready is over its time starts (said to screen readers), and each of its last three
+  // seconds ticks softly, with the chime setting. Each is done once, keyed by the set and the second.
+  const said = useRef('');
+  const ticked = useRef('');
+  useEffect(() => {
+    const v = viewRef.current;
+    if (!v || !v.holdEndsAt) return;
+    const now = Date.now();
+    if (v.holdStartsAt && now >= v.holdStartsAt && said.current !== String(v.holdStartsAt)) {
+      said.current = String(v.holdStartsAt);
+      // Only when it has just started, not when the page comes back to one long since going.
+      if (now - v.holdStartsAt < 2000) v.holdGo();
+    }
+    const left = Math.ceil((v.holdEndsAt - now) / 1000);
+    if (!v.holdLead && left >= 1 && left <= 3) {
+      const key = v.holdEndsAt + ':' + left;
+      if (ticked.current !== key) {
+        ticked.current = key;
+        if (liveSettings().chime) playTick();
+      }
+    }
+  });
 
   // A rest or a timed set that has run out goes, with a chime (unless turned off), a short glow on the card, and a buzz
   // where the phone allows it. A timed set's end counts it done, which may start a rest.

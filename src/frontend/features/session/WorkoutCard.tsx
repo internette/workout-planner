@@ -9,6 +9,7 @@ import { SessionProgress } from '@/frontend/components/SessionProgress';
 import { ExerciseName } from '@/frontend/components/ExerciseName';
 import { SetPips } from '@/frontend/components/SetPips';
 import { endCue } from '@/frontend/features/live/cue';
+import styles from './hold.module.css';
 
 const divider: CSSProperties = { border: 0, borderTop: '1px solid var(--color-line)', margin: 'var(--space-4) 0' };
 
@@ -125,32 +126,69 @@ function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
   );
 }
 
-/** A timed set counting down: which set of which exercise, with a longer time and "Done set" to end it early. At
- * 0:00 it's done, as if "Done set" were pressed. */
+/** A timed set: after "Start set", a few seconds to get ready (big, counting 5 to 1), then its time counting down in
+ * a ring, with "+30 sec" and "Done set" to end it early. Its last three seconds pulse. At 0:00 it's done, as if "Done
+ * set" were pressed. */
 function HoldSection({ v }: { v: PlannerVals }) {
+  if (v.holdLead > 0)
+    return (
+      <section aria-label="Set" style={{ marginTop: 'var(--space-4)', textAlign: 'center' }}>
+        <Text variant="micro" tone="slate" as="div">
+          {v.holdSet}
+        </Text>
+        <Text variant="micro" tone="slate" as="div" style={{ marginTop: 'var(--space-3)' }}>
+          Get ready
+        </Text>
+        {/* Keyed by the second, so each number pops in. Read out once, when the set is started. */}
+        <div key={v.holdLead} className={styles.lead} aria-hidden="true" style={{ margin: 'var(--space-2) 0' }}>
+          {v.holdLead}
+        </div>
+        <Text variant="subheading" as="div">
+          {v.holdName}
+        </Text>
+        <Text variant="body" tone="muted" as="div" style={{ marginTop: 'var(--space-1)' }}>
+          {v.holdLine}
+        </Text>
+      </section>
+    );
+  const r = 86;
+  const c = 2 * Math.PI * r;
+  const last = v.holdSecLeft > 0 && v.holdSecLeft <= 3;
   return (
     <section aria-label="Set" style={{ marginTop: 'var(--space-4)' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: 'var(--space-3)' }}>
-        <div>
-          <Text variant="micro" tone="slate" as="div">
-            {v.holdSet}
-          </Text>
-          {/* Read out once a second would be too much; the set's end is announced instead. */}
-          <Text variant="title" as="div" aria-hidden="true" style={{ margin: 'var(--space-1) 0 0', fontVariantNumeric: 'tabular-nums' }}>
-            {v.holdLabel}
-          </Text>
-        </div>
-        <div style={{ flex: '1 1 160px', minWidth: 0, textAlign: 'right' }}>
-          <Text variant="subheading" as="div">
-            {v.holdName}
-          </Text>
-          <Text variant="body" tone="muted" as="div" style={{ marginTop: 'var(--space-1)' }}>
-            {v.holdLine}
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', justifyContent: 'space-between', gap: 'var(--space-1) var(--space-3)' }}>
+        <Text variant="micro" tone="slate" as="div">
+          {v.holdSet}
+        </Text>
+        <Text variant="body" tone="muted" as="div">
+          {v.holdName} · {v.holdLine}
+        </Text>
+      </div>
+      {/* Read out once a second would be too much; the set's start and end are announced instead. */}
+      <div className={last ? styles.ring + ' ' + styles.last : styles.ring} aria-hidden="true" style={{ marginTop: 'var(--space-3)' }}>
+        <svg viewBox="0 0 196 196">
+          <circle cx="98" cy="98" r={r} fill="none" stroke="var(--color-mist)" strokeWidth="12" />
+          <circle
+            className={styles.arc}
+            cx="98"
+            cy="98"
+            r={r}
+            fill="none"
+            stroke="var(--color-pink)"
+            strokeWidth="12"
+            strokeLinecap="round"
+            strokeDasharray={c}
+            strokeDashoffset={c * (1 - v.holdPct / 100)}
+          />
+        </svg>
+        <div className={styles.time}>
+          <span className={styles.digits}>{v.holdLabel}</span>
+          <Text variant="body" tone="muted" as="span" style={{ marginTop: 'var(--space-1)' }}>
+            of {v.holdTotalLabel}
           </Text>
         </div>
       </div>
-      <ProgressBar value={v.holdPct} style={{ marginTop: 'var(--space-3)' }} />
-      <div style={{ display: 'flex', gap: 'var(--space-2)', marginTop: 'var(--space-3)' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-3)' }}>
         <Button type="secondary" size="sm" onClick={v.holdMore}>
           +30 sec
         </Button>

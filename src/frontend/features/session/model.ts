@@ -368,7 +368,7 @@ export function workoutVals(ctx: Ctx) {
         : resting
           ? 'Resting ' + formatElapsed(Math.ceil((st.rest.endsAt - Date.now()) / 1000)) + (timer ? ' · ' + formatElapsed(timerSec) + ' total' : '')
           : holding
-          ? st.hold.name + ' ' + formatElapsed(Math.ceil((st.hold.endsAt - Date.now()) / 1000)) + (timer ? ' · ' + formatElapsed(timerSec) + ' total' : '')
+          ? st.hold.name + (st.hold.startsAt && st.hold.startsAt > Date.now() ? ' · Get ready' : ' ' + formatElapsed(Math.min(st.hold.total, Math.ceil((st.hold.endsAt - Date.now()) / 1000)))) + (timer ? ' · ' + formatElapsed(timerSec) + ' total' : '')
           : timer
           ? (timer.runningSince ? 'In progress · ' : 'Paused · ') + formatElapsed(timerSec)
           : ride
