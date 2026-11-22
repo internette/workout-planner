@@ -50,6 +50,24 @@ export function playChime() {
   note(t + 0.16, 1760);
 }
 
+/** One short, quiet sine note (A5), for each of a timed set's last three seconds. */
+export function playTick() {
+  const c = audio();
+  if (!c) return;
+  if (c.state === 'suspended') c.resume().catch(() => undefined);
+  const t = c.currentTime + 0.02;
+  const o = c.createOscillator();
+  const g = c.createGain();
+  o.type = 'sine';
+  o.frequency.value = 880;
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(0.1, t + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+  o.connect(g).connect(c.destination);
+  o.start(t);
+  o.stop(t + 0.15);
+}
+
 /** A rest or timed set just ran out (not skipped or ended early). */
 export function markEnd(kind: 'rest' | 'hold') {
   last = { at: Date.now(), kind };

@@ -17,6 +17,9 @@ export const restIn = (e: Pick<Exercise, 'rest'>) => {
   return m ? Number(m[0]) : 0;
 };
 
+/** The seconds to get ready after "Start set", before a timed set's time starts counting. */
+export const GET_READY = 5;
+
 /** A timed set's seconds: the "45" of "3 × 45 sec", or 0 for sets counted in reps. */
 export const timeIn = (e: Pick<Exercise, 'sets'>) => (isTimed(e.sets) ? Number(splitSetsReps(e.sets).time) || 0 : 0);
 
@@ -83,13 +86,14 @@ export function setsFor(ctx: Ctx) {
     const clock = (st.workoutTimer || {})[id];
     const of = setsIn(e);
     const set = Math.min(of, setsDoneOf(id, name) + 1);
+    const startsAt = now + GET_READY * 1000;
     logic.s({
-      hold: { id, name, endsAt: now + time * 1000, total: time },
+      hold: { id, name, startsAt, endsAt: startsAt + time * 1000, total: time },
       rest: null,
       ...(!clock || !clock.runningSince
         ? { workoutTimer: Object.assign({}, st.workoutTimer, { [id]: { elapsed: clock ? clock.elapsed : 0, runningSince: now } }) }
         : {}),
-      announce: (of > 1 ? 'Set ' + set + ' of ' + of + ' started. ' : 'Started. ') + time + ' seconds.',
+      announce: 'Get ready. ' + (of > 1 ? 'Set ' + set + ' of ' + of + ', ' : '') + time + ' seconds, starting in ' + GET_READY + '.',
     });
   };
 
@@ -127,7 +131,9 @@ export function setsFor(ctx: Ctx) {
 
   const restLeft = restNow ? Math.max(0, Math.ceil((restNow.endsAt - Date.now()) / 1000)) : 0;
   const restNext = restNow ? nextSet(restNow.id, restNow.after) : null;
-  const holdLeft = holdNow ? Math.max(0, Math.ceil((holdNow.endsAt - Date.now()) / 1000)) : 0;
+  // Getting ready, the seconds until its time starts; then its time left (all of it while getting ready).
+  const holdLead = holdNow && holdNow.startsAt ? Math.max(0, Math.ceil((holdNow.startsAt - Date.now()) / 1000)) : 0;
+  const holdLeft = holdNow ? Math.min(holdNow.total, Math.max(0, Math.ceil((holdNow.endsAt - Date.now()) / 1000))) : 0;
   return {
     exercisesOf,
     setsDoneOf,
@@ -135,6 +141,7 @@ export function setsFor(ctx: Ctx) {
     completeSet,
     startSet,
     holdNow,
+    holdLead,
     holdLeft,
     holdLabel: formatElapsed(holdLeft),
     /** A longer timed set. */
@@ -189,6 +196,11 @@ export function restVals(ctx: Ctx) {
     // A timed set counting down on its session's page: its time left, which set of which exercise, and its rest after.
     holdShown: !!s.holdNow && ctx.st.screen === 'detail' && s.holdNow.id === ctx.listKey,
     holdLabel: s.holdLabel,
+    /** Getting ready after "Start set": the seconds left before its time starts (0 once it's going). */
+    holdLead: s.holdLead,
+    holdSecLeft: s.holdLeft,
+    /** Its whole time, for "of 0:45" under the time left. */
+    holdTotalLabel: s.holdNow ? formatElapsed(s.holdNow.total) : '',
     holdPct: s.holdNow ? Math.round((s.holdLeft / Math.max(1, s.holdNow.total)) * 100) : 0,
     holdSet: (() => {
       const n = s.holdNow ? s.nextSet(s.holdNow.id, s.holdNow.name) : null;
@@ -202,6 +214,10 @@ export function restVals(ctx: Ctx) {
     holdMore: () => s.addHold(30),
     holdDone: () => s.holdNow && s.completeSet(s.holdNow.id, s.holdNow.name),
     holdOver: s.holdOver,
+    /** The getting-ready seconds are over and its time starts: said to screen readers. */
+    holdGo: () => s.holdNow && ctx.logic.s({ announce: 'Go. ' + s.holdNow.total + ' seconds.' }),
+    /** When the timed set's time starts counting, for the page to notice (0 when none, or already going). */
+    holdStartsAt: s.holdNow && s.holdNow.startsAt ? s.holdNow.startsAt : 0,
     /** When the timed set counting down ends, for the page to notice (0 when none). */
     holdEndsAt: s.holdNow ? s.holdNow.endsAt : 0,
     restSkip: s.skipRest,
