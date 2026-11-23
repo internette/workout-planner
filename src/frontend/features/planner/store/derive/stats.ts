@@ -6,6 +6,7 @@ import type { Entry } from '@/frontend/data/plannerData';
 import { bossStage } from '@/frontend/features/boss/derive';
 import { achievementStage } from '@/frontend/features/achievements/derive';
 import { coveredDays, usesByDay } from '@/frontend/features/moonwalk/effects';
+import { heaviest } from '@/frontend/features/session/setLog';
 
 // Streaks, weekly buckets, XP and rank, records and quest counts, derived from every entry.
 /** One session in a week of the Progress chart. */
@@ -143,15 +144,18 @@ export function statsStage(ctx: CalendarCtx) {
     const t = questSeed(d, m).title;
     questCounts[t] = (questCounts[t] || 0) + 1;
   });
-  // Personal bests come from what was actually done: an exercise ticked off in a session up to today, at the weight
-  // that session had (its own version of the workout), not whatever a plan says now.
+  // Personal bests come from what was actually done: the heaviest set logged in a session up to today, else, for an
+  // exercise ticked off without its sets logged (ticked by hand, or from before sets were logged), the weight that
+  // session had (its own version of the workout), not whatever a plan says now.
   const bestByEx = {};
   pastDays.forEach((x) => {
     if (x.av.ride) return;
     const ticked = (st.done || {})[idOf(x.av)] || [];
+    const logged = (st.setLog || {})[idOf(x.av)] || {};
     (EXV[x.av.exKey] || []).forEach((e) => {
-      if (!ticked.includes(e.name)) return;
-      const w = parseFloat(numericOnly(String(e.weight)));
+      const most = heaviest(logged[e.name]);
+      if (!ticked.includes(e.name) && most == null) return;
+      const w = most != null ? most : parseFloat(numericOnly(String(e.weight)));
       if (!isNaN(w) && w > (bestByEx[e.name] || 0)) bestByEx[e.name] = w;
     });
   });

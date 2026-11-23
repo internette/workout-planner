@@ -1,12 +1,16 @@
 import { exLine, formatElapsed, idOf, isTimed, splitSetsReps } from '@/frontend/shared/helpers';
 import type { Ctx } from '../planner/store/types';
 import type { PlannerState } from '../planner/store/state';
-import type { Entry, Exercise } from '@/frontend/data/plannerData';
+import type { Entry, Exercise, LoggedSet, SetLog } from '@/frontend/data/plannerData';
+import { weightStep, stepWeight } from '@/frontend/shared/weightSteps';
+import { startSet as startFrom, typedSet } from './setLog';
 
 // Sets, and the rest between them. Each "Done set" counts one; the last of an exercise's sets ticks it off, the same
 // as its tick does. After a set, that exercise's rest counts down (unless nothing is left to do), with the next set
 // up. A timed set (a plank, a dead hang) is started instead, counts down its time, and is done when the time is up or
 // at "Done set". Sets done are kept in this browser with the clock; ticked exercises are saved, as before.
+// Each "Done set" also logs what that set was (its weight and reps, as changed on the card, else where it started;
+// see setLog.ts), saved with the ticks once the set log migration has run.
 
 /** How many sets an exercise has: the "4" of "4 × 8", or one when it doesn't say. */
 export const setsIn = (e: Pick<Exercise, 'sets'>) => Math.max(1, Number(splitSetsReps(e.sets).sets) || 1);
@@ -40,6 +44,16 @@ export function setsFor(ctx: Ctx) {
       .map(({ e }) => e);
   };
   const setsDoneOf = (id: string, name: string) => ((st.setsDone || {})[id] || {})[name] || 0;
+  /** The sets of an exercise logged so far in a session. */
+  const logOf = (id: string, name: string): LoggedSet[] => ((st.setLog || {})[id] || {})[name] || [];
+  /** Where the next set of an exercise starts: the last one done in this session, else the plan. */
+  const startOf = (id: string, e: Exercise) => startFrom(e, logOf(id, e.name));
+  /** The next set opened to change, if it's this one. */
+  const draftOf = (id: string, nm: string) => {
+    const d = st.setDraft;
+    return d && d.id === id && d.name === nm ? d : null;
+  };
+  const draftStr = (n: number | null) => (n == null ? '' : String(n));
   // The exercise just done carries on until its sets are done, then one already started, before the first still to
   // do in the list.
   const nextIn = (list: Exercise[], done: string[], sets: Record<string, number>, after?: string): NextSet | null => {
@@ -115,6 +129,16 @@ export function setsFor(ctx: Ctx) {
       patch.workoutTimer = Object.assign({}, st.workoutTimer, {
         [id]: { elapsed: clock ? clock.elapsed : 0, runningSince: now },
       });
+    // What the set was, unless it's a timed one: as changed on the card, else where it started.
+    let log: SetLog | undefined;
+    if (!timeIn(e)) {
+      const start = startOf(id, e);
+      const d = draftOf(id, name);
+      const prior = logOf(id, name).slice(0, count - 1);
+      log = Object.assign({}, (st.setLog || {})[id], { [name]: prior.concat([d ? typedSet(start, d.w, d.r) : start]) });
+      patch.setLog = Object.assign({}, st.setLog, { [id]: log });
+    }
+    patch.setDraft = null;
     const ticked = count >= of;
     const names = ticked ? done.concat([name]) : done;
     if (ticked) patch.done = Object.assign({}, st.done, { [id]: names });
@@ -125,8 +149,27 @@ export function setsFor(ctx: Ctx) {
       (ticked ? name + ' done. ' + names.length + ' of ' + list.length + ' exercises done.' : 'Set ' + count + ' of ' + of + ' done.') +
       (patch.rest ? ' Rest ' + rest + ' seconds.' : '');
     logic.s(patch);
-    if (ticked)
-      logic.saveTicks(id, names, names.length === list.length || actualMinutes(at.av) > 0);
+    // A set that doesn't tick its exercise off is saved too, once its weight and reps can be.
+    if (ticked || (log && logic.model.setLogReady))
+      logic.saveTicks(id, names, names.length === list.length || actualMinutes(at.av) > 0, log);
+  };
+
+  /** Opens the next set of an exercise to change its weight or reps, starting from where it would be logged. */
+  const openDraft = (id: string, e: Exercise) => {
+    const start = startOf(id, e);
+    logic.s({ setDraft: { id, name: e.name, w: draftStr(start.w), r: draftStr(start.r) } });
+  };
+  /** Types into the open set's weight (`w`) or reps (`r`) box. */
+  const typeDraft = (key: 'w' | 'r', text: string) => {
+    const d = logic.state.setDraft;
+    if (d) logic.s({ setDraft: { ...d, [key]: key === 'w' ? text.replace(/[^0-9.]/g, '') : text.replace(/[^0-9]/g, '') } });
+  };
+  /** A step lighter or heavier (5 lb, or 10 on a machine or cable), or a rep fewer or more. Never below nothing. */
+  const stepDraft = (e: Exercise, key: 'w' | 'r', dir: 1 | -1) => {
+    const d = logic.state.setDraft;
+    if (!d) return;
+    const next = key === 'w' ? stepWeight(d.w, dir, weightStep(e)) : String(Math.max(0, (parseInt(d.r, 10) || 0) + dir));
+    logic.s({ setDraft: { ...d, [key]: next === '0' ? '' : next } });
   };
 
   const restLeft = restNow ? Math.max(0, Math.ceil((restNow.endsAt - Date.now()) / 1000)) : 0;
@@ -140,6 +183,12 @@ export function setsFor(ctx: Ctx) {
     nextSet,
     completeSet,
     startSet,
+    logOf,
+    startOf,
+    draftOf,
+    openDraft,
+    typeDraft,
+    stepDraft,
     holdNow,
     holdLead,
     holdLeft,

@@ -151,6 +151,7 @@ export async function loadModel(today: Date): Promise<Model> {
   const entries: Model['entries'] = [];
   const done: Model['done'] = {};
   const rideDone: Model['rideDone'] = {};
+  const setLog: Model['setLog'] = {};
   const entryById: Record<string, Entry> = {};
 
   // A repeating workout's series is on the weekdays stored with it, or (from before those were stored) the one most of
@@ -206,6 +207,7 @@ export async function loadModel(today: Date): Promise<Model> {
     entryById[p.id] = av;
     if (isRide) rideDone[p.id] = completed;
     else {
+      if (p.set_log && typeof p.set_log === 'object') setLog[p.id] = p.set_log;
       done[p.id] = p.done_exercises ? withSides(keyOf(w), p.done_exercises) : completed ? EXV[keyOf(w)].map((e) => e.name) : [];
       if (p.done_exercises && done[p.id].length !== p.done_exercises.length)
         renames.push(supabase.from('plan_entries').update({ done_exercises: done[p.id] }).eq('id', p.id));
@@ -303,6 +305,8 @@ export async function loadModel(today: Date): Promise<Model> {
     workouts: saved,
     done,
     rideDone,
+    setLog,
+    setLogReady: plan.some((p: any) => 'set_log' in p),
     year: today.getFullYear(),
     warmupReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_warmup' in r),
     stretchReady: [...workouts, ...builtinWorkoutRows].some((r: any) => 'is_stretch' in r),

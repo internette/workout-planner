@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
 import { Card } from '@moonshot/design-system/card';
-import { Repeat } from '@moonshot/design-system/icons';
+import { Minus, Plus, Repeat } from '@moonshot/design-system/icons';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
 import { Text } from '@moonshot/design-system/typography';
 import type { PlannerVals } from '@/frontend/features/planner/store/types';
@@ -10,6 +10,7 @@ import { ExerciseName } from '@/frontend/components/ExerciseName';
 import { SetPips } from '@/frontend/components/SetPips';
 import { endCue } from '@/frontend/features/live/cue';
 import styles from './hold.module.css';
+import logStyles from './setlog.module.css';
 
 const divider: CSSProperties = { border: 0, borderTop: '1px solid var(--color-line)', margin: 'var(--space-4) 0' };
 
@@ -96,19 +97,49 @@ function TimerSection({ v }: { v: PlannerVals }) {
   );
 }
 
-/** The set up next: which exercise, how far through its sets, and "Done set" while the workout is going. */
+/** The set up next: which exercise, how far through its sets, and "Done set" while the workout is going. While it's
+ * going, what the set will be logged as sits after "Set 2 of 3" ("40 lb × 8"); tapped, its weight and reps open in
+ * place, a row each, to change before "Done set". */
 function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
+  const log = now.log;
+  const head = (
+    <span style={{ flex: '1 1 160px', minWidth: 0 }}>
+      <ExerciseName name={now.name} />
+      <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-1)' }}>
+        <SetPips pips={now.pips} />
+        <Text variant="body" tone="slate" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          {now.label}
+          {log && !log.editing ? ' ·' : ''}
+        </Text>
+        {log && !log.editing ? (
+          <button type="button" className={logStyles.chip} onClick={log.open} aria-label={log.chipAria}>
+            {log.chip}
+          </button>
+        ) : null}
+      </span>
+    </span>
+  );
+  if (log && log.editing && now.onDone)
+    return (
+      <div style={{ marginTop: 'var(--space-4)' }}>
+        {head}
+        <div className={logStyles.rows}>
+          {log.weight ? <LogRow label="Weight" unit="lb" inputMode="decimal" f={log.weight} /> : null}
+          {log.reps ? <LogRow label="Reps" inputMode="numeric" f={log.reps} /> : null}
+        </div>
+        {log.planNote ? (
+          <Text variant="body" as="p" weight="medium" style={{ margin: 'var(--space-4) 0 0', color: 'var(--color-pink-deep)' }}>
+            {log.planNote}
+          </Text>
+        ) : null}
+        <Button type="primary" size="lg" fullWidth onClick={now.onDone} aria-label={now.doneAria} style={{ marginTop: 'var(--space-4)' }}>
+          Done set
+        </Button>
+      </div>
+    );
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2) var(--space-3)', marginTop: 'var(--space-4)' }}>
-      <span style={{ flex: '1 1 160px', minWidth: 0 }}>
-        <ExerciseName name={now.name} />
-        <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-1)' }}>
-          <SetPips pips={now.pips} />
-          <Text variant="body" tone="slate" style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {now.label}
-          </Text>
-        </span>
-      </span>
+      {head}
       {now.onDone ? (
         <Button type="primary" size="sm" onClick={now.onDone} aria-label={now.doneAria}>
           Done set
@@ -122,6 +153,43 @@ function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
           Paused
         </Text>
       ) : null}
+    </div>
+  );
+}
+
+type LogField = NonNullable<NonNullable<NonNullable<PlannerVals['setNow']>['log']>['weight']>;
+
+/** The next set's weight or reps: its name, then − , the number to tap and type in, and +. */
+function LogRow({ label, unit, inputMode, f }: { label: string; unit?: string; inputMode: 'decimal' | 'numeric'; f: LogField }) {
+  return (
+    <div className={logStyles.row}>
+      <Text variant="body" tone="slate">
+        {label}
+      </Text>
+      <div className={logStyles.stepper}>
+        <button type="button" className={logStyles.step} onClick={f.less} aria-label={f.lessAria}>
+          <Minus color="currentColor" size={18} strokeWidth={2.6} />
+        </button>
+        <label className={logStyles.field}>
+          <input
+            className={logStyles.input}
+            inputMode={inputMode}
+            enterKeyHint="done"
+            aria-label={label + (unit ? ' in pounds' : '')}
+            value={f.value}
+            onChange={f.onChange}
+            onFocus={(ev) => ev.currentTarget.select()}
+          />
+          {unit ? (
+            <span className={logStyles.unit} aria-hidden="true">
+              {unit}
+            </span>
+          ) : null}
+        </label>
+        <button type="button" className={logStyles.step} onClick={f.more} aria-label={f.moreAria}>
+          <Plus color="currentColor" size={18} strokeWidth={2.6} />
+        </button>
+      </div>
     </div>
   );
 }
