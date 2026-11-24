@@ -2,7 +2,7 @@ import { setupVals } from '@/frontend/features/setup/model';
 import { DCLogic } from './dcLogic';
 import * as db from '@/frontend/data/plannerData';
 import { isSignedOut } from '@/frontend/data/session';
-import type { Model } from '@/frontend/data/plannerData';
+import type { Model, SetLog } from '@/frontend/data/plannerData';
 import { HOME_OF, MONTHS } from '@/frontend/shared/constants';
 import { monthPatch, noticePatch } from '@/frontend/shared/helpers';
 import type { Viewport } from '../useViewport';
@@ -106,10 +106,15 @@ export class PlannerLogic extends DCLogic<PlannerState> {
       const setsDone = Object.fromEntries(Object.entries(this.state.setsDone || {}).filter(([k]) => workoutTimer[k]));
       // Ticks still waiting to be saved stay ticked: the database doesn't have them yet.
       const done = { ...model.done, ...Object.fromEntries(Object.entries(this.unsaved).map(([k, t]) => [k, t.names])) };
+      // What each set was, the same way: what's saved, with what's still waiting on top. Before the set log migration
+      // nothing is saved, so the sets logged on this visit stay as they are.
+      const setLog = model.setLogReady
+        ? { ...model.setLog, ...Object.fromEntries(Object.entries(this.unsaved).filter(([, t]) => t.log).map(([k, t]) => [k, t.log!])) }
+        : this.state.setLog || {};
       this.stale = false;
       // Signed in again (in another tab, say): the note that it had ended goes.
       const back = this.state.signedOut && !isSignedOut() ? { signedOut: false, signedOutOpen: false } : {};
-      this.setState({ done, rideDone: model.rideDone, workoutTimer, setsDone, ...opened, ...back, ...patch });
+      this.setState({ done, rideDone: model.rideDone, setLog, workoutTimer, setsDone, ...opened, ...back, ...patch });
       // Ticks kept from a visit that lost its connection: saved now the plan has loaded.
       if (first && this.ticksWaiting) void this.save(() => this.flushTicks(), {}, true);
       // The "Today" shortcut: today's first session not yet done, as its card on the calendar opens it. With none left
@@ -144,7 +149,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
   // reload, and they're saved again when the connection is back. A session's done list is written whole, so saving
   // the latest one again is always right.
   ticksKey = '';
-  private unsaved: Record<string, { names: string[]; completed: boolean }> = {};
+  private unsaved: Record<string, { names: string[]; completed: boolean; log?: SetLog }> = {};
   /** Some ticks haven't been saved yet. */
   get ticksWaiting() {
     return Object.keys(this.unsaved).length > 0;
@@ -176,7 +181,7 @@ export class PlannerLogic extends DCLogic<PlannerState> {
   private async flushTicks() {
     for (const [id, t] of Object.entries(this.unsaved)) {
       try {
-        await db.setExercisesDone(id, t.names, t.completed);
+        await db.setExercisesDone(id, t.names, t.completed, this.model?.setLogReady ? t.log : undefined);
       } catch (e) {
         // Refused by the database rather than lost on the way: saving it again won't help. It stops waiting, the error
         // shows, and the reload puts that session's ticks back to what was saved.
@@ -197,10 +202,13 @@ export class PlannerLogic extends DCLogic<PlannerState> {
     }
     this.ticksStuck = false;
   }
-  /** Saves a session's ticks: `names` done, and whether that completes it. One that doesn't go through is kept and
-   * shown as waiting, not as an error, and saved again with the next tick or when the connection is back. */
-  saveTicks(entryId: string, names: string[], completed: boolean) {
-    this.unsaved = { ...this.unsaved, [entryId]: { names, completed } };
+  /** Saves a session's ticks: `names` done, and whether that completes it, with what each set was (`log`) once the
+   * set log migration has run. Left out, the log still waiting from an earlier tick goes with it. One that doesn't go
+   * through is kept and shown as waiting, not as an error, and saved again with the next tick or when the connection
+   * is back. */
+  saveTicks(entryId: string, names: string[], completed: boolean, log?: SetLog) {
+    const kept = log !== undefined && this.model?.setLogReady ? log : this.unsaved[entryId]?.log;
+    this.unsaved = { ...this.unsaved, [entryId]: { names, completed, ...(kept ? { log: kept } : {}) } };
     this.keepTicks();
     return this.save(() => this.flushTicks(), {}, true);
   }

@@ -20,6 +20,14 @@ export interface Exercise {
   builtin?: boolean; // from the shared catalog: read-only, copy it to change it
 }
 
+// One set as it was actually done: pounds (null for bodyweight or a band) and reps (null when it has none).
+export interface LoggedSet {
+  w: number | null;
+  r: number | null;
+}
+// A session's sets as done, by exercise name, in the order they were done.
+export type SetLog = Record<string, LoggedSet[]>;
+
 // The plan of a workout done for distance rather than with exercises: a ride, or a run or walk (`run`).
 export interface RidePlan {
   dist: string;
@@ -153,6 +161,9 @@ export interface Model {
   builtinWorkouts: BuiltinWorkout[]; // the shared catalog of ready-made workouts, in catalog order
   done: Record<string, string[]>; // plan entry id -> ticked exercise names
   rideDone: Record<string, boolean>;
+  setLog: Record<string, SetLog>; // plan entry id -> what each set actually was
+  // Whether each set's weight and reps can be saved yet (the set log migration has added the column).
+  setLogReady: boolean;
   year: number;
   // Whether workouts can be marked as warm-ups yet (the warm-ups migration has added the column).
   warmupReady: boolean;

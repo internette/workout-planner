@@ -3,10 +3,18 @@
 import { supabase } from '../supabase';
 import { isoWeekday, seriesWeekdays } from '@/frontend/shared/helpers';
 import { numOrNull, completionCols } from './convert';
+import type { SetLog } from './types';
 import { ok, workoutById, isAhead, untouchedIds, SESSION_COLS, savedWorkoutOf } from './db';
 
-export async function setExercisesDone(entryId: string, names: string[], completed: boolean) {
-  await ok(supabase.from('plan_entries').update({ done_exercises: names, ...completionCols(completed) }).eq('id', entryId));
+/** A session's ticks: the exercises done and whether that completes it, and, once the set log migration has run, what
+ * each set actually was (`log`; left out, the column isn't written). */
+export async function setExercisesDone(entryId: string, names: string[], completed: boolean, log?: SetLog) {
+  await ok(
+    supabase
+      .from('plan_entries')
+      .update({ done_exercises: names, ...completionCols(completed), ...(log !== undefined ? { set_log: log } : {}) })
+      .eq('id', entryId),
+  );
 }
 
 export async function setRideDone(entryId: string, completed: boolean) {

@@ -6,7 +6,9 @@ import { iconSvg, typeIcon } from '@/frontend/shared/icons';
 import * as db from '@/frontend/data/plannerData';
 import type { Ctx } from '../planner/store/types';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
-import type { Entry } from '@/frontend/data/plannerData';
+import type { Entry, Exercise, LoggedSet } from '@/frontend/data/plannerData';
+import { weightStep } from '@/frontend/shared/weightSteps';
+import { doneLine, planSet, setLabel, typedSet } from './setLog';
 import { setsFor, setsIn, timeIn } from './sets';
 import { leaveRunningWorkout, pausedClock } from './leave';
 import { dropTrack, openPouch } from '../moonwalk/model';
@@ -161,6 +163,9 @@ export function workoutVals(ctx: Ctx) {
     // Its sets start again too, with no rest going.
     logic.s({
       setsDone: Object.assign({}, st.setsDone, { [listKey]: {} }),
+      // What its sets were goes with them.
+      setLog: Object.assign({}, st.setLog, { [listKey]: {} }),
+      setDraft: null,
       ...(st.rest && st.rest.id === listKey ? { rest: null } : {}),
       ...(st.hold && st.hold.id === listKey ? { hold: null } : {}),
     });
@@ -172,7 +177,7 @@ export function workoutVals(ctx: Ctx) {
         logic.save(() => db.setRideDone(idOf(selAct), false));
       } else {
         logic.s({ done: Object.assign({}, st.done, { [listKey]: [] }) });
-        logic.saveTicks(listKey, [], false);
+        logic.saveTicks(listKey, [], false, {});
       }
     }
     // From the Day view it opens the session; on the session's own page it stays there.
@@ -277,9 +282,10 @@ export function workoutVals(ctx: Ctx) {
   };
   // Day view shows a card for every workout on the day. A card's buttons pick its session first, then do what
   // the same button does for the session on screen, so the detail, timer and diary all follow that session.
-  const exerciseRow = (e, doneNames) => ({
+  const exerciseRow = (e, doneNames, logged?: LoggedSet[]) => ({
     exName: e.name,
-    exDetail: exLine(e),
+    // With sets logged, what they were after the plan: "3 × 8 · 40 lb · did 40 × 8, 35 × 8".
+    exDetail: [exLine(e), doneLine(logged)].filter(Boolean).join(' · '),
     exDone: doneNames.includes(e.name),
     isH: e.i === 'h',
     isV: e.i === 'v',
@@ -329,7 +335,7 @@ export function workoutVals(ctx: Ctx) {
     // Under way, the ones still to do come first and the done ones drop to the bottom, so the next is on top.
     const ordered = now ? [...left, ...list.filter((e) => doneNames.includes(e.name))] : list;
     const rows = ordered.map((e) => ({
-      ...exerciseRow(e, doneNames),
+      ...exerciseRow(e, doneNames, ((st.setLog || {})[id] || {})[e.name]),
       setNow: now && e.name === now.name && setsIn(e) > 1 ? 'Set ' + Math.min(setsIn(e), (setsOf[e.name] || 0) + 1) + ' of ' + setsIn(e) : '',
     }));
     const resting = !!(st.rest && st.rest.id === id && st.rest.endsAt > Date.now());
@@ -419,6 +425,46 @@ export function workoutVals(ctx: Ctx) {
       continue: run('continueWorkout'),
     };
   });
+  // The next set's weight and reps on the progress card: what it'll be logged as, and, opened, a row each to change it.
+  const setLogVals = (sets: ReturnType<typeof setsFor>, e: Exercise) => {
+    const start = sets.startOf(listKey, e);
+    if (start.w == null && start.r == null) return null;
+    const d = sets.draftOf(listKey, e.name);
+    const plan = planSet(e);
+    const typed = d ? typedSet(start, d.w, d.r) : start;
+    const step = weightStep(e);
+    const label = setLabel(start);
+    return {
+      chip: label,
+      chipAria: 'Change weight and reps: ' + label,
+      open: () => sets.openDraft(listKey, e),
+      editing: !!d,
+      weight:
+        d && start.w != null
+          ? {
+              value: d.w,
+              onChange: (ev: { target: { value: string } }) => sets.typeDraft('w', ev.target.value),
+              less: () => sets.stepDraft(e, 'w', -1),
+              more: () => sets.stepDraft(e, 'w', 1),
+              lessAria: step + ' lb lighter',
+              moreAria: step + ' lb heavier',
+            }
+          : null,
+      reps:
+        d && start.r != null
+          ? {
+              value: d.r,
+              onChange: (ev: { target: { value: string } }) => sets.typeDraft('r', ev.target.value),
+              less: () => sets.stepDraft(e, 'r', -1),
+              more: () => sets.stepDraft(e, 'r', 1),
+              lessAria: 'One rep fewer',
+              moreAria: 'One rep more',
+            }
+          : null,
+      // Changed from the plan: what the plan was, so it's clear this set is different.
+      planNote: d && (typed.w !== plan.w || typed.r !== plan.r) && setLabel(plan) ? 'Plan was ' + setLabel(plan) : '',
+    };
+  };
   // The set up next, on today's session page, for the progress card: the exercise the rows' sets are counting, and
   // "Done set" for it while the workout is going (its clock running, not paused, and not finished). A timed set has
   // "Start set" instead, which counts its time down; it's done when the time is up.
@@ -438,6 +484,9 @@ export function workoutVals(ctx: Ctx) {
       // Paused: the clock says so where "Done set" was.
       paused: !!timerState && !timerRunning && !finished,
       doneAria: 'Done: ' + n.e.name + (n.of > 1 ? ', set ' + n.set + ' of ' + n.of : ''),
+      // While the workout is going, what the set will be logged as ("40 lb × 8"), to tap and change before "Done set":
+      // its weight and reps open in place, each with − and + and a box to type in.
+      log: timerRunning && !finished && !time ? setLogVals(sets, n.e) : null,
     };
   })();
   return {

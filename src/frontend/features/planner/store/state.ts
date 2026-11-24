@@ -1,6 +1,6 @@
 import type { Track } from '@/frontend/features/moonwalk/track';
 import type { SetupDraft } from '@/frontend/features/setup/model';
-import type { Exercise } from '@/frontend/data/plannerData';
+import type { Exercise, SetLog } from '@/frontend/data/plannerData';
 import type { Mood } from '@moonshot/design-system/icons';
 
 // The planner's UI state: which screen is open, what's selected, and every form and panel's contents until they are
@@ -117,6 +117,14 @@ export interface TemplateConfirm {
 }
 
 /** A rest counting down between sets: for which session, after which exercise, and when it ends. */
+/** The next set's weight and reps, opened on the progress card to change before "Done set". */
+export interface SetDraft {
+  id: string; // the session
+  name: string; // the exercise
+  w: string; // pounds as typed ('' for none)
+  r: string; // reps as typed
+}
+
 export interface RestState {
   id: string;
   after: string;
@@ -277,6 +285,11 @@ export interface PlannerState {
   workoutTimer?: Record<string, { elapsed: number; runningSince: number | null }>;
   /** Sets done so far, per session and exercise (by name). Kept in this browser, like the clock. */
   setsDone?: Record<string, Record<string, number>>;
+  /** What each set actually was (weight and reps), per session and exercise, in the order done. Saved with the ticks. */
+  setLog?: Record<string, SetLog>;
+  /** The set up next, opened to change its weight or reps before "Done set": which session and exercise, and the two
+   * boxes as typed. */
+  setDraft?: SetDraft | null;
   /** The rest between sets, counting down. */
   rest?: RestState | null;
   hold?: HoldState | null;

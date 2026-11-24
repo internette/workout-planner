@@ -1,0 +1,89 @@
+/* The next set's weight and reps on the progress card: the "40 lb × 8" chip, and, opened, a row each with round
+   − and + and a number to type in. */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-full);
+  border: 1px dashed var(--color-outline);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font: inherit;
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  cursor: pointer;
+}
+/* Taller to tap than it looks: 44px. */
+.chip { position: relative; }
+.chip::after { content: ''; position: absolute; inset: -6px 0; }
+.chip:hover { border-color: var(--color-pink); }
+.chip:focus-visible { outline: 2px solid var(--color-pink); outline-offset: 2px; }
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  margin-top: var(--space-4);
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--color-pink);
+  color: var(--color-surface);
+  cursor: pointer;
+}
+.step:hover { background: var(--color-accent-hover); }
+.step:focus-visible { outline: 2px solid var(--color-pink-deep); outline-offset: 2px; }
+
+.field {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 3px;
+  min-width: 72px;
+}
+.input {
+  width: 3.2ch;
+  height: 40px;
+  box-sizing: content-box;
+  padding: 0 4px;
+  border: 0;
+  border-bottom: 2px dashed var(--color-outline);
+  border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+  background: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.input:focus {
+  outline: none;
+  border-bottom: 2px solid var(--color-pink);
+  background: var(--color-pink-tint);
+}
+.unit {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-slate);
+}

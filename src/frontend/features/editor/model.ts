@@ -7,6 +7,7 @@ import * as db from '@/frontend/data/plannerData';
 import { themed } from '@moonshot/design-system/colors';
 import type { Ctx } from '../planner/store/types';
 import { setsFor, setsIn } from '../session/sets';
+import { doneLine } from '../session/setLog';
 import { kindOf } from '@/frontend/components/KindTag';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import { stepWeight, weightStep } from '@/frontend/shared/weightSteps';
@@ -1355,7 +1356,8 @@ export function editVals(ctx: Ctx) {
         setRest: (ev) => setRest({ target: { value: withSec(digitsOnly(ev.target.value)) } }),
         areas: areaToggles(exAreas, (value) => setAreas({ target: { value } })),
         icoSvg: iconSvg(cur),
-        detail: exLine(e, true),
+        // On a session's page, with sets logged, what they were after the plan: "… · did 40 × 8, 35 × 8".
+        detail: [exLine(e, true), st.screen === 'detail' ? doneLine(((st.setLog || {})[listKey] || {})[e.name]) : ''].filter(Boolean).join(' · '),
         // Ticked off: its name is struck through and muted.
         nameDone: !!doneSet[e.name],
         isDone: !!doneSet[e.name],
@@ -1393,16 +1395,20 @@ export function editVals(ctx: Ctx) {
           if (st.screen === 'edit') return logic.s({ editDone: names, announce });
           // On the session page a tick counts at once. A finished session stays completed while ticks change;
           // otherwise it's done once all are ticked.
-          // Unticked, its sets start again from the first.
+          // Unticked, its sets start again from the first, and what they were goes with them.
+          const { [e.name]: _cleared, ...logLeft } = (st.setLog || {})[listKey] || {};
           logic.s({
             done: Object.assign({}, st.done, { [listKey]: names }),
             announce,
             ...(nowDone
               ? {}
-              : { setsDone: Object.assign({}, st.setsDone, { [listKey]: Object.assign({}, (st.setsDone || {})[listKey], { [e.name]: 0 }) }) }),
+              : {
+                  setsDone: Object.assign({}, st.setsDone, { [listKey]: Object.assign({}, (st.setsDone || {})[listKey], { [e.name]: 0 }) }),
+                  setLog: Object.assign({}, st.setLog, { [listKey]: logLeft }),
+                }),
           });
           if (!creating)
-            logic.saveTicks(listKey, names, (tot > 0 && names.length === tot) || !!(selAct && ctx.actualMinutes(selAct)));
+            logic.saveTicks(listKey, names, (tot > 0 && names.length === tot) || !!(selAct && ctx.actualMinutes(selAct)), nowDone ? undefined : logLeft);
         },
         // One done on each side comes out with its other side, unless just this side is asked for.
         remove: () =>
