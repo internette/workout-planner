@@ -3,7 +3,7 @@ import type { Ctx } from '../planner/store/types';
 import type { PlannerState } from '../planner/store/state';
 import type { Entry, Exercise, LoggedSet, SetLog } from '@/frontend/data/plannerData';
 import { weightStep, stepWeight } from '@/frontend/shared/weightSteps';
-import { startSet as startFrom, typedSet } from './setLog';
+import { offPlan, planSet, setLabel, startSet as startFrom, typedSet } from './setLog';
 
 // Sets, and the rest between them. Each "Done set" counts one; the last of an exercise's sets ticks it off, the same
 // as its tick does. After a set, that exercise's rest counts down (unless nothing is left to do), with the next set
@@ -51,7 +51,12 @@ export function setsFor(ctx: Ctx) {
   /** The next set opened to change, if it's this one. */
   const draftOf = (id: string, nm: string) => {
     const d = st.setDraft;
-    return d && d.id === id && d.name === nm ? d : null;
+    return d && d.id === id && d.name === nm && d.set == null ? d : null;
+  };
+  /** A set already done, opened to change, in this session. */
+  const fixOf = (id: string) => {
+    const d = st.setDraft;
+    return d && d.id === id && d.set != null ? (d as typeof d & { set: number }) : null;
   };
   const draftStr = (n: number | null) => (n == null ? '' : String(n));
   // The exercise just done carries on until its sets are done, then one already started, before the first still to
@@ -159,6 +164,31 @@ export function setsFor(ctx: Ctx) {
     const start = startOf(id, e);
     logic.s({ setDraft: { id, name: e.name, w: draftStr(start.w), r: draftStr(start.r) } });
   };
+  /** Opens a set already done (`set`, 0 for its first) to change its weight or reps, starting from what was logged. */
+  const openFix = (id: string, name: string, set: number) => {
+    const s0 = logOf(id, name)[set];
+    if (!s0) return;
+    logic.s({ setDraft: { id, name, set, w: draftStr(s0.w), r: draftStr(s0.r) } });
+  };
+  /** Saves the set opened by openFix as changed, and saves the log with the ticks. */
+  const saveFix = () => {
+    const d = logic.state.setDraft;
+    if (!d || d.set == null) return;
+    const at = entry(d.id);
+    const sets = logOf(d.id, d.name);
+    const was = sets[d.set];
+    if (!at || !was) return logic.s({ setDraft: null });
+    const now = typedSet(was, d.w, d.r);
+    const log = Object.assign({}, (st.setLog || {})[d.id], { [d.name]: sets.map((x, i) => (i === d.set ? now : x)) });
+    const names = (st.done || {})[d.id] || [];
+    logic.s({
+      setLog: Object.assign({}, st.setLog, { [d.id]: log }),
+      setDraft: null,
+      announce: 'Set ' + (d.set + 1) + ' changed' + (setLabel(now) ? ' to ' + setLabel(now) : '') + '.',
+    });
+    if (logic.model.setLogReady)
+      logic.saveTicks(d.id, names, names.length === exercisesOf(at.av).length || actualMinutes(at.av) > 0, log);
+  };
   /** Types into the open set's weight (`w`) or reps (`r`) box. */
   const typeDraft = (key: 'w' | 'r', text: string) => {
     const d = logic.state.setDraft;
@@ -186,7 +216,11 @@ export function setsFor(ctx: Ctx) {
     logOf,
     startOf,
     draftOf,
+    fixOf,
     openDraft,
+    openFix,
+    saveFix,
+    cancelFix: () => logic.s({ setDraft: null }),
     typeDraft,
     stepDraft,
     holdNow,
@@ -234,8 +268,65 @@ export function restVals(ctx: Ctx) {
   const s = setsFor(ctx);
   const r = s.restNow;
   const shown = !!r && ctx.st.screen === 'detail' && r.id === ctx.listKey;
+  // The set just done, while resting after it: what it was logged as, with Change to fix it before the next one.
+  const fix = ctx.st.screen === 'detail' ? s.fixOf(ctx.listKey) : null;
+  const lastSet = (() => {
+    if (!shown || !r || fix) return null;
+    const sets = s.logOf(r.id, r.after);
+    const last = sets[sets.length - 1];
+    const label = last ? setLabel(last) : '';
+    if (!label) return null;
+    const n = sets.length;
+    return {
+      label: 'Set ' + n + ':',
+      value: label,
+      change: () => s.openFix(r.id, r.after, n - 1),
+      changeAria: 'Change set ' + n + ' of ' + r.after + ': ' + label,
+    };
+  })();
+  // That set opened to change: its weight and reps, each with − and + and a box to type in, then Save set.
+  const fixSet = (() => {
+    if (!fix) return null;
+    const at = ctx.logic.model.entries.find((x) => x.av.id === fix.id);
+    const e = at ? s.exercisesOf(at.av).find((x) => x.name === fix.name) : null;
+    const was = s.logOf(fix.id, fix.name)[fix.set];
+    if (!e || !was) return null;
+    const step = weightStep(e);
+    const typed = typedSet(was, fix.w, fix.r);
+    const odd = offPlan(typed, planSet(e));
+    return {
+      title: e.name + ' · set ' + (fix.set + 1),
+      weight:
+        was.w != null
+          ? {
+              value: fix.w,
+              onChange: (ev: { target: { value: string } }) => s.typeDraft('w', ev.target.value),
+              less: () => s.stepDraft(e, 'w', -1),
+              more: () => s.stepDraft(e, 'w', 1),
+              lessAria: step + ' lb lighter',
+              moreAria: step + ' lb heavier',
+            }
+          : null,
+      reps:
+        was.r != null
+          ? {
+              value: fix.r,
+              onChange: (ev: { target: { value: string } }) => s.typeDraft('r', ev.target.value),
+              less: () => s.stepDraft(e, 'r', -1),
+              more: () => s.stepDraft(e, 'r', 1),
+              lessAria: 'One rep fewer',
+              moreAria: 'One rep more',
+            }
+          : null,
+      check: odd ? odd + ' Check it’s right before you save.' : '',
+      save: s.saveFix,
+      cancel: s.cancelFix,
+    };
+  })();
   return {
     restShown: shown,
+    lastSet,
+    fixSet,
     restLabel: s.restLabel,
     // How much of the rest is left, as the bar drains.
     restPct: r ? Math.round((s.restLeft / Math.max(1, r.total)) * 100) : 0,

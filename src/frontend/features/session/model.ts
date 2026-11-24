@@ -8,7 +8,7 @@ import type { Ctx } from '../planner/store/types';
 import { DEFAULT_ZONE } from '@/shared/planDraft';
 import type { Entry, Exercise, LoggedSet } from '@/frontend/data/plannerData';
 import { weightStep } from '@/frontend/shared/weightSteps';
-import { doneLine, planSet, setLabel, typedSet } from './setLog';
+import { doneLine, offPlan, planSet, setLabel, typedSet } from './setLog';
 import { setsFor, setsIn, timeIn } from './sets';
 import { leaveRunningWorkout, pausedClock } from './leave';
 import { dropTrack, openPouch } from '../moonwalk/model';
@@ -463,6 +463,8 @@ export function workoutVals(ctx: Ctx) {
           : null,
       // Changed from the plan: what the plan was, so it's clear this set is different.
       planNote: d && (typed.w !== plan.w || typed.r !== plan.r) && setLabel(plan) ? 'Plan was ' + setLabel(plan) : '',
+      // Far off the plan, likely a typo: said before "Done set", which still works if it's right.
+      check: d && offPlan(typed, plan) ? offPlan(typed, plan) + ' Check it’s right before you tap Done set.' : '',
     };
   };
   // The set up next, on today's session page, for the progress card: the exercise the rows' sets are counting, and

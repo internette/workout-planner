@@ -123,6 +123,7 @@ export interface SetDraft {
   name: string; // the exercise
   w: string; // pounds as typed ('' for none)
   r: string; // reps as typed
+  set?: number; // a set already done being changed (0 for its first), else the next set
 }
 
 export interface RestState {

@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import { Button } from '@moonshot/design-system/buttons';
+import { Callout } from '@moonshot/design-system/callout';
 import { Card } from '@moonshot/design-system/card';
 import { Minus, Plus, Repeat } from '@moonshot/design-system/icons';
 import { ProgressBar } from '@moonshot/design-system/progress-bar';
@@ -39,7 +40,14 @@ export function WorkoutCard({ v }: { v: PlannerVals }) {
               {cue.label}
             </div>
           ) : null}
-          {v.holdShown ? <HoldSection v={v} /> : v.restShown ? <RestSection v={v} /> : v.setNow ? <NextSet now={v.setNow} /> : null}
+          {v.holdShown ? (
+            <HoldSection v={v} />
+          ) : v.restShown ? (
+            <RestSection v={v} />
+          ) : v.setNow && !v.fixSet ? (
+            <NextSet now={v.setNow} />
+          ) : null}
+          {v.fixSet ? <FixSet f={v.fixSet} /> : null}
           {v.finishNow ? (
             <Button type="primary" size="lg" fullWidth onClick={v.finishNow} style={{ marginTop: 'var(--space-4)' }}>
               Finish workout
@@ -127,6 +135,11 @@ function NextSet({ now }: { now: NonNullable<PlannerVals['setNow']> }) {
           {log.weight ? <LogRow label="Weight" unit="lb" inputMode="decimal" f={log.weight} /> : null}
           {log.reps ? <LogRow label="Reps" inputMode="numeric" f={log.reps} /> : null}
         </div>
+        {log.check ? (
+          <Callout tone="warning" style={{ marginTop: 'var(--space-4)' }}>
+            {log.check}
+          </Callout>
+        ) : null}
         {log.planNote ? (
           <Text variant="body" as="p" weight="medium" style={{ margin: 'var(--space-4) 0 0', color: 'var(--color-pink-deep)' }}>
             {log.planNote}
@@ -303,6 +316,59 @@ function RestSection({ v }: { v: PlannerVals }) {
         </Button>
         <Button type="primary" size="sm" onClick={v.restSkip}>
           Skip rest
+        </Button>
+      </div>
+      {/* The set just done, to fix a slip (a typo, a rep miscounted) before the next one. */}
+      {v.lastSet ? (
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 'var(--space-1) var(--space-3)',
+            marginTop: 'var(--space-4)',
+            paddingTop: 'var(--space-2)',
+            borderTop: '1px solid var(--color-line)',
+          }}
+        >
+          <Text variant="body" tone="slate" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            {v.lastSet.label}{' '}
+            <Text variant="body" weight="semibold" tone="ink">
+              {v.lastSet.value}
+            </Text>
+          </Text>
+          <Button type="secondary" ghost size="sm" onClick={v.lastSet.change} aria-label={v.lastSet.changeAria} style={{ marginRight: 'calc(-1 * var(--space-3))' }}>
+            Change
+          </Button>
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
+/** A set already done, opened to change: its weight and reps, a row each, then Save set or Cancel. */
+function FixSet({ f }: { f: NonNullable<PlannerVals['fixSet']> }) {
+  return (
+    <section aria-label="Change set" style={{ marginTop: 'var(--space-4)', paddingTop: 'var(--space-4)', borderTop: '1px solid var(--color-line)' }}>
+      <Text variant="subheading" as="h3" style={{ margin: 0 }}>
+        {f.title}
+      </Text>
+      <div className={logStyles.rows}>
+        {f.weight ? <LogRow label="Weight" unit="lb" inputMode="decimal" f={f.weight} /> : null}
+        {f.reps ? <LogRow label="Reps" inputMode="numeric" f={f.reps} /> : null}
+      </div>
+      {f.check ? (
+        <Callout tone="warning" style={{ marginTop: 'var(--space-4)' }}>
+          {f.check}
+        </Callout>
+      ) : null}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
+        <Button type="neutral" ghost size="md" onClick={f.cancel}>
+          Cancel
+        </Button>
+        <Button type="primary" size="md" onClick={f.save}>
+          Save set
         </Button>
       </div>
     </section>

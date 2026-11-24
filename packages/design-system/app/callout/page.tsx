@@ -18,13 +18,14 @@ export default function CalloutPage() {
 
       <h2 id="tones" style={h2}>Tones</h2>
       <p style={note}>
-        <code>success</code> in the accent tint for something that went through; <code>danger</code> for something that
-        didn&apos;t. An <code>icon</code> goes before the message, drawn in the tone&apos;s color.
+        <code>success</code> in the accent tint for something that went through; <code>warning</code> in gold for
+        something to check before going on; <code>danger</code> for something that didn&apos;t. An <code>icon</code> goes before the message, drawn in the tone&apos;s color.
       </p>
       <div style={panel}>
         <Callout tone="success" icon={<Check color="var(--color-pink-deep)" strokeWidth={2.4} size={16} />}>
           “Fall routine” begins: 18 sessions on your calendar from Oct 19.
         </Callout>
+        <Callout tone="warning">400 lb is 10 times the plan&apos;s 40 lb. Check it&apos;s right before you tap Done set.</Callout>
         <Callout tone="danger">Something went wrong saving that. Your plan is as it was.</Callout>
       </div>
 
@@ -56,7 +57,7 @@ export default function CalloutPage() {
           It is a live region: <code>role=&quot;status&quot;</code> by default, so news is read out without interrupting;{' '}
           <code>role=&quot;alert&quot;</code> for a failure that needs reading now.
         </li>
-        <li>The tones are the theme&apos;s: in another color theme the success tint follows it; danger stays red.</li>
+        <li>The tones are the theme&apos;s: in another color theme the success tint follows it; warning stays gold and danger stays red.</li>
       </ul>
     </DocPage>
   );
