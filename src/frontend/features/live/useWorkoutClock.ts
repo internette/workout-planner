@@ -51,7 +51,7 @@ export function useWorkoutClock(logic: PlannerLogic, view: PlannerVals | null, a
     markEnd(holdOut ? 'hold' : 'rest');
     if (holdOut) v.holdOver();
     else v.restOver();
-    if (liveSettings().chime) playChime();
+    if (liveSettings().chime) playChime(holdOut ? 'hold' : 'rest');
     // The glow goes after a few seconds even if nothing else redraws the page.
     setTimeout(() => logic.forceUpdate(), CUE_MS + 50);
     try {
@@ -94,14 +94,12 @@ export function useWorkoutClock(logic: PlannerLogic, view: PlannerVals | null, a
   // at its own volume.
   useEffect(() => setAudioSession(), []);
 
-  // iOS plays a page's sound only after a tap on it, so any tap or key press readies the chime.
+  // iOS plays a page's sound only after a tap on it, so any tap or key press readies the chime. It counts a tap when
+  // the finger lifts (touchend, click), not when it lands, so readying on pointerdown alone could leave it silent.
   useEffect(() => {
     const ready = () => unlockChime();
-    window.addEventListener('pointerdown', ready);
-    window.addEventListener('keydown', ready);
-    return () => {
-      window.removeEventListener('pointerdown', ready);
-      window.removeEventListener('keydown', ready);
-    };
+    const events = ['pointerup', 'touchend', 'click', 'keydown'] as const;
+    events.forEach((e) => window.addEventListener(e, ready, { passive: true }));
+    return () => events.forEach((e) => window.removeEventListener(e, ready));
   }, []);
 }
