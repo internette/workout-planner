@@ -1,8 +1,9 @@
 import type { CSSProperties, ReactNode } from 'react';
 
 export interface CalloutProps {
-  /** `success` for something that went through (a plan added, a workout scheduled); `danger` for something that didn't. */
-  tone: 'success' | 'danger';
+  /** `success` for something that went through (a plan added, a workout scheduled); `warning` for something to check
+   * before going on (a weight far off the plan); `danger` for something that didn't go through. */
+  tone: 'success' | 'warning' | 'danger';
   /** A small icon before the message, drawn in the tone's color. */
   icon?: ReactNode;
   /** A button after the message: Dismiss, View day. */
@@ -17,6 +18,8 @@ export interface CalloutProps {
 // barely shows. The border is 4.1:1 or more on the page in every theme.
 const TONES = {
   success: { background: 'var(--color-pink-tint)', color: 'var(--color-pink-deep)', border: '1px solid var(--color-pink)' },
+  // Gold deep on the gold tint is 5.6:1; the gold border keeps the strip visible on the page, as success's does.
+  warning: { background: 'var(--color-gold-tint)', color: 'var(--color-gold-deep)', border: '1px solid var(--color-gold)' },
   danger: { background: 'var(--color-danger-tint)', color: 'var(--color-danger)' },
 };
 

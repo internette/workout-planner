@@ -46,3 +46,15 @@ export const doneLine = (sets: LoggedSet[] | undefined) => {
 /** The heaviest weight among the sets done, or null with none. */
 export const heaviest = (sets: LoggedSet[] | undefined) =>
   (sets || []).reduce<number | null>((max, s) => (s.w != null && (max == null || s.w > max) ? s.w : max), null);
+
+/**
+ * A weight far off the plan, as a likely typo: more than double it, or under half. Says by how much ("400 lb is 10
+ * times the plan's 40 lb"), or '' when it's near the plan, or there's no weight to compare.
+ */
+export const offPlan = (s: LoggedSet, plan: LoggedSet) => {
+  if (s.w == null || plan.w == null || plan.w <= 0) return '';
+  const ratio = s.w / plan.w;
+  if (ratio > 2) return s.w + ' lb is ' + (ratio >= 3 ? Math.round(ratio) + ' times' : 'more than double') + ' the plan’s ' + plan.w + ' lb.';
+  if (ratio < 0.5) return s.w + ' lb is under half the plan’s ' + plan.w + ' lb.';
+  return '';
+};
